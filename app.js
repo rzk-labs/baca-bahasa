@@ -13,7 +13,7 @@ const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */
 const KEY = 'bacabahasa.v1';
-let db = Object.assign({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 20, vocab: [], weak: {}, tab: 'rak' }, JSON.parse(localStorage.getItem(KEY) || '{}'));
+let db = Object.assign({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, tab: 'rak' }, JSON.parse(localStorage.getItem(KEY) || '{}'));
 const save = () => localStorage.setItem(KEY, JSON.stringify(db));
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 1); r.onupgradeneeded = () => r.result.createObjectStore('t'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
