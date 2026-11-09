@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Baca Bahasa</title>
-<meta name="theme-color" content="#2f6f5e">
+<meta name="theme-color" content="#f5f6fb">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,18 +12,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header id="top"><h1 id="ttl">Baca Bahasa</h1><div id="hdx"></div></header>
+<header id="top"><h1 id="ttl">Baca Bahasa</h1><div id="hdx"></div><div id="prog"></div></header>
 <main id="view"></main>
-<nav id="tabs">
-  <button data-t="rak"><b>📚</b><span>Rak</span></button>
-  <button data-t="baca"><b>📖</b><span>Baca</span></button>
-  <button data-t="bicara"><b>🗣️</b><span>Bicara</span></button>
-  <button data-t="kata"><b>⭐</b><span>Kata</span></button>
-</nav>
+<nav id="tabs"></nav>
 <div id="shade" class="hide"></div>
 <div id="sheet" class="hide"><div class="grab"></div><div id="sheetBody"></div></div>
 <div id="toast" class="hide"></div>
 <input type="file" id="file" accept=".txt,.epub,.pdf,text/plain,application/epub+zip,application/pdf" hidden>
 <script src="app.js"></script>
+<script src="ui.js"></script>
 </body>
 </html>
