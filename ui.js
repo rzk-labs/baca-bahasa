@@ -26,7 +26,7 @@ function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) %
 function cover(b, big) { const h = hue(b.title); const ini = b.title.replace(/[^\p{L}\p{N} ]/gu, '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => [...w][0]).join('').toUpperCase() || '?'; return `<div class="cover${big ? ' big' : ''}" style="background:linear-gradient(150deg,hsl(${h} 70% 58%),hsl(${(h + 40) % 360} 65% 42%))">${esc(ini)}</div>`; }
 function applyTheme() { document.documentElement.dataset.theme = db.theme; const dark = db.theme === 'dark' || (db.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches); document.querySelector('meta[name=theme-color]').content = dark ? '#0f1020' : db.theme === 'sepia' ? '#f3ead8' : '#f5f6fb'; }
 const langName = l => (LANGS[l] || [l])[0];
-const pctOf = b => b.total ? Math.round((b.pos + 1) / b.total * 100) : 0;
+const pctOf = b => b.pct != null ? b.pct : b.total ? Math.round((b.pos + 1) / b.total * 100) : 0;
 const progress = p => { $('#prog').innerHTML = p == null ? '' : `<i style="width:${p}%"></i>`; };
 
 /* ---------- kerangka ---------- */
@@ -39,13 +39,35 @@ const langOpts = sel => Object.entries(LANGS).map(([k, v]) => `<option value="${
 const book = () => db.books.find(b => b.id === db.cur);
 let cache = { id: null, pages: null };
 async function pagesOf(b) {
-  if (cache.id !== b.id) { const paras = await getText(b.id); cache = { id: b.id, pages: paginate(paras || ['(teks hilang)'], b.lang) }; b.total = cache.pages.length; save(); }
+  if (cache.id !== b.id) {
+    const paras = await getText(b.id); cache = { id: b.id, pages: makeSections(paras || ['(teks hilang)']) };
+    if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; } // format bab baru
+    b.total = cache.pages.length; save();
+  }
   return cache.pages;
+}
+/* bagian buku = bab (EPUB: tiap file spine, penanda \u0002) atau potongan ±15rb huruf */
+function makeSections(paras) {
+  const secs = []; let cur = [], n = 0;
+  const push = () => { if (cur.length) secs.push(cur); cur = []; n = 0; };
+  for (const p of paras) {
+    if (p === '\u0002') { push(); continue; }
+    if (n > 15000 && !p.startsWith('\u0001')) push();
+    cur.push(p); n += p.length;
+  }
+  push();
+  return secs.length ? secs : [['(kosong)']];
+}
+const isHead = raw => raw.startsWith('\u0001') || (raw.length < 80 && !/[.!?,;:"”'’)\]]$/.test(raw.trim()));
+// paragraf + kalimat dengan nomor urut yang sama untuk mode Baca & Bicara
+function secParas(sec, lang) {
+  let k = 0;
+  return sec.map(raw => { const h = isHead(raw), p = raw.replace(/^\u0001/, ''); return { h, sents: sentences(p, lang).map(s => ({ s, i: tokens(s, lang).some(t => t.w) ? k++ : -1 })) }; });
 }
 const TABS = { rak: ['home', 'Beranda'], baca: ['book', 'Baca'], bicara: ['mic', 'Bicara'], kata: ['star', 'Kata'] };
 $('#tabs').innerHTML = Object.entries(TABS).map(([k, [i, l]]) => `<button data-t="${k}">${ico(i)}<span>${l}</span></button>`).join('');
 function setTab(t) {
-  db.tab = t; save(); closeSheet(); stopListen();
+  db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove("reading");
   $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   $('#hdx').innerHTML = ''; $('#ttl').textContent = 'Baca Bahasa'; progress(null);
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
@@ -65,9 +87,9 @@ function openSettings() {
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa buku ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
     <div class="set-row"><div class="eyebrow">Artikan ke</div><select id="mylang">${langOpts(db.my)}</select></div>
     <button class="pri big" style="width:100%" onclick="closeSheet()">Selesai</button>`);
-  $('#fs').oninput = e => { db.fs = +e.target.value; save(); $('#fsv').textContent = db.fs + 'px'; const p = $('.page'); if (p) p.style.fontSize = db.fs + 'px'; };
+  $('#fs').oninput = e => { db.fs = +e.target.value; save(); $('#fsv').textContent = db.fs + 'px'; const p = $('.page'); if (p) { p.style.fontSize = db.fs + 'px'; layout(); } };
   $$('#thm button').forEach(x => x.onclick = () => { db.theme = x.dataset.v; save(); applyTheme(); $$('#thm button').forEach(y => y.classList.toggle('on', y === x)); });
-  $$('#fnt button').forEach(x => x.onclick = () => { db.font = x.dataset.v; save(); $$('#fnt button').forEach(y => y.classList.toggle('on', y === x)); const p = $('.page'); if (p) p.classList.toggle('serif', db.font === 'serif'); });
+  $$('#fnt button').forEach(x => x.onclick = () => { db.font = x.dataset.v; save(); $$('#fnt button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('serif', db.font === 'serif'); layout(); } });
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
@@ -84,7 +106,7 @@ function viewRak() {
   $('#view').innerHTML = `
   <div class="hello"><div><div class="mut sm">${greet} 👋</div><h2>Mau baca apa hari ini?</h2></div><div class="streak" title="Hari berturut-turut">🔥 ${st}</div></div>
   ${cur ? `<div class="hero" id="hero">${cover(cur, true)}<div class="hinfo"><div class="eyebrow">Lanjutkan membaca</div><div class="htitle">${esc(cur.title)}</div>
-    <div class="hmeta">${langName(cur.lang)} · hlm ${cur.pos + 1}/${cur.total || '?'}</div><div class="bar light"><i style="width:${pctOf(cur)}%"></i></div>
+    <div class="hmeta">${langName(cur.lang)} · ${pctOf(cur)}% dibaca</div><div class="bar light"><i style="width:${pctOf(cur)}%"></i></div>
     <div class="hbtns"><button id="hRead">${ico('book')} Baca</button><button id="hSpeak">${ico('mic')} Bicara</button></div></div></div>` : ''}
   <div class="stats"><div><b>${db.books.length}</b><span>Buku</span></div><div><b>${db.vocab.length}</b><span>Kata disimpan</span></div><div><b>${avg}</b><span>Skor ucapan</span></div></div>
   <div class="card">
@@ -140,22 +162,94 @@ async function viewBaca() {
   const b = book();
   if (!b) { $('#view').innerHTML = emptyNeedBook('📖', 'Belum ada buku yang dibuka.'); return; }
   b.opened = Date.now(); save();
-  const pages = await pagesOf(b);
-  b.pos = Math.min(b.pos, pages.length - 1);
-  $('#ttl').textContent = b.title; progress(pctOf(b));
-  $('#hdx').innerHTML = `<button class="icon aa" id="set" aria-label="Tampilan">Aa</button>`;
-  $('#set').onclick = openSettings;
-  let si = 0;
-  const html = pages[b.pos].map(p => (p.length < 80 && !/[.!?,;:"”]$/.test(p) ? '<p class="h">' : '<p>') + sentences(p, b.lang).map(s => `<span class="s" data-s="${si++}">` + tokens(s, b.lang).map(t => t.w ? `<span class="w">${esc(t.t)}</span>` : esc(t.t)).join('') + '</span>').join('') + '</p>').join('');
+  const secs = await pagesOf(b);
+  b.pos = Math.max(0, Math.min(b.pos, secs.length - 1));
+  document.body.classList.add('reading');
+  const sp = secParas(secs[b.pos], b.lang);
+  const head = sp.find(P => P.h);
+  const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
+  const wordsHtml = s => tokens(s, b.lang).map(t => t.w ? `<span class="w">${esc(t.t)}</span>` : esc(t.t)).join('');
+  let first = true;
+  const html = sp.map(P => {
+    const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
+    if (P.h) { first = true; return `<h2 class="ch">${inner}</h2>`; }
+    const c = first ? ' class="first"' : ''; first = false; return `<p${c}>${inner}</p>`;
+  }).join('');
   $('#view').innerHTML = `
-    ${db.seenTip ? '' : `<div class="tip" id="tip"><span>👆</span><div><b>Ketuk kata</b> yang bikin bingung untuk lihat artinya. Masih bingung? Lanjut ke <b>arti kalimat</b>.</div><button id="tipx">${ico('x')}</button></div>`}
-    <article class="page${db.font === 'serif' ? ' serif' : ''}" style="font-size:${db.fs}px">${html}</article>
-    <div class="pager"><button id="pv" ${b.pos ? '' : 'disabled'}>${ico('left')}</button><span>hlm ${b.pos + 1}/${pages.length}</span><button id="nx" ${b.pos < pages.length - 1 ? '' : 'disabled'}>Berikutnya ${ico('right')}</button></div>`;
+    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}" id="reader" lang="${esc(b.lang)}">
+      <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali">${ico('left')}</button>
+        <div class="rtitle"><b>${esc(b.title)}</b><span>Bab ${b.pos + 1} dari ${secs.length}</span></div>
+        <button class="icon" id="rSpeak" aria-label="Latihan bicara">${ico('mic')}</button><button class="icon aa" id="set" aria-label="Tampilan">Aa</button></div>
+      <div class="rhead">${esc(chTitle)}</div>
+      <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${db.fs}px">${html}</div></div>
+      <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
+        <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
+        <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
+      ${db.seenTip ? '' : `<div class="rtip" id="tip"><div>👆 <b>Ketuk kata</b> = artinya<br>👉 <b>Geser / ketuk tepi</b> = balik halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx">${ico('x')}</button></div>`}
+    </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
-  const go = d => { b.pos += d; b.si = 0; save(); viewBaca(); window.scrollTo(0, 0); };
-  $('#pv').onclick = () => go(-1); $('#nx').onclick = () => go(1);
-  $('.page').onclick = e => { const w = e.target.closest('.w'); if (w) { vib(8); onWord(w); } };
+  $('#rHome').onclick = () => setTab('rak');
+  $('#rSpeak').onclick = () => setTab('bicara');
+  $('#set').onclick = openSettings;
+  $('#pv').onclick = () => turn(-1); $('#nx').onclick = () => turn(1);
+  const vp = $('#vp'); let tx = null, moved = false;
+  vp.addEventListener('touchstart', e => { const t = e.touches[0]; tx = [t.clientX, t.clientY]; moved = false; }, { passive: true });
+  vp.addEventListener('touchend', e => {
+    if (!tx) return; const t = e.changedTouches[0], dx = t.clientX - tx[0], dy = t.clientY - tx[1]; tx = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; turn(dx < 0 ? 1 : -1); }
+  });
+  vp.onclick = e => {
+    if (moved) { moved = false; return; }
+    const w = e.target.closest('.w'); if (w) { vib(8); onWord(w); return; }
+    const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+    if (x < 0.28) turn(-1); else if (x > 0.72) turn(1); else $('#reader').classList.toggle('chrome');
+  };
+  RD.quiet = false;
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
 }
+/* ---------- pembagian halaman ala e-book (CSS columns) ---------- */
+const RD = { page: 0, n: 1, step: 1, toEnd: false, quiet: false };
+function layout() {
+  const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
+  const b = book(), W = vp.clientWidth, H = vp.clientHeight;
+  const per = W >= 860 ? 2 : 1, G = per === 2 ? 72 : 48, cw = (W - (per - 1) * G) / per;
+  vp.classList.toggle('two', per === 2);
+  Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
+  const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
+  RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
+  let p = 0;
+  if (RD.toEnd) p = RD.n - 1;
+  else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
+  RD.toEnd = false;
+  showPage(p, false);
+}
+function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
+function showPage(p, anim = true) {
+  const cols = $('#cols'), b = book(); if (!cols) return;
+  RD.page = Math.max(0, Math.min(RD.n - 1, p));
+  cols.style.transition = anim ? '' : 'none';
+  cols.style.transform = `translateX(${-RD.page * RD.step}px)`;
+  // kalimat pertama di halaman ini = posisi baca (dipakai juga oleh mode Bicara)
+  for (const el of cols.querySelectorAll('.s')) { if (pageOf(el, cols) >= RD.page) { b.si = +el.dataset.s; break; } }
+  let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
+  if (hd) $('.rhead').textContent = hd.textContent.trim();
+  b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
+  $('#pgn').textContent = `${RD.page + 1} / ${RD.n}` + (b.total > 1 ? ` · bab ${b.pos + 1}/${b.total}` : '') + ` · ${b.pct}%`;
+  $('#pbar').style.width = b.pct + '%';
+  $('#pv').disabled = RD.page === 0 && b.pos === 0;
+  $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
+}
+function turn(d) {
+  const b = book(); closeSheet();
+  const np = RD.page + d;
+  if (np >= 0 && np < RD.n) { vib(4); showPage(np); $('#reader').classList.remove('chrome'); return; }
+  if (d > 0 && b.pos < b.total - 1) { b.pos++; b.si = 0; RD.quiet = true; save(); viewBaca(); }
+  else if (d < 0 && b.pos > 0) { b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
+  else toast(d > 0 ? '🎉 Halaman terakhir buku' : 'Ini halaman pertama');
+}
+let rsT; addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) layout(); }, 150); });
+addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 async function onWord(el) {
   const b = book(); markDay();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -209,7 +303,7 @@ async function viewBicara() {
   const b = book();
   if (!b) { $('#view').innerHTML = emptyNeedBook('🗣️', 'Pilih buku dulu untuk latihan bicara.'); return; }
   const pages = await pagesOf(b);
-  const sents = pages[b.pos].flatMap(p => sentences(p, b.lang)).map(s => s.trim()).filter(s => tokens(s, b.lang).some(t => t.w));
+  const sents = secParas(pages[b.pos], b.lang).flatMap(P => P.sents.filter(x => x.i >= 0).map(x => x.s.trim()));
   b.si = Math.max(0, Math.min(b.si || 0, sents.length - 1)); save();
   const sent = sents[b.si] || '';
   let wi = 0; const words = [];

@@ -144,3 +144,32 @@ input[type=range]{padding:0;border:0;accent-color:var(--pri);background:none;box
 .vitem .s1{font-size:13px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vitem button{padding:8px;background:var(--bg2);color:var(--mut)}
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 96px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;z-index:20;font-size:14px;font-weight:600;max-width:90vw;box-shadow:var(--shadow);animation:up .25s}
+/* ===== mode buku (e-book) ===== */
+body.reading{overflow:hidden}
+body.reading #top,body.reading #tabs{display:none}
+body.reading #view{padding:0;animation:none}
+.reader{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;background:var(--paper);color:var(--paper-ink);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.reader::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#0000000d,transparent 18px,transparent calc(100% - 18px),#0000000d)}
+.rhead{flex:none;height:40px;display:flex;align-items:flex-end;justify-content:center;padding:0 64px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vp{flex:1;position:relative;overflow:hidden;margin:18px 28px 6px;width:calc(100% - 56px);max-width:1100px;align-self:center}
+.vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:56px;margin-left:-28px;pointer-events:none;background:linear-gradient(90deg,transparent,#00000012 45%,#0000001c 50%,#00000012 55%,transparent)}
+.cols.page{column-fill:auto;background:none;box-shadow:none;border-radius:0;padding:0;line-height:1.62;text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform .42s cubic-bezier(.22,.8,.24,1);will-change:transform;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.reader.serif .cols.page{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.cols p{margin:0;text-indent:1.5em;orphans:2;widows:2}
+.cols p.first{text-indent:0}
+.cols p.first::first-letter{float:left;font-size:3.3em;line-height:.82;padding:.06em .08em 0 0;font-weight:700;color:var(--pri)}
+.cols h2.ch{font-size:1.45em;line-height:1.25;text-align:center;font-weight:700;margin:1.4em 0 1.1em;letter-spacing:-.01em;break-after:avoid;-webkit-column-break-after:avoid}
+.cols h2.ch:first-child{margin-top:2.2em}
+.cols h2.ch::after{content:"";display:block;width:42px;height:2px;margin:.7em auto 0;background:var(--pri);border-radius:2px;opacity:.7}
+.cols .w{padding:0;margin:0}
+.rfoot{flex:none;height:54px;display:flex;align-items:center;gap:8px;padding:0 10px;max-width:760px;width:100%;align-self:center}
+.rmid{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
+.rmid .bar{height:3px;margin-top:6px;background:color-mix(in srgb,var(--mut) 22%,transparent)}
+.pg{background:none;color:var(--mut);padding:10px;border-radius:50%}
+.rbar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 12px 10px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 8px 20px #0000000f;transform:translateY(-110%);transition:transform .25s ease}
+.reader.chrome .rbar{transform:none}
+.rtitle{flex:1;min-width:0;text-align:center;line-height:1.25}
+.rtitle b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle span{font-size:12px;color:var(--mut)}
+.rtip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 64px);transform:translateX(-50%);z-index:3;display:flex;gap:10px;align-items:flex-start;width:min(92vw,360px);background:var(--ink);color:var(--bg);border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.55;box-shadow:0 10px 30px #0004;animation:up .3s}
+.rtip button{padding:4px;background:none;color:inherit;opacity:.7}
+body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
