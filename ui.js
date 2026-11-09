@@ -1,9 +1,9 @@
 'use strict';
-/* KEPO v5 — UI Gen Z: maskot, XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
+/* KEPO v6 — fun tapi profesional (krem, blok warna, maskot doodle). Maskot, XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
 db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7;
 db.xp = db.xp || 0; db.xpDay = db.xpDay || {}; db.badges = db.badges || []; if (db.sfx == null) db.sfx = true;
 db.stat = Object.assign({ look: 0, save: 0, page: 0, speak: 0, perfect: 0, rem: 0, flash: 0 }, db.stat || {});
-if (!db.v5) { db.v5 = 1; db.theme = 'dark'; } db.theme = db.theme || 'dark';
+if (!db.v6) { db.v6 = 1; db.theme = 'light'; } db.theme = db.theme || 'light';
 const GOAL = 30;
 
 /* ---------- ikon ---------- */
@@ -25,28 +25,29 @@ const ICONS = {
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 
-/* ---------- maskot Kepo: blob lime penasaran ---------- */
+/* ---------- maskot Kepo: doodle garis (gaya Klubi/teentalk), badan lavender ---------- */
 function mascot(mood = 'curious', cls = '') {
-  const eyes = { curious: [4, -2], happy: [0, 0], wow: [0, 0], sad: [0, 3], cheer: [0, -2] }[mood] || [0, 0];
+  const K = '#2A1215', S = `stroke="${K}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
+  const happy = mood === 'happy' || mood === 'cheer';
+  const eyes = happy
+    ? `<path d="M38 58q7-8 14 0M68 56q7-8 14 0" ${S}/>`
+    : mood === 'wow' ? `<circle cx="45" cy="56" r="6" fill="${K}"/><circle cx="75" cy="54" r="6" fill="${K}"/>`
+    : mood === 'sad' ? `<circle cx="45" cy="60" r="4.5" fill="${K}"/><circle cx="75" cy="58" r="4.5" fill="${K}"/><path d="M36 48l14 4M84 46l-14 4" ${S}/>`
+    : `<ellipse cx="47" cy="57" rx="4.5" ry="6" fill="${K}"/><ellipse cx="77" cy="55" rx="4.5" ry="6" fill="${K}"/><path d="M68 42q9-6 17 0" ${S}/>`;
   const mouth = {
-    curious: '<path d="M52 82q8 5 16 0" stroke="#16112E" stroke-width="4" fill="none" stroke-linecap="round"/>',
-    happy: '<path d="M44 76q16 18 32 0Z" fill="#16112E"/><path d="M52 84q8 5 16 0" fill="#FF6B6B"/>',
-    cheer: '<path d="M42 74q18 22 36 0Z" fill="#16112E"/><path d="M50 84q10 6 20 0" fill="#FF6B6B"/>',
-    wow: '<ellipse cx="60" cy="82" rx="7" ry="9" fill="#16112E"/>',
-    sad: '<path d="M50 86q10-8 20 0" stroke="#16112E" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    curious: `<path d="M54 74q6 4 12 0" ${S}/>`,
+    happy: `<path d="M48 70q12 14 24 0" ${S}/>`,
+    cheer: `<path d="M46 69q14 18 28 0z" fill="${K}"/><path d="M53 78q7 4 14 0" stroke="#FF7A59" stroke-width="5" stroke-linecap="round" fill="none"/>`,
+    wow: `<ellipse cx="60" cy="75" rx="6" ry="8" ${S}/>`,
+    sad: `<path d="M50 78q10-8 20 0" ${S}/>`
   }[mood];
-  const happyEyes = mood === 'happy' || mood === 'cheer';
-  const eye = (cx, cy, r) => happyEyes
-    ? `<path d="M${cx - r * .7} ${cy + 2}q${r * .7} -${r} ${r * 1.4} 0" stroke="#16112E" stroke-width="5" fill="none" stroke-linecap="round"/>`
-    : `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff"/><circle cx="${cx + eyes[0]}" cy="${cy + eyes[1]}" r="${r * .5}" fill="#16112E"/><circle cx="${cx + eyes[0] + 2}" cy="${cy + eyes[1] - 3}" r="2" fill="#fff"/>`;
-  const brow = mood === 'curious' ? '<path d="M70 36q8-6 16-2" stroke="#16112E" stroke-width="4" fill="none" stroke-linecap="round"/>' : mood === 'sad' ? '<path d="M34 42q8-4 14 0M72 40q8-4 14 2" stroke="#16112E" stroke-width="3.5" fill="none" stroke-linecap="round"/>' : '';
-  return `<svg class="mascot ${cls}" viewBox="0 0 120 120" aria-hidden="true">
-    <path d="M62 14q4-12 14-10" stroke="#C6FF3D" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="78" cy="5" r="5" fill="#FF5FA2"/>
-    <path d="M60 14c30 0 50 20 50 50 0 28-20 48-50 48S10 92 10 64c0-30 20-50 50-50z" fill="#C6FF3D"/>
-    <path d="M24 92c10 14 24 20 36 20 30 0 50-20 50-48 0-6-1-12-3-17 0 30-22 52-52 52-12 0-23-3-31-7z" fill="#9FD82A"/>
-    ${eye(44, 56, 13)}${eye(78, 54, 15)}${brow}
-    <circle cx="30" cy="74" r="6" fill="#FF5FA2" opacity=".55"/><circle cx="92" cy="72" r="6" fill="#FF5FA2" opacity=".55"/>
-    ${mouth}</svg>`;
+  const arm = mood === 'cheer' ? `<path d="M100 66q12-10 10-26M104 40l6-2M106 44l7 1" ${S}/>` : mood === 'happy' ? `<path d="M100 72q10 2 14-8" ${S}/>` : `<path d="M100 74q8 4 10 12" ${S}/>`;
+  return `<svg class="mascot ${cls}" viewBox="0 0 124 124" aria-hidden="true">
+    <path d="M58 22q-2-12 8-16" ${S}/><path d="M66 4l2 5M72 7l-4 3M62 7l4 3" stroke="#FF7A59" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M60 22c28 0 44 20 44 46 0 26-18 44-44 44S14 94 14 68c0-28 18-46 46-46z" fill="#C9BFFF" ${S.replace('fill="none"', '')}/>
+    <path d="M22 78q2 18 18 26" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".6"/>
+    ${eyes}<ellipse cx="34" cy="68" rx="6" ry="3.5" fill="#FF8FC4"/><ellipse cx="88" cy="66" rx="6" ry="3.5" fill="#FF8FC4"/>
+    ${mouth}${arm}<path d="M20 74q-10 2-10 12" ${S}/></svg>`;
 }
 
 /* ---------- utilitas ---------- */
@@ -56,11 +57,12 @@ function markDay() { const d = today(); if (!db.days.includes(d)) { db.days.push
 function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(d.toISOString().slice(0, 10))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
 function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
 const EMO = ['📖', '🌙', '🚀', '🦊', '🌊', '🍜', '🎧', '🌸', '⚡', '🐉', '🎮', '🍓'];
-function cover(b) { const h = hue(b.title); return `<div class="cover" style="background:linear-gradient(150deg,hsl(${h} 85% 62%),hsl(${(h + 50) % 360} 80% 45%))"><span class="em">${EMO[h % EMO.length]}</span><span>${esc(b.title.slice(0, 34))}</span></div>`; }
+const CCOL = ['#D4E94B', '#C9BFFF', '#FFB8DA', '#FF7A59', '#6E8BEA', '#F5CF52', '#BDE8D4', '#FFF6E5'];
+function cover(b) { const h = hue(b.title); return `<div class="cover" style="background:${CCOL[h % CCOL.length]}"><span class="em">${EMO[h % EMO.length]}</span><span>${esc(b.title.slice(0, 34))}</span></div>`; }
 function applyTheme() {
   document.documentElement.dataset.theme = db.theme;
   const dark = db.theme === 'dark' || (db.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  document.querySelector('meta[name=theme-color]').content = dark ? '#0E0B1F' : db.theme === 'sepia' ? '#F6EEDC' : '#F4F1FF';
+  document.querySelector('meta[name=theme-color]').content = dark ? '#1A1312' : db.theme === 'sepia' ? '#F4EAD5' : '#F2EEE5';
 }
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', tr: 'Turki', id: 'Indonesia' };
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', tr: '🇹🇷', id: '🇮🇩' };
@@ -92,7 +94,7 @@ function sfx(kind) {
 function confetti(n = 70) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const box = document.createElement('div'); box.className = 'confetti';
-  const cols = ['#7C5CFF', '#C6FF3D', '#FF6B6B', '#FF5FA2', '#3DDCFF', '#FFC53D'];
+  const cols = ['#D4E94B', '#C9BFFF', '#FFB8DA', '#FF7A59', '#6E8BEA', '#F5CF52'];
   for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + 'vw'; p.style.background = cols[i % cols.length]; p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px'); p.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); p.style.animationDelay = Math.random() * .3 + 's'; box.appendChild(p); }
   document.body.appendChild(box); setTimeout(() => box.remove(), 2000);
 }
@@ -129,7 +131,7 @@ function award(n, stat) {
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
   const el = document.createElement('div'); el.className = 'lvlup';
-  el.innerHTML = `<div class="card">${mascot('cheer', 'jump')}<h1 class="grad-text">${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
+  el.innerHTML = `<div class="card">${mascot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
 function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.innerHTML = `🔥 ${streak()}`; if (x) x.innerHTML = `⚡ ${db.xp}`; }
@@ -188,11 +190,11 @@ const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(
 /* ---------- pengaturan ---------- */
 function openSettings() {
   const b = book();
-  const th = [['dark', 'Gelap'], ['light', 'Terang'], ['sepia', 'Sepia'], ['auto', 'Ikut HP']];
-  const sw = { auto: 'linear-gradient(180deg,#F4F1FF 58%,#0E0B1F 58%)', light: '#F4F1FF', sepia: '#F6EEDC', dark: '#0E0B1F' };
-  const ink = { auto: '#16112E', light: '#16112E', sepia: '#2E2619', dark: '#F5F3FF' };
+  const th = [['light', 'Terang'], ['sepia', 'Sepia'], ['dark', 'Gelap'], ['auto', 'Ikut HP']];
+  const sw = { auto: 'linear-gradient(180deg,#F2EEE5 58%,#1A1312 58%)', light: '#F2EEE5', sepia: '#F4EAD5', dark: '#1A1312' };
+  const ink = { auto: '#2A1215', light: '#2A1215', sepia: '#2E2216', dark: '#FFF6E5' };
   openSheet(`<div class="sh-head"><h2>Pengaturan</h2>${closeBtn}</div>
-    <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small${k === 'auto' ? ' style="color:#F5F3FF"' : ''}>${l}</small></button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small${k === 'auto' ? ' style="color:#FFF6E5"' : ''}>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${db.fs} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
     <div class="set-row"><div class="eyebrow">Huruf baca</div><div class="seg" id="fnt"><button data-v="serif" class="${db.font === 'serif' ? 'on' : ''}" style="font-family:var(--font-reader)">Klasik</button><button data-v="sans" class="${db.font === 'sans' ? 'on' : ''}">Modern</button></div></div>
     <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${[1.5, 1.7, 1.9].map(v => `<button data-v="${v}" class="${db.lh === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
@@ -207,7 +209,7 @@ function openSettings() {
   $$('#fnt button').forEach(x => x.onclick = () => { db.font = x.dataset.v; save(); $$('#fnt button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('serif', db.font === 'serif'); layout(); } });
   $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
-  $('#rst').onclick = () => { db.fs = 19; db.lh = 1.7; db.font = 'serif'; db.theme = 'dark'; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
+  $('#rst').onclick = () => { db.fs = 19; db.lh = 1.7; db.font = 'serif'; db.theme = 'light'; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
@@ -215,7 +217,7 @@ function openSettings() {
 /* ---------- HOME ---------- */
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
-  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="url(#gl)" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
+  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#2A1215" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -226,32 +228,37 @@ function viewRak() {
   const lines = [`${hi}! Mau kepoin apa hari ini? 👀`, 'Satu halaman aja udah keren kok ✨', 'Yuk, kepoin kata baru! 🔍', 'Bahasa baru, vibes baru 🚀'];
   const line = lines[(new Date().getDate() + db.books.length) % lines.length];
   const addCard = `<div class="card">
-      <h3>Tambah cerita</h3>
-      <div class="langs" style="margin-top:12px"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
+      <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
       <div class="add-grid"><button class="main" id="up"><span class="em">📤</span>Upload file</button><button id="paste"><span class="em">📋</span>Tempel teks</button><button id="sample"><span class="em">✨</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur) {
-    $('#view').innerHTML = `<div class="say">${mascot('cheer', 'bob')}<div class="bubble">Halo! Aku Kepo 👋<small>Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</small></div></div>
-      <div class="card"><h2>Cara mainnya gampang</h2>
-        <div class="steps3"><div><b>📤</b>Masukin cerita favoritmu</div><div><b>👆</b>Ketuk kata yang bikin bingung</div><div><b>🎤</b>Ngomongin kalimatnya, dapet skor & XP</div></div></div>
-      ${addCard}`;
+    $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1>
+      <div class="hello-sub">${mascot('cheer', 'bob')}<div class="mut">Halo, aku Kepo! Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</div></div>
+      <div class="steps3"><div class="t-pink"><b>1</b>Masukin cerita favoritmu</div><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
+      <div class="sec-h"><h2>Mulai dari sini</h2></div>${addCard}`;
   } else {
+    const BCOL = ['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'];
     $('#view').innerHTML = `
-    <div class="say">${mascot('curious', 'bob')}<div class="bubble">${line}<small>${xt >= GOAL ? 'Target harian udah beres 🎉' : `Target harian tinggal ${GOAL - xt} XP lagi`}</small></div></div>
-    <div class="card"><div class="lvl"><div class="badge-lv"><small>LV</small>${lv}</div><div class="inf"><h3>Level ${lv}</h3><div class="mut sm">${inLv}/100 XP ke level ${lv + 1}</div><div class="bar"><i style="width:${inLv}%"></i></div></div></div>
-      <div class="goal">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div><b>Target harian</b><div class="mut sm">${Math.min(xt, GOAL)}/${GOAL} XP · ketuk kata, baca, ngomong</div></div></div></div>
-    <div class="hero" id="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm" style="opacity:.85">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="bar"><i style="width:${pctOf(cur)}%"></i></div></div></div>
-    <div class="hero-act"><button class="lime" id="hRead">📖 Gas baca</button><button class="pri" id="hSpeak">🎤 Tantangan</button></div>
-    <div class="stats"><div><b>${db.vocab.length}</b><span>Kata disimpan</span></div><div><b>${avg}</b><span>Skor ngomong</span></div><div><b>${db.badges.length}/${BADGES.length}</b><span>Lencana</span></div></div>
-    <div class="sec-h"><h2>Lencana</h2><span class="mut sm">${db.badges.length} kebuka</span></div>
-    <div class="hscroll">${BADGES.map(([id, em, name, desc]) => `<div class="badge${db.badges.includes(id) ? '' : ' off'}" title="${esc(desc)}"><span class="em">${em}</span><b>${name}</b><span class="mut" style="font-size:11px;line-height:14px;display:block;margin-top:2px">${desc}</span></div>`).join('')}</div>
+    <h1 class="big">${hi === 'Pagi' ? 'Pagi' : hi === 'Siang' ? 'Siang' : hi === 'Sore' ? 'Sore' : 'Malam'},<br><span class="circle-txt">kepoin</span> apa?</h1>
+    <div class="hello-sub">${mascot('curious', 'bob')}<div class="mut">${line}</div></div>
+    <div class="bento">
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+        <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
+      <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
+      <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
+      <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">🔥${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
+      <div class="tile t-mint"><div class="eyebrow">Skor ngomong</div><div class="num">${avg}</div><div class="lbl2">${db.vocab.length} kata disimpan</div></div>
+      <div class="tile t-cream wide chal" id="hSpeak">${mascot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div><span style="font:800 28px var(--font-display)">→</span></div>
+    </div>
+    <div class="sec-h"><h2>Lencana</h2><span class="mut sm">${db.badges.length}/${BADGES.length} kebuka</span></div>
+    <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${BCOL[i]}${db.badges.includes(id) ? '' : ' off'}" title="${esc(desc)}"><span class="em">${em}</span><b>${name}</b><span class="d">${desc}</span></div>`).join('')}</div>
     <div class="sec-h"><h2>Koleksi kamu</h2><span class="mut sm">${list.length} cerita</span></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${esc(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>
       <button class="del" data-del="${b.id}" aria-label="Hapus cerita">${ico('trash')}</button></div>`).join('')}</div>
-    ${addCard}`;
+    <div class="sec-h"><h2>Tambah cerita</h2></div>${addCard}`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
-    $('#hero').onclick = () => open('baca'); $('#hRead').onclick = () => open('baca'); $('#hSpeak').onclick = () => open('bicara');
+    $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
     animRing($('#view'));
   }
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
@@ -454,7 +461,7 @@ async function viewBicara() {
   progress(sents.length ? (b.si + 1) / sents.length * 100 : 0);
   $('#view').innerHTML = `
     ${SR || TEST ? '' : `<div class="note">⚠️ <div>${micError('nosupport')}</div></div>`}
-    <h1 style="margin:6px 2px 12px">Tantangan <span class="grad-text">Ngomong</span> 🎤</h1>
+    <h1 style="margin:6px 2px 12px">Tantangan <span class="hl-txt">ngomong</span></h1>
     <div class="card">
       <div class="eyebrow center">Kalimat ${b.si + 1} dari ${sents.length}</div>
       <div class="target" id="target" lang="${esc(b.lang)}">${tHtml}</div>
@@ -567,8 +574,8 @@ function viewKata() {
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
   const known = db.vocab.filter(v => v.known).length;
   $('#view').innerHTML = `
-    <h1 style="margin:6px 2px 12px">Kata <span class="grad-text">kamu</span> 🧠</h1>
-    <div class="sum"><div><b>${db.vocab.length}</b><span>Disimpan</span></div><div><b>${known}</b><span>Udah hafal</span></div><div><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
+    <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
+    <div class="sum"><div class="t-lime"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="t-lav"><b>${known}</b><span>Udah hafal</span></div><div class="t-pink"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
     <div class="seg" id="kseg"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}">⚡ Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}">Susah diucap</button></div>
     <div id="kbody"></div>`;
   $$('#kseg button').forEach(x => x.onclick = () => { kataSeg = x.dataset.v; sfx('pop'); viewKata(); });
