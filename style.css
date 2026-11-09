@@ -296,3 +296,4 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rtip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 56px);transform:translateX(-50%);z-index:3;display:flex;gap:10px;align-items:center;width:min(92vw,380px);background:var(--ink);color:var(--cream);border-radius:var(--radius-lg);padding:12px 14px;font-size:14px;line-height:22px}
 .rtip button{min-height:32px;width:32px;padding:0;color:inherit;opacity:.75}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
+img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}

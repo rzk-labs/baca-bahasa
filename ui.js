@@ -25,29 +25,11 @@ const ICONS = {
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 
-/* ---------- maskot Kepo: doodle garis (gaya Klubi/teentalk), badan lavender ---------- */
+/* ---------- maskot Kepo: gelembung chat lime (ilustrasi ChatGPT, konsep A) ---------- */
+const MOODS = ['curious', 'happy', 'cheer', 'wow', 'sad', 'icon'];
 function mascot(mood = 'curious', cls = '') {
-  const K = '#2A1215', S = `stroke="${K}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
-  const happy = mood === 'happy' || mood === 'cheer';
-  const eyes = happy
-    ? `<path d="M38 58q7-8 14 0M68 56q7-8 14 0" ${S}/>`
-    : mood === 'wow' ? `<circle cx="45" cy="56" r="6" fill="${K}"/><circle cx="75" cy="54" r="6" fill="${K}"/>`
-    : mood === 'sad' ? `<circle cx="45" cy="60" r="4.5" fill="${K}"/><circle cx="75" cy="58" r="4.5" fill="${K}"/><path d="M36 48l14 4M84 46l-14 4" ${S}/>`
-    : `<ellipse cx="47" cy="57" rx="4.5" ry="6" fill="${K}"/><ellipse cx="77" cy="55" rx="4.5" ry="6" fill="${K}"/><path d="M68 42q9-6 17 0" ${S}/>`;
-  const mouth = {
-    curious: `<path d="M54 74q6 4 12 0" ${S}/>`,
-    happy: `<path d="M48 70q12 14 24 0" ${S}/>`,
-    cheer: `<path d="M46 69q14 18 28 0z" fill="${K}"/><path d="M53 78q7 4 14 0" stroke="#FF7A59" stroke-width="5" stroke-linecap="round" fill="none"/>`,
-    wow: `<ellipse cx="60" cy="75" rx="6" ry="8" ${S}/>`,
-    sad: `<path d="M50 78q10-8 20 0" ${S}/>`
-  }[mood];
-  const arm = mood === 'cheer' ? `<path d="M100 66q12-10 10-26M104 40l6-2M106 44l7 1" ${S}/>` : mood === 'happy' ? `<path d="M100 72q10 2 14-8" ${S}/>` : `<path d="M100 74q8 4 10 12" ${S}/>`;
-  return `<svg class="mascot ${cls}" viewBox="0 0 124 124" aria-hidden="true">
-    <path d="M58 22q-2-12 8-16" ${S}/><path d="M66 4l2 5M72 7l-4 3M62 7l4 3" stroke="#FF7A59" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M60 22c28 0 44 20 44 46 0 26-18 44-44 44S14 94 14 68c0-28 18-46 46-46z" fill="#C9BFFF" ${S.replace('fill="none"', '')}/>
-    <path d="M22 78q2 18 18 26" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".6"/>
-    ${eyes}<ellipse cx="34" cy="68" rx="6" ry="3.5" fill="#FF8FC4"/><ellipse cx="88" cy="66" rx="6" ry="3.5" fill="#FF8FC4"/>
-    ${mouth}${arm}<path d="M20 74q-10 2-10 12" ${S}/></svg>`;
+  if (!MOODS.includes(mood)) mood = 'curious';
+  return `<img class="mascot ${cls}" src="img/kepo-${mood}.webp" alt="" draggable="false" decoding="async">`;
 }
 
 /* ---------- utilitas ---------- */
@@ -173,7 +155,7 @@ function secParas(sec, lang) {
 }
 const TABS = { rak: ['home', 'Home'], baca: ['book', 'Baca'], bicara: ['mic', 'Ngomong'], kata: ['cards', 'Kata'] };
 $('#tabs').innerHTML = Object.entries(TABS).map(([k, [i, l]]) => `<button data-t="${k}">${ico(i)}<span>${l}</span></button>`).join('');
-const BRAND_TTL = `${mascot('curious')}<span>Kepo</span>`;
+const BRAND_TTL = `${mascot('icon')}<span>Kepo</span>`;
 function setTab(t) {
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading');
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });

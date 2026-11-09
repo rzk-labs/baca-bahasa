@@ -10,7 +10,7 @@
 | Tagline | **Kepoin bahasa baru.** |
 | Janji | Belajar bahasa asing lewat cerita yang kamu suka — ketuk kata, ngerti, ngomong, dapet XP. |
 | Kepribadian | Penasaran · seru · rapi · suportif · percaya diri |
-| Maskot | **Kepo**: blob lavender bergaris tinta (doodle ala Klubi/teentalk), antena coral, alis naik penasaran. Mood: `curious`, `happy`, `cheer` (melambai), `wow`, `sad`. File: `logo.svg`, `icon.svg` (latar lime). |
+| Maskot | **Kepo** (v7): gelembung chat lime bergaris cokelat tua, tangan & kaki putih — konsep A, ilustrasi dibuat ChatGPT (chat "Buat character sheet maskot Kepo"). Pose: `curious` (mikir, tanda tanya), `happy` (melambai), `cheer` (merayakan), `wow` (kaget), `sad` (memeluk hati, menyemangati), `icon` (tanpa tangan/kaki). File: `img/kepo-*.webp` (transparan); ikon app = pose icon di latar lavender. |
 
 ## Warna (terang krem = bawaan)
 | Peran | Hex |
