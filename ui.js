@@ -612,7 +612,7 @@ function deck(kb) {
   const v = cards[0], next = cards[1]; flipped = false;
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">BELUM</span>
-        <div class="eyebrow" style="color:rgba(255,255,255,.75)">${langName(v.lang)} · ${cards.length} kartu</div>
+        <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu</div>
         <div class="fw" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${esc(v.t)}</div><div class="fs" style="margin-top:8px">${esc(v.s || '')}</div></div>
         <div class="tap" id="tapl">Tap buat liat artinya 👆</div></div></div>
     <div class="deck-act"><button class="no" id="fNo">✕ Belum</button><button class="icon tint" id="fSp" aria-label="Dengerin">${ico('vol')}</button><button class="yes" id="fYes">✓ Hafal</button></div>
