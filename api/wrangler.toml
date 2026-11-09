@@ -1,0 +1,8 @@
+name = "kepo-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kepo-db"
+database_id = "00000000-0000-0000-0000-000000000000"

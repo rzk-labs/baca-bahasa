@@ -297,3 +297,21 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rtip button{min-height:32px;width:32px;padding:0;color:inherit;opacity:.75}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
 img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
+/* ---------- akun, leaderboard, bagikan ---------- */
+.avatar{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;min-height:0;padding:0;border-radius:50%;background:var(--lav);color:var(--ink);font:800 16px/1 var(--font-display);flex:none}
+.avatar.big{width:56px;height:56px;font-size:26px}
+.pill.login{background:var(--ink);color:var(--cream);border:0;cursor:pointer;min-height:34px}
+[data-theme=dark] .pill.login{background:var(--lime);color:var(--ink)}
+@media (max-width:380px){#pStreak{display:none}}
+.acct-card{display:flex;align-items:center;gap:14px;background:var(--color-surface);border-radius:var(--radius-lg);padding:14px;margin-top:6px}
+.acct-card b{font:800 22px/1.1 var(--font-display);font-stretch:80%}
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:14px}
+.lb-row .rk{width:34px;text-align:center;font-weight:800}
+.lb-row b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.lb-row .xp{font:800 15px var(--font-ui);font-variant-numeric:tabular-nums}
+.lb-row.me{background:var(--lime);color:var(--ink)}
+.lb-gap{text-align:center;color:var(--color-text-muted);letter-spacing:4px}
+.lb-cta{display:flex;align-items:center;gap:12px}.lb-cta>div{flex:1}.lb-cta b{display:block;font:800 21px/1.15 var(--font-display);font-stretch:80%;margin-top:2px}
+.lb-cta .lime{min-height:46px}
+.bk .shr{position:absolute;top:46px;right:6px;width:34px;height:34px;min-height:0;padding:0;background:rgba(255,255,255,.75);color:var(--ink);font-size:18px;font-weight:800}
+.share-link{display:flex;gap:8px;margin-top:14px}.share-link input{margin:0;flex:1;font-size:14px}.share-link button{min-height:52px}
