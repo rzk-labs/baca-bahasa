@@ -1,10 +1,11 @@
-# Baca Bahasa
+# Kepo — kepoin bahasa baru
 
-PWA untuk belajar bahasa asing lewat membaca buku sendiri. Live: https://rzk-labs.github.io/baca-bahasa/
+PWA belajar bahasa asing lewat cerita sendiri, untuk anak muda. Live: https://rzk-labs.github.io/baca-bahasa/
 
-- **Rak**: upload `.txt` / `.epub` / `.pdf` (teks, bukan scan) atau tempel teks. Disimpan lokal (IndexedDB).
-- **Baca**: teks tanpa arti. Klik kata → arti kata (+ kamus), tombol *Arti kalimat* → terjemahan kalimat.
-- **Bicara**: baca kalimat ke mikrofon, tiap kata diberi skor %, kata terjelek masuk **remedial** (latih per kata sampai ≥85%).
-- **Kata**: kosakata tersimpan + daftar kata sulit diucapkan.
+- **Home**: maskot Kepo, level & XP, target harian, streak, lencana, koleksi cerita. Upload `.txt` / `.epub` / `.pdf` atau tempel teks (disimpan lokal, IndexedDB).
+- **Baca**: e-reader layar penuh. Ketuk kata → arti kata → "Masih bingung?" → arti kalimat.
+- **Ngomong**: tantangan baca kalimat, skor % per kata, Boss Level (latih kata terjelek sampai ≥85%).
+- **Kata**: kartu hafalan swipe, daftar tersimpan, kata susah diucap.
 
-Terjemahan: Google Translate endpoint publik (cadangan MyMemory). Suara: Web Speech API (Chrome / Safari iOS 14.5+). `?test` = mode uji (`window.__fake` untuk hasil suara palsu).
+Brand & UI: lihat `BRAND.md`. Logika teks/suara/skor di `app.js`, tampilan di `ui.js`.
+Terjemahan: Google Translate endpoint publik (cadangan MyMemory). Suara: Web Speech API. `?test` = mode uji (`window.__fake` = hasil suara palsu).
