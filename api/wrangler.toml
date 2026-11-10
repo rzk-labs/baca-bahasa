@@ -5,4 +5,4 @@ compatibility_date = "2026-11-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "kepo-db"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "efa6834d-e976-4465-9282-f25d8bdd7566"

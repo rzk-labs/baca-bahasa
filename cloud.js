@@ -1,6 +1,6 @@
 'use strict';
 /* Kepo cloud: akun (login/daftar), sinkron progres, leaderboard mingguan, bagikan cerita. Server: api/ (Cloudflare Worker + D1). */
-const API_PROD = ''; // diisi URL Worker setelah deploy, mis. https://kepo-api.xxx.workers.dev
+const API_PROD = 'https://kepo-api.rizkachoirunnisa0403.workers.dev'; // Cloudflare Worker (api/)
 const API = (() => {
   const q = new URLSearchParams(location.search).get('api');
   if (q) { localStorage.setItem('kepo.api', q); return q; }
