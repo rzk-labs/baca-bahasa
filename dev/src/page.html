@@ -261,7 +261,7 @@ async function markas(again){
   evs.sort((a,b)=>new Date(b.t)-new Date(a.t));
   V.innerHTML=`
   <div class="row" style="margin-bottom:16px"><div><div class="eyebrow mut">${new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'})}</div><h1>Markas tim</h1></div><span class="sp"></span>
-    <button class="btn ghost" id="pmnow">${IC.play} Jalankan PM sekarang</button></div>
+    <button class="btn ghost" id="pmnow" ${pmRun?'disabled':''}>${pmRun?'<i class="dot"></i> PM sedang bekerja…':IC.play+' Jalankan PM sekarang'}</button></div>
   <div class="bento">
     <div class="tile c t-lime span2"><div class="row" style="align-items:center;gap:16px"><div class="ring" style="--p:${p}"><b>${p}%</b></div><div style="min-width:0"><div class="eyebrow">Fase sekarang</div><h2 style="margin:4px 0 6px">${esc(R?.fase_sekarang||'—')}</h2><div class="sm">${esc(R?.prinsip||'')}</div></div></div></div>
     <div class="tile c ${siap.length?'t-sun':'t-mint'}" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${siap.length}</div><div class="sm">${siap.length?'hasil siap dicek →':'Semua beres ✨'}</div></div>
@@ -272,7 +272,7 @@ async function markas(again){
   <div class="agents">${['pm','riset','desain','developer','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
   <div class="tile">${evs.length?`<div class="feed">${evs.map(e=>`<div class="ev"><div class="ic ${e.c}">${e.ic}</div><div style="min-width:0;flex:1"><div>${e.txt}</div><div class="mut sm">${lalu(e.t)}${e.url?` · <a href="${e.url}" target="_blank">log</a>`:''}</div></div></div>`).join('')}</div>`:'<div class="empty">Belum ada aktivitas.</div>'}</div>`;
-  $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;try{await call('/pm',{paksa:true});b.innerHTML='✓ PM dipanggil';setTimeout(async()=>{await load();markas(true)},6000)}catch(x){b.disabled=false;b.textContent=x.message}};
+  $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;try{await call('/pm',{paksa:true});b.innerHTML='<i class="dot"></i> PM sedang bekerja…';setTimeout(async()=>{await load();markas(true)},8000)}catch(x){b.disabled=false;b.textContent=x.message}};
   auto(markas);
 }
 

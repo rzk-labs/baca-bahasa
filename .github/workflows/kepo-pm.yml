@@ -58,6 +58,7 @@ jobs:
             Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
             {"peran":"developer|riset|desain|pm","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
+            Jika TIDAK ada tugas baru yang layak (mis. bahan sudah lengkap dan menunggu founder), tulis {"lewati":true,"alasan":"<1 kalimat>"} ke file yang sama.
           claude_args: >-
             --max-turns 30
             --allowedTools "Read,Glob,Grep,Write"
@@ -66,7 +67,10 @@ jobs:
         if: steps.cek.outputs.jalan == '1'
         run: |
           F=".kepo-tmp/tugas.json"
-          test -s "$F" || { echo "PM tidak menulis tugas.json"; exit 1; }
+          if [ ! -s "$F" ] || [ "$(jq -r '.lewati // false' "$F" 2>/dev/null)" = "true" ]; then
+            A=$(jq -r '.alasan // "tidak ada tugas baru yang layak"' "$F" 2>/dev/null || echo "tidak ada tugas baru")
+            echo "::notice title=PM istirahat::$A"; echo "PM istirahat: $A" >> "$GITHUB_STEP_SUMMARY"; exit 0
+          fi
           PERAN=$(jq -r .peran "$F"); case "$PERAN" in developer|riset|desain|pm) ;; *) PERAN=developer ;; esac
           gh label create "peran:$PERAN" --color C9B8FF 2>/dev/null || true
           gh label create otomatis --color 9CC8FF 2>/dev/null || true
