@@ -1,5 +1,23 @@
 [
   {
+    "n": 266,
+    "judul": "Sheet arti kalimat: tampilkan cara baca seluruh kalimat (JP/KR/ZH)",
+    "poin": "Arti kalimat sekarang menampilkan cara baca seluruh kalimat Jepang/Korea/China.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 264,
+    "judul": "E-reader: tanda 'Offline' halus + sheet arti jelas saat sinyal putus",
+    "poin": "Reader sekarang kasih tanda 'Offline' kecil saat sinyal putus.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 257,
+    "judul": "Pengaturan: pilihan suara tak hilang diam-diam + arti offline",
+    "poin": "Pilihan suara baca tak hilang lagi; muncul pesan saat suara belum siap.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 255,
     "judul": "E-reader: cara baca kecil di atas kata yang pernah diketuk (opsional)",
     "poin": "Baca Jepang/Korea/Mandarin kini bisa tampil cara baca kecil di atas kata.",
@@ -159,24 +177,6 @@
     "n": 104,
     "judul": "Ekspor CSV Anki: pilih per bahasa atau per buku",
     "poin": "Ekspor CSV sekarang bisa pilih Semua, per bahasa, atau per buku.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 98,
-    "judul": "Kartu hafalan: kata 'Hafal' muncul lagi untuk dicek ulang",
-    "poin": "Kata yang ditandai Hafal sekarang muncul lagi: 3, 7, lalu 21 hari kemudian.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 90,
-    "judul": "E-reader: sisa waktu baca akurat & footer halaman tak terpotong",
-    "poin": "Sisa waktu baca sekarang lebih jujur, dan geser halaman lebih mulus.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 89,
-    "judul": "E-reader: footer halaman tak terpotong di HP kecil & tombol dengar rapi",
-    "poin": "Teks halaman di bawah layar baca sekarang lebih pendek, tidak terpotong di HP kecil.",
     "tgl": "2026-11-11"
   }
 ]

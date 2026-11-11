@@ -197,8 +197,20 @@ const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(
 function voiceRow(lang) {
   const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
   const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
-  if (!vs.length) return '';
-  return `<div class="set-row"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
+  if (!vs.length) {
+    const loaded = speechSynthesis.getVoices().length > 0;
+    if (!loaded && !voiceRow.wait) {
+      voiceRow.wait = true;
+      speechSynthesis.addEventListener('voiceschanged', () => {
+        voiceRow.wait = false;
+        const el = $('#vrow'), b = book();
+        if (el && b) el.outerHTML = voiceRow(b.lang);
+        const s = $('#vsel'); if (s) s.onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
+      }, { once: true });
+    }
+    return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><div class="mut sm">${loaded ? 'Perangkat ini belum punya suara untuk bahasa ini' : 'Suara belum termuat, coba buka lagi sebentar'}</div></div>`;
+  }
+  return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
 }
 // Ukuran huruf efektif: pilihan pengguna menang; kalau belum pernah diubah, pakai default per bahasa.
 const FS0 = { ja: 21, 'zh-CN': 21, ko: 20 };
@@ -436,7 +448,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}</div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         <button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
@@ -669,7 +681,7 @@ async function onWord(el) {
     setWBaca(bacaOf(word, v.baca));
     $('#wbase').textContent = v.base ? 'Bentuk dasar: ' + v.base : '';
     $('#wpos').textContent = v.pos ? (POS[v.pos] || v.pos) : '';
-    $('#wdict').innerHTML = '<div class="mut sm">Dari kata tersimpan (offline)</div>';
+    $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
   const load = () => { const my = ++tok; const sv = savedOf(); if (sv) showSaved(sv); return translate(word, b.lang, db.my).then(r => {
@@ -684,7 +696,7 @@ async function onWord(el) {
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
-  }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Sinyal lemah, arti belum kebuka. Coba lagi ya.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
@@ -716,12 +728,23 @@ function showSentence(word, sent, sIdx, sEl) {
   openSheet(`
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
+    <div id="sbaca"></div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
-  translate(sent, b.lang, db.my).then(r => { if ($('#str')) { $('#str').textContent = r.text; keepVisible('.s.hl'); } }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
+  translate(sent, b.lang, db.my).then(r => {
+    if (!$('#str')) return;
+    $('#str').textContent = r.text;
+    const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
+    if (bc && sb) {
+      const v = `<div class="sbaca" lang="${esc(b.lang)}">${esc(bc)}</div>`;
+      sb.innerHTML = db.showBaca ? v : `<button class="ghost sbaca-peek" id="speek" type="button">Lihat cara baca</button>` + v.replace('class="sbaca"', 'class="sbaca hide" id="speekv"');
+      if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
+    }
+    keepVisible('.s.hl');
+  }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
@@ -984,5 +1007,8 @@ applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
 if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
+const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
+window.addEventListener('offline', syncOff);
+window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
