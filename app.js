@@ -257,7 +257,8 @@ function speak(text, lang, rate = 0.9) {
   if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate;
-  const v = speechSynthesis.getVoices().find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
+  const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
+  const v = (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
   if (v) u.voice = v;
   speechSynthesis.speak(u);
 }
