@@ -1,5 +1,11 @@
 [
   {
+    "n": 142,
+    "judul": "Kartu arti kata: kata tersimpan tetap muncul artinya saat offline",
+    "poin": "Kata yang sudah disimpan sekarang langsung muncul artinya, bahkan tanpa sinyal.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 138,
     "judul": "Kata Tersimpan: tombol ✕ hapus dijauhkan dari tombol suara",
     "poin": "Tombol hapus kata sudah jauh dari tombol suara, jadi susah kepencet.",
