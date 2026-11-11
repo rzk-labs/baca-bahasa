@@ -326,7 +326,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b><span>Bab ${b.pos + 1} dari ${secs.length} · ⚡ ${xpToday()} XP hari ini</span></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}</div>
         <button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${db.fs}px">${html}</div></div>
@@ -339,6 +339,16 @@ async function viewBaca() {
   $('#rHome').onclick = () => setTab('rak');
   $('#rSpeak').onclick = () => setTab('bicara');
   $('#set').onclick = openSettings;
+  if ($('#rChap')) $('#rChap').onclick = () => {
+    const items = secs.map((s, i) => {
+      const h = secParas(s, b.lang).find(P => P.h);
+      const t = h ? h.sents.map(x => x.s).join('').trim() : '';
+      return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bab ' + (i + 1))}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
+    }).join('');
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab 📖</span>${closeBtn}</div><div class="chlist">${items}</div>`);
+    $$('#sheet .chi').forEach(x => x.onclick = () => { const i = +x.dataset.ch; closeSheet(); if (i !== b.pos) { b.pos = i; b.si = 0; RD.quiet = true; save(); viewBaca(); } });
+    const cur = $('#sheet .chi.on'); if (cur) cur.scrollIntoView({ block: 'center' });
+  };
   $('#pv').onclick = () => turn(-1); $('#nx').onclick = () => turn(1);
   const vp = $('#vp'); let tx = null, moved = false;
   let lpT, lpT2, lpEl = null, lpDone = false;
