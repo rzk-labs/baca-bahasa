@@ -321,10 +321,10 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
-  const startSample = l => {
+  const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
-    addBook(S.title, cleanParas(S.text), l);
+    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); }
   };
   $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   $('#sample').onclick = () => {
@@ -340,7 +340,7 @@ function viewRak() {
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
       <label class="eyebrow" style="display:block;margin-top:12px">Teks<textarea id="px" placeholder="Tempel teks bahasa asing di sini…"></textarea></label>
       <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">Masukin ✨</button></div>`);
-    $('#ps').onclick = () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); };
+    $('#ps').onclick = async () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); } };
   };
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
@@ -355,7 +355,7 @@ $('#file').onchange = async e => {
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
   try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
-  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : /internet|pustaka/.test(err.message) || (!navigator.onLine && /\.(epub|pdf)$/i.test(f.name)) ? 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
+  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? (/\.pdf$/i.test(f.name) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : 'File ini kosong, nggak ada teks yang kebaca.') : /internet|pustaka/.test(err.message) || (!navigator.onLine && /\.(epub|pdf)$/i.test(f.name)) ? 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
 };
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
@@ -535,8 +535,10 @@ function showPage(p, anim = true) {
   $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
-  $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
-  if ($('#nx').disabled && !RD.quiet && !b.doneAt) setTimeout(() => { if (document.body.classList.contains('reading') && RD.page === RD.n - 1) finishBook(b); }, 600);
+  const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
+  nx.disabled = last && !!b.doneAt;
+  if (last && !b.doneAt) { nx.textContent = 'Selesai 🎉'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
 }
 function turn(d) {
   const b = book(); closeSheet();
@@ -646,7 +648,7 @@ async function onWord(el) {
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
-  }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Sinyal lemah, arti belum kebuka. Coba lagi ya.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
