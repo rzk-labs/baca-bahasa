@@ -1,5 +1,17 @@
 [
   {
+    "n": 132,
+    "judul": "Kartu 'Lanjut baca' di Beranda: tampilkan halaman & sisa menit",
+    "poin": "Kartu Lanjut baca di Beranda kini menunjukkan bab dan perkiraan sisa menit.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 129,
+    "judul": "E-reader: teks rata kiri di HP supaya tak ada celah lebar antar kata",
+    "poin": "Teks bacaan di HP sekarang rata kiri, tak ada celah lebar antar kata.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 122,
     "judul": "Kartu arti kata: tampilkan 'muncul N× di buku ini' untuk kata penting",
     "poin": "Kartu arti kata sekarang bilang berapa kali kata itu muncul di buku.",

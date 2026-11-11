@@ -5,6 +5,7 @@ db.xp = db.xp || 0; db.xpDay = db.xpDay || {}; db.badges = db.badges || []; if (
 db.stat = Object.assign({ look: 0, save: 0, page: 0, speak: 0, perfect: 0, rem: 0, flash: 0 }, db.stat || {});
 if (!db.v6) { db.v6 = 1; db.theme = 'light'; } db.theme = db.theme || 'light';
 const GOAL = 30;
+const FEEDBACK_KONTAK = ''; /* isi tautan WhatsApp (https://wa.me/...) atau mailto: tim kalau sudah ada; kosong = hanya bagikan/salin */
 
 /* ---------- ikon ---------- */
 const BM = '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>';
@@ -196,7 +197,9 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">🔊 Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">🔇 Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
+    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
     <button class="ghost full" id="rst">Balikin setelan awal</button>`);
+  if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = db.fs + 'px'; $('#reader').style.setProperty('--reader-lh', db.lh); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
   $('#fsm').onclick = () => setFs(db.fs - 1); $('#fsp').onclick = () => setFs(db.fs + 1);
@@ -209,6 +212,46 @@ function openSettings() {
   $('#rst').onclick = () => { db.fs = 19; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
+}
+
+/* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
+const APP_VER = 'v46';
+function openFeedback() {
+  if (document.body.classList.contains('reading')) return;
+  const kinds = [['rusak', '🐞', 'Ada yang rusak'], ['ide', '💡', 'Ide'], ['suka', '❤️', 'Suka']];
+  let kind = 'ide', stars = 0;
+  openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
+    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}"><span>${e}</span> ${l}</button>`).join('')}</div>
+    <label class="fb-l">Ceritain aja
+      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?"></textarea></label>
+    <div class="mut sm fb-cnt"><span id="fbC">0</span>/500</div>
+    <div class="eyebrow">Nilai app (boleh dilewati)</div>
+    <div class="fb-stars" id="fbS">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" aria-label="${n} bintang">★</button>`).join('')}</div>
+    <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP (browser, ukuran layar, versi app)</span></label>
+    <div class="mut sm">Yang kamu tulis dibaca tim Keepo.</div>
+    <button class="pri full" id="fbSend" style="margin-top:12px">Kirim</button>`);
+  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
+  $$('#fbS button').forEach(x => x.onclick = () => { const n = +x.dataset.n; stars = stars === n ? 0 : n; $$('#fbS button').forEach(y => y.classList.toggle('on', +y.dataset.n <= stars)); });
+  $('#fbT').oninput = e => { $('#fbC').textContent = e.target.value.length; };
+  $('#fbSend').onclick = async () => {
+    const txt = $('#fbT').value.trim().slice(0, 500);
+    if (!txt) { toast('Tulis dulu ya, sedikit aja cukup.'); $('#fbT').focus(); return; }
+    const kl = kinds.find(k => k[0] === kind);
+    let msg = `[Keepo] ${kl[1]} ${kl[2]}\n${txt}`;
+    if (stars) msg += `\nBintang: ${stars}/5`;
+    if ($('#fbI').checked) msg += `\nInfo HP: ${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`;
+    try { await putFeedback({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg }); } catch (e) { }
+    const copy = async () => { try { await navigator.clipboard.writeText(msg); toast('Tersalin! Tempel ke pesan buat tim Keepo.', 4500); } catch (e) { toast('Gagal menyalin. Salinan tersimpan di HP-mu.', 4500); } };
+    closeSheet();
+    if (/^(https?:|mailto:)/.test(FEEDBACK_KONTAK)) {
+      await copy();
+      const m = FEEDBACK_KONTAK.startsWith('mailto:');
+      const link = m ? FEEDBACK_KONTAK + '?subject=' + encodeURIComponent('Masukan Keepo') + '&body=' + encodeURIComponent(msg) : FEEDBACK_KONTAK + (FEEDBACK_KONTAK.includes('wa.me') ? '?text=' + encodeURIComponent(msg) : '');
+      window.open(link, '_blank', 'noopener'); return;
+    }
+    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya! 💚'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
+    await copy();
+  };
 }
 
 /* ---------- HOME ---------- */
@@ -260,6 +303,7 @@ function viewRak() {
     animRing($('#view'));
     heroMins(cur);
   }
+  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
