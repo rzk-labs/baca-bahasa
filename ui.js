@@ -581,7 +581,16 @@ async function onWord(el) {
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
-  const load = () => { const my = ++tok; return translate(word, b.lang, db.my).then(r => {
+  const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
+  const showSaved = v => {
+    $('#wtr').textContent = v.t;
+    $('#wbaca').textContent = bacaOf(word, v.baca);
+    $('#wbase').textContent = v.base ? 'Bentuk dasar: ' + v.base : '';
+    $('#wpos').textContent = v.pos ? (POS[v.pos] || v.pos) : '';
+    $('#wdict').innerHTML = '<div class="mut sm">Dari kata tersimpan (offline)</div>';
+    keepVisible('.w.sel');
+  };
+  const load = () => { const my = ++tok; const sv = savedOf(); if (sv) showSaved(sv); return translate(word, b.lang, db.my).then(r => {
     if (my !== tok || !$('#wtr')) return;
     tr = r;
     $('#wtr').textContent = r.text;
@@ -593,7 +602,7 @@ async function onWord(el) {
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
-  }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
