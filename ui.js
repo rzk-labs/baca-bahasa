@@ -95,20 +95,30 @@ const BADGES = [
   ['lv5', '👑', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
 ];
 let badgeQ = Promise.resolve();
+/* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
+const lateQ = []; let lateT = null;
+const isReading = () => document.body.classList.contains('reading');
+function notifyLater(fn) { if (isReading()) lateQ.push(fn); else fn(); }
+function flushLate(force) {
+  if (lateT || !lateQ.length || (isReading() && force !== true)) return;
+  const step = () => { lateT = null; if (!lateQ.length || (isReading() && force !== true)) return; lateQ.shift()(); if (lateQ.length) lateT = setTimeout(step, 2000); };
+  step();
+}
+new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 function award(n, stat) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   const before = level();
   if (n) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
-    const f = document.createElement('div'); f.className = 'xpfly'; f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), 1200);
-    if (had < GOAL && had + n >= GOAL) setTimeout(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }, 600);
+    const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
+    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
-  if (level() > before) setTimeout(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl'), 700);
-  newB.forEach(([, em, name], i) => setTimeout(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }, 1300 + i * 1800));
+  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl')), 700);
+  newB.forEach(([, em, name], i) => setTimeout(() => notifyLater(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
@@ -299,6 +309,7 @@ const SESS = { id: null, t: 0 };
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
+  setTimeout(() => flushLate(true), 2500);
   const ws = db.vocab.filter(v => v.book === b.title && v.lang === b.lang && (v.at || 0) >= SESS.t);
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   sfx('win'); confetti(60);
