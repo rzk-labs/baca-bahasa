@@ -283,6 +283,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols h2.ch:first-child{margin-top:1.6em}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
+.cols .w.saved{text-decoration:underline dotted var(--blue);text-decoration-thickness:2px;text-underline-offset:4px}
 .cols .w.sel{background:var(--lime);color:var(--ink);border-radius:6px}
 @media (hover:hover){.cols .w:hover{background:var(--color-hl-word)}}
 .rfoot{flex:none;height:44px;display:flex;align-items:center;gap:8px;padding:0 8px;max-width:720px;width:100%;align-self:center}

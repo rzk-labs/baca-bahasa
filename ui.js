@@ -288,7 +288,8 @@ async function viewBaca() {
   const sp = secParas(secs[b.pos], b.lang);
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
-  const wordsHtml = s => tokens(s, b.lang).map(t => t.w ? `<span class="w">${esc(t.t)}</span>` : esc(t.t)).join('');
+  const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
+  const wordsHtml = s => tokens(s, b.lang).map(t => t.w ? `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}">${esc(t.t)}</span>` : esc(t.t)).join('');
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch">${inner}</h2>` : `<p>${inner}</p>`;
@@ -399,6 +400,7 @@ async function onWord(el) {
     if (isSaved()) return;
     const r = tr || await translate(word, b.lang, db.my).catch(() => ({ text: '' }));
     db.vocab.unshift({ w: word, t: r.text, pos: r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('saved'); });
     $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast('Masuk ke kartu kata kamu ⭐');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
