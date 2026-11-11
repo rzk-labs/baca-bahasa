@@ -1,5 +1,11 @@
 [
   {
+    "n": 255,
+    "judul": "E-reader: cara baca kecil di atas kata yang pernah diketuk (opsional)",
+    "poin": "Baca Jepang/Korea/Mandarin kini bisa tampil cara baca kecil di atas kata.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 248,
     "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
     "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
@@ -172,11 +178,5 @@
     "judul": "E-reader: footer halaman tak terpotong di HP kecil & tombol dengar rapi",
     "poin": "Teks halaman di bawah layar baca sekarang lebih pendek, tidak terpotong di HP kecil.",
     "tgl": "2026-11-11"
-  },
-  {
-    "judul": "Ekspor CSV Anki: aman, tanpa kartu kosong, tombol di atas",
-    "n": 80,
-    "tgl": "2026-11-11",
-    "poin": "Ekspor CSV sekarang melewati kata yang belum ada artinya, jadi tak ada kartu kosong."
   }
 ]

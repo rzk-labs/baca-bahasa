@@ -306,6 +306,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols{-webkit-touch-callout:none}
 .cols .s.press{background:var(--lav);color:var(--ink);border-radius:4px;transition:background var(--dur-color)}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
+.cols .w ruby{ruby-position:over}
+.cols .w rt{font-size:.5em;line-height:1;font-weight:500;letter-spacing:0;color:var(--color-text-muted);-webkit-user-select:none;user-select:none}
+.cols .w rt::before{content:attr(data-r)}
+.cols .w.sel rt{color:var(--ink)}
 .cols .w.saved{text-decoration:underline dotted var(--color-saved-line);text-decoration-thickness:2px;text-underline-offset:4px}
 .cols .w.sel{background:var(--lime);color:var(--ink);border-radius:6px;box-shadow:inset 0 -3px 0 var(--color-sel-edge);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 @media (hover:hover){.cols .w:hover{background:var(--color-hl-word)}}
