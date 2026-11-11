@@ -148,22 +148,25 @@ function trPersist() {
   try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
 }
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
+const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
+/* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */
+function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;
-  if (trCache.has(k)) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
+  if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
   let out;
   try {
-    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&q=${encodeURIComponent(q)}`);
+    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`);
     if (!r.ok) throw new Error('gtx ' + r.status);
     const j = await r.json();
-    out = { text: (j[0] || []).map(x => x[0]).join(''), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
+    out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
   } catch (e) {
     try {
       const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
-      out = { text: t, dict: [] };
+      out = { text: t, dict: [], baca: '' };
     } catch (e2) { throw new Error('Terjemahan gagal (offline atau kuota habis)'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
@@ -178,7 +181,7 @@ async function refillVocab() {
   refilling = true; let n = 0;
   try {
     for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
-      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
+      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
     }
     if (n) save();
   } finally { refilling = false; }
