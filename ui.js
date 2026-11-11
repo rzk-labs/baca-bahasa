@@ -685,12 +685,22 @@ function viewKata() {
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
-        kl.insertAdjacentHTML('beforeend', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
-        $('#kCsv').onclick = () => {
-          if (!db.vocab.length) return toast('Belum ada kata buat diekspor 😅');
-          const a = document.createElement('a'), u = URL.createObjectURL(new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' }));
-          a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-          toast('kepo-kata.csv udah diunduh ✨');
+        kl.insertAdjacentHTML('afterbegin', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
+        $('#kCsv').onclick = async () => {
+          const ready = db.vocab.filter(v => !v.noTr && (v.t || '').trim()).length;
+          if (!ready) return toast('Belum ada kata yang ada artinya 😅');
+          const blob = new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' });
+          try {
+            const a = document.createElement('a'), u = URL.createObjectURL(blob);
+            a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+            toast(`kepo-kata.csv udah diunduh (${ready} kata) ✨`);
+          } catch (e) {
+            try {
+              const f = new File([blob], 'kepo-kata.csv', { type: 'text/csv' });
+              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'kepo-kata.csv' }); toast('Siap dibagikan ✨'); }
+              else toast('Perangkat ini belum bisa unduh CSV 😢');
+            } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
+          }
         };
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
