@@ -284,7 +284,7 @@ function viewRak() {
     <div class="mut sm" style="margin:-4px 0 8px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     <div class="hello-sub">${mascot('curious', 'bob')}<div class="mut">${line}</div></div>
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
       <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
@@ -301,6 +301,7 @@ function viewRak() {
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
     animRing($('#view'));
+    heroMins(cur);
   }
   { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
@@ -468,6 +469,25 @@ const unitsOf = (t, lang) => {
   t = t.replace(/\u0001/g, '');
   return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
 };
+/* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
+function heroPos(b, mins) {
+  const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
+  return esc(where + (mins ? ` · ${mins} lagi` : ''));
+}
+async function heroMins(b) {
+  try {
+    const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
+    if (!secs.length) return;
+    const per = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0));
+    const pos = Math.max(0, Math.min(b.pos || 0, secs.length - 1));
+    const frac = secs.length > 1 ? Math.max(0, Math.min(1, pctOf(b) / 100 * secs.length - pos)) : pctOf(b) / 100;
+    let m = per[pos] * (1 - frac);
+    for (let i = pos + 1; i < secs.length; i++) m += per[i];
+    const n = Math.ceil(m - 1e-9), el = $('#heroPos');
+    if (!el || db.cur !== b.id) return;
+    el.innerHTML = heroPos(b, n < 1 ? '≥1 mnt' : `±${n} mnt`);
+  } catch (e) {}
+}
 function minsLeft(b) {
   const secs = cache.id === b.id && cache.pages;
   if (!secs || !secs[b.pos] || !(RD.n > 0)) return '';
