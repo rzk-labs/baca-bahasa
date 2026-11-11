@@ -1,5 +1,11 @@
 [
   {
+    "n": 308,
+    "judul": "E-reader: pintasan 'Cara baca' di bar baca untuk JP/KR/ZH (kecil)",
+    "poin": "Buku Jepang/Korea/Mandarin kini punya tombol kecil \"Cara baca\" di bar atas.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 306,
     "judul": "HP sempit (320px): header tak sesak & tab bawah lega",
     "poin": "Bagian atas dan menu bawah di HP kecil kini lebih lega.",
@@ -171,12 +177,6 @@
     "n": 142,
     "judul": "Kartu arti kata: kata tersimpan tetap muncul artinya saat offline",
     "poin": "Kata yang sudah disimpan sekarang langsung muncul artinya, bahkan tanpa sinyal.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 138,
-    "judul": "Kata Tersimpan: tombol ✕ hapus dijauhkan dari tombol suara",
-    "poin": "Tombol hapus kata sudah jauh dari tombol suara, jadi susah kepencet.",
     "tgl": "2026-11-11"
   }
 ]
