@@ -45,6 +45,10 @@ jobs:
           mkdir -p .kepo-tmp
           gh issue list --label kepo-dev --state all --limit 30 --json number,title,state,labels \
             --jq '.[] | "#\(.number) [\(.state)] [\([.labels[].name]|join(","))] \(.title)"' > ".kepo-tmp/tugas.txt"
+          M=$(gh issue list --label masukan-pengguna --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$M" ]; then
+            gh issue view "$M" --comments --json comments --jq '[.comments[-8:][] | .body] | join("\n---\n")' > ".kepo-tmp/masukan.txt" || true
+          fi
 
       - name: PM agent merencanakan
         if: steps.cek.outputs.jalan == '1'
@@ -56,6 +60,7 @@ jobs:
             Kamu agent PM tim Keepo. Baca CLAUDE.md, docs/TIM.md, docs/roadmap.json, dokumen lain di docs/, dan daftar tugas .kepo-tmp/tugas.txt (jangan duplikat tugas yang sudah ada/selesai/ditolak).
             Pilih SATU tugas berikutnya yang paling berdampak, sesuai fase sekarang, prioritas P0 dulu, prinsip "Reader First, AI Second", dan kapasitas founder 1-4 jam/minggu.
             Aturan seimbang: lihat 3 tugas berlabel otomatis terakhir di tugas.txt; jika belum ada yang berupa upgrade aplikasi, tugas kali ini WAJIB upgrade aplikasi (peran developer, atau desain yang mengubah style.css/ui.js). Untuk upgrade app, baca kode (index.html, app.js, ui.js, style.css), cari perbaikan nyata pada P0: kenyamanan membaca & bantuan memahami kata.
+            Baca juga .kepo-tmp/masukan.txt (bila ada): masukan terbaru dari 2 tester AI & 2 pengguna AI. Masalah nyata yang berulang/berat dari mereka layak jadi tugas upgrade app; sebut nama mereka di "alasan".
             Batas antrean sekarang 5 tugas menunggu (bukan 2); jangan lewati hanya karena ada 2-4 tugas menunggu.
             Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:

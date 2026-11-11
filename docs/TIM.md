@@ -9,6 +9,8 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (20 tahap, prioritas P0-P3, mi
 | Riset | `peran:riset` | Riset pasar, kompetitor, persona, naskah wawancara, rencana uji | Dokumen `docs/riset-*.md` |
 | Desain | `peran:desain` | UX/UI, alur, microcopy, brand | Dokumen `docs/desain-*.md` dan/atau perubahan CSS/UI kecil |
 | Developer | `peran:developer` | Mengubah kode aplikasi | Perubahan kode + PR |
+| Tester AI (Tari, Bima) | otomatis | Tiap 07.00 WIB mencari bug: tampilan HP & keandalan | Komentar di issue "Masukan pengguna AI" |
+| Pengguna AI (Nadia, Raka) | otomatis | Tiap 07.00 WIB mencoba app sebagai calon pengguna | Komentar di issue "Masukan pengguna AI"; dibaca PM |
 | QA | otomatis | Memeriksa setiap PR: sintaks, risiko, kesesuaian dengan permintaan | Komentar "QA lolos" / "QA catatan" |
 
 ## Aturan

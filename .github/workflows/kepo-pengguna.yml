@@ -1,0 +1,102 @@
+name: Keepo Pengguna & Tester AI
+
+# Tiap hari 07.00 WIB (sebelum PM jam 08.00): 2 tester AI + 2 pengguna AI mencoba Keepo
+# (dengan membaca kode aplikasi live di main) lalu menulis masukan di issue "Masukan pengguna AI".
+# PM membaca masukan ini saat memilih tugas.
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  siapkan:
+    runs-on: ubuntu-latest
+    outputs:
+      issue: ${{ steps.i.outputs.n }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - id: i
+        run: |
+          gh label create masukan-pengguna --color F2A6C8 2>/dev/null || true
+          N=$(gh issue list --label masukan-pengguna --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -z "$N" ]; then
+            URL=$(gh issue create --title "Masukan pengguna AI" --label masukan-pengguna \
+              --body "Tiap hari 2 tester AI + 2 pengguna AI mencoba Keepo dan menulis masukan di sini. PM membacanya.")
+            N=${URL##*/}
+          fi
+          echo "n=$N" >> "$GITHUB_OUTPUT"
+
+  coba:
+    needs: siapkan
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nama: Tari
+            ikon: "🔍"
+            jenis: tester
+            profil: "Tester AI. Fokus: tampilan & pemakaian di HP kecil (iPhone Safari): tombol terlalu kecil, teks terpotong, tata letak rusak, alur membingungkan."
+          - nama: Bima
+            ikon: "🧪"
+            jenis: tester
+            profil: "Tester AI. Fokus: keandalan: impor .txt/.epub/.pdf, terjemahan gagal, mode offline, data/progres hilang, error JavaScript."
+          - nama: Nadia
+            ikon: "📖"
+            jenis: pengguna
+            profil: "Pengguna AI. 20 tahun, mahasiswi Bandung, bahasa Inggris A2, ingin baca novel di HP sebelum tidur, gampang bosan & terdistraksi, tidak sabar dengan langkah ribet."
+          - nama: Raka
+            ikon: "💼"
+            jenis: pengguna
+            profil: "Pengguna AI. 24 tahun, karyawan Jakarta, belajar bahasa Korea/Jepang level B1, baca artikel & web novel saat di KRL, ingin cepat paham kata tanpa pindah aplikasi."
+    steps:
+      - uses: actions/checkout@v4
+      - name: Siapkan instruksi
+        env:
+          NAMA: ${{ matrix.nama }}
+          JENIS: ${{ matrix.jenis }}
+          PROFIL: ${{ matrix.profil }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
+          gh issue view "${{ needs.siapkan.outputs.issue }}" --comments --json comments \
+            --jq '[.comments[-8:][] | .body] | join("\n---\n")' > .kepo-tmp/lalu.txt 2>/dev/null || true
+          {
+            echo "Kamu adalah $NAMA. $PROFIL"
+            echo "Aplikasi: Keepo, PWA belajar bahasa lewat membaca buku (live di https://rzk-labs.github.io/baca-bahasa/)."
+            echo "Baca CLAUDE.md lalu 'coba' aplikasinya dengan membaca kodenya (index.html, ui.js, app.js, style.css) dan bayangkan memakainya sesuai profilmu."
+            if [ "$JENIS" = tester ]; then
+              echo "Cari masalah NYATA yang bisa dibuktikan dari kode (sebut di bagian mana). Jangan mengarang."
+            else
+              echo "Ceritakan pengalamanmu sebagai pengguna: apa yang bikin senang, bingung, atau bikin berhenti pakai."
+            fi
+            echo "Masukan hari-hari sebelumnya ada di .kepo-tmp/lalu.txt: JANGAN ulangi hal yang sama; cari hal baru."
+            echo "Jangan ubah file apa pun. Tulis hanya .kepo-tmp/masukan.md: maksimal 3 poin '- ...', tiap poin maks 20 kata, bahasa sehari-hari, urut dari paling penting. Tanpa judul."
+          } > .kepo-tmp/prompt.md
+      - name: Mencoba aplikasi
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_bots: github-actions
+          prompt: Baca file .kepo-tmp/prompt.md lalu kerjakan instruksinya.
+          claude_args: >-
+            --max-turns 30
+            --allowedTools "Read,Glob,Grep,Write"
+      - name: Kirim masukan
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -s .kepo-tmp/masukan.md ] || exit 0
+          L=$([ "${{ matrix.jenis }}" = tester ] && echo "Tester AI" || echo "Pengguna AI")
+          gh issue comment "${{ needs.siapkan.outputs.issue }}" --body-file <(printf '**%s %s** (%s) · %s\n\n%s' \
+            "${{ matrix.ikon }}" "${{ matrix.nama }}" "$L" "$(TZ=Asia/Jakarta date +%d-%m-%Y)" "$(cat .kepo-tmp/masukan.md)")
