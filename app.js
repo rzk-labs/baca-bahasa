@@ -13,7 +13,12 @@ const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */
 const KEY = 'bacabahasa.v1';
-let db = Object.assign({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, tab: 'rak' }, JSON.parse(localStorage.getItem(KEY) || '{}'));
+const DEF = () => ({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, tab: 'rak' });
+let db = (() => {
+  const raw = localStorage.getItem(KEY);
+  try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
+  catch (e) { try { localStorage.setItem(KEY + '.rusak', raw); } catch (e2) { } return DEF(); }
+})();
 const save = () => localStorage.setItem(KEY, JSON.stringify(db));
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 1); r.onupgradeneeded = () => r.result.createObjectStore('t'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
@@ -136,11 +141,16 @@ async function parsePdf(buf, title) {
 }
 
 /* ---------- terjemahan ---------- */
-const trCache = new Map();
+const TR_KEY = 'bacabahasa.tr', TR_MAX = 500;
+const trCache = new Map((() => { try { const x = JSON.parse(localStorage.getItem(TR_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; } })());
+function trPersist() {
+  while (trCache.size > TR_MAX) trCache.delete(trCache.keys().next().value);
+  try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
+}
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;
-  if (trCache.has(k)) return trCache.get(k);
+  if (trCache.has(k)) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
   let out;
   try {
     const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&q=${encodeURIComponent(q)}`);
@@ -148,12 +158,31 @@ async function translate(q, sl, tl) {
     const j = await r.json();
     out = { text: (j[0] || []).map(x => x[0]).join(''), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
   } catch (e) {
-    const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
-    const j = await r.json();
-    out = { text: j.responseData?.translatedText || '?', dict: [] };
+    try {
+      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
+      const j = await r.json();
+      const t = j.responseData?.translatedText;
+      if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
+      out = { text: t, dict: [] };
+    } catch (e2) { throw new Error('Terjemahan gagal (offline atau kuota habis)'); }
   }
-  trCache.set(k, out);
+  if (!out.text) throw new Error('Terjemahan kosong');
+  trCache.delete(k); trCache.set(k, out); trPersist();
   return out;
+}
+
+/* isi ulang arti kata tersimpan yang masih kosong; true bila ada yang terisi */
+let refilling = false;
+async function refillVocab() {
+  if (refilling || navigator.onLine === false) return false;
+  refilling = true; let n = 0;
+  try {
+    for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
+      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
+    }
+    if (n) save();
+  } finally { refilling = false; }
+  return n > 0;
 }
 
 /* ---------- suara: baca (TTS) & dengar (rekognisi) ---------- */
