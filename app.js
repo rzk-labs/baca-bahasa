@@ -151,6 +151,8 @@ const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', a
 const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
 /* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
+/* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
+function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
@@ -160,6 +162,7 @@ async function translate(q, sl, tl) {
     if (!r.ok) throw new Error('gtx ' + r.status);
     const j = await r.json();
     out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
+    const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   } catch (e) {
     try {
       const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
@@ -181,7 +184,7 @@ async function refillVocab() {
   refilling = true; let n = 0;
   try {
     for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
-      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
+      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
     }
     if (n) save();
   } finally { refilling = false; }
