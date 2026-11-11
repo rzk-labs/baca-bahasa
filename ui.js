@@ -20,7 +20,7 @@ const ICONS = {
   trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
   stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
   search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
-  check: '<path d="M20 6 9 17l-5-5"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>', plus: '<path d="M12 5v14M5 12h14"/>',
   slow: '<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -373,32 +373,47 @@ async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
-  const word = el.textContent, sEl = el.closest('.s'), sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
+  const sEl = el.closest('.s'), sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
+  const ws = [...sEl.querySelectorAll('.w')], MAXW = 5;
+  let lo = ws.indexOf(el), hi = lo, word = el.textContent, tr = null, tok = 0;
+  const phraseOf = () => { const r = document.createRange(); r.setStartBefore(ws[lo]); r.setEndAfter(ws[hi]); return r.toString().replace(/\s+/g, ' ').trim(); };
   const isSaved = () => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">1/2 · Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b>${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button></div>
+    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexp" aria-label="Perluas ke kata sebelah" title="Perluas" style="margin-left:auto">${ico('plus')}</button></div>
     <span class="pos" id="wpos"></span>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
-  let tr = null;
-  const load = () => translate(word, b.lang, db.my).then(r => {
-    tr = r; if (!$('#wtr')) return;
+  const load = () => { const my = ++tok; return translate(word, b.lang, db.my).then(r => {
+    if (my !== tok || !$('#wtr')) return;
+    tr = r;
     $('#wtr').textContent = r.text;
-    const d = r.dict;
-    if (d.length) $('#wpos').textContent = POS[d[0].pos] || d[0].pos;
+    const d = r.dict || [];
+    $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 6);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
-  }).catch(() => { if ($('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } });
+  }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load();
+  const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
+  updExp();
+  $('#wexp').onclick = () => {
+    if (hi - lo + 1 >= MAXW) return;
+    if (hi < ws.length - 1) hi++; else if (lo > 0) lo--; else return;
+    vib(8); sfx('pop');
+    ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
+    word = phraseOf(); tr = null;
+    $('#wword').textContent = word; $('#wpos').textContent = '';
+    $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wsave').innerHTML = saveLbl(); updExp(); load();
+  };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
-    const r = tr || await translate(word, b.lang, db.my).catch(() => ({ text: '' }));
-    db.vocab.unshift({ w: word, t: r.text, pos: r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => ({ text: '' }));
+    db.vocab.unshift({ w, t: r.text, pos: r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast('Masuk ke kartu kata kamu ⭐');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
