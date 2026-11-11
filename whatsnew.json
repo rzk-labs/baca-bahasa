@@ -1,5 +1,11 @@
 [
   {
+    "n": 193,
+    "judul": "Saklar 'Tampilkan cara baca' di Setelan (kartu arti & kartu Hafal)",
+    "poin": "Setelan baru: cara baca (romaji/pinyin) bisa dimatikan. Awalnya tetap nyala.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 185,
     "judul": "E-reader: sisa waktu baca jujur saat bab lain belum dimuat",
     "poin": "Sisa waktu baca sekarang jujur: tampil '≥N menit' kalau ada bab belum dihitung.",
@@ -172,11 +178,5 @@
     "n": 47,
     "tgl": "2026-11-11",
     "poin": "Kata tersimpan sekarang bisa diunduh jadi file untuk aplikasi kartu hafalan."
-  },
-  {
-    "judul": "Anti-rusak: simpan penuh, cache offline aman, impor offline",
-    "n": 41,
-    "tgl": "2026-11-11",
-    "poin": "Memori HP penuh sekarang diberi tahu, bukan bikin aplikasi error."
   }
 ]
