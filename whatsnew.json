@@ -1,5 +1,11 @@
 [
   {
+    "n": 185,
+    "judul": "E-reader: sisa waktu baca jujur saat bab lain belum dimuat",
+    "poin": "Sisa waktu baca sekarang jujur: tampil '≥N menit' kalau ada bab belum dihitung.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 182,
     "judul": "Kartu arti: saran 'Sudah 3× diketuk, simpan?' + ketukan pertama terasa",
     "poin": "Kartu arti kini menyarankan \"Simpan\" setelah kata diketuk 3 kali.",
@@ -172,11 +178,5 @@
     "n": 41,
     "tgl": "2026-11-11",
     "poin": "Memori HP penuh sekarang diberi tahu, bukan bikin aplikasi error."
-  },
-  {
-    "judul": "E-reader: tahan lama di kalimat langsung munculkan arti kalimat",
-    "n": 39,
-    "tgl": "2026-11-11",
-    "poin": "Tahan satu kalimat di e-reader, arti kalimatnya langsung muncul."
   }
 ]
