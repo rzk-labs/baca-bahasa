@@ -1,5 +1,17 @@
 [
   {
+    "n": 174,
+    "judul": "Daftar Tersimpan: rapikan lencana ketukan, kata panjang, & menu urut",
+    "poin": "Lencana ketukan \"N×\" sekarang tampil rapi dengan huruf kecil.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 173,
+    "judul": "Hitungan ketukan kata ikut tersimpan di akun (sinkron)",
+    "poin": "Hitungan ketuk kata sekarang ikut tersimpan di akun.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 163,
     "judul": "Kartu Hafal: kata muncul lagi nanti (jeda 1/3/7/21 hari)",
     "poin": "Kartu Hafal sekarang muncul lagi setelah 1, 3, 7, lalu 21 hari.",
@@ -166,17 +178,5 @@
     "n": 33,
     "tgl": "2026-11-11",
     "poin": "Hapus kata sekarang bisa diurungkan lewat tombol \"Urungkan\" beberapa detik."
-  },
-  {
-    "judul": "Rapikan ukuran tombol & teks kecil di HP (style.css)",
-    "n": 31,
-    "tgl": "2026-11-11",
-    "poin": "Tombol hapus, bagikan, dan tutup tips lebih besar, tidak mudah salah pencet."
-  },
-  {
-    "judul": "Arti kata tahan offline: simpan permanen, isi ulang, data aman",
-    "n": 22,
-    "tgl": "2026-11-11",
-    "poin": "Bentrok dengan update terbaru sudah digabung, dua-duanya tetap jalan."
   }
 ]
