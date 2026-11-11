@@ -1,4 +1,4 @@
-const C='kepo-v76';
+const C='kepo-v78';
 const FILES=['./','index.html','app.js','ui.js','cloud.js','style.css','manifest.webmanifest','img/kepo-curious.webp','img/kepo-happy.webp','img/kepo-cheer.webp','img/kepo-wow.webp','img/kepo-sad.webp','img/kepo-icon.webp','icon-180.png','icon-192.png','icon-512.png'];
 // pustaka impor EPUB/PDF: di-cache saat pertama dipakai online
 const CDN='https://cdnjs.cloudflare.com/ajax/libs/';
