@@ -27,6 +27,32 @@ const save = () => {
     return false;
   }
 };
+/* ---------- hitung ketukan kata (db.taps: "bahasa|kata" → angka; data lama tanpa kolom = 0) ---------- */
+const TAP_MAX = 2000, TAP_GAP = 3000;
+let lastTap = { k: '', t: 0 };
+const tapKey = (lang, w) => lang + '|' + String(w || '').toLowerCase();
+const tapsOf = (lang, w) => {
+  const v = (db.vocab || []).find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w || '').toLowerCase());
+  return (v && +v.tap > 0 ? +v.tap : 0) + ((db.taps && +db.taps[tapKey(lang, w)]) || 0);
+};
+function countTap(lang, w) {
+  const k = tapKey(lang, w), now = Date.now();
+  if (!lang || !String(w || '').trim()) return 0;
+  const dup = lastTap.k === k && now - lastTap.t < TAP_GAP; lastTap = { k, t: now };
+  if (!db.taps || typeof db.taps !== 'object') db.taps = {};
+  const v = db.vocab.find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w).toLowerCase());
+  if (!dup) {
+    if (v) v.tap = (+v.tap || 0) + 1;
+    else {
+      db.taps[k] = (+db.taps[k] || 0) + 1;
+      const ks = Object.keys(db.taps);
+      if (ks.length > TAP_MAX) ks.filter(x => x !== k).sort((a, b) => db.taps[a] - db.taps[b]).slice(0, ks.length - TAP_MAX).forEach(x => delete db.taps[x]);
+    }
+    save();
+  }
+  return tapsOf(lang, w);
+}
+const takeTaps = (lang, w) => { const k = tapKey(lang, w), n = (db.taps && +db.taps[k]) || 0; if (db.taps) delete db.taps[k]; return n; };
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
@@ -182,7 +208,7 @@ function ctxOf(v, max) {
 function vocabCSV(list) {
   const q = s => { s = String(s == null ? '' : s).replace(/\r?\n|\r/g, ' ').trim(); if (/^[=+\-@\t]/.test(s)) s = "'" + s; return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const ok = (list || []).filter(v => v && !v.noTr && String(v.t || '').trim());
-  const rows = [['kata', 'arti', 'cara baca', 'bentuk dasar', 'kalimat contoh', 'bahasa']].concat(ok.map(v => [v.w, v.t, bacaOf(v.w, v.baca), baseOf(v.w, v.base), ctxOf(v), (LANGS[v.lang] || [v.lang])[0]]));
+  const rows = [['kata', 'arti', 'cara baca', 'bentuk dasar', 'kalimat contoh', 'bahasa', 'diketuk']].concat(ok.map(v => [v.w, v.t, bacaOf(v.w, v.baca), baseOf(v.w, v.base), ctxOf(v), (LANGS[v.lang] || [v.lang])[0], +v.tap > 0 ? +v.tap : 0]));
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
