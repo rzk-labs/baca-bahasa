@@ -82,3 +82,4 @@ Contoh hitungan (asumsi saya, bukan fakta):
 - Founder/agent: cek manual UI Indonesia & ulasan bintang 1-3 tiap app (satu jam).
 - Cari angka pelajar Inggris & Korea di Indonesia dari sumber resmi.
 - Masukkan 3 hipotesis & 3 pertanyaan ke naskah wawancara.
+- Cocokkan dengan peta masalah dari penguji AI: `docs/desain-peta-masalah-membaca.md`.
