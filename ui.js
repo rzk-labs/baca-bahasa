@@ -165,6 +165,7 @@ function setTab(t) {
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata })[t]();
+  if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(mood, 'bob')}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
@@ -387,7 +388,7 @@ async function viewBaca() {
 }
 const MG = { s: 12, m: 24, l: 48 };
 const setCur = el => { const c = $('#cols'), r = $('#reader'), p = el && el.closest ? el.closest('p,h2') : null; if (!c || !r || !r.classList.contains('focus') || !p) return; $$('.cols .cur').forEach(x => x !== p && x.classList.remove('cur')); p.classList.add('cur'); c.classList.add('has-cur'); };
-const RD = { dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
+const RD = { ss: [], hs: [], dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
   const b = book(), W = vp.clientWidth, H = vp.clientHeight;
@@ -396,6 +397,9 @@ function layout() {
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
+  /* cache halaman tiap kalimat/judul sekali per layout, supaya geser halaman tidak mengukur ulang */
+  RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols), u: unitsOf(el.textContent, b.lang) }));
+  RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
   else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
@@ -405,24 +409,28 @@ function layout() {
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca: 150 kata/menit; Jepang/Korea 400 karakter/menit */
 const unitsOf = (t, lang) => /^(ja|ko)/.test(lang) ? t.replace(/\s/g, '').length / 400 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
-function minsLeft(b, cols) {
+function minsLeft(b) {
   let m = 0;
-  for (const el of cols.querySelectorAll('.s')) if (pageOf(el, cols) >= RD.page) m += unitsOf(el.textContent, b.lang);
+  for (const x of RD.ss) if (x.pg >= RD.page) m += x.u;
   const secs = cache.id === b.id && cache.pages;
-  if (secs) for (let i = b.pos + 1; i < secs.length; i++) m += secs[i].reduce((a, p) => a + unitsOf(p, b.lang), 0);
+  if (secs) {
+    if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
+    for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
+  }
   const n = Math.ceil(m - 1e-9);
-  return n < 1 ? 'kurang dari 1 menit' : `sisa ±${n} menit`;
+  if (!secs && b.pos + 1 < (b.total || 1)) return `≥${Math.max(1, n)} mnt`;
+  return n < 1 ? '<1 mnt' : `±${n} mnt`;
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
-  for (const el of cols.querySelectorAll('.s')) { if (pageOf(el, cols) >= RD.page) { b.si = +el.dataset.s; break; } }
-  let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
+  for (const x of RD.ss) { if (x.pg >= RD.page) { b.si = +x.el.dataset.s; break; } }
+  let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b, cols)}`;
+  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b)}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
