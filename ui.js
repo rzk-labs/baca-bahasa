@@ -817,14 +817,22 @@ function viewKata() {
           const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
           const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
           const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
+          // iPhone/PWA: unduh lewat <a download> sering diam, jadi menu Bagikan dulu.
+          const iosLike = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+          const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+          let f = null;
+          try { f = new File([blob], fn, { type: 'text/csv' }); } catch (e) {}
+          if (f && (iosLike || standalone) && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
+            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan ✨'); }
+            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa 👌'); }
+          }
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
             a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
             toast(`${fn} udah diunduh (${ready} kata) ✨`);
           } catch (e) {
             try {
-              const f = new File([blob], fn, { type: 'text/csv' });
-              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
