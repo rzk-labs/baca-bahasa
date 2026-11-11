@@ -95,20 +95,30 @@ const BADGES = [
   ['lv5', '👑', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
 ];
 let badgeQ = Promise.resolve();
+/* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
+const lateQ = []; let lateT = null;
+const isReading = () => document.body.classList.contains('reading');
+function notifyLater(fn) { if (isReading()) lateQ.push(fn); else fn(); }
+function flushLate(force) {
+  if (lateT || !lateQ.length || (isReading() && force !== true)) return;
+  const step = () => { lateT = null; if (!lateQ.length || (isReading() && force !== true)) return; lateQ.shift()(); if (lateQ.length) lateT = setTimeout(step, 2000); };
+  step();
+}
+new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 function award(n, stat) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   const before = level();
   if (n) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
-    const f = document.createElement('div'); f.className = 'xpfly'; f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), 1200);
-    if (had < GOAL && had + n >= GOAL) setTimeout(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }, 600);
+    const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
+    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
-  if (level() > before) setTimeout(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl'), 700);
-  newB.forEach(([, em, name], i) => setTimeout(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }, 1300 + i * 1800));
+  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl')), 700);
+  newB.forEach(([, em, name], i) => setTimeout(() => notifyLater(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
@@ -299,6 +309,7 @@ const SESS = { id: null, t: 0 };
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
+  setTimeout(() => flushLate(true), 2500);
   const ws = db.vocab.filter(v => v.book === b.title && v.lang === b.lang && (v.at || 0) >= SESS.t);
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   sfx('win'); confetti(60);
@@ -461,6 +472,28 @@ function keepVisible(sel) {
   RD.dy = -Math.round(Math.min(need, Math.max(0, top - vp.getBoundingClientRect().top - 4)));
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy}px)`;
 }
+/* hitung kemunculan kata di buku: dibangun malas sekali per buku (Map kata->jumlah) */
+let freq = { id: null, lang: null, pages: null, map: null, part: false };
+function freqOf(b) {
+  const full = cache.id === b.id && cache.pages;
+  if (!full) { /* teks belum ter-cache: hitung dari halaman yang sedang terbuka, jangan disimpan */
+    const m = new Map(); for (const el of document.querySelectorAll('#cols .w')) { const k = norm(el.textContent); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    return { map: m, part: true };
+  }
+  if (freq.id !== b.id || freq.lang !== b.lang || freq.pages !== full) {
+    const m = new Map();
+    for (const sec of full) for (const p of sec) for (const t of tokens(p, b.lang)) { if (!t.w) continue; const k = norm(t.t); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    freq = { id: b.id, lang: b.lang, pages: full, map: m, part: false };
+  }
+  return freq;
+}
+function showFreq(word, b) {
+  const box = $('#wfreq'); if (!box) return;
+  const k = norm(word);
+  if (!k || /\s/.test(word.trim())) { box.textContent = ''; return; }
+  const f = freqOf(b), n = f.map.get(k) || 0;
+  box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
+}
 async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -478,6 +511,7 @@ async function onWord(el) {
     <div class="mut sm" id="wbaca"></div>
     <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="wfreq" id="wfreq"></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
   keepVisible('.w.sel');
@@ -493,6 +527,7 @@ async function onWord(el) {
     $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
+    setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load();
@@ -505,7 +540,7 @@ async function onWord(el) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
