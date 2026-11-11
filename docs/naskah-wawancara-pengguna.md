@@ -37,6 +37,7 @@ Bacakan apa adanya:
 | P7 | Kalau baca aksara non-Latin (Jepang/Korea/Mandarin): kesulitan apa yang kamu alami? (lewati bila tidak relevan) | 1,5 |
 | P8 | Pernah bayar untuk belajar bahasa atau baca (app, buku, kursus)? Ceritain: apa, berapa, kenapa? | 1,5 |
 | P9 | Berapa kira-kira biaya per bulan yang terasa mahal untuk app seperti itu? Dan yang terasa murah? | 1 |
+| P7a-P7c | (opsional, peserta non-Latin) cara baca: terakhir ketemu kata yang belum bisa dibaca; pernah pakai romaji/pinyin/furigana & kapan lepas; hafalan: lihat cara baca dulu atau tebak dulu. Lengkap: `docs/riset-cara-baca-romanisasi.md` bagian 5 | 2 |
 | P10-P14 | (opsional, bila waktu ada) 5 pertanyaan harga & perilaku bayar: lihat `docs/riset-harga-kesediaan-bayar.md` bagian 4 | 3 |
 
 Probe netral (boleh dipakai di mana saja):
