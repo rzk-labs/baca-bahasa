@@ -355,6 +355,8 @@ async function papan(again){
   auto(papan);
 }
 
+// sumber "docs/xxx.md" di catatan jadi tautan yang bisa diketuk
+const linkDok=s=>esc(s).replace(/docs\/[\w.-]+?\.md/g,p=>`<a href="#" style="text-decoration:underline;font-weight:700" onclick="go('dokumen','${p}');return false">${p.slice(5,-3).replace(/[-_]/g,' ')} ↗</a>`);
 async function peta(){
   if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
@@ -362,7 +364,7 @@ async function peta(){
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
   <div class="bento" style="margin-bottom:22px"><div class="tile c t-lav span2"><div class="eyebrow">Progres keseluruhan</div><div class="big">${progres(R)}%</div><div class="bar" style="margin-top:10px"><i style="width:${progres(R)}%"></i></div></div>
   <div class="tile c t-sun span2"><div class="eyebrow">Kapasitas founder</div><div style="font-weight:700;margin-top:6px">${esc(R.kapasitas_founder||'')}</div></div></div>
-  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${esc(t.catatan)}</div></div></div>`).join('')}</div></div>`}).join('')}
+  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${linkDok(t.catatan)}</div></div></div>`).join('')}</div></div>`}).join('')}
   <div class="sec"><h2>Milestone</h2></div><div class="grid">${R.milestone.map(m=>`<div class="tile row"><div class="av ${m.status==='selesai'?'t-mint':m.status==='berjalan'?'t-sun':'t-blue'}" style="font-family:Archivo;font-weight:900;font-size:22px">${m.no}</div><div style="flex:1;min-width:0"><b>${esc(m.nama)}</b> <span class="chip k-${m.status}">${KS[m.status]||m.status}</span><div class="mut sm">${esc(m.isi)}</div></div></div>`).join('')}</div>
   <div class="sec"><h2>Prioritas</h2></div><div class="tile"><div class="grid" style="gap:8px">${R.prioritas.map(p=>`<div class="row"><span class="chip ${p.level==='P0'?'t-coral':p.level==='P1'?'t-sun':p.level==='P2'?'t-blue':'s-ditolak'}">${p.level}</span><span>${esc(p.isi)}</span></div>`).join('')}</div></div>`;
 }
