@@ -1,5 +1,17 @@
 [
   {
+    "n": 109,
+    "judul": "Kartu hafalan: tampilkan cara baca & bentuk dasar di balik kartu",
+    "poin": "Balik kartu hafalan sekarang nunjukin cara baca dan bentuk dasar kata.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 104,
+    "judul": "Ekspor CSV Anki: pilih per bahasa atau per buku",
+    "poin": "Ekspor CSV sekarang bisa pilih Semua, per bahasa, atau per buku.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 98,
     "judul": "Kartu hafalan: kata 'Hafal' muncul lagi untuk dicek ulang",
     "poin": "Kata yang ditandai Hafal sekarang muncul lagi: 3, 7, lalu 21 hari kemudian.",
