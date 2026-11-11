@@ -80,6 +80,20 @@ function paginate(paras, lang) {
 /* ---------- impor file ---------- */
 const loaded = {};
 function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Gagal memuat pustaka (cek internet)')); }; document.head.appendChild(s); })); }
+const JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+const PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+// siapkan pustaka EPUB/PDF lebih awal (sekali per perangkat) supaya impor tetap jalan offline
+function prefetchImportLibs() {
+  try {
+    if (localStorage.getItem('kepo_libs_ready') || !navigator.onLine || navigator.connection?.saveData) return;
+    const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
+    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } }).catch(() => { });
+  } catch (e) { }
+}
+window.addEventListener('load', () => {
+  const go = () => setTimeout(prefetchImportLibs, 0);
+  if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 8000 }); else setTimeout(prefetchImportLibs, 4000);
+});
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
@@ -88,7 +102,7 @@ async function parseFile(file) {
   return { title: name, paras: cleanParas(await file.text()) };
 }
 async function parseEpub(buf, fallback) {
-  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+  await loadScript(JSZIP_URL);
   const z = await JSZip.loadAsync(buf);
   const idx = {}; Object.keys(z.files).forEach(k => idx[k.replace(/\\/g, '/').toLowerCase()] = z.files[k]);
   const zf = p => idx[p.toLowerCase()] || null;
@@ -116,7 +130,7 @@ async function parseEpub(buf, fallback) {
   return { title, paras: splitLong(paras) };
 }
 async function parsePdf(buf, title) {
-  const V = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  const V = PDFJS_BASE;
   await loadScript(V + 'pdf.min.js');
   pdfjsLib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js';
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
