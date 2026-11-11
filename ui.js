@@ -472,6 +472,28 @@ function keepVisible(sel) {
   RD.dy = -Math.round(Math.min(need, Math.max(0, top - vp.getBoundingClientRect().top - 4)));
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy}px)`;
 }
+/* hitung kemunculan kata di buku: dibangun malas sekali per buku (Map kata->jumlah) */
+let freq = { id: null, lang: null, pages: null, map: null, part: false };
+function freqOf(b) {
+  const full = cache.id === b.id && cache.pages;
+  if (!full) { /* teks belum ter-cache: hitung dari halaman yang sedang terbuka, jangan disimpan */
+    const m = new Map(); for (const el of document.querySelectorAll('#cols .w')) { const k = norm(el.textContent); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    return { map: m, part: true };
+  }
+  if (freq.id !== b.id || freq.lang !== b.lang || freq.pages !== full) {
+    const m = new Map();
+    for (const sec of full) for (const p of sec) for (const t of tokens(p, b.lang)) { if (!t.w) continue; const k = norm(t.t); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    freq = { id: b.id, lang: b.lang, pages: full, map: m, part: false };
+  }
+  return freq;
+}
+function showFreq(word, b) {
+  const box = $('#wfreq'); if (!box) return;
+  const k = norm(word);
+  if (!k || /\s/.test(word.trim())) { box.textContent = ''; return; }
+  const f = freqOf(b), n = f.map.get(k) || 0;
+  box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
+}
 async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -489,6 +511,7 @@ async function onWord(el) {
     <div class="mut sm" id="wbaca"></div>
     <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="wfreq" id="wfreq"></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
   keepVisible('.w.sel');
@@ -504,6 +527,7 @@ async function onWord(el) {
     $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
+    setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load();
@@ -516,7 +540,7 @@ async function onWord(el) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
