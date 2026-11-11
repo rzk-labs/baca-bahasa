@@ -282,6 +282,7 @@ function viewRak() {
   const line = lines[(new Date().getDate() + db.books.length) % lines.length];
   const addCard = `<div class="card">
       <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
+      ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
       <div class="add-grid"><button class="main" id="up"><span class="em">📤</span>Upload file</button><button id="paste"><span class="em">📋</span>Tempel teks</button><button id="sample"><span class="em">✨</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
@@ -320,14 +321,18 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
+  const startSample = l => {
+    const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
+    if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
+    addBook(S.title, cleanParas(S.text), l);
+  };
+  $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   $('#sample').onclick = () => {
     openSheet(`<div class="sh-head"><h2>Cerita contoh</h2>${closeBtn}</div><div class="mut sm">Pilih bahasa ceritanya</div>
       <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span></button>`).join('')}</div>`);
     $$('[data-sl]').forEach(el => el.onclick = () => {
-      const l = el.dataset.sl, S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
       closeSheet();
-      if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
-      addBook(S.title, cleanParas(S.text), l);
+      startSample(el.dataset.sl);
     });
   };
   $('#paste').onclick = () => {

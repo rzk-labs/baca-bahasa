@@ -388,3 +388,4 @@ button.avatar,.pill.login,.wsug .pill-sm{position:relative}
 button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
 #hdx{gap:8px}
 #tabs button{min-width:44px;min-height:44px}
+.try1{margin-top:var(--space-4)}.try1-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}.try1-row button{flex-direction:column;gap:6px;min-height:96px;min-width:44px;padding:10px 6px;border-radius:var(--radius-lg);background:var(--lime);color:var(--ink);font-weight:700;font-size:15px;text-align:center}.try1-row .em{font-size:36px;line-height:1}
