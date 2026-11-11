@@ -386,6 +386,16 @@ function layout() {
   showPage(p, false);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
+/* sisa waktu baca: 150 kata/menit; Jepang/Korea 400 karakter/menit */
+const unitsOf = (t, lang) => /^(ja|ko)/.test(lang) ? t.replace(/\s/g, '').length / 400 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+function minsLeft(b, cols) {
+  let m = 0;
+  for (const el of cols.querySelectorAll('.s')) if (pageOf(el, cols) >= RD.page) m += unitsOf(el.textContent, b.lang);
+  const secs = cache.id === b.id && cache.pages;
+  if (secs) for (let i = b.pos + 1; i < secs.length; i++) m += secs[i].reduce((a, p) => a + unitsOf(p, b.lang), 0);
+  const n = Math.ceil(m - 1e-9);
+  return n < 1 ? 'kurang dari 1 menit' : `sisa ±${n} menit`;
+}
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
@@ -395,7 +405,7 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n}` + (b.total > 1 ? ` · Bab ${b.pos + 1}/${b.total}` : '') + ` · ${b.pct}% kelar`;
+  $('#pgn').textContent = `Hal ${RD.page + 1} dari ${RD.n} · ${minsLeft(b, cols)}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
