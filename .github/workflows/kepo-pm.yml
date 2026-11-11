@@ -66,6 +66,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_bots: github-actions
           prompt: |
             ${{ inputs.peran && format('WAJIB: tugas kali ini untuk peran "{0}" (abaikan aturan seimbang; peran lain sedang diberi tugas paralel, jadi pilih hal yang tidak tumpang tindih). Jangan lewati.', inputs.peran) || '' }}
             ${{ inputs.fokus && format('ARAHAN FOUNDER (utamakan): {0}', inputs.fokus) || '' }}
