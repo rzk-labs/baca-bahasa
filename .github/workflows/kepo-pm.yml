@@ -12,6 +12,15 @@ on:
         description: Tetap jalan walau masih ada tugas menunggu
         type: boolean
         default: false
+      peran:
+        description: Wajib pilih tugas untuk peran ini (kosong = bebas)
+        type: choice
+        options: ['', riset, desain, developer, pm]
+        default: ''
+      fokus:
+        description: Arahan fokus dari founder (opsional)
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -19,7 +28,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: kepo-pm
+  group: kepo-pm-${{ inputs.peran || 'bebas' }}
   cancel-in-progress: false
 
 jobs:
@@ -57,6 +66,8 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
+            ${{ inputs.peran && format('WAJIB: tugas kali ini untuk peran "{0}" (abaikan aturan seimbang; peran lain sedang diberi tugas paralel, jadi pilih hal yang tidak tumpang tindih). Jangan lewati.', inputs.peran) || '' }}
+            ${{ inputs.fokus && format('ARAHAN FOUNDER (utamakan): {0}', inputs.fokus) || '' }}
             Kamu agent PM tim Keepo. Baca CLAUDE.md, docs/TIM.md, docs/roadmap.json, dokumen lain di docs/, dan daftar tugas .kepo-tmp/tugas.txt (jangan duplikat tugas yang sudah ada/selesai/ditolak).
             Pilih SATU tugas berikutnya yang paling berdampak, sesuai fase sekarang, prioritas P0 dulu, prinsip "Reader First, AI Second", dan kapasitas founder 1-4 jam/minggu.
             Aturan seimbang: lihat 3 tugas berlabel otomatis terakhir di tugas.txt; jika belum ada yang berupa upgrade aplikasi, tugas kali ini WAJIB upgrade aplikasi (peran developer, atau desain yang mengubah style.css/ui.js). Untuk upgrade app, baca kode (index.html, app.js, ui.js, style.css), cari perbaikan nyata pada P0: kenyamanan membaca & bantuan memahami kata.
@@ -78,7 +89,7 @@ jobs:
             A=$(jq -r '.alasan // "tidak ada tugas baru yang layak"' "$F" 2>/dev/null || echo "tidak ada tugas baru")
             echo "::notice title=PM istirahat::$A"; echo "PM istirahat: $A" >> "$GITHUB_STEP_SUMMARY"; exit 0
           fi
-          PERAN=$(jq -r .peran "$F"); case "$PERAN" in developer|riset|desain|pm) ;; *) PERAN=developer ;; esac
+          PERAN=$(jq -r .peran "$F"); [ -n "${{ inputs.peran }}" ] && PERAN="${{ inputs.peran }}"; case "$PERAN" in developer|riset|desain|pm) ;; *) PERAN=developer ;; esac
           gh label create "peran:$PERAN" --color C9B8FF 2>/dev/null || true
           gh label create otomatis --color 9CC8FF 2>/dev/null || true
           jq -r '.isi + "\n\n---\n_Dipilih PM agent: " + .alasan + "_"' "$F" > ".kepo-tmp/body.md"
