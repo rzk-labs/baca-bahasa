@@ -304,7 +304,7 @@ const cls = p => p >= PASS ? 'g' : p >= 60 ? 'm' : 'b';
 
 
 /* ---------- buku contoh (teks orisinal) ---------- */
-const SAMPLE = `The Lighthouse Keeper
+const SAMPLE_EN = `The Lighthouse Keeper
 
 Every evening, old Tomas climbed the narrow stairs of the lighthouse. There were one hundred and twelve steps, and he knew each one by heart. Some steps creaked, some were cold, and one near the top was always a little wet.
 
@@ -317,3 +317,25 @@ When he opened the door, a young girl stood there, soaking wet and shivering. "M
 Tomas brought her inside and gave her a warm blanket. "The light is still burning," he told her gently. "If your father can see it, he will find his way." They climbed the stairs together and stared into the rain.
 
 Hours passed. The girl almost fell asleep against the window. Then, just before sunrise, a small green boat appeared between the waves. The girl jumped up and laughed with relief. Tomas smiled, because this was the reason he climbed the stairs every night.`;
+
+const SAMPLE_KO = `우산을 두고 온 날
+
+월요일 아침, 지수는 늦잠을 잤습니다. 급하게 옷을 입고 버스 정류장으로 뛰어갔습니다. 하늘이 흐렸지만 우산을 챙기지 못했습니다.
+
+오후에 갑자기 비가 내리기 시작했습니다. 지수는 회사 앞에서 한참 서 있었습니다. 그때 옆 자리 민호 씨가 파란 우산을 펴고 말했습니다. "같이 가요, 저도 지하철역까지 가거든요."
+
+둘은 우산 하나를 같이 쓰고 천천히 걸었습니다. 지수는 고맙다고 말하고 따뜻한 커피를 사 주었습니다. 다음 날부터 지수는 가방에 항상 작은 우산을 넣고 다닙니다.`;
+
+const SAMPLE_JA = `雨の日の小さな本屋
+
+駅の近くに、小さな古い本屋があります。店の主人の田中さんは、毎朝七時に店を開けて、本を一冊ずつきれいにします。
+
+ある雨の日、ミナという女の子が店に入ってきました。かさから水がぽたぽた落ちています。「ここで少し休んでもいいですか」と彼女は聞きました。田中さんは笑って、あたたかいお茶を出しました。
+
+ミナは棚の前で、青い表紙の本を見つけました。それは子どものころに大好きだった絵本でした。彼女はとてもうれしくなって、その本を買いました。雨がやんだとき、ミナは「また来ます」と言って、元気に帰っていきました。`;
+
+const SAMPLES = {
+  en: { title: 'The Lighthouse Keeper (contoh)', text: SAMPLE_EN },
+  ko: { title: '우산을 두고 온 날 (contoh)', text: SAMPLE_KO },
+  ja: { title: '雨の日の小さな本屋 (contoh)', text: SAMPLE_JA },
+};
