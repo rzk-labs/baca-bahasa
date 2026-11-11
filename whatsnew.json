@@ -1,5 +1,17 @@
 [
   {
+    "n": 160,
+    "judul": "udah di bikin belum fitur kalau terjemahin kata nanti di hitung udah d",
+    "poin": "Sekarang tiap kata yang diketuk dihitung, misalnya \"Udah kamu cek 3×\".",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 152,
+    "judul": "Keepo HQ: kolom Live dibatasi 5 + daftar nama penguji dari data",
+    "poin": "Kolom Live di Papan dibatasi 5 kartu, sisanya lewat tombol.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 147,
     "judul": "Kata Tersimpan: tombol Ekspor CSV naik ke atas daftar",
     "poin": "Tombol Ekspor CSV sekarang di atas daftar kata, bentuknya pil kecil.",
@@ -166,11 +178,5 @@
     "n": 18,
     "tgl": "2026-11-11",
     "poin": "Di e-reader, tap kata lalu tekan tombol plus untuk menambah kata sebelah."
-  },
-  {
-    "judul": "Tandai kata tersimpan di teks bacaan (garis bawah halus)",
-    "n": 15,
-    "tgl": "2026-11-11",
-    "poin": "Kata yang sudah kamu simpan sekarang bergaris bawah titik-titik biru di bacaan."
   }
 ]
