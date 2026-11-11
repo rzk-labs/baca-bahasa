@@ -21,6 +21,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  actions: write
 
 concurrency:
   group: kepo-dev-${{ github.event.issue.number || inputs.issue }}
@@ -182,7 +183,15 @@ jobs:
           fi
           if [ "$V" = "LOLOS" ]; then L=qa-lolos; H="✅ QA lolos"; else L=qa-catatan; H="⚠️ QA ada catatan"; fi
           gh issue comment "$N" --body-file <(printf '**Siap dicek.**\n\n%s\n\n---\n**%s**\n%s' "$(cat $T/ringkasan.md)" "$H" "$QA")
-          gh issue edit "$N" --add-label siap-dicek --add-label "$L" --remove-label sedang-dikerjakan
+          if [ "$V" = "LOLOS" ]; then
+            # Auto-setujui: QA lolos -> langsung masuk antrean live
+            gh label create antre-live --color 7DD3FC 2>/dev/null || true
+            gh issue edit "$N" --add-label antre-live --add-label "$L" --remove-label sedang-dikerjakan
+            gh issue comment "$N" --body "🚀 **QA lolos → otomatis disetujui**, masuk antrean live."
+            gh workflow run kepo-gabung.yml
+          else
+            gh issue edit "$N" --add-label siap-dicek --add-label "$L" --remove-label sedang-dikerjakan
+          fi
 
       - name: Tandai gagal
         if: failure()
