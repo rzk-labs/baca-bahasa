@@ -157,7 +157,14 @@ function trPersist() {
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
 const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
 /* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */
+function vocabCSV(list) {
+  const q = s => { s = String(s == null ? '' : s).replace(/\r?\n|\r/g, ' ').trim(); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const rows = [['kata', 'arti', 'cara baca', 'kalimat contoh', 'bahasa']].concat((list || []).map(v => [v.w, v.t, bacaOf(v.w, v.baca), v.s, (LANGS[v.lang] || [v.lang])[0]]));
+  return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
+}
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
+/* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
+function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
@@ -167,6 +174,7 @@ async function translate(q, sl, tl) {
     if (!r.ok) throw new Error('gtx ' + r.status);
     const j = await r.json();
     out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
+    const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   } catch (e) {
     try {
       const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
@@ -188,7 +196,7 @@ async function refillVocab() {
   refilling = true; let n = 0;
   try {
     for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
-      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
+      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
     }
     if (n) save();
   } finally { refilling = false; }
@@ -296,7 +304,7 @@ const cls = p => p >= PASS ? 'g' : p >= 60 ? 'm' : 'b';
 
 
 /* ---------- buku contoh (teks orisinal) ---------- */
-const SAMPLE = `The Lighthouse Keeper
+const SAMPLE_EN = `The Lighthouse Keeper
 
 Every evening, old Tomas climbed the narrow stairs of the lighthouse. There were one hundred and twelve steps, and he knew each one by heart. Some steps creaked, some were cold, and one near the top was always a little wet.
 
@@ -309,3 +317,25 @@ When he opened the door, a young girl stood there, soaking wet and shivering. "M
 Tomas brought her inside and gave her a warm blanket. "The light is still burning," he told her gently. "If your father can see it, he will find his way." They climbed the stairs together and stared into the rain.
 
 Hours passed. The girl almost fell asleep against the window. Then, just before sunrise, a small green boat appeared between the waves. The girl jumped up and laughed with relief. Tomas smiled, because this was the reason he climbed the stairs every night.`;
+
+const SAMPLE_KO = `우산을 두고 온 날
+
+월요일 아침, 지수는 늦잠을 잤습니다. 급하게 옷을 입고 버스 정류장으로 뛰어갔습니다. 하늘이 흐렸지만 우산을 챙기지 못했습니다.
+
+오후에 갑자기 비가 내리기 시작했습니다. 지수는 회사 앞에서 한참 서 있었습니다. 그때 옆 자리 민호 씨가 파란 우산을 펴고 말했습니다. "같이 가요, 저도 지하철역까지 가거든요."
+
+둘은 우산 하나를 같이 쓰고 천천히 걸었습니다. 지수는 고맙다고 말하고 따뜻한 커피를 사 주었습니다. 다음 날부터 지수는 가방에 항상 작은 우산을 넣고 다닙니다.`;
+
+const SAMPLE_JA = `雨の日の小さな本屋
+
+駅の近くに、小さな古い本屋があります。店の主人の田中さんは、毎朝七時に店を開けて、本を一冊ずつきれいにします。
+
+ある雨の日、ミナという女の子が店に入ってきました。かさから水がぽたぽた落ちています。「ここで少し休んでもいいですか」と彼女は聞きました。田中さんは笑って、あたたかいお茶を出しました。
+
+ミナは棚の前で、青い表紙の本を見つけました。それは子どものころに大好きだった絵本でした。彼女はとてもうれしくなって、その本を買いました。雨がやんだとき、ミナは「また来ます」と言って、元気に帰っていきました。`;
+
+const SAMPLES = {
+  en: { title: 'The Lighthouse Keeper (contoh)', text: SAMPLE_EN },
+  ko: { title: '우산을 두고 온 날 (contoh)', text: SAMPLE_KO },
+  ja: { title: '雨の日の小さな本屋 (contoh)', text: SAMPLE_JA },
+};
