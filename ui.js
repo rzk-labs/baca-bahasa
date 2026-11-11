@@ -165,6 +165,7 @@ function setTab(t) {
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata })[t]();
+  if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(mood, 'bob')}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
@@ -524,7 +525,7 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px"><button class="ghost" id="ssp" style="padding-left:0;min-height:44px;font-size:14px">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl" style="padding-left:0;min-height:44px;font-size:14px">${ico('slow')} Pelan</button></div>
+    <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
