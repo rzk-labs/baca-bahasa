@@ -239,6 +239,8 @@ async function fetchTimeout(url, ms = 8000) {
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
+  const stale = trCache.get(k);
+  if (stale && stale.text && navigator.onLine === false) return stale;
   let out;
   try {
     const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`);
@@ -253,7 +255,7 @@ async function translate(q, sl, tl) {
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
       out = { text: t, dict: [], baca: '' };
-    } catch (e2) { throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
+    } catch (e2) { if (stale && stale.text) return stale; throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
   trCache.delete(k); trCache.set(k, out); trPersist();

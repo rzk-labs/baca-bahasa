@@ -197,8 +197,20 @@ const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(
 function voiceRow(lang) {
   const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
   const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
-  if (!vs.length) return '';
-  return `<div class="set-row"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
+  if (!vs.length) {
+    const loaded = speechSynthesis.getVoices().length > 0;
+    if (!loaded && !voiceRow.wait) {
+      voiceRow.wait = true;
+      speechSynthesis.addEventListener('voiceschanged', () => {
+        voiceRow.wait = false;
+        const el = $('#vrow'), b = book();
+        if (el && b) el.outerHTML = voiceRow(b.lang);
+        const s = $('#vsel'); if (s) s.onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
+      }, { once: true });
+    }
+    return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><div class="mut sm">${loaded ? 'Perangkat ini belum punya suara untuk bahasa ini' : 'Suara belum termuat, coba buka lagi sebentar'}</div></div>`;
+  }
+  return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
 }
 // Ukuran huruf efektif: pilihan pengguna menang; kalau belum pernah diubah, pakai default per bahasa.
 const FS0 = { ja: 21, 'zh-CN': 21, ko: 20 };
