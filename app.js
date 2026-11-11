@@ -19,7 +19,14 @@ let db = (() => {
   try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
   catch (e) { try { localStorage.setItem(KEY + '.rusak', raw); } catch (e2) { } return DEF(); }
 })();
-const save = () => localStorage.setItem(KEY, JSON.stringify(db));
+let fullWarn = 0;
+const save = () => {
+  try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+  catch (e) {
+    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Memori HP penuh, hapus buku lama dulu', 6000); } catch (e2) { } }
+    return false;
+  }
+};
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 1); r.onupgradeneeded = () => r.result.createObjectStore('t'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
