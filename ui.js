@@ -274,7 +274,10 @@ async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
   await putText(id, paras);
   db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
-  db.cur = id; save(); toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
+  const prevCur = db.cur;
+  db.cur = id;
+  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return; }
+  toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
 }
 
 /* ---------- BACA (e-reader) ---------- */
