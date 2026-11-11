@@ -500,12 +500,13 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
-    <button class="ghost" id="ssp" style="padding-left:0">${ico('vol')} Dengerin kalimatnya</button>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px"><button class="ghost" id="ssp" style="padding-left:0;min-height:44px;font-size:14px">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl" style="padding-left:0;min-height:44px;font-size:14px">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
   translate(sent, b.lang, db.my).then(r => { if ($('#str')) { $('#str').textContent = r.text; keepVisible('.s.hl'); } }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
   $('#ssp').onclick = () => speak(sent, b.lang);
+  $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
 }
