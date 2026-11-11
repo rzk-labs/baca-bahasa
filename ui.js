@@ -122,7 +122,7 @@ function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.inner
 let toastT;
 function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
 function openSheet(html) { $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); }
-function closeSheet() { $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); }
+function closeSheet() { if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); }
 $('#shade').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
@@ -348,7 +348,7 @@ async function viewBaca() {
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
 }
-const RD = { page: 0, n: 1, step: 1, toEnd: false, quiet: false };
+const RD = { dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
   const b = book(), W = vp.clientWidth, H = vp.clientHeight;
@@ -360,7 +360,7 @@ function layout() {
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
   else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
-  RD.toEnd = false;
+  RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
@@ -368,7 +368,7 @@ function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   cols.style.transition = anim ? '' : 'none';
-  cols.style.transform = `translateX(${-RD.page * RD.step}px)`;
+  cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
   for (const el of cols.querySelectorAll('.s')) { if (pageOf(el, cols) >= RD.page) { b.si = +el.dataset.s; break; } }
   let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
   if (hd) $('.rhead').textContent = hd.textContent.trim();
@@ -391,6 +391,18 @@ let rsT; addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(
 addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 
 /* ---------- sheet arti kata → kalimat ---------- */
+/* geser isi halaman ke atas (tanpa ganti halaman) supaya kata/kalimat terpilih tidak ketutup sheet */
+function keepVisible(sel) {
+  const cols = $('#cols'), sh = $('#sheet'), vp = $('#vp'); if (!cols || !sh || !vp) return;
+  RD.dy = 0; cols.style.transform = `translate(${-RD.page * RD.step}px, 0px)`;
+  const els = [...cols.querySelectorAll(sel)]; if (!els.length) return;
+  const rs = els.flatMap(x => [...x.getClientRects()]);
+  const bottom = Math.max(...rs.map(r => r.bottom)), top = Math.min(...rs.map(r => r.top));
+  const need = bottom - (innerHeight - sh.offsetHeight - 12);
+  if (need <= 0) return;
+  RD.dy = -Math.round(Math.min(need, Math.max(0, top - vp.getBoundingClientRect().top - 4)));
+  cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy}px)`;
+}
 async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -409,6 +421,7 @@ async function onWord(el) {
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
+  keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
   const load = () => { const my = ++tok; return translate(word, b.lang, db.my).then(r => {
@@ -418,8 +431,9 @@ async function onWord(el) {
     $('#wbaca').textContent = bacaOf(word, r.baca);
     const d = r.dict || [];
     $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
-    const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 6);
+    const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
+    keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
@@ -432,7 +446,7 @@ async function onWord(el) {
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = '';
     $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); load();
+    $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
@@ -454,7 +468,8 @@ function showSentence(word, sent, sIdx, sEl) {
     <button class="ghost" id="ssp" style="padding-left:0">${ico('vol')} Dengerin kalimatnya</button>
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
-  translate(sent, b.lang, db.my).then(r => { if ($('#str')) $('#str').textContent = r.text; }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
+  keepVisible('.s.hl');
+  translate(sent, b.lang, db.my).then(r => { if ($('#str')) { $('#str').textContent = r.text; keepVisible('.s.hl'); } }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
   $('#ssp').onclick = () => speak(sent, b.lang);
   if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };

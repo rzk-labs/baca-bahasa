@@ -164,20 +164,22 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .steps3 b{flex:none;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font:800 16px var(--font-display)}
 /* ---------- sheet ---------- */
 #shade{position:fixed;inset:0;z-index:9;background:var(--color-scrim);animation:fade .25s ease-out}
-#sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;max-width:640px;margin:0 auto;max-height:90dvh;overflow:auto;background:var(--color-bg);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;box-shadow:var(--shadow-sheet);padding:10px 20px calc(env(safe-area-inset-bottom) + 20px);animation:up var(--dur-sheet) var(--ease-out)}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;max-width:640px;margin:0 auto;max-height:90dvh;overflow:auto;background:var(--color-bg);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;box-shadow:var(--shadow-sheet);padding:10px 20px calc(env(safe-area-inset-bottom) + 14px);animation:up var(--dur-sheet) var(--ease-out)}
 @keyframes up{from{transform:translateY(50px);opacity:0}}
 @keyframes fade{from{opacity:0}}
 .grab{width:42px;height:5px;border-radius:var(--radius-full);background:var(--color-border);margin:0 auto 10px}
 .sh-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:var(--space-2)}
 .stepchip{display:inline-flex;gap:6px;align-items:center;height:30px;padding:0 12px;border-radius:var(--radius-full);background:var(--lime);color:var(--ink);font-size:12px;font-weight:800}
-.wd{display:flex;align-items:center;gap:var(--space-3);margin:var(--space-3) 0 var(--space-1)}
-.wd b{font:800 46px/46px var(--font-display);font-stretch:75%;letter-spacing:-.03em}
+.wd{display:flex;align-items:center;gap:var(--space-3);margin:var(--space-1) 0 2px}
+.wd b{font:800 34px/38px var(--font-display);font-stretch:75%;letter-spacing:-.03em}
 .pos{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);background:var(--lav);border-radius:var(--radius-full);padding:3px 10px}
 .pos:empty{display:none}
-.tr{font:800 28px/32px var(--font-display);font-stretch:80%;margin:var(--space-3) 0}
+.tr{font:800 24px/28px var(--font-display);font-stretch:80%;margin:var(--space-2) 0}
 .tr.sent{font:600 18px/26px var(--font-ui)}
 .loading{color:var(--color-text-muted);font:600 15px var(--font-ui)}
-.dict{display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:21px;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);padding:12px 14px}
+.dict{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:19px;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);padding:8px 12px}
+.dict>div{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden}
+#sheet .row{margin-top:var(--space-2)}
 .dict:empty{display:none}
 .dict b{color:var(--color-text)}
 .src{font:400 20px/1.6 var(--font-reader);background:var(--color-surface);border-radius:var(--radius-lg);padding:16px 18px;margin:var(--space-2) 0 var(--space-3)}
