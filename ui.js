@@ -478,10 +478,17 @@ const unitsOf = (t, lang) => {
   return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
 };
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
-function heroPos(b, mins) {
+function heroPos(b, mins, part) {
   const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
-  return esc(where + (mins ? ` · ${mins} lagi` : ''));
+  return esc(where + (mins ? ` · sisa ${mins}` : '')) + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
 }
+/* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
+function fmtMins(m, part) {
+  const n = Math.ceil(m - 1e-9);
+  if (!part) return n < 1 ? '' : `±${Math.max(1, Math.round(m))} mnt`;
+  return n < 1 ? '—' : `≥${n} mnt`;
+}
+const unseen = (b, secs) => !secs.length || (b.total || 1) > secs.length || (secs.length === 1 && secs[0].length === 1 && /^\((kosong|teks hilang)\)$/.test(secs[0][0]));
 async function heroMins(b) {
   try {
     const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
@@ -491,18 +498,19 @@ async function heroMins(b) {
     const frac = secs.length > 1 ? Math.max(0, Math.min(1, pctOf(b) / 100 * secs.length - pos)) : pctOf(b) / 100;
     let m = per[pos] * (1 - frac);
     for (let i = pos + 1; i < secs.length; i++) m += per[i];
-    const n = Math.ceil(m - 1e-9), el = $('#heroPos');
+    const part = unseen(b, secs), el = $('#heroPos');
     if (!el || db.cur !== b.id) return;
-    el.innerHTML = heroPos(b, n < 1 ? '≥1 mnt' : `±${n} mnt`);
+    el.innerHTML = heroPos(b, fmtMins(m, part), part);
   } catch (e) {}
 }
 function minsLeft(b) {
   const secs = cache.id === b.id && cache.pages;
-  if (!secs || !secs[b.pos] || !(RD.n > 0)) return '';
+  if (!secs || !secs[b.pos] || !(RD.n > 0)) return null;
   if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
   let m = RD.chu[b.pos] * (RD.n - RD.page) / RD.n;
   for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
-  return m > 0 ? `±${Math.max(1, Math.round(m))} mnt` : '';
+  const part = unseen(b, secs);
+  return { t: fmtMins(m, part), part };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -514,7 +522,7 @@ function showPage(p, anim = true) {
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
   const ml = minsLeft(b);
-  $('#pgn').textContent = ml ? `Hal ${RD.page + 1}/${RD.n} · ${ml}` : `Hal ${RD.page + 1} dari ${RD.n}`;
+  $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
