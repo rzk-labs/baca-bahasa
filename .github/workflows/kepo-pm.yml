@@ -1,4 +1,5 @@
 name: Keepo Agent PM
+run-name: "PM · ${{ inputs.peran || 'bebas' }}"
 
 # Tiap hari jam 08.00 WIB, PM agent memilih 1 tugas berikutnya dari roadmap,
 # membuat issue, lalu menyerahkannya ke agent kerja.

@@ -108,3 +108,4 @@ jobs:
         run: |
           SISA=$(gh issue list --label antre-live --state open --json number --jq length)
           [ "$SISA" -gt 0 ] && gh workflow run kepo-gabung.yml || true
+          gh workflow run kepo-jaga.yml || true

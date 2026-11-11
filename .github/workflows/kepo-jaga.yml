@@ -1,0 +1,49 @@
+name: Keepo Jaga Tim
+
+# Memastikan tidak ada anggota tim yang menganggur.
+# Tiap 30 menit (dan setiap kali tugas selesai): untuk tiap peran yang sedang kosong,
+# minta PM memberi tugas baru khusus peran itu.
+# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 8 tugas otomatis per peran per hari.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  actions: write
+
+concurrency:
+  group: kepo-jaga
+  cancel-in-progress: false
+
+jobs:
+  jaga:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Cek & isi peran yang kosong
+        run: |
+          TUNGGU=$(gh issue list --label kepo-dev --label siap-dicek --state open --json number --jq length)
+          echo "Menunggu founder: $TUNGGU"
+          if [ "$TUNGGU" -ge 6 ]; then
+            echo "::notice title=Tim menunggu kamu::$TUNGGU hasil menunggu dicek. Tim tidak diberi tugas baru dulu."; exit 0
+          fi
+          HARI=$(date -u +%Y-%m-%d)
+          PMRUN=$(gh run list --workflow kepo-pm.yml --limit 20 --json status,displayTitle \
+            --jq '[.[]|select(.status!="completed")|.displayTitle]|join(" ")')
+          for P in riset desain developer pm; do
+            SIBUK=$(gh issue list --label kepo-dev --label "peran:$P" --state open --json labels \
+              --jq '[.[]|select([.labels[].name]|(index("siap-dicek") or index("gagal"))|not)]|length')
+            HARI_INI=$(gh issue list --label otomatis --label "peran:$P" --state all --limit 50 --json createdAt \
+              --jq "[.[]|select(.createdAt|startswith(\"$HARI\"))]|length")
+            if [ "$SIBUK" -gt 0 ]; then echo "$P: sibuk ($SIBUK tugas)"; continue; fi
+            if echo "$PMRUN" | grep -qw "$P"; then echo "$P: PM sedang memilihkan tugas"; continue; fi
+            if [ "$HARI_INI" -ge 8 ]; then echo "$P: batas harian tercapai ($HARI_INI)"; continue; fi
+            echo "$P: KOSONG → minta PM memberi tugas"
+            gh workflow run kepo-pm.yml -f paksa=true -f peran="$P"
+          done

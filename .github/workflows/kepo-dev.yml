@@ -198,3 +198,7 @@ jobs:
         run: |
           gh issue comment "$N" --body "**Agent gagal.** Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           gh issue edit "$N" --add-label gagal --remove-label sedang-dikerjakan
+
+      - name: Jaga tim tetap sibuk
+        if: always()
+        run: gh workflow run kepo-jaga.yml || true
