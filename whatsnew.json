@@ -1,5 +1,11 @@
 [
   {
+    "n": 227,
+    "judul": "Laporan usability (Tahap 17): temuan tester AI + keluhan UX kompetitor",
+    "poin": "Laporan usability selesai: temuan 4 penguji plus 45 keluhan pengguna aplikasi kompetitor.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 201,
     "judul": "Ekspor CSV siap Anki: kolom tag & buku + petunjuk impor 3 langkah",
     "poin": "Ekspor CSV sekarang punya kolom buku dan tag, siap diimpor ke Anki.",
@@ -172,11 +178,5 @@
     "n": 55,
     "tgl": "2026-11-11",
     "poin": "Sorotan kata di tema Terang dan Sepia kini punya garis tebal, jadi jelas terlihat."
-  },
-  {
-    "judul": "Ringkasan kata baru setelah selesai baca satu buku",
-    "n": 54,
-    "tgl": "2026-11-11",
-    "poin": "Selesai baca buku, muncul ringkasan kata baru dari sesi itu."
   }
 ]
