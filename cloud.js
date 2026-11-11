@@ -7,7 +7,7 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak'];
+const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps'];
 
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
@@ -28,7 +28,15 @@ function isoWeekKey(d = new Date()) {
   return `${y}-W${String(w).padStart(2, '0')}`;
 }
 function weekXp() { const wk = isoWeekKey(); return Object.entries(db.xpDay || {}).filter(([d]) => isoWeekKey(new Date(d + 'T12:00:00')) === wk).reduce((a, [, v]) => a + v, 0); }
-const progressData = () => Object.fromEntries(SYNC_KEYS.map(k => [k, db[k]]));
+// taps: kirim maks 1000 kata teratas (ukuran tetap jauh di bawah batas server)
+const topTaps = (t, n = 1000) => Object.fromEntries(Object.entries(t && typeof t === 'object' ? t : {}).sort((a, b) => b[1] - a[1]).slice(0, n));
+const progressData = () => Object.fromEntries(SYNC_KEYS.map(k => [k, k === 'taps' ? topTaps(db.taps) : db[k]]));
+// gabung ketukan: angka terbesar per kunci 'bahasa|kata'
+function mergeTaps(srv) {
+  if (!srv || typeof srv !== 'object') return;
+  if (!db.taps || typeof db.taps !== 'object') db.taps = {};
+  for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
+}
 let lastSync = '';
 async function pushSync(force) {
   if (!db.acct || !API) return;
@@ -37,13 +45,13 @@ async function pushSync(force) {
   await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
   lastSync = sig;
 }
-function applyServer(data) { SYNC_KEYS.forEach(k => { if (data[k] != null) db[k] = data[k]; }); save(); }
+function applyServer(data) { SYNC_KEYS.forEach(k => { if (k === 'taps') mergeTaps(data.taps); else if (data[k] != null) db[k] = data[k]; }); save(); }
 async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden };
   const d = res.data;
   // pilih progres yang lebih maju: data server kalau XP-nya >= XP di HP ini
   if (d && (d.xp || 0) >= (db.xp || 0)) { applyServer(d); toast(`Hai ${db.acct.nick}! Progres kamu sudah dipulihkan ✨`); }
-  else { save(); toast(`Hai ${db.acct.nick}! Progres di HP ini disimpan ke akun ✨`); }
+  else { if (d) mergeTaps(d.taps); save(); toast(`Hai ${db.acct.nick}! Progres di HP ini disimpan ke akun ✨`); }
   await pushSync(true).catch(() => { });
   closeSheet(); setTab(db.tab || 'rak');
 }
