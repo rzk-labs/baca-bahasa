@@ -1,6 +1,6 @@
 // Kepo Dev — panel permintaan untuk AI agent yang mengembangkan Kepo.
 // Secrets: GH_TOKEN (akses repo), DEV_PASSWORD, SIGN_KEY.
-import PAGE from './page.js';
+import PAGE from './page.html';
 
 const REPO = 'rzk-labs/baca-bahasa';
 const LABEL = 'kepo-dev';
@@ -49,7 +49,15 @@ function status(issue) {
   if (L.includes('gagal')) return 'gagal';
   return 'antre';
 }
-const brief = i => ({ n: i.number, judul: i.title, status: status(i), dibuat: i.created_at, diubah: i.updated_at });
+const lbl = i => i.labels.map(l => l.name);
+const brief = i => {
+  const L = lbl(i);
+  const p = L.find(x => x.startsWith('peran:'));
+  return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
+    qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at };
+};
+const PERAN = ['developer', 'riset', 'desain', 'pm'];
+const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm' };
 
 async function openPR(env, n) {
   const owner = REPO.split('/')[0];
@@ -79,6 +87,36 @@ async function api(req, env, url) {
   }
   if (!(await authed(req, env))) return json({ error: 'Perlu login' }, 401);
 
+  if (p === '/hq' && req.method === 'GET') {
+    const [issues, road, docs, runs] = await Promise.all([
+      gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`),
+      gh(env, `/repos/${REPO}/contents/docs/roadmap.json`, { raw: true }).then(r => (r.ok ? r.json() : null)),
+      gh(env, `/repos/${REPO}/contents/docs`, { soft: true }),
+      gh(env, `/repos/${REPO}/actions/runs?per_page=15`, { soft: true }),
+    ]);
+    return json({
+      tasks: issues.filter(i => !i.pull_request).map(brief),
+      roadmap: road,
+      docs: Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md')).map(d => d.path) : [],
+      runs: runs && runs.workflow_runs ? runs.workflow_runs.filter(r => WF[r.path.split('/').pop()]).map(r => ({
+        jenis: WF[r.path.split('/').pop()], judul: r.display_title, status: r.status, hasil: r.conclusion, mulai: r.run_started_at || r.created_at, url: r.html_url,
+      })) : null,
+    });
+  }
+  if (p === '/doc' && req.method === 'GET') {
+    const path = url.searchParams.get('path') || '';
+    if (!/^docs\/[\w.-]+\.md$/.test(path)) return json({ error: 'path' }, 400);
+    const r = await gh(env, `/repos/${REPO}/contents/${path}`, { raw: true });
+    return json({ path, isi: r.ok ? await r.text() : '' });
+  }
+  if (p === '/pm' && req.method === 'POST') {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/kepo-pm.yml/dispatches`, {
+      method: 'POST', headers: { authorization: 'Bearer ' + env.GH_TOKEN, accept: 'application/vnd.github+json', 'user-agent': 'kepo-dev', 'content-type': 'application/json' },
+      body: JSON.stringify({ ref: 'main', inputs: { paksa: String(!!body.paksa) } }),
+    });
+    if (!r.ok) return json({ error: r.status === 403 ? 'Token GitHub belum punya izin Actions (Read and write)' : 'Gagal menjalankan PM (' + r.status + ')' }, 400);
+    return json({ ok: true });
+  }
   if (p === '/tasks' && req.method === 'GET') {
     const l = await gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=40&sort=created&direction=desc`);
     return json(l.filter(i => !i.pull_request).map(brief));
@@ -88,7 +126,8 @@ async function api(req, env, url) {
     if (isi.length < 5) return json({ error: 'Tulis permintaannya dulu' }, 400);
     const judul = String(body.judul || '').trim() || isi.split('\n')[0].slice(0, 70);
     await gh(env, `/repos/${REPO}/labels`, { method: 'POST', body: JSON.stringify({ name: LABEL, color: 'C6FF3D' }), soft: true });
-    const i = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: judul, body: isi, labels: [LABEL] }) });
+    const peran = PERAN.includes(body.peran) ? body.peran : 'developer';
+    const i = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: judul, body: isi, labels: [LABEL, 'peran:' + peran] }) });
     return json(brief(i));
   }
 
@@ -117,7 +156,7 @@ async function api(req, env, url) {
     const isi = String(body.isi || '').trim();
     if (isi.length < 3) return json({ error: 'Tulis revisinya dulu' }, 400);
     if (issue.state === 'closed') await gh(env, `/repos/${REPO}/issues/${n}`, { method: 'PATCH', body: JSON.stringify({ state: 'open' }) });
-    await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'PUT', body: JSON.stringify({ labels: [LABEL, 'sedang-dikerjakan'] }) });
+    await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'PUT', body: JSON.stringify({ labels: [...lbl(issue).filter(x => x === LABEL || x.startsWith('peran:') || x === 'otomatis'), 'sedang-dikerjakan'] }) });
     await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body: 'Revisi: ' + isi }) });
     return json({ ok: true });
   }

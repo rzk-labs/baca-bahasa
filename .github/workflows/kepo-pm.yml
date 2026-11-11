@@ -1,0 +1,77 @@
+name: Keepo Agent PM
+
+# Tiap hari jam 08.00 WIB, PM agent memilih 1 tugas berikutnya dari roadmap,
+# membuat issue, lalu menyerahkannya ke agent kerja.
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      paksa:
+        description: Tetap jalan walau masih ada tugas menunggu
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: kepo-pm
+  cancel-in-progress: false
+
+jobs:
+  pm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cek antrean
+        id: cek
+        run: |
+          OPEN=$(gh issue list --label kepo-dev --state open --json number --jq length)
+          echo "Tugas terbuka: $OPEN"
+          if [ "$OPEN" -ge 2 ] && [ "${{ inputs.paksa }}" != "true" ]; then
+            echo "Masih ada $OPEN tugas menunggu founder. PM istirahat hari ini."
+            echo "jalan=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "jalan=1" >> "$GITHUB_OUTPUT"
+          fi
+          mkdir -p .kepo-tmp
+          gh issue list --label kepo-dev --state all --limit 30 --json number,title,state,labels \
+            --jq '.[] | "#\(.number) [\(.state)] [\([.labels[].name]|join(","))] \(.title)"' > ".kepo-tmp/tugas.txt"
+
+      - name: PM agent merencanakan
+        if: steps.cek.outputs.jalan == '1'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Kamu agent PM tim Keepo. Baca CLAUDE.md, docs/TIM.md, docs/roadmap.json, dokumen lain di docs/, dan daftar tugas .kepo-tmp/tugas.txt (jangan duplikat tugas yang sudah ada/selesai/ditolak).
+            Pilih SATU tugas berikutnya yang paling berdampak, sesuai fase sekarang, prioritas P0 dulu, prinsip "Reader First, AI Second", dan kapasitas founder 1-4 jam/minggu.
+            Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
+            Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
+            {"peran":"developer|riset|desain|pm","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
+          claude_args: >-
+            --max-turns 30
+            --allowedTools "Read,Glob,Grep,Write"
+
+      - name: Buat tugas & serahkan
+        if: steps.cek.outputs.jalan == '1'
+        run: |
+          F=".kepo-tmp/tugas.json"
+          test -s "$F" || { echo "PM tidak menulis tugas.json"; exit 1; }
+          PERAN=$(jq -r .peran "$F"); case "$PERAN" in developer|riset|desain|pm) ;; *) PERAN=developer ;; esac
+          gh label create "peran:$PERAN" --color C9B8FF 2>/dev/null || true
+          gh label create otomatis --color 9CC8FF 2>/dev/null || true
+          jq -r '.isi + "\n\n---\n_Dipilih PM agent: " + .alasan + "_"' "$F" > ".kepo-tmp/body.md"
+          URL=$(gh issue create --title "$(jq -r .judul "$F")" --body-file ".kepo-tmp/body.md" --label kepo-dev --label "peran:$PERAN" --label otomatis)
+          N=${URL##*/}
+          echo "Tugas baru: $URL"
+          gh workflow run kepo-dev.yml -f issue="$N"

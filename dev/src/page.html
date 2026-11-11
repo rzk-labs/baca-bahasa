@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Keepo HQ</title>
+<meta name="theme-color" content="#F2EEE5">
+<link rel="icon" href="https://rzk-labs.github.io/baca-bahasa/icon-192.png">
+<link rel="apple-touch-icon" href="https://rzk-labs.github.io/baca-bahasa/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,700;75,800;75,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<style>
+:root{
+  --bg:#F2EEE5;--ink:#2A1215;--mut:#7a6a6b;--card:#FFFDF8;--line:#E3DBCC;--soft:#E9E3D6;
+  --lime:#C6FF3D;--lav:#C9B8FF;--pink:#FFB8D9;--coral:#FF8A65;--sun:#FFE14D;--mint:#9EF0C9;--blue:#A9CFFF;
+  --on:#2A1215;--shadow:0 1px 0 var(--ink);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140D0F;--ink:#F4EFE6;--mut:#ad9d9e;--card:#1F1618;--line:#33272A;--soft:#2a1f22}}
+:root[data-theme="dark"]{--bg:#140D0F;--ink:#F4EFE6;--mut:#ad9d9e;--card:#1F1618;--line:#33272A;--soft:#2a1f22}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+h1,h2,h3,.disp{font-family:Archivo,sans-serif;font-stretch:75%;font-weight:900;text-transform:uppercase;letter-spacing:.005em;line-height:.95;margin:0}
+h1{font-size:44px}h2{font-size:26px}h3{font-size:19px}
+a{color:inherit}
+.app{display:grid;grid-template-columns:1fr;min-height:100vh}
+/* sidebar */
+.side{display:none}
+.main{padding:16px 16px 110px;max-width:1180px;width:100%;margin:0 auto;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 18px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:40px;height:40px;border-radius:12px;background:var(--lav);border:2px solid var(--ink)}
+.brand b{font-family:Archivo;font-stretch:75%;font-weight:900;font-size:24px;text-transform:uppercase;line-height:1}
+.brand small{display:block;color:var(--mut);font-size:12px;font-weight:600}
+.tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));z-index:20;display:flex;gap:2px;background:#2A1215;padding:6px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.tabbar button{border:0;background:none;color:#F2EEE5;opacity:.65;padding:9px 13px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.tabbar button.on{background:var(--lime);color:#2A1215;opacity:1}
+.tabbar svg{width:18px;height:18px}
+@media (min-width:1000px){
+  .app{grid-template-columns:248px 1fr}
+  .side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;padding:22px 16px;border-right:2px solid var(--line)}
+  .side .brand{margin-bottom:18px}
+  .side nav button{width:100%;display:flex;align-items:center;gap:10px;border:0;background:none;padding:11px 14px;border-radius:14px;font-weight:700;cursor:pointer;text-align:left}
+  .side nav button.on{background:var(--ink);color:var(--bg)}
+  .side nav svg{width:19px;height:19px}
+  .side .foot{margin-top:auto;font-size:12px;color:var(--mut)}
+  .tabbar,.top .brand{display:none}
+  .main{padding:28px 32px 48px}
+}
+/* blocks */
+.grid{display:grid;gap:14px}
+.bento{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:760px){.bento{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{border:2px solid var(--ink);border-radius:24px;padding:18px;background:var(--card);position:relative;overflow:hidden;min-width:0}
+.tile.c{color:var(--on)}
+.span2{grid-column:span 2}.span4{grid-column:1/-1}
+.t-lime{background:var(--lime)}.t-lav{background:var(--lav)}.t-pink{background:var(--pink)}.t-sun{background:var(--sun)}.t-mint{background:var(--mint)}.t-blue{background:var(--blue)}.t-coral{background:var(--coral)}.t-ink{background:#2A1215;color:#F2EEE5}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.big{font-family:Archivo;font-stretch:75%;font-weight:900;font-size:56px;line-height:.9}
+.mut{color:var(--mut)}.sm{font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);font-weight:800;font-size:14px;padding:10px 16px;border-radius:999px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.lime{background:var(--lime);color:#2A1215;border-color:#2A1215}
+.tile.c .btn{border-color:#2A1215;background:#2A1215;color:#F2EEE5}.tile.c .btn.ghost{background:transparent;color:#2A1215}
+.btn:disabled{opacity:.5;cursor:default}
+.btn svg{width:16px;height:16px}
+.sec{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:28px 0 12px}
+/* ring */
+.ring{--p:0;width:92px;height:92px;border-radius:50%;background:conic-gradient(#2A1215 calc(var(--p)*1%),rgba(42,18,21,.15) 0);display:grid;place-items:center;flex:none}
+.ring b{width:68px;height:68px;border-radius:50%;background:var(--lime);display:grid;place-items:center;font-family:Archivo;font-stretch:75%;font-weight:900;font-size:24px}
+/* agents */
+.agents{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.agent{display:flex;flex-direction:column;gap:10px}
+.av{width:52px;height:52px;border-radius:16px;border:2px solid #2A1215;display:grid;place-items:center;font-size:26px;flex:none;position:relative}
+.av .live{position:absolute;right:-5px;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--lime);border:2px solid #2A1215;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(.7)}}
+.agent .st{font-size:13px;font-weight:700;padding:8px 10px;border-radius:12px;background:var(--soft);min-height:38px}
+.agent .st.on{background:var(--sun);color:#2A1215}
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1.5px solid #2A1215;color:#2A1215;white-space:nowrap;line-height:1.4}
+.s-antre{background:var(--blue)}.s-dikerjakan{background:var(--sun)}.s-siap{background:var(--lime)}.s-gagal{background:var(--coral)}.s-live{background:var(--mint)}.s-ditolak{background:#d9d4cb}
+.p-developer{background:var(--lime)}.p-riset{background:var(--blue)}.p-desain{background:var(--pink)}.p-pm{background:var(--lav)}.p-qa{background:var(--mint)}
+.chip.o{background:transparent;color:var(--ink);border-color:var(--ink)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1s infinite}
+/* board */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.col{background:var(--soft);border-radius:22px;padding:12px;scroll-snap-align:start;min-height:200px}
+.col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
+.card:hover{transform:translateY(-2px)}
+.card b{display:block;margin:6px 0 4px;line-height:1.3}
+/* timeline */
+.feed{display:grid;gap:0}
+.ev{display:flex;gap:12px;padding:10px 0;border-bottom:1.5px dashed var(--line);align-items:flex-start}
+.ev:last-child{border:0}
+.ev .ic{width:34px;height:34px;border-radius:11px;border:2px solid #2A1215;display:grid;place-items:center;flex:none;font-size:16px}
+.ev b{font-weight:700}
+/* map */
+.phase{margin-bottom:16px}
+.phase-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.stages{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.stage{display:flex;gap:10px;align-items:flex-start;padding:12px;border:2px solid var(--ink);border-radius:16px;background:var(--card)}
+.stage .no{font-family:Archivo;font-stretch:75%;font-weight:900;font-size:22px;width:34px;flex:none}
+.stage b{display:block;line-height:1.25}
+.k-selesai{background:var(--mint)}.k-draft,.k-berjalan{background:var(--sun)}.k-awal{background:var(--blue)}.k-belum{background:transparent;color:var(--ink);border-style:dashed}
+.bar{height:10px;border-radius:99px;background:rgba(42,18,21,.15);overflow:hidden}.bar i{display:block;height:100%;background:#2A1215;border-radius:99px}
+/* doc */
+.doclist{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.md{line-height:1.65;overflow-wrap:anywhere}.md h1,.md h2,.md h3{margin:22px 0 10px}.md h1{font-size:32px}
+.md table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}.md td,.md th{border:1.5px solid var(--line);padding:6px 10px;text-align:left}
+.md code{background:var(--soft);padding:1px 5px;border-radius:6px}.md pre{background:var(--soft);padding:12px;border-radius:12px;overflow-x:auto}
+/* detail */
+.msg{border-left:4px solid var(--lav);padding:4px 0 4px 14px;margin:14px 0}
+.msg.kamu{border-color:var(--pink)}.msg small{display:block;color:var(--mut);font-weight:800;margin-bottom:2px}
+textarea,input,select{width:100%;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
+textarea{min-height:120px;resize:vertical}
+textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--lime)}
+.err{color:#d43d1a;font-weight:700;font-size:14px}
+.back{border:0;background:none;font-weight:800;cursor:pointer;padding:6px 0;margin-bottom:8px}
+/* sheet */
+.veil{position:fixed;inset:0;background:rgba(20,10,12,.45);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.veil.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:560px;border-radius:28px 28px 0 0;padding:20px 16px max(20px,env(safe-area-inset-bottom));border:2px solid var(--ink);border-bottom:0;max-height:92vh;overflow:auto}
+@media (min-width:700px){.veil{align-items:center}.sheet{border-radius:28px;border-bottom:2px solid var(--ink)}}
+.roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+.roles label{cursor:pointer}
+.roles input{display:none}
+.roles span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border:2px solid var(--ink);border-radius:16px;font-weight:800;font-size:12px;text-align:center}
+.roles span i{font-style:normal;font-size:22px}
+.roles input:checked+span{background:var(--lime);color:#2A1215;border-color:#2A1215}
+.empty{padding:22px;text-align:center;color:var(--mut);border:2px dashed var(--line);border-radius:18px}
+.skel{height:120px;border-radius:24px;background:linear-gradient(90deg,var(--soft),var(--line),var(--soft));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.fab{position:fixed;right:16px;bottom:88px;z-index:21}
+@media (min-width:1000px){.fab{display:none}}
+</style></head><body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><img src="https://rzk-labs.github.io/baca-bahasa/img/kepo-icon.webp" alt=""><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div>
+    <nav id="sidenav"></nav>
+    <button class="btn lime" style="margin-top:14px" onclick="perintah()">＋ Perintah ke tim</button>
+    <div class="foot">Live: <a href="https://rzk-labs.github.io/baca-bahasa/" target="_blank">rzk-labs.github.io/baca-bahasa</a></div>
+  </aside>
+  <main class="main">
+    <div class="top"><div class="brand"><img src="https://rzk-labs.github.io/baca-bahasa/img/kepo-icon.webp" alt=""><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div></div>
+    <div id="view"></div>
+  </main>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+<button class="btn lime fab" id="fab" onclick="perintah()" style="display:none">＋ Perintah</button>
+<div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
+<script>
+const $=s=>document.querySelector(s), V=$('#view');
+let tok=''; try{tok=localStorage.getItem('kd_tok')||''}catch(e){}
+let HQ=null, timer=null, cur='markas';
+const IC={
+  markas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  papan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>',
+  peta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
+  dokumen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>'
+};
+const NAV=[['markas','Markas'],['papan','Papan'],['peta','Peta'],['dokumen','Dokumen']];
+const TIM={
+  pm:{n:'PM',e:'🧭',c:'t-lav',d:'Memilih tugas harian dari roadmap'},
+  riset:{n:'Riset',e:'🔎',c:'t-blue',d:'Pasar, kompetitor, persona'},
+  desain:{n:'Desain',e:'🎨',c:'t-pink',d:'UX/UI, alur, brand'},
+  developer:{n:'Developer',e:'🛠️',c:'t-lime',d:'Menulis kode aplikasi'},
+  qa:{n:'QA',e:'🧪',c:'t-mint',d:'Memeriksa setiap hasil'}
+};
+const ST={antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
+const KS={selesai:'Selesai',draft:'Draft',berjalan:'Berjalan',awal:'Awal',belum:'Belum'};
+const BOBOT={selesai:1,draft:.6,berjalan:.5,awal:.3,belum:0};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tgl=t=>new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+function lalu(t){const m=Math.round((Date.now()-new Date(t))/6e4);if(m<1)return'barusan';if(m<60)return m+' mnt lalu';const h=Math.round(m/60);if(h<24)return h+' jam lalu';return Math.round(h/24)+' hari lalu'}
+const chipS=t=>`<span class="chip s-${t.status}">${t.status==='dikerjakan'?'<i class="dot"></i>':''}${ST[t.status]}</span>`;
+const chipP=p=>`<span class="chip p-${p}">${TIM[p]?.e||''} ${TIM[p]?.n||p}</span>`;
+const chipQ=q=>q?`<span class="chip o">${q==='lolos'?'✅ QA lolos':'⚠️ QA catatan'}</span>`:'';
+
+async function call(path,body){
+  const r=await fetch('/api'+path,{method:body?'POST':'GET',headers:{authorization:'Bearer '+tok,'content-type':'application/json'},body:body?JSON.stringify(body):undefined});
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401&&path!=='/login'){tok='';login();throw new Error('Perlu login')}
+  if(!r.ok)throw new Error(d.error||'Gagal ('+r.status+')');
+  return d;
+}
+function navs(){
+  const b=(k,l)=>`<button class="${cur===k?'on':''}" onclick="go('${k}')">${IC[k]}<span>${l}</span></button>`;
+  $('#sidenav').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
+  $('#tabbar').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
+  $('#fab').style.display=tok?'':'none';
+}
+function go(k,arg){clearTimeout(timer);cur=k;navs();scrollTo(0,0);
+  if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);
+  try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
+}
+async function load(){HQ=await call('/hq');return HQ}
+function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{await load();fn(true)}catch(e){}},sibuk?12000:60000)}
+function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
+
+function login(){
+  clearTimeout(timer);$('#fab').style.display='none';
+  V.innerHTML=`<div class="tile t-lav c" style="max-width:440px;margin:8vh auto 0"><div class="eyebrow">Khusus founder</div><h1 style="margin:6px 0 14px">Masuk markas</h1>
+  <input id="pw" type="password" placeholder="Password" autocomplete="current-password"><div class="row" style="margin-top:12px"><button class="btn" id="go">Masuk</button><span id="e" class="err"></span></div></div>`;
+  const f=async()=>{try{const d=await call('/login',{pw:$('#pw').value});tok=d.token;try{localStorage.setItem('kd_tok',tok)}catch(e){};go('markas')}catch(e){$('#e').textContent=e.message}};
+  $('#go').onclick=f;$('#pw').onkeydown=e=>{if(e.key==='Enter')f()};
+}
+
+function nextPM(){const d=new Date();d.setUTCHours(1,0,0,0);if(d<=new Date())d.setUTCDate(d.getUTCDate()+1);return d}
+function progres(r){if(!r)return 0;return Math.round(r.tahap.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/r.tahap.length*100)}
+
+async function markas(again){
+  if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(cur!=='markas')return;
+  const T=HQ.tasks, R=HQ.roadmap, runs=HQ.runs;
+  const siap=T.filter(t=>t.status==='siap'), jalan=T.filter(t=>t.status==='dikerjakan'||t.status==='antre');
+  const live=T.filter(t=>t.status==='live').length, p=progres(R);
+  const pmRun=(runs||[]).find(r=>r.jenis==='pm'&&r.status!=='completed');
+  const kerjaRun=(runs||[]).filter(r=>r.jenis==='kerja'&&r.status!=='completed');
+  const np=nextPM();
+  const agent=k=>{
+    const a=TIM[k];let on=null,st='';
+    if(k==='pm'){on=pmRun;st=pmRun?'Sedang memilih tugas berikutnya…':'Siaga · jadwal '+np.toLocaleString('id-ID',{weekday:'short',hour:'2-digit',minute:'2-digit'})}
+    else if(k==='qa'){const q=T.filter(t=>t.qa);on=kerjaRun.length&&jalan.length?1:0;st=q.length?`${q.filter(t=>t.qa==='lolos').length} lolos · ${q.filter(t=>t.qa==='catatan').length} catatan`:'Belum ada pemeriksaan'}
+    else{const w=T.find(t=>t.peran===k&&(t.status==='dikerjakan'||t.status==='antre'));on=w;st=w?'Sedang: '+esc(w.judul):`Siaga · ${T.filter(t=>t.peran===k&&t.status==='live').length} tugas live`}
+    return `<div class="tile agent"><div class="row"><div class="av ${a.c}">${a.e}${on?'<i class="live"></i>':''}</div><div><h3>${a.n}</h3><div class="mut sm">${a.d}</div></div></div><div class="st ${on?'on':''}">${st}</div></div>`;
+  };
+  const evs=[];
+  (runs||[]).slice(0,8).forEach(r=>evs.push({t:r.mulai,ic:r.jenis==='pm'?'🧭':'🛠️',c:r.jenis==='pm'?'t-lav':'t-lime',txt:`<b>${r.jenis==='pm'?'PM':'Tim'}</b> ${r.status!=='completed'?'sedang bekerja':r.hasil==='success'?'selesai':r.hasil==='skipped'?'dilewati':'gagal'} · ${esc(r.judul)}`,url:r.url}));
+  if(!runs)T.slice(0,8).forEach(t=>evs.push({t:t.diubah,ic:TIM[t.peran]?.e||'•',c:TIM[t.peran]?.c||'',txt:`<b>#${t.n}</b> ${esc(t.judul)} → ${ST[t.status]}`}));
+  evs.sort((a,b)=>new Date(b.t)-new Date(a.t));
+  V.innerHTML=`
+  <div class="row" style="margin-bottom:16px"><div><div class="eyebrow mut">${new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'})}</div><h1>Markas tim</h1></div><span class="sp"></span>
+    <button class="btn ghost" id="pmnow">${IC.play} Jalankan PM sekarang</button></div>
+  <div class="bento">
+    <div class="tile c t-lime span2"><div class="row" style="align-items:center;gap:16px"><div class="ring" style="--p:${p}"><b>${p}%</b></div><div style="min-width:0"><div class="eyebrow">Fase sekarang</div><h2 style="margin:4px 0 6px">${esc(R?.fase_sekarang||'—')}</h2><div class="sm">${esc(R?.prinsip||'')}</div></div></div></div>
+    <div class="tile c ${siap.length?'t-sun':'t-mint'}" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${siap.length}</div><div class="sm">${siap.length?'hasil siap dicek →':'Semua beres ✨'}</div></div>
+    <div class="tile c t-pink"><div class="eyebrow">Sudah live</div><div class="big">${live}</div><div class="sm">${jalan.length} sedang dikerjakan</div></div>
+  </div>
+  ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
+  <div class="sec"><h2>Tim agent</h2><span class="mut sm">Bekerja tiap hari 08.00 WIB</span></div>
+  <div class="agents">${['pm','riset','desain','developer','qa'].map(agent).join('')}</div>
+  <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
+  <div class="tile">${evs.length?`<div class="feed">${evs.map(e=>`<div class="ev"><div class="ic ${e.c}">${e.ic}</div><div style="min-width:0;flex:1"><div>${e.txt}</div><div class="mut sm">${lalu(e.t)}${e.url?` · <a href="${e.url}" target="_blank">log</a>`:''}</div></div></div>`).join('')}</div>`:'<div class="empty">Belum ada aktivitas.</div>'}</div>`;
+  $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;try{await call('/pm',{paksa:true});b.innerHTML='✓ PM dipanggil';setTimeout(async()=>{await load();markas(true)},6000)}catch(x){b.disabled=false;b.textContent=x.message}};
+  auto(markas);
+}
+
+async function papan(again){
+  if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(cur!=='papan')return;
+  const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
+  const by=k=>HQ.tasks.filter(t=>k==='gagal'?(t.status==='gagal'||t.status==='ditolak'):t.status===k);
+  V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
+  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);return `<div class="col"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?L.map(t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`).join(''):'<div class="empty sm">Kosong</div>'}</div>`}).join('')}</div>`;
+  auto(papan);
+}
+
+async function peta(){
+  if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
+  const fases=[...new Set(R.tahap.map(t=>t.fase))];
+  V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
+  <div class="bento" style="margin-bottom:22px"><div class="tile c t-lav span2"><div class="eyebrow">Progres keseluruhan</div><div class="big">${progres(R)}%</div><div class="bar" style="margin-top:10px"><i style="width:${progres(R)}%"></i></div></div>
+  <div class="tile c t-sun span2"><div class="eyebrow">Kapasitas founder</div><div style="font-weight:700;margin-top:6px">${esc(R.kapasitas_founder||'')}</div></div></div>
+  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${esc(t.catatan)}</div></div></div>`).join('')}</div></div>`}).join('')}
+  <div class="sec"><h2>Milestone</h2></div><div class="grid">${R.milestone.map(m=>`<div class="tile row"><div class="av ${m.status==='selesai'?'t-mint':m.status==='berjalan'?'t-sun':'t-blue'}" style="font-family:Archivo;font-weight:900;font-size:22px">${m.no}</div><div style="flex:1;min-width:0"><b>${esc(m.nama)}</b> <span class="chip k-${m.status}">${KS[m.status]||m.status}</span><div class="mut sm">${esc(m.isi)}</div></div></div>`).join('')}</div>
+  <div class="sec"><h2>Prioritas</h2></div><div class="tile"><div class="grid" style="gap:8px">${R.prioritas.map(p=>`<div class="row"><span class="chip ${p.level==='P0'?'t-coral':p.level==='P1'?'t-sun':p.level==='P2'?'t-blue':'s-ditolak'}">${p.level}</span><span>${esc(p.isi)}</span></div>`).join('')}</div></div>`;
+}
+
+async function dokumen(path){
+  if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(path){
+    V.innerHTML='<div class="skel"></div>';
+    try{const d=await call('/doc?path='+encodeURIComponent(path));
+      const html=window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(d.isi)):'<pre>'+esc(d.isi)+'</pre>';
+      V.innerHTML=`<button class="back" onclick="go('dokumen')">← Semua dokumen</button><div class="tile md">${html}</div>`;
+    }catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>'}
+    return;
+  }
+  const col=n=>n.includes('riset')?'t-blue':n.includes('desain')?'t-pink':n.includes('TIM')?'t-lav':'t-sun';
+  V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">Hasil kerja riset, desain, dan PM</div><h1>Dokumen</h1></div>
+  ${HQ.docs.length?`<div class="doclist">${HQ.docs.map(p=>{const n=p.replace('docs/','').replace('.md','');return `<div class="tile c ${col(n)}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div style="font-size:26px">📄</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n.replace(/[-_]/g,' '))}</h3></div>`}).join('')}</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
+}
+
+async function detail(n){
+  clearTimeout(timer);scrollTo(0,0);
+  let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
+  const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
+  const kerja=t.status==='antre'||t.status==='dikerjakan';
+  let aksi='';
+  if(kerja)aksi=`<p class="mut"><i class="dot" style="display:inline-block"></i> Tim sedang bekerja (biasanya 1–10 menit). Halaman menyegarkan sendiri.</p><a class="btn ghost" target="_blank" href="${t.actions}">Lihat log</a>`;
+  else if(t.status==='siap')aksi=`<a class="btn ghost" target="_blank" href="${t.preview}">Coba preview ↗</a><button class="btn lime" id="ok">Setujui &amp; live</button><button class="btn ghost" id="no">Tolak</button>`;
+  else if(t.status==='live')aksi=`<a class="btn ghost" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a><span class="mut sm">Live ±1–2 menit; tutup-buka app kalau belum berubah.</span>`;
+  V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
+  <div class="tile"><div class="row">${chipP(hq.peran||'developer')}${chipS(t)}${chipQ(hq.qa)}${hq.otomatis?'<span class="chip o">🤖 dari PM</span>':''}<span class="sp"></span><a class="mut sm" href="${t.url}" target="_blank">#${t.n}</a></div>
+  <h2 style="margin:12px 0 4px">${esc(t.judul)}</h2>
+  <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div></div>
+  ${t.riwayat.map(m=>`<div class="msg ${m.dari}"><small>${m.dari==='kamu'?'Kamu':'Tim agent'} · ${tgl(m.waktu)}</small><div class="md">${md(m.teks)}</div></div>`).join('')}
+  <div class="row" style="margin-top:14px">${aksi}</div><div id="e" class="err"></div></div>
+  ${kerja?'':`<div class="tile" style="margin-top:14px"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut sm">Tim melanjutkan dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: tombolnya kebesaran, kecilin dan pindah ke kanan."></textarea><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>`}`;
+  const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
+  if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
+  if($('#no'))$('#no').onclick=e=>{const b=e.currentTarget;if(b.dataset.y)act('tolak',0,b);else{b.dataset.y=1;b.textContent='Yakin tolak?'}};
+  if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value},e.currentTarget);
+  if(kerja)timer=setTimeout(()=>detail(n),12000);
+}
+function md(s){return window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(String(s||''))):esc(s).replace(/\n/g,'<br>')}
+
+function perintah(){
+  const v=$('#veil');v.classList.add('on');
+  $('#sheet').innerHTML=`<div class="row"><h2>Perintah ke tim</h2><span class="sp"></span><button class="btn ghost" onclick="tutup()">✕</button></div>
+  <p class="mut sm">Pilih siapa yang mengerjakan, lalu jelaskan seperti ngobrol.</p>
+  <div class="roles">${['developer','desain','riset','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
+  <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
+  <div class="row" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
+  $('#isi').focus();
+  $('#kirim').onclick=async e=>{const b=e.currentTarget;b.disabled=true;
+    try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value});tutup();await load();detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false}};
+}
+function tutup(){$('#veil').classList.remove('on')}
+$('#veil').onclick=e=>{if(e.target.id==='veil')tutup()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')tutup()});
+
+if(!tok){navs();login()}else{const h=location.hash.slice(1)||'markas',i=h.indexOf('/'),k=i<0?h:h.slice(0,i),a=i<0?'':h.slice(i+1);go(NAV.some(x=>x[0]===k)?k:'markas',a&&decodeURIComponent(a))}
+</script></body></html>

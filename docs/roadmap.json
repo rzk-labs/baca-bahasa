@@ -1,0 +1,45 @@
+{
+  "produk": "Keepo",
+  "tagline": "Belajar bahasa asing lewat membaca buku",
+  "prinsip": "Reader First, AI Second: pengguna datang untuk membaca; AI membantu saat dibutuhkan, bukan mengambil alih.",
+  "fase_sekarang": "Discovery & Validation",
+  "kapasitas_founder": "Solo founder, 1-4 jam per minggu. Budget fleksibel selama manfaatnya jelas (spend when proven).",
+  "tahap": [
+    { "no": 1,  "nama": "Founder Vision & Goals",          "fase": "Strategic Foundation",       "status": "draft",   "catatan": "Visi, misi, tujuan dampak sosial, filosofi finansial sudah draft." },
+    { "no": 2,  "nama": "Strategic Context Analysis",      "fase": "Strategic Foundation",       "status": "draft",   "catatan": "Audit sumber daya, SWOT, strategi teknologi awal. Kelayakan teknis belum diuji." },
+    { "no": 3,  "nama": "Trend & Industry Research",       "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Tren belajar bahasa, digital learning, reading apps." },
+    { "no": 4,  "nama": "Ideation",                        "fase": "Discovery & Market Research", "status": "selesai", "catatan": "Belajar bahasa lewat membaca buku." },
+    { "no": 5,  "nama": "Opportunity Discovery",           "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Masalah saat membaca bahasa asing." },
+    { "no": 6,  "nama": "Market Research",                 "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Segmentasi & estimasi potensi pengguna." },
+    { "no": 7,  "nama": "Competitor Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Linga, LingQ, Readlang, Beelinguapp." },
+    { "no": 8,  "nama": "Market Gap Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Peluang: pembaca A2-B1, Indonesia-first, distraction-free reading." },
+    { "no": 9,  "nama": "Customer Discovery",              "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Baru hipotesis persona; target wawancara 15 calon pengguna." },
+    { "no": 10, "nama": "Problem & Demand Validation",     "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Belum uji masalah nyata & willingness to pay." },
+    { "no": 11, "nama": "Product Strategy",                "fase": "Product & Business Strategy", "status": "draft",  "catatan": "Target, positioning, rekomendasi MVP." },
+    { "no": 12, "nama": "Business Model",                  "fase": "Product & Business Strategy", "status": "draft",  "catatan": "Hipotesis freemium + subscription." },
+    { "no": 13, "nama": "Brand Discovery",                 "fase": "Brand Development",           "status": "awal",   "catatan": "Arah kepribadian Cozy Bookish." },
+    { "no": 14, "nama": "Naming Strategy",                 "fase": "Brand Development",           "status": "awal",   "catatan": "Nama kerja Keepo (alternatif: Babasa), belum final." },
+    { "no": 15, "nama": "Visual Identity",                 "fase": "Brand Development",           "status": "awal",   "catatan": "Palet, tipografi, logo, maskot gelembung chat." },
+    { "no": 16, "nama": "UX/UI Design",                    "fase": "Design & Build",              "status": "awal",   "catatan": "Beranda, reader e-book, tab Kata/Ngomong sudah ada di app." },
+    { "no": 17, "nama": "Prototyping & Usability Test",    "fase": "Design & Build",              "status": "belum",  "catatan": "Uji alur baca + ketuk-kata dengan 8-10 peserta." },
+    { "no": 18, "nama": "MVP Development",                 "fase": "Design & Build",              "status": "awal",   "catatan": "PWA live di GitHub Pages; belum diverifikasi dengan pengguna nyata." },
+    { "no": 19, "nama": "Beta Testing & Launch",           "fase": "Launch & Growth",             "status": "belum",  "catatan": "Private beta 30-50 pengguna selama 4 minggu." },
+    { "no": 20, "nama": "Growth & Scaling",                "fase": "Launch & Growth",             "status": "belum",  "catatan": "" }
+  ],
+  "prioritas": [
+    { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
+    { "level": "P0", "isi": "Bantuan memahami kata dan kalimat" },
+    { "level": "P0", "isi": "Privasi dan keamanan dasar" },
+    { "level": "P1", "isi": "Menyimpan progres dan kosakata" },
+    { "level": "P1", "isi": "Mengukur kebiasaan dan pemahaman" },
+    { "level": "P2", "isi": "Pronunciation scoring" },
+    { "level": "P2", "isi": "Banyak bahasa sekaligus" },
+    { "level": "P3", "isi": "Fitur sosial, leaderboard, marketplace buku (tunda)" }
+  ],
+  "milestone": [
+    { "no": 1, "nama": "Validate the Problem",          "isi": "Wawancara ~15 calon pengguna tentang masalah & kebiasaan membaca.", "status": "belum" },
+    { "no": 2, "nama": "Validate the Solution",         "isi": "Uji alur baca + ketuk-kata dengan 8-10 peserta, bandingkan dengan cara mereka sekarang.", "status": "belum" },
+    { "no": 3, "nama": "Build the Smallest Useful Reader", "isi": "Reader satu bahasa, impor teks, terjemahan kontekstual, progres membaca.", "status": "berjalan" },
+    { "no": 4, "nama": "Private Beta",                  "isi": "30-50 pengguna, amati 4 minggu: retensi, kemudahan membaca, peningkatan pemahaman.", "status": "belum" }
+  ]
+}
