@@ -131,6 +131,7 @@ button:disabled{opacity:.35;pointer-events:none}
 .goal-row .ring{width:58px;height:58px}.goal-row .ring svg{width:58px;height:58px}.goal-row .ring circle{stroke-width:8}
 .goal-row .ring .bg{stroke:rgba(42,18,21,.14)}
 .goal-row .ring .score{font:800 15px var(--font-ui)}
+.wod-w{font:800 30px/32px var(--font-display);font-stretch:75%;overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer}
 .chal .mascot{width:64px;height:64px}
 .chal b{font:800 22px/24px var(--font-display);font-stretch:78%;display:block}

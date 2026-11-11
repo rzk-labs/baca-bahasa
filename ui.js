@@ -310,6 +310,16 @@ function autoLang(text) {
   setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
   return g;
 }
+/* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
+function wordOfDay() {
+  const ok = db.vocab.filter(v => v && !v.noTr && String(v.t || '').trim() && v.w);
+  if (!ok.length) return null;
+  const now = Date.now(), due = ok.filter(v => !v.known && (v.due || 0) <= now);
+  const pool = (due.length ? due : ok).slice().sort((a, b) => ((a.due || a.at || 0) - (b.due || b.at || 0)) || String(a.w).localeCompare(String(b.w)));
+  const top = pool.slice(0, 7), d = new Date(), key = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
+  const v = top[key % top.length];
+  return { v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
+}
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -338,6 +348,8 @@ function viewRak() {
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
+      ${(() => { const k = wordOfDay(); if (!k) return ''; const { v, b } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
+        return `<div class="tile t-blue wide wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}${b ? `<div class="hero-act"><button class="pri" id="wodOpen" data-bk="${esc(b.id)}">Buka di bukunya →</button></div>` : ''}</div>`; })()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
       <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
       <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">🔥${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
@@ -352,6 +364,7 @@ function viewRak() {
     <div class="sec-h"><h2>Tambah cerita</h2></div>${addCard}`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
+    if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
     animRing($('#view'));
     heroMins(cur);
   }
