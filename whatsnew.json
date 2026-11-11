@@ -1,5 +1,11 @@
 [
   {
+    "n": 306,
+    "judul": "HP sempit (320px): header tak sesak & tab bawah lega",
+    "poin": "Bagian atas dan menu bawah di HP kecil kini lebih lega.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 297,
     "judul": "E-reader: pilihan rata teks (Rata kiri/Rata penuh) di Pengaturan",
     "poin": "Di Pengaturan ada pilihan baru \"Rata teks\": rata kiri atau rata penuh.",
@@ -171,12 +177,6 @@
     "n": 138,
     "judul": "Kata Tersimpan: tombol ✕ hapus dijauhkan dari tombol suara",
     "poin": "Tombol hapus kata sudah jauh dari tombol suara, jadi susah kepencet.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 132,
-    "judul": "Kartu 'Lanjut baca' di Beranda: tampilkan halaman & sisa menit",
-    "poin": "Kartu Lanjut baca di Beranda kini menunjukkan bab dan perkiraan sisa menit.",
     "tgl": "2026-11-11"
   }
 ]
