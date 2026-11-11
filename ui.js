@@ -567,6 +567,7 @@ function showFreq(word, b) {
   const f = freqOf(b), n = f.map.get(k) || 0;
   box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
 }
+const sugSeen = new Set();
 async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -587,9 +588,19 @@ async function onWord(el) {
     <div class="mut sm" id="wlook"></div>
     <div class="wfreq" id="wfreq"></div>
     <div class="wtap" id="wtap"></div>
+    <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
-  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 2 ? `Diketuk ${n}×` : ''; };
+  const showSug = n => {
+    const g = $('#wsug'); if (!g) return;
+    const k = b.lang + '|' + word.toLowerCase();
+    if (n < 3 || isSaved() || sugSeen.has(k)) { g.hidden = true; g.innerHTML = ''; return; }
+    sugSeen.add(k);
+    g.innerHTML = '<span>Sering dibuka nih. Simpan biar gampang diulang?</span><button class="pill-sm" id="wsug-b">Simpan</button>';
+    g.hidden = false;
+    $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
+  };
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 2 ? `Diketuk ${n}×` : ''; showSug(n); };
   showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);

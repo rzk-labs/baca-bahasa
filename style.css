@@ -368,6 +368,8 @@ img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
 .fb-chk{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 0 8px;font-size:14px;font-weight:600}
 .fb-chk input{width:24px;min-height:24px;height:24px;margin:0;flex:none}
 .wtap{font-size:12px;font-weight:700;color:rgba(42,18,21,.6);margin:0 0 6px}.wtap:empty{display:none}
+.wsug{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:rgba(42,18,21,.75);margin:0 0 8px}.wsug[hidden]{display:none}
+.wsug .pill-sm{min-height:32px;padding:4px 14px;border-radius:999px;border:0;background:#2A1215;color:#F2EEE5;font:inherit;font-weight:700;cursor:pointer}
 .tapb{display:inline-block;vertical-align:middle;margin:2px 0 2px 4px;padding:0 8px;border-radius:999px;background:var(--color-text);color:#F2EEE5;font-family:var(--font-ui);font-size:12px;font-weight:800;line-height:20px;font-stretch:100%}
 .wfreq{font-size:12px;color:rgba(42,18,21,.6);margin:2px 0 6px;overflow-wrap:anywhere}.wfreq:empty{display:none}
 /* Kata Tersimpan: bar ekspor CSV di atas daftar */
