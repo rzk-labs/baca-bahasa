@@ -76,6 +76,15 @@ jobs:
           fi
           node -e "JSON.parse(require('fs').readFileSync('docs/roadmap.json','utf8'))"
           for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] && node --check "$f"; done
+          # catat di "Yang baru" (whatsnew.json, tampil di Beranda app) bila ini perubahan app
+          P=$(gh issue view "$N" --json labels --jq '[.labels[].name|select(startswith("peran:"))][0] // ""')
+          if [ "$P" = "peran:developer" ] || [ "$P" = "peran:desain" ]; then
+            J=$(gh issue view "$N" --json title --jq .title)
+            POIN=$(gh issue view "$N" --json comments --jq '[.comments[].body|select(test("Siap dicek"))][-1] // ""' | grep -m1 -E '^\s*- ' | sed -E 's/^\s*-\s*//' || true)
+            [ -f whatsnew.json ] || echo '[]' > whatsnew.json
+            jq --argjson n "$N" --arg j "$J" --arg p "$POIN" --arg t "$(date -u +%F)" \
+              '[{n:$n,judul:$j,poin:$p,tgl:$t}] + map(select(.n != $n)) | .[:30]' whatsnew.json > .kepo-tmp/wn.json && mv .kepo-tmp/wn.json whatsnew.json
+          fi
           # versi cache harus lebih tinggi dari main bila file app berubah
           MC=$(git show origin/main:sw.js | grep -o "kepo-v[0-9]*" | head -1 | tr -dc 0-9)
           BC=$(grep -o "kepo-v[0-9]*" sw.js | head -1 | tr -dc 0-9)

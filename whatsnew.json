@@ -1,0 +1,98 @@
+[
+ {
+  "judul": "Ekspor CSV Anki: aman, tanpa kartu kosong, tombol di atas",
+  "n": 80,
+  "tgl": "2026-11-11",
+  "poin": "Ekspor CSV sekarang melewati kata yang belum ada artinya, jadi tak ada kartu kosong."
+ },
+ {
+  "judul": "E-reader: pengaturan lebar margin & mode fokus baris",
+  "n": 74,
+  "tgl": "2026-11-11",
+  "poin": "Pengaturan baca kini punya pilihan lebar margin: sempit, sedang, atau lebar."
+ },
+ {
+  "judul": "Daftar Tersimpan: tombol hapus kata dijauhkan & dibuat beda dari suara",
+  "n": 64,
+  "tgl": "2026-11-11",
+  "poin": "Tombol hapus kata sekarang jauh dari tombol suara, di ujung kanan."
+ },
+ {
+  "judul": "E-reader: tombol dengar kalimat versi pelan di kartu arti",
+  "n": 63,
+  "tgl": "2026-11-11",
+  "poin": "Kartu arti kalimat sekarang punya tombol Pelan untuk dengar kalimat lebih lambat."
+ },
+ {
+  "judul": "E-reader: sorotan kata & garis bawah jelas di tema Sepia/Gelap",
+  "n": 55,
+  "tgl": "2026-11-11",
+  "poin": "Sorotan kata di tema Terang dan Sepia kini punya garis tebal, jadi jelas terlihat."
+ },
+ {
+  "judul": "Ringkasan kata baru setelah selesai baca satu buku",
+  "n": 54,
+  "tgl": "2026-11-11",
+  "poin": "Selesai baca buku, muncul ringkasan kata baru dari sesi itu."
+ },
+ {
+  "judul": "Kartu arti kata: jangan tutupi kalimat yang lagi dibaca",
+  "n": 48,
+  "tgl": "2026-11-11",
+  "poin": "Kartu arti kata sekarang lebih pendek dan lebih rapat."
+ },
+ {
+  "judul": "Ekspor kata tersimpan ke CSV (siap impor Anki)",
+  "n": 47,
+  "tgl": "2026-11-11",
+  "poin": "Kata tersimpan sekarang bisa diunduh jadi file untuk aplikasi kartu hafalan."
+ },
+ {
+  "judul": "Anti-rusak: simpan penuh, cache offline aman, impor offline",
+  "n": 41,
+  "tgl": "2026-11-11",
+  "poin": "Memori HP penuh sekarang diberi tahu, bukan bikin aplikasi error."
+ },
+ {
+  "judul": "E-reader: tahan lama di kalimat langsung munculkan arti kalimat",
+  "n": 39,
+  "tgl": "2026-11-11",
+  "poin": "Tahan satu kalimat di e-reader, arti kalimatnya langsung muncul."
+ },
+ {
+  "judul": "Tab Kata: hapus bisa diurungkan & kata Hafal muncul lagi nanti",
+  "n": 33,
+  "tgl": "2026-11-11",
+  "poin": "Hapus kata sekarang bisa diurungkan lewat tombol \"Urungkan\" beberapa detik."
+ },
+ {
+  "judul": "Rapikan ukuran tombol & teks kecil di HP (style.css)",
+  "n": 31,
+  "tgl": "2026-11-11",
+  "poin": "Tombol hapus, bagikan, dan tutup tips lebih besar, tidak mudah salah pencet."
+ },
+ {
+  "judul": "Arti kata tahan offline: simpan permanen, isi ulang, data aman",
+  "n": 22,
+  "tgl": "2026-11-11",
+  "poin": "Bentrok dengan update terbaru sudah digabung, dua-duanya tetap jalan."
+ },
+ {
+  "judul": "Peta masalah membaca dari masukan pengguna AI (Discovery tahap 5 & 8)",
+  "n": 21,
+  "tgl": "2026-11-11",
+  "poin": "Bentrok dengan versi terbaru sudah digabung; catatan kedua pihak tetap ada."
+ },
+ {
+  "judul": "Terjemah frasa di e-reader: tap kata lalu perluas ke kata sebelah",
+  "n": 18,
+  "tgl": "2026-11-11",
+  "poin": "Di e-reader, tap kata lalu tekan tombol plus untuk menambah kata sebelah."
+ },
+ {
+  "judul": "Tandai kata tersimpan di teks bacaan (garis bawah halus)",
+  "n": 15,
+  "tgl": "2026-11-11",
+  "poin": "Kata yang sudah kamu simpan sekarang bergaris bawah titik-titik biru di bacaan."
+ }
+]

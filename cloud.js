@@ -166,6 +166,20 @@ async function openSharedFromUrl() {
   } catch (e) { $('#shIn').textContent = e.message; }
 }
 
+/* ---------- Yang baru (diisi otomatis saat update live, file whatsnew.json) ---------- */
+async function homeWhatsNew() {
+  const host = $('#wnHome'); if (!host) return;
+  let L = [];
+  try { L = await (await fetch('whatsnew.json?t=' + Date.now(), { cache: 'no-store' })).json(); } catch (e) { host.remove(); return; }
+  if (!Array.isArray(L) || !L.length) { host.remove(); return; }
+  let seen = 0; try { seen = +localStorage.getItem('kepo.wnSeen') || 0; } catch (e) {}
+  const baru = L.filter(x => x.n > seen).length;
+  const row = x => `<li><b>${esc(x.judul)}</b>${x.poin ? `<div class="mut sm">${esc(x.poin)}</div>` : ''}</li>`;
+  host.innerHTML = `<div class="card wn"><div class="sec-h" style="margin:0 0 8px"><h2>✨ Yang baru${baru ? ` <span class="wn-dot">${baru}</span>` : ''}</h2>${L.length > 3 ? '<button class="ghost" id="wnAll">Lihat semua</button>' : ''}</div><ul class="wn-l">${L.slice(0, 3).map(row).join('')}</ul></div>`;
+  const all = $('#wnAll'); if (all) all.onclick = () => { host.querySelector('.wn-l').innerHTML = L.slice(0, 20).map(row).join(''); all.remove(); };
+  try { localStorage.setItem('kepo.wnSeen', String(Math.max(...L.map(x => x.n)))); } catch (e) {}
+}
+
 /* ---------- pasang ke UI yang ada ---------- */
 const _setTab = setTab;
 setTab = function (t) {
@@ -173,6 +187,7 @@ setTab = function (t) {
   renderAcct();
   if (t === 'rak') {
     const ben = $('.bento');
+    if (ben) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; ben.after(w); homeWhatsNew(); }
     if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
