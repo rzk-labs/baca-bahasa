@@ -113,6 +113,18 @@ async function api(req, env, url) {
       })) : null,
     });
   }
+  if (p === '/hasil' && req.method === 'GET') {
+    const [issues, cs] = await Promise.all([
+      gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=100&sort=created&direction=desc`),
+      gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100`, { soft: true }),
+    ]);
+    const lap = {};
+    (Array.isArray(cs) ? cs : []).forEach(c => {
+      const n = +String(c.issue_url).split('/').pop();
+      if (!lap[n] && /Siap dicek|tidak mengubah/i.test(c.body || '')) lap[n] = { teks: c.body, waktu: c.created_at };
+    });
+    return json(issues.filter(i => !i.pull_request).map(i => ({ ...brief(i), laporan: lap[i.number] || null })));
+  }
   if (p === '/doc' && req.method === 'GET') {
     const path = url.searchParams.get('path') || '';
     if (!/^docs\/[\w.-]+\.md$/.test(path)) return json({ error: 'path' }, 400);

@@ -62,6 +62,8 @@ jobs:
           PERAN=$(gh issue view "$N" --json labels --jq '[.labels[].name|select(startswith("peran:"))][0] // "peran:developer"' | sed 's/peran://')
           echo "PERAN=$PERAN" >> "$GITHUB_ENV"
           printf '%s' "$REVISI" > "$T/revisi.txt"
+          M=$(gh issue list --label masukan-pengguna --state open --limit 1 --json number --jq '.[0].number // empty')
+          [ -n "$M" ] && gh issue view "$M" --json comments --jq '[.comments[-12:][] | .body] | join("\n---\n")' > "$T/masukan.txt" || true
           if git ls-remote --exit-code --heads origin "$BR" >/dev/null; then
             git checkout -B "$BR" "origin/$BR"
             # Selaraskan dengan main; bila bentrok, agent yang menyelesaikan tanda konflik.
@@ -85,6 +87,7 @@ jobs:
           {
             echo "$PERAN_TXT"
             echo "Baca CLAUDE.md, docs/TIM.md, dan docs/roadmap.json dulu untuk konteks."
+            echo "Masukan terbaru dari tester AI (Tari, Bima) & pengguna AI (Nadia, Raka) ada di .kepo-tmp/masukan.txt; pakai bila relevan."
             echo ""
             echo "## Tugas #$N: $(cat $T/judul.txt)"
             cat "$T/isi.txt"
@@ -127,6 +130,12 @@ jobs:
           if [ -f .kepo-ringkasan.md ]; then RINGKASAN="$(cat .kepo-ringkasan.md)"; rm .kepo-ringkasan.md; fi
           printf '%s' "$RINGKASAN" > "$T/ringkasan.md"
           git checkout -- .github 2>/dev/null || true   # agent tidak boleh mengubah workflow
+          # Pastikan versi cache lebih tinggi dari main bila file app berubah
+          MC=$(git show origin/main:sw.js | grep -o "kepo-v[0-9]*" | head -1 | tr -dc 0-9)
+          BC=$(grep -o "kepo-v[0-9]*" sw.js | head -1 | tr -dc 0-9)
+          if git diff --name-only origin/main -- index.html app.js ui.js style.css cloud.js img | grep -q . && [ "$BC" -le "$MC" ]; then
+            sed -i "s/kepo-v$BC'/kepo-v$((MC+1))'/" sw.js
+          fi
           git add -A
           git diff --cached --quiet || git commit -m "Keepo #$N ($PERAN): $(cat $T/judul.txt)"
           if [ "$(git rev-list --count origin/main..HEAD)" = "0" ]; then
