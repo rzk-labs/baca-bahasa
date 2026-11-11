@@ -1,5 +1,11 @@
 [
   {
+    "n": 194,
+    "judul": "Area ketuk tombol kecil di HP dibesarkan jadi minimal 44px",
+    "poin": "Tombol kecil di HP (avatar, Masuk, Simpan, pilihan) sekarang lebih gampang diketuk.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 193,
     "judul": "Saklar 'Tampilkan cara baca' di Setelan (kartu arti & kartu Hafal)",
     "poin": "Setelan baru: cara baca (romaji/pinyin) bisa dimatikan. Awalnya tetap nyala.",
@@ -172,11 +178,5 @@
     "n": 48,
     "tgl": "2026-11-11",
     "poin": "Kartu arti kata sekarang lebih pendek dan lebih rapat."
-  },
-  {
-    "judul": "Ekspor kata tersimpan ke CSV (siap impor Anki)",
-    "n": 47,
-    "tgl": "2026-11-11",
-    "poin": "Kata tersimpan sekarang bisa diunduh jadi file untuk aplikasi kartu hafalan."
   }
 ]
