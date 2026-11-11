@@ -345,6 +345,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rtitle b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle span{font-size:12px;color:var(--color-text-muted)}
 .rtip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 56px);transform:translateX(-50%);z-index:3;display:flex;gap:10px;align-items:center;width:min(92vw,380px);background:var(--ink);color:var(--cream);border-radius:var(--radius-lg);padding:12px 14px;font-size:14px;line-height:22px}
 .rtip button{min-height:44px;width:44px;flex:none;padding:0;color:inherit}
+.rrt{width:auto;min-width:44px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:800}.rrt .i{width:20px;height:20px}.rrt.on{background:var(--color-surface-soft)}@media (max-width:420px){.rrtl{display:none}}
 .rthm{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800;letter-spacing:.02em}
 .nchip{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 12px 0;padding:4px 4px 4px 12px;border-radius:var(--radius-lg);background:var(--color-surface-soft);color:var(--color-text);border:1px solid var(--color-border);font-size:13px;line-height:18px;font-weight:600}
 .nchip span{flex:1 1 150px}
@@ -421,4 +422,16 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fb-kind,.fb-stars,.seg{gap:8px}.chlist{gap:8px}.sheet-aux{gap:8px 12px}
 .pill{position:relative}
 .pill::after{content:"";position:absolute;left:50%;top:50%;width:100%;height:max(100%,44px);transform:translate(-50%,-50%)}
+/* #306 HP sempit (<=360px): header tak sesak, logo utuh, tab bawah lega */
+@media (max-width:360px){
+  #top{padding-left:10px;padding-right:10px;gap:4px}
+  #top h1{flex:1 1 auto;min-width:max-content;overflow:visible;font-size:22px;gap:3px}
+  #top h1 .mascot{width:24px;height:24px;flex:none}
+  #hdx{gap:4px;flex:none;min-width:0}
+  .pill{height:32px;padding:0 8px;gap:3px;font-size:12px}
+  .pill.login{padding:0 10px}
+  #hdx .icon{width:44px}
+  #tabs{left:10px;right:10px;gap:4px;padding:6px}
+  #tabs button{gap:3px;min-height:44px;padding:8px 0;font-size:12px;line-height:15px}
+}
 .try1{margin-top:var(--space-4)}.try1-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}.try1-row button{flex-direction:column;gap:6px;min-height:96px;min-width:44px;padding:10px 6px;border-radius:var(--radius-lg);background:var(--lime);color:var(--ink);font-weight:700;font-size:15px;text-align:center}.try1-row .em{font-size:36px;line-height:1}
