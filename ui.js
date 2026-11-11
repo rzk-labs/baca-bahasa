@@ -324,7 +324,7 @@ function viewRak() {
   const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
-    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); }
+    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { toast('Gagal menyimpan. Penyimpanan HP mungkin penuh.'); }
   };
   $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   $('#sample').onclick = () => {
@@ -340,7 +340,7 @@ function viewRak() {
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
       <label class="eyebrow" style="display:block;margin-top:12px">Teks<textarea id="px" placeholder="Tempel teks bahasa asing di sini…"></textarea></label>
       <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">Masukin ✨</button></div>`);
-    $('#ps').onclick = async () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); } };
+    $('#ps').onclick = async () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); } catch (e) { toast('Gagal menyimpan. Penyimpanan HP mungkin penuh.'); } };
   };
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
@@ -355,7 +355,17 @@ $('#file').onchange = async e => {
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
   try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
-  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? (/\.pdf$/i.test(f.name) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : 'File ini kosong, nggak ada teks yang kebaca.') : /internet|pustaka/.test(err.message) || (!navigator.onLine && /\.(epub|pdf)$/i.test(f.name)) ? 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
+  catch (err) {
+    console.error(err);
+    const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
+    let msg;
+    if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
+    else if (/scan|gambar/.test(m) || (/kosong/.test(m) && isPdf)) msg = 'PDF ini isinya gambar/scan, teksnya nggak kebaca.';
+    else if (/kosong/.test(m)) msg = 'File ini kosong, nggak ada teks yang kebaca.';
+    else if (/internet|pustaka/.test(m) || (!navigator.onLine && (isEpub || isPdf))) msg = 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.';
+    else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
+    toast(msg, 6000);
+  }
 };
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
