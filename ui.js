@@ -577,8 +577,11 @@ async function onWord(el) {
     <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wfreq" id="wfreq"></div>
+    <div class="wtap" id="wtap"></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 2 ? `Diketuk ${n}×` : ''; };
+  showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
@@ -614,13 +617,14 @@ async function onWord(el) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
-    db.vocab.unshift({ w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    const tp = takeTaps(b.lang, w);
+    db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
     $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
   };
@@ -777,7 +781,7 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all';
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru';
 const REVIEW_DAYS = [0, 3, 7, 21], DAY_MS = 864e5;
 const isDue = v => v.known && (v.due || 0) <= Date.now();
 function viewKata() {
@@ -798,7 +802,8 @@ function viewKata() {
     const q = kataQ.toLowerCase(), kl = $('#klist');
     if (kataSeg === 'simpan') {
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div></div>
+      if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}${+v.tap > 0 ? ` <span class="tapb" title="Diketuk ${+v.tap} kali">${+v.tap}×</span>` : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div></div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
@@ -809,7 +814,10 @@ function viewKata() {
         const opt = (val, txt) => `<option value="${esc(val)}"${csvF === val ? ' selected' : ''}>${esc(txt)}</option>`;
         const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
           ? `<select id="kCsvF" aria-label="Pilih kata yang diekspor">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
+        const sortSel =`<select id="kSort" aria-label="Urutkan kata" style="margin:0 0 8px"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
         kl.insertAdjacentHTML('afterbegin', `<div class="csvbar"><div class="csvcnt"><b>${db.vocab.length}</b> kata</div><button class="csvbtn" id="kCsv">⬇️ Ekspor CSV (${readyN()})</button>${filt}</div>`);
+        kl.insertAdjacentHTML('afterbegin', sortSel);
+        $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
         if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; $('#kCsv').textContent = `⬇️ Ekspor CSV (${readyN()})`; };
         $('#kCsv').onclick = async () => {
           const ready = readyN(), list = db.vocab.filter(inF);

@@ -1,5 +1,11 @@
 [
   {
+    "n": 152,
+    "judul": "Keepo HQ: kolom Live dibatasi 5 + daftar nama penguji dari data",
+    "poin": "Kolom Live di Papan dibatasi 5 kartu, sisanya lewat tombol.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 147,
     "judul": "Kata Tersimpan: tombol Ekspor CSV naik ke atas daftar",
     "poin": "Tombol Ekspor CSV sekarang di atas daftar kata, bentuknya pil kecil.",

@@ -302,7 +302,7 @@ async function markas(again){
   auto(markas);
 }
 
-let HF='semua';
+let HF='semua',LAMA=false;
 async function hasilKerja(again){
   if(!again)skel();
   let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
@@ -317,6 +317,8 @@ async function hasilKerja(again){
   let all=[...item,...mas];
   if(HF==='penguji')all=mas;else if(HF!=='semua')all=item.filter(t=>t.peran===HF);
   all.sort((x,y)=>new Date(y.w)-new Date(x.w));
+  const batas=Date.now()-7*864e5, nLama=all.filter(x=>new Date(x.w)<batas).length;
+  if(!LAMA)all=all.filter(x=>new Date(x.w)>=batas);
   const hari=d=>new Date(d).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
   const grp=[];all.forEach(x=>{const h=hari(x.w);let g=grp.find(g=>g.h===h);if(!g)grp.push(g={h,xs:[]});g.xs.push(x)});
   const kartu=x=>{
@@ -337,7 +339,7 @@ async function hasilKerja(again){
   <div class="sec"><h2>Per anggota tim</h2></div>
   <div class="agents">${per.map(k=>`<div class="tile agent" style="cursor:pointer" onclick="HF='${k}';hasilKerja(true)"><div class="row"><div class="av ${TIM[k].c}">${TIM[k].e}</div><div><h3>${TIM[k].n}</h3><div class="mut sm">${TIM[k].d}</div></div></div><div class="st"><b>${cnt(k)}</b> hasil</div></div>`).join('')}</div>
   <div class="row hf" style="margin:18px 0 6px;flex-wrap:wrap;gap:8px">${f('semua','Semua')}${per.map(k=>f(k,TIM[k].e+' '+TIM[k].n)).join('')}${f('penguji','👥 Tester & pengguna')}</div>
-  ${grp.length?grp.map(g=>`<div class="sec"><h2 style="font-size:20px">${esc(g.h)}</h2></div><div class="grid">${g.xs.map(kartu).join('')}</div>`).join(''):'<div class="empty">Belum ada hasil.</div>'}`;
+  ${grp.length?grp.map(g=>`<div class="sec"><h2 style="font-size:20px">${esc(g.h)}</h2></div><div class="grid">${g.xs.map(kartu).join('')}</div>`).join(''):'<div class="empty">Belum ada hasil 7 hari terakhir.</div>'}${nLama?`<div style="margin:14px 0"><button class="btn ghost more-btn" style="width:100%" onclick="LAMA=!LAMA;hasilKerja(true)">${LAMA?'Lipat yang lama':'Tampilkan lebih lama ('+nLama+')'}</button></div>`:''}`;
   clearTimeout(timer);timer=setTimeout(()=>{if(cur==='hasil')hasilKerja(true)},30000);
 }
 
