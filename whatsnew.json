@@ -1,5 +1,11 @@
 [
   {
+    "n": 274,
+    "judul": "Impor buku: tebak bahasa cerita otomatis, pemula tak perlu pilih",
+    "poin": "Sekarang bahasa cerita ditebak otomatis saat upload file atau tempel teks.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 272,
     "judul": "E-reader: tawarkan tema gelap/Ikut HP saat baca malam, 1 ketukan",
     "poin": "Saat baca malam, muncul saran halus: pakai tema gelap atau ikut HP.",
@@ -171,12 +177,6 @@
     "n": 113,
     "judul": "Impor EPUB/PDF tetap jalan offline: siapkan pustaka lebih awal",
     "poin": "Impor EPUB/PDF kini siap offline: pustaka diunduh diam-diam sekali saat online.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 109,
-    "judul": "Kartu hafalan: tampilkan cara baca & bentuk dasar di balik kartu",
-    "poin": "Balik kartu hafalan sekarang nunjukin cara baca dan bentuk dasar kata.",
     "tgl": "2026-11-11"
   }
 ]

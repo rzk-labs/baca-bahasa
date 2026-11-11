@@ -298,6 +298,16 @@ function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
   return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#2A1215" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
 }
+let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa cerita
+/* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
+function autoLang(text) {
+  const g = blManual ? null : guessLang(text);
+  if (!g || g === db.lastLang) return db.lastLang;
+  db.lastLang = g; save();
+  const sel = $('#bl'); if (sel) sel.value = g;
+  setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
+  return g;
+}
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -344,7 +354,8 @@ function viewRak() {
     heroMins(cur);
   }
   { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
-  $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
+  blManual = false;
+  $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
   const startSample = async l => {
@@ -369,7 +380,7 @@ function viewRak() {
     $('#ps').onclick = async () => {
       const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
       const btn = $('#ps'); btn.disabled = true;
-      try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); closeSheet(); }
+      try { const ps = cleanParas(x); await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, autoLang(ps.join(' '))); closeSheet(); }
       catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
     };
   };
@@ -385,7 +396,7 @@ $('#file').onchange = async e => {
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
+  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, autoLang(r.paras.join(' '))); }
   catch (err) {
     console.error(err);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
