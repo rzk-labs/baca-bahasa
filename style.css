@@ -257,6 +257,10 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .vitem .s1{font-size:13px;line-height:19px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vitem .icon{color:var(--color-text-muted);flex:none;min-width:44px;min-height:44px}
 .vitem .icon+.icon{margin-left:var(--space-3)}
+.vitem .icon.vdel{margin-left:20px;opacity:.55}
+.vitem .icon.vdel svg{width:18px;height:18px}
+.vitem .icon.vdel:active{opacity:1}
+@media (max-width:359px){.vitem{padding:var(--space-3)}.vitem .icon.vdel{margin-left:16px}}
 #toast .tact{background:none;border:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;padding:10px 4px;min-height:44px;cursor:pointer}
 /* ---------- toast, XP, konfeti, level up ---------- */
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 24px);transform:translateX(-50%);z-index:20;min-height:46px;display:flex;align-items:center;max-width:min(92vw,480px);padding:10px 18px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font-size:14px;line-height:20px;font-weight:700;animation:up var(--dur-sheet) var(--ease-out)}
