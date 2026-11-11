@@ -1,5 +1,11 @@
 [
   {
+    "n": 237,
+    "judul": "Kartu Hafal: tinggi menyesuaikan isi & kata panjang tidak meluber",
+    "poin": "Kartu Hafal sekarang menyesuaikan isinya, kata panjang tidak meluber lagi.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 227,
     "judul": "Laporan usability (Tahap 17): temuan tester AI + keluhan UX kompetitor",
     "poin": "Laporan usability selesai: temuan 4 penguji plus 45 keluhan pengguna aplikasi kompetitor.",
@@ -172,11 +178,5 @@
     "n": 63,
     "tgl": "2026-11-11",
     "poin": "Kartu arti kalimat sekarang punya tombol Pelan untuk dengar kalimat lebih lambat."
-  },
-  {
-    "judul": "E-reader: sorotan kata & garis bawah jelas di tema Sepia/Gelap",
-    "n": 55,
-    "tgl": "2026-11-11",
-    "poin": "Sorotan kata di tema Terang dan Sepia kini punya garis tebal, jadi jelas terlihat."
   }
 ]
