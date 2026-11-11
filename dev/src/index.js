@@ -73,7 +73,7 @@ const brief = i => {
   return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
     qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at };
 };
-const PERAN = ['developer', 'riset', 'desain', 'pm'];
+const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing'];
 const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm', 'kepo-pengguna.yml': 'pengguna' };
 
 async function openPR(env, n) {

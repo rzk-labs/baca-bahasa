@@ -36,7 +36,7 @@ jobs:
           HARI=$(date -u +%Y-%m-%d)
           PMRUN=$(gh run list --workflow kepo-pm.yml --limit 20 --json status,displayTitle \
             --jq '[.[]|select(.status!="completed")|.displayTitle]|join(" ")')
-          for P in riset desain developer pm; do
+          for P in riset desain developer pm marketing; do
             SIBUK=$(gh issue list --label kepo-dev --label "peran:$P" --state open --json labels \
               --jq '[.[]|select([.labels[].name]|(index("siap-dicek") or index("gagal"))|not)]|length')
             HARI_INI=$(gh issue list --label otomatis --label "peran:$P" --state all --limit 50 --json createdAt \

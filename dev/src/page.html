@@ -199,6 +199,7 @@ const TIM={
   riset:{n:'Riset',e:'🔎',c:'t-blue',d:'Pasar, kompetitor, persona'},
   desain:{n:'Desain',e:'🎨',c:'t-pink',d:'UX/UI, alur, brand'},
   developer:{n:'Developer',e:'🛠️',c:'t-lime',d:'Menulis kode aplikasi'},
+  marketing:{n:'Marketing',e:'📣',c:'t-sun',d:'Threads IG asbun, cari tester'},
   qa:{n:'QA',e:'🧪',c:'t-mint',d:'Memeriksa setiap hasil'}
 };
 const UJI=[
@@ -290,7 +291,7 @@ async function markas(again){
   </div>
   ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Kerja terus · peran kosong langsung diberi tugas (cek tiap 30 mnt)</span></div>
-  <div class="agents">${['pm','riset','desain','developer','qa'].map(agent).join('')}</div>
+  <div class="agents">${['pm','riset','desain','developer','marketing','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 2 jam &amp; tiap ada update live${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span></div>
   <div class="agents">${UJI.map(uji).join('')}</div>
   <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
@@ -308,7 +309,7 @@ async function hasilKerja(again){
   const OK={menuju:['🚀 Menuju live','t-blue'],live:['✅ Live','t-mint'],siap:['⏳ Menunggu kamu','t-sun'],dikerjakan:['🛠️ Dikerjakan','t-lav'],antre:['🕒 Antre','t-lav'],ditolak:['✖ Ditolak',''],gagal:['⚠️ Gagal','']};
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
-  const per=['riset','desain','developer','pm'];
+  const per=['riset','desain','developer','marketing','pm'];
   const cnt=k=>item.filter(t=>t.peran===k&&(t.status==='live'||t.status==='siap')).length;
   const lv=item.filter(t=>t.status==='live').length, sp=item.filter(t=>t.status==='siap').length;
   let all=[...item,...mas];
@@ -446,7 +447,7 @@ function perintah(){
   const v=$('#veil');v.classList.add('on');
   $('#sheet').innerHTML=`<div class="row"><h2>Perintah ke tim</h2><span class="sp"></span><button class="btn ghost" onclick="tutup()">✕</button></div>
   <p class="mut sm">Pilih siapa yang mengerjakan, lalu jelaskan seperti ngobrol.</p>
-  <div class="roles">${['developer','desain','riset','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
+  <div class="roles">${['developer','desain','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
   <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
   <div class="row" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
   $('#isi').focus();

@@ -16,7 +16,7 @@ on:
       peran:
         description: Wajib pilih tugas untuk peran ini (kosong = bebas)
         type: choice
-        options: ['', riset, desain, developer, pm]
+        options: ['', riset, desain, developer, pm, marketing]
         default: ''
       fokus:
         description: Arahan fokus dari founder (opsional)
@@ -77,7 +77,7 @@ jobs:
             Batas antrean sekarang 5 tugas menunggu (bukan 2); jangan lewati hanya karena ada 2-4 tugas menunggu.
             Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
-            {"peran":"developer|riset|desain|pm","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
+            {"peran":"developer|riset|desain|pm|marketing","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
             Jika TIDAK ada tugas baru yang layak (mis. bahan sudah lengkap dan menunggu founder), tulis {"lewati":true,"alasan":"<1 kalimat>"} ke file yang sama.
           claude_args: >-
             --max-turns 30
@@ -91,7 +91,7 @@ jobs:
             A=$(jq -r '.alasan // "tidak ada tugas baru yang layak"' "$F" 2>/dev/null || echo "tidak ada tugas baru")
             echo "::notice title=PM istirahat::$A"; echo "PM istirahat: $A" >> "$GITHUB_STEP_SUMMARY"; exit 0
           fi
-          PERAN=$(jq -r .peran "$F"); [ -n "${{ inputs.peran }}" ] && PERAN="${{ inputs.peran }}"; case "$PERAN" in developer|riset|desain|pm) ;; *) PERAN=developer ;; esac
+          PERAN=$(jq -r .peran "$F"); [ -n "${{ inputs.peran }}" ] && PERAN="${{ inputs.peran }}"; case "$PERAN" in developer|riset|desain|pm|marketing) ;; *) PERAN=developer ;; esac
           gh label create "peran:$PERAN" --color C9B8FF 2>/dev/null || true
           gh label create otomatis --color 9CC8FF 2>/dev/null || true
           jq -r '.isi + "\n\n---\n_Dipilih PM agent: " + .alasan + "_"' "$F" > ".kepo-tmp/body.md"
