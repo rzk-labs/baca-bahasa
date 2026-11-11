@@ -1,5 +1,17 @@
 [
   {
+    "n": 163,
+    "judul": "Kartu Hafal: kata muncul lagi nanti (jeda 1/3/7/21 hari)",
+    "poin": "Kartu Hafal sekarang muncul lagi setelah 1, 3, 7, lalu 21 hari.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 162,
+    "judul": "Minta pilihan suara",
+    "poin": "Sekarang kamu bisa pilih suara pembaca sendiri di Pengaturan.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 160,
     "judul": "udah di bikin belum fitur kalau terjemahin kata nanti di hitung udah d",
     "poin": "Sekarang tiap kata yang diketuk dihitung, misalnya \"Udah kamu cek 3×\".",
@@ -166,17 +178,5 @@
     "n": 22,
     "tgl": "2026-11-11",
     "poin": "Bentrok dengan update terbaru sudah digabung, dua-duanya tetap jalan."
-  },
-  {
-    "judul": "Peta masalah membaca dari masukan pengguna AI (Discovery tahap 5 & 8)",
-    "n": 21,
-    "tgl": "2026-11-11",
-    "poin": "Bentrok dengan versi terbaru sudah digabung; catatan kedua pihak tetap ada."
-  },
-  {
-    "judul": "Terjemah frasa di e-reader: tap kata lalu perluas ke kata sebelah",
-    "n": 18,
-    "tgl": "2026-11-11",
-    "poin": "Di e-reader, tap kata lalu tekan tombol plus untuk menambah kata sebelah."
   }
 ]
