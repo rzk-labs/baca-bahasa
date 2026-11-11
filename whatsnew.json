@@ -1,5 +1,11 @@
 [
   {
+    "n": 317,
+    "judul": "Sheet kata: tombol '+' bisa perluas ke kiri & ketuk beruntun tak antre",
+    "poin": "Sheet arti kata kini punya tombol ‹ untuk menambah kata sebelumnya.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 315,
     "judul": "Sheet arti kalimat: tombol 'Coba lagi' & offline jelas saat gagal",
     "poin": "Arti kalimat kini punya tombol \"Coba lagi\" saat sinyal putus.",
@@ -171,12 +177,6 @@
     "n": 152,
     "judul": "Keepo HQ: kolom Live dibatasi 5 + daftar nama penguji dari data",
     "poin": "Kolom Live di Papan dibatasi 5 kartu, sisanya lewat tombol.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 147,
-    "judul": "Kata Tersimpan: tombol Ekspor CSV naik ke atas daftar",
-    "poin": "Tombol Ekspor CSV sekarang di atas daftar kata, bentuknya pil kecil.",
     "tgl": "2026-11-11"
   }
 ]
