@@ -1,5 +1,17 @@
 [
   {
+    "n": 285,
+    "judul": "Beranda: kartu 'Kata hari ini' dari kata yang pernah kamu ketuk",
+    "poin": "Beranda sekarang punya kartu \"Kata hari ini\" dari kata yang pernah kamu ketuk.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 282,
+    "judul": "E-reader: kata sering diketuk diberi tanda halus di teks",
+    "poin": "Di e-reader, kata yang sering kamu ketuk sekarang diberi warna tipis di teks.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 274,
     "judul": "Impor buku: tebak bahasa cerita otomatis, pemula tak perlu pilih",
     "poin": "Sekarang bahasa cerita ditebak otomatis saat upload file atau tempel teks.",
@@ -165,18 +177,6 @@
     "n": 122,
     "judul": "Kartu arti kata: tampilkan 'muncul N× di buku ini' untuk kata penting",
     "poin": "Kartu arti kata sekarang bilang berapa kali kata itu muncul di buku.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 119,
-    "judul": "E-reader: XP melayang & toast lencana tak ganggu fokus baca",
-    "poin": "Saat baca, \"+XP\" jadi kecil di pojok atas dan cepat hilang.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 113,
-    "judul": "Impor EPUB/PDF tetap jalan offline: siapkan pustaka lebih awal",
-    "poin": "Impor EPUB/PDF kini siap offline: pustaka diunduh diam-diam sekali saat online.",
     "tgl": "2026-11-11"
   }
 ]
