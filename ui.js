@@ -535,8 +535,10 @@ function showPage(p, anim = true) {
   $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
-  $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
-  if ($('#nx').disabled && !RD.quiet && !b.doneAt) setTimeout(() => { if (document.body.classList.contains('reading') && RD.page === RD.n - 1) finishBook(b); }, 600);
+  const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
+  nx.disabled = last && !!b.doneAt;
+  if (last && !b.doneAt) { nx.textContent = 'Selesai 🎉'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
 }
 function turn(d) {
   const b = book(); closeSheet();
