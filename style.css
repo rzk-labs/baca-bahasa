@@ -301,6 +301,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--color-border);pointer-events:none}
 .cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:.005em;text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
+.reader[data-align=l] .cols.page{text-align:start;-webkit-hyphens:manual;hyphens:manual}.reader[data-align=j] .cols.page{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
 .reader:is([lang=ja],[lang=ko],[lang=zh-CN]) .cols.page{font-family:var(--font-cjk);text-align:start}
 @media (max-width:600px){.reader .cols.page{text-align:start}}
 .cols p{margin:0 0 .9em;orphans:2;widows:2}
