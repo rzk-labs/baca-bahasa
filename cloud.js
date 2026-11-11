@@ -142,7 +142,7 @@ async function shareBook(id) {
       $('#shOut').innerHTML = `<div class="share-link"><input id="shLink" readonly value="${esc(link)}"><button class="lime" id="shCopy">Salin</button></div>
         ${navigator.share ? '<div class="row"><button class="pri" id="shNative">📤 Kirim ke teman</button></div>' : ''}<div class="mut sm" style="margin-top:8px">Kode: <b>${r.id}</b></div>`;
       $('#shCopy').onclick = async () => { try { await navigator.clipboard.writeText(link); } catch (e) { $('#shLink').select(); document.execCommand('copy'); } toast('Link disalin ✅'); };
-      if ($('#shNative')) $('#shNative').onclick = () => navigator.share({ title: b.title, text: `Baca "${b.title}" bareng aku di Kepo 👀`, url: link }).catch(() => { });
+      if ($('#shNative')) $('#shNative').onclick = () => navigator.share({ title: b.title, text: `Baca "${b.title}" bareng aku di KEEPO 👀`, url: link }).catch(() => { });
       award(5); sfx('ding');
     } catch (e) { toast(e.message, 5000); bt.disabled = false; bt.textContent = '🔗 Bikin link'; }
   };
