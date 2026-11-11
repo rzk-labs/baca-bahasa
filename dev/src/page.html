@@ -217,9 +217,12 @@ const chipS=t=>`<span class="chip s-${t.status}">${t.status==='dikerjakan'?'<i c
 const chipP=p=>`<span class="chip p-${p}">${TIM[p]?.e||''} ${TIM[p]?.n||p}</span>`;
 const chipQ=q=>q?`<span class="chip o">${q==='lolos'?'✅ QA lolos':'⚠️ QA catatan'}</span>`:'';
 
-async function call(path,body){
-  const r=await fetch('/api'+path,{method:body?'POST':'GET',headers:{authorization:'Bearer '+tok,'content-type':'application/json'},body:body?JSON.stringify(body):undefined});
+async function call(path,body,coba=0){
+  let r;try{r=await fetch('/api'+path,{method:body?'POST':'GET',headers:{authorization:'Bearer '+tok,'content-type':'application/json'},body:body?JSON.stringify(body):undefined})}catch(e){r=null}
+  if((!r||r.status>=500)&&!body&&coba<2){await new Promise(z=>setTimeout(z,1500));return call(path,body,coba+1)}
+  if(!r)throw new Error('Koneksi putus. Coba muat ulang.');
   const d=await r.json().catch(()=>({}));
+  if(r.status>=500)throw new Error(d.error||'Server sedang sibuk. Muat ulang sebentar lagi.');
   if(r.status===401&&path!=='/login'){tok='';login();throw new Error('Perlu login')}
   if(!r.ok)throw new Error(d.error||'Gagal ('+r.status+')');
   return d;

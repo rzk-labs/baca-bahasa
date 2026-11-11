@@ -9,6 +9,19 @@ const BR = n => `kepo/issue-${n}`;
 const json = (d, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 
 async function gh(env, path, opt = {}) {
+  // GitHub kadang balas 5xx/halaman error sesaat: ulangi (hanya GET) sampai 3x.
+  const get = !opt.method || opt.method === 'GET';
+  for (let i = 0; ; i++) {
+    try {
+      const d = await gh1(env, path, opt);
+      return d;
+    } catch (e) {
+      if (!get || i >= 2 || !e.sesaat) { if (opt.raw && e.sesaat) return new Response('', { status: 502 }); if (opt.soft && e.sesaat) return null; throw e.sesaat ? new Error('GitHub sedang lambat, coba lagi sebentar') : e; }
+      await new Promise(r => setTimeout(r, 600 * (i + 1)));
+    }
+  }
+}
+async function gh1(env, path, opt = {}) {
   const r = await fetch('https://api.github.com' + path, {
     ...opt,
     headers: {
@@ -19,9 +32,12 @@ async function gh(env, path, opt = {}) {
       ...(opt.body ? { 'content-type': 'application/json' } : {}),
     },
   });
+  const sesaat = () => Object.assign(new Error('sesaat'), { sesaat: true });
+  if (r.status >= 500) throw sesaat();
   if (opt.raw) return r;
   const t = await r.text();
-  const d = t ? JSON.parse(t) : null;
+  let d = null;
+  try { d = t ? JSON.parse(t) : null; } catch (e) { throw sesaat(); }
   if (!r.ok && !opt.soft) throw new Error(`GitHub ${r.status}: ${d && d.message}`);
   return d;
 }
