@@ -567,6 +567,7 @@ function showFreq(word, b) {
   const f = freqOf(b), n = f.map.get(k) || 0;
   box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
 }
+const sugSeen = new Set();
 async function onWord(el) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -587,20 +588,19 @@ async function onWord(el) {
     <div class="mut sm" id="wlook"></div>
     <div class="wfreq" id="wfreq"></div>
     <div class="wtap" id="wtap"></div>
-    <div class="wsug" id="wsug"></div>
+    <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
-  const sugShown = new Set();
-  const showTap = n => {
-    const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : '';
+  const showSug = n => {
     const g = $('#wsug'); if (!g) return;
-    const key = word.toLowerCase();
-    if (n >= 3 && !isSaved() && !sugShown.has(key)) {
-      sugShown.add(key);
-      g.innerHTML = `<span>Sudah ${n}× diketuk. Simpan biar gampang diulang?</span><button class="pri sm" id="wsugb">Simpan</button>`;
-      $('#wsugb').onclick = () => $('#wsave').click();
-    } else g.innerHTML = '';
+    const k = b.lang + '|' + word.toLowerCase();
+    if (n < 3 || isSaved() || sugSeen.has(k)) { g.hidden = true; g.innerHTML = ''; return; }
+    sugSeen.add(k);
+    g.innerHTML = `<span>Sudah ${n}× diketuk. Simpan biar gampang diulang?</span><button class="pill-sm" id="wsug-b">Simpan</button>`;
+    g.hidden = false;
+    $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; showSug(n); };
   showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
@@ -837,9 +837,8 @@ function viewKata() {
         const opt = (val, txt) => `<option value="${esc(val)}"${csvF === val ? ' selected' : ''}>${esc(txt)}</option>`;
         const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
           ? `<select id="kCsvF" aria-label="Pilih kata yang diekspor">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
-        const sortSel =`<select id="kSort" aria-label="Urutkan kata" style="margin:0 0 8px"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
-        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar"><div class="csvcnt"><b>${db.vocab.length}</b> kata</div><button class="csvbtn" id="kCsv">⬇️ Ekspor CSV (${readyN()})</button>${filt}</div>`);
-        kl.insertAdjacentHTML('afterbegin', sortSel);
+        const sortSel =`<select id="kSort" class="csvsort" aria-label="Urutkan kata"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
+        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar"><div class="csvcnt"><b>${db.vocab.length}</b> kata</div><button class="csvbtn" id="kCsv">⬇️ Ekspor CSV (${readyN()})</button>${sortSel}${filt}</div>`);
         $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
         if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; $('#kCsv').textContent = `⬇️ Ekspor CSV (${readyN()})`; };
         $('#kCsv').onclick = async () => {

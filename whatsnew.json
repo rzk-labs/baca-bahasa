@@ -1,5 +1,17 @@
 [
   {
+    "n": 182,
+    "judul": "Kartu arti: saran 'Sudah 3× diketuk, simpan?' + ketukan pertama terasa",
+    "poin": "Kartu arti kini menyarankan \"Simpan\" setelah kata diketuk 3 kali.",
+    "tgl": "2026-11-11"
+  },
+  {
+    "n": 174,
+    "judul": "Daftar Tersimpan: rapikan lencana ketukan, kata panjang, & menu urut",
+    "poin": "Lencana ketukan \"N×\" sekarang tampil rapi dengan huruf kecil.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 173,
     "judul": "Hitungan ketukan kata ikut tersimpan di akun (sinkron)",
     "poin": "Hitungan ketuk kata sekarang ikut tersimpan di akun.",
@@ -166,17 +178,5 @@
     "n": 39,
     "tgl": "2026-11-11",
     "poin": "Tahan satu kalimat di e-reader, arti kalimatnya langsung muncul."
-  },
-  {
-    "judul": "Tab Kata: hapus bisa diurungkan & kata Hafal muncul lagi nanti",
-    "n": 33,
-    "tgl": "2026-11-11",
-    "poin": "Hapus kata sekarang bisa diurungkan lewat tombol \"Urungkan\" beberapa detik."
-  },
-  {
-    "judul": "Rapikan ukuran tombol & teks kecil di HP (style.css)",
-    "n": 31,
-    "tgl": "2026-11-11",
-    "poin": "Tombol hapus, bagikan, dan tutup tips lebih besar, tidak mudah salah pencet."
   }
 ]
