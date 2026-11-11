@@ -1,0 +1,125 @@
+name: Kepo Dev Agent
+
+# Dipicu dari web Kepo Dev:
+# - issue baru berlabel "kepo-dev"       -> agent mengerjakan permintaan
+# - komentar "Revisi: ..." di issue itu  -> agent merevisi branch yang sama
+# Hanya pemilik repo (rzk-labs) yang bisa memicu, supaya orang lain tidak memakai kuota.
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: kepo-dev-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    if: >-
+      github.event.sender.login == 'rzk-labs' &&
+      contains(github.event.issue.labels.*.name, 'kepo-dev') &&
+      github.event.issue.pull_request == null &&
+      (
+        github.event_name == 'issues' ||
+        (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'Revisi:'))
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      N: ${{ github.event.issue.number }}
+      BR: kepo/issue-${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Siapkan branch & status
+        run: |
+          git config user.name "Kepo Dev Agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin "$BR" >/dev/null; then
+            git checkout -B "$BR" "origin/$BR"
+          else
+            git checkout -b "$BR"
+          fi
+          gh label create sedang-dikerjakan --color FBCA04 2>/dev/null || true
+          gh label create siap-dicek --color 0E8A16 2>/dev/null || true
+          gh label create gagal --color D93F0B 2>/dev/null || true
+          gh issue edit "$N" --add-label sedang-dikerjakan --remove-label siap-dicek --remove-label gagal || true
+
+      - name: Tulis instruksi
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+          REVISI: ${{ github.event.comment.body }}
+        run: |
+          {
+            echo "Kamu developer aplikasi Kepo (baca CLAUDE.md dulu). Kerjakan permintaan pemilik aplikasi di bawah ini langsung di file repo."
+            echo ""
+            echo "## Permintaan: $TITLE"
+            echo "$BODY"
+            if [ -n "$REVISI" ]; then
+              echo ""
+              echo "## REVISI TERBARU (prioritaskan ini; perubahan sebelumnya sudah ada di branch ini)"
+              echo "$REVISI"
+            fi
+            echo ""
+            echo "## Aturan"
+            echo "- Ubah file seperlunya. Jangan git commit/push, jangan buat PR: workflow yang mengurusnya."
+            echo "- Cek sintaks JS yang kamu ubah dengan node --check."
+            echo "- Kalau mengubah file aplikasi yang di-cache, naikkan versi C di sw.js."
+            echo "- Terakhir, tulis file .kepo-ringkasan.md (Bahasa Indonesia, singkat, untuk orang non-teknis): 2-5 poin apa yang berubah + cara mengeceknya di aplikasi. Kalau permintaan tidak jelas/tidak bisa dikerjakan, jangan ubah kode dan jelaskan alasannya di file itu."
+          } > "$RUNNER_TEMP/prompt.md"
+          echo "PROMPT_FILE=$RUNNER_TEMP/prompt.md" >> "$GITHUB_ENV"
+
+      - name: Claude mengerjakan
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Baca file ${{ env.PROMPT_FILE }} lalu kerjakan instruksinya.
+          claude_args: >-
+            --max-turns 80
+            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(node:*),Bash(ls:*),Bash(cat:*),Bash(grep:*),Bash(git diff:*),Bash(git status:*)"
+
+      - name: Commit, push, PR
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        run: |
+          RINGKASAN="Agent selesai, tapi tidak menulis ringkasan."
+          if [ -f .kepo-ringkasan.md ]; then RINGKASAN="$(cat .kepo-ringkasan.md)"; rm .kepo-ringkasan.md; fi
+          git add -A
+          if git diff --cached --quiet; then
+            gh issue comment "$N" --body "**Agent tidak mengubah kode.**
+
+          $RINGKASAN"
+            gh issue edit "$N" --add-label gagal --remove-label sedang-dikerjakan
+            exit 0
+          fi
+          git commit -m "Kepo Dev #$N: $TITLE"
+          git push -u origin "$BR"
+          PR=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number')
+          if [ -z "$PR" ]; then
+            gh pr create --head "$BR" --base main --title "Kepo Dev #$N: $TITLE" --body "Closes #$N
+
+          $RINGKASAN"
+          fi
+          gh issue comment "$N" --body "**Siap dicek.**
+
+          $RINGKASAN"
+          gh issue edit "$N" --add-label siap-dicek --remove-label sedang-dikerjakan
+
+      - name: Tandai gagal
+        if: failure()
+        run: |
+          gh issue comment "$N" --body "**Agent gagal.** Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh issue edit "$N" --add-label gagal --remove-label sedang-dikerjakan
