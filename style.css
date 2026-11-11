@@ -341,6 +341,13 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rtitle b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle span{font-size:12px;color:var(--color-text-muted)}
 .rtip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 56px);transform:translateX(-50%);z-index:3;display:flex;gap:10px;align-items:center;width:min(92vw,380px);background:var(--ink);color:var(--cream);border-radius:var(--radius-lg);padding:12px 14px;font-size:14px;line-height:22px}
 .rtip button{min-height:44px;width:44px;flex:none;padding:0;color:inherit}
+.rthm{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800;letter-spacing:.02em}
+.nchip{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 12px 0;padding:4px 4px 4px 12px;border-radius:var(--radius-lg);background:var(--color-surface-soft);color:var(--color-text);border:1px solid var(--color-border);font-size:13px;line-height:18px;font-weight:600}
+.nchip span{flex:1 1 150px}
+.nchip button{min-height:44px;min-width:44px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font-size:13px;font-weight:800}
+.nchip .nx{background:transparent;color:inherit;padding:0}
+[data-theme=dark] .nchip button:not(.nx){background:var(--lime);color:var(--ink)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .nchip button:not(.nx){background:var(--lime);color:var(--ink)}}
 @media (prefers-reduced-motion:reduce){body.reading .xpfly.mini{animation-duration:.8s!important}*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
 img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
 /* ---------- akun, leaderboard, bagikan ---------- */

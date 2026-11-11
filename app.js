@@ -9,6 +9,32 @@ const LANGS = {
   pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
 };
 const CJK = l => l === 'ja' || l === 'zh-CN';
+/* Tebak bahasa cerita dari 1.500 karakter pertama; ragu → null. */
+const LANG_HINT = {
+  en: ['the', 'and', 'of', 'to', 'was', 'with', 'that', 'his', 'her'], es: ['el', 'los', 'las', 'del', 'que', 'una', 'por', 'con', 'es'],
+  fr: ['le', 'les', 'des', 'est', 'une', 'que', 'pas', 'dans', 'et'], de: ['der', 'die', 'und', 'das', 'nicht', 'ist', 'ein', 'mit', 'ich'],
+  id: ['yang', 'dan', 'di', 'itu', 'dengan', 'untuk', 'tidak', 'dia', 'ini'], it: ['il', 'di', 'che', 'una', 'per', 'con', 'sono', 'della', 'non'],
+  pt: ['os', 'uma', 'para', 'com', 'não', 'que', 'por', 'do', 'da'], nl: ['de', 'het', 'een', 'van', 'en', 'niet', 'is', 'dat', 'ik'],
+  tr: ['ve', 'bir', 'bu', 'için', 'ile', 'çok', 'da', 'ne', 'ama'], ru: []
+};
+function guessLang(text) {
+  const s = String(text || '').slice(0, 1500);
+  const n = re => (s.match(re) || []).length;
+  if (n(/[぀-ヿ]/g) >= 3) return 'ja';
+  if (n(/[가-힯]/g) >= 3) return 'ko';
+  if (n(/[一-鿿]/g) >= 3) return 'zh-CN';
+  if (n(/[Ѐ-ӿ]/g) >= 10) return 'ru';
+  if (n(/[؀-ۿ]/g) >= 10) return 'ar';
+  const w = s.toLowerCase().match(/[a-zà-ÿ']+/g) || [];
+  if (w.length < 15) return null;
+  let best = null, bs = 0, second = 0;
+  for (const k in LANG_HINT) {
+    if (!LANGS[k]) continue;
+    const set = new Set(LANG_HINT[k]); let c = 0; for (const x of w) if (set.has(x)) c++;
+    if (c > bs) { second = bs; bs = c; best = k; } else if (c > second) second = c;
+  }
+  return bs >= 3 && bs >= second * 1.5 && bs / w.length > 0.05 ? best : null;
+}
 const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */

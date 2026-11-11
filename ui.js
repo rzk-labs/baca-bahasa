@@ -298,6 +298,16 @@ function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
   return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#2A1215" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
 }
+let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa cerita
+/* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
+function autoLang(text) {
+  const g = blManual ? null : guessLang(text);
+  if (!g || g === db.lastLang) return db.lastLang;
+  db.lastLang = g; save();
+  const sel = $('#bl'); if (sel) sel.value = g;
+  setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
+  return g;
+}
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -344,7 +354,8 @@ function viewRak() {
     heroMins(cur);
   }
   { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
-  $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
+  blManual = false;
+  $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
   const startSample = async l => {
@@ -369,7 +380,7 @@ function viewRak() {
     $('#ps').onclick = async () => {
       const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
       const btn = $('#ps'); btn.disabled = true;
-      try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); closeSheet(); }
+      try { const ps = cleanParas(x); await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, autoLang(ps.join(' '))); closeSheet(); }
       catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
     };
   };
@@ -385,7 +396,7 @@ $('#file').onchange = async e => {
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
+  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, autoLang(r.paras.join(' '))); }
   catch (err) {
     console.error(err);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
@@ -445,11 +456,14 @@ async function viewBaca() {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch">${inner}</h2>` : `<p>${inner}</p>`;
   }).join('');
+  const hr = new Date().getHours();
+  const nightChip = db.theme === 'light' && !db.themeSet && (hr >= 19 || hr < 5 || matchMedia('(prefers-color-scheme: dark)').matches);
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        <button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+      ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>🌙 Mata capek? Pakai tema gelap</span><button data-t="dark">Gelap</button><button data-t="auto">Ikut HP</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
@@ -459,6 +473,8 @@ async function viewBaca() {
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
+  $('#rThm').onclick = () => { const o = ['light', 'sepia', 'dark']; db.theme = o[(o.indexOf(db.theme) + 1) % 3]; db.themeSet = true; save(); applyTheme(); $('#rThm').setAttribute('aria-label', 'Ganti tema: sekarang ' + ({ light: 'terang', sepia: 'sepia', dark: 'gelap' })[db.theme]); $('#nchip')?.remove(); layout(); };
+  $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   $('#rSpeak').onclick = () => setTab('bicara');
   $('#reader #set').onclick = openSettings;
   if ($('#rChap')) $('#rChap').onclick = () => {
