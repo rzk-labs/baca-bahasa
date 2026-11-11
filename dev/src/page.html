@@ -207,7 +207,7 @@ const UJI=[
   {n:'Nadia',e:'📖',c:'t-pink',d:'Pengguna · mahasiswi, Inggris A2'},
   {n:'Raka',e:'💼',c:'t-sun',d:'Pengguna · karyawan, Korea/Jepang B1'}
 ];
-const ST={antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
+const ST={menuju:'Menuju live',antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
 const KS={selesai:'Selesai',draft:'Draft',berjalan:'Berjalan',awal:'Awal',belum:'Belum'};
 const BOBOT={selesai:1,draft:.6,berjalan:.5,awal:.3,belum:0};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -301,7 +301,7 @@ async function hasilKerja(again){
   let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   if(cur!=='hasil')return;
   if(!HQ){try{await load()}catch(e){}}
-  const OK={live:['✅ Live','t-mint'],siap:['⏳ Menunggu kamu','t-sun'],dikerjakan:['🛠️ Dikerjakan','t-lav'],antre:['🕒 Antre','t-lav'],ditolak:['✖ Ditolak',''],gagal:['⚠️ Gagal','']};
+  const OK={menuju:['🚀 Menuju live','t-blue'],live:['✅ Live','t-mint'],siap:['⏳ Menunggu kamu','t-sun'],dikerjakan:['🛠️ Dikerjakan','t-lav'],antre:['🕒 Antre','t-lav'],ditolak:['✖ Ditolak',''],gagal:['⚠️ Gagal','']};
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
   const per=['riset','desain','developer','pm'];
@@ -337,7 +337,7 @@ async function hasilKerja(again){
 async function papan(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='papan')return;
-  const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
+  const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
   const by=k=>HQ.tasks.filter(t=>k==='gagal'?(t.status==='gagal'||t.status==='ditolak'):t.status===k);
   V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
   <div class="board">${cols.map(([k,l,c])=>{const L=by(k);return `<div class="col"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?L.map(t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`).join(''):'<div class="empty sm">Kosong</div>'}</div>`}).join('')}</div>`;
@@ -393,14 +393,14 @@ async function detail(n){
   clearTimeout(timer);scrollTo(0,0);
   let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
-  const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan';
+  const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
   const h=hasil(t.riwayat);
   const ref=t.pr&&!t.pr.merged?t.branch:'';
   const docs=(t.files||[]).filter(f=>/^docs\/[\w.-]+\.md$/.test(f));
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
   const LIM=4;
-  const warna={siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
-  const pesan={siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live 🎉',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
+  const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
+  const pesan={menuju:'Disetujui ✅ Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live 🎉',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
   <div class="dt">
   <section class="tile c ${warna} hero">

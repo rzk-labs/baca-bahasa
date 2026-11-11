@@ -1,0 +1,109 @@
+name: Keepo Antrean Live
+
+# Founder klik Setujui -> issue diberi label "antre-live".
+# Workflow ini menggabungkan tugas SATU PER SATU (antrean), menyelaraskan dengan versi terbaru,
+# menyelesaikan bentrok otomatis (agent), lalu membuatnya live. Lanjut ke antrean berikutnya.
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: kepo-gabung
+  cancel-in-progress: false
+
+jobs:
+  gabung:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'antre-live'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ambil antrean pertama & selaraskan
+        id: a
+        run: |
+          gh label create antre-live --color 7DD3FC 2>/dev/null || true
+          N=$(gh issue list --label antre-live --state open --json number --jq '[.[].number]|sort|.[0] // empty')
+          if [ -z "$N" ]; then echo "Antrean kosong."; echo "n=" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "n=$N" >> "$GITHUB_OUTPUT"; echo "N=$N" >> "$GITHUB_ENV"; BR="kepo/issue-$N"; echo "BR=$BR" >> "$GITHUB_ENV"
+          git config user.name "Keepo Agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
+          git checkout -B "$BR" "origin/$BR"
+          if git merge origin/main --no-edit -q; then
+            echo "konflik=0" >> "$GITHUB_OUTPUT"
+          else
+            git diff --name-only --diff-filter=U | tee .kepo-tmp/konflik.txt
+            echo "konflik=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Agent menyelesaikan bentrok
+        if: steps.a.outputs.konflik == '1'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_bots: github-actions
+          prompt: |
+            Kamu agent penggabung tim Keepo. File di .kepo-tmp/konflik.txt berisi tanda konflik git (<<<<<<< ======= >>>>>>>) antara versi terbaru (main) dan hasil tugas.
+            Gabungkan dengan mempertahankan KEDUA perubahan. Hapus semua tanda konflik.
+            docs/roadmap.json: tetap JSON valid; untuk status tahap pakai yang paling maju (selesai > draft > berjalan > awal > belum), gabungkan catatan.
+            sw.js: pakai versi C tertinggi + 1.
+            Cek tiap file .js dengan node --check dan roadmap dengan node -e "JSON.parse(require('fs').readFileSync('docs/roadmap.json','utf8'))".
+            Jangan git commit. Jangan ubah file lain.
+          claude_args: >-
+            --max-turns 40
+            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(node:*),Bash(git diff:*),Bash(git status:*)"
+
+      - name: Gabungkan & live
+        if: steps.a.outputs.n != ''
+        run: |
+          git checkout -- .github 2>/dev/null || true
+          if grep -rlE '^(<<<<<<<|>>>>>>>) ' --include='*.js' --include='*.css' --include='*.html' --include='*.json' --include='*.md' . 2>/dev/null | grep -v node_modules; then
+            echo "Masih ada tanda konflik"; exit 1
+          fi
+          node -e "JSON.parse(require('fs').readFileSync('docs/roadmap.json','utf8'))"
+          for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] && node --check "$f"; done
+          # versi cache harus lebih tinggi dari main bila file app berubah
+          MC=$(git show origin/main:sw.js | grep -o "kepo-v[0-9]*" | head -1 | tr -dc 0-9)
+          BC=$(grep -o "kepo-v[0-9]*" sw.js | head -1 | tr -dc 0-9)
+          if git diff --name-only origin/main -- index.html app.js ui.js style.css cloud.js img | grep -q . && [ "$BC" -le "$MC" ]; then
+            sed -i "s/kepo-v$BC'/kepo-v$((MC+1))'/" sw.js
+          fi
+          git add -A
+          git diff --cached --quiet || git commit -qm "Selaraskan #$N dengan versi terbaru"
+          git push -q origin "$BR"
+          PR=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number')
+          [ -n "$PR" ] || { echo "PR tidak ditemukan"; exit 1; }
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            gh pr merge "$PR" --squash --delete-branch && break
+            [ "$i" = 10 ] && exit 1; sleep 6
+          done
+          gh issue edit "$N" --add-label live --remove-label antre-live --remove-label siap-dicek || true
+          gh issue close "$N" --reason completed 2>/dev/null || true
+          gh issue comment "$N" --body "✅ **Sudah live.**"
+
+      - name: Tandai gagal
+        if: failure() && steps.a.outputs.n != ''
+        run: |
+          git merge --abort 2>/dev/null || true
+          gh issue edit "$N" --remove-label antre-live --add-label gagal || true
+          gh issue comment "$N" --body "**Gagal dibuat live otomatis.** Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Lanjut antrean berikutnya
+        if: always() && steps.a.outputs.n != ''
+        run: |
+          SISA=$(gh issue list --label antre-live --state open --json number --jq length)
+          [ "$SISA" -gt 0 ] && gh workflow run kepo-gabung.yml || true
