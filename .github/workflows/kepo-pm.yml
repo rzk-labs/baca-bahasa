@@ -75,7 +75,9 @@ jobs:
             Aturan seimbang: lihat 3 tugas berlabel otomatis terakhir di tugas.txt; jika belum ada yang berupa upgrade aplikasi, tugas kali ini WAJIB upgrade aplikasi (peran developer, atau desain yang mengubah style.css/ui.js). Untuk upgrade app, baca kode (index.html, app.js, ui.js, style.css), cari perbaikan nyata pada P0: kenyamanan membaca & bantuan memahami kata.
             Baca juga .kepo-tmp/masukan.txt (bila ada): masukan terbaru dari 2 tester AI & 2 pengguna AI. Masalah nyata yang berulang/berat dari mereka layak jadi tugas upgrade app; sebut nama mereka di "alasan".
             Batas antrean sekarang 5 tugas menunggu (bukan 2); jangan lewati hanya karena ada 2-4 tugas menunggu.
-            Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
+            Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas).
+            KEPUTUSAN FOUNDER (lihat "aturan_validasi" di roadmap.json): JANGAN menunggu manusia. Tahap yang butuh manusia (wawancara, kemauan bayar, usability, beta) dikerjakan dengan BUKTI PUBLIK di internet (WebSearch: ulasan aplikasi kompetitor, Reddit, forum, Threads/X, studi) + uji tester/pengguna AI, lalu tahapnya boleh dinaikkan ke "selesai". Prioritaskan tahap "belum" dan "awal" di fase sekarang.
+            Tiap tugas riset/pm WAJIB berakhir dengan menaikkan status tahap terkait di docs/roadmap.json (belum→awal→draft→selesai) bila syarat aturan_validasi terpenuhi; tahap "draft" yang dokumennya sudah lengkap & divalidasi bukti → jadikan "selesai".
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
             {"peran":"developer|riset|desain|pm|marketing","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
             Jika TIDAK ada tugas baru yang layak (mis. bahan sudah lengkap dan menunggu founder), tulis {"lewati":true,"alasan":"<1 kalimat>"} ke file yang sama.
