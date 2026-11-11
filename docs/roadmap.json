@@ -26,6 +26,9 @@
     { "no": 19, "nama": "Beta Testing & Launch",           "fase": "Launch & Growth",             "status": "belum",  "catatan": "Private beta 30-50 pengguna selama 4 minggu." },
     { "no": 20, "nama": "Growth & Scaling",                "fase": "Launch & Growth",             "status": "belum",  "catatan": "" }
   ],
+  "backlog": [
+    { "no": 9, "peran": "developer", "prioritas": "P0", "nama": "Pengaturan keterbacaan Keepo HQ", "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md", "status": "siap dikerjakan" }
+  ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
     { "level": "P0", "isi": "Bantuan memahami kata dan kalimat" },
