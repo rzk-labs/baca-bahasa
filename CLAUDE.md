@@ -11,7 +11,7 @@ Live: https://rzk-labs.github.io/baca-bahasa/ (GitHub Pages dari branch `main`, 
 - `style.css` — gaya. Ikuti `BRAND.md` (latar krem #F2EEE5, tinta #2A1215, blok warna flat, judul Archivo condensed, tombol pil gelap).
 - `sw.js` — service worker. **Setiap kali mengubah file yang di-cache, naikkan versi konstanta `C`** (mis. `kepo-v9` → `kepo-v10`) supaya pengguna dapat versi baru.
 - `img/` — maskot WebP. `api/` — Cloudflare Worker + D1 (jangan diubah kecuali diminta; deploy-nya manual).
-- `dev/` — web "Kepo Dev" (panel permintaan untuk agent). Jangan diubah kecuali diminta.
+- `dev/` — web "Keepo HQ" (markas tim agent, Cloudflare Worker). Boleh diubah HANYA untuk tugas tentang Keepo HQ (mis. dari masukan Dina). Cek `node --check dev/src/index.js`.
 
 ## Aturan kerja
 - Vanilla JS tanpa framework dan tanpa build/npm untuk aplikasi utama. Jangan tambah dependensi besar.

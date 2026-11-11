@@ -91,6 +91,7 @@ jobs:
             gh pr merge "$PR" --squash --delete-branch && break
             [ "$i" = 10 ] && exit 1; sleep 6
           done
+          if git diff --name-only origin/main HEAD -- dev | grep -q .; then gh workflow run kepo-hq-deploy.yml || true; fi
           gh issue edit "$N" --add-label live --remove-label antre-live --remove-label siap-dicek || true
           gh issue close "$N" --reason completed 2>/dev/null || true
           gh issue comment "$N" --body "✅ **Sudah live.**"

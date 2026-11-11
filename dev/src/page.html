@@ -90,7 +90,7 @@ a{color:inherit}
 .col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
 .card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
 .card:hover{transform:translateY(-2px)}
-.card b{display:block;margin:6px 0 4px;line-height:1.3}
+.card b{display:block;margin:6px 0 4px;line-height:1.3;overflow-wrap:anywhere}
 /* timeline */
 .feed{display:grid;gap:0}
 .ev{display:flex;gap:12px;padding:10px 0;border-bottom:1.5px dashed var(--line);align-items:flex-start}
@@ -205,7 +205,8 @@ const UJI=[
   {n:'Tari',e:'🔍',c:'t-blue',d:'Tester · tampilan HP'},
   {n:'Bima',e:'🧪',c:'t-mint',d:'Tester · data & offline'},
   {n:'Nadia',e:'📖',c:'t-pink',d:'Pengguna · mahasiswi, Inggris A2'},
-  {n:'Raka',e:'💼',c:'t-sun',d:'Pengguna · karyawan, Korea/Jepang B1'}
+  {n:'Raka',e:'💼',c:'t-sun',d:'Pengguna · karyawan, Korea/Jepang B1'},
+  {n:'Dina',e:'🗂️',c:'t-lav',d:'Pengguna Keepo HQ · founder sibuk'}
 ];
 const ST={menuju:'Menuju live',antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
 const KS={selesai:'Selesai',draft:'Draft',berjalan:'Berjalan',awal:'Awal',belum:'Belum'};
@@ -343,7 +344,7 @@ async function papan(again){
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
   const by=k=>HQ.tasks.filter(t=>k==='gagal'?(t.status==='gagal'||t.status==='ditolak'):t.status===k);
   V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
-  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);return `<div class="col"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?L.map(t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`).join(''):'<div class="empty sm">Kosong</div>'}</div>`}).join('')}</div>`;
+  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);return `<div class="col"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?L.map(t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 PM</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`).join(''):'<div class="empty sm">Kosong</div>'}</div>`}).join('')}</div>`;
   auto(papan);
 }
 
