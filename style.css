@@ -23,7 +23,7 @@
   --shadow-card:none;--shadow-sheet:0 -12px 40px rgba(42,18,21,.18);
   --ease-out:cubic-bezier(.2,.8,.2,1);--ease-pop:cubic-bezier(.3,1.5,.5,1);
   --dur-tap:100ms;--dur-color:150ms;--dur-page:220ms;--dur-sheet:280ms;--dur-ring:800ms;
-  --tabbar-h:66px;
+  --tabbar-h:72px;
 }
 [data-theme=sepia]{
   --color-bg:#F4EAD5;--color-surface:#FFF9EC;--color-surface-soft:#EADCC0;
@@ -82,7 +82,7 @@ button:disabled{opacity:.35;pointer-events:none}
 #view{padding:4px 18px calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 36px);max-width:720px;margin:0 auto;animation:pop .3s var(--ease-out)}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}}
 #tabs{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 10px);z-index:6;display:flex;gap:4px;height:var(--tabbar-h);padding:6px;max-width:480px;margin:0 auto;background:var(--ink);border-radius:var(--radius-full)}
-#tabs button{flex:1;flex-direction:column;gap:1px;min-height:0;padding:4px 0;font-size:12px;line-height:15px;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
+#tabs button{flex:1;flex-direction:column;gap:2px;min-height:48px;padding:7px 0;font-size:12px;line-height:15px;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
 #tabs button svg{width:22px;height:22px}
 #tabs button.on{color:var(--ink);background:var(--lime)}
 @media (min-width:1024px){
@@ -340,6 +340,15 @@ img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
 .pill.login{background:var(--ink);color:var(--cream);border:0;cursor:pointer;min-height:34px}
 [data-theme=dark] .pill.login{background:var(--lime);color:var(--ink)}
 @media (max-width:380px){#pStreak{display:none}}
+@media (max-width:380px){
+  #top{padding-left:12px;padding-right:12px;gap:6px}
+  #top h1{min-width:0;font-size:26px}
+  #top h1 .mascot{width:30px;height:30px;flex:none}
+  #hdx{gap:4px;flex:none}
+  .pill{padding:0 9px;font-size:13px}
+  #hdx .icon{width:40px}
+}
+@media (max-width:340px){#top h1{font-size:23px;gap:4px}#top h1 .mascot{width:26px;height:26px}.pill{padding:0 8px}#hdx .icon{width:36px}}
 .acct-card{display:flex;align-items:center;gap:14px;background:var(--color-surface);border-radius:var(--radius-lg);padding:14px;margin-top:6px}
 .acct-card b{font:800 22px/1.1 var(--font-display);font-stretch:80%}
 .lb-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:14px}
