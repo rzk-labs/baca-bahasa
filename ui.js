@@ -308,11 +308,14 @@ let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa ceri
 /* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
 function autoLang(text) {
   const g = blManual ? null : guessLang(text);
-  if (!g || g === db.lastLang) return db.lastLang;
+  return g || db.lastLang;
+}
+/* Simpan bahasa tebakan + toast, HANYA dipanggil setelah impor sukses. */
+function commitLang(g) {
+  if (!g || g === db.lastLang || blManual) return;
   db.lastLang = g; save();
   const sel = $('#bl'); if (sel) sel.value = g;
   setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
-  return g;
 }
 /* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
 function wordOfDay() {
@@ -399,7 +402,7 @@ function viewRak() {
     $('#ps').onclick = async () => {
       const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
       const btn = $('#ps'); btn.disabled = true;
-      try { const ps = cleanParas(x); await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, autoLang(ps.join(' '))); closeSheet(); }
+      try { const ps = cleanParas(x); const lg = autoLang(ps.join(' ')); if (await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, lg)) commitLang(lg); closeSheet(); }
       catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
     };
   };
@@ -415,7 +418,7 @@ $('#file').onchange = async e => {
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, autoLang(r.paras.join(' '))); }
+  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg); }
   catch (err) {
     console.error(err);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
@@ -435,8 +438,9 @@ async function addBook(title, paras, lang) {
   db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
   const prevCur = db.cur;
   db.cur = id;
-  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return; }
+  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
   toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
+  return true;
 }
 
 /* ---------- BACA (e-reader) ---------- */
@@ -685,7 +689,7 @@ async function onWord(el) {
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexp" aria-label="Perluas ke kata sebelah" title="Perluas" style="margin-left:auto">${ico('plus')}</button></div>
+    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya" style="margin-left:auto;font:800 24px/1 var(--font-ui)">‹</button><button class="icon tint" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">${ico('plus')}</button></div>
     <span class="pos" id="wpos"></span>
     <div class="mut sm" id="wbaca"></div>
     <div class="mut sm" id="wbase"></div>
@@ -736,18 +740,22 @@ async function onWord(el) {
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
-  const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
+  const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; e.style.opacity = can ? '' : '.35'; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
   updExp();
-  $('#wexp').onclick = () => {
+  let expT = 0;
+  const grow = dir => {
     if (hi - lo + 1 >= MAXW) return;
-    if (hi < ws.length - 1) hi++; else if (lo > 0) lo--; else return;
+    if (dir > 0 && hi < ws.length - 1) hi++; else if (dir < 0 && lo > 0) lo--; else return;
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
-    word = phraseOf(); tr = null;
+    word = phraseOf(); tr = null; tok++; clearTimeout(expT);
     $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); load(); bumpLook(); keepVisible('.w.sel');
+    $('#wsave').innerHTML = saveLbl(); updExp(); keepVisible('.w.sel');
+    expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
+  $('#wexp').onclick = () => grow(1);
+  $('#wexl').onclick = () => grow(-1);
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
     const sg = $('#wsug'); if (sg) sg.innerHTML = '';

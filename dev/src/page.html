@@ -160,6 +160,13 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .read h3{margin:18px 0 6px;font-size:20px}
 .read p{margin:10px 0}
 .read li{margin:6px 0}
+.read .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;max-width:100%}
+.read table{border-collapse:collapse;font-size:15px;line-height:1.5;min-width:100%}
+.read th,.read td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+.read th{background:var(--soft);font-weight:700;white-space:nowrap}
+.read tbody tr:nth-child(even){background:var(--soft)}
+.dsum{margin:4px 0 8px;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.dcard[hidden]{display:none}
 .read details{border-top:2px solid var(--line);padding:14px 0}
 .read details>summary{font-family:Archivo;font-stretch:75%;font-weight:900;text-transform:uppercase;font-size:22px;line-height:1.1}
 .read details[open]>summary{margin-bottom:8px}
@@ -355,6 +362,8 @@ async function papan(again){
   auto(papan);
 }
 
+// sumber "docs/xxx.md" di catatan jadi tautan yang bisa diketuk
+const linkDok=s=>esc(s).replace(/docs\/[\w.-]+?\.md/g,p=>`<a href="#" style="text-decoration:underline;font-weight:700" onclick="go('dokumen','${p}');return false">${p.slice(5,-3).replace(/[-_]/g,' ')} ↗</a>`);
 async function peta(){
   if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
@@ -362,7 +371,7 @@ async function peta(){
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
   <div class="bento" style="margin-bottom:22px"><div class="tile c t-lav span2"><div class="eyebrow">Progres keseluruhan</div><div class="big">${progres(R)}%</div><div class="bar" style="margin-top:10px"><i style="width:${progres(R)}%"></i></div></div>
   <div class="tile c t-sun span2"><div class="eyebrow">Kapasitas founder</div><div style="font-weight:700;margin-top:6px">${esc(R.kapasitas_founder||'')}</div></div></div>
-  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${esc(t.catatan)}</div></div></div>`).join('')}</div></div>`}).join('')}
+  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${linkDok(t.catatan)}</div></div></div>`).join('')}</div></div>`}).join('')}
   <div class="sec"><h2>Milestone</h2></div><div class="grid">${R.milestone.map(m=>`<div class="tile row"><div class="av ${m.status==='selesai'?'t-mint':m.status==='berjalan'?'t-sun':'t-blue'}" style="font-family:Archivo;font-weight:900;font-size:22px">${m.no}</div><div style="flex:1;min-width:0"><b>${esc(m.nama)}</b> <span class="chip k-${m.status}">${KS[m.status]||m.status}</span><div class="mut sm">${esc(m.isi)}</div></div></div>`).join('')}</div>
   <div class="sec"><h2>Prioritas</h2></div><div class="tile"><div class="grid" style="gap:8px">${R.prioritas.map(p=>`<div class="row"><span class="chip ${p.level==='P0'?'t-coral':p.level==='P1'?'t-sun':p.level==='P2'?'t-blue':'s-ditolak'}">${p.level}</span><span>${esc(p.isi)}</span></div>`).join('')}</div></div>`;
 }
@@ -375,6 +384,7 @@ async function dokumen(path,ref,back){
       const html=window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(d.isi)):'<pre>'+esc(d.isi)+'</pre>';
       V.innerHTML=`<button class="back" id="bk">← ${back?'Kembali ke tugas':'Semua dokumen'}</button>${ref?'<div class="note">📝 Draf — belum disetujui</div>':''}<article class="tile read">${html}</article>`;
       $('#bk').onclick=()=>back?detail(back):go('dokumen');
+      V.querySelectorAll('article table').forEach(t=>{const w=document.createElement('div');w.className='tbl';t.replaceWith(w);w.appendChild(t)});
       // ADHD: tiap bagian h2 bisa dilipat, bagian pertama terbuka
       const art=V.querySelector('article');const hs=[...art.querySelectorAll('h2')];
       if(hs.length>2)hs.forEach((h,i)=>{const det=document.createElement('details');if(i===0)det.open=true;const sum=document.createElement('summary');sum.innerHTML=h.innerHTML;det.appendChild(sum);let x=h.nextSibling;while(x&&!(x.nodeType===1&&x.tagName==='H2')){const nx=x.nextSibling;det.appendChild(x);x=nx}h.replaceWith(det)});
@@ -382,8 +392,13 @@ async function dokumen(path,ref,back){
     return;
   }
   const col=n=>n.includes('riset')?'t-blue':n.includes('desain')?'t-pink':n.includes('TIM')?'t-lav':'t-sun';
+  const info=HQ.docs_info||{}, tg=p=>info[p]&&info[p].diubah?new Date(info[p].diubah).getTime():0;
+  const urut=HQ.docs.map((p,i)=>({p,i})).sort((x,y)=>(tg(y.p)-tg(x.p))||(y.i-x.i)).map(x=>x.p);
+  const kartuD=p=>{const n=p.replace('docs/','').replace('.md','').replace(/[-_]/g,' '),m=info[p]||{},baru=m.diubah&&Date.now()-tg(p)<7*864e5;
+    return `<div class="tile c ${col(p)} dcard" data-q="${esc((n+' '+(m.ringkas||'')).toLowerCase())}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div class="row" style="justify-content:space-between"><div style="font-size:26px">📄</div>${baru?'<span class="chip o">Baru</span>':''}</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n)}</h3>${m.ringkas?`<p class="dsum">${esc(m.ringkas)}</p>`:''}${m.diubah?`<span class="mut sm">${lalu(m.diubah)}</span>`:''}</div>`};
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">Hasil kerja riset, desain, dan PM</div><h1>Dokumen</h1></div>
-  ${HQ.docs.length?`<div class="doclist">${HQ.docs.map(p=>{const n=p.replace('docs/','').replace('.md','');return `<div class="tile c ${col(n)}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div style="font-size:26px">📄</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n.replace(/[-_]/g,' '))}</h3></div>`}).join('')}</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
+  ${HQ.docs.length?`<input id="cariDok" type="search" placeholder="Cari dokumen…" aria-label="Cari dokumen" style="margin-bottom:14px"><div class="doclist" id="dlist">${urut.map(kartuD).join('')}</div><div class="empty" id="dkosong" hidden>Tidak ada dokumen yang cocok.</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
+  const ci=$('#cariDok');if(ci)ci.oninput=()=>{const q=ci.value.trim().toLowerCase();let n=0;V.querySelectorAll('.dcard').forEach(c=>{const ok=!q||c.dataset.q.includes(q);c.hidden=!ok;if(ok)n++});$('#dkosong').hidden=n>0};
 }
 
 // Ambil hasil kerja terakhir dari komentar agent jadi bagian-bagian pendek
