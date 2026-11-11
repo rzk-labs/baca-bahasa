@@ -61,7 +61,7 @@ Dicek ke kode saat ini.
 
 | # | Status | Catatan |
 |---|---|---|
-| 1 | 🟡 Sebagian | Tema gelap & "Ikut HP" ada di pengaturan; bawaan tetap terang. |
+| 1 | 🟢 Ditangani | Saran tema gelap/Ikut HP sekali di e-reader malam hari + tombol "Tema" 1 ketukan (#272). |
 | 2 | ❌ Belum | XP melayang dan toast lencana selalu muncul; tak ada mode tenang. |
 | 3 | ❌ Belum | Bahasa cerita dan "artiin ke" dipilih manual. |
 | 4 | ❌ Belum | Cache arti hanya di memori; hilang saat app ditutup. |
