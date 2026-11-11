@@ -182,6 +182,12 @@ $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(mood, 'bob')}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
 
 /* ---------- pengaturan ---------- */
+function voiceRow(lang) {
+  const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
+  const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
+  if (!vs.length) return '';
+  return `<div class="set-row"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
+}
 function openSettings() {
   const b = book();
   const th = [['light', 'Terang'], ['sepia', 'Sepia'], ['dark', 'Gelap'], ['auto', 'Ikut HP']];
@@ -196,9 +202,11 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
     <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">🔊 Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">🔇 Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
+    ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
     ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
     <button class="ghost full" id="rst">Balikin setelan awal</button>`);
+  if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = db.fs + 'px'; $('#reader').style.setProperty('--reader-lh', db.lh); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
@@ -576,6 +584,7 @@ async function onWord(el) {
     <div class="mut sm" id="wbaca"></div>
     <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="mut sm" id="wlook"></div>
     <div class="wfreq" id="wfreq"></div>
     <div class="wtap" id="wtap"></div>
     <div class="dict" id="wdict"></div>
@@ -585,6 +594,7 @@ async function onWord(el) {
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
+  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
   const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
   const showSaved = v => {
     $('#wtr').textContent = v.t;
@@ -607,7 +617,7 @@ async function onWord(el) {
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
-  load();
+  load(); bumpLook();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
   $('#wexp').onclick = () => {
@@ -618,7 +628,7 @@ async function onWord(el) {
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
+    $('#wsave').innerHTML = saveLbl(); updExp(); load(); bumpLook(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
@@ -804,7 +814,7 @@ function viewKata() {
     if (kataSeg === 'simpan') {
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}${+v.tap > 0 ? ` <span class="tapb" title="Diketuk ${+v.tap} kali">${+v.tap}×</span>` : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div></div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}${+v.tap > 0 ? ` <span class="tapb" title="Diketuk ${+v.tap} kali">${+v.tap}×</span>` : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div>${((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `<div class="mut sm">Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×</div>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
@@ -826,14 +836,22 @@ function viewKata() {
           const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
           const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
           const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
+          // iPhone/PWA: unduh lewat <a download> sering diam, jadi menu Bagikan dulu.
+          const iosLike = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+          const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+          let f = null;
+          try { f = new File([blob], fn, { type: 'text/csv' }); } catch (e) {}
+          if (f && (iosLike || standalone) && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
+            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan ✨'); }
+            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa 👌'); }
+          }
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
             a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
             toast(`${fn} udah diunduh (${ready} kata) ✨`);
           } catch (e) {
             try {
-              const f = new File([blob], fn, { type: 'text/csv' });
-              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
