@@ -668,13 +668,13 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false;
-const REVIEW_DAYS = [1, 3, 7, 14], DAY_MS = 864e5;
-const isDue = v => v.known && (v.kd || 0) + REVIEW_DAYS[Math.min(v.kn || 0, 3)] * DAY_MS <= Date.now();
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all';
+const REVIEW_DAYS = [0, 3, 7, 21], DAY_MS = 864e5;
+const isDue = v => v.known && (v.due || 0) <= Date.now();
 function viewKata() {
-  let mig = false; db.vocab.forEach(v => { if (v.known && !v.kd) { v.kd = Date.now(); v.kn = 0; mig = true; } }); if (mig) save();
+  let mig = false; db.vocab.forEach(v => { if (v.known && v.lv == null) { v.lv = 1; v.due = Date.now() + 3 * DAY_MS; mig = true; } }); if (mig) save();
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
-  const known = db.vocab.filter(v => v.known).length;
+  const known = db.vocab.filter(v => v.known && (v.lv || 0) >= 3).length;
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
     <div class="sum"><div class="t-lime"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="t-lav"><b>${known}</b><span>Udah hafal</span></div><div class="t-pink"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
@@ -693,19 +693,29 @@ function viewKata() {
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
-        kl.insertAdjacentHTML('afterbegin', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
+        const langs = [...new Set(db.vocab.map(v => v.lang).filter(Boolean))], books = [...new Set(db.vocab.map(v => v.book).filter(Boolean))];
+        if (csvF !== 'all' && !langs.some(l => csvF === 'l:' + l) && !books.some(b => csvF === 'b:' + b)) csvF = 'all';
+        const inF = v => csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2));
+        const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
+        const opt = (val, txt) => `<option value="${esc(val)}"${csvF === val ? ' selected' : ''}>${esc(txt)}</option>`;
+        const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
+          ? `<select id="kCsvF" aria-label="Pilih kata yang diekspor" style="margin:0 0 8px">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
+        kl.insertAdjacentHTML('afterbegin', `<div style="margin-bottom:10px">${filt}<button class="pri" id="kCsv" style="min-height:48px;width:100%">⬇️ Ekspor ${readyN()} kata</button></div>`);
+        if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; $('#kCsv').textContent = `⬇️ Ekspor ${readyN()} kata`; };
         $('#kCsv').onclick = async () => {
-          const ready = db.vocab.filter(v => !v.noTr && (v.t || '').trim()).length;
+          const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya 😅');
-          const blob = new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' });
+          const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+          const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
+          const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
-            a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-            toast(`kepo-kata.csv udah diunduh (${ready} kata) ✨`);
+            a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+            toast(`${fn} udah diunduh (${ready} kata) ✨`);
           } catch (e) {
             try {
-              const f = new File([blob], 'kepo-kata.csv', { type: 'text/csv' });
-              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'kepo-kata.csv' }); toast('Siap dibagikan ✨'); }
+              const f = new File([blob], fn, { type: 'text/csv' });
+              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
@@ -734,11 +744,13 @@ function viewKata() {
 function deck(kb) {
   if (db.vocab.some(x => x.noTr)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => !v.known || isDue(v));
-  if (!cards.length) { kb.innerHTML = db.vocab.length ? emptyState('cheer', 'Semua kartu udah hafal! 🧠', 'Keren banget. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
+  if (!cards.length) {
+    const dues = db.vocab.filter(v => v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0;
+    kb.innerHTML = db.vocab.length ? emptyState('cheer', nd ? 'Semua beres hari ini 🧠' : 'Semua kartu udah hafal! 🧠', nd ? `Kartu berikutnya muncul ${nd} hari lagi. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">BELUM</span>
-        <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu</div>
+        <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${v.known ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
         <div class="fw" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${esc(v.t)}</div><div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div></div>
         <div class="tap" id="tapl">Tap buat liat artinya 👆</div></div></div>
     <div class="deck-act"><button class="no" id="fNo">✕ Belum</button><button class="icon tint" id="fSp" aria-label="Dengerin">${ico('vol')}</button><button class="yes" id="fYes">✓ Hafal</button></div>
@@ -747,7 +759,7 @@ function deck(kb) {
   const flip = () => { flipped = !flipped; $('#back').classList.toggle('hide', !flipped); $('#tapl').classList.toggle('hide', flipped); sfx('pop'); };
   const decide = ok => {
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
-    if (ok) { v.kn = v.known && v.kd ? Math.min((v.kn || 0) + 1, 3) : 0; v.known = true; v.kd = Date.now(); save(); sfx('ding'); award(2, 'flash'); } else { if (v.known) { v.kn = 0; v.kd = Date.now(); } db.vocab.splice(db.vocab.indexOf(v), 1); db.vocab.push(v); save(); sfx('soft'); }
+    if (ok) { v.lv = Math.min((v.lv || 0) + 1, 3); v.due = Date.now() + REVIEW_DAYS[v.lv] * DAY_MS; v.known = true; save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; db.vocab.splice(db.vocab.indexOf(v), 1); db.vocab.push(v); save(); sfx('soft'); }
     setTimeout(() => deck(kb), 280);
   };
   $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fSp').onclick = () => speak(v.w, v.lang, 0.8);
