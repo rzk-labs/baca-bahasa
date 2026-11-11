@@ -157,6 +157,11 @@ function trPersist() {
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
 const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
 /* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */
+function vocabCSV(list) {
+  const q = s => { s = String(s == null ? '' : s).replace(/\r?\n|\r/g, ' ').trim(); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const rows = [['kata', 'arti', 'cara baca', 'kalimat contoh', 'bahasa']].concat((list || []).map(v => [v.w, v.t, bacaOf(v.w, v.baca), v.s, (LANGS[v.lang] || [v.lang])[0]]));
+  return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
+}
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
 async function translate(q, sl, tl) {
   const k = sl + '|' + tl + '|' + q;

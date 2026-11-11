@@ -616,6 +616,15 @@ function viewKata() {
       kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(v.s || '')}</div></div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon" data-dv="${v.i}" aria-label="Hapus kata">${ico('x')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
+      if (db.vocab.length) {
+        kl.insertAdjacentHTML('beforeend', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
+        $('#kCsv').onclick = () => {
+          if (!db.vocab.length) return toast('Belum ada kata buat diekspor 😅');
+          const a = document.createElement('a'), u = URL.createObjectURL(new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' }));
+          a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+          toast('kepo-kata.csv udah diunduh ✨');
+        };
+      }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
         const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); save(); renderList();
