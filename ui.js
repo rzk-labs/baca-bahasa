@@ -131,6 +131,18 @@ function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.inner
 
 /* ---------- kerangka ---------- */
 let toastT;
+const MSG_SIMPAN_GAGAL = 'Gagal menyimpan buku. Penyimpanan HP penuh? Coba hapus buku lama.';
+let lastErrToast = 0;
+function globalErr(ev) {
+  const r = ev && (ev.reason || ev.error), msg = String((r && r.message) || (ev && ev.message) || r || '');
+  if (/ResizeObserver|AbortError|Script error/i.test(msg) || (ev && ev.type === 'error' && !ev.error && !ev.message)) return;
+  if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
+  const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
+  console.error(r || msg);
+  toast('Ada yang error. Coba muat ulang ya.', 4000);
+}
+window.addEventListener('error', globalErr);
+window.addEventListener('unhandledrejection', globalErr);
 function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
 function openSheet(html) { $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); }
 function closeSheet() { if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); }
@@ -324,7 +336,7 @@ function viewRak() {
   const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
-    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); }
+    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); }
   };
   $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   $('#sample').onclick = () => {
@@ -340,7 +352,12 @@ function viewRak() {
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
       <label class="eyebrow" style="display:block;margin-top:12px">Teks<textarea id="px" placeholder="Tempel teks bahasa asing di sini…"></textarea></label>
       <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">Masukin ✨</button></div>`);
-    $('#ps').onclick = async () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); } catch (e) { toast('Gagal nyimpen cerita. Coba lagi.'); } };
+    $('#ps').onclick = async () => {
+      const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
+      const btn = $('#ps'); btn.disabled = true;
+      try { await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); closeSheet(); }
+      catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
+    };
   };
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
@@ -355,11 +372,22 @@ $('#file').onchange = async e => {
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
   try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
-  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? (/\.pdf$/i.test(f.name) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : 'File ini kosong, nggak ada teks yang kebaca.') : /internet|pustaka/.test(err.message) || (!navigator.onLine && /\.(epub|pdf)$/i.test(f.name)) ? 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
+  catch (err) {
+    console.error(err);
+    if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
+    const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
+    let msg;
+    if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
+    else if (/scan|gambar/.test(m) || (/kosong/.test(m) && isPdf)) msg = 'PDF ini isinya gambar/scan, teksnya nggak kebaca.';
+    else if (/kosong/.test(m)) msg = 'File ini kosong, nggak ada teks yang kebaca.';
+    else if (/internet|pustaka/.test(m) || (!navigator.onLine && (isEpub || isPdf))) msg = 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.';
+    else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
+    toast(msg, 6000);
+  }
 };
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
-  await putText(id, paras);
+  try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
   db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
   const prevCur = db.cur;
   db.cur = id;
@@ -599,7 +627,7 @@ async function onWord(el) {
   const isSaved = () => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
-    <div class="sh-head"><span class="stepchip">1/2 · Arti kata</span>${closeBtn}</div>
+    <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
     <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexp" aria-label="Perluas ke kata sebelah" title="Perluas" style="margin-left:auto">${ico('plus')}</button></div>
     <span class="pos" id="wpos"></span>
     <div class="mut sm" id="wbaca"></div>
@@ -610,7 +638,8 @@ async function onWord(el) {
     <div class="wtap" id="wtap"></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
-    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
+    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" data-close id="wdone">Selesai</button></div>
+    <div class="row" style="margin-top:10px"><button class="ghost" id="wnext">Masih bingung? Lihat kalimatnya 👀</button></div>`);
   const showSug = n => {
     const g = $('#wsug'); if (!g) return;
     const k = b.lang + '|' + word.toLowerCase();
@@ -678,7 +707,7 @@ function showSentence(word, sent, sIdx, sEl) {
   sEl.classList.add('hl');
   const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
   openSheet(`
-    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
+    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
