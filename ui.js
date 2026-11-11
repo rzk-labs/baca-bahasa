@@ -247,7 +247,16 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
-  $('#sample').onclick = () => addBook('The Lighthouse Keeper (contoh)', cleanParas(SAMPLE), 'en');
+  $('#sample').onclick = () => {
+    openSheet(`<div class="sh-head"><h2>Cerita contoh</h2>${closeBtn}</div><div class="mut sm">Pilih bahasa ceritanya</div>
+      <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span></button>`).join('')}</div>`);
+    $$('[data-sl]').forEach(el => el.onclick = () => {
+      const l = el.dataset.sl, S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
+      closeSheet();
+      if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
+      addBook(S.title, cleanParas(S.text), l);
+    });
+  };
   $('#paste').onclick = () => {
     openSheet(`<div class="sh-head"><h2>Tempel teks</h2>${closeBtn}</div><div class="mut sm">Bahasa: <b>${langName(db.lastLang)}</b> · ganti di Home</div>
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
