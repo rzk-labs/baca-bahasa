@@ -37,7 +37,8 @@
     { "no": 31, "peran": "developer", "prioritas": "P2", "nama": "Seragamkan nama app jadi KEEPO (sisa \"Kepo\" di teks tampilan, #97)", "dokumen": "docs/spesifikasi-nama-keepo.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 32, "peran": "developer", "prioritas": "P0", "nama": "Jalan kembali ke Home dari e-reader: tombol di halaman Tamat, tombol Back HP, petunjuk (#159)", "dokumen": "docs/spesifikasi-kembali-ke-home.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 33, "peran": "developer", "prioritas": "P0", "nama": "Kata sering diketuk tampil di tab Kata, simpan sekali ketuk (#230)", "dokumen": "docs/spesifikasi-kata-sering-diketuk.md", "status": "spesifikasi siap dikerjakan" },
-    { "no": 34, "peran": "developer", "prioritas": "P1", "nama": "Tombol feedback kirim langsung ke HQ, tanpa salin-tempel (#234)", "dokumen": "docs/spesifikasi-feedback-langsung-hq.md", "status": "spesifikasi siap; butuh deploy server manual" }
+    { "no": 34, "peran": "developer", "prioritas": "P1", "nama": "Tombol feedback kirim langsung ke HQ, tanpa salin-tempel (#234)", "dokumen": "docs/spesifikasi-feedback-langsung-hq.md", "status": "spesifikasi siap; butuh deploy server manual" },
+    { "no": 35, "peran": "developer", "prioritas": "P0", "nama": "Arti kata tetap terlihat di sheet arti kalimat, tanda di terjemahan (#300)", "dokumen": "docs/spesifikasi-arti-kata-di-kalimat.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
