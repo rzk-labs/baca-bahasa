@@ -102,6 +102,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_bots: github-actions
           prompt: Baca file ${{ env.PROMPT_FILE }} lalu kerjakan instruksinya.
           claude_args: >-
             --max-turns 80
@@ -136,6 +137,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_bots: github-actions
           prompt: |
             Kamu agent QA tim Keepo. Periksa hasil kerja agent untuk tugas berikut (jangan mengubah file apa pun selain menulis laporan).
             Tugas: lihat .kepo-tmp/judul.txt dan .kepo-tmp/isi.txt (revisi, bila ada: .kepo-tmp/revisi.txt).
