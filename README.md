@@ -1,4 +1,4 @@
-# Kepo — kepoin bahasa baru
+# KEEPO — kepoin bahasa baru
 
 PWA belajar bahasa asing lewat cerita sendiri, untuk anak muda. Live: https://rzk-labs.github.io/baca-bahasa/
 
