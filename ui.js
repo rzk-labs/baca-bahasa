@@ -1,6 +1,7 @@
 'use strict';
 /* KEPO v6 — fun tapi profesional (krem, blok warna, maskot doodle). Maskot, XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
-db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; db.mg = db.mg || 'm'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0;
+db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0;
+const effAlign = () => db.align || (window.matchMedia('(max-width:600px)').matches ? 'l' : 'j');
 db.xp = db.xp || 0; db.xpDay = db.xpDay || {}; db.badges = db.badges || []; if (db.sfx == null) db.sfx = true;
 db.stat = Object.assign({ look: 0, save: 0, page: 0, speak: 0, perfect: 0, rem: 0, flash: 0 }, db.stat || {});
 if (!db.v6) { db.v6 = 1; db.theme = 'light'; } db.theme = db.theme || 'light';
@@ -224,6 +225,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small${k === 'auto' ? ' style="color:#FFF6E5"' : ''}>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
     <div class="set-row"><div class="eyebrow">Huruf baca</div><div class="seg" id="fnt"><button data-v="serif" class="${db.font === 'serif' ? 'on' : ''}" style="font-family:var(--font-reader)">Klasik</button><button data-v="sans" class="${db.font === 'sans' ? 'on' : ''}">Modern</button></div></div>
+    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Rata kiri'], ['j', 'Rata penuh']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${[1.5, 1.7, 1.9].map(v => `<button data-v="${v}" class="${db.lh === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
@@ -238,11 +240,12 @@ function openSettings() {
     <button class="ghost full" id="rst">Balikin setelan awal</button>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
-  const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', db.lh); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
+  const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', db.lh); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); db.fsSet = true; save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
   $('#fsm').onclick = () => setFs(readFs(b && b.lang) - 1); $('#fsp').onclick = () => setFs(readFs(b && b.lang) + 1);
   $$('#thm button').forEach(x => x.onclick = () => { db.theme = x.dataset.v; save(); applyTheme(); $$('#thm button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#fnt button').forEach(x => x.onclick = () => { db.font = x.dataset.v; save(); $$('#fnt button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('serif', db.font === 'serif'); layout(); } });
+  $$('#als button').forEach(x => x.onclick = () => { db.align = x.dataset.v; save(); $$('#als button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#mgs button').forEach(x => x.onclick = () => { db.mg = x.dataset.v; save(); $$('#mgs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#fcs button').forEach(x => x.onclick = () => { db.focus = x.dataset.v === '1'; save(); $$('#fcs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('focus', db.focus); $$('.cols .cur').forEach(e => e.classList.remove('cur')); const c = $('#cols'); if (c) c.classList.remove('has-cur'); } });
@@ -250,7 +253,7 @@ function openSettings() {
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
-  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
+  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.align = null; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
@@ -476,7 +479,7 @@ async function viewBaca() {
   const hr = new Date().getHours();
   const nightChip = db.theme === 'light' && !db.themeSet && (hr >= 19 || hr < 5 || matchMedia('(prefers-color-scheme: dark)').matches);
   $('#view').innerHTML = `
-    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
+    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
