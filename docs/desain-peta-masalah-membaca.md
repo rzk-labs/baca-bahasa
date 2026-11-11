@@ -75,3 +75,10 @@ Dicek ke kode saat ini.
 - Sudah ada: tombol "Coba lagi" saat arti gagal dibuka (menolong masalah 4 sedikit).
 - Urutan perbaikan usulan untuk developer: 8, 7, 9 (keandalan), lalu 4, 2, 5.
 - Dokumen ini tidak mengubah kode; tiap perbaikan jadi tugas terpisah.
+
+## Catatan #282: tanda kata sering diketuk
+- Kata diketuk 3× atau lebih diberi latar oranye tipis di teks e-reader.
+- Tidak bentrok: garis titik biru (tersimpan) dan blok lime (dipilih) tetap utuh.
+- Token `--color-often-bg` aman di tema terang, sepia, dan gelap; tinggi baris tetap.
+- Pengaturan baca: toggle "Tandai kata yang sering kuketuk", default nyala, ikut reset.
+- Tanda muncul saat halaman dirender dan langsung saat ketukan ke-3.
