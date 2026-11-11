@@ -454,7 +454,7 @@ function layout() {
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
   /* cache halaman tiap kalimat/judul sekali per layout, supaya geser halaman tidak mengukur ulang */
-  RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols), u: unitsOf(el.textContent, b.lang) }));
+  RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols) }));
   RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
@@ -463,8 +463,12 @@ function layout() {
   showPage(p, false);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
-/* sisa waktu baca: 150 kata/menit; Jepang/Korea 400 karakter/menit */
-const unitsOf = (t, lang) => /^(ja|ko)/.test(lang) ? t.replace(/\s/g, '').length / 400 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+/* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
+   Latin ~150 kata/mnt; Jepang/Korea/Mandarin ~250 huruf/mnt. Total per bab dihitung sekali per buku. */
+const unitsOf = (t, lang) => {
+  t = t.replace(/\u0001/g, '');
+  return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+};
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
 function heroPos(b, mins) {
   const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
@@ -485,16 +489,12 @@ async function heroMins(b) {
   } catch (e) {}
 }
 function minsLeft(b) {
-  let m = 0;
-  for (const x of RD.ss) if (x.pg >= RD.page) m += x.u;
   const secs = cache.id === b.id && cache.pages;
-  if (secs) {
-    if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
-    for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
-  }
-  const n = Math.ceil(m - 1e-9);
-  if (!secs && b.pos + 1 < (b.total || 1)) return `≥${Math.max(1, n)} mnt`;
-  return n < 1 ? '<1 mnt' : `±${n} mnt`;
+  if (!secs || !secs[b.pos] || !(RD.n > 0)) return '';
+  if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
+  let m = RD.chu[b.pos] * (RD.n - RD.page) / RD.n;
+  for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
+  return m > 0 ? `±${Math.max(1, Math.round(m))} mnt` : '';
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -505,7 +505,8 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b)}`;
+  const ml = minsLeft(b);
+  $('#pgn').textContent = ml ? `Hal ${RD.page + 1}/${RD.n} · ${ml}` : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
