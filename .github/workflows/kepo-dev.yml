@@ -116,6 +116,7 @@ jobs:
           RINGKASAN="Agent selesai, tapi tidak menulis ringkasan."
           if [ -f .kepo-ringkasan.md ]; then RINGKASAN="$(cat .kepo-ringkasan.md)"; rm .kepo-ringkasan.md; fi
           printf '%s' "$RINGKASAN" > "$T/ringkasan.md"
+          git checkout -- .github 2>/dev/null || true   # agent tidak boleh mengubah workflow
           git add -A
           git diff --cached --quiet || git commit -m "Keepo #$N ($PERAN): $(cat $T/judul.txt)"
           if [ "$(git rev-list --count origin/main..HEAD)" = "0" ]; then
