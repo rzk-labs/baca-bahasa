@@ -98,14 +98,14 @@ jobs:
           RINGKASAN="Agent selesai, tapi tidak menulis ringkasan."
           if [ -f .kepo-ringkasan.md ]; then RINGKASAN="$(cat .kepo-ringkasan.md)"; rm .kepo-ringkasan.md; fi
           git add -A
-          if git diff --cached --quiet; then
+          git diff --cached --quiet || git commit -m "Kepo Dev #$N: $TITLE"
+          if [ "$(git rev-list --count origin/main..HEAD)" = "0" ]; then
             gh issue comment "$N" --body "**Agent tidak mengubah kode.**
 
           $RINGKASAN"
             gh issue edit "$N" --add-label gagal --remove-label sedang-dikerjakan
             exit 0
           fi
-          git commit -m "Kepo Dev #$N: $TITLE"
           git push -u origin "$BR"
           PR=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number')
           if [ -z "$PR" ]; then
