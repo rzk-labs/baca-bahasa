@@ -1,5 +1,11 @@
 [
   {
+    "n": 264,
+    "judul": "E-reader: tanda 'Offline' halus + sheet arti jelas saat sinyal putus",
+    "poin": "Reader sekarang kasih tanda 'Offline' kecil saat sinyal putus.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 257,
     "judul": "Pengaturan: pilihan suara tak hilang diam-diam + arti offline",
     "poin": "Pilihan suara baca tak hilang lagi; muncul pesan saat suara belum siap.",
@@ -171,12 +177,6 @@
     "n": 98,
     "judul": "Kartu hafalan: kata 'Hafal' muncul lagi untuk dicek ulang",
     "poin": "Kata yang ditandai Hafal sekarang muncul lagi: 3, 7, lalu 21 hari kemudian.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 90,
-    "judul": "E-reader: sisa waktu baca akurat & footer halaman tak terpotong",
-    "poin": "Sisa waktu baca sekarang lebih jujur, dan geser halaman lebih mulus.",
     "tgl": "2026-11-11"
   }
 ]
