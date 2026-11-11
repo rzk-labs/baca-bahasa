@@ -668,7 +668,7 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false;
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all';
 const REVIEW_DAYS = [0, 3, 7, 21], DAY_MS = 864e5;
 const isDue = v => v.known && (v.due || 0) <= Date.now();
 function viewKata() {
@@ -693,19 +693,29 @@ function viewKata() {
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
-        kl.insertAdjacentHTML('afterbegin', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
+        const langs = [...new Set(db.vocab.map(v => v.lang).filter(Boolean))], books = [...new Set(db.vocab.map(v => v.book).filter(Boolean))];
+        if (csvF !== 'all' && !langs.some(l => csvF === 'l:' + l) && !books.some(b => csvF === 'b:' + b)) csvF = 'all';
+        const inF = v => csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2));
+        const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
+        const opt = (val, txt) => `<option value="${esc(val)}"${csvF === val ? ' selected' : ''}>${esc(txt)}</option>`;
+        const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
+          ? `<select id="kCsvF" aria-label="Pilih kata yang diekspor" style="margin:0 0 8px">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
+        kl.insertAdjacentHTML('afterbegin', `<div style="margin-bottom:10px">${filt}<button class="pri" id="kCsv" style="min-height:48px;width:100%">⬇️ Ekspor ${readyN()} kata</button></div>`);
+        if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; $('#kCsv').textContent = `⬇️ Ekspor ${readyN()} kata`; };
         $('#kCsv').onclick = async () => {
-          const ready = db.vocab.filter(v => !v.noTr && (v.t || '').trim()).length;
+          const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya 😅');
-          const blob = new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' });
+          const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+          const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
+          const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
-            a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-            toast(`kepo-kata.csv udah diunduh (${ready} kata) ✨`);
+            a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+            toast(`${fn} udah diunduh (${ready} kata) ✨`);
           } catch (e) {
             try {
-              const f = new File([blob], 'kepo-kata.csv', { type: 'text/csv' });
-              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'kepo-kata.csv' }); toast('Siap dibagikan ✨'); }
+              const f = new File([blob], fn, { type: 'text/csv' });
+              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
