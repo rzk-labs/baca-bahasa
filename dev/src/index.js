@@ -44,6 +44,7 @@ function status(issue) {
   const L = issue.labels.map(l => l.name);
   if (L.includes('live')) return 'live';
   if (L.includes('ditolak') || issue.state === 'closed') return 'ditolak';
+  if (L.includes('antre-live')) return 'menuju';
   if (L.includes('sedang-dikerjakan')) return 'dikerjakan';
   if (L.includes('siap-dicek')) return 'siap';
   if (L.includes('gagal')) return 'gagal';
@@ -189,19 +190,11 @@ async function api(req, env, url) {
   if (act === 'setujui') {
     const pr = await openPR(env, n);
     if (!pr || pr.state !== 'open') return json({ error: 'Belum ada perubahan yang siap digabung' }, 400);
-    const r = await gh(env, `/repos/${REPO}/pulls/${pr.number}/merge`, { method: 'PUT', body: JSON.stringify({ merge_method: 'squash' }), soft: true });
-    if (!r || !r.merged) {
-      if (r && /conflict/i.test(r.message || '')) {
-        await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body: 'Revisi: Bentrok dengan update lain yang sudah live. Selaraskan dengan versi terbaru, pertahankan kedua perubahan.' }) });
-        return json({ error: 'Bentrok dengan update lain. Tim sedang menyelaraskan otomatis (±10 menit), lalu klik Setujui lagi.' }, 409);
-      }
-      return json({ error: 'Gagal menggabung: ' + (r && r.message) }, 409);
-    }
-    await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'POST', body: JSON.stringify({ labels: ['live'] }) });
+    // Masuk antrean live: workflow kepo-gabung.yml menggabungkan satu per satu & menyelesaikan bentrok.
+    await gh(env, `/repos/${REPO}/labels`, { method: 'POST', body: JSON.stringify({ name: 'antre-live', color: '7DD3FC' }), soft: true });
     await gh(env, `/repos/${REPO}/issues/${n}/labels/siap-dicek`, { method: 'DELETE', soft: true });
-    await gh(env, `/repos/${REPO}/issues/${n}`, { method: 'PATCH', body: JSON.stringify({ state: 'closed', state_reason: 'completed' }) });
-    await gh(env, `/repos/${REPO}/git/refs/heads/${BR(n)}`, { method: 'DELETE', soft: true });
-    return json({ ok: true });
+    await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'POST', body: JSON.stringify({ labels: ['antre-live'] }) });
+    return json({ ok: true, antre: true });
   }
   if (act === 'tolak') {
     const pr = await openPR(env, n);
