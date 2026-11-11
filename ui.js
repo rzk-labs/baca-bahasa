@@ -282,7 +282,7 @@ $('#file').onchange = async e => {
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
   try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
-  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : /internet|pustaka/.test(err.message) ? 'Koneksi putus. Coba lagi pas ada internet.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
+  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : /internet|pustaka/.test(err.message) || (!navigator.onLine && /\.(epub|pdf)$/i.test(f.name)) ? 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
 };
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
