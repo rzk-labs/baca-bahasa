@@ -135,6 +135,10 @@ async function pagesOf(b) {
     if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; }
     b.total = cache.pages.length; save();
   }
+  /* perkiraan unit baca per bab: dihitung sekali, disimpan (buku lama: lazy) */
+  if (!Array.isArray(b.units) || b.units.length !== cache.pages.length) {
+    b.units = cache.pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
+  }
   return cache.pages;
 }
 function makeSections(paras) {
@@ -396,33 +400,38 @@ function layout() {
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
+  /* hitung sekali per tata letak: halaman tiap kalimat, kalimat pertama & sisa unit per halaman */
+  const els = [...cols.querySelectorAll('.s')], pg = els.map(el => pageOf(el, cols)), suf = new Array(els.length + 1).fill(0);
+  for (let i = els.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(els[i].textContent, b.lang);
+  RD.first = []; RD.left = []; let j = els.length;
+  for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && pg[j - 1] >= q) j--; RD.first[q] = j < els.length ? +els[j].dataset.s : null; RD.left[q] = suf[j]; }
+  RD.heads = [...cols.querySelectorAll('h2.ch')].map(h => ({ p: pageOf(h, cols), t: h.textContent.trim() }));
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
-  else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
+  else if (b.si) { const k = els.findIndex(el => +el.dataset.s === b.si); if (k >= 0) p = pg[k]; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca: 150 kata/menit; Jepang/Korea 400 karakter/menit */
 const unitsOf = (t, lang) => /^(ja|ko)/.test(lang) ? t.replace(/\s/g, '').length / 400 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
-function minsLeft(b, cols) {
-  let m = 0;
-  for (const el of cols.querySelectorAll('.s')) if (pageOf(el, cols) >= RD.page) m += unitsOf(el.textContent, b.lang);
-  const secs = cache.id === b.id && cache.pages;
-  if (secs) for (let i = b.pos + 1; i < secs.length; i++) m += secs[i].reduce((a, p) => a + unitsOf(p, b.lang), 0);
-  const n = Math.ceil(m - 1e-9);
-  return n < 1 ? 'kurang dari 1 menit' : `sisa ±${n} menit`;
+function minsLeft(b) {
+  let m = RD.left ? RD.left[RD.page] || 0 : 0;
+  const ok = Array.isArray(b.units) && b.units.length === b.total;
+  if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
+  const n = Math.max(1, Math.ceil(m - 1e-9));
+  return ok ? (m < 1e-9 ? '<1 mnt' : `±${n} mnt`) : `bab ini ±${n} mnt`;
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
-  for (const el of cols.querySelectorAll('.s')) { if (pageOf(el, cols) >= RD.page) { b.si = +el.dataset.s; break; } }
-  let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
-  if (hd) $('.rhead').textContent = hd.textContent.trim();
+  if (RD.first && RD.first[RD.page] != null) b.si = RD.first[RD.page];
+  let hd = null; for (const h of RD.heads || []) { if (h.p <= RD.page) hd = h; else break; }
+  if (hd) $('.rhead').textContent = hd.t;
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1} dari ${RD.n} · ${minsLeft(b, cols)}`;
+  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b)}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
