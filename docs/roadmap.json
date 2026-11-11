@@ -29,7 +29,8 @@
   "backlog": [
     { "no": 9, "peran": "developer", "prioritas": "P0", "nama": "Pengaturan keterbacaan Keepo HQ", "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md", "status": "siap dikerjakan" },
     { "no": 13, "peran": "riset", "prioritas": "P1", "nama": "Riset dari opini yang sudah ada di internet (tanpa budget)", "dokumen": "docs/riset-opini-internet.md", "status": "siap dijalankan founder" },
-    { "no": 21, "peran": "desain", "prioritas": "P0", "nama": "Peta masalah membaca dari masukan pengguna AI", "dokumen": "docs/desain-peta-masalah-membaca.md", "status": "draft siap dicek" }
+    { "no": 21, "peran": "desain", "prioritas": "P0", "nama": "Peta masalah membaca dari masukan pengguna AI", "dokumen": "docs/desain-peta-masalah-membaca.md", "status": "draft siap dicek" },
+    { "no": 28, "peran": "developer", "prioritas": "P1", "nama": "Fitur feedback di web (form masukan dalam app)", "dokumen": "docs/spesifikasi-feedback-web.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
