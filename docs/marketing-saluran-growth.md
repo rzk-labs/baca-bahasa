@@ -1,14 +1,14 @@
 # Uji saluran growth dari bukti internet (Tugas #254, Tahap 20)
 
 ## Intinya
-- Tidak ada saluran terbukti untuk app baca kecil di Indonesia. Pilih yang murah dan bisa diukur.
-- Saluran utama 4 minggu: Threads asbun + ajak-teman (sekitar 2 jam/minggu). Cadangan: komunitas fandom.
-- Berhenti/ganti bila 3 angka sukses tidak tercapai di akhir minggu ke-4.
+- H1 Threads dan H2 video divonis: **gugur sebagai mesin utama**, tetap layak jadi uji murah.
+- Rencana 4 minggu final: 2-4 jam/minggu, target kecil, 1 metrik sukses per saluran (bagian 6).
+- Berhenti atau ganti bila metrik tak tercapai di minggu ke-4.
 
-Status bukti: 46 bukti dari 5 jenis sumber. Banyak yang lemah (blog pemasaran). Tiap bukti diberi tanda kuat/lemah.
-Tahap 20 naik ke draft, bukan selesai: data Indonesia tipis, data bayar kosong.
+Status bukti: 67 bukti (46 lama + 21 baru) dari 5 jenis sumber. Banyak yang lemah. Tiap bukti diberi tanda K/S/L.
+Tahap 20 naik ke selesai (validasi bukti internet). Tidak ada kasus app bahasa yang tumbuh dari Threads; ini dicatat jujur.
 
-## 1. Bukti (46 tautan)
+## 1. Bukti (67 tautan)
 
 Tanda: **K** = sumber pertama/resmi/survei. **S** = media/studi. **L** = lemah (blog, vendor, hitungan pihak ketiga).
 
@@ -68,6 +68,41 @@ Tanda: **K** = sumber pertama/resmi/survei. **S** = media/studi. **L** = lemah (
 45. L. Program referral: pasang 20-35% unduhan hanya bila sudah matang (vendor). [GrowSurf](https://growsurf.com/statistics/mobile-app-referral-statistics/)
 46. L. Faktor viral app B2C umumnya di bawah 1, jadi tak tumbuh sendiri. [LaunchList](https://blog.getlaunchlist.com/blog/viral-coefficient-k-factor-guide)
 
+### 1f. Tambahan Tugas #304 (21 bukti baru)
+
+Dicari: kasus app kecil, data video Indonesia, pola spam fandom. Hasil jujur: tak ada kasus app bahasa dari Threads/TikTok.
+
+Kasus app kecil (Indie Hackers):
+47. L. Pendiri app bahasa untuk expat: 47 pendaftar dari satu komentar Reddit yang membantu, setelah berminggu-minggu membaca dulu. [Indie Hackers](https://www.indiehackers.com/post/getting-your-first-100-users-7edc83a14a)
+48. L. Komentar di sana: promosi langsung cepat dihapus, risiko ban nyata. [Indie Hackers](https://www.indiehackers.com/post/getting-your-first-100-users-7edc83a14a)
+49. L. App non-bahasa: Reddit beri 60 dari 100 pengguna awal; Discord 25, Indie Hackers 15, X dan HN nol. [Indie Hackers](https://www.indiehackers.com/post/how-i-got-my-first-100-users-2fc9d71c34)
+50. L. Pendiri web app Jepang: Reddit saluran terbaik sejauh ini, ragu bisa membesar. [Indie Hackers](https://www.indiehackers.com/post/first-900-month-after-2-years-of-development-marketed-too-late-japanese-language-learning-web-app-3bf9109a9f)
+51. L. Komentar: yang sulit adalah menahan 100 pengguna awal, bukan mendapatkannya. [Indie Hackers](https://www.indiehackers.com/post/what-are-you-building-how-did-you-get-your-first-100-users-59731b9fef)
+
+Video pendek (app indie, bukan bahasa):
+52. L. Dumbphone: sekitar 20 ribu unduhan dan US$9 ribu MRR dalam 78 hari; video 2,4 juta+ tayangan (blog vendor). [Shortimize](https://www.shortimize.com/blog/20k-downloads-and-9k-mrr-in-78-days-how-this-indie-app-turned-minimalism-into-millions-of-views)
+53. L. Yorbie: 10 ribu pengguna dalam 30 hari, ±80% dari video pendek; satu pendiri khusus pemasaran (klaim sendiri). [Weaving Words](https://weavingwords.pages.dev/notes/2026-05-26_how-i-grew-my-app-from-0-to-10000-users-in-30-days/)
+54. L. Puff Count: US$44 ribu MRR, tapi ada iklan berbayar US$82 ribu; bukan organik murni. [Notion](https://feather-output-351.notion.site/ebd/36fbdcc4b88181bca92ddf7a3df83ea2)
+55. L. Flame: 20 akun dan 5 HP untuk produksi video; tenaga jauh di atas 1-4 jam/minggu. [Stork](https://www.stork.ai/blog/how-5-phones-built-a-10kmonth-app)
+56. L. Pola semua kisah: posting tiap hari, uji banyak hook; klaim tak terverifikasi. [Superwall](https://superwall.dev/blog/our-app-makes-usd30k-month-profit-using-this-simple-strategy-copy-us)
+
+Data video & Threads:
+57. S. Benchmark TikTok 2025: engagement rata-rata 2,5% (Emplicit); median 1,73% (RivalIQ). Beda metode, beda angka. [Emplicit](https://emplicit.co/tiktok-engagement-rate-benchmarks-2025/)
+58. S. Studi akun TikTok merek lokal Indonesia: engagement 13,2% tapi turun tiap tahun (bukan BookTok). [IPB](https://repository.ipb.ac.id/handle/123456789/169195)
+59. L. Tak ada angka jangkauan atau konversi BookTok/buku Indonesia yang terbuka. [Social Insider](https://www.socialinsider.io/id/social-media-benchmarks/tiktok)
+60. L. Threads: jangkauan akun di bawah 10 ribu pengikut disebut 8-12% (tanpa metode). [ScribeCount](https://scribecount.com/author-resource/social-media-marketing-for-authors/threads-for-indie-authors)
+61. L. Studi Hong Kong: 68,4% pengguna ikuti akun pribadi, bukan merek. Akun founder lebih cocok. [10lab](https://10lab-seo-preview.pages.dev/en/blog/threads-low-engagement-root-causes-hong-kong/)
+
+Pola spam di komunitas:
+62. K. Aturan Meta: promosi silang tanpa bayar bukan spam, tapi aturan tiap grup boleh lebih ketat. [Meta](https://transparency.meta.com/id-id/policies/community-standards/spam/)
+63. K. Komunitas fandom HoYoLAB melarang konten tak relevan, duplikat, dan spam forum. [HoYoLAB](https://www.hoyolab.com/article/517406)
+64. K. X: posting atau tautan duplikat melanggar aturan; undangan massal dianggap spam. [X Help](https://help.x.com/id/rules-and-policies/twitter-contest-rules.html)
+65. S. Reddit: pedoman 9:1 (komentar ikut dihitung); moderator tiap sub boleh lebih ketat. [r/modnews](https://lr.us.psf.lt/r/modnews/comments/2asaq6/moderators_we_need_your_input_on_the_future_of/ciybqp9/?context=3)
+66. L. Yang memicu ban: spam, manipulasi vote, ban evasion; bukan promosi sendiri per se. [Something Inc.](https://somethinginc.com/blog/reddit-marketing-without-getting-banned/)
+67. L. Panduan Reddit: sidebar subreddit selalu lebih ketat dari aturan situs. [Analytics Insight](https://www.analyticsinsight.net/business/how-to-promote-your-website-or-business-on-reddit-without-being-flagged-as-spam)
+
+Catatan: sumber 47-67 hasil pencarian (ringkasan mesin); isi penuh halaman belum dibuka satu per satu. Kasus 47-56 lemah (klaim sendiri).
+
 Jenis sumber: sumber pertama (K), media berita, jurnal/survei, komunitas/forum, vendor/blog. Total 5 jenis.
 Tidak ketemu: data Reddit nyata, ulasan toko aplikasi, akun kecil Indonesia di Threads, data Bookstagram.
 
@@ -75,11 +110,16 @@ Tidak ketemu: data Reddit nyata, ulasan toko aplikasi, akun kecil Indonesia di T
 
 | # | Hipotesis | Vonis | Alasan (nomor bukti) |
 |---|---|---|---|
-| H1 | Threads asbun bisa bawa tester | **Belum jelas** | Threads ramai tapi kecil vs TikTok (29-33). Tak ada kasus app kecil. |
-| H2 | BookTok/anime (video) bawa pengguna | **Belum jelas** | Minat baca nyata (35-38), tapi konversi tak terbukti (19). |
+| H1 | Threads asbun bisa bawa tester | **Gugur sebagai mesin utama** (tetap uji murah) | Threads kecil vs TikTok (29-33); nol kasus app kecil dari Threads, nol data konversi (60-61). Kasus awal nyata datang dari Reddit/komunitas (47-50). |
+| H2 | BookTok/anime (video) bawa pengguna | **Gugur untuk 1-4 jam/minggu** (belum diuji sebenarnya) | Kisah sukses butuh produksi harian atau iklan (52-56); konversi BookTok Indonesia tak ada datanya (19, 59). Minat baca nyata (35-38) tapi tak cukup. |
 | H3 | Komunitas fandom (K-pop/anime) | **Terbukti sebagian** | Minat belajar bahasa dari fandom nyata (39-41). Cara masuk tanpa dianggap spam belum jelas (24-25). |
 | H4 | Kreator kecil bawa pengguna | **Terbukti sebagian** | Kasus terkuat: LingQ via satu kreator (4-6). Skala kecil tak teruji. |
 | H5 | Ajak-teman/bagikan kartu | **Gugur sebagai mesin utama** | Referral Duolingo +3% (15), faktor viral umumnya <1 (46). Tetap bagus sebagai pelengkap murah. |
+
+Alasan jujur vonis H1 & H2:
+- "Gugur" = tak terbukti sebagai mesin utama. Bukan terbukti gagal.
+- Bukan "belum jelas" lagi: bukti baru justru menunjuk Reddit/komunitas dan produksi video besar.
+- Cara masuk fandom tanpa spam kini jelas: bantu dulu, aturan grup dulu, tanpa posting ulang (24-25, 47, 62-67).
 
 Pola dari semua bukti:
 - Mulut ke mulut + produk bagus selalu jadi dasar (2, 14, 8).
@@ -119,6 +159,27 @@ Batas berhenti / ganti:
 - Minggu 2: A di bawah 40 → ubah hook dan jam posting, jangan ganti saluran dulu.
 - Minggu 4: A di bawah 100 atau C nol → pindah ke saluran cadangan.
 - Minggu 4: A tinggi tapi C nol → berhenti cari pengunjung, perbaiki sesi pertama dulu (bukti 16).
+
+## 5b. Rencana 4 minggu final (muat 1-4 jam/minggu)
+
+| Minggu | Jam | Kerjaan | Target kecil |
+|---|---|---|---|
+| 1 | 2 | Threads: 3 post asbun + balas semua komentar | 3 post, 10+ balasan |
+| 2 | 2 | Threads: 3 post; 2 komentar membantu di komunitas fandom/bahasa (tanpa tautan dulu) | 3 post, 2 komentar |
+| 3 | 3 | Threads 2 post; 1 post tester di 1 komunitas yang izinkan; DM 1 kreator kecil | 1 post, 1 DM |
+| 4 | 1-2 | Hitung metrik; putuskan lanjut/ganti/berhenti | 1 keputusan tertulis |
+
+Aturan: tanpa video pendek di 4 minggu ini; tanpa posting ulang yang sama; baca aturan tiap grup dulu.
+
+## 6. Satu metrik sukses per saluran
+
+| Saluran | Metrik sukses | Target 4 minggu |
+|---|---|---|
+| Threads | Kunjungan dari tautan Threads | 100+ |
+| Komunitas fandom | Pembaca yang masih buka di hari ke-7 | 3+ |
+| Video pendek (ditunda) | Tidak diukur; uji 1 video di bulan ke-2 hanya bila Threads lolos | - |
+
+Target ini tebakan awal, bukan patokan industri.
 
 ## 5. Batasan
 - Data pembayaran belum diuji: tak ada bukti orang Indonesia bayar lewat saluran mana pun.
