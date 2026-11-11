@@ -13,7 +13,7 @@
     { "no": 6,  "nama": "Market Research",                 "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Segmentasi & estimasi potensi pengguna." },
     { "no": 7,  "nama": "Competitor Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Linga, LingQ, Readlang, Beelinguapp." },
     { "no": 8,  "nama": "Market Gap Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Peluang: pembaca A2-B1, Indonesia-first, distraction-free reading." },
-    { "no": 9,  "nama": "Customer Discovery",              "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Baru hipotesis persona; target wawancara 15 calon pengguna." },
+    { "no": 9,  "nama": "Customer Discovery",              "fase": "Customer & Demand Validation", "status": "awal",   "catatan": "Hipotesis persona + naskah wawancara & screener siap (docs/riset-wawancara-pengguna.md); wawancara 15 calon pengguna belum dijalankan founder." },
     { "no": 10, "nama": "Problem & Demand Validation",     "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Belum uji masalah nyata & willingness to pay." },
     { "no": 11, "nama": "Product Strategy",                "fase": "Product & Business Strategy", "status": "draft",  "catatan": "Target, positioning, rekomendasi MVP." },
     { "no": 12, "nama": "Business Model",                  "fase": "Product & Business Strategy", "status": "draft",  "catatan": "Hipotesis freemium + subscription." },
