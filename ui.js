@@ -422,7 +422,7 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of cols.querySelectorAll('h2.ch')) { if (pageOf(h, cols) <= RD.page) hd = h; else break; }
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1} dari ${RD.n} · ${minsLeft(b, cols)}`;
+  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b, cols)}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
@@ -517,7 +517,7 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px"><button class="ghost" id="ssp" style="padding-left:0;min-height:44px;font-size:14px">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl" style="padding-left:0;min-height:44px;font-size:14px">${ico('slow')} Pelan</button></div>
+    <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
