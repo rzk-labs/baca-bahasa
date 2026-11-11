@@ -576,12 +576,14 @@ async function onWord(el) {
     <div class="mut sm" id="wbaca"></div>
     <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="mut sm" id="wlook"></div>
     <div class="wfreq" id="wfreq"></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
+  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
   const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
   const showSaved = v => {
     $('#wtr').textContent = v.t;
@@ -604,7 +606,7 @@ async function onWord(el) {
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
-  load();
+  load(); bumpLook();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
   $('#wexp').onclick = () => {
@@ -615,7 +617,7 @@ async function onWord(el) {
     word = phraseOf(); tr = null;
     $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
+    $('#wsave').innerHTML = saveLbl(); updExp(); load(); bumpLook(); keepVisible('.w.sel');
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
@@ -798,7 +800,7 @@ function viewKata() {
     const q = kataQ.toLowerCase(), kl = $('#klist');
     if (kataSeg === 'simpan') {
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div></div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div>${((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `<div class="mut sm">Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×</div>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
