@@ -406,6 +406,7 @@ async function onWord(el) {
     <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexp" aria-label="Perluas ke kata sebelah" title="Perluas" style="margin-left:auto">${ico('plus')}</button></div>
     <span class="pos" id="wpos"></span>
     <div class="mut sm" id="wbaca"></div>
+    <div class="mut sm" id="wbase"></div>
     <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
@@ -416,6 +417,7 @@ async function onWord(el) {
     tr = r;
     $('#wtr').textContent = r.text;
     $('#wbaca').textContent = bacaOf(word, r.baca);
+    $('#wbase').textContent = r.base ? 'Bentuk dasar: ' + r.base : '';
     const d = r.dict || [];
     $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 6);
@@ -430,14 +432,14 @@ async function onWord(el) {
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null;
-    $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = '';
+    $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updExp(); load();
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
-    db.vocab.unshift({ w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    db.vocab.unshift({ w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
     $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
   };
