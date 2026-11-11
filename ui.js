@@ -398,10 +398,10 @@ async function onWord(el) {
   load();
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
-    const r = tr || await translate(word, b.lang, db.my).catch(() => ({ text: '' }));
-    db.vocab.unshift({ w: word, t: r.text, pos: r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    const r = tr || await translate(word, b.lang, db.my).catch(() => null);
+    db.vocab.unshift({ w: word, t: r ? r.text : '', ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('saved'); });
-    $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast('Masuk ke kartu kata kamu ⭐');
+    $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
@@ -572,7 +572,7 @@ function viewKata() {
     const q = kataQ.toLowerCase(), kl = $('#klist');
     if (kataSeg === 'simpan') {
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div><div class="t1">${esc(v.t)}</div><div class="s1">${esc(v.s || '')}</div></div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(v.s || '')}</div></div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon" data-dv="${v.i}" aria-label="Hapus kata">${ico('x')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
@@ -590,8 +590,10 @@ function viewKata() {
     }
   };
   renderList();
+  if (db.vocab.some(x => x.noTr)) refillVocab().then(ok => { if (ok && $('#klist') && kataSeg === 'simpan') renderList(); });
 }
 function deck(kb) {
+  if (db.vocab.some(x => x.noTr)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => !v.known);
   if (!cards.length) { kb.innerHTML = db.vocab.length ? emptyState('cheer', 'Semua kartu udah hafal! 🧠', 'Keren banget. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
@@ -621,4 +623,5 @@ applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
 if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
+window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
