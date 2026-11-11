@@ -772,8 +772,10 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
-  translate(sent, b.lang, db.my).then(r => {
-    if (!$('#str')) return;
+  const strEl = $('#str');
+  const alive = () => $('#str') === strEl;
+  const loadSent = () => translate(sent, b.lang, db.my).then(r => {
+    if (!alive()) return;
     $('#str').textContent = r.text;
     const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
     if (bc && sb) {
@@ -782,7 +784,13 @@ function showSentence(word, sent, sIdx, sEl) {
       if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
     }
     keepVisible('.s.hl');
-  }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
+  }).catch(() => {
+    if (!alive()) return;
+    const off = !navigator.onLine;
+    $('#str').innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Artinya belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="sretry">Coba lagi</button>`;
+    $('#sretry').onclick = () => { $('#str').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; loadSent(); };
+  });
+  loadSent();
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
@@ -1047,6 +1055,6 @@ if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http'
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
-window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); });
+window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
