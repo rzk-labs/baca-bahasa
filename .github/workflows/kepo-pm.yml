@@ -47,7 +47,7 @@ jobs:
             --jq '.[] | "#\(.number) [\(.state)] [\([.labels[].name]|join(","))] \(.title)"' > ".kepo-tmp/tugas.txt"
           M=$(gh issue list --label masukan-pengguna --state open --limit 1 --json number --jq '.[0].number // empty')
           if [ -n "$M" ]; then
-            gh issue view "$M" --comments --json comments --jq '[.comments[-8:][] | .body] | join("\n---\n")' > ".kepo-tmp/masukan.txt" || true
+            gh issue view "$M" --json comments --jq '[.comments[-8:][] | .body] | join("\n---\n")' > ".kepo-tmp/masukan.txt" || true
           fi
 
       - name: PM agent merencanakan

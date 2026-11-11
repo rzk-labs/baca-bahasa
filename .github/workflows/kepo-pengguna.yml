@@ -67,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
-          gh issue view "${{ needs.siapkan.outputs.issue }}" --comments --json comments \
+          gh issue view "${{ needs.siapkan.outputs.issue }}" --json comments \
             --jq '[.comments[-8:][] | .body] | join("\n---\n")' > .kepo-tmp/lalu.txt 2>/dev/null || true
           {
             echo "Kamu adalah $NAMA. $PROFIL"
