@@ -1,5 +1,11 @@
 [
   {
+    "n": 162,
+    "judul": "Minta pilihan suara",
+    "poin": "Sekarang kamu bisa pilih suara pembaca sendiri di Pengaturan.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 160,
     "judul": "udah di bikin belum fitur kalau terjemahin kata nanti di hitung udah d",
     "poin": "Sekarang tiap kata yang diketuk dihitung, misalnya \"Udah kamu cek 3×\".",
@@ -172,11 +178,5 @@
     "n": 21,
     "tgl": "2026-11-11",
     "poin": "Bentrok dengan versi terbaru sudah digabung; catatan kedua pihak tetap ada."
-  },
-  {
-    "judul": "Terjemah frasa di e-reader: tap kata lalu perluas ke kata sebelah",
-    "n": 18,
-    "tgl": "2026-11-11",
-    "poin": "Di e-reader, tap kata lalu tekan tombol plus untuk menambah kata sebelah."
   }
 ]
