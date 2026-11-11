@@ -87,6 +87,8 @@ a{color:inherit}
 /* board */
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
 .col{background:var(--soft);border-radius:22px;padding:12px;scroll-snap-align:start;min-height:200px}
+.col.k-live .more-btn{width:100%;margin:2px 0 4px}
+@media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:5}}
 .col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
 .card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
 .card:hover{transform:translateY(-2px)}
@@ -330,7 +332,7 @@ async function hasilKerja(again){
   <div class="bento">
     <div class="tile c t-mint"><div class="eyebrow">Sudah live</div><div class="big">${lv}</div><div class="sm">hasil dipakai</div></div>
     <div class="tile c t-sun" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${sp}</div><div class="sm">cek & setujui →</div></div>
-    <div class="tile c t-pink"><div class="eyebrow">Masukan tester</div><div class="big">${mas.length}</div><div class="sm">dari Tari, Bima, Nadia, Raka</div></div>
+    <div class="tile c t-pink"><div class="eyebrow">Masukan tester</div><div class="big">${mas.length}</div><div class="sm">${[...new Set(mas.map(m=>m.nama))].join(', ')||'belum ada'}</div></div>
   </div>
   <div class="sec"><h2>Per anggota tim</h2></div>
   <div class="agents">${per.map(k=>`<div class="tile agent" style="cursor:pointer" onclick="HF='${k}';hasilKerja(true)"><div class="row"><div class="av ${TIM[k].c}">${TIM[k].e}</div><div><h3>${TIM[k].n}</h3><div class="mut sm">${TIM[k].d}</div></div></div><div class="st"><b>${cnt(k)}</b> hasil</div></div>`).join('')}</div>
@@ -339,13 +341,15 @@ async function hasilKerja(again){
   clearTimeout(timer);timer=setTimeout(()=>{if(cur==='hasil')hasilKerja(true)},30000);
 }
 
+let LIVEALL=false;
 async function papan(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='papan')return;
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
   const by=k=>HQ.tasks.filter(t=>k==='gagal'?(t.status==='gagal'||t.status==='ditolak'):t.status===k);
+  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`;
   V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
-  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);return `<div class="col"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?L.map(t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 PM</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`).join(''):'<div class="empty sm">Kosong</div>'}</div>`}).join('')}</div>`;
+  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?[...L].sort((a,b)=>new Date(b.diubah)-new Date(a.diubah)).slice(0,5):L).map(kartuP).join(''):'<div class="empty sm">Kosong</div>'}${k==='live'&&L.length>5?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
   auto(papan);
 }
 
@@ -409,7 +413,7 @@ async function detail(n){
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
   <div class="dt">
   <section class="tile c ${warna} hero">
-    <div class="row">${chipP(peran)}${hq.otomatis?'<span class="chip o">🤖 dipilih PM</span>':''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
+    <div class="row">${chipP(peran)}${hq.otomatis?'<span class="chip o">🤖 otomatis</span>':''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
     <h2 class="ttl">${esc(t.judul)}</h2>
     <div class="say">${t.status==='dikerjakan'?'<i class="dot" style="display:inline-block"></i> ':''}${pesan}</div>
     ${t.status==='siap'?`<div class="acts"><button class="btn big-b" id="ok">✓ Setujui</button><button class="btn ghost big-b" id="rvb">✎ Revisi</button><button class="btn ghost big-b" id="no">✕ Tolak</button></div>`:''}
