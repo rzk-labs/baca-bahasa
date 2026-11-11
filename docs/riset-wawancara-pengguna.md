@@ -1,5 +1,10 @@
 # Riset: Wawancara 15 Calon Pengguna Keepo
 
+## Intinya
+- Supaya ada yang isi form: sebar di banyak tempat sekaligus, kasih insentif, pesan pendek (lihat bagian 7).
+- Hitung kasar: ±5 orang diajak untuk 1 wawancara jadi, jadi ajak ±75 orang untuk 15 wawancara.
+- Riset internet mendukung hipotesis: buka kamus terus-menerus memang memutus alur baca.
+
 Milestone 1 (Validate the Problem) · Tahap 9 (Customer Discovery).
 Tujuan: membuktikan (atau membantah) bahwa pembaca level A2-B1 benar-benar punya masalah saat membaca teks asing, dan melihat apa yang sudah mereka lakukan untuk mengatasinya. **Bukan** untuk menjual atau menguji fitur Keepo.
 
@@ -164,6 +169,39 @@ Hipotesis H1-H4: mendukung / membantah / netral
 - Jangan debug produk saat wawancara; catat kutipan, bukan solusi.
 - Jika tidak ada yang lolos setelah 1 minggu, longgarkan satu kriteria (mis. usia) dan sebar di tempat baru; jangan memaksa memakai teman dekat.
 - Batas keras: bila jam habis, tunda sintesis, jangan wawancara.
+
+## 7. Cara supaya ada yang isi form (hasil riset internet)
+
+**Temuan dari internet**
+- Aturan praktis: ±25% yang diajak mau, ±80% dari mereka datang → ±5 ajakan per 1 wawancara jadi. Untuk 15 orang, ajak ±75.
+- Screener pendek (5-8 pertanyaan) paling efektif; jangan beri tahu jawaban mana yang lolos.
+- Telegram/WhatsApp biasanya cepat membalas; Discord cepat penuh tapi yang menjawab cenderung paling aktif (bias).
+- Reddit: bangun akun dulu, pesan harus tulus dan bukan link-spam.
+- Mahasiswa Indonesia paling banyak menyebar survei lewat WhatsApp/Telegram/Line (±73%, survei Goodstats). Jadi sebar di sana.
+- Insentif terlalu kecil → sepi; terlalu besar → pemburu hadiah. Acuan luar negeri $30-75 per 30 menit; untuk Indonesia Rp50.000-75.000 (e-voucher/pulsa/GoPay) masuk akal (perkiraan, belum diuji).
+
+**Rencana sebar (urut dari paling mudah)**
+1. Status/story WA & IG pribadi + minta 5 teman menyebarkan ulang (bukan sebagai responden).
+2. Grup Telegram/Discord/FB belajar Jepang, Korea, Inggris (izin admin dulu; satu pesan, jangan spam).
+3. Kampus: UKM/komunitas bahasa, dosen bahasa, grup angkatan jurusan sastra/bahasa.
+4. Reddit (r/indonesia, r/languagelearning) dan komentar tulus di akun belajar bahasa di IG/TikTok.
+5. Di akhir tiap wawancara: minta kenalkan 1-2 teman (snowball).
+
+**Cara membuat orang mau isi**
+- Judul form jelas manfaatnya: "30 menit, ada Rp50.000, bukan jualan".
+- Form maksimal 2 menit; tulis "±2 menit" di awal.
+- Pesan personal ke tiap orang, bukan hanya broadcast.
+- Kirim Selasa-Kamis sore/malam; follow-up sekali setelah 2 hari, lalu berhenti.
+- Sediakan slot akhir pekan juga.
+- Kalau sepi setelah 1 minggu: naikkan insentif sedikit atau ganti tempat sebar, bukan menambah teman dekat.
+
+**Sumber riset**
+- [Koji: rekrut dari komunitas](https://www.koji.so/docs/recruiting-participants-communities-events)
+- [CleverX: rekrut peserta riset produk](https://cleverx.com/blog/how-to-recruit-participants-for-product-research)
+- [Tremendous: kanal & insentif rekrutmen](https://www.tremendous.com/blog/ux-research-recruitment-channels/)
+- [Goodstats: responden survei di Indonesia](https://goodstats.id/label/responden)
+- Dukungan hipotesis masalah: [Draxler dkk. 2022 (e-reader & alur baca)](https://www.medien.informatik.uni-muenchen.de/pubdb/publications/pub/draxler2022_mum/draxler2022_mum.pdf), [studi kamus pada membaca L2](https://journalpub.escholarship.org/catesoljournal/article/36367/galley/27219/download).
+- Sebagian besar sumber adalah blog/vendor, jadi angka di atas hanya acuan kasar.
 
 ## Kesimpulan & langkah berikutnya
 
