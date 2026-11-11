@@ -64,6 +64,10 @@ jobs:
           printf '%s' "$REVISI" > "$T/revisi.txt"
           if git ls-remote --exit-code --heads origin "$BR" >/dev/null; then
             git checkout -B "$BR" "origin/$BR"
+            # Selaraskan dengan main; bila bentrok, agent yang menyelesaikan tanda konflik.
+            if ! git merge origin/main --no-edit -q; then
+              git diff --name-only --diff-filter=U > "$T/konflik.txt"
+            fi
           else
             git checkout -b "$BR"
           fi
@@ -88,6 +92,12 @@ jobs:
               echo ""
               echo "## REVISI TERBARU dari founder (prioritaskan; hasil sebelumnya sudah ada di branch ini)"
               cat "$T/revisi.txt"
+            fi
+            if [ -s "$T/konflik.txt" ]; then
+              echo ""
+              echo "## WAJIB DULU: bentrok dengan versi terbaru"
+              echo "File berikut berisi tanda konflik (<<<<<<< ======= >>>>>>>). Gabungkan: pertahankan perubahan dari main DAN perubahan tugas ini, hapus semua tanda konflik, lalu naikkan versi C di sw.js melebihi versi di main."
+              cat "$T/konflik.txt"
             fi
             echo ""
             echo "## Aturan"

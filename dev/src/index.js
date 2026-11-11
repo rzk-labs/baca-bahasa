@@ -178,7 +178,13 @@ async function api(req, env, url) {
     const pr = await openPR(env, n);
     if (!pr || pr.state !== 'open') return json({ error: 'Belum ada perubahan yang siap digabung' }, 400);
     const r = await gh(env, `/repos/${REPO}/pulls/${pr.number}/merge`, { method: 'PUT', body: JSON.stringify({ merge_method: 'squash' }), soft: true });
-    if (!r || !r.merged) return json({ error: 'Gagal menggabung: ' + (r && r.message) }, 409);
+    if (!r || !r.merged) {
+      if (r && /conflict/i.test(r.message || '')) {
+        await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body: 'Revisi: Bentrok dengan update lain yang sudah live. Selaraskan dengan versi terbaru, pertahankan kedua perubahan.' }) });
+        return json({ error: 'Bentrok dengan update lain. Tim sedang menyelaraskan otomatis (±10 menit), lalu klik Setujui lagi.' }, 409);
+      }
+      return json({ error: 'Gagal menggabung: ' + (r && r.message) }, 409);
+    }
     await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'POST', body: JSON.stringify({ labels: ['live'] }) });
     await gh(env, `/repos/${REPO}/issues/${n}/labels/siap-dicek`, { method: 'DELETE', soft: true });
     await gh(env, `/repos/${REPO}/issues/${n}`, { method: 'PATCH', body: JSON.stringify({ state: 'closed', state_reason: 'completed' }) });
