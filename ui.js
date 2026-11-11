@@ -228,6 +228,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
     ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
+    <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">🔊 Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">🔇 Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
@@ -246,9 +247,10 @@ function openSettings() {
   $$('#mgs button').forEach(x => x.onclick = () => { db.mg = x.dataset.v; save(); $$('#mgs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#fcs button').forEach(x => x.onclick = () => { db.focus = x.dataset.v === '1'; save(); $$('#fcs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('focus', db.focus); $$('.cols .cur').forEach(e => e.classList.remove('cur')); const c = $('#cols'); if (c) c.classList.remove('has-cur'); } });
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
+  $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
-  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
+  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
@@ -308,6 +310,16 @@ function autoLang(text) {
   setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
   return g;
 }
+/* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
+function wordOfDay() {
+  const ok = db.vocab.filter(v => v && !v.noTr && String(v.t || '').trim() && v.w);
+  if (!ok.length) return null;
+  const now = Date.now(), due = ok.filter(v => !v.known && (v.due || 0) <= now);
+  const pool = (due.length ? due : ok).slice().sort((a, b) => ((a.due || a.at || 0) - (b.due || b.at || 0)) || String(a.w).localeCompare(String(b.w)));
+  const top = pool.slice(0, 7), d = new Date(), key = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
+  const v = top[key % top.length];
+  return { v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
+}
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -336,6 +348,8 @@ function viewRak() {
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
+      ${(() => { const k = wordOfDay(); if (!k) return ''; const { v, b } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
+        return `<div class="tile t-blue wide wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}${b ? `<div class="hero-act"><button class="pri" id="wodOpen" data-bk="${esc(b.id)}">Buka di bukunya →</button></div>` : ''}</div>`; })()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
       <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
       <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">🔥${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
@@ -350,6 +364,7 @@ function viewRak() {
     <div class="sec-h"><h2>Tambah cerita</h2></div>${addCard}`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
+    if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
     animRing($('#view'));
     heroMins(cur);
   }
@@ -451,7 +466,9 @@ async function viewBaca() {
     const r = v.lang === b.lang && bacaOf(v.w, v.baca); if (!r) continue;
     if (db.rt === 2 || +v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1) rtMap.set(v.w.toLowerCase(), r);
   }
-  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+  const oftenMemo = new Map();
+  const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
+  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch">${inner}</h2>` : `<p>${inner}</p>`;
@@ -459,7 +476,7 @@ async function viewBaca() {
   const hr = new Date().getHours();
   const nightChip = db.theme === 'light' && !db.themeSet && (hr >= 19 || hr < 5 || matchMedia('(prefers-color-scheme: dark)').matches);
   $('#view').innerHTML = `
-    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
+    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
@@ -684,7 +701,7 @@ async function onWord(el) {
     g.hidden = false;
     $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
-  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; showSug(n); };
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; if (n >= 3) $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('often'); }); showSug(n); };
   showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
