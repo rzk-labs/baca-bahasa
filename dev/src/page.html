@@ -267,7 +267,7 @@ async function markas(again){
   const np=nextPM();
   const agent=k=>{
     const a=TIM[k];let on=null,st='';
-    if(k==='pm'){on=pmRun;st=pmRun?'Sedang memilih tugas berikutnya…':'Siaga · jadwal '+np.toLocaleString('id-ID',{weekday:'short',hour:'2-digit',minute:'2-digit'})}
+    if(k==='pm'){on=pmRun;st=pmRun?'Sedang memilih tugas berikutnya…':'Siaga · bagi tugas tiap 30 mnt'}
     else if(k==='qa'){const q=T.filter(t=>t.qa);on=kerjaRun.length&&jalan.length?1:0;st=q.length?`${q.filter(t=>t.qa==='lolos').length} lolos · ${q.filter(t=>t.qa==='catatan').length} catatan`:'Belum ada pemeriksaan'}
     else{const w=T.find(t=>t.peran===k&&(t.status==='dikerjakan'||t.status==='antre'));on=w;st=w?'Sedang: '+esc(w.judul):`Siaga · ${T.filter(t=>t.peran===k&&t.status==='live').length} tugas live`}
     return `<div class="tile agent"><div class="row"><div class="av ${a.c}">${a.e}${on?'<i class="live"></i>':''}</div><div><h3>${a.n}</h3><div class="mut sm">${a.d}</div></div></div><div class="st ${on?'on':''}">${st}</div></div>`;
