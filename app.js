@@ -126,7 +126,22 @@ async function parseFile(file) {
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
   if (ext === 'epub') return parseEpub(await file.arrayBuffer(), name);
   if (ext === 'pdf') return parsePdf(await file.arrayBuffer(), name);
-  return { title: name, paras: cleanParas(await file.text()) };
+  return { title: name, paras: cleanParas(decodeText(await file.arrayBuffer())) };
+}
+function decodeText(buf) {
+  let s = null;
+  try { s = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+  catch (e) {
+    let best = null, bestBad = Infinity;
+    for (const enc of ['shift_jis', 'gbk', 'big5', 'euc-kr', 'windows-1252']) {
+      let t; try { t = new TextDecoder(enc).decode(buf); } catch (e2) { continue; }
+      const bad = (t.match(/�/g) || []).length;
+      if (bad < bestBad) { best = t; bestBad = bad; }
+      if (bad === 0) break;
+    }
+    s = best != null ? best : new TextDecoder('utf-8').decode(buf);
+  }
+  return s.replace(/^﻿/, '');
 }
 async function parseEpub(buf, fallback) {
   await loadScript(JSZIP_URL);
@@ -135,12 +150,13 @@ async function parseEpub(buf, fallback) {
   const zf = p => idx[p.toLowerCase()] || null;
   const cf = zf('META-INF/container.xml'); if (!cf) throw new Error('File EPUB tidak valid');
   const cont = await cf.async('string');
-  const opfPath = cont.match(/full-path="([^"]+)"/)[1];
+  const opfPath = (cont.match(/full-path="([^"]+)"/) || [])[1]; if (!opfPath) throw new Error('File EPUB tidak valid');
   const base = opfPath.includes('/') ? opfPath.replace(/[^/]+$/, '') : '';
-  const opf = new DOMParser().parseFromString(await zf(opfPath).async('string'), 'application/xml');
+  const opfFile = zf(opfPath); if (!opfFile) throw new Error('File EPUB tidak valid');
+  const opf = new DOMParser().parseFromString(await opfFile.async('string'), 'application/xml');
   const title = opf.getElementsByTagNameNS('*', 'title')[0]?.textContent?.trim() || fallback;
   const man = {}; for (const it of opf.getElementsByTagNameNS('*', 'item')) man[it.getAttribute('id')] = it.getAttribute('href');
-  const resolve = h => { const parts = (base + decodeURIComponent(h.split('#')[0])).split('/'); const o = []; for (const p of parts) { if (p === '..') o.pop(); else if (p !== '.') o.push(p); } return o.join('/'); };
+  const resolve = h => { let raw = h.split('#')[0]; try { raw = decodeURIComponent(raw); } catch (e) { } const parts = (base + raw).split('/'); const o = []; for (const p of parts) { if (p === '..') o.pop(); else if (p !== '.') o.push(p); } return o.join('/'); };
   const paras = [];
   let chLen = 0;
   for (const ref of opf.getElementsByTagNameNS('*', 'itemref')) {

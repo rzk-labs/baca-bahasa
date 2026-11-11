@@ -1,5 +1,11 @@
 [
   {
+    "n": 248,
+    "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
+    "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 246,
     "judul": "HP kecil: header tak sesak, tab bawah lega, sheet arti tanpa '1/2'",
     "poin": "Header di HP kecil lebih rapi: tombol dikecilkan, logo tidak terpotong.",
@@ -172,11 +178,5 @@
     "n": 80,
     "tgl": "2026-11-11",
     "poin": "Ekspor CSV sekarang melewati kata yang belum ada artinya, jadi tak ada kartu kosong."
-  },
-  {
-    "judul": "E-reader: pengaturan lebar margin & mode fokus baris",
-    "n": 74,
-    "tgl": "2026-11-11",
-    "poin": "Pengaturan baca kini punya pilihan lebar margin: sempit, sedang, atau lebar."
   }
 ]
