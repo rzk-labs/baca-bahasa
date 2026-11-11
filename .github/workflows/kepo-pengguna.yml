@@ -6,8 +6,17 @@ name: Keepo Pengguna & Tester AI
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch:
+    inputs:
+      setelah_live:
+        description: Dipicu setelah ada update live (dilewati bila baru jalan <40 menit)
+        type: boolean
+        default: false
+
+concurrency:
+  group: kepo-pengguna
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -18,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       issue: ${{ steps.i.outputs.n }}
+      jalan: ${{ steps.i.outputs.jalan }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
@@ -32,9 +42,16 @@ jobs:
             N=${URL##*/}
           fi
           echo "n=$N" >> "$GITHUB_OUTPUT"
+          J=1
+          if [ "${{ inputs.setelah_live }}" = "true" ]; then
+            T=$(gh api "repos/$GH_REPO/issues/$N" --jq ".updated_at // empty")
+            if [ -n "$T" ] && [ $(( $(date +%s) - $(date -d "$T" +%s) )) -lt 2400 ]; then J=0; echo "Baru dicoba <40 menit lalu, lewati."; fi
+          fi
+          echo "jalan=$J" >> "$GITHUB_OUTPUT"
 
   coba:
     needs: siapkan
+    if: needs.siapkan.outputs.jalan == '1'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
@@ -63,6 +80,8 @@ jobs:
             profil: "Pemakai AI untuk Keepo HQ (web markas tim agent). Kamu founder solo yang sibuk dan ADHD: cuma punya 5 menit, ingin langsung tahu apa yang harus diputuskan. Fokus: teks meluber/terpotong, label/ikon tidak jelas, status membingungkan, terlalu banyak teks, tombol yang tidak jelas akibatnya, tampilan HP."
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 80
       - name: Siapkan instruksi
         env:
           NAMA: ${{ matrix.nama }}
@@ -73,6 +92,7 @@ jobs:
           mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
           gh issue view "${{ needs.siapkan.outputs.issue }}" --json comments \
             --jq '[.comments[-8:][] | .body] | join("\n---\n")' > .kepo-tmp/lalu.txt 2>/dev/null || true
+          git log --since="6 hours ago" --pretty="- %s" origin/main 2>/dev/null | grep "Keepo #" | head -15 > .kepo-tmp/baru.txt || true
           gh issue list --label kepo-dev --state all --limit 40 --json number,title,state,stateReason,labels \
             --jq '.[] | "#\(.number) [\(.state) \(.stateReason // "")] [\([.labels[].name]|join(","))] \(.title)"' > .kepo-tmp/tugas.txt || true
           {
@@ -90,6 +110,7 @@ jobs:
             else
               echo "Ceritakan pengalamanmu sebagai pengguna: apa yang bikin senang, bingung, atau bikin berhenti pakai."
             fi
+            echo "UPDATE TERBARU yang baru live (prioritaskan mencoba ini dulu): lihat .kepo-tmp/baru.txt. Kalau ada yang rusak/kurang dari update itu, laporkan."
             echo "Masukan hari-hari sebelumnya ada di .kepo-tmp/lalu.txt: JANGAN ulangi hal yang sama; cari hal baru."
             echo "Jangan ubah file apa pun. Tulis hanya .kepo-tmp/masukan.md: maksimal 3 poin '- ...', tiap poin maks 20 kata, bahasa sehari-hari, urut dari paling penting. Tanpa judul."
           } > .kepo-tmp/prompt.md

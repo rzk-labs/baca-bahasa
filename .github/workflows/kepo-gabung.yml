@@ -95,6 +95,7 @@ jobs:
           gh issue edit "$N" --add-label live --remove-label antre-live --remove-label siap-dicek || true
           gh issue close "$N" --reason completed 2>/dev/null || true
           gh issue comment "$N" --body "✅ **Sudah live.**"
+          gh workflow run kepo-pengguna.yml -f setelah_live=true || true
 
       - name: Tandai gagal
         if: failure() && steps.a.outputs.n != ''
