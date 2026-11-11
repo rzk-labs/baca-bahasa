@@ -478,10 +478,17 @@ const unitsOf = (t, lang) => {
   return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
 };
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
-function heroPos(b, mins) {
+function heroPos(b, mins, part) {
   const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
-  return esc(where + (mins ? ` · ${mins} lagi` : ''));
+  return esc(where + (mins ? ` · sisa ${mins}` : '')) + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
 }
+/* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
+function fmtMins(m, part) {
+  const n = Math.ceil(m - 1e-9);
+  if (!part) return n < 1 ? '' : `±${Math.max(1, Math.round(m))} mnt`;
+  return n < 1 ? '—' : `≥${n} mnt`;
+}
+const unseen = (b, secs) => !secs.length || (b.total || 1) > secs.length || (secs.length === 1 && secs[0].length === 1 && /^\((kosong|teks hilang)\)$/.test(secs[0][0]));
 async function heroMins(b) {
   try {
     const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
@@ -491,18 +498,19 @@ async function heroMins(b) {
     const frac = secs.length > 1 ? Math.max(0, Math.min(1, pctOf(b) / 100 * secs.length - pos)) : pctOf(b) / 100;
     let m = per[pos] * (1 - frac);
     for (let i = pos + 1; i < secs.length; i++) m += per[i];
-    const n = Math.ceil(m - 1e-9), el = $('#heroPos');
+    const part = unseen(b, secs), el = $('#heroPos');
     if (!el || db.cur !== b.id) return;
-    el.innerHTML = heroPos(b, n < 1 ? '≥1 mnt' : `±${n} mnt`);
+    el.innerHTML = heroPos(b, fmtMins(m, part), part);
   } catch (e) {}
 }
 function minsLeft(b) {
   const secs = cache.id === b.id && cache.pages;
-  if (!secs || !secs[b.pos] || !(RD.n > 0)) return '';
+  if (!secs || !secs[b.pos] || !(RD.n > 0)) return null;
   if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
   let m = RD.chu[b.pos] * (RD.n - RD.page) / RD.n;
   for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
-  return m > 0 ? `±${Math.max(1, Math.round(m))} mnt` : '';
+  const part = unseen(b, secs);
+  return { t: fmtMins(m, part), part };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -514,7 +522,7 @@ function showPage(p, anim = true) {
   if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
   const ml = minsLeft(b);
-  $('#pgn').textContent = ml ? `Hal ${RD.page + 1}/${RD.n} · ${ml}` : `Hal ${RD.page + 1} dari ${RD.n}`;
+  $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
@@ -596,11 +604,11 @@ async function onWord(el) {
     const k = b.lang + '|' + word.toLowerCase();
     if (n < 3 || isSaved() || sugSeen.has(k)) { g.hidden = true; g.innerHTML = ''; return; }
     sugSeen.add(k);
-    g.innerHTML = '<span>Sering dibuka nih. Simpan biar gampang diulang?</span><button class="pill-sm" id="wsug-b">Simpan</button>';
+    g.innerHTML = `<span>Sudah ${n}× diketuk. Simpan biar gampang diulang?</span><button class="pill-sm" id="wsug-b">Simpan</button>`;
     g.hidden = false;
     $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
-  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 2 ? `Diketuk ${n}×` : ''; showSug(n); };
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; showSug(n); };
   showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
@@ -643,6 +651,7 @@ async function onWord(el) {
   };
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
+    const sg = $('#wsug'); if (sg) sg.innerHTML = '';
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
     const tp = takeTaps(b.lang, w);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
@@ -825,7 +834,7 @@ function viewKata() {
     if (kataSeg === 'simpan') {
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${+v.tap >= 2 ? `<div><span class="tapb">Diketuk ${+v.tap}×</span></div>` : ''}${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div>${((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `<div class="mut sm">Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×</div>` : ''}</div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${+v.tap >= 1 ? `<div><span class="tapb">Diketuk ${+v.tap}×</span></div>` : ''}${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div>${((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `<div class="mut sm">Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×</div>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
