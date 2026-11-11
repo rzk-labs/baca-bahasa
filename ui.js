@@ -223,6 +223,7 @@ function viewRak() {
     const BCOL = ['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'];
     $('#view').innerHTML = `
     <h1 class="big">${hi === 'Pagi' ? 'Pagi' : hi === 'Siang' ? 'Siang' : hi === 'Sore' ? 'Sore' : 'Malam'},<br><span class="circle-txt">kepoin</span> apa?</h1>
+    <div class="mut sm" style="margin:-4px 0 8px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     <div class="hello-sub">${mascot('curious', 'bob')}<div class="mut">${line}</div></div>
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
