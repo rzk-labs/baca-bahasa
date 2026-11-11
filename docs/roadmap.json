@@ -21,7 +21,7 @@
     { "no": 14, "nama": "Naming Strategy",                 "fase": "Brand Development",           "status": "awal",   "catatan": "Nama kerja Keepo (alternatif: Babasa), belum final." },
     { "no": 15, "nama": "Visual Identity",                 "fase": "Brand Development",           "status": "awal",   "catatan": "Palet, tipografi, logo, maskot gelembung chat." },
     { "no": 16, "nama": "UX/UI Design",                    "fase": "Design & Build",              "status": "awal",   "catatan": "Beranda, reader e-book, tab Kata/Ngomong sudah ada di app." },
-    { "no": 17, "nama": "Prototyping & Usability Test",    "fase": "Design & Build",              "status": "belum",  "catatan": "Uji alur baca + ketuk-kata dengan 8-10 peserta." },
+    { "no": 17, "nama": "Prototyping & Usability Test",    "fase": "Design & Build",              "status": "belum",  "catatan": "Uji alur baca + ketuk-kata dengan 8-10 peserta. Versi ringan 5 orang siap dijalankan: docs/riset-uji-pakai-5-orang.md." },
     { "no": 18, "nama": "MVP Development",                 "fase": "Design & Build",              "status": "awal",   "catatan": "PWA live di GitHub Pages; belum diverifikasi dengan pengguna nyata. Hak cipta: fitur Bagikan simpan teks di server = risiko terbesar; lihat docs/riset-hak-cipta.md." },
     { "no": 19, "nama": "Beta Testing & Launch",           "fase": "Launch & Growth",             "status": "belum",  "catatan": "Private beta 30-50 pengguna selama 4 minggu. Sebelum beta: S&K, tombol laporan/takedown, tinjauan hukum (docs/riset-hak-cipta.md)." },
     { "no": 20, "nama": "Growth & Scaling",                "fase": "Launch & Growth",             "status": "belum",  "catatan": "" }
