@@ -304,7 +304,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>👉 <b>Geser</b> = ganti halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser</b> = ganti halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
@@ -312,8 +312,26 @@ async function viewBaca() {
   $('#set').onclick = openSettings;
   $('#pv').onclick = () => turn(-1); $('#nx').onclick = () => turn(1);
   const vp = $('#vp'); let tx = null, moved = false;
-  vp.addEventListener('touchstart', e => { const t = e.touches[0]; tx = [t.clientX, t.clientY]; moved = false; }, { passive: true });
+  let lpT, lpT2, lpEl = null, lpDone = false;
+  const lpStop = () => { clearTimeout(lpT); clearTimeout(lpT2); lpT = 0; if (lpEl) { lpEl.classList.remove('press'); lpEl = null; } };
+  vp.addEventListener('touchstart', e => {
+    const t = e.touches[0]; tx = [t.clientX, t.clientY]; moved = false; lpDone = false; lpStop();
+    const sEl = e.touches.length === 1 && e.target.closest ? e.target.closest('.s') : null;
+    if (!sEl || sEl.closest('h2')) return;
+    lpT2 = setTimeout(() => { lpEl = sEl; sEl.classList.add('press'); }, 180);
+    lpT = setTimeout(() => {
+      lpDone = true; moved = true; tx = null; lpStop();
+      try { getSelection().removeAllRanges(); } catch (_) {}
+      vib(12); sfx('pop');
+      $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
+      showSentence('', sEl.textContent.trim(), +sEl.dataset.s, sEl); award(1, 'look');
+    }, 450);
+  }, { passive: true });
+  vp.addEventListener('touchmove', e => { if (!tx || !lpT) return; const t = e.touches[0]; if (Math.hypot(t.clientX - tx[0], t.clientY - tx[1]) > 8) lpStop(); }, { passive: true });
+  vp.addEventListener('touchcancel', lpStop);
+  vp.addEventListener('contextmenu', e => { if (lpDone) e.preventDefault(); });
   vp.addEventListener('touchend', e => {
+    lpStop(); if (lpDone) { e.preventDefault(); return; }
     if (!tx) return; const t = e.changedTouches[0], dx = t.clientX - tx[0], dy = t.clientY - tx[1]; tx = null;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; turn(dx < 0 ? 1 : -1); }
   });
@@ -423,9 +441,9 @@ async function onWord(el) {
 function showSentence(word, sent, sIdx, sEl) {
   const b = book();
   sEl.classList.add('hl');
-  const marked = esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
+  const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
   openSheet(`
-    <div class="sh-head"><button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button><span class="stepchip" style="margin-right:auto">2/2 · Arti kalimat</span>${closeBtn}</div>
+    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     <button class="ghost" id="ssp" style="padding-left:0">${ico('vol')} Dengerin kalimatnya</button>
@@ -433,7 +451,7 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   translate(sent, b.lang, db.my).then(r => { if ($('#str')) $('#str').textContent = r.text; }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
   $('#ssp').onclick = () => speak(sent, b.lang);
-  $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
+  if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
 }
 
