@@ -285,6 +285,8 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols h2.ch{font-family:var(--font-display);font-weight:800;font-stretch:78%;font-size:1.3em;line-height:1.3;text-align:center;font-weight:700;margin:1.2em 0 1.1em;letter-spacing:-.01em;break-after:avoid}
 .cols h2.ch:first-child{margin-top:1.6em}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
+.cols{-webkit-touch-callout:none}
+.cols .s.press{background:var(--lav);color:var(--ink);border-radius:4px;transition:background var(--dur-color)}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
 .cols .w.saved{text-decoration:underline dotted var(--blue);text-decoration-thickness:2px;text-underline-offset:4px}
 .cols .w.sel{background:var(--lime);color:var(--ink);border-radius:6px}
