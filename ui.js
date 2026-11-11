@@ -413,7 +413,7 @@ async function viewBaca() {
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
   $('#rSpeak').onclick = () => setTab('bicara');
-  $('#set').onclick = openSettings;
+  $('#reader #set').onclick = openSettings;
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
