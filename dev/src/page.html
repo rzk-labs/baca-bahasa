@@ -197,6 +197,12 @@ const TIM={
   developer:{n:'Developer',e:'🛠️',c:'t-lime',d:'Menulis kode aplikasi'},
   qa:{n:'QA',e:'🧪',c:'t-mint',d:'Memeriksa setiap hasil'}
 };
+const UJI=[
+  {n:'Tari',e:'🔍',c:'t-blue',d:'Tester · tampilan HP'},
+  {n:'Bima',e:'🧪',c:'t-mint',d:'Tester · data & offline'},
+  {n:'Nadia',e:'📖',c:'t-pink',d:'Pengguna · mahasiswi, Inggris A2'},
+  {n:'Raka',e:'💼',c:'t-sun',d:'Pengguna · karyawan, Korea/Jepang B1'}
+];
 const ST={antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
 const KS={selesai:'Selesai',draft:'Draft',berjalan:'Berjalan',awal:'Awal',belum:'Belum'};
 const BOBOT={selesai:1,draft:.6,berjalan:.5,awal:.3,belum:0};
@@ -255,8 +261,15 @@ async function markas(again){
     else{const w=T.find(t=>t.peran===k&&(t.status==='dikerjakan'||t.status==='antre'));on=w;st=w?'Sedang: '+esc(w.judul):`Siaga · ${T.filter(t=>t.peran===k&&t.status==='live').length} tugas live`}
     return `<div class="tile agent"><div class="row"><div class="av ${a.c}">${a.e}${on?'<i class="live"></i>':''}</div><div><h3>${a.n}</h3><div class="mut sm">${a.d}</div></div></div><div class="st ${on?'on':''}">${st}</div></div>`;
   };
+  const ujiRun=(runs||[]).find(r=>r.jenis==='pengguna'&&r.status!=='completed');
+  const uji=u=>{
+    const m=[...(HQ.masukan||[])].reverse().find(x=>x.teks.includes('** '+u.n+'**')||x.teks.includes(' '+u.n+'**'));
+    const pts=m?m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,'')):[];
+    const st=ujiRun?'Sedang mencoba Keepo…':m?'Masukan '+lalu(m.waktu):'Belum mencoba · tiap 07.00 WIB';
+    return `<div class="tile agent"><div class="row"><div class="av ${u.c}">${u.e}${ujiRun?'<i class="live"></i>':''}</div><div><h3>${u.n}</h3><div class="mut sm">${u.d}</div></div></div><div class="st ${ujiRun?'on':''}">${st}</div>${pts.length?`<div class="sm"><b>${esc(pts[0])}</b></div>${pts.length>1?`<details class="more"><summary>+${pts.length-1} lagi</summary><ul class="pts sm2">${pts.slice(1).map(p=>`<li>${esc(p)}</li>`).join('')}</ul></details>`:''}`:''}</div>`;
+  };
   const evs=[];
-  (runs||[]).filter(r=>r.hasil!=='skipped').slice(0,8).forEach(r=>evs.push({t:r.mulai,ic:r.jenis==='pm'?'🧭':'🛠️',c:r.jenis==='pm'?'t-lav':'t-lime',txt:`<b>${r.jenis==='pm'?'PM':'Tim'}</b> ${r.status!=='completed'?'sedang bekerja':r.hasil==='success'?'selesai':r.hasil==='skipped'?'dilewati':'gagal'} · ${esc(r.judul)}`,url:r.url}));
+  (runs||[]).filter(r=>r.hasil!=='skipped').slice(0,8).forEach(r=>evs.push({t:r.mulai,ic:r.jenis==='pm'?'🧭':r.jenis==='pengguna'?'👥':'🛠️',c:r.jenis==='pm'?'t-lav':r.jenis==='pengguna'?'t-pink':'t-lime',txt:`<b>${r.jenis==='pm'?'PM':r.jenis==='pengguna'?'Tester & pengguna AI':'Tim'}</b> ${r.status!=='completed'?'sedang bekerja':r.hasil==='success'?'selesai':r.hasil==='skipped'?'dilewati':'gagal'} · ${esc(r.judul)}`,url:r.url}));
   if(!runs)T.slice(0,8).forEach(t=>evs.push({t:t.diubah,ic:TIM[t.peran]?.e||'•',c:TIM[t.peran]?.c||'',txt:`<b>#${t.n}</b> ${esc(t.judul)} → ${ST[t.status]}`}));
   evs.sort((a,b)=>new Date(b.t)-new Date(a.t));
   V.innerHTML=`
@@ -270,6 +283,8 @@ async function markas(again){
   ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Bekerja tiap hari 08.00 WIB</span></div>
   <div class="agents">${['pm','riset','desain','developer','qa'].map(agent).join('')}</div>
+  <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 07.00 WIB${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span></div>
+  <div class="agents">${UJI.map(uji).join('')}</div>
   <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
   <div class="tile">${evs.length?`<div class="feed">${evs.map(e=>`<div class="ev"><div class="ic ${e.c}">${e.ic}</div><div style="min-width:0;flex:1"><div>${e.txt}</div><div class="mut sm">${lalu(e.t)}${e.url?` · <a href="${e.url}" target="_blank">log</a>`:''}</div></div></div>`).join('')}</div>`:'<div class="empty">Belum ada aktivitas.</div>'}</div>`;
   $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;try{await call('/pm',{paksa:true});b.innerHTML='<i class="dot"></i> PM sedang bekerja…';setTimeout(async()=>{await load();markas(true)},8000)}catch(x){b.disabled=false;b.textContent=x.message}};

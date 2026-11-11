@@ -57,7 +57,7 @@ const brief = i => {
     qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at };
 };
 const PERAN = ['developer', 'riset', 'desain', 'pm'];
-const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm' };
+const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm', 'kepo-pengguna.yml': 'pengguna' };
 
 async function openPR(env, n) {
   const owner = REPO.split('/')[0];
@@ -88,15 +88,25 @@ async function api(req, env, url) {
   if (!(await authed(req, env))) return json({ error: 'Perlu login' }, 401);
 
   if (p === '/hq' && req.method === 'GET') {
-    const [issues, road, docs, runs] = await Promise.all([
+    const [issues, road, docs, runs, mi] = await Promise.all([
       gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`),
       gh(env, `/repos/${REPO}/contents/docs/roadmap.json`, { raw: true }).then(r => (r.ok ? r.json() : null)),
       gh(env, `/repos/${REPO}/contents/docs`, { soft: true }),
       gh(env, `/repos/${REPO}/actions/runs?per_page=15`, { soft: true }),
+      gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }),
     ]);
+    let masukan = [];
+    const mn = Array.isArray(mi) && mi[0] ? mi[0].number : 0;
+    if (mn) {
+      const iss = await gh(env, `/repos/${REPO}/issues/${mn}`, { soft: true });
+      const tot = (iss && iss.comments) || 0, pg = Math.max(1, Math.ceil(tot / 30));
+      const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
+      if (Array.isArray(cs)) masukan = cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at }));
+    }
     return json({
       tasks: issues.filter(i => !i.pull_request).map(brief),
       roadmap: road,
+      masukan, masukan_issue: mn,
       docs: Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md')).map(d => d.path) : [],
       runs: runs && runs.workflow_runs ? runs.workflow_runs.filter(r => WF[r.path.split('/').pop()]).map(r => ({
         jenis: WF[r.path.split('/').pop()], judul: r.display_title, status: r.status, hasil: r.conclusion, mulai: r.run_started_at || r.created_at, url: r.html_url,
