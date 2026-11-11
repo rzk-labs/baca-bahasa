@@ -120,7 +120,7 @@ function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.inner
 
 /* ---------- kerangka ---------- */
 let toastT;
-function toast(m, ms = 3200) { const t = $('#toast'); t.textContent = m; t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
+function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
 function openSheet(html) { $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); }
 function closeSheet() { $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); }
 $('#shade').onclick = closeSheet;
@@ -572,7 +572,10 @@ function remedial(list, lang, box, done) {
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
 let kataSeg = 'kartu', kataQ = '', flipped = false;
+const REVIEW_DAYS = [1, 3, 7, 14], DAY_MS = 864e5;
+const isDue = v => v.known && (v.kd || 0) + REVIEW_DAYS[Math.min(v.kn || 0, 3)] * DAY_MS <= Date.now();
 function viewKata() {
+  let mig = false; db.vocab.forEach(v => { if (v.known && !v.kd) { v.kd = Date.now(); v.kn = 0; mig = true; } }); if (mig) save();
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
   const known = db.vocab.filter(v => v.known).length;
   $('#view').innerHTML = `
@@ -593,7 +596,10 @@ function viewKata() {
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon" data-dv="${v.i}" aria-label="Hapus kata">${ico('x')}</button></div>`).join('')
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
-      $$('[data-dv]').forEach(el => el.onclick = () => { db.vocab.splice(+el.dataset.dv, 1); save(); renderList(); });
+      $$('[data-dv]').forEach(el => el.onclick = () => {
+        const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); save(); renderList();
+        toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
+      });
     } else {
       const weak = weakAll.filter(o => !q || o.w.toLowerCase().includes(q)).slice(0, 40);
       kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · dicoba ${o.n}×</div></div>${chip(o.last)}</div>`).join('')}
@@ -611,7 +617,7 @@ function viewKata() {
 }
 function deck(kb) {
   if (db.vocab.some(x => x.noTr)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
-  const cards = db.vocab.filter(v => !v.known);
+  const cards = db.vocab.filter(v => !v.known || isDue(v));
   if (!cards.length) { kb.innerHTML = db.vocab.length ? emptyState('cheer', 'Semua kartu udah hafal! 🧠', 'Keren banget. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
@@ -625,7 +631,7 @@ function deck(kb) {
   const flip = () => { flipped = !flipped; $('#back').classList.toggle('hide', !flipped); $('#tapl').classList.toggle('hide', flipped); sfx('pop'); };
   const decide = ok => {
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
-    if (ok) { v.known = true; save(); sfx('ding'); award(2, 'flash'); } else { db.vocab.splice(db.vocab.indexOf(v), 1); db.vocab.push(v); save(); sfx('soft'); }
+    if (ok) { v.kn = v.known && v.kd ? Math.min((v.kn || 0) + 1, 3) : 0; v.known = true; v.kd = Date.now(); save(); sfx('ding'); award(2, 'flash'); } else { if (v.known) { v.kn = 0; v.kd = Date.now(); } db.vocab.splice(db.vocab.indexOf(v), 1); db.vocab.push(v); save(); sfx('soft'); }
     setTimeout(() => deck(kb), 280);
   };
   $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fSp').onclick = () => speak(v.w, v.lang, 0.8);
