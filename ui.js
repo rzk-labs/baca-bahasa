@@ -165,6 +165,7 @@ function setTab(t) {
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata })[t]();
+  if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(mood, 'bob')}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
