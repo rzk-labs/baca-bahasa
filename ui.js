@@ -1,6 +1,6 @@
 'use strict';
 /* KEPO v6 — fun tapi profesional (krem, blok warna, maskot doodle). Maskot, XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
-db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; db.mg = db.mg || 'm'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true;
+db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; db.mg = db.mg || 'm'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0;
 db.xp = db.xp || 0; db.xpDay = db.xpDay || {}; db.badges = db.badges || []; if (db.sfx == null) db.sfx = true;
 db.stat = Object.assign({ look: 0, save: 0, page: 0, speak: 0, perfect: 0, rem: 0, flash: 0 }, db.stat || {});
 if (!db.v6) { db.v6 = 1; db.theme = 'light'; } db.theme = db.theme || 'light';
@@ -197,8 +197,20 @@ const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(
 function voiceRow(lang) {
   const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
   const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
-  if (!vs.length) return '';
-  return `<div class="set-row"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
+  if (!vs.length) {
+    const loaded = speechSynthesis.getVoices().length > 0;
+    if (!loaded && !voiceRow.wait) {
+      voiceRow.wait = true;
+      speechSynthesis.addEventListener('voiceschanged', () => {
+        voiceRow.wait = false;
+        const el = $('#vrow'), b = book();
+        if (el && b) el.outerHTML = voiceRow(b.lang);
+        const s = $('#vsel'); if (s) s.onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
+      }, { once: true });
+    }
+    return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><div class="mut sm">${loaded ? 'Perangkat ini belum punya suara untuk bahasa ini' : 'Suara belum termuat, coba buka lagi sebentar'}</div></div>`;
+  }
+  return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
 }
 // Ukuran huruf efektif: pilihan pengguna menang; kalau belum pernah diubah, pakai default per bahasa.
 const FS0 = { ja: 21, 'zh-CN': 21, ko: 20 };
@@ -215,6 +227,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${[1.5, 1.7, 1.9].map(v => `<button data-v="${v}" class="${db.lh === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
+    ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">🔊 Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">🔇 Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
@@ -232,9 +245,10 @@ function openSettings() {
   $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#mgs button').forEach(x => x.onclick = () => { db.mg = x.dataset.v; save(); $$('#mgs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#fcs button').forEach(x => x.onclick = () => { db.focus = x.dataset.v === '1'; save(); $$('#fcs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('focus', db.focus); $$('.cols .cur').forEach(e => e.classList.remove('cur')); const c = $('#cols'); if (c) c.classList.remove('has-cur'); } });
+  $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
-  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
+  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
@@ -421,7 +435,12 @@ async function viewBaca() {
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
   const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
-  const wordsHtml = s => tokens(s, b.lang).map(t => t.w ? `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}">${esc(t.t)}</span>` : esc(t.t)).join('');
+  const rtMap = new Map();
+  if (db.rt && ['ja', 'ko', 'zh-CN'].includes(b.lang)) for (const v of db.vocab) {
+    const r = v.lang === b.lang && bacaOf(v.w, v.baca); if (!r) continue;
+    if (db.rt === 2 || +v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1) rtMap.set(v.w.toLowerCase(), r);
+  }
+  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch">${inner}</h2>` : `<p>${inner}</p>`;
@@ -429,7 +448,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}</div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         <button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
@@ -662,7 +681,7 @@ async function onWord(el) {
     setWBaca(bacaOf(word, v.baca));
     $('#wbase').textContent = v.base ? 'Bentuk dasar: ' + v.base : '';
     $('#wpos').textContent = v.pos ? (POS[v.pos] || v.pos) : '';
-    $('#wdict').innerHTML = '<div class="mut sm">Dari kata tersimpan (offline)</div>';
+    $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
   const load = () => { const my = ++tok; const sv = savedOf(); if (sv) showSaved(sv); return translate(word, b.lang, db.my).then(r => {
@@ -677,7 +696,7 @@ async function onWord(el) {
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
-  }).catch(() => { if (my === tok && $('#wtr') && !sv) { $('#wtr').innerHTML = `<span class="loading">Sinyal lemah, arti belum kebuka. Coba lagi ya.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
   const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
   updExp();
@@ -977,5 +996,8 @@ applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
 if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
+const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
+window.addEventListener('offline', syncOff);
+window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
