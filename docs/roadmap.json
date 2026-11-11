@@ -32,7 +32,7 @@
     { "no": 21, "peran": "desain", "prioritas": "P0", "nama": "Peta masalah membaca dari masukan pengguna AI", "dokumen": "docs/desain-peta-masalah-membaca.md", "status": "draft siap dicek" },
     { "no": 28, "peran": "developer", "prioritas": "P1", "nama": "Fitur feedback di web (form masukan dalam app)", "dokumen": "docs/spesifikasi-feedback-web.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 29, "peran": "developer", "prioritas": "P1", "nama": "Buku ikut tersimpan di akun (laporan #77: unggah ulang setelah login)", "dokumen": "docs/spesifikasi-sinkron-buku.md", "status": "spesifikasi siap; butuh deploy server manual" },
-    { "no": 30, "peran": "developer", "prioritas": "P0", "nama": "Hitung berapa kali tiap kata diketuk, tampil di daftar kata (#83)", "dokumen": "docs/spesifikasi-hitung-ketukan-kata.md", "status": "spesifikasi siap dikerjakan" },
+    { "no": 30, "peran": "developer", "prioritas": "P0", "nama": "Hitung berapa kali tiap kata diketuk, tampil di daftar kata (#83)", "dokumen": "docs/spesifikasi-hitung-ketukan-kata.md", "status": "selesai" },
     { "no": 31, "peran": "developer", "prioritas": "P2", "nama": "Seragamkan nama app jadi KEEPO (sisa \"Kepo\" di teks tampilan, #97)", "dokumen": "docs/spesifikasi-nama-keepo.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
