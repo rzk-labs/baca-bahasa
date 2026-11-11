@@ -39,7 +39,8 @@
     { "no": 33, "peran": "developer", "prioritas": "P0", "nama": "Kata sering diketuk tampil di tab Kata, simpan sekali ketuk (#230)", "dokumen": "docs/spesifikasi-kata-sering-diketuk.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 34, "peran": "developer", "prioritas": "P1", "nama": "Tombol feedback kirim langsung ke HQ, tanpa salin-tempel (#234)", "dokumen": "docs/spesifikasi-feedback-langsung-hq.md", "status": "spesifikasi siap; butuh deploy server manual" },
     { "no": 35, "peran": "developer", "prioritas": "P0", "nama": "Arti kata beda dengan arti di kalimat: petunjuk frasa + chip perluas (#287)", "dokumen": "docs/spesifikasi-arti-kata-vs-frasa.md", "status": "spesifikasi siap dikerjakan" },
-    { "no": 36, "peran": "developer", "prioritas": "P0", "nama": "Arti frasa: kata + kata lain yang mengubah makna, perluas dua arah & terlihat jelas (#296)", "dokumen": "docs/spesifikasi-arti-frasa.md", "status": "spesifikasi siap dikerjakan" }
+    { "no": 36, "peran": "developer", "prioritas": "P0", "nama": "Arti frasa: kata + kata lain yang mengubah makna, perluas dua arah & terlihat jelas (#296)", "dokumen": "docs/spesifikasi-arti-frasa.md", "status": "spesifikasi siap dikerjakan" },
+    { "no": 37, "peran": "developer", "prioritas": "P0", "nama": "Arti kata tetap terlihat di sheet arti kalimat, tanda di terjemahan (#300)", "dokumen": "docs/spesifikasi-arti-kata-di-kalimat.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
