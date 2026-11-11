@@ -246,6 +246,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .flash .fs{font:500 15px/1.45 var(--font-reader);max-width:300px;opacity:.85}
 .flash .tap{font-size:13px;font-weight:700;opacity:.7;margin-top:6px}
 .flash .eyebrow{color:rgba(42,18,21,.65)}
+.recheck{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:var(--radius-full);background:var(--color-text);color:var(--cream);font-size:11px;letter-spacing:.04em;vertical-align:1px}
 .flash .stamp{position:absolute;top:22px;padding:4px 12px;border:3px solid;border-radius:10px;font:800 20px var(--font-display);opacity:0;transform:rotate(-10deg);background:var(--cream)}
 .flash .stamp.yes{left:20px;color:var(--color-success)}.flash .stamp.no{right:20px;color:var(--color-poor);transform:rotate(10deg)}
 .deck-act{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
@@ -306,7 +307,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rmid{flex:1;text-align:center;font-size:12px;line-height:18px;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0}
-.rmid #pgn{display:block;font-size:12px;line-height:16px;overflow-wrap:anywhere}
+.rmid #pgn{display:block;font-size:12px;line-height:16px;text-align:center;overflow-wrap:anywhere}
 .sheet-aux{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
 .sheet-aux .ghost{padding-left:0;min-height:44px;min-width:44px;font-size:inherit}
 .pg{color:var(--color-text-muted);width:44px;padding:0}
