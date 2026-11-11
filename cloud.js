@@ -187,7 +187,7 @@ setTab = function (t) {
   renderAcct();
   if (t === 'rak') {
     const ben = $('.bento');
-    if (ben) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; ben.after(w); homeWhatsNew(); }
+    { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
     if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
