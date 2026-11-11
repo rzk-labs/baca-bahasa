@@ -12,7 +12,8 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (20 tahap, prioritas P0-P3, mi
 | QA | otomatis | Memeriksa setiap PR: sintaks, risiko, kesesuaian dengan permintaan | Komentar "QA lolos" / "QA catatan" |
 
 ## Aturan
-- 1 tugas per hari dari PM; PM tidak membuat tugas baru jika sudah ada 2 tugas menunggu dicek founder.
+- 1 tugas per hari dari PM; PM tidak membuat tugas baru jika sudah ada 5 tugas menunggu dicek founder.
+- Seimbang: minimal 1 dari tiap 3 tugas PM adalah upgrade aplikasi (developer, atau desain yang mengubah app), fokus P0: kenyamanan membaca & bantuan memahami kata.
 - Tugas yang butuh manusia (wawancara pengguna, rekrut beta) -> agent menyiapkan bahan (naskah, form, daftar pertanyaan), founder yang menjalankan.
 - Semua hasil lewat PR; live hanya setelah founder klik Setujui.
 - Ikuti prinsip "Reader First, AI Second" dan prioritas P0 dulu.

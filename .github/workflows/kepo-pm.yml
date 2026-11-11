@@ -36,7 +36,7 @@ jobs:
         run: |
           OPEN=$(gh issue list --label kepo-dev --state open --json number --jq length)
           echo "Tugas terbuka: $OPEN"
-          if [ "$OPEN" -ge 2 ] && [ "${{ inputs.paksa }}" != "true" ]; then
+          if [ "$OPEN" -ge 5 ] && [ "${{ inputs.paksa }}" != "true" ]; then
             echo "Masih ada $OPEN tugas menunggu founder. PM istirahat hari ini."
             echo "jalan=0" >> "$GITHUB_OUTPUT"
           else
@@ -55,6 +55,8 @@ jobs:
           prompt: |
             Kamu agent PM tim Keepo. Baca CLAUDE.md, docs/TIM.md, docs/roadmap.json, dokumen lain di docs/, dan daftar tugas .kepo-tmp/tugas.txt (jangan duplikat tugas yang sudah ada/selesai/ditolak).
             Pilih SATU tugas berikutnya yang paling berdampak, sesuai fase sekarang, prioritas P0 dulu, prinsip "Reader First, AI Second", dan kapasitas founder 1-4 jam/minggu.
+            Aturan seimbang: lihat 3 tugas berlabel otomatis terakhir di tugas.txt; jika belum ada yang berupa upgrade aplikasi, tugas kali ini WAJIB upgrade aplikasi (peran developer, atau desain yang mengubah style.css/ui.js). Untuk upgrade app, baca kode (index.html, app.js, ui.js, style.css), cari perbaikan nyata pada P0: kenyamanan membaca & bantuan memahami kata.
+            Batas antrean sekarang 5 tugas menunggu (bukan 2); jangan lewati hanya karena ada 2-4 tugas menunggu.
             Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas). Untuk hal yang butuh manusia (wawancara, rekrut beta), buat tugas menyiapkan bahannya.
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
             {"peran":"developer|riset|desain|pm","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
