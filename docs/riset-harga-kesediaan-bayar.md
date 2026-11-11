@@ -1,6 +1,6 @@
 # Riset harga & kesediaan bayar (Tugas #88)
 
-Disusun 11 Nov 2026 dari pengetahuan umum + data di `docs/riset-kompetitor-gap.md`. Belum dicek langsung ke situs resmi. Cek ulang sebelum dipakai di materi publik.
+Disusun 11 Nov 2026 dari pengetahuan umum + data di `docs/riset-kompetitor-gap.md`. Sebagian angka sudah dikoreksi dengan bukti internet: lihat `docs/riset-validasi-kemauan-bayar.md`. Cek ulang sebelum dipakai di materi publik.
 
 ## Intinya
 - Pesaing berbayar sekitar Rp80-200 ribu/bulan; Keepo bisa jauh di bawahnya.
@@ -12,12 +12,13 @@ Kurs kasar: US$1 ≈ Rp16.500. Status: ✅ ada sumber di riset kompetitor; ⚠�
 
 | App | Gratis | Bulanan | Tahunan | Status |
 |---|---|---|---|---|
-| Readlang | 10 terjemahan/hari | US$6 (±Rp100 rb) | US$48 (±Rp800 rb) | ✅ |
-| LingQ | 20 kata simpan | ±US$8-13 | Lifetime US$229/bahasa | ✅ sebagian |
-| Duolingo | Ya, dengan iklan | ±US$13 (di Indonesia lebih murah) | ±US$84 | ⚠️ |
+| Readlang | Kata tunggal tanpa batas; 10 frasa/hari | US$6 (±Rp100 rb); Plus US$15 | US$48; Plus US$120 | ✅ resmi |
+| LingQ | 20 kata simpan | US$12,99 (Premium); US$8,99 bila tahunan (data 2023) | Lifetime US$229/bahasa (lama) | ✅ sebagian |
+| Duolingo | Ya, dengan iklan & batas Energi | ±US$13 di AS; harga Rupiah belum ketemu | ±US$84-120 (AS) | ✅ AS / ⚠️ Indonesia |
 | Lingvist | Uji coba terbatas | ±US$10-15 | ±US$100 | ⚠️ |
-| Migaku | Uji coba | ±US$10 | ±US$100 | ⚠️ |
-| Language Reactor | Fitur dasar gratis | ±US$5-6 (Pro) | belum tahu | ⚠️ |
+| Migaku | Uji coba | ±US$10 (lama) | Seumur hidup US$400-500 | ✅ sebagian (forum) |
+| Language Reactor | Fitur dasar gratis | ±US$5 (Pro) | belum tahu | ✅ sebagian (ulasan) |
+| Beelinguapp | Ada iklan | ±US$3,99-8 | ±US$18-25 | ✅ sebagian (ulasan) |
 
 - Angka ⚠️ dari ingatan umum, bisa meleset. Wajib cek halaman harga resmi.
 - Harga Duolingo di Indonesia biasanya lebih murah; cek langsung di Play Store.
