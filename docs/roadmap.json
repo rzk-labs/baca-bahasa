@@ -27,7 +27,8 @@
     { "no": 20, "nama": "Growth & Scaling",                "fase": "Launch & Growth",             "status": "belum",  "catatan": "" }
   ],
   "backlog": [
-    { "no": 9, "peran": "developer", "prioritas": "P0", "nama": "Pengaturan keterbacaan Keepo HQ", "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md", "status": "siap dikerjakan" }
+    { "no": 9, "peran": "developer", "prioritas": "P0", "nama": "Pengaturan keterbacaan Keepo HQ", "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md", "status": "siap dikerjakan" },
+    { "no": 13, "peran": "riset", "prioritas": "P1", "nama": "Insentif riset tanpa budget (voucher/hadiah gratis)", "dokumen": "docs/riset-voucher-insentif.md", "status": "siap dijalankan founder" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
