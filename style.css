@@ -367,4 +367,11 @@ img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
 .fb-stars button.on{color:var(--color-text)}
 .fb-chk{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 0 8px;font-size:14px;font-weight:600}
 .fb-chk input{width:24px;min-height:24px;height:24px;margin:0;flex:none}
+.wtap{font-size:12px;font-weight:700;color:rgba(42,18,21,.6);margin:0 0 6px}.wtap:empty{display:none}
+.tapb{display:inline-block;vertical-align:middle;margin-left:4px;padding:0 8px;border-radius:999px;background:var(--color-text);color:#F2EEE5;font:800 12px/20px inherit;font-stretch:100%}
 .wfreq{font-size:12px;color:rgba(42,18,21,.6);margin:2px 0 6px;overflow-wrap:anywhere}.wfreq:empty{display:none}
+/* Kata Tersimpan: bar ekspor CSV di atas daftar */
+.csvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.csvcnt{flex:1 1 auto;min-width:0;font:700 14px/1.2 var(--font-ui)}
+.csvbar select{flex:1 1 100%;order:3;margin:0;min-height:44px}
+.csvbtn{flex:0 0 auto;min-height:44px;padding:0 16px;border:0;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font:700 14px/1 var(--font-ui);white-space:nowrap;cursor:pointer}

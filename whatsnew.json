@@ -1,5 +1,11 @@
 [
   {
+    "n": 147,
+    "judul": "Kata Tersimpan: tombol Ekspor CSV naik ke atas daftar",
+    "poin": "Tombol Ekspor CSV sekarang di atas daftar kata, bentuknya pil kecil.",
+    "tgl": "2026-11-11"
+  },
+  {
     "n": 142,
     "judul": "Kartu arti kata: kata tersimpan tetap muncul artinya saat offline",
     "poin": "Kata yang sudah disimpan sekarang langsung muncul artinya, bahkan tanpa sinyal.",
