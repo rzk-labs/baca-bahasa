@@ -135,6 +135,33 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--lime)}
 @keyframes sk{to{background-position:-200% 0}}
 .fab{position:fixed;right:16px;bottom:88px;z-index:21}
 @media (min-width:1000px){.fab{display:none}}
+
+/* ADHD-friendly detail & dokumen */
+.dt{display:grid;gap:14px;max-width:760px}
+.dt .tile{padding:20px}
+.hero .ttl{font-size:30px;margin:12px 0 6px;line-height:1}
+.say{font-size:18px;font-weight:700}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.big-b{padding:13px 20px;font-size:16px}
+.lbl{font-family:Archivo;font-stretch:75%;font-weight:900;text-transform:uppercase;font-size:20px;margin-bottom:8px}
+.pts{margin:0;padding-left:22px;font-size:17px;line-height:1.6}
+.pts li{margin:8px 0;padding-left:4px}
+.pts.sm2{font-size:15px;margin-top:10px}
+details>summary{cursor:pointer;font-weight:800;list-style:none;display:flex;align-items:center;gap:10px}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:'▸';transition:transform .15s}
+details[open]>summary::before{transform:rotate(90deg)}
+details.more>summary{color:var(--mut);margin-top:8px}
+.note{display:inline-block;background:var(--sun);color:#2A1215;font-weight:800;padding:6px 12px;border-radius:12px;margin-bottom:12px}
+.read{max-width:720px;font-size:17px;line-height:1.75;padding:24px}
+.read h1{font-size:34px;margin:0 0 14px}
+.read h3{margin:18px 0 6px;font-size:20px}
+.read p{margin:10px 0}
+.read li{margin:6px 0}
+.read details{border-top:2px solid var(--line);padding:14px 0}
+.read details>summary{font-family:Archivo;font-stretch:75%;font-weight:900;text-transform:uppercase;font-size:22px;line-height:1.1}
+.read details[open]>summary{margin-bottom:8px}
+@media (max-width:600px){.hero .ttl{font-size:26px}.big-b{flex:1}.read{padding:18px;font-size:16.5px}}
 </style></head><body>
 <div class="app">
   <aside class="side">
@@ -229,7 +256,7 @@ async function markas(again){
     return `<div class="tile agent"><div class="row"><div class="av ${a.c}">${a.e}${on?'<i class="live"></i>':''}</div><div><h3>${a.n}</h3><div class="mut sm">${a.d}</div></div></div><div class="st ${on?'on':''}">${st}</div></div>`;
   };
   const evs=[];
-  (runs||[]).slice(0,8).forEach(r=>evs.push({t:r.mulai,ic:r.jenis==='pm'?'🧭':'🛠️',c:r.jenis==='pm'?'t-lav':'t-lime',txt:`<b>${r.jenis==='pm'?'PM':'Tim'}</b> ${r.status!=='completed'?'sedang bekerja':r.hasil==='success'?'selesai':r.hasil==='skipped'?'dilewati':'gagal'} · ${esc(r.judul)}`,url:r.url}));
+  (runs||[]).filter(r=>r.hasil!=='skipped').slice(0,8).forEach(r=>evs.push({t:r.mulai,ic:r.jenis==='pm'?'🧭':'🛠️',c:r.jenis==='pm'?'t-lav':'t-lime',txt:`<b>${r.jenis==='pm'?'PM':'Tim'}</b> ${r.status!=='completed'?'sedang bekerja':r.hasil==='success'?'selesai':r.hasil==='skipped'?'dilewati':'gagal'} · ${esc(r.judul)}`,url:r.url}));
   if(!runs)T.slice(0,8).forEach(t=>evs.push({t:t.diubah,ic:TIM[t.peran]?.e||'•',c:TIM[t.peran]?.c||'',txt:`<b>#${t.n}</b> ${esc(t.judul)} → ${ST[t.status]}`}));
   evs.sort((a,b)=>new Date(b.t)-new Date(a.t));
   V.innerHTML=`
@@ -271,13 +298,17 @@ async function peta(){
   <div class="sec"><h2>Prioritas</h2></div><div class="tile"><div class="grid" style="gap:8px">${R.prioritas.map(p=>`<div class="row"><span class="chip ${p.level==='P0'?'t-coral':p.level==='P1'?'t-sun':p.level==='P2'?'t-blue':'s-ditolak'}">${p.level}</span><span>${esc(p.isi)}</span></div>`).join('')}</div></div>`;
 }
 
-async function dokumen(path){
+async function dokumen(path,ref,back){
   if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(path){
     V.innerHTML='<div class="skel"></div>';
-    try{const d=await call('/doc?path='+encodeURIComponent(path));
+    try{const d=await call('/doc?path='+encodeURIComponent(path)+(ref?'&ref='+encodeURIComponent(ref):''));
       const html=window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(d.isi)):'<pre>'+esc(d.isi)+'</pre>';
-      V.innerHTML=`<button class="back" onclick="go('dokumen')">← Semua dokumen</button><div class="tile md">${html}</div>`;
+      V.innerHTML=`<button class="back" id="bk">← ${back?'Kembali ke tugas':'Semua dokumen'}</button>${ref?'<div class="note">📝 Draf — belum disetujui</div>':''}<article class="tile read">${html}</article>`;
+      $('#bk').onclick=()=>back?detail(back):go('dokumen');
+      // ADHD: tiap bagian h2 bisa dilipat, bagian pertama terbuka
+      const art=V.querySelector('article');const hs=[...art.querySelectorAll('h2')];
+      if(hs.length>2)hs.forEach((h,i)=>{const det=document.createElement('details');if(i===0)det.open=true;const sum=document.createElement('summary');sum.innerHTML=h.innerHTML;det.appendChild(sum);let x=h.nextSibling;while(x&&!(x.nodeType===1&&x.tagName==='H2')){const nx=x.nextSibling;det.appendChild(x);x=nx}h.replaceWith(det)});
     }catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>'}
     return;
   }
@@ -286,25 +317,64 @@ async function dokumen(path){
   ${HQ.docs.length?`<div class="doclist">${HQ.docs.map(p=>{const n=p.replace('docs/','').replace('.md','');return `<div class="tile c ${col(n)}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div style="font-size:26px">📄</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n.replace(/[-_]/g,' '))}</h3></div>`}).join('')}</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
 }
 
+// Ambil hasil kerja terakhir dari komentar agent jadi bagian-bagian pendek
+function hasil(riwayat){
+  const m=[...riwayat].reverse().find(x=>x.dari==='agent'&&/Siap dicek|tidak mengubah/i.test(x.teks));
+  if(!m)return null;
+  const [ring,qa='']=m.teks.replace(/^\*\*[^*]+\*\*\s*/,'').split(/\n-{3,}\n/);
+  const bul=s=>s.split('\n').filter(l=>/^\s*[-*•]\s+/.test(l)).map(l=>l.replace(/^\s*[-*•]\s+/,'').trim());
+  let poin=bul(ring);if(!poin.length)poin=ring.split('\n').map(x=>x.replace(/^#+\s*/,'').trim()).filter(x=>x&&!/^ringkasan/i.test(x));
+  const isTugas=x=>/^(\*\*)?(langkah (anda|kamu)|tugas kamu|yang perlu kamu|cara cek)/i.test(x);
+  const qaL=qa.split('\n').map(x=>x.trim()).filter(Boolean);
+  return {poin:poin.filter(x=>!isTugas(x)),tugas:poin.filter(isTugas).map(x=>x.replace(/^(\*\*)?(langkah (anda|kamu)|tugas kamu|yang perlu kamu)\s*:?\s*(\*\*)?\s*:?\s*/i,'')),
+    qaOk:/lolos/i.test(qaL[0]||''),qaAda:!!qaL.length,qa:bul(qa),waktu:m.waktu};
+}
+const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
+
 async function detail(n){
   clearTimeout(timer);scrollTo(0,0);
   let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
-  const kerja=t.status==='antre'||t.status==='dikerjakan';
-  let aksi='';
-  if(kerja)aksi=`<p class="mut"><i class="dot" style="display:inline-block"></i> Tim sedang bekerja (biasanya 1–10 menit). Halaman menyegarkan sendiri.</p><a class="btn ghost" target="_blank" href="${t.actions}">Lihat log</a>`;
-  else if(t.status==='siap')aksi=`<a class="btn ghost" target="_blank" href="${t.preview}">Coba preview ↗</a><button class="btn lime" id="ok">Setujui &amp; live</button><button class="btn ghost" id="no">Tolak</button>`;
-  else if(t.status==='live')aksi=`<a class="btn ghost" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a><span class="mut sm">Live ±1–2 menit; tutup-buka app kalau belum berubah.</span>`;
+  const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan';
+  const h=hasil(t.riwayat);
+  const ref=t.pr&&!t.pr.merged?t.branch:'';
+  const docs=(t.files||[]).filter(f=>/^docs\/[\w.-]+\.md$/.test(f));
+  const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
+  const LIM=4;
+  const warna={siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
+  const pesan={siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live 🎉',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
-  <div class="tile"><div class="row">${chipP(hq.peran||'developer')}${chipS(t)}${chipQ(hq.qa)}${hq.otomatis?'<span class="chip o">🤖 dari PM</span>':''}<span class="sp"></span><a class="mut sm" href="${t.url}" target="_blank">#${t.n}</a></div>
-  <h2 style="margin:12px 0 4px">${esc(t.judul)}</h2>
-  <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div></div>
-  ${t.riwayat.map(m=>`<div class="msg ${m.dari}"><small>${m.dari==='kamu'?'Kamu':'Tim agent'} · ${tgl(m.waktu)}</small><div class="md">${md(m.teks)}</div></div>`).join('')}
-  <div class="row" style="margin-top:14px">${aksi}</div><div id="e" class="err"></div></div>
-  ${kerja?'':`<div class="tile" style="margin-top:14px"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut sm">Tim melanjutkan dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: tombolnya kebesaran, kecilin dan pindah ke kanan."></textarea><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>`}`;
+  <div class="dt">
+  <section class="tile c ${warna} hero">
+    <div class="row">${chipP(peran)}${hq.otomatis?'<span class="chip o">🤖 dipilih PM</span>':''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
+    <h2 class="ttl">${esc(t.judul)}</h2>
+    <div class="say">${t.status==='dikerjakan'?'<i class="dot" style="display:inline-block"></i> ':''}${pesan}</div>
+    ${t.status==='siap'?`<div class="acts"><button class="btn big-b" id="ok">✓ Setujui</button><button class="btn ghost big-b" id="rvb">✎ Revisi</button><button class="btn ghost big-b" id="no">✕ Tolak</button></div>`:''}
+    ${kerja?`<div class="acts"><a class="btn ghost" target="_blank" href="${t.actions}">Lihat log</a></div>`:''}
+    ${t.status==='live'?`<div class="acts"><a class="btn" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a></div>`:''}
+    <div id="e" class="err"></div>
+  </section>
+  <div id="rvbox" class="tile" style="display:${t.status==='gagal'||t.status==='live'?'block':'none'}"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut">Satu kalimat cukup. Tim lanjut dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: pertanyaannya kebanyakan, jadikan 10 saja."></textarea><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>
+  ${h&&!kerja?`
+  <section class="tile">
+    <div class="lbl">✨ Hasilnya</div>
+    <ul class="pts">${h.poin.slice(0,LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul>
+    ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
+    ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
+  </section>
+  ${h.tugas.length?`<section class="tile c t-sun"><div class="lbl">👉 Tugas kamu</div><ul class="pts">${h.tugas.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></section>`:''}
+  ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'s-dikerjakan'}">${h.qaOk?'✅ QA lolos':'⚠️ QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
+  <details class="tile more"><summary>Detail lengkap (perintah &amp; riwayat)</summary>
+    <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div></div>
+    ${t.riwayat.map(m=>`<div class="msg ${m.dari}"><small>${m.dari==='kamu'?'Kamu':'Tim agent'} · ${tgl(m.waktu)}</small><div class="md">${md(m.teks)}</div></div>`).join('')}
+    <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
+  </details>
+  </div>`;
+  V.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{clearTimeout(timer);dokumen(b.dataset.doc,ref,n)});
   const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
   if($('#no'))$('#no').onclick=e=>{const b=e.currentTarget;if(b.dataset.y)act('tolak',0,b);else{b.dataset.y=1;b.textContent='Yakin tolak?'}};
+  if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value},e.currentTarget);
   if(kerja)timer=setTimeout(()=>detail(n),12000);
 }

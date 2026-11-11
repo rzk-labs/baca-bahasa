@@ -19,3 +19,6 @@ Live: https://rzk-labs.github.io/baca-bahasa/ (GitHub Pages dari branch `main`, 
 - Harus tetap jalan di HP (iPhone Safari) dan layar lebar.
 - Cek sintaks JS yang diubah dengan `node --check <file>`.
 - Data pengguna lama (IndexedDB) jangan sampai rusak; kalau mengubah format, buat migrasi.
+
+## Gaya tulisan untuk founder (wajib)
+Founder kemungkinan ADHD. Semua teks untuk founder (ringkasan, dokumen, microcopy): inti dulu, poin pendek (maks 15 kata), maks 3 poin per bagian, tanpa paragraf panjang, tanpa istilah teknis.

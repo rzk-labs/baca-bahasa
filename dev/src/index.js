@@ -106,8 +106,10 @@ async function api(req, env, url) {
   if (p === '/doc' && req.method === 'GET') {
     const path = url.searchParams.get('path') || '';
     if (!/^docs\/[\w.-]+\.md$/.test(path)) return json({ error: 'path' }, 400);
-    const r = await gh(env, `/repos/${REPO}/contents/${path}`, { raw: true });
-    return json({ path, isi: r.ok ? await r.text() : '' });
+    const ref = url.searchParams.get('ref') || '';
+    if (ref && !/^kepo\/issue-\d+$/.test(ref)) return json({ error: 'ref' }, 400);
+    const r = await gh(env, `/repos/${REPO}/contents/${path}${ref ? '?ref=' + encodeURIComponent(ref) : ''}`, { raw: true });
+    return json({ path, ref, isi: r.ok ? await r.text() : '' });
   }
   if (p === '/pm' && req.method === 'POST') {
     const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/kepo-pm.yml/dispatches`, {
@@ -142,7 +144,9 @@ async function api(req, env, url) {
       gh(env, `/repos/${REPO}/issues/${n}/comments?per_page=100`),
       openPR(env, n),
     ]);
+    const files = pr ? (await gh(env, `/repos/${REPO}/pulls/${pr.number}/files?per_page=50`, { soft: true }) || []).map(f => f.filename) : [];
     return json({
+      files, branch: BR(n),
       ...brief(issue), isi: issue.body || '', url: issue.html_url,
       riwayat: cs.map(c => ({ dari: c.body.startsWith('Revisi:') ? 'kamu' : 'agent', teks: c.body, waktu: c.created_at })),
       pr: pr && { n: pr.number, url: pr.html_url, state: pr.state, merged: !!pr.merged_at },

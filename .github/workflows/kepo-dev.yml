@@ -93,7 +93,8 @@ jobs:
             echo "## Aturan"
             echo "- Ubah file seperlunya. Jangan git commit/push, jangan buat PR: workflow yang mengurusnya."
             echo "- Cek sintaks JS yang kamu ubah dengan node --check. Kalau mengubah file app yang di-cache, naikkan versi C di sw.js."
-            echo "- Terakhir, tulis .kepo-ringkasan.md (Bahasa Indonesia, untuk founder non-teknis): 2-5 poin apa yang dihasilkan + cara mengeceknya. Kalau tugas tidak bisa dikerjakan, jangan ubah apa pun dan jelaskan alasannya di file itu."
+            echo "- Terakhir, tulis .kepo-ringkasan.md untuk founder (non-teknis, ADHD). Format WAJIB: maksimal 3 baris poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari, tanpa nama file/istilah teknis. Jika founder perlu melakukan sesuatu, tambah SATU poin terakhir diawali 'Langkah kamu:' (maks 20 kata). Tanpa judul, tanpa paragraf. Kalau tugas tidak bisa dikerjakan, jangan ubah apa pun dan tulis 1 poin alasannya."
+            echo "- Dokumen di docs/ untuk founder juga harus mudah dipindai (ADHD): mulai dengan bagian '## Intinya' berisi 3 poin, lalu bagian bernomor dengan judul ##, poin pendek, tanpa paragraf panjang."
           } > "$T/prompt.md"
           echo "PROMPT_FILE=$T/prompt.md" >> "$GITHUB_ENV"
 
@@ -143,7 +144,7 @@ jobs:
             Tugas: lihat .kepo-tmp/judul.txt dan .kepo-tmp/isi.txt (revisi, bila ada: .kepo-tmp/revisi.txt).
             Perubahan: .kepo-tmp/diff.patch. Baca file terkait di repo seperlunya.
             Cek: (1) sesuai permintaan, (2) node --check untuk tiap file .js yang berubah, (3) risiko merusak data pengguna/fitur lain, (4) tampilan HP, (5) versi C di sw.js naik bila file app berubah.
-            Tulis laporan ke .kepo-tmp/qa.md. Baris pertama HARUS persis "LOLOS" atau "CATATAN". Lalu 2-5 poin singkat Bahasa Indonesia untuk founder non-teknis.
+            Tulis laporan ke .kepo-tmp/qa.md. Baris pertama HARUS persis "LOLOS" atau "CATATAN". Lalu maksimal 3 poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari untuk founder non-teknis (ADHD). Tulis hanya hal yang penting diketahui founder.
           claude_args: >-
             --max-turns 40
             --allowedTools "Read,Glob,Grep,Write,Bash(node:*),Bash(git diff:*),Bash(ls:*),Bash(cat:*)"
