@@ -57,6 +57,10 @@ jobs:
             ikon: "💼"
             jenis: pengguna
             profil: "Pengguna AI. 24 tahun, karyawan Jakarta, belajar bahasa Korea/Jepang level B1, baca artikel & web novel saat di KRL, ingin cepat paham kata tanpa pindah aplikasi."
+          - nama: Dina
+            ikon: "🗂️"
+            jenis: hq
+            profil: "Pemakai AI untuk Keepo HQ (web markas tim agent). Kamu founder solo yang sibuk dan ADHD: cuma punya 5 menit, ingin langsung tahu apa yang harus diputuskan. Fokus: teks meluber/terpotong, label/ikon tidak jelas, status membingungkan, terlalu banyak teks, tombol yang tidak jelas akibatnya, tampilan HP."
     steps:
       - uses: actions/checkout@v4
       - name: Siapkan instruksi
@@ -69,10 +73,18 @@ jobs:
           mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
           gh issue view "${{ needs.siapkan.outputs.issue }}" --json comments \
             --jq '[.comments[-8:][] | .body] | join("\n---\n")' > .kepo-tmp/lalu.txt 2>/dev/null || true
+          gh issue list --label kepo-dev --state all --limit 40 --json number,title,state,stateReason,labels \
+            --jq '.[] | "#\(.number) [\(.state) \(.stateReason // "")] [\([.labels[].name]|join(","))] \(.title)"' > .kepo-tmp/tugas.txt || true
           {
             echo "Kamu adalah $NAMA. $PROFIL"
+            if [ "$JENIS" = hq ]; then
+              echo "Yang kamu coba: Keepo HQ. Kodenya di dev/src/page.html (tampilan: Markas, Hasil, Papan, Peta, Dokumen, Detail tugas) dan dev/src/index.js (data dari GitHub)."
+              echo "Data tugas nyata saat ini ada di .kepo-tmp/tugas.txt (label menentukan kolom/status). Bayangkan tampilannya dengan data itu, di laptop dan HP 390px."
+              echo "Cari masalah NYATA yang bisa dibuktikan dari kode + data (sebut tampilan & bagian mana). Jangan mengarang."
+            else
             echo "Aplikasi: Keepo, PWA belajar bahasa lewat membaca buku (live di https://rzk-labs.github.io/baca-bahasa/)."
             echo "Baca CLAUDE.md lalu 'coba' aplikasinya dengan membaca kodenya (index.html, ui.js, app.js, style.css) dan bayangkan memakainya sesuai profilmu."
+            fi
             if [ "$JENIS" = tester ]; then
               echo "Cari masalah NYATA yang bisa dibuktikan dari kode (sebut di bagian mana). Jangan mengarang."
             else
@@ -97,6 +109,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           [ -s .kepo-tmp/masukan.md ] || exit 0
-          L=$([ "${{ matrix.jenis }}" = tester ] && echo "Tester AI" || echo "Pengguna AI")
+          case "${{ matrix.jenis }}" in tester) L="Tester AI";; hq) L="Pengguna Keepo HQ";; *) L="Pengguna AI";; esac
           gh issue comment "${{ needs.siapkan.outputs.issue }}" --body-file <(printf '**%s %s** (%s) · %s\n\n%s' \
             "${{ matrix.ikon }}" "${{ matrix.nama }}" "$L" "$(TZ=Asia/Jakarta date +%d-%m-%Y)" "$(cat .kepo-tmp/masukan.md)")
