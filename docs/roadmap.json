@@ -9,10 +9,10 @@
     { "no": 2,  "nama": "Strategic Context Analysis",      "fase": "Strategic Foundation",       "status": "draft",   "catatan": "Audit sumber daya, SWOT, strategi teknologi awal. Kelayakan teknis belum diuji." },
     { "no": 3,  "nama": "Trend & Industry Research",       "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Tren belajar bahasa, digital learning, reading apps." },
     { "no": 4,  "nama": "Ideation",                        "fase": "Discovery & Market Research", "status": "selesai", "catatan": "Belajar bahasa lewat membaca buku." },
-    { "no": 5,  "nama": "Opportunity Discovery",           "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Masalah saat membaca bahasa asing." },
+    { "no": 5,  "nama": "Opportunity Discovery",           "fase": "Discovery & Market Research", "status": "draft",   "catatan": "Masalah saat membaca bahasa asing. Peta dari 4 penguji AI: docs/desain-peta-masalah-membaca.md (belum divalidasi manusia)." },
     { "no": 6,  "nama": "Market Research",                 "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Segmentasi & estimasi potensi pengguna." },
     { "no": 7,  "nama": "Competitor Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Linga, LingQ, Readlang, Beelinguapp." },
-    { "no": 8,  "nama": "Market Gap Analysis",             "fase": "Discovery & Market Research", "status": "awal",   "catatan": "Peluang: pembaca A2-B1, Indonesia-first, distraction-free reading." },
+    { "no": 8,  "nama": "Market Gap Analysis",             "fase": "Discovery & Market Research", "status": "draft",   "catatan": "Peluang: pembaca A2-B1, Indonesia-first, distraction-free reading. 5 peluang teratas: docs/desain-peta-masalah-membaca.md." },
     { "no": 9,  "nama": "Customer Discovery",              "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Baru hipotesis persona; target wawancara 15 calon pengguna." },
     { "no": 10, "nama": "Problem & Demand Validation",     "fase": "Customer & Demand Validation", "status": "belum", "catatan": "Belum uji masalah nyata & willingness to pay." },
     { "no": 11, "nama": "Product Strategy",                "fase": "Product & Business Strategy", "status": "draft",  "catatan": "Target, positioning, rekomendasi MVP." },
@@ -28,7 +28,8 @@
   ],
   "backlog": [
     { "no": 9, "peran": "developer", "prioritas": "P0", "nama": "Pengaturan keterbacaan Keepo HQ", "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md", "status": "siap dikerjakan" },
-    { "no": 13, "peran": "riset", "prioritas": "P1", "nama": "Riset dari opini yang sudah ada di internet (tanpa budget)", "dokumen": "docs/riset-opini-internet.md", "status": "siap dijalankan founder" }
+    { "no": 13, "peran": "riset", "prioritas": "P1", "nama": "Riset dari opini yang sudah ada di internet (tanpa budget)", "dokumen": "docs/riset-opini-internet.md", "status": "siap dijalankan founder" },
+    { "no": 21, "peran": "desain", "prioritas": "P0", "nama": "Peta masalah membaca dari masukan pengguna AI", "dokumen": "docs/desain-peta-masalah-membaca.md", "status": "draft siap dicek" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
