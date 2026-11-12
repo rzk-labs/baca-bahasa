@@ -778,6 +778,7 @@ function showPage(p, anim = true) {
 }
 /* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
 const MARK_MAX = 20;
+const markDate = t => new Date(t).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
 const okMark = m => m && Number.isFinite(m.p) && Number.isFinite(m.s);
 /* penanda terdekat posisi baca terakhir (bab dulu, lalu kalimat); tanpa posisi -> terbaru */
