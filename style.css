@@ -640,3 +640,15 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fyp-b button{min-height:36px}
 .fyp-a{display:flex;gap:8px}
 .fyp-like.on{color:var(--brick-text,inherit)}
+/* Intip kata bab (#638): ikut tergulir di halaman pertama bab */
+.intip{break-inside:avoid;margin:0 0 16px;padding:10px 12px;border-radius:var(--radius-lg);background:var(--color-surface-soft);color:var(--color-text);border:1px solid var(--color-border);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:20px}
+.intip .ih{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.intip .ih b{font-weight:800}
+.intip .ix{min-height:44px;min-width:44px;padding:0 12px;border-radius:var(--radius-full);background:transparent;color:inherit;font-weight:700;font-size:13px;border:1px solid var(--color-border)}
+.intip .isub{font-size:12px;line-height:16px;color:var(--color-text-muted);margin-bottom:4px}
+.intip .irow{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:4px 0;text-align:start;color:inherit;background:transparent;border:0;border-top:1px solid var(--color-border)}
+.intip .iw{flex:0 1 auto;max-width:45%;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.intip .im{flex:1 1 0;min-width:0;color:var(--color-text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.intip .ia{flex:none;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}
+.intip .ia svg.i{width:16px;height:16px}
+.intip .irow.done{opacity:.6}
