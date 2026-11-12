@@ -1,5 +1,11 @@
 [
   {
+    "n": 404,
+    "judul": "Cache terjemahan lebih ringan & pesan 'ruang penuh' yang jujur",
+    "poin": "Pesan \"ruang penuh\" sekarang jujur: buku aman, yang gagal itu progres atau kata.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 399,
     "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
     "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
@@ -171,12 +177,6 @@
     "n": 255,
     "judul": "E-reader: cara baca kecil di atas kata yang pernah diketuk (opsional)",
     "poin": "Baca Jepang/Korea/Mandarin kini bisa tampil cara baca kecil di atas kata.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 248,
-    "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
-    "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
     "tgl": "2026-11-11"
   }
 ]

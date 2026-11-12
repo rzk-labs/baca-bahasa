@@ -57,7 +57,7 @@ const save = () => {
         localStorage.setItem(KEY, JSON.stringify(db)); return true;
       }
     } catch (e3) { }
-    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang penuh: hapus buku lama atau cache, lalu coba lagi.', 6000); } catch (e2) { } }
+    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang browser penuh. Hapus kata yang tak perlu atau kosongkan cache terjemahan (buku kamu aman), lalu coba lagi.', 6000); } catch (e2) { } }
     return false;
   }
 };
@@ -252,14 +252,14 @@ async function parsePdf(buf, title) {
 }
 
 /* ---------- terjemahan ---------- */
-const TR_KEY = 'bacabahasa.tr', TR_MAX = 200;
+const TR_KEY = 'bacabahasa.tr', TR_MAX = 300;
 const trCache = new Map((() => { try { const x = JSON.parse(localStorage.getItem(TR_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; } })());
 function trFlush() {
   clearTimeout(trTimer); trTimer = 0;
   while (trCache.size > TR_MAX) trCache.delete(trCache.keys().next().value);
   try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
 }
-function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 1000); }
+function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 3000); }
 document.addEventListener('visibilitychange', () => { if (document.hidden && trTimer) trFlush(); });
 addEventListener('pagehide', () => { if (trTimer) trFlush(); });
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
