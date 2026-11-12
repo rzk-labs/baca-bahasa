@@ -1,5 +1,11 @@
 [
   {
+    "n": 716,
+    "judul": "Jepang: partikel (が は を…) tak digarisbawahi & tak jadi 'kata baru'",
+    "poin": "Buku Jepang: が, は, を, へ, や, か, ね, よ tak lagi dianggap kata baru.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 714,
     "judul": "Bab buku Jepang terdeteksi (六、題名) & nomor bab Home ikut bab dibaca",
     "poin": "Buku Jepang yang baru diimpor kini terbagi ke bab, mis. \"六、銀河ステーション\".",
@@ -171,12 +177,6 @@
     "n": 656,
     "judul": "[peta 51] Petunjuk baca tak menutup teks, toast pindah ke bawah",
     "poin": "Petunjuk ketuk kini cuma satu baris di bawah, tidak menutup teks bacaan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 653,
-    "judul": "Progres baca konsisten: Home, header, bar baca & label bab",
-    "poin": "Angka progres sekarang sama di Home, bar baca, dan label bab.",
     "tgl": "2026-11-12"
   }
 ]
