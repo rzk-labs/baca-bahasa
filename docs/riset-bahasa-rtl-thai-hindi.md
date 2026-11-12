@@ -120,3 +120,4 @@ Tugas riset berikut: uji 30 kata Arab/Hindi/Thai lewat gtx vs kamus (H5).
 - "Untuk semua bahasa" belum benar untuk Arab: baca nyaman akan pecah.
 - Thai & Hindi mudah ditambah; yang berat itu tampilan huruf dan arah.
 - Kerjakan 2 tugas P0 dulu, baru buka Thai & Hindi.
+- Arab RTL: selesai di app
