@@ -7,7 +7,7 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books'];
+const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal'];
 const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
 const TOMB_TTL = 90 * 864e5;
 
@@ -80,7 +80,7 @@ function mergeVocabEntry(a, b) {
 // gabung data server ke db (bukan timpa). true bila tampilan perlu digambar ulang.
 function mergeSrv(d) {
   if (!isObj(d)) return false;
-  const snap = () => JSON.stringify([db.vocab, db.xp, db.badges, (db.books || []).map(b => [b.pos, b.si, b.marks])]);
+  const snap = () => JSON.stringify([db.kenal, db.vocab, db.xp, db.badges, (db.books || []).map(b => [b.pos, b.si, b.marks])]);
   const before = snap(), now = Date.now(), tomb = new Map();
   for (const t of [].concat(Array.isArray(db.vocabDel) ? db.vocabDel : [], Array.isArray(d.vocabDel) ? d.vocabDel : [])) {
     if (!t || !t.k || !(+t.at > now - TOMB_TTL)) continue;
@@ -112,6 +112,10 @@ function mergeSrv(d) {
   if (isObj(d.weak)) {
     if (!isObj(db.weak)) db.weak = {};
     for (const k in d.weak) { const s = d.weak[k], l = db.weak[k]; if (isObj(s) && (!l || (+s.at || 0) > (+l.at || 0) || ((+s.at || 0) === (+l.at || 0) && (+s.n || 0) > (+l.n || 0)))) db.weak[k] = s; }
+  }
+  if (isObj(d.kenal)) {
+    if (!isObj(db.kenal)) db.kenal = {};
+    for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
   }
   mergeTaps(d.taps);
   mergeBooks(d.books);
