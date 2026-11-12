@@ -171,6 +171,10 @@ async function pagesOf(b) {
     if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; }
     b.total = cache.pages.length; save();
   }
+  /* perkiraan unit baca per bab: dihitung sekali, disimpan (buku lama: lazy) */
+  if (!Array.isArray(b.units) || b.units.length !== cache.pages.length) {
+    b.units = cache.pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
+  }
   return cache.pages;
 }
 function makeSections(paras) {
@@ -274,7 +278,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
     <div class="set-row"><div class="eyebrow">Huruf baca</div><div class="seg" id="fnt"><button data-v="serif" class="${db.font === 'serif' ? 'on' : ''}" style="font-family:var(--font-reader)">Klasik</button><button data-v="sans" class="${db.font === 'sans' ? 'on' : ''}">Modern</button></div></div>
-    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Rata kiri'], ['j', 'Rata penuh']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Kiri'], ['j', 'Kiri-kanan']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${LHS.map(v => `<button data-v="${v}" class="${nearLh(readLh(b && b.lang)) === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
@@ -633,7 +637,11 @@ async function viewBaca() {
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
-  if ($('#rRt')) $('#rRt').onclick = () => { db.rt = db.rt ? 0 : 1; save(); viewBaca(); };
+  if ($('#rRt')) $('#rRt').onclick = () => {
+    db.rt = db.rt ? 0 : 1; save(); viewBaca();
+    const any = db.vocab.some(v => v.lang === b.lang && bacaOf(v.w, v.baca) && (+v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1));
+    toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
+  };
   $('#reader #set').onclick = openSettings;
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
@@ -692,12 +700,16 @@ function layout() {
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
-  /* cache halaman tiap kalimat/judul sekali per layout, supaya geser halaman tidak mengukur ulang */
+  /* cache halaman tiap kalimat/judul + sisa unit baca per halaman: dihitung sekali per layout, geser halaman cukup membaca array */
   RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols) }));
   RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
+  const suf = new Array(RD.ss.length + 1).fill(0);
+  for (let i = RD.ss.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(RD.ss[i].el.textContent, b.lang);
+  RD.left = []; let j = RD.ss.length;
+  for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && RD.ss[j - 1].pg >= q) j--; RD.left[q] = suf[j]; }
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
-  else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
+  else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
 }
@@ -735,13 +747,15 @@ async function heroMins(b) {
   } catch (e) {}
 }
 function minsLeft(b) {
+  if (!(RD.n > 0) || !RD.left) return null;
+  let m = RD.left[RD.page] || 0;
+  const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
+  if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
+  const n = Math.max(1, Math.ceil(m - 1e-9));
+  if (!ok) return { t: `bab ini ±${n} mnt`, part: false };
   const secs = cache.id === b.id && cache.pages;
-  if (!secs || !secs[b.pos] || !(RD.n > 0)) return null;
-  if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
-  let m = RD.chu[b.pos] * (RD.n - RD.page) / RD.n;
-  for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
-  const part = unseen(b, secs);
-  return { t: fmtMins(m, part), part };
+  const part = !secs || unseen(b, secs);
+  return { t: fmtMins(m, part) || '<1 mnt', part };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -764,6 +778,7 @@ function showPage(p, anim = true) {
 }
 /* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
 const MARK_MAX = 20;
+const markDate = t => new Date(t).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
 const okMark = m => m && Number.isFinite(m.p) && Number.isFinite(m.s);
 /* penanda terdekat posisi baca terakhir (bab dulu, lalu kalimat); tanpa posisi -> terbaru */
@@ -1162,7 +1177,7 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru';
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 let deckDone = 0, deckHint = '';
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
@@ -1199,10 +1214,17 @@ function viewKata() {
           ? `<select id="kCsvF" aria-label="Saring kata per bahasa atau buku">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
         const sortSel =`<select id="kSort" class="csvsort" aria-label="Urutkan kata"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
         $('#kcnt').innerHTML = csvF === 'all' ? `<b>${db.vocab.length}</b> kata` : `<b>${db.vocab.filter(inF).length}</b> dari ${db.vocab.length}`;
-        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar">${sortSel}${filt}</div>`);
+        const fchip = (val, txt) => `<button class="fchip${csvF === val ? ' on' : ''}" data-f="${esc(val)}" aria-pressed="${csvF === val}">${esc(txt)}</button>`;
+        const chipRow = filt ? `<div class="fchips" id="kChips" role="group" aria-label="Saring kata">${fchip('all', 'Semua')}${langs.length > 1 ? langs.map(l => fchip('l:' + l, langName(l))).join('') : ''}${books.length > 1 ? books.map(b => fchip('b:' + b, b)).join('') : ''}</div>` : '';
+        const oldScroll = ($('#kChips') || {}).scrollLeft || kataChipScroll;
+        kl.insertAdjacentHTML('afterbegin', `${chipRow}<div class="csvbar">${sortSel}${filt}</div>`);
+        if ($('#kChips')) {
+          $('#kChips').scrollLeft = oldScroll;
+          $$('#kChips .fchip').forEach(b => b.onclick = () => { kataChipScroll = $('#kChips').scrollLeft; csvF = b.dataset.f; sfx('pop'); renderList(); });
+        }
         if (vocab.length) kl.insertAdjacentHTML('beforeend', `<button class="ghost csvexp" id="kCsvHow">Ekspor ke Anki</button>`);
         $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
-        if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; renderList(); };
+        if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; kataChipScroll = 0; renderList(); };
         const exportCsv = async () => {
           const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya 😅');

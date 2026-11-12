@@ -45,7 +45,8 @@
     { "no": 39, "peran": "developer", "prioritas": "P2", "nama": "Profil user dari leaderboard + baca cerita publik user itu, opt-in (#383)", "dokumen": "docs/spesifikasi-profil-leaderboard.md", "status": "spesifikasi siap; butuh deploy server manual" },
     { "no": 40, "peran": "developer", "prioritas": "P0", "nama": "Header saat baca buku lebih ringan: maks 2 tombol kanan, XP & Ngomong pindah (#398)", "dokumen": "docs/desain-header-baca-ringan.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 41, "peran": "developer", "prioritas": "P0", "nama": "Arti tetap jalan saat sinyal lemah: prafetch kalimat halaman aktif, ketukan didahulukan (#458)", "dokumen": "docs/spesifikasi-prafetch-kalimat.md", "status": "spesifikasi siap dikerjakan" },
-    { "no": 42, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ pakai brand v9: Plum Noir, Biru Es, Wasabi, Bricolage + Inter, tanpa maskot (#479)", "dokumen": "docs/spesifikasi-hq-brand-v9.md", "status": "spesifikasi siap dikerjakan" }
+    { "no": 42, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ pakai brand v9: Plum Noir, Biru Es, Wasabi, Bricolage + Inter, tanpa maskot (#479)", "dokumen": "docs/spesifikasi-hq-brand-v9.md", "status": "spesifikasi siap dikerjakan" },
+    { "no": 43, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata (#294)", "dokumen": "docs/spesifikasi-hq-judul-tugas-rapi.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },

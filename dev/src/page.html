@@ -175,6 +175,9 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .hk .pts{margin-top:4px}
 .hf .chip{cursor:pointer;border:2px solid var(--ink);background:none;font:inherit;font-weight:800}
 .hf .chip.on{background:var(--ink);color:var(--bg)}
+.tb{display:flex;gap:10px;align-items:center}
+.tb input{flex:1;min-width:0}
+.tb select{width:auto;flex:none}
 </style></head><body>
 <div class="app">
   <aside class="side">
@@ -324,6 +327,7 @@ async function hasilKerja(again){
   const lv=item.filter(t=>t.status==='live').length, sp=item.filter(t=>t.status==='siap').length;
   let all=[...item,...mas];
   if(HF==='penguji')all=mas;else if(HF!=='semua')all=item.filter(t=>t.peran===HF);
+  if(Q)all=all.filter(x=>x.masukan?(x.nama+' '+x.poin.join(' ')).toLowerCase().includes(Q.toLowerCase().trim()):cocokQ(x,x.laporan?x.laporan.teks:''));
   all.sort((x,y)=>new Date(y.w)-new Date(x.w));
   const batas=Date.now()-7*864e5, nLama=all.filter(x=>new Date(x.w)<batas).length;
   if(!LAMA)all=all.filter(x=>new Date(x.w)>=batas);
@@ -334,7 +338,7 @@ async function hasilKerja(again){
       return `<div class="tile hk"><div class="row"><span class="chip">${u.e} ${esc(x.nama)}</span><span class="mut sm">${esc(u.d)}</span></div><b style="display:block;margin:8px 0 4px">Masukan untuk tim</b><ul class="pts sm2">${x.poin.slice(0,3).map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`;}
     const [lb,c]=OK[x.status]||[x.status,''];
     const pts=x.h?x.h.poin.slice(0,3):[];
-    return `<div class="tile hk" style="cursor:pointer" onclick="detail(${x.n})"><div class="row">${chipP(x.peran)}<span class="chip ${c}">${lb}</span>${x.qa?chipQ(x.qa):''}<span class="sp"></span><span class="mut sm">#${x.n}</span></div><b style="display:block;margin:8px 0 4px">${esc(x.judul)}</b>${pts.length?`<ul class="pts sm2">${pts.map(p=>`<li>${inl(p)}</li>`).join('')}</ul>`:'<div class="mut sm">Belum ada laporan.</div>'}</div>`;
+    return `<div class="tile hk" style="cursor:pointer" onclick="detail(${x.n})"><div class="row">${chipP(x.peran)}<span class="chip ${c}">${lb}</span>${x.qa?chipQ(x.qa):''}<span class="sp"></span><span class="mut sm">#${x.n}</span></div><b style="display:block;margin:8px 0 4px">${esc(x.judul)}</b>${pts.length?`<ul class="pts sm2">${pts.map(p=>`<li>${inl(p)}</li>`).join('')}</ul>`:`<div class="mut sm">${x.status==='dikerjakan'||x.status==='antre'?'Sedang dikerjakan, laporan muncul setelah selesai.':'Laporan tidak ditemukan, buka untuk lihat detail.'}</div>`}</div>`;
   };
   const f=(k,l)=>`<button class="chip ${HF===k?'on':''}" onclick="HF='${k}';hasilKerja(true)">${l}</button>`;
   V.innerHTML=`
@@ -346,24 +350,52 @@ async function hasilKerja(again){
   </div>
   <div class="sec"><h2>Per anggota tim</h2></div>
   <div class="agents">${per.map(k=>`<div class="tile agent" style="cursor:pointer" onclick="HF='${k}';hasilKerja(true)"><div class="row"><div class="av ${TIM[k].c}">${TIM[k].e}</div><div><h3>${TIM[k].n}</h3><div class="mut sm">${TIM[k].d}</div></div></div><div class="st"><b>${cnt(k)}</b> hasil</div></div>`).join('')}</div>
-  <div class="row hf" style="margin:18px 0 6px;flex-wrap:wrap;gap:8px">${f('semua','Semua')}${per.map(k=>f(k,TIM[k].e+' '+TIM[k].n)).join('')}${f('penguji','👥 Tester & pengguna')}</div>
+  <div class="tb" style="margin-top:18px"><input id="qt" type="search" placeholder="Cari hasil, isi laporan, atau #nomor…" aria-label="Cari hasil" value="${esc(Q)}"></div>
+  <div class="row hf" style="margin:10px 0 6px;flex-wrap:wrap;gap:8px">${f('semua','Semua')}${per.map(k=>f(k,TIM[k].e+' '+TIM[k].n)).join('')}${f('penguji','👥 Tester & pengguna')}</div>
   ${grp.length?grp.map(g=>`<div class="sec"><h2 style="font-size:20px">${esc(g.h)}</h2></div><div class="grid">${g.xs.map(kartu).join('')}</div>`).join(''):'<div class="empty">Belum ada hasil 7 hari terakhir.</div>'}${nLama?`<div style="margin:14px 0"><button class="btn ghost more-btn" style="width:100%" onclick="LAMA=!LAMA;hasilKerja(true)">${LAMA?'Lipat yang lama':'Tampilkan lebih lama ('+nLama+')'}</button></div>`:''}`;
-  clearTimeout(timer);timer=setTimeout(()=>{if(cur==='hasil')hasilKerja(true)},30000);
+  pasangAlat(()=>hasilKerja(true));
+  clearTimeout(timer);timer=setTimeout(()=>{if(cur==='hasil'&&!(document.activeElement&&document.activeElement.id==='qt'))hasilKerja(true)},30000);
+}
+
+// Cari, saring, urutkan tugas (dipakai Papan & Hasil)
+let Q='',PF='semua',SORT='baru';
+const cocokQ=(t,extra)=>!Q||(String(t.judul||'')+' #'+t.n+' '+(extra||'')).toLowerCase().includes(Q.toLowerCase().trim());
+const cocokP=t=>PF==='semua'||(PF==='kamu'?!t.otomatis:t.peran===PF);
+const urutT=(L,key)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
+// Bar alat: cari + urutkan + chip peran. ulang() = render ulang halaman, fokus tetap di kotak cari.
+function alatTugas(ulang,denganSort){
+  const per=['riset','desain','developer','marketing','pm'];
+  const ch=(k,l)=>`<button class="chip ${PF===k?'on':''}" data-pf="${k}">${l}</button>`;
+  return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
+  <div class="row hf" style="margin:10px 0 14px;flex-wrap:wrap;gap:8px">${ch('semua','Semua')}${ch('kamu','✍️ Dari kamu')}${per.map(k=>ch(k,TIM[k].e+' '+TIM[k].n)).join('')}</div>`;
+}
+function pasangAlat(ulang){
+  const q=$('#qt');if(q){q.oninput=()=>{Q=q.value;ulang();const n=$('#qt');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}}}
+  const s=$('#srt');if(s)s.onchange=()=>{SORT=s.value;ulang()};
+  V.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>{PF=b.dataset.pf;ulang()});
 }
 
 let LIVEALL=false;
 async function papan(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='papan')return;
+  if(document.activeElement&&document.activeElement.id==='qt'&&again==='auto'){auto(()=>papan('auto'));return} // jangan ganggu saat mengetik
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
   // gagal disembunyikan hanya bila ada tugas pengganti yang ditautkan sebagai revisi/ulang dan benar-benar jalan
   const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.ulang||[]).includes(t.n)&&u.status!=='gagal'&&u.status!=='ditolak');
-  const by=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
+  const by0=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
+  const by=k=>urutT(by0(k).filter(t=>cocokP(t)&&cocokQ(t)));
+  const saring=Q||PF!=='semua';
+  const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const jdl=s=>{s=String(s||'').replace(/\s+/g,' ').trim();if(s.length<=70)return s;const c=s.slice(0,69),i=c.lastIndexOf(' ');return (i>40?c.slice(0,i):c).replace(/[\s,.;:–-]+$/,'')+'…'};
   const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa,t.qaTeks)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">✎ Revisi</button>`:''}</div>`;
-  V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
-  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?[...L].sort((a,b)=>new Date(b.diubah)-new Date(a.diubah)).slice(0,5):L).map(kartuP).join(''):'<div class="empty sm">Kosong</div>'}${k==='live'&&L.length>5?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
-  auto(papan);
+  V.innerHTML=`<div class="row" style="margin-bottom:12px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
+  ${alatTugas(()=>papan(true),true)}
+  ${saring?`<div class="mut sm" style="margin:-4px 0 12px">${nCocok} tugas cocok · <a href="#" id="resetQ">hapus saringan</a></div>`:''}
+  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL&&!saring;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?L.slice(0,5):L).map(kartuP).join(''):`<div class="empty sm">${saring?'Tidak ada yang cocok':'Kosong'}</div>`}${lipat||(k==='live'&&LIVEALL&&L.length>5&&!saring)?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
+  pasangAlat(()=>papan(true));
+  const r=$('#resetQ');if(r)r.onclick=e=>{e.preventDefault();Q='';PF='semua';papan(true)};
+  auto(()=>papan('auto'));
 }
 
 // sumber "docs/xxx.md" di catatan jadi tautan yang bisa diketuk
