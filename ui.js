@@ -465,7 +465,7 @@ function openSettings() {
   openSheet(`<div class="sh-head sticky"><h2>Pengaturan</h2>${closeBtn}</div>
     <div class="set-prev${db.font === 'serif' ? ' serif' : ''}" id="spv" lang="${pl}" aria-hidden="true" style="--reader-lh:${readLh(pl)};font-size:${readFs(b && b.lang)}px;text-align:${effAlign() === 'j' ? 'justify' : 'left'};${db.spacing === 'w' ? '--reader-ls:.04em;--reader-ws:.12em' : ''}">${esc(PREV[pl])}</div>
     ${b && document.body.classList.contains('reading') ? `<div class="set-grp"><div class="set-gt">Penanda &amp; latihan</div>
-    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="bkFind" type="button">${ico('search')} Cari di buku</button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
+    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="kenalAll" type="button" hidden></button><button class="sec full" id="bkFind" type="button">${ico('search')} Cari di buku</button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
     <div class="set-grp"><div class="set-gt">Tampilan baca</div>
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
@@ -515,7 +515,7 @@ function openSettings() {
   if ($('#wnSet')) $('#wnSet').onclick = () => openWhatsNew();
   if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
   if ($('#prepBox')) pagesOf(b).then(sc => { if ($('#prepBox')) bindPrep(b, sc[Math.min(b.pos || 0, sc.length - 1)]); });
-  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
+  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; syncKenalAll(); $('#kenalAll').onclick = kenalAllPage; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; spcSet(v, db.spacing); };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); spcSet($('#reader'), db.spacing); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); db.fsSet = true; save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
@@ -1790,6 +1790,43 @@ async function onWord(el, lastEl) {
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
 /* tambah/hapus garis bawah kata tersimpan di halaman baca yang tampil (tanpa pindah halaman) */
+/* tandai massal: kata tersimpan (tersorot) di halaman ini -> 'sudah kenal'; alur sama dengan tombol per kata (hapus dari kartu + setKenal), bisa diurungkan */
+function kenalPageWords() {
+  const b = book(); if (!b) return [];
+  const seen = new Set(), out = [];
+  $$('.cols .w.saved').forEach(x => {
+    const w = x.textContent.trim(), k = w.toLowerCase(); if (!k || seen.has(k)) return; seen.add(k);
+    if (isKenal(b.lang, w) || !db.vocab.some(v => sameVocab(v, b.lang, w))) return; out.push(w);
+  });
+  return out;
+}
+function syncKenalAll() {
+  const bt = $('#kenalAll'); if (!bt) return;
+  const n = kenalPageWords().length; bt.hidden = !n;
+  bt.innerHTML = `${ico('bmcheck')} Sudah kenal semua di halaman ini (${n})`;
+}
+function paintKenalW(lang, w, on) {
+  const b = book(); if (!b || b.lang !== lang) return; const k = w.toLowerCase();
+  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k && !x.classList.contains('saved')) x.classList.toggle('kenal', on); });
+}
+function kenalAllPage() {
+  const b = book(), ws = kenalPageWords(); if (!b || !ws.length) return;
+  const lang = b.lang, n = ws.length;
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sudah kenal</span>${closeBtn}</div><p>Tandai ${n} kata sudah kenal?</p><div class="mut sm">Kata-katanya keluar dari kartu & berhenti disorot. Bisa diurungkan.</div><div class="set-row set-acts"><button class="sec full" id="kaNo" type="button">Batal</button><button class="full" id="kaYes" type="button">Ya, tandai ${n} kata</button></div>`, 'Konfirmasi sudah kenal');
+  $('#kaNo').onclick = closeSheet;
+  $('#kaYes').onclick = () => {
+    const done = ws.map(w => { const gone = db.vocab.filter(v => sameVocab(v, lang, w)); return { w, gone, at: db.vocab.indexOf(gone[0]) }; });
+    done.forEach(d => { db.vocab = db.vocab.filter(v => !d.gone.includes(v)); tombVocab(lang, d.w); setKenal(lang, d.w, true); paintSaved(lang, d.w, false); paintKenalW(lang, d.w, true); });
+    save(); vib(8); closeSheet();
+    toast(`${n} kata ditandai sudah kenal`, 6000, { label: 'Urungkan', fn: () => {
+      done.slice().reverse().forEach(d => {
+        if (!db.vocab.some(v => sameVocab(v, lang, d.w))) db.vocab.splice(Math.min(d.at, db.vocab.length), 0, ...d.gone);
+        untombVocab(lang, d.w); setKenal(lang, d.w, false); paintKenalW(lang, d.w, false); paintSaved(lang, d.w, true);
+      });
+      save(); if (kataSeg === 'simpan' && $('#klist')) viewKata();
+    } });
+  };
+}
 function paintSaved(lang, w, on) {
   const b = book(); if (!b || b.lang !== lang) return;
   const k = String(w || '').trim().toLowerCase();

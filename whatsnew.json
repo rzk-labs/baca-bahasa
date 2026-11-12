@@ -1,5 +1,11 @@
 [
   {
+    "n": 792,
+    "judul": "Baca: tombol 'Sudah kenal semua' untuk kata tersorot di halaman ini",
+    "poin": "Di Pengaturan baca ada tombol baru: tandai semua kata sorotan halaman ini sudah kenal.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 790,
     "judul": "Dengar halaman: opsi 'Lanjut otomatis' ke halaman berikutnya",
     "poin": "Dengar halaman kini bisa lanjut sendiri ke halaman berikutnya. Bawaannya mati.",
@@ -171,12 +177,6 @@
     "n": 732,
     "judul": "Korea: ketuk kata tanpa partikel menempel (아침에→아침), bukan 1 suku",
     "poin": "Ketuk kata Korea yang menempel partikel, artinya sekarang diambil dari kata dasarnya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 730,
-    "judul": "Baca: saklar sembunyikan bar progres & posisi aman saat ganti huruf",
-    "poin": "Ada saklar baru di Pengaturan baca untuk menyembunyikan bar progres.",
     "tgl": "2026-11-12"
   }
 ]
