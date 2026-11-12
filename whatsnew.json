@@ -1,5 +1,11 @@
 [
   {
+    "n": 706,
+    "judul": "[peta 31] Seragamkan nama app jadi KEEPO di teks tampilan",
+    "poin": "Nama app di layar sekarang seragam: Keepo.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 704,
     "judul": "[peta 67] Keepo HQ Peta ringkas: kartu 1 baris, detail dilipat",
     "poin": "Peta di Keepo HQ sekarang rapi: tiap tahap satu kartu ringkas.",
@@ -171,12 +177,6 @@
     "n": 638,
     "judul": "Kartu 'Intip kata bab': 3-5 kata baru sebelum baca bab",
     "poin": "Buka bab baru: muncul kartu kecil berisi 3-5 kata baru beserta artinya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 632,
-    "judul": "Pengaman data iPhone: peringatan tab Safari & ingatkan cadangan",
-    "poin": "Pengaturan kini memperingatkan pengguna Safari biasa: data bisa hilang sendiri.",
     "tgl": "2026-11-12"
   }
 ]
