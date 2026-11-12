@@ -1,5 +1,11 @@
 [
   {
+    "n": 666,
+    "judul": "[peta 9] Keepo HQ: pengaturan baca (ukuran teks, tema, kontras)",
+    "poin": "Markas tim sekarang punya menu Pengaturan untuk atur ukuran teks dan tema.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 662,
     "judul": "Home: tombol hapus Koleksi aman & kartu 'Kata hari ini' rapi",
     "poin": "Tombol hapus buku sekarang di bawah kartu, jauh dari sampul, tidak gampang kepencet.",
@@ -171,12 +177,6 @@
     "n": 544,
     "judul": "Rekap kata sesi baca: tutup buku, lihat & simpan kata baru",
     "poin": "Keluar dari buku, kamu lihat kata yang tadi diketuk, lengkap dengan artinya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 543,
-    "judul": "Sisa emoji di Pengaturan, Masukan, Leaderboard & Bagikan → ikon garis (v9)",
-    "poin": "Emoji di Pengaturan, masukan, leaderboard, dan bagikan sudah jadi ikon garis.",
     "tgl": "2026-11-12"
   }
 ]
