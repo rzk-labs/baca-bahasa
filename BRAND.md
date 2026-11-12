@@ -16,7 +16,7 @@
 | Ide brand | Rasa kepo = menandai kata yang bikin penasaran, seperti stabilo di buku. |
 | Rasa | Tenang · jernih · ingin tahu · tidak menggurui |
 | Logo | Kata **"Keepo"** Bricolage Grotesque 800, tinta Plum Noir, dengan **coretan stabilo Wasabi** di separuh bawah huruf (bukan titik, bukan maskot). |
-| Ikon app | Huruf **"K"** Bricolage 800 warna Biru Es di latar Plum Noir, coretan stabilo Wasabi di bawahnya. Ukuran 180/192/512 + maskable. |
+| Ikon app | **Buku terbuka** Biru Es di latar Plum Noir, satu baris teks disorot stabilo Wasabi; tanpa maskot & tanpa huruf. Favicon 48 px disederhanakan: dua halaman + satu garis Wasabi. Maskable: isi di area aman tengah 80%. Ukuran 180/192/512 + maskable. |
 | Maskot | **Tidak ada.** File `img/kepo-*.webp` tidak dipakai. |
 
 Aturan logo: jangan ubah warna stabilo, jangan miring/bayangan, ruang kosong minimal setinggi huruf "e".
