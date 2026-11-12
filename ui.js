@@ -503,13 +503,12 @@ function wordOfDay(pick = null) {
 function wodHtml() {
   const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
   const k = wordOfDay(wodPick);
-  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini</div><div class="hero-act"><button class="pri" id="wodRead" style="min-height:44px">Gas baca →</button></div></div>`;
+  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini</div></div>`;
   const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
   return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
 }
 function bindWod() {
   if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
-  if ($('#wodRead')) $('#wodRead').onclick = () => setTab('baca');
   if ($('#wodNext')) $('#wodNext').onclick = () => {
     const cur = wordOfDay(wodPick).v, has = v => v && !v.noTr && String(v.t || '').trim() && v.w;
     const pool = db.vocab.filter(v => has(v) && v !== cur && v.w !== cur.w);
@@ -544,7 +543,7 @@ function viewRak() {
     <div class="hello-sub">${spot('curious')}<div class="mut">${line}</div></div>
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka e-reader di penanda terdekat posisi baca">${ico('bm')} Ke penanda</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
-        <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
+        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
       ${wodHtml()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
       <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres!' : `${GOAL - xt} XP lagi`}</div></div></div>
@@ -846,7 +845,7 @@ async function viewBaca() {
     return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
   }).join('');
   const hr = new Date().getHours();
-  const nightChip = db.theme === 'paper' && !db.themeSet && (hr >= 19 || hr < 5 || matchMedia('(prefers-color-scheme: dark)').matches);
+  const nightChip = db.theme === 'paper' && !db.themeSet && !!db.seenTip && (hr >= 19 || hr < 5); /* panduan dulu; saran tema malam baru setelah panduan ditutup, tak pernah bersamaan */
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
@@ -859,7 +858,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span>${db.tapEdge === false ? '<b>Geser / tombol panah</b> = ganti halaman (laptop: ← →)' : '<b>Geser / ketuk tepi sempit</b> = ganti halaman (bisa dimatikan di Pengaturan)'}</span></div><div>${ico('menu')}<span>${db.tapEdge === false ? '<b>Ketuk layar</b> = menu' : '<b>Ketuk tengah</b> = menu'}</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span>${db.tapEdge === false ? '<b>Geser / tombol panah</b> = ganti halaman (laptop: ← →)' : '<b>Geser / ketuk tepi sempit</b> = ganti halaman (bisa dimatikan di Pengaturan)'}</span></div><div>${ico('menu')}<span>${db.tapEdge === false ? '<b>Ketuk layar</b> = menu' : '<b>Ketuk tengah</b> = menu'}</span></div></div><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => leaveBaca();
@@ -1013,7 +1012,7 @@ const unitsOf = (t, lang) => {
 };
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
 function heroPos(b, mins, part) {
-  const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
+  const where = pctOf(b) >= 100 ? 'Sudah tamat' : (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
   return esc(where + (mins ? ` · sisa ${mins}` : '')) + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
 }
 /* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
