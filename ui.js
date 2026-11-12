@@ -183,7 +183,7 @@ function ttsNote(lang) {
   ttsNoteSeen = true;
   return '<div class="ttsnote">Suara bawaan HP, bisa meleset di kanji.</div>';
 }
-function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
+function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -649,14 +649,18 @@ function cekKembar(f) {
   $('#dupBuka').onclick = () => { closeSheet(); db.cur = ada.id; save(); setTab('baca'); };
   $('#dupLagi').onclick = () => { closeSheet(); importFile(f, true); };
 }
-const IMPOR_TIMEOUT = 45000;
+let imporBatal = null;
+function imporStatus(m) { if (imporBatal) toast(m, Infinity, { label: 'Batal', fn: imporBatal.fn }); }
 async function importFile(f, paksa) {
   if (/\.(epub|pdf)$/i.test(f.name || '') && !navigator.onLine && !(await libsCached())) return toast('EPUB/PDF butuh internet sekali buat siapin alat baca. Sambungkan dulu, atau pakai .txt.', 6000);
-  toast('Lagi nyiapin cerita… ⏳', IMPOR_TIMEOUT + 2000);
-  let tm;
+  if (imporBatal) return toast('Masih nyiapin cerita sebelumnya. Tunggu atau tekan Batal dulu ya.', 4000);
+  let stop;
+  const dibatal = new Promise((_, no) => { stop = () => no(Object.assign(new Error('batal'), { batal: true })); });
+  dibatal.catch(() => { });
+  const me = imporBatal = { fn: stop };
+  imporStatus('Lagi nyiapin cerita… ⏳');
   try {
-    const r = await Promise.race([parseFile(f), new Promise((_, no) => { tm = setTimeout(() => no(Object.assign(new Error('timeout'), { telat: true })), IMPOR_TIMEOUT); })]);
-    clearTimeout(tm);
+    const r = await Promise.race([parseFile(f), dibatal]);
     if (!r.paras.length) throw new Error('kosong');
     if (!paksa) {
       const len = r.paras.join('').length;
@@ -669,19 +673,21 @@ async function importFile(f, paksa) {
     const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }))commitLang(lg);
   }
   catch (err) {
-    clearTimeout(tm);
     console.error(err);
-    if (err && err.telat) return toast('Gagal: kelamaan (lebih dari 45 detik). Cek sinyal, tutup tab lain, lalu coba lagi.', 9000);
+    if (err && err.batal) return toast('Impor dibatalin. Bisa coba lagi kapan aja.', 4000);
+    if (err && err.telat) return toast('Gagal: kelamaan nyiapin file. Coba file .txt, atau sambungkan Wi-Fi lalu coba lagi.', 9000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
     if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
     else if (/scan|gambar/.test(m) || (/kosong/.test(m) && isPdf)) msg = 'PDF ini isinya gambar/scan, teksnya nggak kebaca.';
     else if (/kosong/.test(m)) msg = 'File ini kosong, nggak ada teks yang kebaca.';
+    else if (/lama dimuat/.test(m)) msg = 'Sinyalmu lemah, alat baca lama dimuat. Sambungkan Wi-Fi atau pakai .txt, lalu coba lagi.';
     else if (/internet|pustaka/.test(m) || (!navigator.onLine && (isEpub || isPdf))) msg = 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.';
     else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
     toast(msg, 6000);
   }
+  finally { if (imporBatal === me) imporBatal = null; }
 }
 async function addBook(title, paras, lang, src) {
   const id = 'b' + Date.now().toString(36);
