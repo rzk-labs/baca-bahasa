@@ -1203,7 +1203,10 @@ const SESPG = new Set(); /* halaman layar yang dibuka sesi ini (satuan sama deng
 const RD = { ss: [], hs: [], dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
-  const b = book(), W = vp.clientWidth, H = vp.clientHeight;
+  const b = book(); let W = vp.clientWidth, H = vp.clientHeight;
+  /* ukuran nyaris sama (bar alamat Safari naik-turun, bar muncul-hilang): pakai ukuran layout terakhir agar total halaman stabil */
+  if (RD.cEl === cols && RD.lw && Math.abs(W - RD.lw) <= 2 && Math.abs(H - RD.lh) <= 140) { W = RD.lw; H = RD.lh; }
+  RD.lw = W; RD.lh = H;
   const rd = $('#reader'), sig = [W, H, cols.style.fontSize, rd && rd.style.getPropertyValue('--reader-lh'), rd && rd.style.getPropertyValue('--reader-mg'), rd && rd.classList.contains('serif')].join('|');
   const same = sig === RD.sig && RD.cEl === cols && RD.cLen === cols.textContent.length && RD.ss && RD.ss.length && RD.n > 0 && RD.flash == null && !RD.toEnd;
   if (same) return; /* ukuran/font sama & isi sama: total halaman jangan dihitung ulang */
