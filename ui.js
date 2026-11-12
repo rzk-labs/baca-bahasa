@@ -588,7 +588,7 @@ function viewRak() {
     </div>
     <div class="stat3">
       <div class="t-sun"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()}</div><div class="lbl2">hari</div></div>
-      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}</div><div class="lbl2">${xt >= GOAL ? 'Beres' : `${GOAL - xt} XP lagi`}</div></div>
+      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}</div><div class="lbl2">${xt >= GOAL ? `Beres! ${GOAL} XP` : `dari ${GOAL} XP`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -637,9 +637,7 @@ function viewRak() {
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
     e.stopPropagation();
-    const bk = db.books.find(b => b.id === el.dataset.del);
-    const berisi = bk && (pctOf(bk) > 0 || db.vocab.some(v => v && v.book === bk.title && v.lang === bk.lang));
-    if (berisi && !el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Yakin hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash') + '<span>Hapus</span>'; } }, 3500); return; }
+    if (!el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Yakin hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash') + '<span>Hapus</span>'; } }, 3500); return; }
     hapusBuku(el.dataset.del);
   });
 }
