@@ -1,5 +1,11 @@
 [
   {
+    "n": 772,
+    "judul": "Sampul buku Home: satu huruf besar, judul & penulis tak patah jelek",
+    "poin": "Sampul buku kini cuma satu huruf besar, tanpa judul patah.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 770,
     "judul": "Baca: bagian buku lama dihitung ulang & header sama dengan bar",
     "poin": "Buku lama kini otomatis dibagi ulang per bab saat dibuka.",
@@ -171,12 +177,6 @@
     "n": 712,
     "judul": "Ringkasan mingguan akurat: hitung halaman dibaca, sembunyi bila kosong",
     "poin": "Kartu Minggu ini sekarang hitung halaman yang kamu baca dan kata disimpan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 710,
-    "judul": "Progres Home selalu sama dengan Profil & bar baca, sisa waktu ringkas",
-    "poin": "Persen baca di Home kini selalu sama dengan Profil, juga saat app ditutup.",
     "tgl": "2026-11-12"
   }
 ]
