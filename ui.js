@@ -1352,7 +1352,7 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0;
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 let deckDone = 0, deckHint = '';
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
@@ -1434,6 +1434,30 @@ function viewKata() {
           <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`);
           $('#kCsv').onclick = exportCsv;
         };
+      }
+      /* "Sering diketuk": kata belum tersimpan dengan ketukan >=3 (db.taps), maks 5 */
+      const often = csvF.startsWith('b:') ? [] : Object.entries(db.taps || {}).map(([k, n]) => {
+        const j = k.indexOf('|'); return { lang: k.slice(0, j), w: k.slice(j + 1), n: +n || 0 };
+      }).filter(o => o.n >= 3 && o.w && (csvF === 'all' || csvF === 'l:' + o.lang) && (!q || o.w.toLowerCase().includes(q)) && !db.vocab.some(v => sameVocab(v, o.lang, o.w))).sort((a, c) => c.n - a.n).slice(0, 5);
+      if (often.length) {
+        const sec = `<details class="often-sec" id="kOften"${oftenOpen ? ' open' : ''}><summary>Sering diketuk <span class="tapb">${often.length}</span></summary>${often.map((o, i) => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(o.lang)}">${esc(o.w)} <span class="tapb">${o.n}×</span></div><div class="s1">${esc(langName(o.lang))}</div></div><button class="pill-sm" data-os="${i}" aria-label="Simpan kata ${esc(o.w)}">Simpan</button></div>`).join('')}</details>`;
+        const bar = $('#klist .csvbar');
+        if (bar) bar.insertAdjacentHTML('afterend', sec); else kl.insertAdjacentHTML('afterbegin', sec);
+        $('#kOften').ontoggle = e => { oftenOpen = e.target.open; };
+        $$('[data-os]').forEach(btn => btn.onclick = async () => {
+          const o = often[+btn.dataset.os];
+          if (db.vocab.some(v => sameVocab(v, o.lang, o.w))) return renderList();
+          btn.disabled = true; btn.textContent = 'Menyimpan…';
+          const r = await translate(o.w, o.lang, db.my).catch(() => null);
+          if (db.vocab.some(v => sameVocab(v, o.lang, o.w))) return;
+          const tp = takeTaps(o.lang, o.w);
+          if (isKenal(o.lang, o.w)) setKenal(o.lang, o.w, false);
+          untombVocab(o.lang, o.w);
+          db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w: o.w, t: r ? r.text : '', baca: r ? bacaOf(o.w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: o.lang, s: '', ctx: '', at: Date.now() });
+          save(); vib(10); sfx('ding');
+          if (kataSeg === 'simpan' && $('#klist')) renderList();
+          toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya');
+        });
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {

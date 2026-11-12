@@ -482,6 +482,14 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .wsug{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);box-shadow:none;padding:8px 12px;margin:0 0 8px}.wsug[hidden]{display:none}
 .wsug .pill-sm{min-height:32px;padding:4px 14px;border-radius:999px;border:0;background:#351E28;color:#FAF7F0;font:inherit;font-weight:700;cursor:pointer}
 .tapb{display:inline-block;vertical-align:middle;margin:2px 0 2px 4px;padding:0 8px;border-radius:999px;background:var(--color-text);color:#FAF7F0;font-family:var(--font-ui);font-size:12px;font-weight:800;line-height:20px;}
+/* Tab Kata › Tersimpan: bagian "Sering diketuk" (#230) */
+.often-sec{margin:0 0 12px}
+.often-sec summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;font:800 15px/20px var(--font-display);list-style:none}
+.often-sec summary::-webkit-details-marker{display:none}
+.often-sec summary::after{content:"";margin-left:auto;width:8px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .15s}
+.often-sec[open] summary::after{transform:rotate(-135deg)}
+.often-sec .vitem .pill-sm{flex:none;min-height:44px;min-width:44px;padding:4px 16px;border-radius:999px;border:0;background:#351E28;color:#FAF7F0;font:inherit;font-weight:700;cursor:pointer}
+.often-sec .vitem .pill-sm:disabled{opacity:.6}
 .wfreq{overflow-wrap:anywhere}
 /* Kata Tersimpan: bar ekspor CSV di atas daftar */
 .csvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}

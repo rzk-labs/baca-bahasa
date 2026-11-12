@@ -88,12 +88,14 @@ a{color:inherit}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
 .col{background:var(--soft);border-radius:22px;padding:12px;scroll-snap-align:start;min-height:200px}
 .col.k-live .more-btn{width:100%;margin:2px 0 4px}
-@media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:-1}}
+@media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:5}.col.k-gagal.ada{order:-1}}
 .col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
 .card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
 .card:hover{transform:translateY(-2px)}
 .card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:6px 0 4px;line-height:1.3;overflow-wrap:anywhere}
-.chip.qa-n{background:var(--sun);max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:inline-block}
+.ic-s{width:13px;height:13px;flex:none;vertical-align:-2px}.btn .ic-s{width:15px;height:15px}
+.qa-d{display:block;width:100%}.qa-d>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;border:1.5px solid var(--ink);background:var(--soft);color:var(--ink);line-height:1.4}.qa-d>summary::-webkit-details-marker{display:none}.qa-d>summary::before{display:none}.qa-d .qa-t{margin:6px 2px 0;font-size:13px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+.chip.belum{background:transparent;color:var(--ink);border-style:dashed}
 /* timeline */
 .feed{display:grid;gap:0}
 .ev{display:flex;gap:12px;padding:10px 0;border-bottom:1.5px dashed var(--line);align-items:flex-start}
@@ -183,7 +185,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
   <aside class="side">
     <div class="brand"><img src="https://rzk-labs.github.io/baca-bahasa/img/kepo-icon.webp" alt=""><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div>
     <nav id="sidenav"></nav>
-    <button class="btn lime" style="margin-top:14px" onclick="perintah()">＋ Perintah ke tim</button>
+    <button class="btn lime" style="margin-top:14px" onclick="perintah()"><svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Perintah ke tim</button>
     <div class="foot">Live: <a href="https://rzk-labs.github.io/baca-bahasa/" target="_blank">rzk-labs.github.io/baca-bahasa</a></div>
   </aside>
   <main class="main">
@@ -192,7 +194,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
   </main>
 </div>
 <nav class="tabbar" id="tabbar"></nav>
-<button class="btn lime fab" id="fab" onclick="perintah()" style="display:none">＋ Perintah</button>
+<button class="btn lime fab" id="fab" onclick="perintah()" style="display:none"><svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Perintah</button>
 <div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
 <script>
 const $=s=>document.querySelector(s), V=$('#view');
@@ -225,12 +227,14 @@ const UJI=[
 const ST={menuju:'Menuju live',antre:'Antre',dikerjakan:'Dikerjakan',siap:'Siap dicek',gagal:'Gagal',live:'Live',ditolak:'Ditolak'};
 const KS={selesai:'Selesai',draft:'Draft',berjalan:'Berjalan',awal:'Awal',belum:'Belum'};
 const BOBOT={selesai:1,draft:.6,berjalan:.5,awal:.3,belum:0};
+const SI=d=>`<svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I={cek:SI('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),tambah:SI('<path d="M12 5v14M5 12h14"/>'),pena:SI('<path d="M4 20l4-1 11-11-3-3L5 16z"/>'),silang:SI('<path d="M6 6l12 12M18 6L6 18"/>'),jam:SI('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),roket:SI('<path d="M5 19l4-1m-3-3l-1 4M14 4c4 0 6 2 6 6-2 4-5 6-8 7l-5-5c1-3 3-6 7-8z"/>'),tanda:SI('<path d="M12 4l9 16H3z"/><path d="M12 10v4"/>'),alat:SI('<path d="M14 6a4 4 0 0 0 4 4l-8 8a2 2 0 0 1-3-3l8-8a4 4 0 0 0-1-1z"/>'),oto:SI('<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4"/>'),buka:SI('<circle cx="12" cy="12" r="8"/>')};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const tgl=t=>new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 function lalu(t){const m=Math.round((Date.now()-new Date(t))/6e4);if(m<1)return'barusan';if(m<60)return m+' mnt lalu';const h=Math.round(m/60);if(h<24)return h+' jam lalu';return Math.round(h/24)+' hari lalu'}
 const chipS=t=>`<span class="chip s-${t.status}">${t.status==='dikerjakan'?'<i class="dot"></i>':''}${ST[t.status]}</span>`;
 const chipP=p=>`<span class="chip p-${p}">${TIM[p]?.e||''} ${TIM[p]?.n||p}</span>`;
-const chipQ=(q,tx)=>q==='lolos'?'<span class="chip o">✅ QA lolos</span>':q&&tx?`<span class="chip qa-n" title="${esc(tx)}">⚠️ ${esc(tx)}</span>`:'';
+const chipQ=(q,tx)=>q==='lolos'?`<span class="chip o">${I.cek} QA lolos</span>`:q&&tx?`<details class="qa-d" onclick="event.stopPropagation()"><summary>QA catatan</summary><div class="qa-t">${esc(tx)}</div></details>`:'';
 
 async function call(path,body,coba=0){
   let r;try{r=await fetch('/api'+path,{method:body?'POST':'GET',headers:{authorization:'Bearer '+tok,'content-type':'application/json'},body:body?JSON.stringify(body):undefined})}catch(e){r=null}
@@ -302,7 +306,7 @@ async function markas(again){
     <div class="tile c ${siap.length?'t-sun':'t-mint'}" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${siap.length}</div><div class="sm">${siap.length?'hasil siap dicek →':'Semua beres ✨'}</div></div>
     <div class="tile c t-pink"><div class="eyebrow">Sudah live</div><div class="big">${live}</div><div class="sm">${jalan.length} sedang dikerjakan</div></div>
   </div>
-  ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
+  ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?`<span class="chip o">${I.oto} otomatis</span>`:''}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Kerja terus · peran kosong langsung diberi tugas (cek tiap 30 mnt)</span></div>
   <div class="agents">${['pm','riset','desain','developer','marketing','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 2 jam &amp; tiap ada update live${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span></div>
@@ -319,7 +323,7 @@ async function hasilKerja(again){
   let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   if(cur!=='hasil')return;
   if(!HQ){try{await load()}catch(e){}}
-  const OK={menuju:['🚀 Menuju live','t-blue'],live:['✅ Live','t-mint'],siap:['⏳ Menunggu kamu','t-sun'],dikerjakan:['🛠️ Dikerjakan','t-lav'],antre:['🕒 Antre','t-lav'],ditolak:['✖ Ditolak',''],gagal:['⚠️ Gagal','']};
+  const OK={menuju:[I.roket+' Menuju live','t-blue'],live:[I.cek+' Live','t-mint'],siap:[I.jam+' Menunggu kamu','t-sun'],dikerjakan:[I.alat+' Dikerjakan','t-lav'],antre:[I.jam+' Antre','t-lav'],ditolak:[I.silang+' Ditolak',''],gagal:[I.tanda+' Gagal','']};
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
   const per=['riset','desain','developer','marketing','pm'];
@@ -388,11 +392,11 @@ async function papan(again){
   const saring=Q||PF!=='semua';
   const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const jdl=s=>{s=String(s||'').replace(/\s+/g,' ').trim();if(s.length<=70)return s;const c=s.slice(0,69),i=c.lastIndexOf(' ');return (i>40?c.slice(0,i):c).replace(/[\s,.;:–-]+$/,'')+'…'};
-  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa,t.qaTeks)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">✎ Revisi</button>`:''}</div>`;
-  V.innerHTML=`<div class="row" style="margin-bottom:12px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
+  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?`<span class="chip o">${I.oto} otomatis</span>`:''}${t.status==='live'&&t.terbuka?`<span class="chip belum" title="Issue masih terbuka">${I.buka} belum ditutup</span>`:''}${chipQ(t.qa,t.qaTeks)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">${I.pena} Revisi</button>`:''}</div>`;
+  V.innerHTML=`<div class="row" style="margin-bottom:12px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">${I.tambah} Perintah</button></div>
   ${alatTugas(()=>papan(true),true)}
   ${saring?`<div class="mut sm" style="margin:-4px 0 12px">${nCocok} tugas cocok · <a href="#" id="resetQ">hapus saringan</a></div>`:''}
-  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL&&!saring;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?L.slice(0,5):L).map(kartuP).join(''):`<div class="empty sm">${saring?'Tidak ada yang cocok':'Kosong'}</div>`}${lipat||(k==='live'&&LIVEALL&&L.length>5&&!saring)?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
+  <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL&&!saring;return `<div class="col k-${k}${k==='gagal'&&L.length?' ada':''}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?L.slice(0,5):L).map(kartuP).join(''):`<div class="empty sm">${saring?'Tidak ada yang cocok':'Kosong'}</div>`}${lipat||(k==='live'&&LIVEALL&&L.length>5&&!saring)?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
   pasangAlat(()=>papan(true));
   const r=$('#resetQ');if(r)r.onclick=e=>{e.preventDefault();Q='';PF='semua';papan(true)};
   auto(()=>papan('auto'));
@@ -466,14 +470,14 @@ async function detail(n){
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
   const LIM=4;
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
-  const pesan={menuju:'Disetujui ✅ Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live 🎉',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
+  const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
   <div class="dt">
   <section class="tile c ${warna} hero">
-    <div class="row">${chipP(peran)}${hq.otomatis?'<span class="chip o">🤖 otomatis</span>':''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
+    <div class="row">${chipP(peran)}${hq.otomatis?`<span class="chip o">${I.oto} otomatis</span>`:''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
     <h2 class="ttl">${esc(t.judul)}</h2>
     <div class="say">${t.status==='dikerjakan'?'<i class="dot" style="display:inline-block"></i> ':''}${pesan}</div>
-    ${t.status==='siap'?`<div class="acts"><button class="btn big-b" id="ok">✓ Setujui</button><button class="btn ghost big-b" id="rvb">✎ Revisi</button><button class="btn ghost big-b" id="no">✕ Tolak</button></div>`:''}
+    ${t.status==='siap'?`<div class="acts"><button class="btn big-b" id="ok">${I.cek} Setujui</button><button class="btn ghost big-b" id="rvb">${I.pena} Revisi</button><button class="btn ghost big-b" id="no">${I.silang} Tolak</button></div>`:''}
     ${kerja?`<div class="acts"><a class="btn ghost" target="_blank" href="${t.actions}">Lihat log</a></div>`:''}
     ${t.status==='live'?`<div class="acts"><a class="btn" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a></div>`:''}
     <div id="e" class="err"></div>
@@ -487,7 +491,7 @@ async function detail(n){
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
   ${h.tugas.length?`<section class="tile c t-sun"><div class="lbl">👉 Tugas kamu</div><ul class="pts">${h.tugas.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></section>`:''}
-  ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'s-dikerjakan'}">${h.qaOk?'✅ QA lolos':'⚠️ QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
+  ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'o'}">${h.qaOk?I.cek+' QA lolos':'QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
   <details class="tile more"><summary>Detail lengkap (perintah &amp; riwayat)</summary>
     <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div></div>
     ${t.riwayat.map(m=>`<div class="msg ${m.dari}"><small>${m.dari==='kamu'?'Kamu':'Tim agent'} · ${tgl(m.waktu)}</small><div class="md">${md(m.teks)}</div></div>`).join('')}
@@ -506,7 +510,7 @@ function md(s){return window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.
 
 function perintah(){
   const v=$('#veil');v.classList.add('on');
-  $('#sheet').innerHTML=`<div class="row"><h2>Perintah ke tim</h2><span class="sp"></span><button class="btn ghost" onclick="tutup()">✕</button></div>
+  $('#sheet').innerHTML=`<div class="row"><h2>Perintah ke tim</h2><span class="sp"></span><button class="btn ghost" onclick="tutup()" aria-label="Tutup">${I.silang}</button></div>
   <p class="mut sm">Pilih siapa yang mengerjakan, lalu jelaskan seperti ngobrol.</p>
   <div class="roles">${['developer','desain','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
   <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
