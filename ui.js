@@ -510,8 +510,8 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<button class="rchap" id="rMarks" aria-haspopup="dialog" hidden></button><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button>${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon rbm" id="rBm" type="button" aria-pressed="false" aria-label="Tandai halaman ini">${ico('bm')}</button><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button>${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<span class="rbmw"><button class="icon rbm" id="rBm" type="button" aria-pressed="false" aria-haspopup="dialog" aria-label="Tandai halaman ini">${ico('bm')}</button><span class="rbmn" id="rBmN" aria-hidden="true" hidden></span></span><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>🌙 Mata capek? Pakai tema gelap</span><button data-t="dark">Gelap</button><button data-t="auto">Ikut HP</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
@@ -527,8 +527,13 @@ async function viewBaca() {
   if ($('#rRt')) $('#rRt').onclick = () => { db.rt = db.rt ? 0 : 1; save(); viewBaca(); };
   $('#rSpeak').onclick = () => setTab('bicara');
   $('#reader #set').onclick = openSettings;
-  $('#rBm').onclick = toggleMark;
-  $('#rMarks').onclick = openMarks;
+  { /* ketuk = tandai/hapus; tahan (atau klik kanan) = buka daftar penanda */
+    const bm = $('#rBm'); let lp = 0, tm;
+    bm.onpointerdown = () => { lp = 0; clearTimeout(tm); tm = setTimeout(() => { if (marksOf(book()).length) { lp = 1; vib(8); openMarks(); } }, 550); };
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => bm.addEventListener(ev, () => clearTimeout(tm)));
+    bm.oncontextmenu = e => { e.preventDefault(); if (marksOf(book()).length) { lp = 1; openMarks(); } };
+    bm.onclick = () => { if (lp) { lp = 0; return; } toggleMark(); };
+  }
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
@@ -658,38 +663,47 @@ function showPage(p, anim = true) {
 }
 /* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
 const MARK_MAX = 20;
+const markDate = t => new Date(t).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
 const markHere = b => { const on = new Set(RD.ss.filter(x => x.pg === RD.page).map(x => +x.el.dataset.s)); return marksOf(b).filter(m => m.p === b.pos && on.has(m.s)); };
 function syncMarks() {
-  const b = book(), bt = $('#rBm'), ls = $('#rMarks'); if (!b || !bt || !ls) return;
+  const b = book(), bt = $('#rBm'), ls = $('#rBmN'); if (!b || !bt || !ls) return;
   const on = markHere(b).length > 0, n = marksOf(b).length;
   bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false');
   bt.setAttribute('aria-label', on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini');
-  ls.hidden = !n; ls.textContent = `🔖 ${n} penanda ▾`; ls.setAttribute('aria-label', `Daftar penanda, ada ${n}`);
+  ls.hidden = !n; ls.textContent = n;
+  if (n) bt.setAttribute('aria-label', (on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini') + `. ${n} penanda, tahan untuk lihat daftar`);
+}
+function undoMarks(b, old, gone) {
+  const cur = marksOf(b).slice();
+  gone.forEach(g => { if (cur.includes(g)) return; const i = old.indexOf(g); let j = 0; while (j < cur.length && old.indexOf(cur[j]) >= 0 && old.indexOf(cur[j]) < i) j++; cur.splice(j, 0, g); });
+  b.marks = cur; save(); if (book() === b) syncMarks(); toast('Penanda dikembalikan', 1800);
 }
 function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
-  if (hit.length) { b.marks = marksOf(b).filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus.', 1800); }
+  if (hit.length) { const old = marksOf(b).slice(); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 5000, { label: 'Urungkan', fn: () => undoMarks(b, old, hit) }); }
   if (marksOf(b).length >= MARK_MAX) return toast(`Penanda penuh (maks ${MARK_MAX}). Hapus satu dulu ya.`, 3500);
   const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
   const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 70) : '';
   b.marks = marksOf(b).concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
-  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai 🔖', 1800);
+  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai 🔖', 3000, { label: 'Daftar', fn: openMarks });
 }
 async function openMarks() {
   const b = book(); if (!b) return;
   const secs = await pagesOf(b);
   const list = marksOf(b).slice().sort((p, q) => p.p - q.p || p.s - q.s);
-  const items = list.map((m, i) => `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}</em><span>${esc(m.t || '…')}</span></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda">${ico('trash')}</button></div>`).join('');
+  const items = list.map((m, i) => `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}${m.at ? `<small>${markDate(m.at)}</small>` : ''}</em><span>${esc(m.t || '…')}</span></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda">${ico('trash')}</button></div>`).join('');
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Penanda 🔖 ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Ketuk ikon 🔖 di bar atas buat nandain.</div>'}`);
   $$('#sheet .mkgo').forEach(x => x.onclick = () => {
     const m = list[+x.dataset.i]; closeSheet();
     b.pos = Math.min(m.p, Math.max(0, secs.length - 1)); b.si = m.s; RD.quiet = true; save(); viewBaca();
   });
   $$('#sheet .mkdel').forEach(x => x.onclick = () => {
-    b.marks = marksOf(b).filter(m => m !== list[+x.dataset.i]); save(); syncMarks();
+    const old = marksOf(b).slice(), gone = [list[+x.dataset.i]];
+    b.marks = old.filter(m => m !== gone[0]); save(); syncMarks(); vib(6);
     if (b.marks.length) openMarks(); else closeSheet();
+    toast('Penanda dihapus', 5000, { label: 'Urungkan', fn: () => undoMarks(b, old, gone) });
   });
 }
 function turn(d) {

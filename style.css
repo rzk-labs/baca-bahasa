@@ -358,7 +358,11 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .mki{display:flex;align-items:center;gap:4px}
 .mkgo{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:48px;padding:8px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:left;cursor:pointer}
 .mkgo em{font:800 13px var(--font-ui);font-style:normal;white-space:nowrap;color:var(--color-text-muted)}
-.mkgo span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
+.mkgo span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3}
+.mkgo em small{display:block;font:600 11px var(--font-ui);margin-top:2px}
+.rbmw{position:relative;display:inline-flex;flex:none}
+.rbmn{position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--color-accent,#C4633A);color:#fff;font:800 10px/16px var(--font-ui);text-align:center;pointer-events:none}
+.rbmn[hidden]{display:none}
 .mkdel{flex:none;color:var(--color-text-muted)}
 .mkdel svg{width:18px;height:18px}
 @media (max-width:359px){.mkgo{padding:8px 10px;gap:8px}}
