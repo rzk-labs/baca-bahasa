@@ -790,7 +790,7 @@ function showSentence(word, sent, sIdx, sEl) {
   sEl.classList.add('hl');
   const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
   openSheet(`
-    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span>${closeBtn}</div>
+    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div id="sbaca"></div>
     <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
@@ -824,6 +824,24 @@ function showSentence(word, sent, sIdx, sEl) {
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const sel = sEl.querySelectorAll('.w.sel'); if (sel.length) onWord(sel[0], sel[sel.length - 1]); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
+  /* pindah ke kalimat tetangga: sheet tetap terbuka, sorot ikut pindah, halaman/bab menyusul */
+  const body = () => [...document.querySelectorAll('#cols .s')].filter(e => !e.closest('h2'));
+  const nb = d => { const l = body(), i = l.indexOf(sEl); return i < 0 ? null : l[i + d] || null; };
+  const atEdge = d => !nb(d) && (d > 0 ? b.pos >= (b.total || 1) - 1 : b.pos <= 0);
+  const sp = $('#sprev'), sn = $('#snext');
+  sp.disabled = atEdge(-1); sn.disabled = atEdge(1);
+  sp.style.opacity = sp.disabled ? '.35' : ''; sn.style.opacity = sn.disabled ? '.35' : '';
+  const open = el => { $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); const pg = pageOf(el, $('#cols')); if (pg !== RD.page) showPage(pg); vib(6); showSentence('', el.textContent.trim(), +el.dataset.s, el); };
+  const step = async d => {
+    const el = nb(d); if (el) return open(el);
+    if (d > 0 && b.pos < (b.total || 1) - 1) { b.pos++; b.si = 0; }
+    else if (d < 0 && b.pos > 0) { b.pos--; b.si = 0; RD.toEnd = true; }
+    else return;
+    RD.quiet = true; save(); closeSheet(); await viewBaca();
+    const l = body(), t = d > 0 ? l[0] : l[l.length - 1];
+    if (t) open(t); else toast('Bab ini kosong. Geser halaman aja ya.');
+  };
+  sp.onclick = () => step(-1); sn.onclick = () => step(1);
 }
 
 /* ---------- NGOMONG (tantangan) + BOSS (remedial) ---------- */
