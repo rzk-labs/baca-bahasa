@@ -1,5 +1,11 @@
 [
   {
+    "n": 559,
+    "judul": "Dengar halaman: putar kalimat satu per satu dengan sorotan",
+    "poin": "Ada tombol speaker di bar atas baca: kalimat halaman dibacakan satu per satu.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 557,
     "judul": "Papan Keepo HQ di HP: Gagal di atas, tanpa emoji, chip QA jelas",
     "poin": "Di HP, tugas gagal kini muncul paling atas, emoji diganti ikon garis.",
@@ -171,12 +177,6 @@
     "n": 433,
     "judul": "Sheet arti kata lebih tenang: arti besar, info kecil jadi 1 baris",
     "poin": "Sheet arti kata lebih tenang: arti besar tepat di bawah kata.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 428,
-    "judul": "Kartu Lanjut baca di Home: pintasan 'Ke penanda' 1 ketuk",
-    "poin": "Kartu \"Lanjut baca\" di Home kini punya tombol \"🔖 Ke penanda\".",
     "tgl": "2026-11-12"
   }
 ]
