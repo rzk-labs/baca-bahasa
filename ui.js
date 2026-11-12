@@ -133,7 +133,7 @@ function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.inner
 
 /* ---------- kerangka ---------- */
 let toastT;
-const MSG_SIMPAN_GAGAL = 'Gagal menyimpan buku. Penyimpanan HP penuh? Coba hapus buku lama.';
+const MSG_SIMPAN_GAGAL = 'Gagal nyimpen bukunya, coba lagi ya. Kalau terus gagal, hapus buku lama dulu.';
 let lastErrToast = 0;
 function globalErr(ev) {
   const r = ev && (ev.reason || ev.error), msg = String((r && r.message) || (ev && ev.message) || r || '');
@@ -141,7 +141,7 @@ function globalErr(ev) {
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang error. Coba muat ulang ya.', 4000);
+  toast('Ada yang error. Muat ulang halaman ya', 4000);
 }
 window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
