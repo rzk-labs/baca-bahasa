@@ -1,5 +1,11 @@
 [
   {
+    "n": 544,
+    "judul": "Rekap kata sesi baca: tutup buku, lihat & simpan kata baru",
+    "poin": "Keluar dari buku, kamu lihat kata yang tadi diketuk, lengkap dengan artinya.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 543,
     "judul": "Sisa emoji di Pengaturan, Masukan, Leaderboard & Bagikan → ikon garis (v9)",
     "poin": "Emoji di Pengaturan, masukan, leaderboard, dan bagikan sudah jadi ikon garis.",
@@ -171,12 +177,6 @@
     "n": 408,
     "judul": "Terapkan brand A 'Perpustakaan santai': tanpa maskot, serif Literata",
     "poin": "Tampilan baru \"Perpustakaan santai\" jadi: krem, hijau tua, oranye bata, judul berserif.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 404,
-    "judul": "Cache terjemahan lebih ringan & pesan 'ruang penuh' yang jujur",
-    "poin": "Pesan \"ruang penuh\" sekarang jujur: buku aman, yang gagal itu progres atau kata.",
     "tgl": "2026-11-12"
   }
 ]
