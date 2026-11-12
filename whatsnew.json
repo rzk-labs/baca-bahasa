@@ -1,5 +1,11 @@
 [
   {
+    "n": 417,
+    "judul": "Bar baca ringan: maks 2 tombol kanan & penanda ada Urungkan",
+    "poin": "Bar baca lebih lega: tombol kanan tinggal Cara baca dan Pengaturan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 408,
     "judul": "Terapkan brand A 'Perpustakaan santai': tanpa maskot, serif Literata",
     "poin": "Tampilan baru \"Perpustakaan santai\" jadi: krem, hijau tua, oranye bata, judul berserif.",
@@ -171,12 +177,6 @@
     "n": 264,
     "judul": "E-reader: tanda 'Offline' halus + sheet arti jelas saat sinyal putus",
     "poin": "Reader sekarang kasih tanda 'Offline' kecil saat sinyal putus.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 257,
-    "judul": "Pengaturan: pilihan suara tak hilang diam-diam + arti offline",
-    "poin": "Pilihan suara baca tak hilang lagi; muncul pesan saat suara belum siap.",
     "tgl": "2026-11-11"
   }
 ]
