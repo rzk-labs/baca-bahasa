@@ -658,7 +658,7 @@ function sessRecap(b) {
   });
   return true;
 }
-function leaveBaca() { const b = book(); setTab('rak'); if (b) sessRecap(b); }
+function leaveBaca() { stopListenPage(); const b = book(); setTab('rak'); if (b) sessRecap(b); }
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
@@ -674,6 +674,7 @@ function finishBook(b) {
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
 async function viewBaca() {
+  stopListenPage();
   const b = book();
   if (!b) { $('#view').innerHTML = emptyState('curious', 'Belum ada cerita', 'Masukin cerita dulu yuk, terus kepoin kata-katanya.', 'Tambah cerita', "setTab('rak')"); return; }
   b.opened = Date.now(); if (SESS.id !== b.id) { SESS.id = b.id; SESS.t = Date.now(); } save();
@@ -706,8 +707,9 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
+      ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
@@ -717,6 +719,7 @@ async function viewBaca() {
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => leaveBaca();
+  if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) stopListenPage(); else startListenPage(); };
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   if ($('#rRt')) $('#rRt').onclick = () => {
     db.rt = db.rt ? 0 : 1; save(); viewBaca();
@@ -740,6 +743,7 @@ async function viewBaca() {
   const lpStop = () => { clearTimeout(lpT); clearTimeout(lpT2); lpT = 0; if (lpEl) { lpEl.classList.remove('press'); lpEl = null; } };
   vp.addEventListener('touchstart', e => {
     const t = e.touches[0]; tx = [t.clientX, t.clientY]; moved = false; lpDone = false; lpStop(); setCur(e.target);
+    if (e.target.closest && e.target.closest('.w,.s')) stopListenPage();
     const sEl = e.touches.length === 1 && e.target.closest ? e.target.closest('.s') : null;
     if (!sEl || sEl.closest('h2')) return;
     lpT2 = setTimeout(() => { lpEl = sEl; sEl.classList.add('press'); }, 180);
@@ -762,7 +766,7 @@ async function viewBaca() {
   vp.onclick = e => {
     if (moved) { moved = false; return; }
     setCur(e.target);
-    const w = e.target.closest('.w'); if (w) { vib(8); sfx('pop'); onWord(w); return; }
+    const w = e.target.closest('.w'); if (w) { stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
@@ -770,6 +774,32 @@ async function viewBaca() {
   RD.quiet = false;
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
+}
+/* Dengar halaman: putar kalimat halaman aktif satu per satu, sorot yang sedang dibaca */
+const LIS = { on: false, id: 0 };
+function stopListenPage() {
+  if (!LIS.on) return;
+  LIS.on = false; LIS.id++; stopSpeak();
+  $$('.cols .s.say').forEach(x => x.classList.remove('say'));
+  const bt = $('#rLis'); if (bt) { bt.classList.remove('on'); bt.setAttribute('aria-pressed', 'false'); bt.setAttribute('aria-label', 'Dengar halaman'); }
+  const n = $('#lisNote'); if (n) n.hidden = true;
+}
+function startListenPage() {
+  const b = book(); if (!b || !RD.ss) return;
+  const q = RD.ss.filter(x => x.pg === RD.page).map(x => x.el).filter(el => el.textContent.trim());
+  if (!q.length) return toast('Nggak ada teks di halaman ini');
+  const id = ++LIS.id; LIS.on = true;
+  const bt = $('#rLis'); if (bt) { bt.classList.add('on'); bt.setAttribute('aria-pressed', 'true'); bt.setAttribute('aria-label', 'Berhenti dengar halaman'); }
+  const n = $('#lisNote'); if (n) n.hidden = false;
+  let i = 0;
+  const next = () => {
+    if (!LIS.on || LIS.id !== id) return;
+    $$('.cols .s.say').forEach(x => x.classList.remove('say'));
+    if (i >= q.length) return stopListenPage();
+    const el = q[i++]; el.classList.add('say');
+    speak(el.textContent.replace(/\u0001/g, '').trim(), b.lang, 0.9, { end: next, fail: () => { if (LIS.id === id) stopListenPage(); } });
+  };
+  next();
 }
 const MG = { s: 12, m: 24, l: 48 };
 const setCur = el => { const c = $('#cols'), r = $('#reader'), p = el && el.closest ? el.closest('p,h2') : null; if (!c || !r || !r.classList.contains('focus') || !p) return; $$('.cols .cur').forEach(x => x !== p && x.classList.remove('cur')); p.classList.add('cur'); c.classList.add('has-cur'); };
@@ -962,7 +992,7 @@ async function openMarks() {
   });
 }
 function turn(d) {
-  const b = book(); closeSheet();
+  const b = book(); closeSheet(); stopListenPage();
   const np = RD.page + d;
   if (np >= 0 && np < RD.n) { vib(4); showPage(np); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page'); return; }
   if (d > 0 && b.pos < b.total - 1) { b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page'); viewBaca(); }

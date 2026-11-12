@@ -363,6 +363,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 .cols{-webkit-touch-callout:none}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
+.cols .s.say{background:var(--color-hl-sentence);border-radius:4px;box-shadow:0 0 0 2px var(--color-hl-sentence)}
+.rlis.on{background:var(--color-surface-soft)}
+.lisnote{position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:12px;font-size:12px;line-height:16px;color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);white-space:nowrap}
+.lisnote[hidden]{display:none}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
 .cols .w ruby{ruby-position:over}
 .cols .w rt{font-size:max(.5em,10px);line-height:1.1;font-weight:500;letter-spacing:0;color:var(--color-text-muted);-webkit-user-select:none;user-select:none}

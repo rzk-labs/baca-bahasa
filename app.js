@@ -429,15 +429,18 @@ function voiceFor(lang) {
 }
 let speakTok = 0;
 const ttsRate = r => db.ttsRate === 'slow' ? Math.max(0.4, r * 0.75) : r;
-function speak(text, lang, rate = 0.9) {
+function stopSpeak() { speakTok++; try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) { } }
+/* h = { end, fail } opsional: end saat selesai diucapkan, fail bila suara tak tersedia/error */
+function speak(text, lang, rate = 0.9, h) {
   rate = ttsRate(rate);
-  if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
+  if (!('speechSynthesis' in window)) { if (h && h.fail) h.fail(); return toast('Perangkat tidak mendukung suara'); }
   speechSynthesis.cancel();
   const my = ++speakTok;
   voiceFor(lang).then(v => {
     if (my !== speakTok) return;
-    if (!v) return toast(`HP ini belum punya suara ${(LANGS[lang][0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000);
+    if (!v) { if (h && h.fail) h.fail(); return toast(`HP ini belum punya suara ${(LANGS[lang][0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000); }
     const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate; u.voice = v;
+    if (h) { u.onend = () => { if (my === speakTok && h.end) h.end(); }; u.onerror = () => { if (my === speakTok && h.fail) h.fail(); }; }
     speechSynthesis.speak(u);
   });
 }
