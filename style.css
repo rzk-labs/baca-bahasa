@@ -569,7 +569,6 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 [data-theme=dark] #top h1 span{color:var(--ink)}
 [data-theme=dark] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}
 @media (prefers-color-scheme:dark){[data-theme=auto] #top h1 span{color:var(--ink)}[data-theme=auto] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}}
-<<<<<<< Updated upstream
 /* #543 ikon garis di tombol, judul & lencana peringkat (v9) */
 .fb-open svg.i,#fbHome svg.i,.fb-kind svg.i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
 .seg button svg.i{margin-right:0}
@@ -604,7 +603,6 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   .fchip{padding:0 14px}
 }
 .prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
-=======
 /* Sosial: teman membaca & profil */
 .fr-row{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:9px 6px;border-radius:14px;color:inherit;font:inherit;cursor:pointer}
 .fr-row:hover,.fr-row:focus-visible{background:var(--color-surface-soft)}
@@ -619,4 +617,3 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fr-stats div{background:var(--color-surface-soft);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column}
 .fr-stats b{font-size:20px;font-variant-numeric:tabular-nums}
 .fr-stats span{font-size:11px;color:var(--color-text-muted)}
->>>>>>> Stashed changes

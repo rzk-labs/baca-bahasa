@@ -348,15 +348,11 @@ function openAccount(mode) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
-<<<<<<< Updated upstream
       <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">${ico('trophy')}Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">${ico('eyeoff')}Sembunyikan</button></div></div>
-=======
-      <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">🏆 Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">🙈 Sembunyikan</button></div></div>
-      <div class="set-row"><div class="eyebrow">Profil sosial</div><div class="seg" id="aPub"><button data-v="0" class="${db.acct.publik ? '' : 'on'}">🔒 Privat</button><button data-v="1" class="${db.acct.publik ? 'on' : ''}">👥 Publik</button></div>
+      <div class="set-row"><div class="eyebrow">Profil sosial</div><div class="seg" id="aPub"><button data-v="0" class="${db.acct.publik ? '' : 'on'}">Privat</button><button data-v="1" class="${db.acct.publik ? 'on' : ''}">Publik</button></div>
         <div class="mut sm" style="margin-top:6px">Publik: orang lain bisa cari kamu dan lihat buku yang sedang kamu baca. Teks buku tidak pernah dibagikan.</div>
         <label class="row" style="gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="aHideT" style="width:auto" ${db.acct.hideTitles ? 'checked' : ''}> <span class="sm">Sembunyikan judul buku</span></label>
         <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
->>>>>>> Stashed changes
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
     bkWire();
