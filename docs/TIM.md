@@ -20,3 +20,4 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (20 tahap, prioritas P0-P3, mi
 - Tugas yang butuh manusia (wawancara pengguna, rekrut beta) -> agent menyiapkan bahan (naskah, form, daftar pertanyaan), founder yang menjalankan.
 - Semua hasil lewat PR. QA lolos -> otomatis live (antrean, satu per satu). QA ada catatan -> menunggu founder klik Setujui/Revisi/Tolak.
 - Ikuti prinsip "Reader First, AI Second" dan prioritas P0 dulu.
+- Daftar semua dokumen per peran: `docs/INDEKS.md`.
