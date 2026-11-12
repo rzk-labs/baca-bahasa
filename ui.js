@@ -333,27 +333,32 @@ function commitLang(g) {
   setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
 }
 /* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
-let wodOff = 0, wodDay = '';
-function wordOfDay(offset = 0) {
+let wodPick = null, wodDay = ''; // wodPick: pilihan 'Kata lain', hanya hidup di sesi
+function wordOfDay(pick = null) {
   const ok = db.vocab.filter(v => v && !v.noTr && String(v.t || '').trim() && v.w);
   if (!ok.length) return null;
   const now = Date.now(), due = ok.filter(v => !v.known && (v.due || 0) <= now);
   const pool = (due.length ? due : ok).slice().sort((a, b) => ((a.due || a.at || 0) - (b.due || b.at || 0)) || String(a.w).localeCompare(String(b.w)));
   const top = pool.slice(0, 7), d = new Date(), key = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
-  const v = top[(key + offset) % top.length];
-  return { n: top.length, v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
+  const v = (pick && ok.includes(pick) && pick) || top[key % top.length];
+  return { n: ok.length, v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
 }
 function wodHtml() {
-  const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodOff = 0; }
-  const k = wordOfDay(wodOff);
+  const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
+  const k = wordOfDay(wodPick);
   if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini 👀</div><div class="hero-act"><button class="pri" id="wodRead" style="min-height:44px">Gas baca →</button></div></div>`;
   const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
-  return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" style="min-height:44px">Kata lain</button>` : ''}</div></div>`;
+  return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
 }
 function bindWod() {
   if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
   if ($('#wodRead')) $('#wodRead').onclick = () => setTab('baca');
-  if ($('#wodNext')) $('#wodNext').onclick = () => { wodOff++; $('#wod').outerHTML = wodHtml(); bindWod(); };
+  if ($('#wodNext')) $('#wodNext').onclick = () => {
+    const cur = wordOfDay(wodPick).v, has = v => v && !v.noTr && String(v.t || '').trim() && v.w;
+    const pool = db.vocab.filter(v => has(v) && v !== cur && v.w !== cur.w);
+    if (pool.length) wodPick = pool[Math.floor(Math.random() * pool.length)];
+    $('#wod').outerHTML = wodHtml(); bindWod(); const nb = $('#wodNext'); if (nb) nb.focus();
+  };
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -381,7 +386,7 @@ function viewRak() {
     <div class="mut sm" style="margin:-4px 0 8px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     <div class="hello-sub">${spot('curious')}<div class="mut">${line}</div></div>
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? '<button class="hero-mk" id="hMark" aria-label="Buka e-reader di penanda terbaru">🔖 Ke penanda</button>' : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
       ${wodHtml()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
@@ -398,6 +403,7 @@ function viewRak() {
     <div class="sec-h"><h2>Tambah cerita</h2></div>${addCard}`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
+    const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     bindWod();
     animRing($('#view'));
     heroMins(cur);
@@ -658,6 +664,7 @@ function showPage(p, anim = true) {
 /* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
 const MARK_MAX = 20;
 const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
+const lastMark = b => marksOf(b).reduce((a, m) => m && Number.isFinite(m.p) && Number.isFinite(m.s) && (!a || (m.at || 0) >= (a.at || 0)) ? m : a, null);
 const markHere = b => { const on = new Set(RD.ss.filter(x => x.pg === RD.page).map(x => +x.el.dataset.s)); return marksOf(b).filter(m => m.p === b.pos && on.has(m.s)); };
 function syncMarks() {
   const b = book(), bt = $('#bmTog'), ls = $('#bmList'); if (!b) return;
