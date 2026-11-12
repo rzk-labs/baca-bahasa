@@ -3,6 +3,9 @@ const ORIGINS = ['https://rzk-labs.github.io', 'http://127.0.0.1:8771', 'http://
 const MAX_DATA = 400 * 1024;      // data progres per akun
 const MAX_SHARE = 1900 * 1024;    // teks cerita yang dibagikan
 const MAX_WEEK_XP = 20000;        // batas wajar XP per minggu (anti-curang sederhana)
+const BK_CHUNK = 600 * 1024;      // satu potongan teks buku (gzip+base64) per baris D1
+const BK_MAX = 12 * 1024 * 1024;  // maks satu buku di akun (terkompresi)
+const BK_USER_MAX = 80 * 1024 * 1024; // maks semua buku satu akun (terkompresi)
 
 const enc = new TextEncoder();
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
@@ -24,7 +27,7 @@ function isoWeek(d = new Date()) {
 }
 function cors(req) {
   const o = req.headers.get('Origin') || '';
-  return { 'Access-Control-Allow-Origin': ORIGINS.includes(o) ? o : ORIGINS[0], 'Access-Control-Allow-Methods': 'GET,POST,PUT,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type,Authorization', 'Access-Control-Max-Age': '86400', Vary: 'Origin' };
+  return { 'Access-Control-Allow-Origin': ORIGINS.includes(o) ? o : ORIGINS[0], 'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type,Authorization', 'Access-Control-Max-Age': '86400', Vary: 'Origin' };
 }
 const json = (req, body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...cors(req) } });
 const err = (req, msg, status = 400) => json(req, { error: msg }, status);
@@ -82,6 +85,59 @@ export default {
         await env.DB.prepare('UPDATE users SET data=?, xp=?, week=?, week_xp=?, hidden=?, nick=?, updated_at=? WHERE id=?')
           .bind(data, xp, week, wx, b.hidden ? 1 : 0, nick || u.nick, Date.now(), u.id).run();
         return json(req, { ok: true, week });
+      }
+      // Buku di akun: teks per buku disimpan terkompresi (gzip+base64) dan dipotong per BK_CHUNK.
+      // Kunci buku (bkey) = hash dari bahasa+judul, dibuat di aplikasi. Hanya pemilik akun yang bisa baca.
+      if (p === '/books' && req.method === 'GET') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const r = await env.DB.prepare('SELECT bkey, meta, n, size, updated_at FROM book_meta WHERE user_id=? ORDER BY updated_at DESC').bind(u.id).all();
+        return json(req, { books: (r.results || []).map(x => ({ key: x.bkey, meta: JSON.parse(x.meta || '{}'), n: x.n, size: x.size, at: x.updated_at })) });
+      }
+      const bm = p.match(/^\/books\/([a-f0-9]{16,64})$/);
+      if (bm) {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const key = bm[1];
+        if (req.method === 'GET') {
+          const m = await env.DB.prepare('SELECT meta, n, updated_at FROM book_meta WHERE user_id=? AND bkey=?').bind(u.id, key).first();
+          if (!m) return err(req, 'Buku tidak ada di akun.', 404);
+          const ch = await env.DB.prepare('SELECT idx, data FROM book_chunk WHERE user_id=? AND bkey=? ORDER BY idx').bind(u.id, key).all();
+          const parts = ch.results || [];
+          if (parts.length !== m.n) return err(req, 'Buku di akun belum lengkap. Coba lagi nanti.', 409);
+          return json(req, { meta: JSON.parse(m.meta || '{}'), data: parts.map(x => x.data).join(''), at: m.updated_at });
+        }
+        if (req.method === 'DELETE') {
+          await env.DB.batch([
+            env.DB.prepare('DELETE FROM book_chunk WHERE user_id=? AND bkey=?').bind(u.id, key),
+            env.DB.prepare('DELETE FROM book_meta WHERE user_id=? AND bkey=?').bind(u.id, key),
+          ]);
+          return json(req, { ok: true });
+        }
+        if (req.method === 'PUT') {
+          // satu potongan per permintaan: ?i=0..n-1&n=jumlah. Potongan terakhir menulis meta (buku dianggap lengkap).
+          const i = +url.searchParams.get('i'), n = +url.searchParams.get('n');
+          if (!Number.isInteger(i) || !Number.isInteger(n) || n < 1 || i < 0 || i >= n || n * BK_CHUNK > BK_MAX + BK_CHUNK) return err(req, 'Potongan tidak valid.');
+          const b = await body(req);
+          const data = String(b.data || '');
+          if (!data || data.length > BK_CHUNK || !/^[A-Za-z0-9+/=]+$/.test(data)) return err(req, 'Isi potongan tidak valid.');
+          if (i === 0) {
+            const used = await env.DB.prepare('SELECT COALESCE(SUM(size),0) s FROM book_meta WHERE user_id=? AND bkey<>?').bind(u.id, key).first();
+            const size = +b.size || 0;
+            if (size > BK_MAX) return err(req, 'Buku terlalu besar untuk disimpan di akun.', 413);
+            if ((used && +used.s || 0) + size > BK_USER_MAX) return err(req, 'Ruang buku di akun penuh. Hapus buku lama dulu.', 413);
+            await env.DB.batch([
+              env.DB.prepare('DELETE FROM book_chunk WHERE user_id=? AND bkey=?').bind(u.id, key),
+              env.DB.prepare('DELETE FROM book_meta WHERE user_id=? AND bkey=?').bind(u.id, key),
+            ]);
+          }
+          await env.DB.prepare('INSERT OR REPLACE INTO book_chunk (user_id, bkey, idx, data) VALUES (?,?,?,?)').bind(u.id, key, i, data).run();
+          if (i === n - 1) {
+            const meta = JSON.stringify(b.meta || {}).slice(0, 4000);
+            const sz = await env.DB.prepare('SELECT COALESCE(SUM(LENGTH(data)),0) s, COUNT(*) c FROM book_chunk WHERE user_id=? AND bkey=?').bind(u.id, key).first();
+            if (+sz.c !== n) return err(req, 'Ada potongan yang hilang. Unggah ulang.', 409);
+            await env.DB.prepare('INSERT OR REPLACE INTO book_meta (user_id, bkey, meta, n, size, updated_at) VALUES (?,?,?,?,?,?)').bind(u.id, key, meta, n, +sz.s, Date.now()).run();
+          }
+          return json(req, { ok: true, i, n });
+        }
       }
       if (p === '/leaderboard' && req.method === 'GET') {
         const week = isoWeek(), u = await authUser(req, env);

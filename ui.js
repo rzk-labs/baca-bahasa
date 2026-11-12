@@ -525,7 +525,7 @@ function hapusBuku(id) {
   const book = db.books[i], wasCur = db.cur === id;
   db.books = db.books.filter(b => b.id !== id); if (wasCur) db.cur = null;
   save(); yatimTambah(id);
-  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } }, 5000));
+  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } if (typeof bookGone === 'function') bookGone(book).catch(() => { }); }, 5000));
   toast('Cerita dihapus.', 5000, { label: 'Urungkan', fn: () => {
     if (!pendingDel.has(id)) return;
     clearTimeout(pendingDel.get(id)); pendingDel.delete(id); yatimBuang(id);
@@ -547,6 +547,7 @@ $('#file').onchange = async e => {
 };
 const IMPOR_TIMEOUT = 45000;
 async function importFile(f, paksa) {
+  if (/\.(epub|pdf)$/i.test(f.name || '') && !navigator.onLine && !(await libsCached())) return toast('EPUB/PDF butuh internet sekali buat siapin alat baca. Sambungkan dulu, atau pakai .txt.', 6000);
   toast('Lagi nyiapin cerita… ⏳', IMPOR_TIMEOUT + 2000);
   let tm;
   try {

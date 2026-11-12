@@ -7,7 +7,7 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal'];
+const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal', 'bkGone'];
 const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
 const TOMB_TTL = 90 * 864e5;
 
@@ -119,6 +119,12 @@ function mergeSrv(d) {
   }
   mergeTaps(d.taps);
   mergeBooks(d.books);
+  // buku yang dihapus di perangkat lain: jangan diunduh ulang (gabung, waktu terbaru menang)
+  if (Array.isArray(d.bkGone)) {
+    const m = new Map((Array.isArray(db.bkGone) ? db.bkGone : []).map(x => [x.k, +x.at || 0]));
+    for (const x of d.bkGone) if (x && x.k && (+x.at || 0) > (m.get(x.k) || 0)) m.set(x.k, +x.at);
+    db.bkGone = [...m].map(([k, at]) => ({ k, at })).sort((a, b) => b.at - a.at).slice(0, 200);
+  }
   return snap() !== before;
 }
 // jaga ukuran di bawah MAX_DATA server: pangkas tombstone/buku tertua/taps bila perlu
@@ -166,7 +172,68 @@ async function doSync(opt) {
     lastSync = sig;
   }
   if (changed && !opt.noRefresh) syncRefresh(opt.manual);
+  syncBooks().catch(() => { }); // teks buku: jalan di belakang, tidak menahan sinkron kata/XP
   return changed;
+}
+
+/* ---------- Buku di akun: teks buku disimpan terkompresi (gzip) di server ---------- */
+const BKC = 590 * 1024; // potongan per unggahan (server: maks 600 KB)
+const canGz = typeof CompressionStream === 'function' && typeof DecompressionStream === 'function';
+const hexOf = buf => [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
+async function bookKey(b) { return hexOf(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(bkKey(b)))).slice(0, 40); }
+async function gzB64(str) {
+  const buf = await new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+  const u = new Uint8Array(buf); let bin = '';
+  for (let i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+async function unGzB64(s) {
+  const u = Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  return await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+}
+async function uploadBook(b) {
+  const paras = await getText(b.id); if (!Array.isArray(paras) || !paras.length) return false;
+  const data = await gzB64(JSON.stringify(paras)), key = await bookKey(b), n = Math.ceil(data.length / BKC);
+  const meta = { title: b.title, lang: b.lang, added: b.added || Date.now() };
+  for (let i = 0; i < n; i++) await api(`/books/${key}?i=${i}&n=${n}`, { method: 'PUT', body: { data: data.slice(i * BKC, (i + 1) * BKC), size: data.length, meta } });
+  b.cloud = Date.now(); save(); return true;
+}
+// dipanggil dari hapusBuku (ui.js) setelah buku benar-benar dihapus di perangkat ini
+async function bookGone(b) {
+  if (!b || !canGz) return;
+  const k = await bookKey(b);
+  db.bkGone = [{ k, at: Date.now() }, ...(Array.isArray(db.bkGone) ? db.bkGone : []).filter(x => x.k !== k)].slice(0, 200); save();
+  if (db.acct && API) api(`/books/${k}`, { method: 'DELETE' }).catch(() => { });
+}
+let bkBusy = false;
+async function syncBooks() {
+  if (!db.acct || !API || !canGz || bkBusy || navigator.onLine === false) return;
+  bkBusy = true;
+  try {
+    const rem = (await api('/books')).books || [];
+    const remKeys = new Set(rem.map(x => x.key));
+    const gone = new Map((Array.isArray(db.bkGone) ? db.bkGone : []).map(x => [x.k, +x.at || 0]));
+    const loc = new Map(); for (const b of db.books || []) loc.set(await bookKey(b), b);
+    // naik: buku di perangkat ini yang belum ada di akun (kecuali dihapus setelah buku ini ditambahkan)
+    for (const [k, b] of loc) {
+      if (remKeys.has(k) || (gone.get(k) || 0) > (b.added || 0)) continue;
+      try { await uploadBook(b); } catch (e) { if (/penuh|besar/i.test(e.message)) { toast(e.message, 5000); break; } }
+    }
+    // turun: buku di akun yang belum ada di perangkat ini
+    let added = 0;
+    for (const x of rem) {
+      if (loc.has(x.key) || (gone.get(x.key) || 0) > (x.at || 0)) continue;
+      try {
+        const r = await api(`/books/${x.key}`), paras = JSON.parse(await unGzB64(r.data));
+        if (!Array.isArray(paras) || !paras.length) continue;
+        const id = 'b' + Date.now().toString(36) + added;
+        await putText(id, paras);
+        db.books.push({ id, title: r.meta.title || 'Tanpa judul', lang: r.meta.lang || 'en', pos: 0, si: 0, total: 0, v: 2, added: r.meta.added || Date.now(), opened: 0, cloud: Date.now() });
+        added++; save();
+      } catch (e) { }
+    }
+    if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
+  } catch (e) { } finally { bkBusy = false; }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
 async function runSync(opt = {}) {
@@ -192,10 +259,10 @@ addEventListener('visibilitychange', () => { if (document.visibilityState === 'v
 addEventListener('online', () => { runSync().catch(() => { }); });
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
-const NOTE_AKUN = 'Kata, XP, posisi baca &amp; penanda ikut akun. Teks buku tetap per perangkat.';
+const NOTE_AKUN = 'Kata, XP, buku, posisi baca &amp; penanda ikut akun.';
 const bkKey = b => (b.lang || '') + '|' + String(b.title || '').trim().toLowerCase();
 function bkCard() {
-  return `<div class="set-row"><div class="mut sm">Simpan cadangan biar aman kalau ganti HP. Teks buku tidak ikut, jadi unggah ulang bukunya.</div>
+  return `<div class="set-row"><div class="mut sm">Kalau masuk akun, buku sudah tersimpan otomatis. Cadangan file ini untuk yang tidak pakai akun (teks buku tidak ikut).</div>
     <div class="row"><button class="sec" id="bkOut" type="button">Simpan cadangan penanda &amp; posisi baca</button></div>
     <div class="row"><button class="sec" id="bkIn" type="button">Pulihkan dari cadangan</button></div>
     <input type="file" id="bkFile" accept="application/json,.json" hidden></div>`;
