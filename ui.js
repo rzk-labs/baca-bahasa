@@ -847,17 +847,19 @@ function finishBook(b) {
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
 /* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
-const INTIP_SKIP = ['ja', 'ko', 'zh-CN', 'zh-TW', 'th']; /* pemotongan kata belum andal / tanpa spasi: lewati kartu */
+const INTIP_SKIP = ['th']; /* Thai: pemotongan kata belum andal. ja/ko/zh memakai pemotong kata Intl (#658) */
+const INTIP_CJK = /^(ja|ko|zh)/;
 const INTIP_LATIN = /^(en|id|es|fr|de|it|pt|nl|sv|no|da|fi|pl|tr|ru|uk|cs|ro|hu|vi|ms)/;
 function intipCands(b, sp, savedSet) {
   if (INTIP_SKIP.includes(b.lang) || !seg(b.lang, 'word')) return [];
-  const minLen = INTIP_LATIN.test(b.lang) ? 5 : 3, m = new Map();
+  const cjk = INTIP_CJK.test(b.lang), minLen = INTIP_LATIN.test(b.lang) ? 5 : cjk ? 2 : 3, m = new Map();
   for (const P of sp) {
     if (P.h) continue;
     for (const { s } of P.sents) for (const t of tokens(s, b.lang)) {
       if (!t.w) continue;
       const k = t.t.toLowerCase();
       if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k)) continue;
+      if (cjk && ((/^[\p{Script=Hiragana}ー]+$/u.test(k) && [...k].length < 3) || /^[\p{Script=Latin}]+$/u.test(k))) continue; /* partikel hiragana pendek & huruf latin dilewati */
       const e = m.get(k) || { w: k, lang: b.lang, n: 0, lo: 0, s: s.trim() };
       e.n++; if (t.t === k) e.lo++; m.set(k, e);
     }
@@ -880,6 +882,7 @@ function intipBind(b, cand) {
   };
   $$('#intip .irow').forEach(btn => btn.onclick = () => {
     const e = cand[+btn.dataset.ik]; if (!e || btn.disabled) return;
+    e.lang = b.lang; /* selalu bahasa buku yang sedang dibaca */
     if (db.vocab.some(v => sameVocab(v, e.lang, e.w))) return;
     const c = trCache.get(e.lang + '|' + db.my + '|' + e.w), tp = takeTaps(e.lang, e.w);
     if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
@@ -952,8 +955,9 @@ async function viewBaca() {
     }
     return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) || inPhrase.has(i) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
+  const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
-  if (db.intip !== false && !b.intipOff && !b.si && !RD.toEnd && b.ip !== b.pos) {
+  if (db.intip !== false && !b.intipOff && !(b.si > firstSi) && !RD.toEnd && b.ip !== b.pos) {
     b.ip = b.pos; save();
     intipC = intipCands(b, sp, savedSet);
     if (intipC.length >= 3) intip = intipHtml(b, intipC); else intipC = [];
