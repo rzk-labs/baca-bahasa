@@ -706,3 +706,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .sh-head h2{min-width:0;overflow-wrap:anywhere}
 .rfoot{flex-wrap:wrap}
 @media (max-width:360px){#tabs{left:6px;right:6px;gap:2px}#tabs button{font-size:.75rem}}
+/* Ini nama di sheet arti */
+.wnamerow{margin:6px 0 10px}
+.wnamerow button{font-size:13px;padding:6px 10px}
+#wnama[hidden],#wsave[hidden]{display:none}

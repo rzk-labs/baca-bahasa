@@ -93,6 +93,9 @@ function tombVocab(lang, w) { const k = vocabKey(lang, w); db.vocabDel = (Array.
 function untombVocab(lang, w) { if (Array.isArray(db.vocabDel)) db.vocabDel = db.vocabDel.filter(t => t && t.k !== vocabKey(lang, w)); }
 /* 'sudah kenal': db.kenal[kunci] = waktu (positif = kenal, negatif = dibatalkan; sinkron menang-terbaru) */
 const isKenal = (lang, w) => !!db.kenal && db.kenal[vocabKey(lang, w)] > 0;
+/* 'Ini nama': b.names = array kata huruf kecil per buku (bahasa = bahasa buku). Buku lama tanpa b.names tetap aman. */
+const isNama = (b, w) => !!b && Array.isArray(b.names) && b.names.includes(String(w || '').trim().toLowerCase());
+function setNama(b, w, on) { if (!b) return; const k = String(w || '').trim().toLowerCase(); if (!k) return; if (!Array.isArray(b.names)) b.names = []; const i = b.names.indexOf(k); if (on && i < 0) b.names.push(k); else if (!on && i >= 0) b.names.splice(i, 1); save(); }
 function setKenal(lang, w, on) { if (!db.kenal || typeof db.kenal !== 'object' || Array.isArray(db.kenal)) db.kenal = {}; db.kenal[vocabKey(lang, w)] = on ? Date.now() : -Date.now(); save(); }
 const sameVocab =(v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
 /* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
