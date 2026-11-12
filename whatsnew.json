@@ -1,5 +1,11 @@
 [
   {
+    "n": 690,
+    "judul": "[peta 34] Tombol feedback kirim langsung ke HQ, tanpa salin-tempel",
+    "poin": "Tombol Kirim masukan sekarang langsung sampai ke tim, tanpa salin-tempel.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 686,
     "judul": "[peta 63] Koleksi: hapus aman + toast Target harian pindah ke bawah",
     "poin": "Tombol hapus buku di Koleksi sekarang jauh dari tombol buka dan selalu minta konfirmasi.",
@@ -171,12 +177,6 @@
     "n": 590,
     "judul": "Papan Keepo HQ HP: kolom kosong ciut, chip otomatis & QA mudah diketuk",
     "poin": "Papan HQ di HP lebih rapi: kolom kosong ciut jadi satu baris.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 582,
-    "judul": "Rekap kata sesi baca: simpan sementara, tampil walau 1 kata",
-    "poin": "Kata yang kamu ketuk kini aman, walau aplikasi tertutup mendadak.",
     "tgl": "2026-11-12"
   }
 ]
