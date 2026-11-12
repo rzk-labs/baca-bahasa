@@ -248,7 +248,7 @@ async function afterLogin(res) {
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
-  toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun ✨' : 'Progres di HP ini disimpan ke akun ✨'}`);
+  toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun' : 'Progres di HP ini disimpan ke akun'}`);
   closeSheet(); setTab(db.tab || 'rak');
   // catatan jujur: tampil sekali saja setelah login
   if (!localStorage.getItem('kepo.noteAkun2')) { try { localStorage.setItem('kepo.noteAkun2', '1'); } catch (e) { } setTimeout(() => toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000), 600); }
@@ -279,7 +279,7 @@ function bkSave() {
   const u = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = u; a.download = 'kepo-cadangan-penanda.json'; document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(u), 2000);
-  toast('Cadangan tersimpan ✅');
+  toast('Cadangan tersimpan');
 }
 async function bkRestore(file) {
   let d; try { d = JSON.parse(await file.text()); } catch (e) { d = null; }
@@ -318,13 +318,13 @@ function openAccount(mode) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
-      <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">🏆 Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">🙈 Sembunyikan</button></div></div>
+      <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">${ico('trophy')}Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">${ico('eyeoff')}Sembunyikan</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
     bkWire();
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
-    $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron ✅ Data dari perangkat lain sudah digabung.' : 'Tersinkron ✅'); } catch (e) { toast(e.message); } };
+    $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { toast(e.message); } };
     $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
     return;
   }
@@ -354,12 +354,12 @@ function openAccount(mode) {
 }
 
 /* ---------- Leaderboard ---------- */
-const lbRow = (r, me) => `<div class="lb-row${me ? ' me' : ''}"><span class="rk">${r.rank <= 3 ? ['🥇', '🥈', '🥉'][r.rank - 1] : '#' + r.rank}</span><span class="avatar">${esc(initial(r.nick))}</span><b>${esc(r.nick)}</b><span class="xp">${r.week_xp} XP</span></div>`;
+const lbRow = (r, me) => `<div class="lb-row${me ? ' me' : ''}"><span class="rk">${r.rank <= 3 ? `<span class="medal m${r.rank}" aria-label="Peringkat ${r.rank}">${r.rank}</span>` : '#' + r.rank}</span><span class="avatar">${esc(initial(r.nick))}</span><b>${esc(r.nick)}</b><span class="xp">${r.week_xp} XP</span></div>`;
 async function homeLeaderboard() {
   const host = $('#lbHome'); if (!host) return;
   if (!API) { host.remove(); return; }
-  if (!db.acct) { host.innerHTML = `<div class="tile t-blue lb-cta"><div><div class="eyebrow">Leaderboard minggu ini</div><b>Masuk buat ikut balapan XP 🏆</b></div><button class="lime" id="lbIn">Masuk</button></div>`; $('#lbIn').onclick = () => openAccount('daftar'); return; }
-  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>🏆 Minggu ini</h2><button class="ghost" id="lbAll">Lihat semua</button></div><div id="lbList" class="mut sm">Memuat…</div></div>`;
+  if (!db.acct) { host.innerHTML = `<div class="tile t-blue lb-cta"><div><div class="eyebrow">Leaderboard minggu ini</div><b>Masuk buat ikut balapan XP</b></div><button class="lime" id="lbIn">Masuk</button></div>`; $('#lbIn').onclick = () => openAccount('daftar'); return; }
+  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>${ico('trophy')}Minggu ini</h2><button class="ghost" id="lbAll">Lihat semua</button></div><div id="lbList" class="mut sm">Memuat…</div></div>`;
   $('#lbAll').onclick = openLeaderboard;
   try {
     await pushSync(true).catch(() => { });
@@ -370,7 +370,7 @@ async function homeLeaderboard() {
   } catch (e) { $('#lbList').textContent = e.message; }
 }
 async function openLeaderboard() {
-  openSheet(`<div class="sh-head"><h2>🏆 Leaderboard</h2>${closeBtn}</div><div class="mut sm" id="lbWeek">XP minggu ini · reset tiap Senin</div><div id="lbFull" style="margin-top:12px" class="mut sm">Memuat…</div>`);
+  openSheet(`<div class="sh-head"><h2>${ico('trophy')}Leaderboard</h2>${closeBtn}</div><div class="mut sm" id="lbWeek">XP minggu ini · reset tiap Senin</div><div id="lbFull" style="margin-top:12px" class="mut sm">Memuat…</div>`);
   try {
     const r = await api('/leaderboard');
     $('#lbWeek').textContent = `XP minggu ${r.week} · reset tiap Senin`;
@@ -385,9 +385,9 @@ async function shareBook(id) {
   if (!API) return toast('Server akun belum aktif. Coba lagi nanti ya.');
   if (!db.acct) { toast('Masuk dulu buat bagiin cerita ya.'); return openAccount('daftar'); }
   openSheet(`<div class="sh-head"><h2>Bagikan cerita</h2>${closeBtn}</div>
-    <div class="note">⚠️ <div>Bagikan hanya cerita <b>milikmu sendiri</b> atau yang <b>bebas hak cipta</b> (domain publik). Link ini pribadi: hanya yang kamu kirimi link yang bisa buka.</div></div>
+    <div class="note">${ico('alert')}<div>Bagikan hanya cerita <b>milikmu sendiri</b> atau yang <b>bebas hak cipta</b> (domain publik). Link ini pribadi: hanya yang kamu kirimi link yang bisa buka.</div></div>
     <div class="vitem">${cover(b)}<div class="inf"><div class="w1">${esc(b.title)}</div><div class="s1">${langName(b.lang)}</div></div></div>
-    <div class="row"><button class="pri" id="shGo">🔗 Bikin link</button></div><div id="shOut"></div>`);
+    <div class="row"><button class="pri" id="shGo">${ico('link')}Bikin link</button></div><div id="shOut"></div>`);
   $('#shGo').onclick = async () => {
     const bt = $('#shGo'); bt.disabled = true; bt.textContent = 'Lagi upload…';
     try {
@@ -396,11 +396,11 @@ async function shareBook(id) {
       const link = location.origin + location.pathname + '?share=' + r.id;
       bt.remove();
       $('#shOut').innerHTML = `<div class="share-link"><input id="shLink" readonly value="${esc(link)}"><button class="lime" id="shCopy">Salin</button></div>
-        ${navigator.share ? '<div class="row"><button class="pri" id="shNative">📤 Kirim ke teman</button></div>' : ''}<div class="mut sm" style="margin-top:8px">Kode: <b>${r.id}</b></div>`;
-      $('#shCopy').onclick = async () => { try { await navigator.clipboard.writeText(link); } catch (e) { $('#shLink').select(); document.execCommand('copy'); } toast('Link disalin ✅'); };
-      if ($('#shNative')) $('#shNative').onclick = () => navigator.share({ title: b.title, text: `Baca "${b.title}" bareng aku di KEEPO 👀`, url: link }).catch(() => { });
+        ${navigator.share ? '<div class="row"><button class="pri" id="shNative">' + ico('send') + 'Kirim ke teman</button></div>' : ''}<div class="mut sm" style="margin-top:8px">Kode: <b>${r.id}</b></div>`;
+      $('#shCopy').onclick = async () => { try { await navigator.clipboard.writeText(link); } catch (e) { $('#shLink').select(); document.execCommand('copy'); } toast('Link disalin'); };
+      if ($('#shNative')) $('#shNative').onclick = () => navigator.share({ title: b.title, text: `Baca "${b.title}" bareng aku di KEEPO`, url: link }).catch(() => { });
       award(5); sfx('ding');
-    } catch (e) { toast(e.message, 5000); bt.disabled = false; bt.textContent = '🔗 Bikin link'; }
+    } catch (e) { toast(e.message, 5000); bt.disabled = false; bt.innerHTML = ico('link') + 'Bikin link'; }
   };
 }
 async function openSharedFromUrl() {
@@ -412,7 +412,7 @@ async function openSharedFromUrl() {
     const exists = db.books.find(b => b.shareId === s.id);
     $('#shIn').outerHTML = `<div class="hello-sub">${spot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
       <div class="vitem">${cover({ title: s.title })}<div class="inf"><div class="w1">${esc(s.title)}</div><div class="s1">${langName(s.lang)} · ${s.paras.length} paragraf</div></div></div>
-      <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : '➕ Tambah ke koleksi'}</button></div>`;
+      <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : ico('plus') + 'Tambah ke koleksi'}</button></div>`;
     $('#shAdd').onclick = async () => {
       closeSheet();
       if (exists) { db.cur = exists.id; save(); return setTab('baca'); }
@@ -431,7 +431,7 @@ async function homeWhatsNew() {
   let seen = 0; try { seen = +localStorage.getItem('kepo.wnSeen') || 0; } catch (e) {}
   const baru = L.filter(x => x.n > seen).length;
   const row = x => `<li><b>${esc(x.judul)}</b>${x.poin ? `<div class="mut sm">${esc(x.poin)}</div>` : ''}</li>`;
-  host.innerHTML = `<div class="card wn"><div class="sec-h" style="margin:0 0 8px"><h2>✨ Yang baru${baru ? ` <span class="wn-dot">${baru}</span>` : ''}</h2>${L.length > 3 ? '<button class="ghost" id="wnAll">Lihat semua</button>' : ''}</div><ul class="wn-l">${L.slice(0, 3).map(row).join('')}</ul></div>`;
+  host.innerHTML = `<div class="card wn"><div class="sec-h" style="margin:0 0 8px"><h2>${ico('sparkle')}Yang baru${baru ? ` <span class="wn-dot">${baru}</span>` : ''}</h2>${L.length > 3 ? '<button class="ghost" id="wnAll">Lihat semua</button>' : ''}</div><ul class="wn-l">${L.slice(0, 3).map(row).join('')}</ul></div>`;
   const all = $('#wnAll'); if (all) all.onclick = () => { host.querySelector('.wn-l').innerHTML = L.slice(0, 20).map(row).join(''); all.remove(); };
   try { localStorage.setItem('kepo.wnSeen', String(Math.max(...L.map(x => x.n)))); } catch (e) {}
 }
