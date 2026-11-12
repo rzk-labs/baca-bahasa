@@ -357,7 +357,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
 .cols .w ruby{ruby-position:over}
-.cols .w rt{font-size:max(.5em,10px);line-height:1;font-weight:500;letter-spacing:0;color:var(--color-text-muted);-webkit-user-select:none;user-select:none}
+.cols .w rt{font-size:max(.5em,10px);line-height:1.1;font-weight:500;letter-spacing:0;color:var(--color-text-muted);-webkit-user-select:none;user-select:none}
 .cols .w rt::before{content:attr(data-r)}
 /* penanda kata: sama di semua tema (kata sering diketuk, tersimpan, terpilih) */
 .cols .w:is(.often,.saved,.sel){background:var(--wm);color:var(--wm-ink);border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}

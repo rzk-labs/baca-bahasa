@@ -609,7 +609,11 @@ async function viewBaca() {
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
-  if ($('#rRt')) $('#rRt').onclick = () => { db.rt = db.rt ? 0 : 1; save(); viewBaca(); };
+  if ($('#rRt')) $('#rRt').onclick = () => {
+    db.rt = db.rt ? 0 : 1; save(); viewBaca();
+    const any = db.vocab.some(v => v.lang === b.lang && bacaOf(v.w, v.baca) && (+v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1));
+    toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
+  };
   $('#reader #set').onclick = openSettings;
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
