@@ -1,5 +1,11 @@
 [
   {
+    "n": 516,
+    "judul": "Tombol 'Sudah kenal' di arti kata: kata lama tak ramai lagi",
+    "poin": "Sheet arti kata kini punya tombol \"Sudah kenal\"; kata itu jadi samar saat baca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 509,
     "judul": "Layar kosong tenang: ganti lingkaran warna & emoji 🎉 (brand v9)",
     "poin": "Layar kosong sekarang tenang: satu gaya biru es, tanpa warna-warni.",
@@ -171,12 +177,6 @@
     "n": 376,
     "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
     "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 369,
-    "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
-    "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
     "tgl": "2026-11-12"
   }
 ]

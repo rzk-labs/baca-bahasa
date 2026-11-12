@@ -39,7 +39,7 @@ const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */
 const KEY = 'bacabahasa.v1';
-const DEF = () => ({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, tab: 'rak' });
+const DEF = () => ({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, kenal: {}, tab: 'rak' });
 let db = (() => {
   const raw = localStorage.getItem(KEY);
   try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
@@ -91,6 +91,9 @@ const vocabKey = (lang, w) => (lang || '') + '|' + String(w || '').trim().toLowe
 /* tombstone kata dihapus (ikut sinkron akun): daftar {k,at}; kata yang ditambah lagi setelah 'at' dianggap hidup */
 function tombVocab(lang, w) { const k = vocabKey(lang, w); db.vocabDel = (Array.isArray(db.vocabDel) ? db.vocabDel : []).filter(t => t && t.k !== k); db.vocabDel.push({ k, at: Date.now() }); }
 function untombVocab(lang, w) { if (Array.isArray(db.vocabDel)) db.vocabDel = db.vocabDel.filter(t => t && t.k !== vocabKey(lang, w)); }
+/* 'sudah kenal': db.kenal[kunci] = waktu (positif = kenal, negatif = dibatalkan; sinkron menang-terbaru) */
+const isKenal = (lang, w) => !!db.kenal && db.kenal[vocabKey(lang, w)] > 0;
+function setKenal(lang, w, on) { if (!db.kenal || typeof db.kenal !== 'object' || Array.isArray(db.kenal)) db.kenal = {}; db.kenal[vocabKey(lang, w)] = on ? Date.now() : -Date.now(); save(); }
 const sameVocab =(v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
 /* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
 function dedupeVocab() {

@@ -364,6 +364,9 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .w:is(.often,.saved,.sel) rt{color:var(--wm-ink)}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){background:none;color:inherit}
 .reader.no-often .cols .w.often:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
+.cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);background:none}
+.cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
+#wkenal[hidden]{display:none}
 .cols .w.saved{text-decoration:underline solid var(--wm-ink);text-decoration-thickness:2px;text-underline-offset:4px}
 .cols .w.sel{border-radius:6px;box-shadow:inset 0 -3px 0 var(--wm-ink)}
 @media (hover:hover){.cols .w:hover{background:var(--wm);color:var(--wm-ink)}}
