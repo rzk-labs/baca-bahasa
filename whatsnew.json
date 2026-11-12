@@ -1,5 +1,11 @@
 [
   {
+    "n": 651,
+    "judul": "Rapikan Home: 13 bagian jadi 4, pindahkan sisanya",
+    "poin": "Home kini 4 bagian saja; Tantangan, Peringkat, Lencana, Yang baru, Masukan sudah dipindah.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 649,
     "judul": "Impor buku Gutenberg: lewati judul/daftar isi, mulai Chapter I",
     "poin": "Buku Gutenberg yang diimpor sekarang langsung mulai dari Bab 1, tanpa halaman judul.",
@@ -171,12 +177,6 @@
     "n": 516,
     "judul": "Tombol 'Sudah kenal' di arti kata: kata lama tak ramai lagi",
     "poin": "Sheet arti kata kini punya tombol \"Sudah kenal\"; kata itu jadi samar saat baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 509,
-    "judul": "Layar kosong tenang: ganti lingkaran warna & emoji 🎉 (brand v9)",
-    "poin": "Layar kosong sekarang tenang: satu gaya biru es, tanpa warna-warni.",
     "tgl": "2026-11-12"
   }
 ]
