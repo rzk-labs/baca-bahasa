@@ -82,6 +82,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 80
+      - name: Pakai Keepo sungguhan (akun uji publik)
+        env:
+          KEEPO_BOT_KEY: ${{ secrets.KEEPO_BOT_KEY }}
+          NAMA: ${{ matrix.nama }}
+        run: |
+          mkdir -p .kepo-tmp; echo ".kepo-tmp/" >> .git/info/exclude
+          if [ -z "$KEEPO_BOT_KEY" ]; then echo "KEEPO_BOT_KEY belum diisi: lewati pemakaian nyata."; exit 0; fi
+          npm i --no-save --no-audit --no-fund playwright@1.49.1 >/dev/null 2>&1 && npx playwright install --with-deps chromium >/dev/null 2>&1 \
+            && node .github/scripts/pakai-keepo.mjs || echo "Pemakaian nyata gagal, lanjut ke penilaian kode."
       - name: Siapkan instruksi
         env:
           NAMA: ${{ matrix.nama }}
@@ -109,6 +118,9 @@ jobs:
               echo "Cari masalah NYATA yang bisa dibuktikan dari kode (sebut di bagian mana). Jangan mengarang."
             else
               echo "Ceritakan pengalamanmu sebagai pengguna: apa yang bikin senang, bingung, atau bikin berhenti pakai."
+            fi
+            if [ -s .kepo-tmp/pakai.txt ]; then
+              echo "Kamu BARU SAJA memakai Keepo sungguhan dengan akun ujimu (publik). Catatan sesi: .kepo-tmp/pakai.txt. Screenshot HP: .kepo-tmp/layar/*.png (buka dengan Read). Utamakan masalah yang kamu LIHAT di screenshot/catatan ini."
             fi
             echo "UPDATE TERBARU yang baru live (prioritaskan mencoba ini dulu): lihat .kepo-tmp/baru.txt. Kalau ada yang rusak/kurang dari update itu, laporkan."
             echo "Masukan hari-hari sebelumnya ada di .kepo-tmp/lalu.txt: JANGAN ulangi hal yang sama; cari hal baru."
