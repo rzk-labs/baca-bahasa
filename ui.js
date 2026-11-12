@@ -749,10 +749,15 @@ function toggleMark() {
 async function openMarks() {
   const b = book(); if (!b) return;
   const secs = await pagesOf(b);
-  const list = marksOf(b).slice().sort((p, q) => p.p - q.p || p.s - q.s);
-  const all = marksOf(b), clip = t => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > 110 ? t.slice(0, 110).trimEnd() + '…' : t; };
-  const dt = m => { const d = m.at ? new Date(m.at) : null; return d && !isNaN(d) ? d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : ''; };
-  const items = list.map((m, i) => { const n = all.indexOf(m) + 1; return `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}</em><div class="mkb"><span>${esc(clip(m.t) || '…')}</span><small class="mkat">Penanda ${n}${dt(m) ? ' · ' + dt(m) : ''}</small></div></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${n}">${ico('trash')}</button></div>`; }).join('');
+  const list = marksOf(b).slice().sort((p, q) => (q.at || 0) - (p.at || 0) || p.p - q.p || p.s - q.s);
+  /* persen posisi = kalimat ke-s / total kalimat buku (tak berubah saat ukuran font diganti) */
+  const cnt = secs.map(sc => secParas(sc, b.lang).reduce((n, P) => n + P.sents.filter(x => x.i >= 0).length, 0));
+  const total = cnt.reduce((n, c) => n + c, 0) || 1;
+  const pctAt = m => { const before = cnt.slice(0, Math.max(0, m.p)).reduce((n, c) => n + c, 0); return Math.min(100, Math.max(0, Math.round((before + (m.s || 0)) / total * 100))); };
+  const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `Bab ${m.p + 1}`; };
+  const snip = t => { t = (t || '').replace(/\s+/g, ' ').trim(); if (t.length <= 120) return t; const cut = t.slice(0, 120), sp = cut.lastIndexOf(' '); return (sp > 80 ? cut.slice(0, sp) : cut).replace(/[\s,;:.\-–—]+$/, '') + '…'; };
+  const rel = at => { if (!at) return ''; const d = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 864e5); if (d <= 0) return 'Hari ini'; if (d === 1) return 'Kemarin'; if (d < 30) return `${d} hari lalu`; return new Date(at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: d > 300 ? 'numeric' : undefined }); };
+  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt">${esc(snip(m.t) || '…')}</span><small class="mkat">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`);
   $$('#sheet .mkgo').forEach(x => x.onclick = () => {
     const m = list[+x.dataset.i]; closeSheet();
