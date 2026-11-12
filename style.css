@@ -192,6 +192,12 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .seg button{flex:1;min-height:44px;padding:0 8px;font-size:14px;font-weight:700;color:var(--color-text-muted)}
 .seg button.on{background:var(--color-text);color:var(--color-bg)}
 .set-row{margin:var(--space-5) 0}.set-row .eyebrow{margin-bottom:8px}
+.sh-head.sticky{position:sticky;top:0;z-index:2;background:var(--color-bg);margin:0 -20px var(--space-2);padding:6px 20px}
+.set-prev{background:var(--color-surface);border-radius:var(--radius-lg);padding:12px 14px;line-height:var(--reader-lh,1.7);font-family:var(--font-ui);color:var(--color-text);max-height:calc(2 * var(--reader-lh,1.7) * 1em + 24px);overflow:hidden;margin-top:var(--space-2);-webkit-hyphens:auto;hyphens:auto}
+.set-prev.serif{font-family:var(--font-reader)}
+.set-grp{margin-top:var(--space-5);padding-top:var(--space-3);border-top:1.5px solid var(--color-border)}
+.set-gt{font:800 20px/24px var(--font-display);font-stretch:75%;letter-spacing:-.02em;text-transform:uppercase}
+.set-grp .set-row:first-of-type{margin-top:var(--space-3)}
 .swatch{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .swatch button{flex-direction:column;gap:2px;min-height:72px;border:2.5px solid var(--color-border);border-radius:var(--radius-md);font-size:12px}
 .swatch button span{font:800 22px/1 var(--font-display)}.swatch button small{font-size:12px}

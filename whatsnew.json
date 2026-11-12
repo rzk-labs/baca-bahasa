@@ -1,5 +1,11 @@
 [
   {
+    "n": 376,
+    "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
+    "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 369,
     "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
     "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
@@ -171,12 +177,6 @@
     "n": 227,
     "judul": "Laporan usability (Tahap 17): temuan tester AI + keluhan UX kompetitor",
     "poin": "Laporan usability selesai: temuan 4 penguji plus 45 keluhan pengguna aplikasi kompetitor.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 201,
-    "judul": "Ekspor CSV siap Anki: kolom tag & buku + petunjuk impor 3 langkah",
-    "poin": "Ekspor CSV sekarang punya kolom buku dan tag, siap diimpor ke Anki.",
     "tgl": "2026-11-11"
   }
 ]
