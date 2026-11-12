@@ -37,6 +37,7 @@ const ICONS = {
   bolt: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
   flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
   star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 3.6-1.2A1 1 0 0 1 21 3.6v9.8a1 1 0 0 1-.4.8A6 6 0 0 1 17 15c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/>',
   shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
   upload: '<path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/>',
@@ -244,7 +245,7 @@ addEventListener('popstate', () => {
   if (rdSkip) { rdSkip--; return; }
   if (!rdHist) return;
   if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
-  rdHist = false; setTab('rak');
+  rdHist = false; leaveBaca();
 });
 function setTab(t) {
   if (t !== 'baca') { rdLeave(); pfDisarm(); }
@@ -320,11 +321,23 @@ function openSettings() {
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
     ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">' + ico('chat') + 'Kirim masukan</button>'}
+    <div class="set-grp" id="aturan"><div class="set-gt">Aturan &amp; Hak cipta</div>
+    <ul class="rules">
+      <li>Baca &amp; bagikan hanya buku milikmu atau domain publik.</li>
+      <li>Buku dan progresmu tersimpan di HP ini, bukan di server.</li>
+      <li>Kalau login, hanya XP, kata, dan buku yang kamu bagikan ikut tersimpan.</li>
+      <li>Bagikan = link pribadi. Hanya yang kamu kirimi link yang bisa buka.</li>
+      <li>Terjemahan otomatis bisa keliru. Anggap sebagai bantuan, bukan kebenaran.</li>
+      <li>Minta hapus konten atau laporkan buku: lewat tombol di bawah.</li>
+    </ul>
+    ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
+    </div>
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
     </div>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
-  if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
+  if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
+  if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
   if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
@@ -349,28 +362,29 @@ function openSettings() {
 
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 const APP_VER = 'v46';
-function openFeedback() {
+function openFeedback(opt = {}) {
   if (document.body.classList.contains('reading')) return;
-  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka']];
-  let kind = 'ide', stars = 0;
+  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka'], ['takedown', 'flag', 'Takedown']];
+  let kind = opt.kind || 'ide', stars = 0;
   openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
     <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}">${ico(e)}${l}</button>`).join('')}</div>
+    <div class="mut sm" id="fbHint" ${kind === 'takedown' ? '' : 'hidden'}>Sebut judul atau kode link bukunya &amp; alasannya. Tim Keepo menindaklanjuti.</div>
     <label class="fb-l">Ceritain aja
-      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?"></textarea></label>
-    <div class="mut sm fb-cnt"><span id="fbC">0</span>/500</div>
+      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?">${esc(opt.text || '')}</textarea></label>
+    <div class="mut sm fb-cnt"><span id="fbC">${(opt.text || '').length}</span>/500</div>
     <div class="eyebrow">Nilai app (boleh dilewati)</div>
     <div class="fb-stars" id="fbS">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" aria-label="${n} bintang">★</button>`).join('')}</div>
     <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP (browser, ukuran layar, versi app)</span></label>
     <div class="mut sm">Yang kamu tulis dibaca tim Keepo.</div>
     <button class="pri full" id="fbSend" style="margin-top:12px">Kirim</button>`);
-  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
+  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $('#fbHint').hidden = kind !== 'takedown'; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#fbS button').forEach(x => x.onclick = () => { const n = +x.dataset.n; stars = stars === n ? 0 : n; $$('#fbS button').forEach(y => y.classList.toggle('on', +y.dataset.n <= stars)); });
   $('#fbT').oninput = e => { $('#fbC').textContent = e.target.value.length; };
   $('#fbSend').onclick = async () => {
     const txt = $('#fbT').value.trim().slice(0, 500);
     if (!txt) { toast('Tulis dulu ya, sedikit aja cukup.'); $('#fbT').focus(); return; }
     const kl = kinds.find(k => k[0] === kind);
-    let msg = `[Keepo] ${kl[1]} ${kl[2]}\n${txt}`;
+    let msg = `[Keepo] ${kl[2]}\n${txt}`;
     if (stars) msg += `\nBintang: ${stars}/5`;
     if ($('#fbI').checked) msg += `\nInfo HP: ${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`;
     try { await putFeedback({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg }); } catch (e) { }
@@ -605,6 +619,42 @@ async function addBook(title, paras, lang) {
 
 /* ---------- BACA (e-reader) ---------- */
 const SESS = { id: null, t: 0 };
+/* Rekap kata sesi: ketukan dicatat di memori saja, ditampilkan saat keluar buku */
+const SESSW = new Map();
+function recSess(b, w, sent) {
+  if (!b || !w || /\s/.test(String(w).trim())) return;
+  const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
+  e.n++; SESSW.set(k, e);
+}
+function sessRecap(b) {
+  const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
+  SESSW.clear();
+  if (all.length < 2) return false;
+  const cand = all.filter(e => !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKenal(e.lang, e.w)).sort((x, y) => y.n - x.n).slice(0, 8);
+  if (!cand.length) return false;
+  const row = (e, i) => { const c = trCache.get(e.lang + '|' + db.my + '|' + e.w); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1">${c && c.text ? esc(c.text) : '<i>arti belum ada</i>'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">Simpan yang mau dihafal.</p>
+    <div id="rsl">${cand.map(row).join('')}</div>
+    <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
+  $$('[data-rs]').forEach(btn => btn.onclick = () => {
+    const e = cand[+btn.dataset.rs], c = trCache.get(e.lang + '|' + db.my + '|' + e.w);
+    if (db.vocab.some(v => sameVocab(v, e.lang, e.w))) return;
+    const tp = takeTaps(e.lang, e.w);
+    if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
+    untombVocab(e.lang, e.w);
+    const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
+    db.vocab.unshift(nv); save(); vib(10); sfx('ding');
+    btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
+    toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
+      const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
+      tombVocab(e.lang, e.w); save();
+      if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
+    } });
+  });
+  return true;
+}
+function leaveBaca() { const b = book(); setTab('rak'); if (b) sessRecap(b); }
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
@@ -662,7 +712,7 @@ async function viewBaca() {
       ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span><b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)</span></div><div>${ico('menu')}<span><b>Ketuk tengah</b> = menu</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
-  $('#rHome').onclick = () => setTab('rak');
+  $('#rHome').onclick = () => leaveBaca();
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   if ($('#rRt')) $('#rRt').onclick = () => {
     db.rt = db.rt ? 0 : 1; save(); viewBaca();
@@ -991,7 +1041,7 @@ async function onWord(el, lastEl) {
     $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
   const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; if (n >= 3) $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('often'); }); showSug(n); };
-  showTap(countTap(b.lang, word));
+  showTap(countTap(b.lang, word)); recSess(b, word, sent);
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
