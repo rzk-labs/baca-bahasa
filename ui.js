@@ -622,7 +622,7 @@ function viewRak() {
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
-    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${esc(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>
+    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${esc(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
@@ -765,13 +765,14 @@ async function addBook(title, paras, lang, src, cov) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
   const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() };
+  const nw = perkiraanBaru(paras, lang); if (nw != null) bk.nw = nw;
   if (cov) { try { await putCover(id, cov); bk.cov = 1; COVERS[id] = cov; } catch (e) { } }
   if (src && src.name) bk.src = { name: src.name, size: src.size };
   db.books.push(bk);
   const prevCur = db.cur;
   db.cur = id;
   if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
-  toast('Cerita masuk koleksi!'); sfx('ding'); setTab('baca');
+  toast('Cerita masuk koleksi!' + (bk.nw != null ? ` Perkiraan kata baru ~${bk.nw}%` : '')); sfx('ding'); setTab('baca');
   return true;
 }
 

@@ -162,6 +162,24 @@ function tokens(text, lang) {
   return text.split(/([\p{L}\p{N}\p{M}'’-]+)/u).filter(Boolean).map(t => ({ t, w: /[\p{L}\p{N}]/u.test(t) }));
 }
 const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '');
+/* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
+function perkiraanBaru(paras, lang) {
+  const known = new Set();
+  for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
+  for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
+  known.delete('');
+  if (!known.size) return null;
+  let n = 0, baru = 0;
+  for (const p of paras || []) {
+    for (const t of tokens(p, lang)) {
+      if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+      n++; if (!known.has(norm(t.t))) baru++;
+      if (n >= 3000) break;
+    }
+    if (n >= 3000) break;
+  }
+  return n >= 20 ? Math.min(100, Math.round(baru * 100 / n)) : null;
+}
 const EN_NUM = 'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty'.split(' ');
 
 function cleanParas(raw) {
