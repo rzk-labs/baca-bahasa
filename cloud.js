@@ -613,7 +613,7 @@ setTab = function (t) {
   _setTab(t);
   renderAcct();
   if (t === 'rak') {
-    if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
+    if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; (el.querySelector('.bk-act') || el).appendChild(b); });
   }
 };
 // tombol bagikan juga di mode baca (setelah menu atas digambar)
