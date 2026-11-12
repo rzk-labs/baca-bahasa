@@ -1,5 +1,11 @@
 [
   {
+    "n": 387,
+    "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
+    "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 381,
     "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
     "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
@@ -171,12 +177,6 @@
     "n": 238,
     "judul": "Terjemahan: batas waktu 8 detik + pesan gagal jelas saat sinyal lemah",
     "poin": "Arti kata kini berhenti nunggu setelah 8 detik, lalu muncul pesan dan tombol coba lagi.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 237,
-    "judul": "Kartu Hafal: tinggi menyesuaikan isi & kata panjang tidak meluber",
-    "poin": "Kartu Hafal sekarang menyesuaikan isinya, kata panjang tidak meluber lagi.",
     "tgl": "2026-11-11"
   }
 ]
