@@ -1,5 +1,17 @@
 [
   {
+    "n": 452,
+    "judul": "Lapis baca v9: 4 tema (Kertas, Sepia, Hijau, Malam) & tipografi per bahasa",
+    "poin": "Halaman baca kini punya 4 tema: Kertas, Sepia, Hijau, Malam.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 451,
+    "judul": "Terapkan brand v9: palet Plum/Biru Es/Wasabi, logo & ikon K",
+    "poin": "Warna app sekarang ikut brand baru: Plum, Biru Es, Jade, dan stabilo kuning.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 448,
     "judul": "Tab Kata 'Tersimpan': toolbar rapi di HP, kartu kata tenang",
     "poin": "Tab Kata: kotak cari + jumlah di atas, Urutkan & Saring sebaris di bawahnya.",
@@ -165,18 +177,6 @@
     "n": 306,
     "judul": "HP sempit (320px): header tak sesak & tab bawah lega",
     "poin": "Bagian atas dan menu bawah di HP kecil kini lebih lega.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 297,
-    "judul": "E-reader: pilihan rata teks (Rata kiri/Rata penuh) di Pengaturan",
-    "poin": "Di Pengaturan ada pilihan baru \"Rata teks\": rata kiri atau rata penuh.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 286,
-    "judul": "Ramah jempol: target ketuk min 44px & kontras teks kecil (HP)",
-    "poin": "Tombol di HP kini lebih lega: area ketuk minimal 44px, jarak antar tombol 8px.",
     "tgl": "2026-11-11"
   }
 ]

@@ -43,7 +43,8 @@
     { "no": 37, "peran": "developer", "prioritas": "P0", "nama": "Arti kata tetap terlihat di sheet arti kalimat, tanda di terjemahan (#300)", "dokumen": "docs/spesifikasi-arti-kata-di-kalimat.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 38, "peran": "developer", "prioritas": "P0", "nama": "Batalkan kata yang tak sengaja tersimpan, langsung dari sheet arti + Urungkan (#366)", "dokumen": "docs/spesifikasi-batal-simpan-kata.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 39, "peran": "developer", "prioritas": "P2", "nama": "Profil user dari leaderboard + baca cerita publik user itu, opt-in (#383)", "dokumen": "docs/spesifikasi-profil-leaderboard.md", "status": "spesifikasi siap; butuh deploy server manual" },
-    { "no": 40, "peran": "developer", "prioritas": "P0", "nama": "Header saat baca buku lebih ringan: maks 2 tombol kanan, XP & Ngomong pindah (#398)", "dokumen": "docs/desain-header-baca-ringan.md", "status": "spesifikasi siap dikerjakan" }
+    { "no": 40, "peran": "developer", "prioritas": "P0", "nama": "Header saat baca buku lebih ringan: maks 2 tombol kanan, XP & Ngomong pindah (#398)", "dokumen": "docs/desain-header-baca-ringan.md", "status": "spesifikasi siap dikerjakan" },
+    { "no": 41, "peran": "developer", "prioritas": "P0", "nama": "Arti tetap jalan saat sinyal lemah: prafetch kalimat halaman aktif, ketukan didahulukan (#458)", "dokumen": "docs/spesifikasi-prafetch-kalimat.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
