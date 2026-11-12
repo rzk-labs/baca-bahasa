@@ -576,3 +576,29 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .medal{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font:800 14px/1 var(--font-display);background:var(--hl);color:var(--ink)}
 .medal.m2{background:var(--ice);color:var(--ink)}.medal.m3{background:var(--ink);color:var(--cream)}
 [data-theme=dark] .medal.m3,[data-theme=night] .medal.m3{background:var(--cream);color:var(--ink)}
+/* #573 uji 320px: Home, Kata, sheet arti, penanda, Tamat */
+.wd{flex-wrap:wrap;row-gap:0}
+.wd b{flex:1 1 120px}
+.src,.tr,.wgloss,.sbaca{unicode-bidi:plaintext}
+.src:lang(ja),.src:lang(ko),.src:lang(zh-CN),.wd b:lang(ja),.wd b:lang(ko),.wd b:lang(zh-CN),.wg-w:lang(ja),.wg-w:lang(ko),.wg-w:lang(zh-CN),.vitem .w1:lang(ja),.vitem .w1:lang(ko),.vitem .w1:lang(zh-CN),.fw:lang(ja),.fw:lang(ko),.fw:lang(zh-CN){font-family:var(--font-cjk)}
+.src:lang(ar),.src:lang(fa),.src:lang(ur),.src:lang(he),.wd b:lang(ar),.wd b:lang(he),.vitem .w1:lang(ar),.vitem .w1:lang(he){font-family:"Noto Naskh Arabic","Geeza Pro","Segoe UI",Tahoma,serif;line-height:1.8}
+.vitem .t1,.vitem .vmeta{overflow-wrap:anywhere}
+.hero-mk,.hero-act button,#sheet .row button{min-height:44px}
+@media (max-width:359px){
+  #sheet{padding-left:14px;padding-right:14px}
+  .sh-head.sticky{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .src{font-size:18px;padding:12px 14px}
+  .tr{font-size:22px;line-height:28px}
+  .tr.sent{font-size:17px;line-height:25px}
+  .wd b{font-size:30px;line-height:34px}
+  .sum{gap:8px}.sum div{padding:10px}.sum b{font-size:28px;line-height:30px}
+  .flash{padding:18px 14px}
+  .deck-act{gap:8px}
+  .bk,.bk .cover{width:118px}.bk .cover{height:168px}
+  .add-grid{gap:8px}.add-grid button{font-size:12px}
+  #sheet .row{flex-wrap:wrap}
+  #sheet .row>button{flex:1 1 130px}
+  .sh-head .stepchip{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ksrow{gap:8px}.ksrow .csvcnt{font-size:13px}
+  .fchip{padding:0 14px}
+}
