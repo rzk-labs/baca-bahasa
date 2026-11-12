@@ -782,11 +782,14 @@ function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
   if (hit.length) { const old = marksOf(b); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, hit, old) }); }
-  if (marksOf(b).length >= MARK_MAX) return toast(`Penanda penuh (maks ${MARK_MAX}). Hapus satu dulu ya.`, 3500);
   const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
   const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : '';
-  b.marks = marksOf(b).concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
-  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai', 1800);
+  const old = marksOf(b); let cur = old, gone = null;
+  if (old.length >= MARK_MAX) { gone = old.reduce((a, m) => !a || (m && (m.at || 0) < (a.at || 0)) ? m : a, null); cur = old.filter(m => m !== gone); }
+  b.marks = cur.concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
+  save(); syncMarks(); vib(10); sfx('pop');
+  if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
+  else toast('Halaman ditandai', 1800);
 }
 async function openMarks() {
   const b = book(); if (!b) return;
