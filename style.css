@@ -419,6 +419,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rmid{min-width:0}
 .rmid #pgn{display:block;font-size:12px;line-height:16px;text-align:center;white-space:normal}
 .rmid #pgn .mnote{white-space:normal}
+.reader.no-prog .rmid #pgn,.reader.no-prog .rmid .bar{display:none}
 .nw{white-space:nowrap}
 #sheet .hscroll{margin:0;padding:2px 2px 10px}
 .ring .score small{display:block;font:700 10px/10px var(--font-ui)}

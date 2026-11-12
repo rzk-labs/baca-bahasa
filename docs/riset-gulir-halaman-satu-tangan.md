@@ -104,6 +104,8 @@ Total: 52 butir dari 7 sumber (forum LingQ, forum Readlang, MobileRead, blog e-r
 - Zona tepi jadi 15%; saklar ada di Pengaturan baca.
 - Tombol Maju/Mundur 48px; petunjuk awal ikut saklar.
 
+**Status (#730):** usul 3 dikerjakan
+
 ## 6. Yang belum diketahui
 - Reddit & ulasan Play Store/App Store tak terbuka.
 - Data khusus satu tangan di KRL tidak ada; uji nyata tetap berguna.

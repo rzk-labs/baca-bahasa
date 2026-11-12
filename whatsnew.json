@@ -1,5 +1,11 @@
 [
   {
+    "n": 730,
+    "judul": "Baca: saklar sembunyikan bar progres & posisi aman saat ganti huruf",
+    "poin": "Ada saklar baru di Pengaturan baca untuk menyembunyikan bar progres.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 728,
     "judul": "Baca: bar progres jelas 'Bab X/Y · Hal a/b' & total halaman stabil",
     "poin": "Bar baca sekarang jelas: \"Bab 3/11 · Hal 17/17\", persen buku, satu sisa waktu.",
@@ -171,12 +177,6 @@
     "n": 672,
     "judul": "[peta 58] Hilangkan spanduk 'Ada yang macet' & error textContent null",
     "poin": "Spanduk \"Ada yang macet\" tidak muncul lagi saat buka buku.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 670,
-    "judul": "[peta 59] Beranda jujur: progres, bab/halaman & sisa waktu sama",
-    "poin": "Beranda tidak lagi menulis 0% atau \"Bab 1 dari 1\" sebelum bab dihitung.",
     "tgl": "2026-11-12"
   }
 ]
