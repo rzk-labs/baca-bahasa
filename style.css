@@ -368,6 +368,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
 .cols .s.say{background:var(--color-say);border-radius:4px;box-shadow:-3px 0 0 0 var(--color-text),0 0 0 2px var(--color-say);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .rlis.on{background:var(--color-surface-soft)}
+.rrate{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800}.rrate[hidden]{display:none}
+[data-theme=night] .cols .s.say{background:rgba(232,226,218,.28);box-shadow:0 0 0 2px rgba(232,226,218,.28)}
+[data-theme=dark] .cols .s.say{background:rgba(233,240,86,.3);box-shadow:0 0 0 2px rgba(233,240,86,.3)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .cols .s.say{background:rgba(233,240,86,.3);box-shadow:0 0 0 2px rgba(233,240,86,.3)}}
 .lisnote{position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:12px;font-size:12px;line-height:16px;color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);white-space:nowrap}
 .lisnote[hidden]{display:none}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
@@ -569,7 +573,6 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 [data-theme=dark] #top h1 span{color:var(--ink)}
 [data-theme=dark] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}
 @media (prefers-color-scheme:dark){[data-theme=auto] #top h1 span{color:var(--ink)}[data-theme=auto] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}}
-<<<<<<< Updated upstream
 /* #543 ikon garis di tombol, judul & lencana peringkat (v9) */
 .fb-open svg.i,#fbHome svg.i,.fb-kind svg.i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
 .seg button svg.i{margin-right:0}
@@ -604,7 +607,6 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   .fchip{padding:0 14px}
 }
 .prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
-=======
 /* Sosial: teman membaca & profil */
 .fr-row{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:9px 6px;border-radius:14px;color:inherit;font:inherit;cursor:pointer}
 .fr-row:hover,.fr-row:focus-visible{background:var(--color-surface-soft)}
@@ -619,4 +621,3 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fr-stats div{background:var(--color-surface-soft);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column}
 .fr-stats b{font-size:20px;font-variant-numeric:tabular-nums}
 .fr-stats span{font-size:11px;color:var(--color-text-muted)}
->>>>>>> Stashed changes
