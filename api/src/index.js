@@ -315,7 +315,7 @@ export default {
         await env.DB.prepare('INSERT INTO ai_kuota (who, day, n) VALUES (?,?,1) ON CONFLICT(who, day) DO UPDATE SET n = n + 1').bind(who, day).run();
         let out = '';
         try {
-          const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', { max_tokens: 350, messages: [
+          const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fp8', { max_tokens: 350, messages: [
             { role: 'system', content: 'Kamu guru bahasa untuk pembelajar level A2-B1. Jawab HANYA dalam Bahasa Indonesia santai, singkat (maks 90 kata), format 3 baris: "Arti: ...", "Struktur: ..." (peran kata/tata bahasa penting), "Nuansa: ..." (nada, kesopanan, atau idiom; tulis "tidak ada yang khusus" bila tak ada). Jangan mengarang; kalau ragu, bilang ragu.' },
             { role: 'user', content: `Bahasa kalimat: ${lang}\nKalimat: ${sent}` + (arti ? `\nArti dari mesin (bisa meleset): ${arti}` : '') }] });
           out = String(r && (r.response || r.result || '')).trim().slice(0, 1200);
