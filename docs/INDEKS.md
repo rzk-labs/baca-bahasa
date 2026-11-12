@@ -7,6 +7,7 @@
 
 ## 1. Desain
 - [arah-brand-baru](desain-arah-brand-baru.md)
+- [ikon-logo-baca](desain-ikon-logo-baca.md)
 - [header-baca-ringan](desain-header-baca-ringan.md)
 - [kontras-tema-baca](desain-kontras-tema-baca.md)
 - [laporan-usability](desain-laporan-usability.md)
