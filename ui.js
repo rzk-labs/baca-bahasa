@@ -1100,7 +1100,7 @@ function viewKata() {
   $$('#kseg button').forEach(x => x.onclick = () => { kataSeg = x.dataset.v; sfx('pop'); viewKata(); });
   const kb = $('#kbody');
   if (kataSeg === 'kartu') return deck(kb);
-  kb.innerHTML = `<div class="search">${ico('search')}<input id="kq" type="search" placeholder="Cari kata…" value="${esc(kataQ)}" aria-label="Cari kata"></div><div id="klist"></div>`;
+  kb.innerHTML = `<div class="ksrow"><div class="search">${ico('search')}<input id="kq" type="search" placeholder="Cari kata…" value="${esc(kataQ)}" aria-label="Cari kata"></div><div class="csvcnt" id="kcnt" aria-live="polite"></div></div><div id="klist"></div>`;
   $('#kq').oninput = e => { kataQ = e.target.value; renderList(); };
   const renderList = () => {
     const q = kataQ.toLowerCase(), kl = $('#klist');
@@ -1110,7 +1110,7 @@ function viewKata() {
       const inF = v => csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2));
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => inF(v) && (!q || (v.w + ' ' + v.t).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${+v.tap >= 1 ? `<div><span class="tapb">Diketuk ${+v.tap}×</span></div>` : ''}${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div>${((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `<div class="mut sm">Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×</div>` : ''}</div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ' <span class="vok" title="Udah hafal" aria-label="Udah hafal">✓</span>' : ''}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div>${(() => { const m = [bacaOf(v.w, v.baca), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div></div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : (q || csvF !== 'all') && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
@@ -1119,14 +1119,12 @@ function viewKata() {
         const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
           ? `<select id="kCsvF" aria-label="Saring kata per bahasa atau buku">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
         const sortSel =`<select id="kSort" class="csvsort" aria-label="Urutkan kata"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
-        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar"><div class="csvcnt">${csvF === 'all' ? `<b>${db.vocab.length}</b> kata` : `<b>${db.vocab.filter(inF).length}</b> dari ${db.vocab.length} kata`}</div><button class="csvbtn" id="kCsv">⬇️ Ekspor CSV (${readyN()})</button>${sortSel}${filt}<button class="ghost csvhow" id="kCsvHow">Cara impor ke Anki</button></div>`);
-        $('#kCsvHow').onclick = () => openSheet(`<div class="sh-head"><h2>Impor ke Anki</h2>${closeBtn}</div>
-          <p class="mut sm">Pakai Anki di laptop ya 💻</p>
-          <ol class="csvsteps"><li>Buka <b>File → Import</b>, pilih file CSV Keepo.</li><li>Atur <b>kolom 1 = Depan</b>, kolom lainnya = Belakang.</li><li>Pilih <b>perbarui catatan</b> yang ada, lalu Import.</li></ol>
-          <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`);
+        $('#kcnt').innerHTML = csvF === 'all' ? `<b>${db.vocab.length}</b> kata` : `<b>${db.vocab.filter(inF).length}</b> dari ${db.vocab.length}`;
+        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar">${sortSel}${filt}</div>`);
+        if (vocab.length) kl.insertAdjacentHTML('beforeend', `<button class="ghost csvexp" id="kCsvHow">Ekspor ke Anki</button>`);
         $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
         if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; renderList(); };
-        $('#kCsv').onclick = async () => {
+        const exportCsv = async () => {
           const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya 😅');
           const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
@@ -1151,6 +1149,14 @@ function viewKata() {
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
+        };
+        if ($('#kCsvHow')) $('#kCsvHow').onclick = () => {
+          openSheet(`<div class="sh-head"><h2>Ekspor ke Anki</h2>${closeBtn}</div>
+          <button class="csvbtn csvgo" id="kCsv">Unduh CSV (${readyN()} kata)</button>
+          <p class="mut sm">Cara impor: pakai Anki di laptop.</p>
+          <ol class="csvsteps"><li>Buka <b>File → Import</b>, pilih file CSV Keepo.</li><li>Atur <b>kolom 1 = Depan</b>, kolom lainnya = Belakang.</li><li>Pilih <b>perbarui catatan</b> yang ada, lalu Import.</li></ol>
+          <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`);
+          $('#kCsv').onclick = exportCsv;
         };
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
