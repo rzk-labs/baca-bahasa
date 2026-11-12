@@ -1,5 +1,11 @@
 [
   {
+    "n": 768,
+    "judul": "Home HP: label 'Ngomong' utuh, angka cincin Target muat, judul tak terpenggal",
+    "poin": "Menu bawah: label 'Ngomong' sekarang utuh satu baris di HP kecil.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 766,
     "judul": "Sheet arti kalimat: kata di kalimat bisa diketuk, arti muncul di tempat",
     "poin": "Di arti kalimat, tiap kata sekarang bisa diketuk, artinya muncul langsung di tempat.",
@@ -171,12 +177,6 @@
     "n": 688,
     "judul": "[peta 71] Jelaskan kalimat (AI) gratis 5x/hari, hanya saat diminta",
     "poin": "Tombol \"Jelaskan kalimat ini (AI)\" sudah ada di arti kalimat, jalan hanya saat diketuk.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 708,
-    "judul": "[peta 70] Ringkasan mingguan saat app dibuka, tanpa hukuman streak",
-    "poin": "Beranda kini punya kartu \"Minggu ini\": hari aktif, buku dibuka, kata baru.",
     "tgl": "2026-11-12"
   }
 ]

@@ -560,6 +560,12 @@ window.addEventListener('online', kirimUlangFeedback);
 setTimeout(kirimUlangFeedback, 3000);
 
 /* ---------- HOME ---------- */
+/* judul + penulis dalam kurung ('こころ（夏目漱石）') -> penulis di baris sendiri */
+function heroTitle(t) {
+  t = String(t || '');
+  const m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/);
+  return m ? `${esc(m[1])}<span class="t-au">${esc(m[2])}</span>` : esc(t);
+}
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
   return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
@@ -659,12 +665,12 @@ function viewRak() {
     <div class="mut sm" style="margin:-4px 0 12px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     ${weekCard()}
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
     </div>
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
-      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${xt}/${GOAL}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Target ${GOAL} XP tercapai` : `XP ${xt}/${GOAL}`}</div></div>
+      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, xt > GOAL ? `<span class="gn">${xt}</span><small>dari ${GOAL}</small>` : `<span class="gn">${xt}/${GOAL}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Target ${GOAL} XP tercapai` : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
