@@ -812,7 +812,29 @@ async function viewBaca() {
   }
   const oftenMemo = new Map();
   const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
-  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+  /* frasa 2-5 kata tersimpan: indeks sekali per render (kata pertama -> daftar frasa). Bahasa tanpa spasi (ja/zh/th) dilewati. */
+  const phraseIdx = new Map();
+  if (!['ja', 'zh-CN', 'zh-TW', 'th'].includes(b.lang)) for (const v of db.vocab) {
+    if (v.lang !== b.lang || v.known || !/\s/.test(String(v.w || '').trim())) continue;
+    const pw = tokens(String(v.w).trim(), b.lang).filter(t => t.w).map(t => t.t.toLowerCase());
+    if (pw.length < 2 || pw.length > 5) continue;
+    if (!phraseIdx.has(pw[0])) phraseIdx.set(pw[0], []);
+    phraseIdx.get(pw[0]).push(pw);
+  }
+  const wordsHtml = s => {
+    const tk = tokens(s, b.lang), inPhrase = new Set();
+    if (phraseIdx.size) {
+      const wi = []; tk.forEach((t, i) => { if (t.w) wi.push(i); });
+      wi.forEach((ti, k) => {
+        const list = phraseIdx.get(tk[ti].t.toLowerCase()); if (!list) return;
+        for (const pw of list) {
+          if (k + pw.length > wi.length) continue;
+          if (pw.every((x, j) => tk[wi[k + j]].t.toLowerCase() === x)) for (let j = 0; j < pw.length; j++) inPhrase.add(wi[k + j]);
+        }
+      });
+    }
+    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) || inPhrase.has(i) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+  };
   const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
