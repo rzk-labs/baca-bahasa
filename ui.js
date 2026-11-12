@@ -79,7 +79,8 @@ function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) %
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
 const COVERS = {};
 async function muatCover() { let ada = false; for (const b of db.books) { if (b.cov && !COVERS[b.id]) { try { const u = await getCover(b.id); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
-function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = (b.title || '').trim(), ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span><span class="ct${coverSz(t.slice(0, 34))}" dir="auto">${esc(t.slice(0, 34))}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
+function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34), i = c.search(/\s\S*$/); return (i > 12 ? c.slice(0, i) : c).replace(/[\s,;:\-–—]+$/, '') + '…'; }
+function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = coverTitle((b.title || '').trim()), ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span><span class="ct${coverSz(t)}" dir="auto">${esc(t)}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
 function applyTheme() {
@@ -543,11 +544,13 @@ function wodCx(t) {
   }
   return t;
 }
+// Contoh hanya dipakai bila memuat kata itu sendiri (bukan nyasar dari kata lain).
+function wodCtxOk(cx, w) { const a = String(cx || '').toLowerCase(), b = String(w || '').trim().toLowerCase(); return !!b && a.includes(b) && /[\p{L}\p{N}]/u.test(a.replace(b, '')); }
 function wodHtml() {
   const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
   const k = wordOfDay(wodPick);
-  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini</div></div>`;
-  const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = wodCx(ctxOf(v, 90)), qt = /^[「『“"«]/.test(cx) && /[」』”"»]$/.test(cx);
+  if (!k) return '';
+  const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx0 = wodCx(ctxOf(v, 90)), cx = wodCtxOk(cx0, v.w) ? cx0 : '', qt = /^[「『“"«]/.test(cx) && /[」』”"»]$/.test(cx);
   return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">${qt ? esc(cx) : `“${esc(cx)}”`}</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
 }
 function bindWod() {
@@ -580,8 +583,8 @@ function viewRak() {
     <h1 class="big">${hi},<br><span class="circle-txt">kepoin</span> apa?</h1>
     <div class="mut sm" style="margin:-4px 0 12px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lanjut baca'}</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)}${progInfo(cur).pct > 0 ? ` · ${progInfo(cur).pct}% kelar` : ''}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
-        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Lanjut baca →'}</button></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)}${progInfo(cur).pct > 0 ? ` · ${progInfo(cur).pct}% kelar` : ''}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
     </div>
     <div class="stat3">
       <div class="t-sun"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()}</div><div class="lbl2">hari</div></div>
