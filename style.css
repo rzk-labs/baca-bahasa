@@ -406,6 +406,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .set-acts{display:flex;flex-direction:column;gap:8px}.set-acts button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}.set-acts button:disabled{opacity:.5}.set-acts .i{width:20px;height:20px}.set-acts .on svg path:first-child{fill:currentColor}
 .mki{display:flex;align-items:center;gap:4px}
 .mkgo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:48px;padding:10px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:start;cursor:pointer}
+.mkgo .mkt b{font-weight:800;background:var(--color-hl-sentence);border-radius:3px}
 .mkgo .mkt{min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow-wrap:anywhere}
 .mkdel{flex:none;color:var(--color-text-muted)}
 .mkdel svg{width:18px;height:18px}
@@ -534,6 +535,15 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 /* #334 HP kecil (<=340px): streak tetap terlihat (api+angka), pil ringkas agar muat di 320px */
 @media (max-width:340px){#top h1{font-size:20px}#hdx{gap:2px}#pStreak,#pXp{padding:0 6px;font-size:12px;gap:2px}.pill.login{padding:0 8px;font-size:12px}#hdx .icon{width:40px}}
 .try1{margin-top:var(--space-4)}.try1-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}.try1-row button{flex-direction:column;gap:6px;min-height:96px;min-width:44px;padding:10px 6px;border-radius:var(--radius-lg);background:var(--lime);color:var(--ink);font-weight:700;font-size:15px;text-align:center}.try1-row .em{font-size:36px;line-height:1}
+
+/* #533 Home & Ngomong: ikon garis menggantikan emoji */
+.add-grid button .em{display:flex;align-items:center;justify-content:center;height:26px}.add-grid button .em svg.i{width:26px;height:26px}
+.pill svg.i{width:16px;height:16px}
+.tile .num{display:flex;align-items:center;gap:6px}.tile .num svg.i.numi{width:30px;height:30px}
+.boss svg.i{width:14px;height:14px}
+.trophy{display:flex;justify-content:center;margin-bottom:6px}.trophy svg.i{width:44px;height:44px;stroke-width:1.6}
+.note>svg.i{width:18px;height:18px;margin-top:2px}
+.pri svg.i,.lime svg.i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
 
 /* ---------- logo Keepo: teks Bricolage 800 Plum + coretan stabilo Wasabi di separuh bawah huruf ---------- */
 #top h1 span{position:relative;display:inline-block;color:var(--color-text);z-index:0}

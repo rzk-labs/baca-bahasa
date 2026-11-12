@@ -39,6 +39,12 @@ const ICONS = {
   star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
   shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  upload: '<path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/>',
+  clip: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+  sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 17v4M17 19h4"/>',
+  sword: '<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6M16 16l4 4M19 21l2-2"/>',
+  trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.7V17c0 .6-.5 1-1.2 1.2C7.8 18.7 7 20 7 22M14 14.7V17c0 .6.5 1 1.2 1.2 1 .5 1.8 1.8 1.8 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/>',
+  alert: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
   slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -129,12 +135,12 @@ function award(n, stat) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
-    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
+    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
-  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl')), 700);
+  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago', 'lvl')), 700);
   newB.forEach(([, , name], i) => setTimeout(() => notifyLater(() => { toast(`Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
@@ -143,7 +149,7 @@ function celebrate(title, msg, snd = 'win') {
   el.innerHTML = `<div class="card">${spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.innerHTML = `🔥 ${streak()}`; if (x) x.innerHTML = `⚡ ${db.xp}`; }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.innerHTML = `${ico('flame')}${streak()}`; if (x) x.innerHTML = `${ico('bolt')}${db.xp}`; }
 
 /* ---------- kerangka ---------- */
 let toastT;
@@ -285,7 +291,7 @@ function openSettings() {
   openSheet(`<div class="sh-head sticky"><h2>Pengaturan</h2>${closeBtn}</div>
     <div class="set-prev${db.font === 'serif' ? ' serif' : ''}" id="spv" lang="${pl}" aria-hidden="true" style="--reader-lh:${readLh(pl)};font-size:${readFs(b && b.lang)}px;text-align:${effAlign() === 'j' ? 'justify' : 'left'}">${esc(PREV[pl])}</div>
     ${b && document.body.classList.contains('reading') ? `<div class="set-grp"><div class="set-gt">Penanda &amp; latihan</div>
-    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
+    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="bkFind" type="button">${ico('search')} Cari di buku</button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
     <div class="set-grp"><div class="set-gt">Tampilan baca</div>
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
@@ -312,7 +318,7 @@ function openSettings() {
     </div>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
-  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
+  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); db.fsSet = true; save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
@@ -406,7 +412,7 @@ function wordOfDay(pick = null) {
 function wodHtml() {
   const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
   const k = wordOfDay(wodPick);
-  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini 👀</div><div class="hero-act"><button class="pri" id="wodRead" style="min-height:44px">Gas baca →</button></div></div>`;
+  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini</div><div class="hero-act"><button class="pri" id="wodRead" style="min-height:44px">Gas baca →</button></div></div>`;
   const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
   return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
 }
@@ -426,12 +432,12 @@ function viewRak() {
   const sc = db.scores.slice(-20), avg = sc.length ? Math.round(sc.reduce((a, c) => a + c, 0) / sc.length) + '%' : '—';
   const xt = xpToday(), lv = level(), inLv = db.xp % 100;
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
-  const lines = [`${hi}! Mau kepoin apa hari ini? 👀`, 'Satu halaman aja udah keren kok ✨', 'Yuk, kepoin kata baru! 🔍', 'Bahasa baru, vibes baru 🚀'];
+  const lines = [`${hi}! Mau kepoin apa hari ini?`, 'Satu halaman aja udah keren kok', 'Yuk, kepoin kata baru!', 'Bahasa baru, vibes baru'];
   const line = lines[(new Date().getDate() + db.books.length) % lines.length];
   const addCard = `<div class="card">
       <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
       ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
-      <div class="add-grid"><button class="main" id="up"><span class="em">📤</span>Upload file</button><button id="paste"><span class="em">📋</span>Tempel teks</button><button id="sample"><span class="em">✨</span>Cerita contoh</button></div>
+      <div class="add-grid"><button class="main" id="up"><span class="em">${ico('upload')}</span>Upload file</button><button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur) {
@@ -450,8 +456,8 @@ function viewRak() {
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
       ${wodHtml()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
-      <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
-      <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">🔥${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
+      <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres!' : `${GOAL - xt} XP lagi`}</div></div></div>
+      <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
       <div class="tile t-mint"><div class="eyebrow">Skor ngomong</div><div class="num">${avg}</div><div class="lbl2">${db.vocab.length} kata disimpan</div></div>
       <div class="tile t-cream wide chal" id="hSpeak">${spot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div><span style="font:800 28px var(--font-display)">→</span></div>
     </div>
@@ -491,7 +497,7 @@ function viewRak() {
     openSheet(`<div class="sh-head"><h2>Tempel teks</h2>${closeBtn}</div><div class="mut sm">Bahasa: <b>${langName(db.lastLang)}</b> · ganti di Home</div>
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
       <label class="eyebrow" style="display:block;margin-top:12px">Teks<textarea id="px" placeholder="Tempel teks bahasa asing di sini…"></textarea></label>
-      <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">Masukin ✨</button></div>`);
+      <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">${ico('sparkle')}Masukin</button></div>`);
     $('#ps').onclick = async () => {
       const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
       const btn = $('#ps'); btn.disabled = true;
@@ -586,7 +592,7 @@ async function addBook(title, paras, lang) {
   const prevCur = db.cur;
   db.cur = id;
   if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
-  toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
+  toast('Cerita masuk koleksi!'); sfx('ding'); setTab('baca');
   return true;
 }
 
@@ -600,7 +606,7 @@ function finishBook(b) {
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   sfx('win'); confetti(60);
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
-    <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget 🎉'}</h2>
+    <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>'}
     <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
   const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
@@ -726,6 +732,7 @@ function layout() {
   else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
+  if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
@@ -835,6 +842,37 @@ function toggleMark() {
   save(); syncMarks(); vib(10); sfx('pop');
   if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   else toast('Halaman ditandai', 1800);
+}
+/* ---------- cari di buku ---------- */
+async function openFind() {
+  const b = book(); if (!b) return;
+  const secs = await pagesOf(b);
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('search')} Cari di buku</span>${closeBtn}</div><div class="search"><input id="fq" type="search" dir="auto" lang="${esc(b.lang)}" placeholder="Ketik kata atau kalimat…" aria-label="Cari kata di seluruh bab buku ini" autocomplete="off" enterkeyhint="search"></div><div id="fres" aria-live="polite"><div class="mut sm">Ketik minimal 2 huruf.</div></div>`, 'Cari di buku');
+  const data = secs.map(sc => secParas(sc, b.lang).flatMap(P => P.sents.filter(x => x.i >= 0)));
+  const total = data.reduce((n, d) => n + d.length, 0) || 1;
+  const fq = $('#fq'), out = $('#fres'); let t;
+  const run = () => {
+    const q = fq.value.replace(/\s+/g, ' ').trim(), ql = q.toLowerCase();
+    if (q.length < 2) { out.innerHTML = '<div class="mut sm">Ketik minimal 2 huruf.</div>'; return; }
+    const res = []; let before = 0;
+    outer: for (let p = 0; p < data.length; p++) {
+      for (const x of data[p]) {
+        const txt = x.s.replace(/\s+/g, ' ').trim(), at = txt.toLowerCase().indexOf(ql);
+        if (at >= 0) { res.push({ p, s: x.i, txt, at, pct: Math.min(100, Math.round((before + x.i) / total * 100)) }); if (res.length >= 30) break outer; }
+      }
+      before += data[p].length;
+    }
+    if (!res.length) { out.innerHTML = '<div class="mut sm">Tidak ketemu. Coba kata lain.</div>'; return; }
+    const html = res.map((r, i) => {
+      const room = Math.max(0, 60 - q.length), a = Math.max(0, r.at - Math.floor(room / 2)), e = Math.min(r.txt.length, r.at + q.length + Math.ceil(room / 2));
+      const pre = r.txt.slice(a, r.at), hit = r.txt.slice(r.at, r.at + q.length), post = r.txt.slice(r.at + q.length, e);
+      return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${a > 0 ? '…' : ''}${esc(pre)}<b>${esc(hit)}</b>${esc(post)}${e < r.txt.length ? '…' : ''}</span><small class="mkat" dir="auto">Bab ${r.p + 1} · ${r.pct}%</small></button></div>`;
+    }).join('');
+    out.innerHTML = `<div class="chlist">${html}</div>`;
+    $$('#fres .mkgo').forEach(x => x.onclick = () => { const r = res[+x.dataset.i]; closeSheet(); b.pos = Math.min(r.p, Math.max(0, secs.length - 1)); b.si = r.s; RD.flash = r.s; RD.quiet = true; save(); viewBaca(); });
+  };
+  fq.oninput = () => { clearTimeout(t); t = setTimeout(run, 200); };
+  try { fq.focus({ preventScroll: true }); } catch (e) { }
 }
 async function openMarks() {
   const b = book(); if (!b) return;
@@ -1113,7 +1151,7 @@ async function viewBicara() {
   const tHtml = tokens(sent, b.lang).map(t => { if (!t.w) return esc(t.t); words.push(t.t); return `<span class="t" data-i="${wi++}">${esc(t.t)}</span>`; }).join('');
   progress(sents.length ? (b.si + 1) / sents.length * 100 : 0);
   $('#view').innerHTML = `
-    ${SR || TEST ? '' : `<div class="note">⚠️ <div>${micError('nosupport')}</div></div>`}
+    ${SR || TEST ? '' : `<div class="note">${ico('alert')}<div>${micError('nosupport')}</div></div>`}
     <h1 style="margin:6px 2px 12px">Tantangan <span class="hl-txt">ngomong</span></h1>
     <div class="card">
       <div class="eyebrow center">Kalimat ${b.si + 1} dari ${sents.length}</div>
@@ -1121,7 +1159,7 @@ async function viewBicara() {
       <div class="hint">Dengerin dulu, terus baca kalimatnya keras-keras!</div>
       <div class="aux"><button id="ex">${ico('vol')} Contoh</button><button id="exs">${ico('slow')} Pelan</button></div>
       <div class="micwrap"><button class="mic" id="rec" aria-label="Mulai ngomong">${ico('mic')}</button><div class="mic-lbl" id="recl" aria-live="polite">Tap & ngomong</div></div>
-      <div class="hint" id="rech">Santai aja, nggak ada yang denger kok 🤫</div>
+      <div class="hint" id="rech">Santai aja, nggak ada yang denger kok</div>
       <div class="heard" id="heard"></div>
       <div id="res"></div>
     </div>
@@ -1130,7 +1168,7 @@ async function viewBicara() {
   $('#ex').onclick = () => speak(sent, b.lang, 0.85);
   $('#exs').onclick = () => speak(sent, b.lang, 0.55);
   $('#sp').onclick = () => { if (b.si > 0) b.si--; else if (b.pos > 0) { b.pos--; b.si = 1e9; } else return; save(); viewBicara(); };
-  $('#sn').onclick = () => { if (b.si < sents.length - 1) b.si++; else if (b.pos < pages.length - 1) { b.pos++; b.si = 0; } else return toast('Ini kalimat terakhir. Kamu keren! 🏁'); save(); viewBicara(); };
+  $('#sn').onclick = () => { if (b.si < sents.length - 1) b.si++; else if (b.pos < pages.length - 1) { b.pos++; b.si = 0; } else return toast('Ini kalimat terakhir. Kamu keren!'); save(); viewBicara(); };
   const btn = $('#rec'), lbl = $('#recl');
   let timer;
   btn.onclick = async () => {
@@ -1163,12 +1201,12 @@ async function viewBicara() {
     award(gain, 'speak'); if (avg >= 95) award(0, 'perfect');
     const worst = words.map((w, i) => ({ w, p: sc[i] })).filter(x => x.p < PASS && norm(x.w))
       .sort((a, c) => a.p - c.p).filter((x, i, a) => a.findIndex(y => norm(y.w) === norm(x.w)) === i).slice(0, 5);
-    if (!worst.length) { $('#remed').innerHTML = `<div class="card center"><div style="font-size:44px">🏆</div><h2>Semua kata pas!</h2><div class="mut sm">Gas ke kalimat berikutnya.</div></div>`; return; }
-    $('#remed').innerHTML = `<div class="card"><span class="boss">⚔️ BOSS LEVEL</span><h2 style="margin-top:10px">Kalahin kata tersulit</h2><div class="mut sm">Ada ${worst.length} kata yang masih bandel.</div>
+    if (!worst.length) { $('#remed').innerHTML = `<div class="card center"><div class="trophy">${ico('trophy')}</div><h2>Semua kata pas!</h2><div class="mut sm">Gas ke kalimat berikutnya.</div></div>`; return; }
+    $('#remed').innerHTML = `<div class="card"><span class="boss">${ico('sword')}BOSS LEVEL</span><h2 style="margin-top:10px">Kalahin kata tersulit</h2><div class="mut sm">Ada ${worst.length} kata yang masih bandel.</div>
       <div class="chips">${worst.map(x => chip(x.p, x.w)).join('')}</div>
-      <div class="row"><button class="pri" id="goRem">⚔️ Lawan ${worst.length} kata</button></div></div>`;
+      <div class="row"><button class="pri" id="goRem">${ico('sword')}Lawan ${worst.length} kata</button></div></div>`;
     $('#goRem').onclick = () => remedial(worst, b.lang, $('#remed'), () => {
-      $('#remed').innerHTML = `<div class="card center">${spot('cheer', 'jump')}<h2>Boss kalah! 🎉</h2><div class="mut sm">Sekarang coba ngomongin kalimatnya utuh lagi.</div><div class="row"><button class="lime" id="again">🎤 Ngomong lagi</button></div></div>`;
+      $('#remed').innerHTML = `<div class="card center">${spot('cheer', 'jump')}<h2>Boss kalah!</h2><div class="mut sm">Sekarang coba ngomongin kalimatnya utuh lagi.</div><div class="row"><button class="lime" id="again">${ico('mic')}Ngomong lagi</button></div></div>`;
       sfx('win'); confetti();
       $('#again').onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); btn.click(); };
     });
@@ -1186,7 +1224,7 @@ function remedial(list, lang, box, done) {
     const x = list[i];
     box.innerHTML = `<div class="card">
       <div class="dots">${list.map((_, k) => `<i class="${k === i ? 'on' : passed[k] ? 'done' : ''}"></i>`).join('')}</div>
-      <div class="center"><span class="boss">⚔️ BOSS ${i + 1}/${list.length}</span></div>
+      <div class="center"><span class="boss">${ico('sword')}BOSS ${i + 1}/${list.length}</span></div>
       <div class="eyebrow center lbl" style="margin-top:8px">Kata ${i + 1} dari ${list.length} · Target ${PASS}%</div>
       <div class="rem-word" lang="${esc(lang)}">${esc(x.w)}</div>
       <div class="tr sent center" id="rtr" style="margin:4px 0"></div>
@@ -1208,7 +1246,7 @@ function remedial(list, lang, box, done) {
       tries++;
       const p = c.length ? scoreWord(x.w, c, lang) : 0;
       recordWeak(x.w, lang, p);
-      micState(bt, l, 'idle', p >= PASS ? 'Kena! 💥' : 'Coba lagi');
+      micState(bt, l, 'idle', p >= PASS ? 'Kena!' : 'Coba lagi');
       const [k] = SCORE(p);
       $('#rsc').innerHTML = `<span class="eyebrow">Skor terbaru</span><b style="color:var(--color-${k === 'g' ? 'success' : k === 'm' ? 'medium' : 'poor'})">${p}%</b><span class="sm">${p >= PASS ? 'Boss kalah! Lanjut ke berikutnya.' : p >= 60 ? 'Udah deket banget!' : 'Coba dengerin versi pelan dulu.'}</span>`;
       $('#rh').textContent = c.length ? 'Kedengeran: “' + c[0] + '”' : 'Suaranya belum kedengeran. Coba lebih deket ke mic.';
@@ -1272,7 +1310,7 @@ function viewKata() {
         if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; kataChipScroll = 0; renderList(); };
         const exportCsv = async () => {
           const ready = readyN(), list = db.vocab.filter(inF);
-          if (!ready) return toast('Belum ada kata yang ada artinya 😅');
+          if (!ready) return toast('Belum ada kata yang ada artinya');
           const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
           const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
           const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
@@ -1313,7 +1351,7 @@ function viewKata() {
     } else {
       const weak = weakAll.filter(o => !q || o.w.toLowerCase().includes(q)).slice(0, 40);
       kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · dicoba ${o.n}×</div></div>${chip(o.last)}</div>`).join('')}
-        <div class="row"><button class="pri" id="kRem">⚔️ Lawan ${Math.min(weak.length, 10)} kata</button></div></div>`
+        <div class="row"><button class="pri" id="kRem">${ico('sword')}Lawan ${Math.min(weak.length, 10)} kata</button></div></div>`
         : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
       if ($('#kRem')) $('#kRem').onclick = () => {
         const lang = weak[0].lang, list = weak.filter(o => o.lang === lang).slice(0, 10);
