@@ -355,6 +355,8 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 /* penanda halaman e-reader */
 .rbm.on svg path:first-child{fill:currentColor}
 .rchap[hidden]{display:none}
+.mkat{display:block;margin-top:2px;font:600 12px var(--font-ui);color:var(--color-text-muted)}
+.set-acts{display:flex;flex-direction:column;gap:8px}.set-acts button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}.set-acts button:disabled{opacity:.5}.set-acts .i{width:20px;height:20px}.set-acts .on svg path:first-child{fill:currentColor}
 .mki{display:flex;align-items:center;gap:4px}
 .mkgo{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:48px;padding:8px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:left;cursor:pointer}
 .mkgo em{font:800 13px var(--font-ui);font-style:normal;white-space:nowrap;color:var(--color-text-muted)}
