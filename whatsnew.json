@@ -1,5 +1,11 @@
 [
   {
+    "n": 352,
+    "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
+    "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 350,
     "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
     "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
@@ -171,12 +177,6 @@
     "n": 185,
     "judul": "E-reader: sisa waktu baca jujur saat bab lain belum dimuat",
     "poin": "Sisa waktu baca sekarang jujur: tampil '≥N menit' kalau ada bab belum dihitung.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 182,
-    "judul": "Kartu arti: saran 'Sudah 3× diketuk, simpan?' + ketukan pertama terasa",
-    "poin": "Kartu arti kini menyarankan \"Simpan\" setelah kata diketuk 3 kali.",
     "tgl": "2026-11-11"
   }
 ]
