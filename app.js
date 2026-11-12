@@ -320,18 +320,59 @@ async function fetchTimeout(url, ms = 8000, ext) {
   const onAb = () => ac.abort(); if (ext) { if (ext.aborted) ac.abort(); else ext.addEventListener('abort', onAb); }
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
+async function gtxFetch(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json();
+  const out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
+  const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+  return out;
+}
+/* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
+const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
+function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
+function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
+function pfStop() { pfPause(); PF.q = []; pfFlush(); }
+function pfResume(ms) {
+  pfPause(); if (!PF.q.length || PF.fails >= 2) return pfFlush();
+  const g = PF.gen; PF.t = setTimeout(() => { PF.t = 0; pfRun(g); }, ms == null ? 1000 : ms);
+}
+function pfStart(list, sl, tl) {
+  pfStop(); if (!pfOk() || !Array.isArray(list)) return;
+  PF.sl = sl; PF.tl = tl; PF.fails = 0;
+  PF.q = [...new Set(list.map(x => String(x || '').trim()).filter(Boolean))].filter(q => !trCache.has(sl + '|' + tl + '|' + q)).slice(0, 12);
+  if (PF.q.length) pfResume(0);
+}
+async function pfRun(g) {
+  if (g !== PF.gen || PF.busy) return;
+  if (!pfOk() || !PF.q.length || PF.fails >= 2) return pfStop();
+  const q = PF.q.shift(), k = PF.sl + '|' + PF.tl + '|' + q; PF.busy = true;
+  if (!trCache.has(k)) {
+    const ac = PF.ac = new AbortController();
+    try {
+      const out = await gtxFetch(q, PF.sl, PF.tl, ac.signal);
+      if (g !== PF.gen) return;
+      if (!out.text) throw new Error('kosong');
+      if (!trCache.has(k)) trCache.set(k, out);
+      PF.dirty = true; PF.fails = 0;
+    } catch (e) { if (g !== PF.gen) return; PF.fails++; }
+  }
+  PF.busy = false; PF.ac = null;
+  if (!PF.q.length || PF.fails >= 2) return pfStop();
+  PF.t = setTimeout(() => { PF.t = 0; pfRun(g); }, 400);
+}
+addEventListener('offline', pfStop);
+document.addEventListener('visibilitychange', () => { if (document.hidden) pfStop(); });
 async function translate(q, sl, tl, signal) {
+  pfPause();
   const k = sl + '|' + tl + '|' + q;
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return stale;
   let out;
   try {
-    const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
-    if (!r.ok) throw new Error('gtx ' + r.status);
-    const j = await r.json();
-    out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
-    const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+    out = await gtxFetch(q, sl, tl, signal);
   } catch (e) {
     if (signal && signal.aborted) throw new Error('dibatalkan');
     try {
