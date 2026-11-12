@@ -1,5 +1,11 @@
 [
   {
+    "n": 710,
+    "judul": "Progres Home selalu sama dengan Profil & bar baca, sisa waktu ringkas",
+    "poin": "Persen baca di Home kini selalu sama dengan Profil, juga saat app ditutup.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 688,
     "judul": "[peta 71] Jelaskan kalimat (AI) gratis 5x/hari, hanya saat diminta",
     "poin": "Tombol \"Jelaskan kalimat ini (AI)\" sudah ada di arti kalimat, jalan hanya saat diketuk.",
@@ -171,12 +177,6 @@
     "n": 649,
     "judul": "Impor buku Gutenberg: lewati judul/daftar isi, mulai Chapter I",
     "poin": "Buku Gutenberg yang diimpor sekarang langsung mulai dari Bab 1, tanpa halaman judul.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 646,
-    "judul": "Halaman baca: tak ada baris terpotong di tepi atas/bawah (JP/KR)",
-    "poin": "Baris teks terpotong di tepi halaman baca Jepang/Korea sudah dirapikan.",
     "tgl": "2026-11-12"
   }
 ]

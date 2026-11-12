@@ -412,7 +412,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rmid{flex:1;text-align:center;font-size:12px;line-height:18px;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0}
-.rmid #pgn{display:block;font-size:12px;line-height:16px;text-align:center;overflow-wrap:anywhere}
+.rmid #pgn{display:block;font-size:12px;line-height:16px;text-align:center;white-space:nowrap}
+.rmid #pgn .mnote{white-space:normal}
 .nw{white-space:nowrap}
 #sheet .hscroll{margin:0;padding:2px 2px 10px}
 .ring .score small{display:block;font:700 10px/10px var(--font-ui)}

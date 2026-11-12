@@ -250,6 +250,17 @@ function wakeSync() {
   } catch (e) { wakeBusy = false; }
 }
 document.addEventListener('visibilitychange', wakeSync);
+/* app ke latar belakang saat membaca: simpan persen terbaru (sumber sama dgn Home/Profil/rak) */
+function flushReadPct() {
+  try {
+    if (!document.body.classList.contains('reading')) return;
+    const b = book(); if (!b || !RD || !RD.n || RD.page == null || !b.total) return;
+    b.pct = Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / b.total * 100 - 1e-9)));
+    save();
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushReadPct(); });
+addEventListener('pagehide', flushReadPct);
 /* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
 let rdHist = false, rdSkip = 0;
 function rdLeave() { if (!rdHist) return; rdHist = false; rdSkip++; history.back(); }
@@ -1278,7 +1289,7 @@ function showPage(p, anim = true) {
   if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} tersisa` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}`, rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
+  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} lagi` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}`, rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
   if (pb) pb.style.width = b.pct + '%';
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
