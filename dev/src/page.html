@@ -330,13 +330,13 @@ const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Menunggu kamu','t-
 let BKF='';
 function daftarKerja(){
   const B=(HQ&&HQ.roadmap&&HQ.roadmap.backlog)||[];if(!B.length)return '';
-  const xs=B.map(b=>({...b,e:ember(b.status)})).sort((a,b)=>String(a.prioritas).localeCompare(String(b.prioritas))||a.no-b.no);
+  const xs=B.map(b=>{const m=String(b.nama).match(/#(\d+)/g)||[];return{...b,e:ember(b.status),iss:m.length?+m[m.length-1].slice(1):0,judul:String(b.nama).replace(/\s*\((?:laporan\s*)?#[\d,#\s]+\)/g,'').trim()}}).sort((a,b)=>String(a.prioritas).localeCompare(String(b.prioritas))||a.no-b.no);
   const n=k=>xs.filter(x=>x.e===k).length;
-  const baris=x=>`<div class="tile bk"><div class="row" style="flex-wrap:wrap;gap:6px"><span class="chip ${x.prioritas==='P0'?'t-coral':x.prioritas==='P1'?'t-sun':'o'}">${esc(x.prioritas||'')}</span>${TIM[x.peran]?chipP(x.peran):''}<span class="chip ${EMB[x.e][1]}">${EMB[x.e][0]}</span><span class="sp"></span><span class="mut sm">no. ${x.no}</span></div><b style="display:block;margin:8px 0 4px">${esc(x.nama)}</b><div class="mut sm">${esc(x.status)}</div>${x.dokumen?`<button class="btn ghost sm" style="margin-top:8px" onclick="go('dokumen','${esc(x.dokumen)}')">Buka dokumen</button>`:''}</div>`;
+  const baris=x=>`<div class="tile bk"><div class="row" style="flex-wrap:wrap;gap:6px"><span class="chip ${x.prioritas==='P0'?'t-coral':x.prioritas==='P1'?'t-sun':'o'}">${esc(x.prioritas||'')}</span>${TIM[x.peran]?chipP(x.peran):''}<span class="chip ${EMB[x.e][1]}">${EMB[x.e][0]}</span><span class="sp"></span>${x.iss?`<button class="chip o" onclick="detail(${x.iss})">#${x.iss} →</button>`:'<span class="mut sm">belum ada kartu</span>'}</div><b style="display:block;margin:8px 0 4px">${esc(x.judul)}</b><div class="mut sm" style="font-size:11px">peta no. ${x.no}</div><div class="mut sm">${esc(x.status)}</div>${x.dokumen?`<button class="btn ghost sm" style="margin-top:8px" onclick="go('dokumen','${esc(x.dokumen)}')">Buka dokumen</button>`:''}</div>`;
   const tile=k=>`<div class="tile c ${EMB[k][1]}" style="cursor:pointer;${BKF===k?'outline:3px solid var(--ink)':''}" onclick="BKF=BKF==='${k}'?'':'${k}';hasilKerja(true)"><div class="eyebrow">${EMB[k][0]}</div><div class="big">${n(k)}</div></div>`;
   const aktif=BKF?xs.filter(x=>x.e===BKF):xs.filter(x=>x.e!=='selesai');
   const sel=xs.filter(x=>x.e==='selesai');
-  return `<div class="sec"><h2>Daftar kerja</h2><span class="mut sm">dari peta · ${xs.length} tugas</span></div>
+  return `<div class="sec"><h2>Daftar kerja</h2><span class="mut sm">${xs.length} fitur besar dari peta · tiap fitur bisa terdiri dari banyak kartu #</span></div>
   <div class="bento bk4">${['jalan','kamu','belum','selesai'].map(tile).join('')}</div>
   <div class="grid" style="margin-top:12px">${aktif.length?aktif.map(baris).join(''):'<div class="empty">Tidak ada.</div>'}</div>
   ${!BKF&&sel.length?`<details class="more"><summary>Lihat yang selesai (${sel.length})</summary><div class="grid" style="margin-top:10px">${sel.map(baris).join('')}</div></details>`:''}`;
