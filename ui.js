@@ -547,6 +547,7 @@ $('#file').onchange = async e => {
 };
 const IMPOR_TIMEOUT = 45000;
 async function importFile(f, paksa) {
+  if (/\.(epub|pdf)$/i.test(f.name || '') && !navigator.onLine && !(await libsCached())) return toast('EPUB/PDF butuh internet sekali buat siapin alat baca. Sambungkan dulu, atau pakai .txt.', 6000);
   toast('Lagi nyiapin cerita… ⏳', IMPOR_TIMEOUT + 2000);
   let tm;
   try {
