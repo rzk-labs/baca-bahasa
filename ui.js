@@ -267,6 +267,7 @@ function openSettings() {
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
     ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
+    ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
     </div>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
@@ -289,6 +290,7 @@ function openSettings() {
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
   $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.align = null; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
+  if (typeof bkWire === 'function') bkWire();
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
 
