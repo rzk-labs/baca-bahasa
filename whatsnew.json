@@ -1,5 +1,11 @@
 [
   {
+    "n": 782,
+    "judul": "Satu sumber angka: persen buku & 'kata/minggu' sama di semua layar",
+    "poin": "Persen buku sekarang sama di Home, bar baca, Profil, dan Sosial.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 780,
     "judul": "Target harian dorong belajar kata: XP balik halaman dibatasi",
     "poin": "XP balik halaman kini cuma dihitung 10 per hari ke target harian.",
@@ -171,12 +177,6 @@
     "n": 722,
     "judul": "Home: kartu Streak/Target jelas isinya & 'kata baru' = kata tersimpan",
     "poin": "Kartu Target harian kini tampil 'XP 54/100' dan 'Beres!' tanpa angka dobel.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 718,
-    "judul": "[peta 45] Ikon & logo terasa app baca: buku terbuka + stabilo",
-    "poin": "Ikon app sekarang buku terbuka dengan satu baris disorot stabilo hijau-kuning.",
     "tgl": "2026-11-12"
   }
 ]
