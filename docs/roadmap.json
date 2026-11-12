@@ -70,7 +70,7 @@
     { "no": 63, "peran": "developer", "prioritas": "P1", "nama": "Koleksi: tombol hapus dijauhkan + konfirmasi; toast Target harian pindah ke bawah, tak menutup streak & XP (#663)", "dokumen": "docs/pm-peta-fase-berikutnya-2.md", "status": "siap dikerjakan" },
     { "no": 64, "peran": "developer", "prioritas": "P0", "nama": "Cover asli EPUB tampil di rak & Home, ambil gambar saat impor (perintah founder #485)", "dokumen": "docs/spesifikasi-cover-epub.md", "status": "selesai (#674)" },
     { "no": 65, "peran": "developer", "prioritas": "P0", "nama": "Kartu kata: pisahkan 'Lagi dihafal' dan 'Udah hafal' supaya angka naik saat ketuk Hafal (perintah founder #628)", "dokumen": "docs/spesifikasi-hafal-hitungan.md", "status": "selesai (#676)" },
-    { "no": 66, "peran": "developer", "prioritas": "P0", "nama": "Buka ulang buku tepat di halaman terakhir, bukan satu halaman sebelumnya (perintah founder #367; cek dulu, mungkin sudah beres)", "dokumen": "docs/spesifikasi-lanjut-halaman-terakhir.md", "status": "siap dikerjakan" }
+    { "no": 66, "peran": "developer", "prioritas": "P0", "nama": "Buka ulang buku tepat di halaman terakhir, bukan satu halaman sebelumnya (perintah founder #367; cek dulu, mungkin sudah beres)", "dokumen": "docs/spesifikasi-lanjut-halaman-terakhir.md", "status": "selesai (#678)" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },

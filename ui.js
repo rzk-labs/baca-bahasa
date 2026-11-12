@@ -1139,7 +1139,12 @@ function layout() {
   for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && RD.ss[j - 1].pg >= q) j--; RD.left[q] = suf[j]; }
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
-  else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
+  else {
+    const k = RD.ss.findIndex(y => +y.el.dataset.s === (b.si || 0)), x = RD.ss[k];
+    if (x) p = x.pg;
+    /* halaman tersimpan dipakai hanya bila jumlah halaman sama & masih cocok dgn kalimat tersimpan (anti data basi) */
+    if (x && RD.flash == null && b.pgN === RD.n && Number.isInteger(b.pg) && b.pg >= x.pg && b.pg < RD.n && !(RD.ss[k + 1] && RD.ss[k + 1].pg <= b.pg)) p = b.pg;
+  }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
@@ -1208,7 +1213,11 @@ function showPage(p, anim = true) {
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
-  for (const x of RD.ss) { if (x.pg >= RD.page) { b.si = +x.el.dataset.s; break; } }
+  /* kalimat pertama yang mulai di halaman ini; bila tak ada (kalimat panjang menyambung / halaman akhir), pakai kalimat terakhir yang mulai sebelumnya */
+  let sx = RD.ss.find(x => x.pg >= RD.page);
+  if (!sx || sx.pg > RD.page) { for (let i = RD.ss.length - 1; i >= 0; i--) if (RD.ss[i].pg < RD.page) { sx = RD.ss[i]; break; } }
+  if (sx) b.si = +sx.el.dataset.s;
+  b.pg = RD.page; b.pgN = RD.n;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh && hd) rh.textContent = hd.textContent.trim();
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
