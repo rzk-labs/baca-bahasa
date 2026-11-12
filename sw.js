@@ -1,4 +1,4 @@
-const C='kepo-v127';
+const C='kepo-v128';
 const FILES=['./','index.html','app.js','ui.js','cloud.js','style.css','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
 // pustaka impor EPUB/PDF + font Google (Literata, Inter): di-cache saat pertama dipakai online
 const CDN=['https://cdnjs.cloudflare.com/ajax/libs/','https://fonts.googleapis.com/','https://fonts.gstatic.com/'];
