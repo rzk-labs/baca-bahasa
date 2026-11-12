@@ -1,5 +1,11 @@
 [
   {
+    "n": 684,
+    "judul": "[peta 62] Beranda rapi: satu tombol Gas baca, kartu kosong hilang",
+    "poin": "Beranda sekarang punya satu tombol utama: Gas baca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 682,
     "judul": "[peta 68] Kamus Jepang kecil: cara baca + bentuk dasar di sheet arti",
     "poin": "Kata Jepang kini tampil dengan cara baca dan bentuk dasar, arti offline lebih dulu.",
@@ -171,12 +177,6 @@
     "n": 579,
     "judul": "Sorotan kalimat 'Dengar halaman' jelas di 4 tema, terutama malam",
     "poin": "Kalimat yang sedang dibacakan kini lebih jelas, terutama di tema malam.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 574,
-    "judul": "Impor buku: cek file kembar & peringatan file besar di iPhone",
-    "poin": "Impor buku sekarang menanyakan dulu kalau file yang sama sudah ada di rak.",
     "tgl": "2026-11-12"
   }
 ]
