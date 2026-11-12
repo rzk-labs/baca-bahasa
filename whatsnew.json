@@ -1,5 +1,11 @@
 [
   {
+    "n": 605,
+    "judul": "Sheet arti kalimat: tanda 'arti mesin' + peringatan kalimat panjang",
+    "poin": "Arti kalimat sekarang punya tanda kecil: arti mesin bisa meleset.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 600,
     "judul": "Frasa 2-5 kata yang disimpan ikut digarisbawahi di halaman baca",
     "poin": "Frasa yang kamu simpan sekarang ikut bergaris bawah di halaman baca.",
@@ -171,12 +177,6 @@
     "n": 483,
     "judul": "Daftar penanda rapi untuk Arab & pembaca layar, urungkan segar",
     "poin": "Daftar penanda kini rapi untuk buku Arab dan terbaca benar oleh pembaca layar.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 476,
-    "judul": "Bar atas e-reader lega di HP 320px: maks 2 tombol kanan",
-    "poin": "Bar atas baca kini satu baris: judul, bab, dan jumlah penanda.",
     "tgl": "2026-11-12"
   }
 ]

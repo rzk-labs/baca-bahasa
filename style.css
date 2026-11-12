@@ -230,7 +230,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .seg button.on{background:var(--color-text);color:var(--color-bg)}
 .set-row{margin:var(--space-5) 0}.set-row .eyebrow{margin-bottom:8px}
 .sh-head.sticky{position:sticky;top:0;z-index:2;background:var(--color-bg);margin:0 -20px var(--space-2);padding:6px 20px}
-.set-prev{background:var(--color-surface);border-radius:var(--radius-lg);padding:12px 14px;line-height:var(--reader-lh,1.7);font-family:var(--font-ui);color:var(--color-text);max-height:calc(2 * var(--reader-lh,1.7) * 1em + 24px);overflow:hidden;margin-top:var(--space-2);-webkit-hyphens:auto;hyphens:auto}
+.set-prev{background:var(--color-surface);border-radius:var(--radius-lg);padding:12px 14px;line-height:var(--reader-lh,1.7);font-family:var(--font-ui);color:var(--color-text);max-height:calc(2 * var(--reader-lh,1.7) * 1em + 24px);overflow:hidden;margin-top:var(--space-2);-webkit-hyphens:auto;hyphens:auto;letter-spacing:var(--reader-ls,normal);word-spacing:var(--reader-ws,normal)}
 .set-prev.serif{font-family:var(--font-reader)}
 .set-grp{margin-top:var(--space-5);padding-top:var(--space-3);border-top:1.5px solid var(--color-border)}
 .set-gt{font:800 20px/24px var(--font-display);letter-spacing:-.01em;text-transform:uppercase}
@@ -351,10 +351,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rhead{flex:none;height:40px;display:flex;align-items:flex-end;justify-content:center;padding:0 64px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vp{flex:1;position:relative;overflow:hidden;overscroll-behavior:none;touch-action:pan-y;margin:16px var(--reader-mg,24px) 4px;width:calc(100% - 2 * var(--reader-mg,24px));max-width:1180px;align-self:center}
 .vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--color-border);pointer-events:none}
-.cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:.005em;text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
+.cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:var(--reader-ls,.005em);word-spacing:var(--reader-ws,normal);text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
 .reader[data-align=l] .cols.page{text-align:start;-webkit-hyphens:manual;hyphens:manual}.reader[data-align=j] .cols.page{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
-.reader:is([lang=ja],[lang=ko],[lang=zh-CN]) .cols.page{font-family:var(--font-cjk);text-align:start}
+.reader:is([lang=ja],[lang=ko],[lang=zh-CN]) .cols.page{font-family:var(--font-cjk);text-align:start;letter-spacing:0;word-spacing:normal}
 .cols :is(p,h2.ch)[dir=rtl]{text-align:start;letter-spacing:0;word-spacing:normal;line-height:calc(var(--reader-lh,1.7) + .15);-webkit-hyphens:manual;hyphens:manual;font-family:"Geeza Pro","Segoe UI","Noto Naskh Arabic","Noto Sans Arabic","Droid Arabic Naskh",Tahoma,var(--font-ui)}
 .reader.serif .cols :is(p,h2.ch)[dir=rtl]{font-family:"Geeza Pro","Noto Naskh Arabic","Segoe UI",Tahoma,var(--font-reader)}
 .cols h2.ch[dir=rtl]{text-align:center}
