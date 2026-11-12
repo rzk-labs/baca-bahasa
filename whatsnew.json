@@ -1,5 +1,11 @@
 [
   {
+    "n": 611,
+    "judul": "Garis bawah kata tersimpan: muncul langsung di semua jalur simpan",
+    "poin": "Kata yang kamu simpan sekarang langsung bergaris bawah di halaman baca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 605,
     "judul": "Sheet arti kalimat: tanda 'arti mesin' + peringatan kalimat panjang",
     "poin": "Arti kalimat sekarang punya tanda kecil: arti mesin bisa meleset.",
@@ -171,12 +177,6 @@
     "n": 491,
     "judul": "Penanda: urut sesuai urutan buku & 'Ke penanda' paling dekat posisi baca",
     "poin": "Daftar penanda sekarang bisa diurutkan: Terbaru atau Urutan buku.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 483,
-    "judul": "Daftar penanda rapi untuk Arab & pembaca layar, urungkan segar",
-    "poin": "Daftar penanda kini rapi untuk buku Arab dan terbaca benar oleh pembaca layar.",
     "tgl": "2026-11-12"
   }
 ]

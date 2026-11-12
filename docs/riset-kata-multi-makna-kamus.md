@@ -111,3 +111,9 @@ Hasil: 1 terbukti, 2 sebagian, 0 gugur, 0 belum jelas.
 - Developer: uji popup dengan arti kedua + tanda frasa (lihat bagian 9).
 - Riset: ulang saat ulasan toko Indonesia & Reddit terbuka.
 - Founder (opsional): tanya 5 teman, "kapan arti kata bikin kamu bingung?"
+
+### Catatan #610: lencana "Mungkin frasa" (sudah dibuat)
+- Popup kata kini punya lencana kecil "Mungkin frasa"; ketuk = perluas ke kata tetangga.
+- Muncul untuk partikel Inggris (up/out/off/over/in/on/away/down) atau frasa 2 kata yang artinya beda jauh.
+- Cek hanya dari cache terjemahan: nol panggilan jaringan baru. Dilewati untuk ja/zh/th.
+- Belum diuji ke pengguna; ukur: berapa kali lencana diketuk vs diabaikan.

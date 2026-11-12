@@ -768,11 +768,11 @@ function sessRecap(b) {
     if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
     untombVocab(e.lang, e.w);
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
-    db.vocab.unshift(nv); save(); vib(10); sfx('ding');
+    db.vocab.unshift(nv); save(); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
     toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
-      tombVocab(e.lang, e.w); save();
+      tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
     } });
   });
@@ -807,7 +807,7 @@ async function viewBaca() {
   const sp = secParas(secs[b.pos], b.lang);
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
-  const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
+  const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && v.w).map(v => String(v.w).trim().toLowerCase()));
   const kenalOk = w => isKenal(b.lang, w) && !savedSet.has(w.toLowerCase());
   const rtMap = new Map();
   if (db.rt && ['ja', 'ko', 'zh-CN'].includes(b.lang)) for (const v of db.vocab) {
@@ -1236,6 +1236,7 @@ async function onWord(el, lastEl) {
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
+    <div class="whint" id="whint" hidden></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="pri" data-close id="wdone">Selesai</button></div>
@@ -1268,6 +1269,33 @@ async function onWord(el, lastEl) {
     $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
+  /* lencana "Mungkin frasa": opsional, hanya dari cache terjemahan (tanpa jaringan baru) */
+  const NOSPACE = new Set(['ja', 'zh-CN', 'zh', 'th']);
+  const PART = new Set(['up', 'out', 'off', 'over', 'in', 'on', 'away', 'down']);
+  const FUNC = new Set(['the', 'a', 'an', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their', 'this', 'that', 'of', 'to', 'and', 'or', 'but', 'is', 'was', 'are', 'were', 'be', 'at', 'by', 'for', 'with', 'from', 'as', 'if', 'so', 'not', 'no']);
+  const wl = i => (ws[i] ? ws[i].textContent.toLowerCase().replace(/[^\p{L}\p{N}']/gu, '') : '');
+  const toks = t => (t.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter(x => x.length > 2);
+  const hintDir = () => {
+    if (lo !== hi || NOSPACE.has(b.lang)) return 0;
+    const me = wl(lo), nx = wl(lo + 1), pv = wl(lo - 1);
+    if (b.lang === 'en') {
+      if (!PART.has(me) && !FUNC.has(me) && PART.has(nx) && hi < ws.length - 1) return 1;
+      if (PART.has(me) && pv && !FUNC.has(pv) && !PART.has(pv) && lo > 0) return -1;
+    }
+    /* frasa 2 kata dari cache: artinya tak berbagi kata dengan arti per kata */
+    const diff = (ph, parts) => { const pt = cachedTr(ph, b.lang, db.my); if (!pt) return false; const got = parts.map(x => cachedTr(x, b.lang, db.my)); if (got.some(x => !x)) return false; const pw = toks(pt), bag = new Set(got.flatMap(toks)); return pw.length > 0 && !pw.some(x => bag.has(x)); };
+    if (hi < ws.length - 1 && nx && diff(me + ' ' + nx, [me, nx])) return 1;
+    if (lo > 0 && pv && diff(pv + ' ' + me, [pv, me])) return -1;
+    return 0;
+  };
+  const showHint = () => {
+    const h = $('#whint'); if (!h) return;
+    const d = hintDir();
+    if (!d) { h.hidden = true; h.innerHTML = ''; return; }
+    h.innerHTML = `<button class="hintchip" id="whb" aria-label="Mungkin frasa. Ketuk untuk tambah kata ${d > 0 ? 'berikutnya' : 'sebelumnya'}">Mungkin frasa <span aria-hidden="true">${d > 0 ? '›' : '‹'}</span></button>`;
+    h.hidden = false;
+    $('#whb').onclick = () => grow(d);
+  };
   const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
   const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; retry(); }; };
   const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my, sig).then(r => {
@@ -1282,7 +1310,7 @@ async function onWord(el, lastEl) {
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
-    keepVisible('.w.sel');
+    keepVisible('.w.sel'); showHint();
   }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
   const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
@@ -1295,7 +1323,7 @@ async function onWord(el, lastEl) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
     $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wdict').innerHTML = ''; showHint(); $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
@@ -1308,7 +1336,7 @@ async function onWord(el, lastEl) {
     toast(was ? 'Dibatalkan, kata ini muncul lagi' : 'Ditandai sudah kenal', 6000, { label: 'Urungkan', fn: () => apply(was) });
   };
   $('#wsave').onclick = async () => {
-    const mark = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.toggle('saved', on); });
+    const mark = (w, on) => paintSaved(b.lang, w, on);
     if (isSaved()) {
       /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
       const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
@@ -1328,10 +1356,16 @@ async function onWord(el, lastEl) {
     const tp = takeTaps(b.lang, w);
     if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
-    $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
+    mark(w, true);
     $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
+}
+/* tambah/hapus garis bawah kata tersimpan di halaman baca yang tampil (tanpa pindah halaman) */
+function paintSaved(lang, w, on) {
+  const b = book(); if (!b || b.lang !== lang) return;
+  const k = String(w || '').trim().toLowerCase();
+  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) { x.classList.toggle('saved', on); if (on) x.classList.remove('kenal'); } });
 }
 let lastSentLook = '';
 function showSentence(word, sent, sIdx, sEl) {
