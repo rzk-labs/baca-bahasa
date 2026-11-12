@@ -1,5 +1,11 @@
 [
   {
+    "n": 726,
+    "judul": "Bar menu bawah rapi: alas penuh, kartu tak mengintip di celah",
+    "poin": "Menu bawah sekarang rapi: area di belakangnya tertutup penuh sampai tepi layar.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 724,
     "judul": "Baca: judul bab di header pas, bar progres tak loncat",
     "poin": "Judul bab di atas halaman sekarang tampil pas, tidak dobel lagi.",
@@ -171,12 +177,6 @@
     "n": 667,
     "judul": "[peta 60] Intip kata bab: tampil di bab 1 & buku ja/ko/zh",
     "poin": "Kartu Intip kata kini muncul juga di bab 1 buku baru.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 666,
-    "judul": "[peta 9] Keepo HQ: pengaturan baca (ukuran teks, tema, kontras)",
-    "poin": "Markas tim sekarang punya menu Pengaturan untuk atur ukuran teks dan tema.",
     "tgl": "2026-11-12"
   }
 ]
