@@ -632,10 +632,21 @@ $('#file').onchange = async e => {
   const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
   if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
   if (f.size > 50 * MB) return toast('File-nya kegedean (maks 50 MB).', 5000);
+  const lanjut = () => cekKembar(f);
+  if (isDoc && f.size > 25 * MB) return toast('File besar, bisa berat di HP. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
   const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
-  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: () => importFile(f) });
-  importFile(f);
+  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
+  lanjut();
 };
+/* file kembar: nama + ukuran sama dengan buku yang ada (buku lama tanpa src dilewati) */
+function cekKembar(f) {
+  const ada = db.books.find(b => b && b.src && b.src.name === f.name && b.src.size === f.size);
+  if (!ada) return importFile(f);
+  openSheet(`<div class="sh-head"><h2>Buku ini sudah ada</h2>${closeBtn}</div><div class="mut sm">Buku ini sudah ada. Impor lagi?</div>
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="dupBuka">Buka yang lama</button><button class="btn ghost" id="dupLagi">Impor lagi</button></div>`, 'Buku sudah ada');
+  $('#dupBuka').onclick = () => { closeSheet(); db.cur = ada.id; save(); setTab('baca'); };
+  $('#dupLagi').onclick = () => { closeSheet(); importFile(f, true); };
+}
 const IMPOR_TIMEOUT = 45000;
 async function importFile(f, paksa) {
   if (/\.(epub|pdf)$/i.test(f.name || '') && !navigator.onLine && !(await libsCached())) return toast('EPUB/PDF butuh internet sekali buat siapin alat baca. Sambungkan dulu, atau pakai .txt.', 6000);
@@ -653,12 +664,12 @@ async function importFile(f, paksa) {
         if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
       }
     }
-    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg);
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }))commitLang(lg);
   }
   catch (err) {
     clearTimeout(tm);
     console.error(err);
-    if (err && err.telat) return toast('Kelamaan. Cek sinyal, lalu coba lagi', 6000);
+    if (err && err.telat) return toast('Gagal: kelamaan (lebih dari 45 detik). Cek sinyal, tutup tab lain, lalu coba lagi.', 9000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
@@ -670,10 +681,12 @@ async function importFile(f, paksa) {
     toast(msg, 6000);
   }
 }
-async function addBook(title, paras, lang) {
+async function addBook(title, paras, lang, src) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
-  db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
+  const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() };
+  if (src && src.name) bk.src = { name: src.name, size: src.size };
+  db.books.push(bk);
   const prevCur = db.cur;
   db.cur = id;
   if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
