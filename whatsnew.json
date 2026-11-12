@@ -1,5 +1,11 @@
 [
   {
+    "n": 719,
+    "judul": "Hemat sinyal: cek jatah AI hanya saat diminta + panduan sebut AI",
+    "poin": "Cek jatah AI tidak jalan otomatis lagi, jadi hemat sinyal.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 716,
     "judul": "Jepang: partikel (が は を…) tak digarisbawahi & tak jadi 'kata baru'",
     "poin": "Buku Jepang: が, は, を, へ, や, か, ね, よ tak lagi dianggap kata baru.",
@@ -171,12 +177,6 @@
     "n": 658,
     "judul": "[peta 54] Ketuk kata lebih tepat di HP (area ketuk, tanda baca, ja/zh)",
     "poin": "Ketuk kata di HP lebih tepat: ketukan di celah atau tanda baca kena kata terdekat.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 656,
-    "judul": "[peta 51] Petunjuk baca tak menutup teks, toast pindah ke bawah",
-    "poin": "Petunjuk ketuk kini cuma satu baris di bawah, tidak menutup teks bacaan.",
     "tgl": "2026-11-12"
   }
 ]
