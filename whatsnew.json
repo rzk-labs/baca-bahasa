@@ -1,5 +1,11 @@
 [
   {
+    "n": 448,
+    "judul": "Tab Kata 'Tersimpan': toolbar rapi di HP, kartu kata tenang",
+    "poin": "Tab Kata: kotak cari + jumlah di atas, Urutkan & Saring sebaris di bawahnya.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 442,
     "judul": "Sheet kata: tombol perluas frasa ‹ › sejajar, jelas & mudah diketuk",
     "poin": "Tombol perluas frasa di sheet kata kini sejajar, kiri dan kanan.",
@@ -171,12 +177,6 @@
     "n": 286,
     "judul": "Ramah jempol: target ketuk min 44px & kontras teks kecil (HP)",
     "poin": "Tombol di HP kini lebih lega: area ketuk minimal 44px, jarak antar tombol 8px.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 285,
-    "judul": "Beranda: kartu 'Kata hari ini' dari kata yang pernah kamu ketuk",
-    "poin": "Beranda sekarang punya kartu \"Kata hari ini\" dari kata yang pernah kamu ketuk.",
     "tgl": "2026-11-11"
   }
 ]
