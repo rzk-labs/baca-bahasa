@@ -182,7 +182,7 @@ function secParas(sec, lang) {
 }
 const TABS = { rak: ['home', 'Home'], baca: ['book', 'Baca'], bicara: ['mic', 'Ngomong'], kata: ['cards', 'Kata'] };
 $('#tabs').innerHTML = Object.entries(TABS).map(([k, [i, l]]) => `<button data-t="${k}">${ico(i)}<span>${l}</span></button>`).join('');
-const BRAND_TTL = `<span>Keepo</span>`;
+const BRAND_TTL = `<span>Keepo<span class="dot" aria-hidden="true">.</span></span>`;
 function setTab(t) {
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading');
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });

@@ -78,7 +78,8 @@ button:disabled{opacity:.35;pointer-events:none}
 .full{width:100%}
 /* ---------- kerangka ---------- */
 #top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;height:calc(60px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 18px 0;background:color-mix(in srgb,var(--color-bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-#top h1{font:800 28px/1 var(--font-display);flex:1;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;letter-spacing:-.01em}
+#top h1{font:700 28px/1 var(--font-display);color:var(--color-text);flex:1;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;letter-spacing:-.01em}
+#top h1 .dot{color:#C4633A}
 #hdx{display:flex;gap:6px;align-items:center}
 .pill{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 12px;border-radius:var(--radius-full);background:var(--color-surface);font:700 14px/1 var(--font-ui);white-space:nowrap}
 #prog{position:absolute;left:0;right:0;bottom:0;height:3px}#prog i{display:block;height:100%;background:var(--color-text);transition:width var(--dur-color)}
