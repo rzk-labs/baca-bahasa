@@ -618,7 +618,7 @@ setTab = function (t) {
   _setTab(t);
   renderAcct();
   if (t === 'rak') {
-    if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; (el.querySelector('.bk-act') || el).appendChild(b); });
+    if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.title = 'Bagikan cerita'; b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; (el.querySelector('.bk-act') || el).appendChild(b); });
   }
 };
 // tombol bagikan juga di mode baca (setelah menu atas digambar)
@@ -626,7 +626,7 @@ const _viewBaca = viewBaca;
 viewBaca = async function () {
   await _viewBaca();
   const bar = $('.rbar'), b = book();
-  if (API && bar && b && !$('#rShare')) { const x = document.createElement('button'); x.className = 'icon'; x.id = 'rShare'; x.setAttribute('aria-label', 'Bagikan cerita'); x.textContent = '↗'; x.style.fontSize = '20px'; x.onclick = () => shareBook(b.id); bar.insertBefore(x, bar.querySelector('#set')); }
+  if (API && bar && b && !$('#rShare')) { const x = document.createElement('button'); x.className = 'icon rrt'; x.id = 'rShare'; x.type = 'button'; x.title = 'Bagikan cerita'; x.setAttribute('aria-label', 'Bagikan cerita'); x.innerHTML = '<span class="rrti" aria-hidden="true">↗</span><span class="rrtl">Bagikan</span>'; x.onclick = () => shareBook(b.id); bar.insertBefore(x, bar.querySelector('#set')); }
 };
 setTab(db.tab || 'rak');
 openSharedFromUrl();
