@@ -1350,6 +1350,7 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="src" dir="auto" lang="${esc(b.lang)}">${marked}</div>${wordGloss}
     <div id="sbaca"></div>
     <div class="tr sent" id="str" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
+    <div class="ttsnote hide" id="smt" lang="${esc(db.my)}"></div>
     ${ttsNote(b.lang)}
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">${ico('mic')} Coba ngomongin</button></div>
@@ -1358,7 +1359,7 @@ function showSentence(word, sent, sIdx, sEl) {
   const strEl = $('#str');
   const alive = () => $('#str') === strEl;
   let sSlow = 0, sTok = 0;
-  const loadSent = () => { const my = ++sTok; clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
+  const loadSent = () => { const my = ++sTok; { const m = $('#smt'); if (m) m.classList.add('hide'); } clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
     if (!alive() || my !== sTok) return;
     clearTimeout(sSlow);
     const trEl = $('#str'), lm = wMean.toLowerCase(), lt = r.text.toLowerCase(), at = lm && lt.length === r.text.length ? lt.indexOf(lm) : -1;
@@ -1369,6 +1370,13 @@ function showSentence(word, sent, sIdx, sEl) {
       const mk = document.createElement('mark'); mk.textContent = r.text.slice(at, en);
       trEl.append(mk, r.text.slice(en));
     } else trEl.textContent = r.text;
+    /* tanda arti mesin (#605): hanya setelah terjemahan sukses; kalimat panjang = peringatan lebih kuat */
+    const smt = $('#smt');
+    if (smt) {
+      const cjk = /^(ja|ko|zh)/i.test(b.lang), long = cjk ? [...sent].length > 80 : sent.trim().split(/\s+/).length > 25;
+      smt.textContent = long ? 'Kalimat panjang, arti mesin sering meleset. Baca bagian per bagian.' : 'Arti mesin, bisa meleset. Tahan kata untuk cek.';
+      smt.classList.remove('hide');
+    }
     const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
     if (bc && sb) {
       const v = `<div class="sbaca" dir="auto" lang="${esc(b.lang)}">${esc(bc)}</div>`;
