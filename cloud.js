@@ -592,7 +592,7 @@ let sosSeg = 'fyp';
 function viewSosial() {
   const V = $('#view');
   if (!API) { V.innerHTML = emptyState('curious', 'Sosial belum aktif', 'Server akun belum tersambung. Coba lagi nanti.'); return; }
-  if (!db.acct) { V.innerHTML = emptyState('happy', 'Baca bareng teman', 'Masuk untuk lihat apa yang dibaca orang lain, bagikan status, dan bahan bacaan.', 'Masuk', "openAccount('daftar')"); return; }
+  if (!db.acct) { V.innerHTML = emptyState('sad', 'Baca bareng teman', 'Masuk untuk lihat apa yang dibaca orang lain, bagikan status, dan bahan bacaan.', 'Masuk', "openAccount('daftar')"); return; }
   const seg = (k, l) => `<button data-sg="${k}" class="${sosSeg === k ? 'on' : ''}">${l}</button>`;
   V.innerHTML = `<div class="sec-h"><h2>Sosial</h2><button class="ghost" id="sosMe">Profilku</button></div>
     <div class="seg" id="sosSeg" style="margin-bottom:12px">${seg('fyp', 'Untuk kamu')}${seg('teman', 'Teman')}</div>
