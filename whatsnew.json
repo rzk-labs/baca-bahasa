@@ -1,5 +1,11 @@
 [
   {
+    "n": 784,
+    "judul": "Baca: header & bar satu istilah (Bab/Bagian) + sisa waktu masuk akal",
+    "poin": "Judul atas, daftar isi, dan bar bawah sekarang pakai istilah sama: Bab atau Bagian.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 782,
     "judul": "Satu sumber angka: persen buku & 'kata/minggu' sama di semua layar",
     "poin": "Persen buku sekarang sama di Home, bar baca, Profil, dan Sosial.",
@@ -171,12 +177,6 @@
     "n": 724,
     "judul": "Baca: judul bab di header pas, bar progres tak loncat",
     "poin": "Judul bab di atas halaman sekarang tampil pas, tidak dobel lagi.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 722,
-    "judul": "Home: kartu Streak/Target jelas isinya & 'kata baru' = kata tersimpan",
-    "poin": "Kartu Target harian kini tampil 'XP 54/100' dan 'Beres!' tanpa angka dobel.",
     "tgl": "2026-11-12"
   }
 ]
