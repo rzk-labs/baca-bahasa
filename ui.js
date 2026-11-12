@@ -1002,7 +1002,9 @@ async function viewBaca() {
     if (moved) { moved = false; return; }
     setCur(e.target);
     if (e.target.closest('.intip')) return;
-    const w = e.target.closest('.w'); if (w) { stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
+    let w = e.target.closest('.w');
+    if (!w && !e.target.closest('button,a,input,.intip') && e.clientX) w = nearWord(vp, e.clientX, e.clientY);
+    if (w) { RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
@@ -1324,6 +1326,18 @@ function showFreq(word, b) {
   box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
 }
 const sugSeen = new Set();
+/* Ketukan di celah/tanda baca/tepi kata -> kata terdekat (maks 20px), tampilan teks tak berubah */
+function nearWord(vp, x, y) {
+  const vr = vp.getBoundingClientRect(); let best = null, bd = 20;
+  for (const el of vp.querySelectorAll('#cols .w')) {
+    for (const r of el.getClientRects()) {
+      if (r.right < vr.left || r.left > vr.right || r.bottom < vr.top || r.top > vr.bottom) continue;
+      const dx = Math.max(r.left - x, 0, x - r.right), dy = Math.max(r.top - y, 0, y - r.bottom), d = Math.hypot(dx, dy);
+      if (d < bd) { bd = d; best = el; }
+    }
+  }
+  return best;
+}
 async function onWord(el, lastEl) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
@@ -1339,12 +1353,13 @@ async function onWord(el, lastEl) {
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
+    <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span>${['ja', 'zh-CN', 'zh'].includes(b.lang) && [...word].length > 1 && !el.querySelector('ruby') ? '<button class="icon tint wexb" id="wsplit" aria-label="Pecah per huruf" title="Pecah per huruf">✂</button>' : ''}<button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="whint" id="whint" hidden></div>
+    ${db.seenExpHint ? '' : '<div class="mut sm" id="wonce">Mau lebih dari satu kata? Ketuk ‹ ›</div>'}
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="pri" data-close id="wdone">Selesai</button></div>
@@ -1424,6 +1439,7 @@ async function onWord(el, lastEl) {
   load(); bumpLook();
   const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
   updExp();
+  if ($('#wonce')) { db.seenExpHint = true; save(); }
   let expT = 0;
   const grow = dir => {
     if (hi - lo + 1 >= MAXW) return;
@@ -1437,6 +1453,13 @@ async function onWord(el, lastEl) {
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
   $('#wexp').onclick = () => grow(1);
+  if ($('#wsplit')) $('#wsplit').onclick = () => {
+    const cs = [...el.textContent]; let k = 0;
+    if (RD.tapX != null && el.firstChild) { const tn = el.firstChild, r = document.createRange(); let off = 0; for (let i = 0; i < cs.length; i++) { try { r.setStart(tn, off); r.setEnd(tn, off + cs[i].length); const q = r.getBoundingClientRect(); if (RD.tapX >= q.left && RD.tapX <= q.right) { k = i; break; } } catch (e) { } off += cs[i].length; } }
+    const fr = document.createDocumentFragment(); let pick = null;
+    cs.forEach((c, i) => { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = c; if (i === k) pick = sp; fr.appendChild(sp); });
+    el.replaceWith(fr); RD.tapX = null; onWord(pick);
+  };
   $('#wexl').onclick = () => grow(-1);
   updKenal();
   $('#wkenal').onclick = () => {

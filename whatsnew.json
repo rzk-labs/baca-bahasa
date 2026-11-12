@@ -1,5 +1,11 @@
 [
   {
+    "n": 658,
+    "judul": "[peta 54] Ketuk kata lebih tepat di HP (area ketuk, tanda baca, ja/zh)",
+    "poin": "Ketuk kata di HP lebih tepat: ketukan di celah atau tanda baca kena kata terdekat.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 656,
     "judul": "[peta 51] Petunjuk baca tak menutup teks, toast pindah ke bawah",
     "poin": "Petunjuk ketuk kini cuma satu baris di bawah, tidak menutup teks bacaan.",
@@ -171,12 +177,6 @@
     "n": 533,
     "judul": "Home & tab Ngomong ikut brand v9: ikon garis, tanpa emoji",
     "poin": "Layar Home dan Ngomong sekarang pakai ikon garis, bukan emoji lagi.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 526,
-    "judul": "Impor EPUB/PDF offline: cek pustaka benar-benar tersimpan, pesan jelas",
-    "poin": "Impor EPUB/PDF tanpa sinyal sekarang kasih pesan jelas, tidak gagal diam-diam.",
     "tgl": "2026-11-12"
   }
 ]
