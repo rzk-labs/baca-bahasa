@@ -102,6 +102,7 @@
 - [mutu-terjemahan-mesin](riset-mutu-terjemahan-mesin.md)
 - [nama-keepo](riset-nama-keepo.md)
 - [nama-tokoh-terjemahan-mesin](riset-nama-tokoh-terjemahan-mesin.md)
+- [navigasi-buku](riset-navigasi-buku.md)
 - [opini-internet](riset-opini-internet.md)
 - [pasar-ukuran](riset-pasar-ukuran.md)
 - [peluang-masalah](riset-peluang-masalah.md)
