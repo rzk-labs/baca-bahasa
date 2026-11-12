@@ -733,3 +733,9 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .bk .cover .em{font-size:64px}
 .bk .t,.hero .t{word-break:keep-all;overflow-wrap:break-word;line-break:strict}
 .bk .t .t-au{display:block;font:500 12px/16px var(--font-ui);color:var(--color-text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* #786: ikon bagikan berlabel, judul baca dapat ruang, Koleksi tak tertutup menu bawah */
+.rrt .rrti{font-size:20px;line-height:20px;height:20px}
+.rtitle{overflow:hidden}.rtitle b{min-width:3ch}
+@media (max-width:359px){.rbar{gap:0;padding-left:4px;padding-right:4px}.rrt,.rlis{min-width:38px;padding:0 2px}.rrtl{display:none}}
+.bk .t{min-height:38px;overflow-wrap:break-word}
+.hscroll{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
