@@ -1,5 +1,11 @@
 [
   {
+    "n": 692,
+    "judul": "[peta 69] Saat impor: tampilkan 'Perkiraan kata baru ~N%'",
+    "poin": "Habis impor buku, muncul \"Perkiraan kata baru ~N%\" di notifikasi dan kartu rak.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 690,
     "judul": "[peta 34] Tombol feedback kirim langsung ke HQ, tanpa salin-tempel",
     "poin": "Tombol Kirim masukan sekarang langsung sampai ke tim, tanpa salin-tempel.",
@@ -171,12 +177,6 @@
     "n": 591,
     "judul": "Kartu Kata: jadwal ulang 1/3/7/21 hari, kata jatuh tempo dulu",
     "poin": "Kartu Kata sudah mengulang kata di hari ke 1, 3, 7, dan 21.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 590,
-    "judul": "Papan Keepo HQ HP: kolom kosong ciut, chip otomatis & QA mudah diketuk",
-    "poin": "Papan HQ di HP lebih rapi: kolom kosong ciut jadi satu baris.",
     "tgl": "2026-11-12"
   }
 ]
