@@ -15,6 +15,7 @@ const ICONS = {
   book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
   mic: '<path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/>',
   cards: '<rect x="3" y="6" width="13" height="16" rx="2.5"/><path d="M8 2h10.5A2.5 2.5 0 0 1 21 4.5V17"/>',
+  bm: BM,
   bmplus: BM + '<path d="M12 7v6M15 10H9"/>', bmcheck: BM + '<path d="m9 10 2 2 4-4"/>',
   vol: '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',
   sliders: '<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
@@ -509,8 +510,8 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button>${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}<button class="rchap" id="rMarks" aria-haspopup="dialog" hidden></button><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <button class="icon rthm" id="rThm" aria-label="Ganti tema: sekarang ${({ light: 'terang', sepia: 'sepia', dark: 'gelap', auto: 'ikut HP' })[db.theme] || 'terang'}">Tema</button>${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon rbm" id="rBm" type="button" aria-pressed="false" aria-label="Tandai halaman ini">${ico('bm')}</button><button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>🌙 Mata capek? Pakai tema gelap</span><button data-t="dark">Gelap</button><button data-t="auto">Ikut HP</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
@@ -526,6 +527,8 @@ async function viewBaca() {
   if ($('#rRt')) $('#rRt').onclick = () => { db.rt = db.rt ? 0 : 1; save(); viewBaca(); };
   $('#rSpeak').onclick = () => setTab('bicara');
   $('#reader #set').onclick = openSettings;
+  $('#rBm').onclick = toggleMark;
+  $('#rMarks').onclick = openMarks;
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
@@ -646,11 +649,48 @@ function showPage(p, anim = true) {
   const ml = minsLeft(b);
   $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
+  syncMarks();
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
   nx.disabled = last && !!b.doneAt;
   if (last && !b.doneAt) { nx.textContent = 'Selesai 🎉'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
+}
+/* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
+const MARK_MAX = 20;
+const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
+const markHere = b => { const on = new Set(RD.ss.filter(x => x.pg === RD.page).map(x => +x.el.dataset.s)); return marksOf(b).filter(m => m.p === b.pos && on.has(m.s)); };
+function syncMarks() {
+  const b = book(), bt = $('#rBm'), ls = $('#rMarks'); if (!b || !bt || !ls) return;
+  const on = markHere(b).length > 0, n = marksOf(b).length;
+  bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false');
+  bt.setAttribute('aria-label', on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini');
+  ls.hidden = !n; ls.textContent = `🔖 ${n} penanda ▾`; ls.setAttribute('aria-label', `Daftar penanda, ada ${n}`);
+}
+function toggleMark() {
+  const b = book(); if (!b) return;
+  const hit = markHere(b);
+  if (hit.length) { b.marks = marksOf(b).filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus.', 1800); }
+  if (marksOf(b).length >= MARK_MAX) return toast(`Penanda penuh (maks ${MARK_MAX}). Hapus satu dulu ya.`, 3500);
+  const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
+  const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 70) : '';
+  b.marks = marksOf(b).concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
+  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai 🔖', 1800);
+}
+async function openMarks() {
+  const b = book(); if (!b) return;
+  const secs = await pagesOf(b);
+  const list = marksOf(b).slice().sort((p, q) => p.p - q.p || p.s - q.s);
+  const items = list.map((m, i) => `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}</em><span>${esc(m.t || '…')}</span></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda">${ico('trash')}</button></div>`).join('');
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Penanda 🔖 ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Ketuk ikon 🔖 di bar atas buat nandain.</div>'}`);
+  $$('#sheet .mkgo').forEach(x => x.onclick = () => {
+    const m = list[+x.dataset.i]; closeSheet();
+    b.pos = Math.min(m.p, Math.max(0, secs.length - 1)); b.si = m.s; RD.quiet = true; save(); viewBaca();
+  });
+  $$('#sheet .mkdel').forEach(x => x.onclick = () => {
+    b.marks = marksOf(b).filter(m => m !== list[+x.dataset.i]); save(); syncMarks();
+    if (b.marks.length) openMarks(); else closeSheet();
+  });
 }
 function turn(d) {
   const b = book(); closeSheet();
