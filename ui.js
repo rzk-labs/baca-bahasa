@@ -1236,6 +1236,7 @@ async function onWord(el, lastEl) {
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
+    <div class="whint" id="whint" hidden></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="pri" data-close id="wdone">Selesai</button></div>
@@ -1268,6 +1269,33 @@ async function onWord(el, lastEl) {
     $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
+  /* lencana "Mungkin frasa": opsional, hanya dari cache terjemahan (tanpa jaringan baru) */
+  const NOSPACE = new Set(['ja', 'zh-CN', 'zh', 'th']);
+  const PART = new Set(['up', 'out', 'off', 'over', 'in', 'on', 'away', 'down']);
+  const FUNC = new Set(['the', 'a', 'an', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their', 'this', 'that', 'of', 'to', 'and', 'or', 'but', 'is', 'was', 'are', 'were', 'be', 'at', 'by', 'for', 'with', 'from', 'as', 'if', 'so', 'not', 'no']);
+  const wl = i => (ws[i] ? ws[i].textContent.toLowerCase().replace(/[^\p{L}\p{N}']/gu, '') : '');
+  const toks = t => (t.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter(x => x.length > 2);
+  const hintDir = () => {
+    if (lo !== hi || NOSPACE.has(b.lang)) return 0;
+    const me = wl(lo), nx = wl(lo + 1), pv = wl(lo - 1);
+    if (b.lang === 'en') {
+      if (!PART.has(me) && !FUNC.has(me) && PART.has(nx) && hi < ws.length - 1) return 1;
+      if (PART.has(me) && pv && !FUNC.has(pv) && !PART.has(pv) && lo > 0) return -1;
+    }
+    /* frasa 2 kata dari cache: artinya tak berbagi kata dengan arti per kata */
+    const diff = (ph, parts) => { const pt = cachedTr(ph, b.lang, db.my); if (!pt) return false; const got = parts.map(x => cachedTr(x, b.lang, db.my)); if (got.some(x => !x)) return false; const pw = toks(pt), bag = new Set(got.flatMap(toks)); return pw.length > 0 && !pw.some(x => bag.has(x)); };
+    if (hi < ws.length - 1 && nx && diff(me + ' ' + nx, [me, nx])) return 1;
+    if (lo > 0 && pv && diff(pv + ' ' + me, [pv, me])) return -1;
+    return 0;
+  };
+  const showHint = () => {
+    const h = $('#whint'); if (!h) return;
+    const d = hintDir();
+    if (!d) { h.hidden = true; h.innerHTML = ''; return; }
+    h.innerHTML = `<button class="hintchip" id="whb" aria-label="Mungkin frasa. Ketuk untuk tambah kata ${d > 0 ? 'berikutnya' : 'sebelumnya'}">Mungkin frasa <span aria-hidden="true">${d > 0 ? '›' : '‹'}</span></button>`;
+    h.hidden = false;
+    $('#whb').onclick = () => grow(d);
+  };
   const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
   const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; retry(); }; };
   const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my, sig).then(r => {
@@ -1282,7 +1310,7 @@ async function onWord(el, lastEl) {
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
-    keepVisible('.w.sel');
+    keepVisible('.w.sel'); showHint();
   }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
   const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
@@ -1295,7 +1323,7 @@ async function onWord(el, lastEl) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
     $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wdict').innerHTML = ''; showHint(); $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };

@@ -387,6 +387,8 @@ async function pfRun(g) {
 }
 addEventListener('offline', pfStop);
 document.addEventListener('visibilitychange', () => { if (document.hidden) pfStop(); });
+/* baca cache terjemahan tanpa jaringan & tanpa mengubah urutan LRU; kosong bila belum ada */
+function cachedTr(q, sl, tl) { const v = trCache.get(sl + '|' + tl + '|' + q); return v && v.text ? v.text : ''; }
 async function translate(q, sl, tl, signal) {
   pfPause();
   const k = sl + '|' + tl + '|' + q;
