@@ -88,11 +88,12 @@ a{color:inherit}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
 .col{background:var(--soft);border-radius:22px;padding:12px;scroll-snap-align:start;min-height:200px}
 .col.k-live .more-btn{width:100%;margin:2px 0 4px}
-@media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:5}}
+@media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:-1}}
 .col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
 .card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
 .card:hover{transform:translateY(-2px)}
-.card b{display:block;margin:6px 0 4px;line-height:1.3;overflow-wrap:anywhere}
+.card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:6px 0 4px;line-height:1.3;overflow-wrap:anywhere}
+.chip.qa-n{background:var(--sun);max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:inline-block}
 /* timeline */
 .feed{display:grid;gap:0}
 .ev{display:flex;gap:12px;padding:10px 0;border-bottom:1.5px dashed var(--line);align-items:flex-start}
@@ -226,7 +227,7 @@ const tgl=t=>new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',hou
 function lalu(t){const m=Math.round((Date.now()-new Date(t))/6e4);if(m<1)return'barusan';if(m<60)return m+' mnt lalu';const h=Math.round(m/60);if(h<24)return h+' jam lalu';return Math.round(h/24)+' hari lalu'}
 const chipS=t=>`<span class="chip s-${t.status}">${t.status==='dikerjakan'?'<i class="dot"></i>':''}${ST[t.status]}</span>`;
 const chipP=p=>`<span class="chip p-${p}">${TIM[p]?.e||''} ${TIM[p]?.n||p}</span>`;
-const chipQ=q=>q?`<span class="chip o">${q==='lolos'?'✅ QA lolos':'⚠️ QA catatan'}</span>`:'';
+const chipQ=(q,tx)=>q==='lolos'?'<span class="chip o">✅ QA lolos</span>':q&&tx?`<span class="chip qa-n" title="${esc(tx)}">⚠️ ${esc(tx)}</span>`:'';
 
 async function call(path,body,coba=0){
   let r;try{r=await fetch('/api'+path,{method:body?'POST':'GET',headers:{authorization:'Bearer '+tok,'content-type':'application/json'},body:body?JSON.stringify(body):undefined})}catch(e){r=null}
@@ -355,11 +356,11 @@ async function papan(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='papan')return;
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
-  // tugas gagal yang sudah punya pengganti (tugas lebih baru merujuk #nomornya) disembunyikan
-  const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.rujuk||[]).includes(t.n));
+  // gagal disembunyikan hanya bila ada tugas pengganti yang ditautkan sebagai revisi/ulang dan benar-benar jalan
+  const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.ulang||[]).includes(t.n)&&u.status!=='gagal'&&u.status!=='ditolak');
   const by=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
   const jdl=s=>{s=String(s||'').replace(/\s+/g,' ').trim();if(s.length<=70)return s;const c=s.slice(0,69),i=c.lastIndexOf(' ');return (i>40?c.slice(0,i):c).replace(/[\s,.;:–-]+$/,'')+'…'};
-  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">✎ Revisi</button>`:''}</div>`;
+  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa,t.qaTeks)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">✎ Revisi</button>`:''}</div>`;
   V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
   <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?[...L].sort((a,b)=>new Date(b.diubah)-new Date(a.diubah)).slice(0,5):L).map(kartuP).join(''):'<div class="empty sm">Kosong</div>'}${k==='live'&&L.length>5?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
   auto(papan);
