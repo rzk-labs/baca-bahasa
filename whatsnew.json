@@ -1,5 +1,11 @@
 [
   {
+    "n": 766,
+    "judul": "Sheet arti kalimat: kata di kalimat bisa diketuk, arti muncul di tempat",
+    "poin": "Di arti kalimat, tiap kata sekarang bisa diketuk, artinya muncul langsung di tempat.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 764,
     "judul": "Tombol 'Ini nama' di sheet arti: nama tokoh tak jadi kata belajar",
     "poin": "Sekarang ada tombol \"Ini nama\" di arti kata, jadi nama tokoh tak salah diartikan.",
@@ -171,12 +177,6 @@
     "n": 708,
     "judul": "[peta 70] Ringkasan mingguan saat app dibuka, tanpa hukuman streak",
     "poin": "Beranda kini punya kartu \"Minggu ini\": hari aktif, buku dibuka, kata baru.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 706,
-    "judul": "[peta 31] Seragamkan nama app jadi KEEPO di teks tampilan",
-    "poin": "Nama app di layar sekarang seragam: Keepo.",
     "tgl": "2026-11-12"
   }
 ]
