@@ -1134,9 +1134,13 @@ function showSentence(word, sent, sIdx, sEl) {
   if (slk !== lastSentLook) { lastSentLook = slk; bumpSentLook(b.id, 'kalimat'); }
   sEl.classList.add('hl');
   const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
+  /* arti kata dari cache saja (tanpa permintaan baru); belum ada = baris tidak tampil */
+  const wc = word ? trCache.get(b.lang + '|' + db.my + '|' + word) : null;
+  const wMean = wc && wc.text ? String(wc.text).trim() : '';
+  const wordGloss = wMean ? `<div class="wgloss"><span class="wg-w" dir="auto" lang="${esc(b.lang)}">${esc(word)}</span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(db.my)}">${esc(wMean)}</span></div>` : '';
   openSheet(`
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
-    <div class="src">${marked}</div>
+    <div class="src">${marked}</div>${wordGloss}
     <div id="sbaca"></div>
     <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     ${ttsNote(b.lang)}
@@ -1150,7 +1154,14 @@ function showSentence(word, sent, sIdx, sEl) {
   const loadSent = () => { const my = ++sTok; clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
     if (!alive() || my !== sTok) return;
     clearTimeout(sSlow);
-    $('#str').textContent = r.text;
+    const trEl = $('#str'), lm = wMean.toLowerCase(), lt = r.text.toLowerCase(), at = lm && lt.length === r.text.length ? lt.indexOf(lm) : -1;
+    /* tahap 2: tandai hanya bila arti kata ketemu utuh di terjemahan; tidak ketemu = tanpa tanda */
+    const LET = /[\p{L}\p{N}]/u, en = at + lm.length;
+    if (at >= 0 && !(at > 0 && LET.test(r.text[at - 1])) && !(en < r.text.length && LET.test(r.text[en]))) {
+      trEl.textContent = r.text.slice(0, at);
+      const mk = document.createElement('mark'); mk.textContent = r.text.slice(at, en);
+      trEl.append(mk, r.text.slice(en));
+    } else trEl.textContent = r.text;
     const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
     if (bc && sb) {
       const v = `<div class="sbaca" lang="${esc(b.lang)}">${esc(bc)}</div>`;
