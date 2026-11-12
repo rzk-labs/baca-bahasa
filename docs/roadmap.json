@@ -47,7 +47,8 @@
     { "no": 40, "peran": "developer", "prioritas": "P0", "nama": "Header saat baca buku lebih ringan: maks 2 tombol kanan, XP & Ngomong pindah (#398)", "dokumen": "docs/desain-header-baca-ringan.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 41, "peran": "developer", "prioritas": "P0", "nama": "Arti tetap jalan saat sinyal lemah: prafetch kalimat halaman aktif, ketukan didahulukan (#458)", "dokumen": "docs/spesifikasi-prafetch-kalimat.md", "status": "selesai" },
     { "no": 42, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ pakai brand v9: Plum Noir, Biru Es, Wasabi, Bricolage + Inter, tanpa maskot (#479)", "dokumen": "docs/spesifikasi-hq-brand-v9.md", "status": "spesifikasi siap dikerjakan" },
-    { "no": 43, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata (#294)", "dokumen": "docs/spesifikasi-hq-judul-tugas-rapi.md", "status": "spesifikasi siap dikerjakan" }
+    { "no": 43, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata (#294)", "dokumen": "docs/spesifikasi-hq-judul-tugas-rapi.md", "status": "spesifikasi siap dikerjakan" },
+    { "no": 44, "peran": "pm", "prioritas": "P3", "nama": "Sosial ringan: profil, teman, feed 'sedang dibaca' + akun uji AI (#539)", "dokumen": "docs/spesifikasi-sosial-profil.md", "status": "dispesifikasi, menunggu keputusan; butuh deploy server manual" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
@@ -57,7 +58,7 @@
     { "level": "P1", "isi": "Mengukur kebiasaan dan pemahaman" },
     { "level": "P2", "isi": "Pronunciation scoring" },
     { "level": "P2", "isi": "Banyak bahasa sekaligus" },
-    { "level": "P3", "isi": "Fitur sosial, leaderboard, marketplace buku (tunda)" }
+    { "level": "P3", "isi": "Fitur sosial, leaderboard, marketplace buku (tunda)", "catatan": "Fitur sosial: dispesifikasi, menunggu keputusan (docs/spesifikasi-sosial-profil.md, #539)" }
   ],
   "milestone": [
     { "no": 1, "nama": "Validate the Problem",          "isi": "Wawancara ~15 calon pengguna tentang masalah & kebiasaan membaca.", "status": "selesai", "catatan": "Selesai: 101 bukti dari 6 jenis sumber; masalah umum terbukti (iklan, layar ramai, daftar kata berantakan). Kelemahan: suara Indonesia baru dari iPhone. Lihat docs/riset-milestone1-suara-indonesia.md, docs/pm-milestone-validasi.md." },
