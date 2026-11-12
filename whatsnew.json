@@ -1,5 +1,11 @@
 [
   {
+    "n": 471,
+    "judul": "Daftar penanda jelas: potongan lebih panjang, tanggal & posisi %",
+    "poin": "Daftar penanda sekarang menampilkan cuplikan lebih panjang, bab, persen posisi, dan tanggal.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 466,
     "judul": "Ikon garis menggantikan emoji di e-reader & penanda (brand v9)",
     "poin": "Tombol penanda dan bar baca sekarang pakai ikon garis, bukan emoji.",
@@ -171,12 +177,6 @@
     "n": 317,
     "judul": "Sheet kata: tombol '+' bisa perluas ke kiri & ketuk beruntun tak antre",
     "poin": "Sheet arti kata kini punya tombol ‹ untuk menambah kata sebelumnya.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 315,
-    "judul": "Sheet arti kalimat: tombol 'Coba lagi' & offline jelas saat gagal",
-    "poin": "Arti kalimat kini punya tombol \"Coba lagi\" saat sinyal putus.",
     "tgl": "2026-11-11"
   }
 ]
