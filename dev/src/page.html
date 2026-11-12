@@ -111,7 +111,7 @@ a{color:inherit}
 .stage{display:flex;gap:10px;align-items:flex-start;padding:12px;border:2px solid var(--ink);border-radius:16px;background:var(--card)}
 .stage .no{font-family:Archivo;font-stretch:75%;font-weight:900;font-size:22px;width:34px;flex:none}
 .stage b{display:block;line-height:1.25}
-.k-selesai{background:var(--mint)}.k-draft,.k-berjalan{background:var(--sun)}.k-awal{background:var(--blue)}.k-belum{background:transparent;color:var(--ink);border-style:dashed}
+.bk4{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:640px){.bk4{grid-template-columns:repeat(2,minmax(0,1fr))}}.bk4 .eyebrow{white-space:normal}.k-selesai{background:var(--mint)}.k-draft,.k-berjalan{background:var(--sun)}.k-awal{background:var(--blue)}.k-belum{background:transparent;color:var(--ink);border-style:dashed}
 .bar{height:10px;border-radius:99px;background:rgba(42,18,21,.15);overflow:hidden}.bar i{display:block;height:100%;background:#2A1215;border-radius:99px}
 /* doc */
 .doclist{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
@@ -320,6 +320,27 @@ async function markas(again){
 }
 
 let HF='semua',LAMA=false;
+// Daftar kerja dari roadmap.backlog: kelompok status supaya kelihatan mana selesai, jalan, pause
+function ember(st){st=String(st||'').toLowerCase();
+  if(/^selesai/.test(st))return 'selesai';
+  if(/founder|menunggu keputusan|draft siap dicek|deploy server manual/.test(st))return 'kamu';
+  if(/sedang|berjalan|dikerjakan tim|diproses/.test(st))return 'jalan';
+  return 'belum'}
+const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Menunggu kamu','t-sun'],belum:['⏸️ Belum / pause',''],selesai:['✅ Selesai','t-mint']};
+let BKF='';
+function daftarKerja(){
+  const B=(HQ&&HQ.roadmap&&HQ.roadmap.backlog)||[];if(!B.length)return '';
+  const xs=B.map(b=>({...b,e:ember(b.status)})).sort((a,b)=>String(a.prioritas).localeCompare(String(b.prioritas))||a.no-b.no);
+  const n=k=>xs.filter(x=>x.e===k).length;
+  const baris=x=>`<div class="tile bk"><div class="row" style="flex-wrap:wrap;gap:6px"><span class="chip ${x.prioritas==='P0'?'t-coral':x.prioritas==='P1'?'t-sun':'o'}">${esc(x.prioritas||'')}</span>${TIM[x.peran]?chipP(x.peran):''}<span class="chip ${EMB[x.e][1]}">${EMB[x.e][0]}</span><span class="sp"></span><span class="mut sm">no. ${x.no}</span></div><b style="display:block;margin:8px 0 4px">${esc(x.nama)}</b><div class="mut sm">${esc(x.status)}</div>${x.dokumen?`<button class="btn ghost sm" style="margin-top:8px" onclick="go('dokumen','${esc(x.dokumen)}')">Buka dokumen</button>`:''}</div>`;
+  const tile=k=>`<div class="tile c ${EMB[k][1]}" style="cursor:pointer;${BKF===k?'outline:3px solid var(--ink)':''}" onclick="BKF=BKF==='${k}'?'':'${k}';hasilKerja(true)"><div class="eyebrow">${EMB[k][0]}</div><div class="big">${n(k)}</div></div>`;
+  const aktif=BKF?xs.filter(x=>x.e===BKF):xs.filter(x=>x.e!=='selesai');
+  const sel=xs.filter(x=>x.e==='selesai');
+  return `<div class="sec"><h2>Daftar kerja</h2><span class="mut sm">dari peta · ${xs.length} tugas</span></div>
+  <div class="bento bk4">${['jalan','kamu','belum','selesai'].map(tile).join('')}</div>
+  <div class="grid" style="margin-top:12px">${aktif.length?aktif.map(baris).join(''):'<div class="empty">Tidak ada.</div>'}</div>
+  ${!BKF&&sel.length?`<details class="more"><summary>Lihat yang selesai (${sel.length})</summary><div class="grid" style="margin-top:10px">${sel.map(baris).join('')}</div></details>`:''}`;
+}
 async function hasilKerja(again){
   if(!again)skel();
   let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
@@ -354,6 +375,7 @@ async function hasilKerja(again){
     <div class="tile c t-sun" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${sp}</div><div class="sm">cek & setujui →</div></div>
     <div class="tile c t-pink"><div class="eyebrow">Masukan tester</div><div class="big">${mas.length}</div><div class="sm">${[...new Set(mas.map(m=>m.nama))].join(', ')||'belum ada'}</div></div>
   </div>
+  ${daftarKerja()}
   <div class="sec"><h2>Per anggota tim</h2></div>
   <div class="agents">${per.map(k=>`<div class="tile agent" style="cursor:pointer" onclick="HF='${k}';hasilKerja(true)"><div class="row"><div class="av ${TIM[k].c}">${TIM[k].e}</div><div><h3>${TIM[k].n}</h3><div class="mut sm">${TIM[k].d}</div></div></div><div class="st"><b>${cnt(k)}</b> hasil</div></div>`).join('')}</div>
   <div class="tb" style="margin-top:18px"><input id="qt" type="search" placeholder="Cari hasil, isi laporan, atau #nomor…" aria-label="Cari hasil" value="${esc(Q)}"></div>
