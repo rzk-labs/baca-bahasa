@@ -382,6 +382,8 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .rchap{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 10px;margin:-14px 0;border:0;background:none;color:var(--color-text-muted);font:700 12px var(--font-ui);cursor:pointer;border-radius:var(--radius-full)}
 .rchap:active{background:var(--color-surface)}
 .chlist{display:flex;flex-direction:column;gap:6px;margin-top:var(--space-2)}
+#mkOrd{margin-top:var(--space-2)}
+#mkOrd button{font-size:13px;padding:0 6px}
 .chi{display:flex;align-items:center;gap:12px;min-height:48px;padding:8px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:left;cursor:pointer}
 .chi em{font:800 13px var(--font-ui);font-style:normal;min-width:24px;color:var(--color-text-muted)}
 .chi span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
