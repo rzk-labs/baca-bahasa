@@ -312,6 +312,7 @@ function openSettings() {
     ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
+    <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
     <div class="set-grp"><div class="set-gt">Lainnya</div>
@@ -339,6 +340,7 @@ function openSettings() {
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
+  $$('#tes button').forEach(x => x.onclick = () => { db.tapEdge = x.dataset.v === '1'; save(); $$('#tes button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#wks button').forEach(x => x.onclick = () => { db.wake = x.dataset.v === '1'; save(); $$('#wks button').forEach(y => y.classList.toggle('on', y === x)); wakeSync(); });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
   $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.lhSet = false; db.align = null; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'paper'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
@@ -695,7 +697,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span><b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)</span></div><div>${ico('menu')}<span><b>Ketuk tengah</b> = menu</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span>${db.tapEdge === false ? '<b>Geser / tombol panah</b> = ganti halaman (laptop: ← →)' : '<b>Geser / ketuk tepi sempit</b> = ganti halaman (bisa dimatikan di Pengaturan)'}</span></div><div>${ico('menu')}<span>${db.tapEdge === false ? '<b>Ketuk layar</b> = menu' : '<b>Ketuk tengah</b> = menu'}</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => leaveBaca();
@@ -746,7 +748,8 @@ async function viewBaca() {
     setCur(e.target);
     const w = e.target.closest('.w'); if (w) { vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-    if (x < 0.25) turn(-1); else if (x > 0.75) turn(1); else $('#reader').classList.toggle('chrome');
+    const te = db.tapEdge !== false;
+    if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
   };
   RD.quiet = false;
   layout();

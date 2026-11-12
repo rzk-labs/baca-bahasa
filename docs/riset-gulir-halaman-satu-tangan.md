@@ -100,6 +100,10 @@ Total: 52 butir dari 7 sumber (forum LingQ, forum Readlang, MobileRead, blog e-r
 2. **Satu tangan:** tombol "Maju" besar (≥48px) di bawah; zona bawah layar jangan jadi satu-satunya jalan.
 3. **Posisi aman & progres opsional:** uji kalimat yang sedang dibaca tetap terlihat setelah ganti huruf; saklar sembunyikan "Hal x/n · Sisa".
 
+**Status (#550):** usul 1-2 sudah dikerjakan.
+- Zona tepi jadi 15%; saklar ada di Pengaturan baca.
+- Tombol Maju/Mundur 48px; petunjuk awal ikut saklar.
+
 ## 6. Yang belum diketahui
 - Reddit & ulasan Play Store/App Store tak terbuka.
 - Data khusus satu tangan di KRL tidak ada; uji nyata tetap berguna.
