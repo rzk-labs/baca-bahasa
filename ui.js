@@ -529,12 +529,21 @@ function wordOfDay(pick = null) {
   const v = (pick && ok.includes(pick) && pick) || top[key % top.length];
   return { n: ok.length, v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
 }
+// Buang kutip/kurung pembuka yang menggantung di ujung contoh (potongan kalimat).
+function wodCx(t) {
+  t = String(t || '').trim();
+  for (let i = 0; i < 4; i++) {
+    const u = t.replace(/[\s「『“‘"'«(（\[【]+(…)?$/, (m, e) => e || '').replace(/^[」』”’"'»)）\]】]+\s*/, '');
+    if (u === t) break; t = u;
+  }
+  return t;
+}
 function wodHtml() {
   const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
   const k = wordOfDay(wodPick);
   if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini</div></div>`;
-  const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
-  return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
+  const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = wodCx(ctxOf(v, 90)), qt = /^[「『“"«]/.test(cx) && /[」』”"»]$/.test(cx);
+  return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">${qt ? esc(cx) : `“${esc(cx)}”`}</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
 }
 function bindWod() {
   if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
@@ -576,7 +585,7 @@ function viewRak() {
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${esc(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>
-      <button class="del" data-del="${b.id}" aria-label="Hapus cerita">${ico('trash')}</button></div>`).join('')}</div>`;
+      <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
@@ -620,7 +629,9 @@ function viewRak() {
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
     e.stopPropagation();
-    if (!el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash'); } }, 3000); return; }
+    const bk = db.books.find(b => b.id === el.dataset.del);
+    const berisi = bk && (pctOf(bk) > 0 || db.vocab.some(v => v && v.book === bk.title && v.lang === bk.lang));
+    if (berisi && !el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Yakin hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash') + '<span>Hapus</span>'; } }, 3500); return; }
     hapusBuku(el.dataset.del);
   });
 }
