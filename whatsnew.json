@@ -1,5 +1,11 @@
 [
   {
+    "n": 504,
+    "judul": "Penanda penuh: timpa yang terlama otomatis + Urungkan",
+    "poin": "Penanda penuh? Sekarang yang terlama otomatis diganti, tak perlu hapus manual.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 302,
     "judul": "E-reader: tombol cepat 'cara baca' di bar baca (JP/KR/ZH)",
     "poin": "Tombol cara baca di bar baca sekarang kasih pesan singkat saat diketuk.",
@@ -171,12 +177,6 @@
     "n": 359,
     "judul": "Sheet kalimat: tombol ‹ › pindah kalimat tanpa tutup sheet",
     "poin": "Di jendela arti kalimat ada tombol panah kiri dan kanan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 352,
-    "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
-    "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
     "tgl": "2026-11-12"
   }
 ]
