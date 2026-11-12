@@ -626,7 +626,7 @@ function streakInfo() {
   let best = 0, run = 0, prev = null;
   for (const d of ds) { run = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1 ? run + 1 : 1; if (run > best) best = run; prev = d; }
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
-  return best > cur ? `Rekor ${best} hari` : cur > 0 ? 'Rekor barumu!' : 'Mulai hari ini yuk';
+  return best > cur ? `Rekor ${best} hari` : cur >= 2 ? 'Rekor barumu!' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -655,7 +655,7 @@ function viewRak() {
     </div>
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
-      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${xt}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Beres!' : `XP ${xt}/${GOAL}`}</div></div>
+      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${xt}/${GOAL}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Target ${GOAL} XP tercapai` : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -1049,7 +1049,7 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" title="Pengaturan baca" aria-label="Pengaturan baca">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(b.title)}</div>
