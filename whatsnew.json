@@ -1,5 +1,11 @@
 [
   {
+    "n": 790,
+    "judul": "Dengar halaman: opsi 'Lanjut otomatis' ke halaman berikutnya",
+    "poin": "Dengar halaman kini bisa lanjut sendiri ke halaman berikutnya. Bawaannya mati.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 788,
     "judul": "Baca: colek lembut ketuk kata pertama bila 4 halaman tanpa ketukan",
     "poin": "Pembaca baru yang 4 halaman belum ketuk kata dapat colekan ramah, sekali saja.",
@@ -171,12 +177,6 @@
     "n": 730,
     "judul": "Baca: saklar sembunyikan bar progres & posisi aman saat ganti huruf",
     "poin": "Ada saklar baru di Pengaturan baca untuk menyembunyikan bar progres.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 728,
-    "judul": "Baca: bar progres jelas 'Bab X/Y · Hal a/b' & total halaman stabil",
-    "poin": "Bar baca sekarang jelas: \"Bab 3/11 · Hal 17/17\", persen buku, satu sisa waktu.",
     "tgl": "2026-11-12"
   }
 ]
