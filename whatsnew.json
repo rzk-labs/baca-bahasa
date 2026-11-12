@@ -1,5 +1,11 @@
 [
   {
+    "n": 422,
+    "judul": "Toast error: bilang progres aman + tombol Muat ulang",
+    "poin": "Pesan error sekarang tenang: bilang bacaan dan katamu tetap aman.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 417,
     "judul": "Bar baca ringan: maks 2 tombol kanan & penanda ada Urungkan",
     "poin": "Bar baca lebih lega: tombol kanan tinggal Cara baca dan Pengaturan.",
@@ -171,12 +177,6 @@
     "n": 266,
     "judul": "Sheet arti kalimat: tampilkan cara baca seluruh kalimat (JP/KR/ZH)",
     "poin": "Arti kalimat sekarang menampilkan cara baca seluruh kalimat Jepang/Korea/China.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 264,
-    "judul": "E-reader: tanda 'Offline' halus + sheet arti jelas saat sinyal putus",
-    "poin": "Reader sekarang kasih tanda 'Offline' kecil saat sinyal putus.",
     "tgl": "2026-11-11"
   }
 ]
