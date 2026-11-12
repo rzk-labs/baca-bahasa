@@ -459,6 +459,8 @@ async function openProfile(username) {
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div><div><b>${p.kata7}</b><span>kata minggu ini</span></div><div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${p.reading.length ? p.reading.map(bacaBaris).join('') : '<div class="mut sm">Belum ada buku yang dibuka.</div>'}
+      ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${db.badges.length}/${BADGES.length} kebuka</span></div>
+      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${db.badges.includes(id) ? '' : ' off'}" title="${esc(desc)}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${desc}</span></div>`).join('')}</div>` : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
     const f = $('#pfFol'); if (f) f.onclick = async () => { f.disabled = true; try { await api('/ikuti/' + encodeURIComponent(p.username), { method: p.diikuti ? 'DELETE' : 'POST' }); toast(p.diikuti ? `Berhenti mengikuti ${p.nick}.` : `Kamu mengikuti ${p.nick}.`); openProfile(p.username); if ($('#frHome')) homeFriends(); } catch (e) { toast(e.message); f.disabled = false; } };
@@ -576,14 +578,19 @@ async function openSharedFromUrl() {
 async function homeWhatsNew() {
   const host = $('#wnHome'); if (!host) return;
   let L = [];
-  try { L = await (await fetch('whatsnew.json?t=' + Date.now(), { cache: 'no-store' })).json(); } catch (e) { host.remove(); return; }
-  if (!Array.isArray(L) || !L.length) { host.remove(); return; }
+  try { L = await (await fetch('whatsnew.json?t=' + Date.now(), { cache: 'no-store' })).json(); } catch (e) { host.innerHTML = '<div class="mut sm">Kabar baru belum bisa dimuat. Coba lagi nanti.</div>'; return; }
+  if (!Array.isArray(L) || !L.length) { host.innerHTML = '<div class="mut sm">Belum ada kabar baru.</div>'; return; }
   let seen = 0; try { seen = +localStorage.getItem('kepo.wnSeen') || 0; } catch (e) {}
   const baru = L.filter(x => x.n > seen).length;
   const row = x => `<li><b>${esc(x.judul)}</b>${x.poin ? `<div class="mut sm">${esc(x.poin)}</div>` : ''}</li>`;
   host.innerHTML = `<div class="card wn"><div class="sec-h" style="margin:0 0 8px"><h2>${ico('sparkle')}Yang baru${baru ? ` <span class="wn-dot">${baru}</span>` : ''}</h2>${L.length > 3 ? '<button class="ghost" id="wnAll">Lihat semua</button>' : ''}</div><ul class="wn-l">${L.slice(0, 3).map(row).join('')}</ul></div>`;
   const all = $('#wnAll'); if (all) all.onclick = () => { host.querySelector('.wn-l').innerHTML = L.slice(0, 20).map(row).join(''); all.remove(); };
   try { localStorage.setItem('kepo.wnSeen', String(Math.max(...L.map(x => x.n)))); } catch (e) {}
+}
+
+function openWhatsNew() {
+  openSheet(`<div class="sh-head"><h2>Yang baru</h2>${closeBtn}</div><div id="wnHome" class="mut sm">Memuat…</div>`, 'Yang baru');
+  homeWhatsNew();
 }
 
 /* ---------- pasang ke UI yang ada ---------- */
@@ -595,19 +602,17 @@ function viewSosial() {
   if (!db.acct) { V.innerHTML = emptyState('sad', 'Baca bareng teman', 'Masuk untuk lihat apa yang dibaca orang lain, bagikan status, dan bahan bacaan.', 'Masuk', "openAccount('daftar')"); return; }
   const seg = (k, l) => `<button data-sg="${k}" class="${sosSeg === k ? 'on' : ''}">${l}</button>`;
   V.innerHTML = `<div class="sec-h"><h2>Sosial</h2><button class="ghost" id="sosMe">Profilku</button></div>
-    <div class="seg" id="sosSeg" style="margin-bottom:12px">${seg('fyp', 'Untuk kamu')}${seg('teman', 'Teman')}</div>
-    <div id="${sosSeg === 'fyp' ? 'fypHome' : 'frHome'}"></div>`;
+    <div class="seg" id="sosSeg" style="margin-bottom:12px">${seg('fyp', 'Untuk kamu')}${seg('teman', 'Teman')}${seg('rank', 'Peringkat')}</div>
+    <div id="${sosSeg === 'fyp' ? 'fypHome' : sosSeg === 'rank' ? 'lbHome' : 'frHome'}"></div>`;
   $$('#sosSeg button').forEach(b => b.onclick = () => { sosSeg = b.dataset.sg; viewSosial(); });
   $('#sosMe').onclick = () => openProfile(db.acct.username);
-  if (sosSeg === 'fyp') homeFyp(); else homeFriends();
+  if (sosSeg === 'fyp') homeFyp(); else if (sosSeg === 'rank') homeLeaderboard(); else homeFriends();
 }
 const _setTab = setTab;
 setTab = function (t) {
   _setTab(t);
   renderAcct();
   if (t === 'rak') {
-    const ben = $('.bento');
-    if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
 };

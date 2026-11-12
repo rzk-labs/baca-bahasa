@@ -156,6 +156,13 @@ button:disabled{opacity:.35;pointer-events:none}
 .goal-row .ring .score{font:800 15px var(--font-ui)}
 .wod-w{font:800 30px/32px var(--font-display);overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px;flex-wrap:wrap}.wod .hero-act button{flex:1 1 130px}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
+.stat3 .eyebrow{color:rgba(53,30,40,.75);font-size:11px}
+.stat3 .num{font:800 28px/30px var(--font-display);display:flex;align-items:center;justify-content:center;gap:4px}
+.stat3 .num svg.i.numi{width:22px;height:22px}
+.stat3 .lbl2{font-size:12px;line-height:15px;font-weight:700}
+.stat3 .goal-row{display:flex;justify-content:center;margin:2px 0}
 .chal .spot{width:52px;height:52px}
 .chal b{font:800 22px/24px var(--font-display);display:block}
 .cover{flex:none;width:74px;height:104px;border-radius:6px 12px 12px 6px;display:flex;flex-direction:column;justify-content:space-between;padding:9px;font:700 11px/1.2 var(--font-display);color:var(--ink);box-shadow:inset 4px 0 0 rgba(53,30,40,.14);overflow:hidden;overflow-wrap:normal;word-break:normal;-webkit-hyphens:manual;hyphens:manual;position:relative;border:1.5px solid rgba(53,30,40,.15)}
