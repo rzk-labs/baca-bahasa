@@ -1,5 +1,11 @@
 [
   {
+    "n": 682,
+    "judul": "[peta 68] Kamus Jepang kecil: cara baca + bentuk dasar di sheet arti",
+    "poin": "Kata Jepang kini tampil dengan cara baca dan bentuk dasar, arti offline lebih dulu.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 680,
     "judul": "[peta 61] Impor Gutenberg/Aozora: bab benar, _miring_ rapi, dialog bukan judul",
     "poin": "Jumlah bab buku Gutenberg kini benar dan tetap sama sejak impor.",
@@ -171,12 +177,6 @@
     "n": 574,
     "judul": "Impor buku: cek file kembar & peringatan file besar di iPhone",
     "poin": "Impor buku sekarang menanyakan dulu kalau file yang sama sudah ada di rak.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 573,
-    "judul": "Uji layar 320px: rapikan Home, Kata & sheet arti (style.css)",
-    "poin": "Tampilan di HP kecil dirapikan: kartu buku, tab Kata, dan jendela arti.",
     "tgl": "2026-11-12"
   }
 ]
