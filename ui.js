@@ -792,13 +792,9 @@ async function onWord(el, lastEl) {
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
     <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya" style="margin-left:auto;font:800 24px/1 var(--font-ui)">‹</button><button class="icon tint" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">${ico('plus')}</button></div>
-    <span class="pos" id="wpos"></span>
-    <div class="mut sm" id="wbaca"></div>
-    <div class="mut sm" id="wbase"></div>
+    <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
     <div class="tr" id="wtr" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
-    <div class="mut sm" id="wlook"></div>
-    <div class="wfreq" id="wfreq"></div>
-    <div class="wtap" id="wtap"></div>
+    <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" data-close id="wdone">Selesai</button></div>
