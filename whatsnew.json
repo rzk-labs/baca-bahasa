@@ -1,5 +1,11 @@
 [
   {
+    "n": 359,
+    "judul": "Sheet kalimat: tombol ‹ › pindah kalimat tanpa tutup sheet",
+    "poin": "Di jendela arti kalimat ada tombol panah kiri dan kanan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 352,
     "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
     "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
@@ -171,12 +177,6 @@
     "n": 193,
     "judul": "Saklar 'Tampilkan cara baca' di Setelan (kartu arti & kartu Hafal)",
     "poin": "Setelan baru: cara baca (romaji/pinyin) bisa dimatikan. Awalnya tetap nyala.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 185,
-    "judul": "E-reader: sisa waktu baca jujur saat bab lain belum dimuat",
-    "poin": "Sisa waktu baca sekarang jujur: tampil '≥N menit' kalau ada bab belum dihitung.",
     "tgl": "2026-11-11"
   }
 ]
