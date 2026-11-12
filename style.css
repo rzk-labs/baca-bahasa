@@ -394,6 +394,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .mki{display:flex;align-items:center;gap:4px}
 .mkgo{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:48px;padding:8px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:left;cursor:pointer}
 .mkgo em{font:800 13px var(--font-ui);font-style:normal;white-space:nowrap;color:var(--color-text-muted)}
+.mkb{flex:1;min-width:0}.mkb span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .mkgo span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
 .mkdel{flex:none;color:var(--color-text-muted)}
 .mkdel svg{width:18px;height:18px}

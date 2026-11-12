@@ -750,7 +750,9 @@ async function openMarks() {
   const b = book(); if (!b) return;
   const secs = await pagesOf(b);
   const list = marksOf(b).slice().sort((p, q) => p.p - q.p || p.s - q.s);
-  const items = list.map((m, i) => `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}</em><span>${esc(m.t || '…')}${m.at ? `<small class="mkat">${new Date(m.at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</small>` : ''}</span></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda">${ico('trash')}</button></div>`).join('');
+  const all = marksOf(b), clip = t => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > 110 ? t.slice(0, 110).trimEnd() + '…' : t; };
+  const dt = m => { const d = m.at ? new Date(m.at) : null; return d && !isNaN(d) ? d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : ''; };
+  const items = list.map((m, i) => { const n = all.indexOf(m) + 1; return `<div class="mki"><button class="mkgo" data-i="${i}"><em>Bab ${m.p + 1}</em><div class="mkb"><span>${esc(clip(m.t) || '…')}</span><small class="mkat">Penanda ${n}${dt(m) ? ' · ' + dt(m) : ''}</small></div></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${n}">${ico('trash')}</button></div>`; }).join('');
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`);
   $$('#sheet .mkgo').forEach(x => x.onclick = () => {
     const m = list[+x.dataset.i]; closeSheet();
