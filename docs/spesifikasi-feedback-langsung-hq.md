@@ -2,7 +2,7 @@
 
 ## Intinya
 - Tombol "Kirim" langsung mengirim masukan ke Keepo HQ. Tanpa buka WhatsApp/email/bagikan.
-- Butuh endpoint baru di server. Deploy manual oleh founder.
+- Dipilih: Worker HQ (`dev/`) terima kiriman. Deploy otomatis, founder tidak perlu apa-apa.
 - Kalau offline atau gagal, masukan tetap aman di HP dan dikirim ulang nanti.
 
 ## 1. Masalah sekarang
@@ -20,8 +20,9 @@
 - App kirim `POST /feedback` ke server (JSON: jenis, teks, bintang, info HP, versi app, waktu).
 - Server menulis komentar ke issue "Masukan pengguna" (label `masukan-pengguna`).
 - Dengan begitu HQ langsung menampilkannya di kotak masukan, tanpa ubah pembaca HQ.
-- Pilihan A: Worker `api/` + tabel D1 `feedback` (arsip rapi).
-- Pilihan B: Worker HQ (`dev/`) menerima POST lalu menulis komentar GitHub (lebih sederhana).
+- KEPUTUSAN: pilihan B. Worker HQ (`dev/`) menerima POST lalu menulis komentar GitHub.
+- Pilihan A (Worker `api/` + D1) tidak dipakai; `api/` tidak disentuh.
+- Izinkan CORS dari `https://rzk-labs.github.io` saja.
 
 ## 4. Aturan server
 - Maks 5 kiriman per jam per perangkat. Teks maks 500 huruf.
@@ -35,7 +36,8 @@
 - Kirim ulang yang belum terkirim saat app dibuka atau kembali online.
 - Salin/bagikan hanya jadi cadangan jika server menolak berulang.
 - `app.js`: fungsi baca/tandai antrean. Data lama aman (kolom baru opsional).
-- Server: endpoint baru (setelah founder setuju menyentuh `api/` atau `dev/`).
+- Server: `POST /feedback` di `dev/src/index.js` (boleh diubah untuk tugas ini). Cek `node --check dev/src/index.js`.
+- Token GitHub tetap di Worker HQ; jangan taruh di app.
 - Naikkan versi `C` di `sw.js`. Cek `node --check`.
 
 ## 6. Ukuran sukses
@@ -43,6 +45,6 @@
 - ≥90% masukan yang dikirim muncul di HQ.
 - Nol masukan hilang saat offline.
 
-## 7. Keputusan untuk founder
-- Pilih A (server utama) atau B (Worker HQ)?
-- Setuju deploy manual setelah kode siap?
+## 7. Status
+- Keputusan sudah diambil (pilihan B, deploy otomatis). Tidak ada yang menunggu founder.
+- Siap dikerjakan developer (peta no. 34).
