@@ -75,6 +75,7 @@
 - [brand-identitas](riset-brand-identitas.md)
 - [cara-baca-romanisasi](riset-cara-baca-romanisasi.md)
 - [customer-discovery](riset-customer-discovery.md)
+- [dengar-otomatis-lanjut](riset-dengar-otomatis-lanjut.md)
 - [dengar-sambil-baca](riset-dengar-sambil-baca.md)
 - [ekspor-anki](riset-ekspor-anki.md)
 - [hak-cipta](riset-hak-cipta.md)
