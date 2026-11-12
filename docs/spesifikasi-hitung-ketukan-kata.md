@@ -41,3 +41,12 @@
 ## 6. Di luar cakupan
 - Tidak ada sinkron server baru (`api/` tidak diubah).
 - Tidak ada grafik atau papan skor.
+
+## 7. Arti kalimat dicatat
+- Kolom opsional `db.sentLooks[idBuku] = {kata, kalimat}`; data lama aman tanpa kolom.
+- `kata` naik tiap cek kata di buku itu. `db.looks` tidak diubah.
+- `kalimat` naik tiap sheet kalimat dibuka untuk kalimat baru (termasuk ‹ ›).
+- Tombol "Lihat kalimatnya" dan tahan-kalimat dihitung; buka ulang kalimat sama tanpa ganti kalimat tidak.
+- Maks 200 buku; yang terlama dibuang. Hanya lokal, tidak disinkron (`api/` dan sinkron tak berubah).
+- Tampil di tab Kata: "Buku ini: 42 kata dicek · 5 kalimat dibuka". Disembunyikan bila 0.
+- Pemakaian: bandingkan rasio kata vs kalimat sebelum fitur "tebak dulu".
