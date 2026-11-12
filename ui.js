@@ -313,6 +313,7 @@ function openSettings() {
     ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
+    ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
@@ -350,6 +351,7 @@ function openSettings() {
   $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; db.lhSet = true; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#mgs button').forEach(x => x.onclick = () => { db.mg = x.dataset.v; save(); $$('#mgs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#fcs button').forEach(x => x.onclick = () => { db.focus = x.dataset.v === '1'; save(); $$('#fcs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('focus', db.focus); $$('.cols .cur').forEach(e => e.classList.remove('cur')); const c = $('#cols'); if (c) c.classList.remove('has-cur'); } });
+  $$('#trs button').forEach(x => x.onclick = () => { db.ttsRate = x.dataset.v === 'slow' ? 'slow' : 'normal'; save(); $$('#trs button').forEach(y => y.classList.toggle('on', y === x)); speak(b && b.lang === 'ja' ? 'こんにちは' : 'Hello', b ? b.lang : 'en', 0.8); });
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
@@ -1320,7 +1322,7 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0;
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 let deckDone = 0, deckHint = '';
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
@@ -1402,6 +1404,30 @@ function viewKata() {
           <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`);
           $('#kCsv').onclick = exportCsv;
         };
+      }
+      /* "Sering diketuk": kata belum tersimpan dengan ketukan >=3 (db.taps), maks 5 */
+      const often = csvF.startsWith('b:') ? [] : Object.entries(db.taps || {}).map(([k, n]) => {
+        const j = k.indexOf('|'); return { lang: k.slice(0, j), w: k.slice(j + 1), n: +n || 0 };
+      }).filter(o => o.n >= 3 && o.w && (csvF === 'all' || csvF === 'l:' + o.lang) && (!q || o.w.toLowerCase().includes(q)) && !db.vocab.some(v => sameVocab(v, o.lang, o.w))).sort((a, c) => c.n - a.n).slice(0, 5);
+      if (often.length) {
+        const sec = `<details class="often-sec" id="kOften"${oftenOpen ? ' open' : ''}><summary>Sering diketuk <span class="tapb">${often.length}</span></summary>${often.map((o, i) => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(o.lang)}">${esc(o.w)} <span class="tapb">${o.n}×</span></div><div class="s1">${esc(langName(o.lang))}</div></div><button class="pill-sm" data-os="${i}" aria-label="Simpan kata ${esc(o.w)}">Simpan</button></div>`).join('')}</details>`;
+        const bar = $('#klist .csvbar');
+        if (bar) bar.insertAdjacentHTML('afterend', sec); else kl.insertAdjacentHTML('afterbegin', sec);
+        $('#kOften').ontoggle = e => { oftenOpen = e.target.open; };
+        $$('[data-os]').forEach(btn => btn.onclick = async () => {
+          const o = often[+btn.dataset.os];
+          if (db.vocab.some(v => sameVocab(v, o.lang, o.w))) return renderList();
+          btn.disabled = true; btn.textContent = 'Menyimpan…';
+          const r = await translate(o.w, o.lang, db.my).catch(() => null);
+          if (db.vocab.some(v => sameVocab(v, o.lang, o.w))) return;
+          const tp = takeTaps(o.lang, o.w);
+          if (isKenal(o.lang, o.w)) setKenal(o.lang, o.w, false);
+          untombVocab(o.lang, o.w);
+          db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w: o.w, t: r ? r.text : '', baca: r ? bacaOf(o.w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: o.lang, s: '', ctx: '', at: Date.now() });
+          save(); vib(10); sfx('ding');
+          if (kataSeg === 'simpan' && $('#klist')) renderList();
+          toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya');
+        });
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {

@@ -1,5 +1,11 @@
 [
   {
+    "n": 553,
+    "judul": "Pilihan laju suara Normal/Lambat di Pengaturan baca",
+    "poin": "Di Pengaturan baca ada pilihan \"Laju suara\": Normal atau Lambat.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 550,
     "judul": "Ketuk tepi lebih sempit + saklar & tombol maju besar (satu tangan)",
     "poin": "Ketuk pinggir layar sekarang lebih sempit, jadi ketuk kata tidak salah ganti halaman.",
@@ -171,12 +177,6 @@
     "n": 422,
     "judul": "Toast error: bilang progres aman + tombol Muat ulang",
     "poin": "Pesan error sekarang tenang: bilang bacaan dan katamu tetap aman.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 417,
-    "judul": "Bar baca ringan: maks 2 tombol kanan & penanda ada Urungkan",
-    "poin": "Bar baca lebih lega: tombol kanan tinggal Cara baca dan Pengaturan.",
     "tgl": "2026-11-12"
   }
 ]
