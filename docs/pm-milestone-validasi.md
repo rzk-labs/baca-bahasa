@@ -74,6 +74,7 @@ Isi: uji alur baca + ketuk-kata, 8-10 peserta, bandingkan cara lama.
 - Hanya abstrak terbaca; konteks EFL (bahasa Inggris), bukan JP/KR.
 
 **Vonis: SEBAGIAN.** Alur masuk akal dan didukung studi; belum ada manusia yang mencobanya.
+- Update #363: 46 bukti baru, M2 naik ke selesai (bukti internet). Lihat `riset-validasi-solusi-ketuk-kata.md`.
 
 ## 4. Milestone 3: Build the Smallest Useful Reader
 Isi: reader satu bahasa, impor teks, terjemahan kontekstual, progres baca.
