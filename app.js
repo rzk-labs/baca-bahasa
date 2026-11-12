@@ -88,7 +88,10 @@ function countTap(lang, w) {
 }
 /* ---------- kunci kata tersimpan: kata lowercase + bahasa (dipakai SEMUA jalur simpan/cari/gabung) ---------- */
 const vocabKey = (lang, w) => (lang || '') + '|' + String(w || '').trim().toLowerCase();
-const sameVocab = (v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
+/* tombstone kata dihapus (ikut sinkron akun): daftar {k,at}; kata yang ditambah lagi setelah 'at' dianggap hidup */
+function tombVocab(lang, w) { const k = vocabKey(lang, w); db.vocabDel = (Array.isArray(db.vocabDel) ? db.vocabDel : []).filter(t => t && t.k !== k); db.vocabDel.push({ k, at: Date.now() }); }
+function untombVocab(lang, w) { if (Array.isArray(db.vocabDel)) db.vocabDel = db.vocabDel.filter(t => t && t.k !== vocabKey(lang, w)); }
+const sameVocab =(v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
 /* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
 function dedupeVocab() {
   if (!Array.isArray(db.vocab)) return false;
