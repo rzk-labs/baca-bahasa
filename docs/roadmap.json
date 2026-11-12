@@ -61,7 +61,7 @@
     { "no": 54, "peran": "developer", "prioritas": "P0", "nama": "Ketuk kata lebih tepat: area ketuk lebih besar tak terlihat, tanda baca ikut kata terdekat, petunjuk sekali soal tombol tambah kata, geser batas kata ja/zh (#637)", "dokumen": "docs/riset-akurasi-ketuk-kata.md", "status": "selesai (#658)" },
     { "no": 55, "peran": "developer", "prioritas": "P0", "nama": "Penanda: pintasan 'Lanjut dari penanda' di Home, daftar dengan bab+tanggal+cuplikan lebih panjang, lalu tombol Urungkan (#419)", "dokumen": "docs/riset-penanda-sinkron.md", "status": "selesai (dulu salah tempat bernomor 37 di milestone; dipindah #642)" },
     { "no": 56, "peran": "riset", "prioritas": "P0", "nama": "Bukti internet: setelah tamat buku — baca ulang & saran buku berikutnya (#643)", "dokumen": "docs/riset-setelah-tamat-buku.md", "status": "selesai" },
-    { "no": 57, "peran": "developer", "prioritas": "P0", "nama": "Setelah tamat: kartu Home buku 100% jadi Baca ulang + saran buku berikutnya, sheet Tamat sesuai kondisi, ringkasan kata baru & waktu baca (#643)", "dokumen": "docs/riset-setelah-tamat-buku.md", "status": "siap dikerjakan" }
+    { "no": 57, "peran": "developer", "prioritas": "P0", "nama": "Setelah tamat: kartu Home buku 100% jadi Baca ulang + saran buku berikutnya, sheet Tamat sesuai kondisi, ringkasan kata baru & waktu baca (#643)", "dokumen": "docs/riset-setelah-tamat-buku.md", "status": "selesai (#660)" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
