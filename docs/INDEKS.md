@@ -104,6 +104,7 @@
 - [pemotongan-kata-jp-kr](riset-pemotongan-kata-jp-kr.md)
 - [pengingat-baca-pwa](riset-pengingat-baca-pwa.md)
 - [penanda-sinkron](riset-penanda-sinkron.md)
+- [rekap-sesi-baca](riset-rekap-sesi-baca.md)
 - [sesi-pertama](riset-sesi-pertama.md)
 - [skor-ucapan](riset-skor-ucapan.md)
 - [sumber-kamus](riset-sumber-kamus.md)
