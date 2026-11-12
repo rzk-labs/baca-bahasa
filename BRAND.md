@@ -7,11 +7,20 @@
 | | |
 |---|---|
 | Nama | **Kepo** (logo teks "Keepo" serif) |
-| Tagline | **Kepoin bahasa baru.** |
+| Tagline | **Kepoin bahasa baru.** (alternatif: "Baca bukumu sendiri, ngerti bahasanya.") |
 | Rasa | Hangat · tenang · rapi · seperti pojok baca |
 | Maskot | **Tidak ada.** Pakai blok warna flat + ikon garis (`spot()` di ui.js). File `img/kepo-*.webp` tidak dipakai lagi. |
 
-## Warna (terang krem = bawaan)
+## Intinya
+- Arah A: tenang, hangat, seperti pojok baca. Tanpa maskot.
+- Untuk semua pengguna dan semua bahasa, tidak fokus satu bahasa.
+
+## 1. Identitas
+- Nama: **Keepo**.
+- Logo: teks serif, tanpa maskot.
+- Ikon aplikasi: huruf K serif hijau tua.
+
+## 2. Warna
 | Peran | Hex |
 |---|---|
 | Latar krem | #F4EFE4 |
@@ -25,15 +34,28 @@ Kontras teks min. 4.5:1 (sudah dicek): hijau tua di krem 11.2 · di beige 9.7 ·
 Oranye #C4633A **hanya** untuk garis/ikon/blok besar (kontras 3.5), bukan teks kecil.
 Mode sepia & gelap (hijau malam #15201A) tetap ada; teks redup disesuaikan (≥4.5:1).
 
-## Tipografi
+- Teks utama pakai tinta di atas latar atau permukaan.
+- Aksen untuk tombol penting dan sorotan kecil.
+- Cek kontras tiap pasangan warna sebelum dipakai.
+
+## 3. Tipografi
 - Judul: **Literata** (serif) 800. Teks UI: **Inter**. Baca: Literata (Klasik) atau Inter (Modern).
 - Google Fonts (preconnect, `display=swap`), di-cache service worker. Cadangan: Georgia / system-ui.
+- Ukuran teks baca tetap bisa diatur pengguna.
 
-## Gaya visual
+## 4. Gaya visual
 - **Bento**: blok warna flat bersudut 26 px, tanpa bayangan.
 - Tombol **pil** hijau tua; tab bar pil gelap, tab aktif peach.
 - Keadaan kosong, sapaan, hasil skor: lingkaran warna + ikon garis.
 - Ikon app: huruf K serif krem di latar #22362B (192, 512, maskable, 180).
+- Ikon garis sederhana, tebal garis seragam.
+- Hormati `prefers-reduced-motion`; efek seperlunya.
+
+## 5. Nada tulisan
+- Tenang & hangat. Kalimat pendek. Pakai "kamu".
+- Tanpa "yuk" dan "gas". Tanpa tumpukan emoji.
+- Benar: "Lanjut di halaman 48, ya."
+- Salah: "Yuk gas lanjut baca!!! 🔥🔥🔥"
 
 ## Gamifikasi
 - **XP:** ketuk kata +1 · simpan kata +2 · balik halaman +2 · bab baru +5 · tantangan ngomong +2…+10 (+5 bila ≥85%) · kalahkan boss +3 · kartu hafal +2.
@@ -45,5 +67,13 @@ Mode sepia & gelap (hijau malam #15201A) tetap ada; teks redup disesuaikan (≥4
 - **Ngomong:** mic bulat hijau tua, skor per kata (sage/ochre/tanah), cincin skor → boss.
 - **Kata:** Kartu · Tersimpan · Susah diucap.
 
-## Microcopy
-Santai, pakai "kamu", tanpa kata menghakimi. Skor: ≥85 **Mantap!** · 60–84 **Dikit lagi!** · <60 **Gas latihan!**
+## 6. Tidak dipakai lagi
+- Maskot (gelembung chat lime & semua pose).
+- Krem #F2EEE5 dan tinta #2A1215.
+- Font judul Archivo condensed.
+- Fokus satu bahasa.
+
+## 7. Yang tetap
+- XP, level, target harian, streak, dan lencana tetap ada.
+- Alur layar Home, Baca, Ngomong, Kata tidak berubah.
+- Skor ucapan: ≥85 Mantap · 60–84 Dikit lagi · <60 Perlu latihan.
