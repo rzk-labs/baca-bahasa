@@ -12,6 +12,7 @@
 - [laporan-usability](desain-laporan-usability.md)
 - [peta-masalah-membaca](desain-peta-masalah-membaca.md)
 - [segmen-potensial](desain-segmen-potensial.md)
+- [sorotan-kata](desain-sorotan-kata.md)
 
 ## 2. Discovery & naskah
 - [discovery-pasar](discovery-pasar.md)

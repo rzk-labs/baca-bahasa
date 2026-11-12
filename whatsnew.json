@@ -1,5 +1,11 @@
 [
   {
+    "n": 566,
+    "judul": "Sorotan kata di halaman baca: tenang, 3 status mudah dibedakan",
+    "poin": "Halaman baca lebih tenang: kata ditandai garis bawah, bukan blok warna.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 559,
     "judul": "Dengar halaman: putar kalimat satu per satu dengan sorotan",
     "poin": "Ada tombol speaker di bar atas baca: kalimat halaman dibacakan satu per satu.",
@@ -171,12 +177,6 @@
     "n": 437,
     "judul": "Tema baca Sepia & Gelap: kontras teks, penanda kata & sheet diperiksa",
     "poin": "Teks di tema Sepia dan Gelap ternyata sudah cukup jelas dibaca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 433,
-    "judul": "Sheet arti kata lebih tenang: arti besar, info kecil jadi 1 baris",
-    "poin": "Sheet arti kata lebih tenang: arti besar tepat di bawah kata.",
     "tgl": "2026-11-12"
   }
 ]
