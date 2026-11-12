@@ -1,5 +1,11 @@
 [
   {
+    "n": 428,
+    "judul": "Kartu Lanjut baca di Home: pintasan 'Ke penanda' 1 ketuk",
+    "poin": "Kartu \"Lanjut baca\" di Home kini punya tombol \"🔖 Ke penanda\".",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 422,
     "judul": "Toast error: bilang progres aman + tombol Muat ulang",
     "poin": "Pesan error sekarang tenang: bilang bacaan dan katamu tetap aman.",
@@ -171,12 +177,6 @@
     "n": 272,
     "judul": "E-reader: tawarkan tema gelap/Ikut HP saat baca malam, 1 ketukan",
     "poin": "Saat baca malam, muncul saran halus: pakai tema gelap atau ikut HP.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 266,
-    "judul": "Sheet arti kalimat: tampilkan cara baca seluruh kalimat (JP/KR/ZH)",
-    "poin": "Arti kalimat sekarang menampilkan cara baca seluruh kalimat Jepang/Korea/China.",
     "tgl": "2026-11-11"
   }
 ]
