@@ -1,5 +1,71 @@
 [
   {
+    "n": 688,
+    "judul": "[peta 71] Jelaskan kalimat (AI) gratis 5x/hari, hanya saat diminta",
+    "poin": "Tombol \"Jelaskan kalimat ini (AI)\" sudah ada di arti kalimat, jalan hanya saat diketuk.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 708,
+    "judul": "[peta 70] Ringkasan mingguan saat app dibuka, tanpa hukuman streak",
+    "poin": "Beranda kini punya kartu \"Minggu ini\": hari aktif, buku dibuka, kata baru.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 706,
+    "judul": "[peta 31] Seragamkan nama app jadi KEEPO di teks tampilan",
+    "poin": "Nama app di layar sekarang seragam: Keepo.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 704,
+    "judul": "[peta 67] Keepo HQ Peta ringkas: kartu 1 baris, detail dilipat",
+    "poin": "Peta di Keepo HQ sekarang rapi: tiap tahap satu kartu ringkas.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 702,
+    "judul": "[peta 46] Keepo HQ: kartu Hasil punya status Belum diproses/Progres/Selesai",
+    "poin": "Kartu Hasil di HQ kini punya tiga status: Belum diproses, Progres, Selesai.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 700,
+    "judul": "Rapikan Profil & kartu buku: lencana tak mepet, judul rapi, progres sama",
+    "poin": "Lencana di Profil tidak lagi mepet tepi layar.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 698,
+    "judul": "[peta 43] Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata",
+    "poin": "Judul tugas di papan HQ sekarang dipotong rapi di batas kata.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 696,
+    "judul": "Rapikan Home & baca: persen tak dobel, panduan hilang sendiri, target ada satuan",
+    "poin": "Home lebih rapi: persen tampil sekali, target harian pakai satuan XP.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 694,
+    "judul": "[peta 42] Keepo HQ pakai brand v9 (Plum Noir, Biru Es, Wasabi)",
+    "poin": "Tampilan Keepo HQ sekarang pakai warna dan huruf brand baru.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 692,
+    "judul": "[peta 69] Saat impor: tampilkan 'Perkiraan kata baru ~N%'",
+    "poin": "Habis impor buku, muncul \"Perkiraan kata baru ~N%\" di notifikasi dan kartu rak.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 690,
+    "judul": "[peta 34] Tombol feedback kirim langsung ke HQ, tanpa salin-tempel",
+    "poin": "Tombol Kirim masukan sekarang langsung sampai ke tim, tanpa salin-tempel.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 686,
     "judul": "[peta 63] Koleksi: hapus aman + toast Target harian pindah ke bawah",
     "poin": "Tombol hapus buku di Koleksi sekarang jauh dari tombol buka dan selalu minta konfirmasi.",
@@ -111,72 +177,6 @@
     "n": 646,
     "judul": "Halaman baca: tak ada baris terpotong di tepi atas/bawah (JP/KR)",
     "poin": "Baris teks terpotong di tepi halaman baca Jepang/Korea sudah dirapikan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 641,
-    "judul": "Bar baca: jumlah halaman konsisten dengan catatan sesi",
-    "poin": "Bar baca kini dihitung ulang saat ukuran layar berubah, jadi angka halaman akurat.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 638,
-    "judul": "Kartu 'Intip kata bab': 3-5 kata baru sebelum baca bab",
-    "poin": "Buka bab baru: muncul kartu kecil berisi 3-5 kata baru beserta artinya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 632,
-    "judul": "Pengaman data iPhone: peringatan tab Safari & ingatkan cadangan",
-    "poin": "Pengaturan kini memperingatkan pengguna Safari biasa: data bisa hilang sendiri.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 624,
-    "judul": "Toast rapi & streak/XP ikut naik saat baca",
-    "poin": "Pesan kecil di layar sekarang berupa kartu rapi, tampil di atas.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 619,
-    "judul": "Baca aman: cegah error 'Ada yang macet' & pesan Tamat sesuai kondisi",
-    "poin": "Error \"Ada yang macet\" saat baca sudah dicegah.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 611,
-    "judul": "Garis bawah kata tersimpan: muncul langsung di semua jalur simpan",
-    "poin": "Kata yang kamu simpan sekarang langsung bergaris bawah di halaman baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 605,
-    "judul": "Sheet arti kalimat: tanda 'arti mesin' + peringatan kalimat panjang",
-    "poin": "Arti kalimat sekarang punya tanda kecil: arti mesin bisa meleset.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 600,
-    "judul": "Frasa 2-5 kata yang disimpan ikut digarisbawahi di halaman baca",
-    "poin": "Frasa yang kamu simpan sekarang ikut bergaris bawah di halaman baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 591,
-    "judul": "Kartu Kata: jadwal ulang 1/3/7/21 hari, kata jatuh tempo dulu",
-    "poin": "Kartu Kata sudah mengulang kata di hari ke 1, 3, 7, dan 21.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 590,
-    "judul": "Papan Keepo HQ HP: kolom kosong ciut, chip otomatis & QA mudah diketuk",
-    "poin": "Papan HQ di HP lebih rapi: kolom kosong ciut jadi satu baris.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 582,
-    "judul": "Rekap kata sesi baca: simpan sementara, tampil walau 1 kata",
-    "poin": "Kata yang kamu ketuk kini aman, walau aplikasi tertutup mendadak.",
     "tgl": "2026-11-12"
   }
 ]

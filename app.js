@@ -135,6 +135,9 @@ try { if (navigator.storage && navigator.storage.persist) navigator.storage.pers
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
+const allFeedback = () => idb.then(d => new Promise((res, rej) => { const q = d.transaction('fb', 'readonly').objectStore('fb').getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }));
+const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim === false)); // data lama (tanpa kolom terkirim) dianggap sudah beres
+const markFeedbackSent = id => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'), st = tx.objectStore('fb'), q = st.get(id); q.onsuccess = () => { if (q.result) st.put({ ...q.result, terkirim: true }); }; tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
 const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); return s.delete(id); });
@@ -159,6 +162,24 @@ function tokens(text, lang) {
   return text.split(/([\p{L}\p{N}\p{M}'’-]+)/u).filter(Boolean).map(t => ({ t, w: /[\p{L}\p{N}]/u.test(t) }));
 }
 const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '');
+/* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
+function perkiraanBaru(paras, lang) {
+  const known = new Set();
+  for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
+  for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
+  known.delete('');
+  if (!known.size) return null;
+  let n = 0, baru = 0;
+  for (const p of paras || []) {
+    for (const t of tokens(p, lang)) {
+      if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+      n++; if (!known.has(norm(t.t))) baru++;
+      if (n >= 3000) break;
+    }
+    if (n >= 3000) break;
+  }
+  return n >= 20 ? Math.min(100, Math.round(baru * 100 / n)) : null;
+}
 const EN_NUM = 'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty'.split(' ');
 
 function cleanParas(raw) {

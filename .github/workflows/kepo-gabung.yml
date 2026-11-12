@@ -75,7 +75,7 @@ jobs:
             echo "Masih ada tanda konflik"; exit 1
           fi
           node -e "JSON.parse(require('fs').readFileSync('docs/roadmap.json','utf8'))"
-          for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] && node --check "$f"; done
+          for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] || continue; case "$f" in api/*|dev/*) node --input-type=module --check < "$f";; *) node --check "$f";; esac; done
           # catat di "Yang baru" (whatsnew.json, tampil di Beranda app) bila ini perubahan app
           P=$(gh issue view "$N" --json labels --jq '[.labels[].name|select(startswith("peran:"))][0] // ""')
           if [ "$P" = "peran:developer" ] || [ "$P" = "peran:desain" ]; then
