@@ -671,3 +671,9 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .intip .irow.done{opacity:.6}
 /* 5 tab: label tetap muat di HP kecil */
 @media (max-width:389px){#tabs{gap:4px;padding:5px}#tabs button{font-size:11px;gap:3px}#tabs button svg{width:20px;height:20px}}
+/* #700: lencana tak mepet, statistik 1 baris, judul buku maks 2 baris */
+#sheet .hscroll{padding:2px 18px 10px;margin:0 -18px;scroll-padding-left:18px}
+.fr-stats div{min-width:0;justify-content:flex-start}
+.fr-stats span{overflow:hidden;text-overflow:ellipsis}
+@media(max-width:360px){.fr-stats{gap:6px}.fr-stats span{font-size:10px}}
+.bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
