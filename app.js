@@ -300,6 +300,7 @@ function gbParas(paras, isGb) {
 }
 /* hitungan bab: tiap judul bab jelas = bab baru (hanya bila belum ada pembatas bab & ada ≥3 judul).
    Judul 'II.' saja dipakai bila tak ada 'Chapter …'. Hasil sama sejak impor. */
+const CH_VER = 2; /* versi deteksi bab; naikkan bila aturan deteksi berubah (buku lama dihitung ulang saat dibuka) */
 function gbChapters(out) {
   if (!out || out.includes('\u0002')) return out;
   let lv = 2, n = out.filter(p => gbHead(p) === 2).length;
