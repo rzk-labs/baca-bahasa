@@ -467,6 +467,7 @@ function openSettings() {
 
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 const APP_VER = 'v46';
+const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   if (document.body.classList.contains('reading')) return;
   const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka'], ['takedown', 'flag', 'Takedown']];
@@ -491,20 +492,49 @@ function openFeedback(opt = {}) {
     const kl = kinds.find(k => k[0] === kind);
     let msg = `[Keepo] ${kl[2]}\n${txt}`;
     if (stars) msg += `\nBintang: ${stars}/5`;
-    if ($('#fbI').checked) msg += `\nInfo HP: ${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`;
-    try { await putFeedback({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg }); } catch (e) { }
-    const copy = async () => { try { await navigator.clipboard.writeText(msg); toast('Tersalin! Tempel ke pesan buat tim Keepo.', 4500); } catch (e) { toast('Gagal menyalin. Salinan tersimpan di HP-mu.', 4500); } };
+    const btn = $('#fbSend'); btn.disabled = true; btn.textContent = 'Mengirim…';
+    const rec = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg, terkirim: false, gagal: 0 };
+    if ($('#fbI').checked) { rec.info = `${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`; rec.msg += `\nInfo HP: ${rec.info}`; }
+    try { await putFeedback(rec); } catch (e) { }
+    const r = await kirimFeedback(rec);
     closeSheet();
-    if (/^(https?:|mailto:)/.test(FEEDBACK_KONTAK)) {
-      await copy();
-      const m = FEEDBACK_KONTAK.startsWith('mailto:');
-      const link = m ? FEEDBACK_KONTAK + '?subject=' + encodeURIComponent('Masukan Keepo') + '&body=' + encodeURIComponent(msg) : FEEDBACK_KONTAK + (FEEDBACK_KONTAK.includes('wa.me') ? '?text=' + encodeURIComponent(msg) : '');
-      window.open(link, '_blank', 'noopener'); return;
+    if (r === 'ok') { toast('Makasih masukannya! 💚'); return; }
+    if (r === 'ditolak' && rec.gagal >= 3) { /* cadangan: server menolak berulang */
+      if (navigator.share) { try { await navigator.share({ text: rec.msg }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+      try { await navigator.clipboard.writeText(rec.msg); toast('Server menolak. Tersalin, tempel ke pesan buat tim Keepo.', 4500); } catch (e) { toast('Belum terkirim. Salinan tersimpan di HP-mu.', 4500); }
+      return;
     }
-    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya!'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
-    await copy();
+    toast('Belum terkirim, disimpan dulu. Nanti dikirim otomatis.', 4500);
   };
 }
+/* Kirim satu masukan ke HQ. Return 'ok' | 'gagal' (offline/server error) | 'ditolak' (4xx). */
+async function kirimFeedback(rec) {
+  let r = 'gagal';
+  try {
+    const res = await fetch(FEEDBACK_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jenis: rec.kind, teks: rec.text, bintang: rec.stars || 0, info: rec.info || '', versi: APP_VER, waktu: rec.t, dev: fbDevId() }) });
+    r = res.ok ? 'ok' : (res.status >= 400 && res.status < 500 && res.status !== 429 ? 'ditolak' : 'gagal');
+  } catch (e) { }
+  try {
+    if (r === 'ok') await markFeedbackSent(rec.id);
+    else { if (r === 'ditolak') rec.gagal = (rec.gagal || 0) + 1; await putFeedback(rec); }
+  } catch (e) { }
+  return r;
+}
+function fbDevId() {
+  let v = ''; try { v = localStorage.getItem('kepo_fbdev'); if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem('kepo_fbdev', v); } } catch (e) { }
+  return v || 'anon';
+}
+let fbKirimJalan = false;
+async function kirimUlangFeedback() {
+  if (fbKirimJalan || !navigator.onLine) return;
+  fbKirimJalan = true;
+  try {
+    const q = (await pendingFeedback()).filter(f => (f.gagal || 0) < 3).slice(0, 10);
+    for (const f of q) { if (await kirimFeedback(f) === 'gagal') break; }
+  } catch (e) { } finally { fbKirimJalan = false; }
+}
+window.addEventListener('online', kirimUlangFeedback);
+setTimeout(kirimUlangFeedback, 3000);
 
 /* ---------- HOME ---------- */
 function ringSmall(p, label) {

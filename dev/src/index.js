@@ -268,10 +268,50 @@ async function api(req, env, url) {
   return json({ error: 'not found' }, 404);
 }
 
+// ---- masukan pengguna nyata: POST /feedback (dari app Kepo) ----
+const FB_ORIGIN = 'https://rzk-labs.github.io';
+const FB_CORS = { 'access-control-allow-origin': FB_ORIGIN, 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400', vary: 'Origin' };
+const fbJson = (d, s = 200) => { const r = json(d, s); Object.entries(FB_CORS).forEach(([k, v]) => r.headers.set(k, v)); return r; };
+const fbHits = new Map(); // perangkat -> waktu kiriman (per isolate; pembatas sederhana)
+const fbClean = (t, n) => String(t == null ? '' : t).replace(/<[^>]*>/g, ' ').replace(/(?:https?:\/\/|www\.)\S+/gi, '[tautan]').replace(/[`@\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').replace(/[ \t]+/g, ' ').trim().slice(0, n);
+async function feedback(req, env) {
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: FB_CORS });
+  if (req.method !== 'POST') return fbJson({ error: 'Metode salah' }, 405);
+  if (req.headers.get('origin') !== FB_ORIGIN) return fbJson({ error: 'Asal tidak diizinkan' }, 403);
+  let b; try { b = await req.json(); } catch (e) { return fbJson({ error: 'Data tidak valid' }, 400); }
+  if (!b || typeof b !== 'object') return fbJson({ error: 'Data tidak valid' }, 400);
+  const teks = fbClean(b.teks, 500);
+  if (!teks) return fbJson({ error: 'Teks kosong' }, 400);
+  const dev = fbClean(b.dev, 40) || req.headers.get('cf-connecting-ip') || 'x';
+  const now = Date.now(), hits = (fbHits.get(dev) || []).filter(t => now - t < 3600e3);
+  if (hits.length >= 5) return fbJson({ error: 'Terlalu sering, coba lagi nanti' }, 429);
+  if (fbHits.size > 5000) fbHits.clear();
+  const jenis = { rusak: 'Ada yang rusak', ide: 'Ide', suka: 'Suka', takedown: 'Takedown' }[b.jenis] || 'Ide';
+  const bin = Math.max(0, Math.min(5, parseInt(b.bintang, 10) || 0));
+  let body = `🌐 **Pengguna nyata** · ${jenis}\n\n${teks}`;
+  if (bin) body += `\n\nBintang: ${bin}/5`;
+  const info = fbClean(b.info, 300);
+  if (info) body += `\n\nInfo HP: ${info}`;
+  const m = await gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`);
+  let n = Array.isArray(m) && m[0] ? m[0].number : 0;
+  if (!n) {
+    await gh(env, `/repos/${REPO}/labels`, { method: 'POST', body: JSON.stringify({ name: 'masukan-pengguna', color: 'F2A6C8' }), soft: true });
+    const c = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: 'Masukan pengguna', labels: ['masukan-pengguna'], body: 'Kotak masukan dari pengguna Keepo.' }) });
+    n = c && c.number;
+  }
+  if (!n) return fbJson({ error: 'Gagal menyimpan' }, 502);
+  await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body }) });
+  hits.push(now); fbHits.set(dev, hits);
+  return fbJson({ ok: true });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     try {
+      if (url.pathname === '/feedback') {
+        try { return await feedback(req, env); } catch (e) { return fbJson({ error: 'Gagal menyimpan' }, 502); }
+      }
       if (url.pathname.startsWith('/api/')) return await api(req, env, url);
       const pm = url.pathname.match(/^\/p\/(\d+)(\/.*)?$/);
       if (pm) {
