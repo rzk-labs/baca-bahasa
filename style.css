@@ -314,6 +314,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .search input{padding-left:46px;margin:0;border-radius:var(--radius-full)}
 .vitem{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);margin-bottom:8px;background:var(--color-surface);border-radius:var(--radius-lg)}
 .vitem .inf{flex:1;min-width:0}.vitem .w1{overflow-wrap:anywhere;font:800 22px/26px var(--font-display);}.vitem .t1{font-size:14px;line-height:21px;font-weight:700}
+.vitem .t1.noarti{display:inline-block;max-width:100%;font-size:12px;line-height:18px;font-weight:600;font-style:italic;color:var(--color-text-muted);border:1px dashed currentColor;border-radius:999px;padding:0 8px}
 .vitem .s1{font-size:13px;line-height:19px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vitem .icon{color:var(--color-text-muted);flex:none;min-width:44px;min-height:44px}
 .vitem .icon+.icon{margin-left:var(--space-3)}

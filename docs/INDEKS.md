@@ -7,6 +7,7 @@
 
 ## 1. Desain
 - [arah-brand-baru](desain-arah-brand-baru.md)
+- [ikon-logo-baca](desain-ikon-logo-baca.md)
 - [header-baca-ringan](desain-header-baca-ringan.md)
 - [kontras-tema-baca](desain-kontras-tema-baca.md)
 - [laporan-usability](desain-laporan-usability.md)
@@ -130,6 +131,7 @@
 - [hq-brand-v9](spesifikasi-hq-brand-v9.md)
 - [hq-judul-tugas-rapi](spesifikasi-hq-judul-tugas-rapi.md)
 - [hq-pengaturan-baca](spesifikasi-hq-pengaturan-baca.md)
+- [hq-status-kartu-hasil](spesifikasi-hq-status-kartu-hasil.md)
 - [kata-sering-diketuk](spesifikasi-kata-sering-diketuk.md)
 - [kembali-ke-home](spesifikasi-kembali-ke-home.md)
 - [lanjut-halaman-terakhir](spesifikasi-lanjut-halaman-terakhir.md)

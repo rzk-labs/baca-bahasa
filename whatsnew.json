@@ -1,5 +1,11 @@
 [
   {
+    "n": 582,
+    "judul": "Rekap kata sesi baca: simpan sementara, tampil walau 1 kata",
+    "poin": "Kata yang kamu ketuk kini aman, walau aplikasi tertutup mendadak.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 579,
     "judul": "Sorotan kalimat 'Dengar halaman' jelas di 4 tema, terutama malam",
     "poin": "Kalimat yang sedang dibacakan kini lebih jelas, terutama di tema malam.",
@@ -171,12 +177,6 @@
     "n": 461,
     "judul": "Sampul buku & rak ikut brand v9: palet Plum/Biru Es, tanpa emoji",
     "poin": "Sampul buku kini pakai warna Plum, Biru Es, dan Jade, tanpa emoji.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 452,
-    "judul": "Lapis baca v9: 4 tema (Kertas, Sepia, Hijau, Malam) & tipografi per bahasa",
-    "poin": "Halaman baca kini punya 4 tema: Kertas, Sepia, Hijau, Malam.",
     "tgl": "2026-11-12"
   }
 ]
