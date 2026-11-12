@@ -484,6 +484,12 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .csvbar{flex-wrap:nowrap}
 .csvbar select,.csvbar select.csvsort{flex:1 1 0;min-width:0;order:0;margin:0;min-height:44px}
 .csvexp{display:block;width:100%;min-height:44px;margin:8px 0 16px;font-weight:700}
+/* Saring kata per bahasa/buku (chip geser) */
+.fchips{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 0 8px;padding:2px 0;max-width:100%}
+.fchips::-webkit-scrollbar{display:none}
+.fchip{flex:0 0 auto;min-height:44px;max-width:60vw;padding:0 16px;border:0;border-radius:var(--radius-full);background:var(--color-surface);color:var(--color-text);font:700 14px/1 var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.fchip.on{background:#351E28;color:#FAF7F0}
+[data-theme=night] .fchip.on{background:var(--lime);color:var(--ink)}
 .csvgo{width:100%;margin:8px 0 12px}
 .vitem .w1{font-size:24px;line-height:28px}
 .vitem .t1{font-size:16px;line-height:23px}
