@@ -99,7 +99,8 @@ const brief = i => {
   const L = lbl(i);
   const p = L.find(x => x.startsWith('peran:'));
   return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
-    qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at };
+    qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at,
+    rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
 };
 const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing'];
 const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm', 'kepo-pengguna.yml': 'pengguna' };
