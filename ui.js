@@ -156,6 +156,7 @@ window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
 function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
+const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } }
 $('#shade').onclick = closeSheet;
@@ -585,7 +586,7 @@ async function viewBaca() {
   const oftenMemo = new Map();
   const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
   const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
-  const rtlA = b.lang === 'ar' ? ' dir="rtl" lang="ar"' : '';
+  const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
@@ -752,7 +753,7 @@ function syncMarks() {
   const rm = $('#rMk'); if (rm) { rm.hidden = !n; $('#rMkN').textContent = n; }
   if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
 }
-function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); if (!$('#sheet').classList.contains('hide') && $('#sheet .mkgo')) openMarks(); }
+function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); if (!$('#sheet').classList.contains('hide') && $('#sheet').getAttribute('aria-label') === 'Daftar penanda') { if (b.marks.length) openMarks(); else closeSheet(); } }
 function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
@@ -775,7 +776,7 @@ async function openMarks() {
   const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `Bab ${m.p + 1}`; };
   const snip = t => { t = (t || '').replace(/\s+/g, ' ').trim(); if (t.length <= 120) return t; const cut = t.slice(0, 120), sp = cut.lastIndexOf(' '); return (sp > 80 ? cut.slice(0, sp) : cut).replace(/[\s,;:.\-–—]+$/, '') + '…'; };
   const rel = at => { if (!at) return ''; const d = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 864e5); if (d <= 0) return 'Hari ini'; if (d === 1) return 'Kemarin'; if (d < 30) return `${d} hari lalu`; return new Date(at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: d > 300 ? 'numeric' : undefined }); };
-  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto">${esc(snip(m.t) || '…')}</span><small class="mkat" dir="auto">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
+  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${esc(snip(m.t) || '…')}</span><small class="mkat" dir="auto">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length > 1 ? `<div class="seg" id="mkOrd" role="group" aria-label="Urutan penanda"><button data-v="baru" aria-pressed="${ord === 'baru'}" class="${ord === 'baru' ? 'on' : ''}">Terbaru</button><button data-v="buku" aria-pressed="${ord === 'buku'}" class="${ord === 'buku' ? 'on' : ''}">Urutan buku</button></div>` : ''}${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`, 'Daftar penanda');
   $$('#mkOrd button').forEach(x => x.onclick = () => { try { localStorage.setItem('kepo_markord', x.dataset.v); } catch (e) {} openMarks(); });
   $$('#sheet .mkgo').forEach(x => x.onclick = () => {
