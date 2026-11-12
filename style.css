@@ -676,4 +676,10 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fr-stats div{min-width:0;justify-content:flex-start}
 .fr-stats span{overflow:hidden;text-overflow:ellipsis}
 @media(max-width:360px){.fr-stats{gap:6px}.fr-stats span{font-size:10px}}
+.wk{margin:0 0 12px;padding:12px 14px}
+.wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
+.wk-g div{display:flex;flex-direction:column;min-width:0}
+.wk-g b{font-size:24px;line-height:28px}
+.wk-g span{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
