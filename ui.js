@@ -777,6 +777,8 @@ async function isiArtiRekap(cand) {
 let rekapAktif = null;
 function sessRecap(b) {
   const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
+  const pgs = b ? [...SESPG].filter(k => k.startsWith(b.id + ':')).length : 0;
+  if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
   if (b) sesiClear(b.id);
   if (!all.length) return false;
@@ -785,7 +787,7 @@ function sessRecap(b) {
   rekapAktif = cand;
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
-    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">Simpan yang mau dihafal.</p>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgs > 1 ? `${pgs} halaman layar kamu buka. ` : ''}Simpan yang mau dihafal.</p>
     <div id="rsl">${cand.map(row).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
   isiArtiRekap(cand);
@@ -1016,6 +1018,13 @@ async function viewBaca() {
   if (intipC.length) intipBind(b, intipC);
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
+  /* ukuran area baca berubah setelah layout pertama: hitung ulang halaman */
+  if (window.ResizeObserver) {
+    if (RD.ro) RD.ro.disconnect();
+    let lw = vp.clientWidth, lh = vp.clientHeight;
+    RD.ro = new ResizeObserver(() => { const w = vp.clientWidth, h = vp.clientHeight; if (w === lw && h === lh) return; lw = w; lh = h; if (vp.isConnected && $('#cols')) layout(); });
+    RD.ro.observe(vp);
+  }
   if (LIS.chain) { LIS.chain = false; startListenPage(); }
 }
 /* Dengar halaman: putar kalimat halaman aktif satu per satu, sorot yang sedang dibaca */
@@ -1075,6 +1084,7 @@ function lisAdvance() {
 document.addEventListener('visibilitychange', () => { if (document.hidden && LIS.on) { pauseListenPage(true); toast('Dengar dijeda'); } });
 const MG = { s: 12, m: 24, l: 48 };
 const setCur = el => { const c = $('#cols'), r = $('#reader'), p = el && el.closest ? el.closest('p,h2') : null; if (!c || !r || !r.classList.contains('focus') || !p) return; $$('.cols .cur').forEach(x => x !== p && x.classList.remove('cur')); p.classList.add('cur'); c.classList.add('has-cur'); };
+const SESPG = new Set(); /* halaman layar yang dibuka sesi ini (satuan sama dengan bar baca) */
 const RD = { ss: [], hs: [], dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
@@ -1152,10 +1162,11 @@ function showPage(p, anim = true) {
   for (const x of RD.ss) { if (x.pg >= RD.page) { b.si = +x.el.dataset.s; break; } }
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh && hd) rh.textContent = hd.textContent.trim();
+  SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
   const ml = minsLeft(b);
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${ml.t}` : `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
+  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${ml.t}` : `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : (RD.n === 1 ? '' : `Hal ${RD.page + 1} dari ${RD.n}`);
   if (pb) pb.style.width = b.pct + '%';
   syncMarks();
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
