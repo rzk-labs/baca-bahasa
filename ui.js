@@ -506,7 +506,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser</b> = ganti halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
@@ -651,7 +651,7 @@ function turn(d) {
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));
-addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
+addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || (e.key === ' ' && /BUTTON|A/.test(e.target.tagName))) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 
 /* ---------- sheet arti kata → kalimat ---------- */
 /* geser isi halaman ke atas (tanpa ganti halaman) supaya kata/kalimat terpilih tidak ketutup sheet */
