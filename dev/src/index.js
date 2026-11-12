@@ -78,7 +78,8 @@ async function docInfo(env, paths) {
     paths.forEach((p, i) => {
       const n = tgt['h' + i] && tgt['h' + i].nodes && tgt['h' + i].nodes[0];
       const baris = String(teks[p] || '').split('\n').map(x => x.trim()).find(x => x && !/^#/.test(x) && !/^[-=*_]{3,}$/.test(x)) || '';
-      out[p] = { diubah: n ? n.committedDate : null, ringkas: baris.replace(/[*_`>#]/g, '').replace(/^[-+]\s+/, '').slice(0, 100) };
+      const jd = (String(teks[p] || '').split('\n').find(x => /^#\s+\S/.test(x)) || '').replace(/^#\s+/, '').replace(/[*_`]/g, '').trim().slice(0, 90);
+      out[p] = { judul: jd, diubah: n ? n.committedDate : null, ringkas: baris.replace(/[*_`>#]/g, '').replace(/^[-+]\s+/, '').slice(0, 100) };
     });
     return out;
   } catch (e) { return {}; }
