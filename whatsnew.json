@@ -1,5 +1,11 @@
 [
   {
+    "n": 670,
+    "judul": "[peta 59] Beranda jujur: progres, bab/halaman & sisa waktu sama",
+    "poin": "Beranda tidak lagi menulis 0% atau \"Bab 1 dari 1\" sebelum bab dihitung.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 667,
     "judul": "[peta 60] Intip kata bab: tampil di bab 1 & buku ja/ko/zh",
     "poin": "Kartu Intip kata kini muncul juga di bab 1 buku baru.",
@@ -171,12 +177,6 @@
     "n": 553,
     "judul": "Pilihan laju suara Normal/Lambat di Pengaturan baca",
     "poin": "Di Pengaturan baca ada pilihan \"Laju suara\": Normal atau Lambat.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 550,
-    "judul": "Ketuk tepi lebih sempit + saklar & tombol maju besar (satu tangan)",
-    "poin": "Ketuk pinggir layar sekarang lebih sempit, jadi ketuk kata tidak salah ganti halaman.",
     "tgl": "2026-11-12"
   }
 ]
