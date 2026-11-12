@@ -7,7 +7,9 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps'];
+const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books'];
+const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
+const TOMB_TTL = 90 * 864e5;
 
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
@@ -30,38 +32,163 @@ function isoWeekKey(d = new Date()) {
 function weekXp() { const wk = isoWeekKey(); return Object.entries(db.xpDay || {}).filter(([d]) => isoWeekKey(new Date(d + 'T12:00:00')) === wk).reduce((a, [, v]) => a + v, 0); }
 // taps: kirim maks 1000 kata teratas (ukuran tetap jauh di bawah batas server)
 const topTaps = (t, n = 1000) => Object.fromEntries(Object.entries(t && typeof t === 'object' ? t : {}).sort((a, b) => b[1] - a[1]).slice(0, n));
-const progressData = () => Object.fromEntries(SYNC_KEYS.map(k => [k, k === 'taps' ? topTaps(db.taps) : db[k]]));
+const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
+// keadaan baca ringan per buku (tanpa teks). Waktu ubah dicatat di db.bkAt saat posisi/penanda berubah.
+function bkState(b) {
+  const marks = (Array.isArray(b.marks) ? b.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 80), at: m.at || 0 }));
+  const st = { title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct == null ? null : b.pct, marks };
+  st.sig = JSON.stringify([st.pos, st.si, st.pct, marks]);
+  return st;
+}
+function bkLocal() {
+  const out = {}; if (!isObj(db.bkAt)) db.bkAt = {};
+  for (const b of db.books || []) {
+    const k = bkKey(b), st = bkState(b); let r = db.bkAt[k];
+    if (!r || r.sig !== st.sig) db.bkAt[k] = r = { sig: st.sig, at: !r && !st.pos && !st.si && !st.marks.length ? 0 : Date.now() };
+    st.at = r.at; delete st.sig; out[k] = st;
+  }
+  return out;
+}
+function mergeBooks(srvB) {
+  const loc = bkLocal(), rem = isObj(srvB) ? srvB : {}, keep = {};
+  const open = db.tab === 'baca' && typeof book === 'function' ? book() : null;
+  for (const k in rem) {
+    const x = rem[k]; if (!isObj(x)) continue;
+    const l = loc[k];
+    if (!l) { keep[k] = x; continue; }
+    if (!((+x.at || 0) > l.at) || !Number.isFinite(x.pos) || (open && bkKey(open) === k)) continue; // yang terbaru menang; buku yang lagi dibaca tidak digeser
+    const b = db.books.find(y => bkKey(y) === k); if (!b) continue;
+    b.pos = x.pos; b.si = Number.isFinite(x.si) ? x.si : 0; if (x.pct != null) b.pct = x.pct;
+    const mx = typeof MARK_MAX === 'number' ? MARK_MAX : 20;
+    b.marks = (Array.isArray(x.marks) ? x.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).slice(0, mx).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 140), at: m.at || Date.now() }));
+    db.bkAt[k] = { sig: bkState(b).sig, at: +x.at };
+  }
+  db.bkRemote = keep;
+}
+const VF = ['t', 'baca', 's', 'ctx', 'base', 'pos'];
+const vScore = v => VF.reduce((a, f) => a + String(v[f] || '').length, 0);
+function mergeVocabEntry(a, b) {
+  const [x, y] = vScore(b) > vScore(a) ? [b, a] : [a, b], o = { ...x };
+  for (const f of VF) if (String(y[f] || '').length > String(o[f] || '').length) o[f] = y[f];
+  const tp = Math.max(+a.tap || 0, +b.tap || 0); if (tp > 0) o.tap = tp;
+  if (a.at && b.at) o.at = Math.min(a.at, b.at); else if (a.at || b.at) o.at = a.at || b.at;
+  if ((y.lv || 0) > (o.lv || 0)) { o.lv = y.lv; o.due = y.due; }
+  if (a.known || b.known) o.known = a.known || b.known;
+  if (String(o.t || '').trim()) delete o.noTr;
+  return o;
+}
+// gabung data server ke db (bukan timpa). true bila tampilan perlu digambar ulang.
+function mergeSrv(d) {
+  if (!isObj(d)) return false;
+  const snap = () => JSON.stringify([db.vocab, db.xp, db.badges, (db.books || []).map(b => [b.pos, b.si, b.marks])]);
+  const before = snap(), now = Date.now(), tomb = new Map();
+  for (const t of [].concat(Array.isArray(db.vocabDel) ? db.vocabDel : [], Array.isArray(d.vocabDel) ? d.vocabDel : [])) {
+    if (!t || !t.k || !(+t.at > now - TOMB_TTL)) continue;
+    if (!tomb.has(t.k) || tomb.get(t.k) < +t.at) tomb.set(t.k, +t.at);
+  }
+  db.vocabDel = [...tomb].map(([k, at]) => ({ k, at }));
+  const alive = v => isObj(v) && v.w && !(tomb.has(vocabKey(v.lang, v.w)) && tomb.get(vocabKey(v.lang, v.w)) >= (+v.at || 0));
+  const map = new Map(), out = [], onlyMap = new Map(), only = [];
+  for (const v of Array.isArray(db.vocab) ? db.vocab : []) {
+    if (!alive(v)) continue;
+    const k = vocabKey(v.lang, v.w), i = map.get(k);
+    if (i == null) { map.set(k, out.length); out.push(v); } else out[i] = mergeVocabEntry(out[i], v);
+  }
+  for (const v of Array.isArray(d.vocab) ? d.vocab : []) {
+    if (!alive(v)) continue;
+    const k = vocabKey(v.lang, v.w), i = map.get(k), j = onlyMap.get(k);
+    if (i != null) out[i] = mergeVocabEntry(out[i], v);
+    else if (j != null) only[j] = mergeVocabEntry(only[j], v);
+    else { onlyMap.set(k, only.length); only.push(v); }
+  }
+  // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
+  db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
+  if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
+  if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
+  if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
+  if (Array.isArray(d.days)) db.days = [...new Set([...(db.days || []), ...d.days])].sort().slice(-400);
+  if (isObj(d.stat)) for (const k in d.stat) { const n = +d.stat[k] || 0; if (n > (+db.stat[k] || 0)) db.stat[k] = n; }
+  if (Array.isArray(d.scores) && d.scores.length > (db.scores || []).length) db.scores = d.scores.slice(-100);
+  if (isObj(d.weak)) {
+    if (!isObj(db.weak)) db.weak = {};
+    for (const k in d.weak) { const s = d.weak[k], l = db.weak[k]; if (isObj(s) && (!l || (+s.at || 0) > (+l.at || 0) || ((+s.at || 0) === (+l.at || 0) && (+s.n || 0) > (+l.n || 0)))) db.weak[k] = s; }
+  }
+  mergeTaps(d.taps);
+  mergeBooks(d.books);
+  return snap() !== before;
+}
+// jaga ukuran di bawah MAX_DATA server: pangkas tombstone/buku tertua/taps bila perlu
+function fitData(data) {
+  const size = () => JSON.stringify(data).length;
+  const keepNew = (o, n) => { const ks = Object.keys(o).sort((a, b) => (o[b].at || 0) - (o[a].at || 0)); ks.slice(n).forEach(k => delete o[k]); };
+  const stages = [
+    () => { data.vocabDel = data.vocabDel.slice().sort((a, b) => b.at - a.at).slice(0, 300); },
+    () => keepNew(data.books, 100),
+    () => { data.taps = topTaps(data.taps, 300); },
+    () => { data.vocabDel = data.vocabDel.slice(0, 50); keepNew(data.books, 30); data.taps = topTaps(data.taps, 100); }
+  ];
+  for (const s of stages) { if (size() <= SYNC_MAX) break; s(); }
+  return data;
+}
+function progressData() {
+  const data = Object.fromEntries(SYNC_KEYS.map(k => [k, k === 'taps' ? topTaps(db.taps) : db[k]]));
+  const loc = bkLocal(), books = { ...(isObj(db.bkRemote) ? db.bkRemote : {}) };
+  for (const k in loc) if (loc[k].at > 0 || books[k]) books[k] = loc[k];
+  data.books = books;
+  data.vocabDel = (Array.isArray(db.vocabDel) ? db.vocabDel : []).filter(t => t && +t.at > Date.now() - TOMB_TTL);
+  return fitData(data);
+}
+const dataSig = () => JSON.stringify(progressData()) + db.acct.hidden + db.acct.nick;
 // gabung ketukan: angka terbesar per kunci 'bahasa|kata'
 function mergeTaps(srv) {
   if (!srv || typeof srv !== 'object') return;
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
-let lastSync = '';
-async function pushSync(force) {
-  if (!db.acct || !API) return;
-  const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
-  if (!force && sig === lastSync) return;
-  await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
-  lastSync = sig;
+let lastSync = '', syncCur = null;
+function syncRefresh(force) {
+  if (!force && !$('#sheet').classList.contains('hide')) return;
+  const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+  if (db.tab === 'rak' || (db.tab === 'kata' && typeof kataSeg !== 'undefined' && kataSeg === 'simpan' && !typing)) setTab(db.tab);
 }
-function applyServer(data) { SYNC_KEYS.forEach(k => { if (k === 'taps') mergeTaps(data.taps); else if (data[k] != null) db[k] = data[k]; }); dedupeVocab(); save(); }
+async function doSync(opt) {
+  if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
+  const r = opt.pre || await api('/me');
+  if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
+  const changed = mergeSrv(r.data); save();
+  const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
+  if (opt.force || sig !== lastSync) {
+    await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
+    lastSync = sig;
+  }
+  if (changed && !opt.noRefresh) syncRefresh(opt.manual);
+  return changed;
+}
+// satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
+async function runSync(opt = {}) {
+  if (!db.acct || !API) return false;
+  if (syncCur) { if (!opt.force) return false; try { await syncCur; } catch (e) { } }
+  syncCur = doSync(opt);
+  try { return await syncCur; } finally { syncCur = null; }
+}
+const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden };
-  const d = res.data;
-  // pilih progres yang lebih maju: data server kalau XP-nya >= XP di HP ini
-  if (d && (d.xp || 0) >= (db.xp || 0)) { applyServer(d); toast(`Hai ${db.acct.nick}! Progres kamu sudah dipulihkan ✨`); }
-  else { if (d) mergeTaps(d.taps); save(); toast(`Hai ${db.acct.nick}! Progres di HP ini disimpan ke akun ✨`); }
-  await pushSync(true).catch(() => { });
+  const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
+  save();
+  try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
+  toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun ✨' : 'Progres di HP ini disimpan ke akun ✨'}`);
   closeSheet(); setTab(db.tab || 'rak');
   // catatan jujur: tampil sekali saja setelah login
-  if (!localStorage.getItem('kepo.noteAkun')) { try { localStorage.setItem('kepo.noteAkun', '1'); } catch (e) { } setTimeout(() => toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000), 600); }
+  if (!localStorage.getItem('kepo.noteAkun2')) { try { localStorage.setItem('kepo.noteAkun2', '1'); } catch (e) { } setTimeout(() => toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000), 600); }
 }
-setInterval(() => pushSync().catch(() => { }), 20000);
-addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') pushSync().catch(() => { }); });
+setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
+setInterval(() => { if (document.visibilityState === 'visible') runSync().catch(() => { }); }, 60000);
+addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') runSync().catch(() => { }); else pushSync().catch(() => { }); });
+addEventListener('online', () => { runSync().catch(() => { }); });
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
-const NOTE_AKUN = 'Yang ikut akun: XP, kata, lencana. Buku &amp; penanda masih di HP ini.';
+const NOTE_AKUN = 'Kata, XP, posisi baca &amp; penanda ikut akun. Teks buku tetap per perangkat.';
 const bkKey = b => (b.lang || '') + '|' + String(b.title || '').trim().toLowerCase();
 function bkCard() {
   return `<div class="set-row"><div class="mut sm">Simpan cadangan biar aman kalau ganti HP. Teks buku tidak ikut, jadi unggah ulang bukunya.</div>
@@ -126,7 +253,7 @@ function openAccount(mode) {
     bkWire();
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
-    $('#aSync').onclick = async () => { try { await pushSync(true); toast('Tersinkron ✅'); } catch (e) { toast(e.message); } };
+    $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron ✅ Data dari perangkat lain sudah digabung.' : 'Tersinkron ✅'); } catch (e) { toast(e.message); } };
     $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
     return;
   }
@@ -258,4 +385,4 @@ viewBaca = async function () {
 };
 setTab(db.tab || 'rak');
 openSharedFromUrl();
-if (db.acct) api('/me').then(r => { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; save(); renderAcct(); }).catch(() => { });
+if (db.acct) runSync({ profile: true }).catch(() => { });
