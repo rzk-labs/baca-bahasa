@@ -407,6 +407,7 @@ function openSettings() {
     ${b && document.body.classList.contains('reading') ? `<div class="set-row">${prepHtml()}</div>` : ''}
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Intip kata bab</div><div class="seg" id="ips"><button data-v="1" class="${db.intip === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.intip === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kartu kecil berisi 3-5 kata baru di awal bab. Bisa dilewati.</div></div>
+    <div class="set-row"><div class="eyebrow">Jelaskan kalimat (AI)</div><div class="seg" id="ais"><button data-v="1" class="${db.aiJelas === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.aiJelas === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Tombol penjelas di arti kalimat. Cuma jalan kalau diketuk, gratis 5x sehari.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
@@ -454,6 +455,7 @@ function openSettings() {
   $$('#trs button').forEach(x => x.onclick = () => { db.ttsRate = x.dataset.v === 'slow' ? 'slow' : 'normal'; save(); $$('#trs button').forEach(y => y.classList.toggle('on', y === x)); speak(b && b.lang === 'ja' ? 'こんにちは' : 'Hello', b ? b.lang : 'en', 0.8); });
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
+  $$('#ais button').forEach(x => x.onclick = () => { db.aiJelas = x.dataset.v === '1'; save(); $$('#ais button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#ips button').forEach(x => x.onclick = () => { db.intip = x.dataset.v === '1'; save(); $$('#ips button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
   $$('#tes button').forEach(x => x.onclick = () => { db.tapEdge = x.dataset.v === '1'; save(); $$('#tes button').forEach(y => y.classList.toggle('on', y === x)); });
@@ -1632,6 +1634,7 @@ function showSentence(word, sent, sIdx, sEl) {
     <div class="ttsnote hide" id="smt" lang="${esc(db.my)}"></div>
     ${ttsNote(b.lang)}
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
+    ${db.aiJelas === false ? '' : `<div class="aij" id="aij"><button class="ghost" id="aibtn" type="button">Jelaskan kalimat ini (AI)</button><div class="aij-q mut sm" id="aiq"></div><div id="aiout" aria-live="polite"></div></div>`}
     <div class="row"><button class="lime" id="spr">${ico('mic')} Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
@@ -1671,6 +1674,30 @@ function showSentence(word, sent, sIdx, sEl) {
     $('#sretry').onclick = () => { $('#str').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; loadSent(); };
   }); };
   loadSent();
+  /* Jelaskan kalimat (AI): hanya jalan saat tombol diketuk; sisa jatah harian dari server */
+  if ($('#aibtn')) {
+    const aib = $('#aibtn'), aiq = $('#aiq'), aio = $('#aiout');
+    const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
+    const setQ = n => { if (aiq && aiq.isConnected) aiq.textContent = n == null ? '' : n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
+    const msg = t => { if (aio.isConnected) aio.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
+    aib.onclick = async () => {
+      if (typeof api !== 'function') return msg('Fitur ini belum siap. Arti kalimat biasa tetap jalan.');
+      if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal, arti kalimat biasa tetap jalan.');
+      aib.disabled = true; aio.innerHTML = '<span class="loading">AI lagi mikir…</span>';
+      const mt = $('#str') && $('#str').textContent;
+      try {
+        const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: sent.slice(0, 600), lang: b.lang, arti: mt && !/…$/.test(mt) ? mt.slice(0, 600) : '' } });
+        if (!aio.isConnected) return;
+        setQ(r.sisa);
+        aio.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div><div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="airep" type="button">Lapor kalau salah</button></div>`;
+        aio.querySelector('.aij-t').textContent = r.teks;
+        $('#airep').onclick = () => { $('#airep').disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: sent.slice(0, 600), lang: b.lang, teks: r.teks } }).then(() => { const x = $('#airep'); if (x) x.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const x = $('#airep'); if (x) { x.disabled = false; x.textContent = 'Gagal kirim, coba lagi'; } }); };
+        keepVisible('.s.hl');
+      } catch (e) { if (aio.isConnected) { if (/habis/i.test(e.message)) { setQ(0); aio.innerHTML = ''; } else msg(e.message + ' Arti kalimat biasa tetap jalan.'); } }
+      aib.disabled = false;
+    };
+    if (navigator.onLine && typeof api === 'function') api('/jelaskan', { method: 'POST', body: { dev: devId(), cek: 1 } }).then(r => setQ(r.sisa)).catch(() => { });
+  }
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const sel = sEl.querySelectorAll('.w.sel'); if (sel.length) onWord(sel[0], sel[sel.length - 1]); };

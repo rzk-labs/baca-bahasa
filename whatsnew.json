@@ -1,5 +1,11 @@
 [
   {
+    "n": 688,
+    "judul": "[peta 71] Jelaskan kalimat (AI) gratis 5x/hari, hanya saat diminta",
+    "poin": "Tombol \"Jelaskan kalimat ini (AI)\" sudah ada di arti kalimat, jalan hanya saat diketuk.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 708,
     "judul": "[peta 70] Ringkasan mingguan saat app dibuka, tanpa hukuman streak",
     "poin": "Beranda kini punya kartu \"Minggu ini\": hari aktif, buku dibuka, kata baru.",
@@ -171,12 +177,6 @@
     "n": 646,
     "judul": "Halaman baca: tak ada baris terpotong di tepi atas/bawah (JP/KR)",
     "poin": "Baris teks terpotong di tepi halaman baca Jepang/Korea sudah dirapikan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 641,
-    "judul": "Bar baca: jumlah halaman konsisten dengan catatan sesi",
-    "poin": "Bar baca kini dihitung ulang saat ukuran layar berubah, jadi angka halaman akurat.",
     "tgl": "2026-11-12"
   }
 ]
