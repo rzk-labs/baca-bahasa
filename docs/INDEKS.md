@@ -102,6 +102,7 @@
 - [sesi-pertama](riset-sesi-pertama.md)
 - [skor-ucapan](riset-skor-ucapan.md)
 - [sumber-kamus](riset-sumber-kamus.md)
+- [terjemahan-sejajar](riset-terjemahan-sejajar.md)
 - [tipografi-baca-hp](riset-tipografi-baca-hp.md)
 - [tren-industri](riset-tren-industri.md)
 - [ui-indonesia-level-a2b1](riset-ui-indonesia-level-a2b1.md)

@@ -37,6 +37,7 @@ const ICONS = {
   bolt: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
   flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
   star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  flag: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 3.6-1.2A1 1 0 0 1 21 3.6v9.8a1 1 0 0 1-.4.8A6 6 0 0 1 17 15c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/>',
   shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
   upload: '<path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/>',
@@ -313,6 +314,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div>` : ''}
+    <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
     <div class="set-grp"><div class="set-gt">Lainnya</div>
@@ -321,11 +323,23 @@ function openSettings() {
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
     ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">' + ico('chat') + 'Kirim masukan</button>'}
+    <div class="set-grp" id="aturan"><div class="set-gt">Aturan &amp; Hak cipta</div>
+    <ul class="rules">
+      <li>Baca &amp; bagikan hanya buku milikmu atau domain publik.</li>
+      <li>Buku dan progresmu tersimpan di HP ini, bukan di server.</li>
+      <li>Kalau login, hanya XP, kata, dan buku yang kamu bagikan ikut tersimpan.</li>
+      <li>Bagikan = link pribadi. Hanya yang kamu kirimi link yang bisa buka.</li>
+      <li>Terjemahan otomatis bisa keliru. Anggap sebagai bantuan, bukan kebenaran.</li>
+      <li>Minta hapus konten atau laporkan buku: lewat tombol di bawah.</li>
+    </ul>
+    ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
+    </div>
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
     </div>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
-  if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
+  if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
+  if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
   if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
@@ -341,6 +355,7 @@ function openSettings() {
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
+  $$('#tes button').forEach(x => x.onclick = () => { db.tapEdge = x.dataset.v === '1'; save(); $$('#tes button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#wks button').forEach(x => x.onclick = () => { db.wake = x.dataset.v === '1'; save(); $$('#wks button').forEach(y => y.classList.toggle('on', y === x)); wakeSync(); });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
   $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.lhSet = false; db.align = null; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'paper'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
@@ -351,28 +366,29 @@ function openSettings() {
 
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 const APP_VER = 'v46';
-function openFeedback() {
+function openFeedback(opt = {}) {
   if (document.body.classList.contains('reading')) return;
-  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka']];
-  let kind = 'ide', stars = 0;
+  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka'], ['takedown', 'flag', 'Takedown']];
+  let kind = opt.kind || 'ide', stars = 0;
   openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
     <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}">${ico(e)}${l}</button>`).join('')}</div>
+    <div class="mut sm" id="fbHint" ${kind === 'takedown' ? '' : 'hidden'}>Sebut judul atau kode link bukunya &amp; alasannya. Tim Keepo menindaklanjuti.</div>
     <label class="fb-l">Ceritain aja
-      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?"></textarea></label>
-    <div class="mut sm fb-cnt"><span id="fbC">0</span>/500</div>
+      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?">${esc(opt.text || '')}</textarea></label>
+    <div class="mut sm fb-cnt"><span id="fbC">${(opt.text || '').length}</span>/500</div>
     <div class="eyebrow">Nilai app (boleh dilewati)</div>
     <div class="fb-stars" id="fbS">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" aria-label="${n} bintang">★</button>`).join('')}</div>
     <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP (browser, ukuran layar, versi app)</span></label>
     <div class="mut sm">Yang kamu tulis dibaca tim Keepo.</div>
     <button class="pri full" id="fbSend" style="margin-top:12px">Kirim</button>`);
-  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
+  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $('#fbHint').hidden = kind !== 'takedown'; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#fbS button').forEach(x => x.onclick = () => { const n = +x.dataset.n; stars = stars === n ? 0 : n; $$('#fbS button').forEach(y => y.classList.toggle('on', +y.dataset.n <= stars)); });
   $('#fbT').oninput = e => { $('#fbC').textContent = e.target.value.length; };
   $('#fbSend').onclick = async () => {
     const txt = $('#fbT').value.trim().slice(0, 500);
     if (!txt) { toast('Tulis dulu ya, sedikit aja cukup.'); $('#fbT').focus(); return; }
     const kl = kinds.find(k => k[0] === kind);
-    let msg = `[Keepo] ${kl[1]} ${kl[2]}\n${txt}`;
+    let msg = `[Keepo] ${kl[2]}\n${txt}`;
     if (stars) msg += `\nBintang: ${stars}/5`;
     if ($('#fbI').checked) msg += `\nInfo HP: ${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`;
     try { await putFeedback({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg }); } catch (e) { }
@@ -697,7 +713,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span><b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)</span></div><div>${ico('menu')}<span><b>Ketuk tengah</b> = menu</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span>${db.tapEdge === false ? '<b>Geser / tombol panah</b> = ganti halaman (laptop: ← →)' : '<b>Geser / ketuk tepi sempit</b> = ganti halaman (bisa dimatikan di Pengaturan)'}</span></div><div>${ico('menu')}<span>${db.tapEdge === false ? '<b>Ketuk layar</b> = menu' : '<b>Ketuk tengah</b> = menu'}</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => leaveBaca();
@@ -748,7 +764,8 @@ async function viewBaca() {
     setCur(e.target);
     const w = e.target.closest('.w'); if (w) { vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-    if (x < 0.25) turn(-1); else if (x > 0.75) turn(1); else $('#reader').classList.toggle('chrome');
+    const te = db.tapEdge !== false;
+    if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
   };
   RD.quiet = false;
   layout();
