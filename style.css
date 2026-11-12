@@ -602,3 +602,4 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   .ksrow{gap:8px}.ksrow .csvcnt{font-size:13px}
   .fchip{padding:0 14px}
 }
+.prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}

@@ -1,5 +1,11 @@
 [
   {
+    "n": 573,
+    "judul": "Uji layar 320px: rapikan Home, Kata & sheet arti (style.css)",
+    "poin": "Tampilan di HP kecil dirapikan: kartu buku, tab Kata, dan jendela arti.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 567,
     "judul": "Cadangan penuh: kata tersimpan, 'sudah kenal', XP ikut file",
     "poin": "Cadangan sekarang menyimpan kata, XP, lencana, dan streak, bukan cuma penanda.",
@@ -171,12 +177,6 @@
     "n": 448,
     "judul": "Tab Kata 'Tersimpan': toolbar rapi di HP, kartu kata tenang",
     "poin": "Tab Kata: kotak cari + jumlah di atas, Urutkan & Saring sebaris di bawahnya.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 442,
-    "judul": "Sheet kata: tombol perluas frasa ‹ › sejajar, jelas & mudah diketuk",
-    "poin": "Tombol perluas frasa di sheet kata kini sejajar, kiri dan kanan.",
     "tgl": "2026-11-12"
   }
 ]
