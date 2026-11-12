@@ -1713,11 +1713,26 @@ function showSentence(word, sent, sIdx, sEl) {
   const slk = b.id + '|' + b.pos + '|' + sIdx + '|' + sent.slice(0, 40);
   if (slk !== lastSentLook) { lastSentLook = slk; bumpSentLook(b.id, 'kalimat'); }
   sEl.classList.add('hl');
-  const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
+  /* kalimat sumber: tiap kata jadi tombol ketuk (pemecah kata sama dengan halaman baca); tanda/angka/partikel tetap teks biasa */
+  const stoks = tokens(sent, b.lang);
+  let mRange = null;
+  if (word) { const m = new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u').exec(sent); if (m) mRange = [m.index + m[1].length, m.index + m[1].length + m[2].length]; }
+  const srcHtml = rng => {
+    let pos = 0, o = '', open = false;
+    for (const t of stoks) {
+      const a = pos, z = pos + t.t.length; pos = z;
+      if (rng && !open && a >= rng[0] && a < rng[1]) { o += '<mark>'; open = true; }
+      const tap = t.w && !/^[\p{N}\p{P}\p{S}\s]+$/u.test(t.t) && !isParticle(b.lang, t.t);
+      o += tap ? `<span class="sw" role="button" tabindex="0" data-sw="${esc(t.t)}" aria-label="Lihat arti kata ${esc(t.t)}">${esc(t.t)}</span>` : esc(t.t);
+      if (open && z >= rng[1]) { o += '</mark>'; open = false; }
+    }
+    return open ? o + '</mark>' : o;
+  };
+  const marked = srcHtml(mRange);
   /* arti kata dari cache saja (tanpa permintaan baru); belum ada = baris tidak tampil */
   const wc = word ? trCache.get(b.lang + '|' + db.my + '|' + word) : null;
   const wMean = wc && wc.text ? String(wc.text).trim() : '';
-  const wordGloss = wMean ? `<div class="wgloss"><span class="wg-w" dir="auto" lang="${esc(b.lang)}">${esc(word)}</span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(db.my)}">${esc(wMean)}</span></div>` : '';
+  const wordGloss = `<div class="wgloss" id="wgl" aria-live="polite"${wMean ? '' : ' hidden'}>${wMean ? `<span class="wg-w" dir="auto" lang="${esc(b.lang)}">${esc(word)}</span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(db.my)}">${esc(wMean)}</span>` : ''}</div>`;
   openSheet(`
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
     <div class="src" dir="auto" lang="${esc(b.lang)}">${marked}</div>${wordGloss}
@@ -1789,6 +1804,46 @@ function showSentence(word, sent, sIdx, sEl) {
       aib.disabled = false;
     };
     if (aiq) aiq.textContent = 'Gratis 5x sehari';
+  }
+  /* ketuk kata di kalimat: arti muncul di baris .wgloss, sheet tetap terbuka, tidak simpan otomatis */
+  {
+    const srcEl = $('#sheet .src') || document.querySelector('.src'), gl = $('#wgl');
+    let gTok = 0;
+    const showGloss = async w => {
+      const my = ++gTok, lang = b.lang, my2 = db.my, k = lang + '|' + my2 + '|' + w;
+      const paint = (txt, r) => {
+        if (my !== gTok || !gl.isConnected) return;
+        const saved = db.vocab.some(v => sameVocab(v, lang, w));
+        gl.hidden = false;
+        gl.innerHTML = `<span class="wg-w" dir="auto" lang="${esc(lang)}"></span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(my2)}"></span>` + (txt ? `<button class="pill-sm wg-save" type="button" aria-label="${saved ? 'Kata ' + esc(w) + ' sudah tersimpan' : 'Simpan kata ' + esc(w)}"${saved ? ' disabled' : ''}>${saved ? 'Tersimpan' : 'Simpan kata'}</button>` : '');
+        gl.querySelector('.wg-w').textContent = w; gl.querySelector('.wg-m').textContent = txt || 'Lagi nyari artinya…';
+        const sv = gl.querySelector('.wg-save');
+        if (sv && !saved) sv.onclick = () => {
+          if (db.vocab.some(v => sameVocab(v, lang, w))) return;
+          const tp = takeTaps(lang, w);
+          if (isKenal(lang, w)) setKenal(lang, w, false);
+          db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: txt, baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() });
+          save(); vib(10); sfx('ding'); paintSaved(lang, w, true); award(2, 'save'); toast('Masuk ke kartu kata kamu');
+          paint(txt, r);
+        };
+      };
+      /* tanda <mark> pindah ke kata yang diketuk */
+      const i = [...srcEl.querySelectorAll('.sw')].findIndex(x => x === document.activeElement);
+      srcEl.innerHTML = srcHtml(null);
+      const nodes = [...srcEl.querySelectorAll('.sw')];
+      const cur = nodes[i >= 0 ? i : nodes.findIndex(x => x.dataset.sw === w)];
+      if (cur) { const mk = document.createElement('mark'); cur.replaceWith(mk); mk.appendChild(cur); if (i >= 0) cur.focus({ preventScroll: true }); }
+      const c = trCache.get(k);
+      if (c && c.text) return paint(String(c.text).trim(), c);
+      paint('', null);
+      try { const r = await translate(w, lang, my2); paint(r && r.text ? String(r.text).trim() : '', r); if (!(r && r.text) && my === gTok) gl.querySelector('.wg-m').textContent = 'Artinya belum kebuka'; }
+      catch (e) { if (my === gTok && gl.isConnected) { gl.hidden = false; gl.querySelector('.wg-m').textContent = navigator.onLine ? 'Artinya belum kebuka. Coba lagi ya.' : 'Lagi offline. Arti muncul begitu ada sinyal.'; } }
+    };
+    if (srcEl) {
+      const pick = e => { const t = e.target.closest && e.target.closest('.sw'); if (t && srcEl.contains(t)) { vib(6); showGloss(t.dataset.sw); } };
+      srcEl.onclick = pick;
+      srcEl.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(e); } };
+    }
   }
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);

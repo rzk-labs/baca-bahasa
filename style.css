@@ -244,6 +244,13 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .wg-w{font-weight:700}.wg-arr{display:inline-flex;width:16px;height:16px}.wg-arr svg{width:16px;height:16px}
 .tr mark{background:var(--hl);color:var(--ink);border-radius:6px;padding:0 3px}
 .src mark{background:var(--hl);color:var(--ink);border-radius:6px;padding:0 3px}
+.wgloss[hidden]{display:none}
+.wg-m{flex:1 1 auto;min-width:0}
+.wg-save{margin-left:auto;min-height:32px}
+.src .sw{display:inline-block;min-height:32px;line-height:32px;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;color:inherit}
+.src .sw:hover{background:var(--color-surface-soft)}
+.src .sw:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.src mark .sw:hover{background:transparent}
 .seg{display:flex;gap:4px;padding:4px;border-radius:var(--radius-full);background:var(--color-surface)}
 .seg button{flex:1;min-height:44px;padding:0 8px;font-size:14px;font-weight:700;color:var(--color-text-muted)}
 .seg button.on{background:var(--color-text);color:var(--color-bg)}
