@@ -1769,14 +1769,16 @@ function remedial(list, lang, box, done) {
 let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 let deckDone = 0, deckHint = '';
+const isLearning = v => !v.known && (v.lv || 0) >= 1;
+const refreshHafal = () => { const a = $('#sumLearn'), b = $('#sumKnown'); if (a) a.textContent = db.vocab.filter(isLearning).length; if (b) b.textContent = db.vocab.filter(v => v.known).length; };
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
 function viewKata() {
   let mig = false; db.vocab.forEach(v => { if (v.known && (v.lv || 0) < 4) { v.known = false; v.lv = v.lv || 0; v.due = v.due || 0; mig = true; } }); if (mig) save(); deckDone = 0; deckHint = '';
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
-  const known = db.vocab.filter(v => v.known).length;
+  const known = db.vocab.filter(v => v.known).length, learning = db.vocab.filter(isLearning).length;
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
-    <div class="sum"><div class="s1"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="s2"><b>${known}</b><span>Udah hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
+    <div class="sum"><div class="s1"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Lagi dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Udah hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<div class="mut sm" id="kdue" style="margin:-2px 2px 10px">${n} kata siap diulas</div>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
     <div class="seg" id="kseg"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}">Susah diucap</button></div>
@@ -1913,7 +1915,8 @@ function deck(kb) {
   const decide = ok => {
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
     deckDone++;
-    if (ok) { const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Muncul lagi ${d} hari lagi`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = ''; save(); sfx('soft'); }
+    if (ok) { const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Mantap! Muncul lagi ${d} hari lagi · ${REVIEW_DAYS.length - lv} tahap lagi jadi hafal`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = ''; save(); sfx('soft'); }
+    refreshHafal();
     setTimeout(() => deck(kb), 280);
   };
   $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fSp').onclick = () => speak(v.w, v.lang, 0.8);
