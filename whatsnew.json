@@ -1,5 +1,11 @@
 [
   {
+    "n": 722,
+    "judul": "Home: kartu Streak/Target jelas isinya & 'kata baru' = kata tersimpan",
+    "poin": "Kartu Target harian kini tampil 'XP 54/100' dan 'Beres!' tanpa angka dobel.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 718,
     "judul": "[peta 45] Ikon & logo terasa app baca: buku terbuka + stabilo",
     "poin": "Ikon app sekarang buku terbuka dengan satu baris disorot stabilo hijau-kuning.",
@@ -171,12 +177,6 @@
     "n": 662,
     "judul": "Home: tombol hapus Koleksi aman & kartu 'Kata hari ini' rapi",
     "poin": "Tombol hapus buku sekarang di bawah kartu, jauh dari sampul, tidak gampang kepencet.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 660,
-    "judul": "[peta 57] Setelah tamat: Baca ulang + saran buku berikutnya",
-    "poin": "Buku yang sudah tamat sekarang punya tombol \"Baca ulang\" yang mulai dari awal.",
     "tgl": "2026-11-12"
   }
 ]
