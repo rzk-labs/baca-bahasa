@@ -1,5 +1,11 @@
 [
   {
+    "n": 686,
+    "judul": "[peta 63] Koleksi: hapus aman + toast Target harian pindah ke bawah",
+    "poin": "Tombol hapus buku di Koleksi sekarang jauh dari tombol buka dan selalu minta konfirmasi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 684,
     "judul": "[peta 62] Beranda rapi: satu tombol Gas baca, kartu kosong hilang",
     "poin": "Beranda sekarang punya satu tombol utama: Gas baca.",
@@ -171,12 +177,6 @@
     "n": 582,
     "judul": "Rekap kata sesi baca: simpan sementara, tampil walau 1 kata",
     "poin": "Kata yang kamu ketuk kini aman, walau aplikasi tertutup mendadak.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 579,
-    "judul": "Sorotan kalimat 'Dengar halaman' jelas di 4 tema, terutama malam",
-    "poin": "Kalimat yang sedang dibacakan kini lebih jelas, terutama di tema malam.",
     "tgl": "2026-11-12"
   }
 ]
