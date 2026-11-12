@@ -1,5 +1,11 @@
 [
   {
+    "n": 624,
+    "judul": "Toast rapi & streak/XP ikut naik saat baca",
+    "poin": "Pesan kecil di layar sekarang berupa kartu rapi, tampil di atas.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 619,
     "judul": "Baca aman: cegah error 'Ada yang macet' & pesan Tamat sesuai kondisi",
     "poin": "Error \"Ada yang macet\" saat baca sudah dicegah.",
@@ -171,12 +177,6 @@
     "n": 72,
     "judul": "E-reader: teks rata kiri di HP biar tak ada celah lebar antar kata",
     "poin": "Teks baca di HP sekarang rata kiri, jadi tak ada celah lebar antar kata.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 493,
-    "judul": "Kata tersimpan tanpa duplikat + ketuk 'Tersimpan' untuk batal",
-    "poin": "Kata yang sama tidak akan tersimpan dua kali lagi; kata ganda lama digabung otomatis.",
     "tgl": "2026-11-12"
   }
 ]
