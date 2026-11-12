@@ -1,5 +1,11 @@
 [
   {
+    "n": 533,
+    "judul": "Home & tab Ngomong ikut brand v9: ikon garis, tanpa emoji",
+    "poin": "Layar Home dan Ngomong sekarang pakai ikon garis, bukan emoji lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 526,
     "judul": "Impor EPUB/PDF offline: cek pustaka benar-benar tersimpan, pesan jelas",
     "poin": "Impor EPUB/PDF tanpa sinyal sekarang kasih pesan jelas, tidak gagal diam-diam.",
@@ -171,12 +177,6 @@
     "n": 391,
     "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
     "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 387,
-    "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
-    "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
     "tgl": "2026-11-12"
   }
 ]
