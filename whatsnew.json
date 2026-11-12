@@ -1,5 +1,11 @@
 [
   {
+    "n": 591,
+    "judul": "Kartu Kata: jadwal ulang 1/3/7/21 hari, kata jatuh tempo dulu",
+    "poin": "Kartu Kata sudah mengulang kata di hari ke 1, 3, 7, dan 21.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 590,
     "judul": "Papan Keepo HQ HP: kolom kosong ciut, chip otomatis & QA mudah diketuk",
     "poin": "Papan HQ di HP lebih rapi: kolom kosong ciut jadi satu baris.",
@@ -171,12 +177,6 @@
     "n": 471,
     "judul": "Daftar penanda jelas: potongan lebih panjang, tanggal & posisi %",
     "poin": "Daftar penanda sekarang menampilkan cuplikan lebih panjang, bab, persen posisi, dan tanggal.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 466,
-    "judul": "Ikon garis menggantikan emoji di e-reader & penanda (brand v9)",
-    "poin": "Tombol penanda dan bar baca sekarang pakai ikon garis, bukan emoji.",
     "tgl": "2026-11-12"
   }
 ]
