@@ -182,7 +182,11 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .wd b{font:800 34px/38px var(--font-display);letter-spacing:-.01em}
 .pos{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);background:var(--lav);border-radius:var(--radius-full);padding:3px 10px}
 .pos:empty{display:none}
-.tr{font:800 24px/28px var(--font-display);margin:var(--space-2) 0}
+.tr{font:800 24px/30px var(--font-display);margin:2px 0 var(--space-2)}
+.wmeta{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;font-size:13px;line-height:20px;color:var(--color-text-muted);overflow-wrap:anywhere}
+.wmeta>span:empty,.wnote>span:empty{display:none}
+.wmeta>span:not(:empty)~span:not(:empty)::before,.wnote>span:not(:empty)~span:not(:empty)::before{content:"·";margin-right:6px}
+.wnote{display:flex;flex-wrap:wrap;gap:0 6px;font-size:12px;line-height:18px;font-weight:600;color:var(--color-text-muted);margin:0 0 8px}.wnote:not(:has(span:not(:empty))){display:none}
 .tr.sent{font:600 18px/26px var(--font-ui)}
 .loading{color:var(--color-text-muted);font:600 15px var(--font-ui)}
 .dict{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:19px;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);padding:8px 12px}
@@ -421,11 +425,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .fb-stars button.on{color:var(--color-text)}
 .fb-chk{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 0 8px;font-size:14px;font-weight:600}
 .fb-chk input{width:24px;min-height:24px;height:24px;margin:0;flex:none}
-.wtap{font-size:12px;font-weight:700;color:rgba(34,54,43,.75);margin:0 0 6px}.wtap:empty{display:none}
-.wsug{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:rgba(34,54,43,.75);margin:0 0 8px}.wsug[hidden]{display:none}
+.wsug{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);box-shadow:none;padding:8px 12px;margin:0 0 8px}.wsug[hidden]{display:none}
 .wsug .pill-sm{min-height:32px;padding:4px 14px;border-radius:999px;border:0;background:#22362B;color:#F4EFE4;font:inherit;font-weight:700;cursor:pointer}
 .tapb{display:inline-block;vertical-align:middle;margin:2px 0 2px 4px;padding:0 8px;border-radius:999px;background:var(--color-text);color:#F4EFE4;font-family:var(--font-ui);font-size:12px;font-weight:800;line-height:20px;}
-.wfreq{font-size:12px;color:rgba(34,54,43,.75);margin:2px 0 6px;overflow-wrap:anywhere}.wfreq:empty{display:none}
+.wfreq{overflow-wrap:anywhere}
 /* Kata Tersimpan: bar ekspor CSV di atas daftar */
 .csvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
 .csvcnt{flex:1 1 auto;min-width:0;font:700 14px/1.2 var(--font-ui)}
