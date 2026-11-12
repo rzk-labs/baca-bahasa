@@ -1,5 +1,11 @@
 [
   {
+    "n": 302,
+    "judul": "E-reader: tombol cepat 'cara baca' di bar baca (JP/KR/ZH)",
+    "poin": "Tombol cara baca di bar baca sekarang kasih pesan singkat saat diketuk.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 158,
     "judul": "Kata Tersimpan: saring daftar per bahasa/buku lewat chip di atas",
     "poin": "Di tab Tersimpan, ada chip geser untuk saring kata per bahasa atau buku.",
@@ -171,12 +177,6 @@
     "n": 352,
     "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
     "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 350,
-    "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
-    "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
     "tgl": "2026-11-12"
   }
 ]
