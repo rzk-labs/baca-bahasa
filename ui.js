@@ -87,7 +87,7 @@ function applyTheme() {
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', tr: 'Turki', id: 'Indonesia' };
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', tr: '🇹🇷', id: '🇮🇩' };
 const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0]);
-const pctOf = b => b.pct != null ? b.pct : b.total ? Math.round((b.pos + 1) / b.total * 100) : 0;
+const pctOf = b => b.pct != null ? b.pct : b.total ? Math.max(1, Math.ceil((b.pos + 1) / b.total * 100 - 1e-9)) : 0;
 const progress = p => { $('#prog').innerHTML = p == null ? '' : `<i style="width:${p}%"></i>`; };
 const SCORE = p => p >= PASS ? ['g', 'Mantap!', 'Pengucapanmu udah jelas banget.', 'cheer'] : p >= 60 ? ['m', 'Dikit lagi!', 'Udah deket. Perhatiin bunyinya ya.', 'wow'] : ['b', 'Gas latihan!', 'Santai, kita latih pelan-pelan.', 'sad'];
 const chip = (p, txt) => `<span class="chip ${SCORE(p)[0]}">${txt ? esc(txt) + ' · ' : ''}${p}%</span>`;
@@ -1115,7 +1115,7 @@ const unitsOf = (t, lang) => {
 };
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
 function heroPos(b, mins, part) {
-  const where = pctOf(b) >= 100 ? 'Sudah tamat' : (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
+  const where = pctOf(b) >= 100 ? 'Sudah tamat' : `Bab ${(b.pos || 0) + 1} dari ${b.total || 1} · ${pctOf(b)}%`;
   return esc(where + (mins ? ` · sisa ${mins}` : '')) + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
 }
 /* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
@@ -1135,6 +1135,7 @@ async function heroMins(b) {
     let m = per[pos] * (1 - frac);
     for (let i = pos + 1; i < secs.length; i++) m += per[i];
     const part = unseen(b, secs), el = $('#heroPos');
+    if (typeof b.mleft === 'number' && b.mleft >= 0 && !part) m = b.mleft; /* angka sama persis dgn bar baca */
     if (!el || db.cur !== b.id) return;
     el.innerHTML = heroPos(b, fmtMins(m, part), part);
   } catch (e) {}
@@ -1145,10 +1146,10 @@ function minsLeft(b) {
   const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
   if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
   const n = Math.max(1, Math.ceil(m - 1e-9));
-  if (!ok) return { t: `bab ini ±${n} mnt`, part: false };
+  if (!ok) return { t: `bab ini ±${n} mnt`, part: false, bab: true };
   const secs = cache.id === b.id && cache.pages;
   const part = !secs || unseen(b, secs);
-  return { t: fmtMins(m, part) || '<1 mnt', part };
+  return { t: fmtMins(m, part) || '<1 mnt', part, m };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -1159,10 +1160,12 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh && hd) rh.textContent = hd.textContent.trim();
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
-  b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
+  b.pct = Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
   const ml = minsLeft(b);
+  if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
+  save();
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${ml.t}` : `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : (RD.n === 1 ? '' : `Hal ${RD.page + 1} dari ${RD.n}`);
+  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${ml.t}${ml.bab ? '' : ' (sisa buku)'}` : `Hal ${RD.page + 1}/${RD.n} bab ini · Sisa ${ml.t}${ml.bab ? '' : ' (sisa buku)'}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : (RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n} bab ini`);
   if (pb) pb.style.width = b.pct + '%';
   syncMarks();
   $('#pv').disabled = RD.page === 0 && b.pos === 0;

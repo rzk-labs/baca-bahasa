@@ -1,5 +1,11 @@
 [
   {
+    "n": 653,
+    "judul": "Progres baca konsisten: Home, header, bar baca & label bab",
+    "poin": "Angka progres sekarang sama di Home, bar baca, dan label bab.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 651,
     "judul": "Rapikan Home: 13 bagian jadi 4, pindahkan sisanya",
     "poin": "Home kini 4 bagian saja; Tantangan, Peringkat, Lencana, Yang baru, Masukan sudah dipindah.",
@@ -171,12 +177,6 @@
     "n": 520,
     "judul": "Tab Kata & kartu Hafal ikut brand v9: ikon garis, tanpa emoji",
     "poin": "Tab Kata dan kartu hafalan sekarang pakai ikon garis, emoji hilang.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 516,
-    "judul": "Tombol 'Sudah kenal' di arti kata: kata lama tak ramai lagi",
-    "poin": "Sheet arti kata kini punya tombol \"Sudah kenal\"; kata itu jadi samar saat baca.",
     "tgl": "2026-11-12"
   }
 ]
