@@ -2,7 +2,8 @@
   "produk": "Keepo",
   "tagline": "Baca bukumu sendiri, ngerti bahasanya.",
   "prinsip": "Reader First, AI Second: pengguna datang untuk membaca; AI membantu saat dibutuhkan, bukan mengambil alih.",
-  "fase_sekarang": "Discovery & Validation",
+  "fase_sekarang": "Siap Beta (setelah Discovery & Validation selesai)",
+  "peta_fase_berikutnya": "#510: A Siap Beta (sekarang) -> B Beta Privat nyata -> C Buka Publik -> D Monetisasi. Gerbang ke beta: cadangan penuh+persist, kotak centang/matikan Bagikan, takedown+Laporkan+syarat singkat. Lihat docs/pm-peta-fase-berikutnya.md.",
   "kapasitas_founder": "Solo founder, 1-4 jam per minggu. Budget fleksibel selama manfaatnya jelas (spend when proven).",
   "aturan_validasi": "Keputusan founder: tahap yang biasanya butuh manusia (wawancara, uji kemauan bayar, usability test, beta) divalidasi dulu dengan BUKTI PUBLIK di internet (ulasan Play Store/App Store kompetitor, Reddit, forum, Threads/X, komentar YouTube, survei & studi terbit) ditambah uji oleh tester & pengguna AI. Tahap boleh berstatus \"selesai\" bila: minimal 30 kutipan/bukti nyata dari minimal 3 sumber berbeda (dengan tautan), tiap hipotesis diberi vonis terbukti/gugur/belum jelas, dan ada kesimpulan. Tandai di catatan \"(validasi bukti internet)\". Wawancara manusia nanti hanya penguat, bukan syarat.",
   "tahap": [
