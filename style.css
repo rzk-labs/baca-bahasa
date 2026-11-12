@@ -23,7 +23,7 @@
   --shadow-card:none;--shadow-sheet:0 -12px 40px rgba(42,18,21,.18);
   --ease-out:cubic-bezier(.2,.8,.2,1);--ease-pop:cubic-bezier(.3,1.5,.5,1);
   --dur-tap:100ms;--dur-color:150ms;--dur-page:220ms;--dur-sheet:280ms;--dur-ring:800ms;
-  --tabbar-h:72px;
+  --tabbar-h:76px;
 }
 [data-theme=sepia]{
   --color-bg:#F4EAD5;--color-surface:#FFF9EC;--color-surface-soft:#EADCC0;
@@ -82,7 +82,7 @@ button:disabled{opacity:.35;pointer-events:none}
 #view{padding:4px 18px calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 36px);max-width:720px;margin:0 auto;animation:pop .3s var(--ease-out)}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}}
 #tabs{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 10px);z-index:6;display:flex;gap:8px;height:var(--tabbar-h);padding:6px;max-width:480px;margin:0 auto;background:var(--ink);border-radius:var(--radius-full)}
-#tabs button{flex:1;flex-direction:column;gap:2px;min-height:48px;padding:7px 0;font-size:12px;line-height:15px;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
+#tabs button{flex:1;flex-direction:column;gap:4px;min-height:48px;padding:6px 0;font-size:13px;line-height:16px;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
 #tabs button svg{width:22px;height:22px}
 #tabs button.on{color:var(--ink);background:var(--lime)}
 @media (min-width:1024px){
@@ -417,7 +417,7 @@ img.mascot{object-fit:contain;-webkit-user-drag:none;user-select:none}
 button.avatar,.pill.login,.wsug .pill-sm{position:relative}
 button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
 #hdx{gap:8px}
-#tabs button{min-width:44px;min-height:44px}
+#tabs button{min-width:44px;min-height:48px}
 /* #286 ramah jempol: jarak antar target >=8px, area ketuk >=44px */
 .fb-kind,.fb-stars,.seg{gap:8px}.chlist{gap:8px}.sheet-aux{gap:8px 12px}
 .pill{position:relative}
@@ -434,7 +434,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   #hdx .icon{width:44px}
   #pStreak,#pXp{padding:0 7px}
   #tabs{left:10px;right:10px;gap:4px;padding:6px}
-  #tabs button{gap:3px;min-height:44px;padding:8px 0;font-size:12px;line-height:15px}
+  #tabs button{gap:3px;min-height:48px;padding:6px 0;font-size:13px;line-height:16px}
 }
 /* #334 HP kecil (<=340px): streak tetap terlihat (api+angka), pil ringkas agar muat di 320px */
 @media (max-width:340px){#top h1{font-size:20px}#top h1 .mascot{width:22px;height:22px}#hdx{gap:2px}#pStreak,#pXp{padding:0 6px;font-size:12px;gap:2px}.pill.login{padding:0 8px;font-size:12px}#hdx .icon{width:40px}}
