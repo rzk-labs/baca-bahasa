@@ -73,6 +73,7 @@
 - [bahasa-rtl-thai-hindi](riset-bahasa-rtl-thai-hindi.md)
 - [bantuan-arti-bertahap](riset-bantuan-arti-bertahap.md)
 - [batas-impor-hp](riset-batas-impor-hp.md)
+- [bacaan-pendek-vs-buku](riset-bacaan-pendek-vs-buku.md)
 - [beta-data-bagikan](riset-beta-data-bagikan.md)
 - [brand-identitas](riset-brand-identitas.md)
 - [cara-baca-romanisasi](riset-cara-baca-romanisasi.md)
