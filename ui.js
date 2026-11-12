@@ -142,7 +142,7 @@ function globalErr(ev) {
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang error. Muat ulang halaman ya', 4000);
+  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => location.reload() });
 }
 window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
