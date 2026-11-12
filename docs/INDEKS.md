@@ -142,3 +142,4 @@
 - [prafetch-kalimat](spesifikasi-prafetch-kalimat.md)
 - [profil-leaderboard](spesifikasi-profil-leaderboard.md)
 - [sinkron-buku](spesifikasi-sinkron-buku.md)
+- [garis-bawah-frasa-langsung](spesifikasi-garis-bawah-frasa-langsung.md)
