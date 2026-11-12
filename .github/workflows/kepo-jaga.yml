@@ -3,7 +3,7 @@ name: Keepo Jaga Tim
 # Memastikan tidak ada anggota tim yang menganggur.
 # Tiap 30 menit (dan setiap kali tugas selesai): untuk tiap peran yang sedang kosong,
 # minta PM memberi tugas baru khusus peran itu.
-# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 40 tugas otomatis per peran per hari.
+# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 32 tugas otomatis per peran per hari.
 
 on:
   schedule:
@@ -57,7 +57,7 @@ jobs:
               --jq "[.[]|select(.createdAt|startswith(\"$HARI\"))]|length")
             if [ "$SIBUK" -gt 0 ]; then echo "$P: sibuk ($SIBUK tugas)"; continue; fi
             if echo "$PMRUN" | grep -qw "$P"; then echo "$P: PM sedang memilihkan tugas"; continue; fi
-            if [ "$HARI_INI" -ge 40 ]; then echo "$P: batas harian tercapai ($HARI_INI)"; continue; fi
+            if [ "$HARI_INI" -ge 32 ]; then echo "$P: batas harian tercapai ($HARI_INI)"; continue; fi
             echo "$P: KOSONG → minta PM memberi tugas"
             gh workflow run kepo-pm.yml -f paksa=true -f peran="$P"
           done
