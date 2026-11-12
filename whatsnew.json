@@ -1,5 +1,11 @@
 [
   {
+    "n": 788,
+    "judul": "Baca: colek lembut ketuk kata pertama bila 4 halaman tanpa ketukan",
+    "poin": "Pembaca baru yang 4 halaman belum ketuk kata dapat colekan ramah, sekali saja.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 786,
     "judul": "Baca: ikon ↗ di header berlabel + judul utuh; Koleksi tampil judul",
     "poin": "Tombol ↗ di layar baca sekarang berlabel \"Bagikan\".",
@@ -171,12 +177,6 @@
     "n": 728,
     "judul": "Baca: bar progres jelas 'Bab X/Y · Hal a/b' & total halaman stabil",
     "poin": "Bar baca sekarang jelas: \"Bab 3/11 · Hal 17/17\", persen buku, satu sisa waktu.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 726,
-    "judul": "Bar menu bawah rapi: alas penuh, kartu tak mengintip di celah",
-    "poin": "Menu bawah sekarang rapi: area di belakangnya tertutup penuh sampai tepi layar.",
     "tgl": "2026-11-12"
   }
 ]
