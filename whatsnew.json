@@ -1,5 +1,11 @@
 [
   {
+    "n": 600,
+    "judul": "Frasa 2-5 kata yang disimpan ikut digarisbawahi di halaman baca",
+    "poin": "Frasa yang kamu simpan sekarang ikut bergaris bawah di halaman baca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 591,
     "judul": "Kartu Kata: jadwal ulang 1/3/7/21 hari, kata jatuh tempo dulu",
     "poin": "Kartu Kata sudah mengulang kata di hari ke 1, 3, 7, dan 21.",
@@ -171,12 +177,6 @@
     "n": 476,
     "judul": "Bar atas e-reader lega di HP 320px: maks 2 tombol kanan",
     "poin": "Bar atas baca kini satu baris: judul, bab, dan jumlah penanda.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 471,
-    "judul": "Daftar penanda jelas: potongan lebih panjang, tanggal & posisi %",
-    "poin": "Daftar penanda sekarang menampilkan cuplikan lebih panjang, bab, persen posisi, dan tanggal.",
     "tgl": "2026-11-12"
   }
 ]
