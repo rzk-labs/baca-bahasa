@@ -252,11 +252,18 @@ function wakeSync() {
 }
 document.addEventListener('visibilitychange', wakeSync);
 /* app ke latar belakang saat membaca: simpan persen terbaru (sumber sama dgn Home/Profil/rak) */
+/* satu rumus persen buku (bobot bab bila ada): bar baca, keluar reader, dan simpan latar memakai ini */
+function readPct(b) {
+  const uOk = Array.isArray(b.units) && b.units.length === (b.total || 1) && b.units.length > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
+  return uOk && uSum > 0
+    ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, b.pos).reduce((a, x) => a + x, 0) + b.units[b.pos] * (RD.page + 1) / RD.n) / uSum * 100 - 1e-9)))
+    : Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
+}
 function flushReadPct() {
   try {
     if (!document.body.classList.contains('reading')) return;
     const b = book(); if (!b || !RD || !RD.n || RD.page == null || !b.total) return;
-    b.pct = Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / b.total * 100 - 1e-9)));
+    b.pct = readPct(b);
     save();
   } catch (e) {}
 }
@@ -888,7 +895,7 @@ function sessRecap(b) {
   });
   return true;
 }
-function leaveBaca() { stopListenPage(); const b = book(); if (b && RD && RD.n && RD.page != null && b.total) { b.pct = Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / b.total * 100 - 1e-9))); save(); } setTab('rak'); if (b) sessRecap(b); }
+function leaveBaca() { stopListenPage(); const b = book(); if (b && RD && RD.n && RD.page != null && b.total) { b.pct = readPct(b); save(); } setTab('rak'); if (b) sessRecap(b); }
 /* Baca ulang: balik ke awal; tanda tamat (doneAt) dibiarkan supaya XP tamat tak dobel */
 function restartBook(b) { b.pos = 0; b.si = 0; b.pct = 1; RD.quiet = true; save(); }
 /* saran berikutnya: buku belum selesai, bahasa sama, panjang mirip/sedikit lebih panjang (belum ada data level buku) */
@@ -1299,19 +1306,19 @@ function showPage(p, anim = true) {
   const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
-  const uOk = Array.isArray(b.units) && b.units.length === (b.total || 1) && b.units.length > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
-  b.pct = uOk && uSum > 0
-    ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, b.pos).reduce((a, x) => a + x, 0) + b.units[b.pos] * (RD.page + 1) / RD.n) / uSum * 100 - 1e-9)))
-    : Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
+  b.pct = readPct(b);
   const ml = minsLeft(b);
   if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
-    const rem = ml && ml.t ? `${nw(ml.t)} lagi` : '';
+    const rem = ml && ml.t ? nw(ml.t) : '';
     const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n}`);
-    pgn.innerHTML = [multi ? nw(`Bab ${b.pos + 1}/${b.total}`) : '', hal, multi ? nw(`${b.pct}% buku`) : '', rem].filter(Boolean).join(' · ')
+    const l1 = [multi ? nw(`Bab ${b.pos + 1}/${b.total}`) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${b.pct}%`) : '', rem].filter(Boolean).join(' · ');
+    pgn.title = 'persen dari seluruh buku, perkiraan sisa waktu';
+    pgn.setAttribute('aria-label', [multi ? `Bab ${b.pos + 1} dari ${b.total}` : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${b.pct} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
+    pgn.innerHTML = [l1, l2].filter(Boolean).join(' · ')
       + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '')
       + (multi && lastPg && b.pos < b.total - 1 ? '<span class="mnote">Ujung bab, geser untuk bab berikutnya</span>' : '');
   }
