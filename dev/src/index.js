@@ -101,6 +101,7 @@ const brief = i => {
   const p = L.find(x => x.startsWith('peran:'));
   return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
     qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at,
+    ulang: [...new Set([...((i.title || '') + '\n' + (i.body || '')).matchAll(/(?:revisi|ulang|ulangi|pengganti)[^#\n]{0,25}#(\d+)/gi)].map(x => +x[1]))].filter(x => x !== i.number),
     rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
 };
 const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing'];
@@ -152,8 +153,18 @@ async function api(req, env, url) {
       const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
       if (Array.isArray(cs)) masukan = cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at }));
     }
+    const tasks = issues.filter(i => !i.pull_request).map(brief);
+    // isi catatan QA (1 baris) diambil dari komentar, hanya untuk tugas berlabel qa-catatan
+    await Promise.all(tasks.filter(t => t.qa === 'catatan').slice(0, 10).map(async t => {
+      const cs = await gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true });
+      const c = Array.isArray(cs) && cs.filter(x => x.body.includes('QA ada catatan')).pop();
+      if (!c) return;
+      const tx = c.body.split('QA ada catatan**')[1] || '';
+      const ln = tx.split('\n').map(x => x.replace(/^[\s>*#\-•]+/, '').replace(/[*_`]/g, '').trim()).find(x => x.length > 2 && !/^QA agent tidak menulis/.test(x));
+      if (ln) t.qaTeks = ln.slice(0, 200);
+    }));
     return json({
-      tasks: issues.filter(i => !i.pull_request).map(brief),
+      tasks,
       roadmap: road,
       masukan, masukan_issue: mn, docs_info,
       docs: Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md')).map(d => d.path) : [],
