@@ -895,14 +895,14 @@ function finishBook(b) {
   const ws = all.filter(v => (v.at || 0) >= SESS.t), lama = !ws.length && all.length > 0;
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
-  const ring = [ws.length ? `${ws.length} kata baru` : '', mnt >= 1 && mnt < 600 ? `baca ±${mnt} mnt` : ''].filter(Boolean).join(' · ');
+  const ring = [ws.length ? `${ws.length} kata disimpan` : '', mnt >= 1 && mnt < 600 ? `baca ±${mnt} mnt` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
   const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" style="min-height:44px;margin-top:6px;text-align:left"><span style="overflow-wrap:anywhere">${esc(x.title)}</span> <span class="mut sm">${langName(x.lang)} · ${pctOf(x)}%</span></button>`).join('')}`
     : `<p class="mut sm" style="margin-top:14px">Mau cerita baru? Impor buku atau teks lain buat dikepoin.</p><button class="sec full" id="fbadd" style="min-height:44px">Impor buku baru</button>`;
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
-    <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
+    <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (lama ? '<p class="mut">Kata kamu dari buku ini sudah tersimpan, latih di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
     <div class="row" style="gap:8px;margin-top:12px">${ws.length || lama ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length || lama ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>
     <div class="row" style="margin-top:8px"><button class="ghost" id="fbr" style="min-height:44px">Baca ulang dari awal</button></div>${nxHtml}`, 'Tamat');
@@ -1044,7 +1044,7 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat (AI, gratis 5x/hari). <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat${db.aiJelas === false ? '' : ' (+ Jelaskan AI, gratis 5x/hari)'}. <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
@@ -1708,7 +1708,7 @@ function showSentence(word, sent, sIdx, sEl) {
       } catch (e) { if (aio.isConnected) { if (/habis/i.test(e.message)) { setQ(0); aio.innerHTML = ''; } else msg(e.message + ' Arti kalimat biasa tetap jalan.'); } }
       aib.disabled = false;
     };
-    if (navigator.onLine && typeof api === 'function') api('/jelaskan', { method: 'POST', body: { dev: devId(), cek: 1 } }).then(r => setQ(r.sisa)).catch(() => { });
+    if (aiq) aiq.textContent = 'Gratis 5x sehari';
   }
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
