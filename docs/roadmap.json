@@ -49,7 +49,8 @@
     { "no": 42, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ pakai brand v9: Plum Noir, Biru Es, Wasabi, Bricolage + Inter, tanpa maskot (#479)", "dokumen": "docs/spesifikasi-hq-brand-v9.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 43, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata (#294)", "dokumen": "docs/spesifikasi-hq-judul-tugas-rapi.md", "status": "spesifikasi siap dikerjakan" },
     { "no": 44, "peran": "pm", "prioritas": "P3", "nama": "Sosial ringan: profil, teman, feed 'sedang dibaca' + akun uji AI (#539)", "dokumen": "docs/spesifikasi-sosial-profil.md", "status": "dispesifikasi, menunggu keputusan; butuh deploy server manual" },
-    { "no": 45, "peran": "desain", "prioritas": "P1", "nama": "Ikon & logo terasa app baca: buku terbuka + stabilo Wasabi, tanpa maskot (#584)", "dokumen": "docs/desain-ikon-logo-baca.md", "status": "siap dikerjakan" }
+    { "no": 45, "peran": "desain", "prioritas": "P1", "nama": "Ikon & logo terasa app baca: buku terbuka + stabilo Wasabi, tanpa maskot (#584)", "dokumen": "docs/desain-ikon-logo-baca.md", "status": "siap dikerjakan" },
+    { "no": 46, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: kartu Hasil punya status 3 jenis: Belum diproses, Progres, Selesai (#586)", "dokumen": "docs/spesifikasi-hq-status-kartu-hasil.md", "status": "spesifikasi siap dikerjakan" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
