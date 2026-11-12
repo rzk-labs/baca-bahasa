@@ -374,17 +374,18 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .w ruby{ruby-position:over}
 .cols .w rt{font-size:max(.5em,10px);line-height:1.1;font-weight:500;letter-spacing:0;color:var(--color-text-muted);-webkit-user-select:none;user-select:none}
 .cols .w rt::before{content:attr(data-r)}
-/* penanda kata: sama di semua tema (kata sering diketuk, tersimpan, terpilih) */
-.cols .w:is(.often,.saved,.sel){background:var(--wm);color:var(--wm-ink);border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.cols .w:is(.often,.saved,.sel) rt{color:var(--wm-ink)}
-.reader.no-often .cols .w.often:not(.saved):not(.sel){background:none;color:inherit}
-.reader.no-often .cols .w.often:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
-.cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);background:none}
+/* penanda kata (tenang): disimpan = garis bawah solid tipis, sering diketuk = garis putus-putus, kenal = pudar, wasabi hanya kata aktif (.sel) */
+.cols .w{-webkit-box-decoration-break:clone;box-decoration-break:clone;text-decoration-skip-ink:auto}
+.cols .w.saved{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:var(--color-text);text-decoration-thickness:1.5px;text-underline-offset:.2em}
+.cols .w.often:not(.saved){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:2px;text-underline-offset:.22em}
+.reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
+.cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
 #wkenal[hidden]{display:none}
-.cols .w.saved{text-decoration:underline solid var(--wm-ink);text-decoration-thickness:2px;text-underline-offset:4px}
-.cols .w.sel{border-radius:6px;box-shadow:inset 0 -3px 0 var(--wm-ink)}
-@media (hover:hover){.cols .w:hover{background:var(--wm);color:var(--wm-ink)}}
+.cols .w.sel{background:var(--wm);color:var(--wm-ink);border-radius:4px;text-decoration-color:var(--wm-ink)}
+.cols .w.sel rt{color:var(--wm-ink)}
+@media (hover:hover){.cols .w:hover:not(.sel){background:var(--color-surface-soft)}}
+@media (forced-colors:active){.cols .w.sel{outline:2px solid Highlight}}
 .rfoot{flex:none;min-height:48px;display:flex;align-items:center;gap:8px;padding:0 8px;max-width:720px;width:100%;align-self:center}
 .rmid{flex:1;text-align:center;font-size:12px;line-height:18px;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
