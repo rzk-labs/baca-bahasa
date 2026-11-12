@@ -1,5 +1,11 @@
 [
   {
+    "n": 764,
+    "judul": "Tombol 'Ini nama' di sheet arti: nama tokoh tak jadi kata belajar",
+    "poin": "Sekarang ada tombol \"Ini nama\" di arti kata, jadi nama tokoh tak salah diartikan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 762,
     "judul": "Baca: total halaman 'Hal a/b' tak loncat saat balik halaman",
     "poin": "Total halaman di buku tak loncat lagi saat balik halaman.",
@@ -171,12 +177,6 @@
     "n": 706,
     "judul": "[peta 31] Seragamkan nama app jadi KEEPO di teks tampilan",
     "poin": "Nama app di layar sekarang seragam: Keepo.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 704,
-    "judul": "[peta 67] Keepo HQ Peta ringkas: kartu 1 baris, detail dilipat",
-    "poin": "Peta di Keepo HQ sekarang rapi: tiap tahap satu kartu ringkas.",
     "tgl": "2026-11-12"
   }
 ]
