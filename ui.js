@@ -46,6 +46,13 @@ const ICONS = {
   sword: '<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6M16 16l4 4M19 21l2-2"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.7V17c0 .6-.5 1-1.2 1.2C7.8 18.7 7 20 7 22M14 14.7V17c0 .6.5 1 1.2 1.2 1 .5 1.8 1.8 1.8 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/>',
   alert: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+  chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  bug:'<path d="m8 2 1.9 1.9M16 2l-1.9 1.9"/><path d="M9 7.1V6a3 3 0 0 1 6 0v1.1"/><path d="M12 20a6 6 0 0 1-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3a6 6 0 0 1-6 6zM12 20v-9M6.5 13H2M17.5 13H22M6 17l-3 2M18 17l3 2M6 9 3 7M18 9l3-2"/>',
+  bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>',
+  heart:'<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  send:'<path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',
+  eyeoff:'<path d="M10.7 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-2.2 3M6.6 6.6A17 17 0 0 0 2 12s4 7 10 7a9.7 9.7 0 0 0 5.4-1.6M2 2l20 20"/>',
   slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -238,7 +245,7 @@ addEventListener('popstate', () => {
   if (rdSkip) { rdSkip--; return; }
   if (!rdHist) return;
   if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
-  rdHist = false; setTab('rak');
+  rdHist = false; leaveBaca();
 });
 function setTab(t) {
   if (t !== 'baca') { rdLeave(); pfDisarm(); }
@@ -313,7 +320,7 @@ function openSettings() {
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
-    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
+    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">' + ico('chat') + 'Kirim masukan</button>'}
     <div class="set-grp" id="aturan"><div class="set-gt">Aturan &amp; Hak cipta</div>
     <ul class="rules">
       <li>Baca &amp; bagikan hanya buku milikmu atau domain publik.</li>
@@ -323,7 +330,7 @@ function openSettings() {
       <li>Terjemahan otomatis bisa keliru. Anggap sebagai bantuan, bukan kebenaran.</li>
       <li>Minta hapus konten atau laporkan buku: lewat tombol di bawah.</li>
     </ul>
-    ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')} Minta hapus konten</button>`}
+    ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
@@ -357,10 +364,10 @@ function openSettings() {
 const APP_VER = 'v46';
 function openFeedback(opt = {}) {
   if (document.body.classList.contains('reading')) return;
-  const kinds = [['rusak', 'bolt', 'Ada yang rusak'], ['ide', 'star', 'Ide'], ['suka', 'check', 'Suka'], ['takedown', 'flag', 'Takedown']];
+  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka'], ['takedown', 'flag', 'Takedown']];
   let kind = opt.kind || 'ide', stars = 0;
   openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
-    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}">${ico(e)} ${l}</button>`).join('')}</div>
+    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}">${ico(e)}${l}</button>`).join('')}</div>
     <div class="mut sm" id="fbHint" ${kind === 'takedown' ? '' : 'hidden'}>Sebut judul atau kode link bukunya &amp; alasannya. Tim Keepo menindaklanjuti.</div>
     <label class="fb-l">Ceritain aja
       <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?">${esc(opt.text || '')}</textarea></label>
@@ -389,7 +396,7 @@ function openFeedback(opt = {}) {
       const link = m ? FEEDBACK_KONTAK + '?subject=' + encodeURIComponent('Masukan Keepo') + '&body=' + encodeURIComponent(msg) : FEEDBACK_KONTAK + (FEEDBACK_KONTAK.includes('wa.me') ? '?text=' + encodeURIComponent(msg) : '');
       window.open(link, '_blank', 'noopener'); return;
     }
-    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya! 💚'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
+    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya!'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
     await copy();
   };
 }
@@ -488,7 +495,7 @@ function viewRak() {
     animRing($('#view'));
     heroMins(cur);
   }
-  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
+  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">' + ico('chat') + 'Kirim masukan</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
   blManual = false;
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
@@ -612,6 +619,42 @@ async function addBook(title, paras, lang) {
 
 /* ---------- BACA (e-reader) ---------- */
 const SESS = { id: null, t: 0 };
+/* Rekap kata sesi: ketukan dicatat di memori saja, ditampilkan saat keluar buku */
+const SESSW = new Map();
+function recSess(b, w, sent) {
+  if (!b || !w || /\s/.test(String(w).trim())) return;
+  const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
+  e.n++; SESSW.set(k, e);
+}
+function sessRecap(b) {
+  const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
+  SESSW.clear();
+  if (all.length < 2) return false;
+  const cand = all.filter(e => !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKenal(e.lang, e.w)).sort((x, y) => y.n - x.n).slice(0, 8);
+  if (!cand.length) return false;
+  const row = (e, i) => { const c = trCache.get(e.lang + '|' + db.my + '|' + e.w); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1">${c && c.text ? esc(c.text) : '<i>arti belum ada</i>'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">Simpan yang mau dihafal.</p>
+    <div id="rsl">${cand.map(row).join('')}</div>
+    <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
+  $$('[data-rs]').forEach(btn => btn.onclick = () => {
+    const e = cand[+btn.dataset.rs], c = trCache.get(e.lang + '|' + db.my + '|' + e.w);
+    if (db.vocab.some(v => sameVocab(v, e.lang, e.w))) return;
+    const tp = takeTaps(e.lang, e.w);
+    if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
+    untombVocab(e.lang, e.w);
+    const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
+    db.vocab.unshift(nv); save(); vib(10); sfx('ding');
+    btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
+    toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
+      const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
+      tombVocab(e.lang, e.w); save();
+      if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
+    } });
+  });
+  return true;
+}
+function leaveBaca() { const b = book(); setTab('rak'); if (b) sessRecap(b); }
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
@@ -669,7 +712,7 @@ async function viewBaca() {
       ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span><b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)</span></div><div>${ico('menu')}<span><b>Ketuk tengah</b> = menu</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
-  $('#rHome').onclick = () => setTab('rak');
+  $('#rHome').onclick = () => leaveBaca();
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   if ($('#rRt')) $('#rRt').onclick = () => {
     db.rt = db.rt ? 0 : 1; save(); viewBaca();
@@ -998,11 +1041,11 @@ async function onWord(el, lastEl) {
     $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
   const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; if (n >= 3) $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('often'); }); showSug(n); };
-  showTap(countTap(b.lang, word));
+  showTap(countTap(b.lang, word)); recSess(b, word, sent);
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
-  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
+  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}×` : 'Pertama kali kamu cek kata ini'; };
   const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
@@ -1074,7 +1117,7 @@ async function onWord(el, lastEl) {
     if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
-    $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
+    $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
@@ -1334,17 +1377,17 @@ function viewKata() {
           let f = null;
           try { f = new File([blob], fn, { type: 'text/csv' }); } catch (e) {}
           if (f && (iosLike || standalone) && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
-            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan ✨'); }
-            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa 👌'); }
+            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan'); }
+            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa'); }
           }
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
             a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-            toast(`${fn} udah diunduh (${ready} kata) ✨`);
+            toast(`${fn} udah diunduh (${ready} kata)`);
           } catch (e) {
             try {
-              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
-              else toast('Perangkat ini belum bisa unduh CSV 😢');
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan'); }
+              else toast('Perangkat ini belum bisa unduh CSV');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
         };
@@ -1370,7 +1413,7 @@ function viewKata() {
       if ($('#kRem')) $('#kRem').onclick = () => {
         const lang = weak[0].lang, list = weak.filter(o => o.lang === lang).slice(0, 10);
         $('#kwl').remove();
-        remedial(list.map(o => ({ w: o.w, p: o.last })), lang, $('#kbox'), () => { celebrate('Boss kalah!', 'Semua kata sulit udah kamu lawan 💪'); viewKata(); });
+        remedial(list.map(o => ({ w: o.w, p: o.last })), lang, $('#kbox'), () => { celebrate('Boss kalah!', 'Semua kata sulit udah kamu lawan'); viewKata(); });
       };
     }
   };
@@ -1415,6 +1458,6 @@ if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
 window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
-window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
+window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
 bersihYatim();

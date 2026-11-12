@@ -553,3 +553,10 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 [data-theme=dark] #top h1 span{color:var(--ink)}
 [data-theme=dark] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}
 @media (prefers-color-scheme:dark){[data-theme=auto] #top h1 span{color:var(--ink)}[data-theme=auto] #top h1 span::after{top:.1em;height:auto;bottom:.02em;left:-.2em;right:-.2em;border-radius:.2em}}
+/* #543 ikon garis di tombol, judul & lencana peringkat (v9) */
+.fb-open svg.i,#fbHome svg.i,.fb-kind svg.i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
+.seg button svg.i{margin-right:0}
+.sec-h h2 svg.i,.sh-head h2 svg.i{width:22px;height:22px;margin-right:8px;vertical-align:-3px}
+.medal{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font:800 14px/1 var(--font-display);background:var(--hl);color:var(--ink)}
+.medal.m2{background:var(--ice);color:var(--ink)}.medal.m3{background:var(--ink);color:var(--cream)}
+[data-theme=dark] .medal.m3,[data-theme=night] .medal.m3{background:var(--cream);color:var(--ink)}
