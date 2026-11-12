@@ -83,7 +83,7 @@ function openAccount(mode) {
   let m = mode === 'daftar' ? 'daftar' : 'masuk';
   const draw = () => {
     openSheet(`<div class="sh-head"><h2>${m === 'masuk' ? 'Masuk' : 'Bikin akun'}</h2>${closeBtn}</div>
-      <div class="hello-sub">${mascot('happy')}<div class="mut sm">${m === 'masuk' ? 'Lanjutin progres kamu di HP mana aja.' : 'Simpan XP & streak, ikut leaderboard, dan bagikan cerita ke teman.'}</div></div>
+      <div class="hello-sub">${spot('happy')}<div class="mut sm">${m === 'masuk' ? 'Lanjutin progres kamu di HP mana aja.' : 'Simpan XP & streak, ikut leaderboard, dan bagikan cerita ke teman.'}</div></div>
       <div class="seg" id="aMode"><button data-v="masuk" class="${m === 'masuk' ? 'on' : ''}">Masuk</button><button data-v="daftar" class="${m === 'daftar' ? 'on' : ''}">Daftar</button></div>
       <form id="aForm" autocomplete="on">
         <label class="eyebrow" style="display:block;margin-top:14px">Username<input id="aU" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, angka, _" required></label>
@@ -162,7 +162,7 @@ async function openSharedFromUrl() {
   try {
     const s = await api('/share/' + encodeURIComponent(id));
     const exists = db.books.find(b => b.shareId === s.id);
-    $('#shIn').outerHTML = `<div class="hello-sub">${mascot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
+    $('#shIn').outerHTML = `<div class="hello-sub">${spot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
       <div class="vitem">${cover({ title: s.title })}<div class="inf"><div class="w1">${esc(s.title)}</div><div class="s1">${langName(s.lang)} · ${s.paras.length} paragraf</div></div></div>
       <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : '➕ Tambah ke koleksi'}</button></div>`;
     $('#shAdd').onclick = async () => {
