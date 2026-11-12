@@ -1,5 +1,11 @@
 [
   {
+    "n": 704,
+    "judul": "[peta 67] Keepo HQ Peta ringkas: kartu 1 baris, detail dilipat",
+    "poin": "Peta di Keepo HQ sekarang rapi: tiap tahap satu kartu ringkas.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 702,
     "judul": "[peta 46] Keepo HQ: kartu Hasil punya status Belum diproses/Progres/Selesai",
     "poin": "Kartu Hasil di HQ kini punya tiga status: Belum diproses, Progres, Selesai.",
@@ -171,12 +177,6 @@
     "n": 632,
     "judul": "Pengaman data iPhone: peringatan tab Safari & ingatkan cadangan",
     "poin": "Pengaturan kini memperingatkan pengguna Safari biasa: data bisa hilang sendiri.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 624,
-    "judul": "Toast rapi & streak/XP ikut naik saat baca",
-    "poin": "Pesan kecil di layar sekarang berupa kartu rapi, tampil di atas.",
     "tgl": "2026-11-12"
   }
 ]

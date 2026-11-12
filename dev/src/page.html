@@ -116,12 +116,25 @@ a{color:inherit}
 .ev .ic{width:34px;height:34px;border-radius:11px;border:1.5px solid #351E28;color:#351E28;display:grid;place-items:center;flex:none;font-size:16px}
 .ev b{font-weight:700}
 /* map */
-.phase{margin-bottom:16px}
-.phase-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.stages{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
-.stage{display:flex;gap:10px;align-items:flex-start;padding:12px;border:2px solid var(--ink);border-radius:16px;background:var(--card)}
-.stage .no{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:22px;width:34px;flex:none}
-.stage b{display:block;line-height:1.25}
+.phase{margin-bottom:12px}
+.phase>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:6px 2px}
+.phase>summary::before{display:none}
+.phase>summary h3{margin:0;overflow-wrap:anywhere}
+.phase>summary .bar{grid-column:1/-1;height:6px}
+.stages{display:grid;gap:8px;margin-top:8px;align-items:stretch;grid-template-columns:minmax(0,1fr)}
+@media(min-width:640px){.stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1000px){.stages{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.stage{border:2px solid var(--ink);border-radius:16px;background:var(--card);min-width:0}
+.stage>summary{display:grid;grid-template-columns:34px minmax(0,1fr);gap:2px 10px;align-items:start;padding:10px 12px;min-height:92px;box-sizing:border-box;font-weight:400}
+.stage>summary::before{display:none}
+.stage .no{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:22px;line-height:1.1;grid-row:1/4}
+.stage b{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;line-height:1.25;overflow-wrap:anywhere}
+.stage .chip{justify-self:start}
+.stage .ct{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.stage .dt2{padding:0 12px 12px;overflow-wrap:anywhere}
+.stage[open]>summary b,.stage[open]>summary .ct{display:block}
+.stage .dt2 .acts{margin-top:10px;flex-wrap:wrap}
+.stage .dt2 .btn{max-width:100%;white-space:normal;text-align:left}
 .bk4{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:640px){.bk4{grid-template-columns:repeat(2,minmax(0,1fr))}}.bk4 .eyebrow{white-space:normal}.bkj{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.evl{padding:16px}.evl .big{font-size:30px}.evs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.evs .eyebrow{white-space:normal;font-size:11px}.evbar{display:flex;height:12px;border-radius:999px;overflow:hidden;border:1.5px solid var(--ink);margin-top:6px}.evbar i{display:block;height:100%}.k-selesai{background:var(--jade)}.k-draft,.k-berjalan{background:var(--wasabi)}.k-awal{background:#D7EFFF}.k-belum{background:transparent;color:var(--ink);border-style:dashed}
 .bar{height:10px;border-radius:99px;background:rgba(53,30,40,.15);overflow:hidden}.bar i{display:block;height:100%;background:var(--wasabi);box-shadow:inset 0 0 0 1px #351E28;border-radius:99px}
 /* doc */
@@ -495,7 +508,7 @@ async function peta(){
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
   <div class="bento" style="margin-bottom:22px"><div class="tile c t-lav span2"><div class="eyebrow">Progres keseluruhan</div><div class="big">${progres(R)}%</div><div class="bar" style="margin-top:10px"><i style="width:${progres(R)}%"></i></div></div>
   <div class="tile c t-sun span2"><div class="eyebrow">Kapasitas founder</div><div style="font-weight:700;margin-top:6px">${esc(R.kapasitas_founder||'')}</div></div></div>
-  ${fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);const pr=Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100);return `<div class="phase"><div class="phase-h"><h3>${esc(f)}</h3><span class="mut sm">${pr}%</span></div><div class="stages">${L.map(t=>`<div class="stage"><div class="no">${String(t.no).padStart(2,'0')}</div><div style="min-width:0"><b>${esc(t.nama)}</b><span class="chip k-${t.status}" style="margin:6px 0">${KS[t.status]||t.status}</span><div class="mut sm">${linkDok(t.catatan)}</div>${sumberDok(t.catatan).length?`<div class="acts" style="margin-top:10px;flex-wrap:wrap">${sumberDok(t.catatan).map(d=>`<button class="btn lime" data-sumber="${esc(d)}">📄 Sumber: ${esc(namaDok(d))}</button>`).join('')}</div>`:''}</div></div>`).join('')}</div></div>`}).join('')}
+  ${(()=>{const info=fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);return {f,L,pr:Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100),done:L.every(t=>t.status==='selesai')}});return [...info.filter(x=>!x.done),...info.filter(x=>x.done)]})().map(({f,L,pr,done})=>`<details class="phase"${done?'':' open'}><summary><h3>${esc(f)}</h3><span class="mut sm">${pr}%${done?' · selesai':''}</span><div class="bar"><i style="width:${pr}%"></i></div></summary><div class="stages">${L.map(t=>{const sd=sumberDok(t.catatan);return `<details class="stage"><summary><div class="no">${String(t.no).padStart(2,'0')}</div><b>${esc(t.nama)}</b><span class="chip k-${t.status}">${KS[t.status]||t.status}</span><div class="mut sm ct">${linkDok(t.catatan||'')||'—'}</div></summary><div class="dt2"><div class="mut sm">${linkDok(t.catatan||'')}</div>${sd.length?`<div class="acts">${sd.map(d=>`<button class="btn lime" data-sumber="${esc(d)}">📄 Sumber: ${esc(namaDok(d))}</button>`).join('')}</div>`:''}</div></details>`}).join('')}</div></details>`).join('')}
   <div class="sec"><h2>Milestone</h2></div><div class="grid">${R.milestone.map(m=>`<div class="tile row"><div class="av ${m.status==='selesai'?'t-mint':m.status==='berjalan'?'t-sun':'t-blue'}" style="font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:22px">${m.no}</div><div style="flex:1;min-width:0"><b>${esc(m.nama)}</b> <span class="chip k-${m.status}">${KS[m.status]||m.status}</span><div class="mut sm">${esc(m.isi)}</div></div></div>`).join('')}</div>
   <div class="sec"><h2>Prioritas</h2></div><div class="tile"><div class="grid" style="gap:8px">${R.prioritas.map(p=>`<div class="row"><span class="chip ${p.level==='P0'?'t-coral':p.level==='P1'?'t-sun':p.level==='P2'?'t-blue':'s-ditolak'}">${p.level}</span><span>${esc(p.isi)}</span></div>`).join('')}</div></div>`;
   V.querySelectorAll('[data-sumber]').forEach(b=>b.onclick=()=>go('dokumen',b.dataset.sumber));
