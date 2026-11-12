@@ -406,6 +406,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .set-acts{display:flex;flex-direction:column;gap:8px}.set-acts button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}.set-acts button:disabled{opacity:.5}.set-acts .i{width:20px;height:20px}.set-acts .on svg path:first-child{fill:currentColor}
 .mki{display:flex;align-items:center;gap:4px}
 .mkgo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:48px;padding:10px 14px;border:0;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font:600 15px/20px var(--font-ui);text-align:start;cursor:pointer}
+.mkgo .mkt b{font-weight:800;background:var(--color-hl-sentence);border-radius:3px}
 .mkgo .mkt{min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow-wrap:anywhere}
 .mkdel{flex:none;color:var(--color-text-muted)}
 .mkdel svg{width:18px;height:18px}
