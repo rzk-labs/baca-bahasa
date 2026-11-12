@@ -412,7 +412,9 @@ async function openSharedFromUrl() {
     const exists = db.books.find(b => b.shareId === s.id);
     $('#shIn').outerHTML = `<div class="hello-sub">${spot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
       <div class="vitem">${cover({ title: s.title })}<div class="inf"><div class="w1">${esc(s.title)}</div><div class="s1">${langName(s.lang)} · ${s.paras.length} paragraf</div></div></div>
-      <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : '➕ Tambah ke koleksi'}</button></div>`;
+      <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : ico('plus') + ' Tambah ke koleksi'}</button></div>
+      <div class="row"><button class="ghost" id="shRep">${ico('flag')} Laporkan buku ini</button></div>`;
+    $('#shRep').onclick = () => { closeSheet(); setTimeout(() => openFeedback({ kind: 'takedown', text: `Laporan buku "${s.title}" (kode link: ${s.id}). Alasan: ` }), 50); };
     $('#shAdd').onclick = async () => {
       closeSheet();
       if (exists) { db.cur = exists.id; save(); return setTab('baca'); }
