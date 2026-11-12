@@ -284,6 +284,7 @@ function bkSave() {
   const u = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = u; a.download = 'kepo-cadangan.json'; document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(u), 2000);
+  try { localStorage.setItem('kepo.bkDone', '1'); } catch (e) { }
   toast('Cadangan tersimpan');
 }
 async function bkRestore(file) {
