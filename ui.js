@@ -402,6 +402,7 @@ function openSettings() {
     ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
     ${b && document.body.classList.contains('reading') ? `<div class="set-row">${prepHtml()}</div>` : ''}
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
+    <div class="set-row"><div class="eyebrow">Intip kata bab</div><div class="seg" id="ips"><button data-v="1" class="${db.intip === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.intip === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kartu kecil berisi 3-5 kata baru di awal bab. Bisa dilewati.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div>` : ''}
     <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
@@ -447,6 +448,7 @@ function openSettings() {
   $$('#trs button').forEach(x => x.onclick = () => { db.ttsRate = x.dataset.v === 'slow' ? 'slow' : 'normal'; save(); $$('#trs button').forEach(y => y.classList.toggle('on', y === x)); speak(b && b.lang === 'ja' ? 'こんにちは' : 'Hello', b ? b.lang : 'en', 0.8); });
   $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
   $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
+  $$('#ips button').forEach(x => x.onclick = () => { db.intip = x.dataset.v === '1'; save(); $$('#ips button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
   $$('#tes button').forEach(x => x.onclick = () => { db.tapEdge = x.dataset.v === '1'; save(); $$('#tes button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#wks button').forEach(x => x.onclick = () => { db.wake = x.dataset.v === '1'; save(); $$('#wks button').forEach(y => y.classList.toggle('on', y === x)); wakeSync(); });
@@ -820,6 +822,66 @@ function finishBook(b) {
   const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
+/* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
+const INTIP_SKIP = ['ja', 'ko', 'zh-CN', 'zh-TW', 'th']; /* pemotongan kata belum andal / tanpa spasi: lewati kartu */
+const INTIP_LATIN = /^(en|id|es|fr|de|it|pt|nl|sv|no|da|fi|pl|tr|ru|uk|cs|ro|hu|vi|ms)/;
+function intipCands(b, sp, savedSet) {
+  if (INTIP_SKIP.includes(b.lang) || !seg(b.lang, 'word')) return [];
+  const minLen = INTIP_LATIN.test(b.lang) ? 5 : 3, m = new Map();
+  for (const P of sp) {
+    if (P.h) continue;
+    for (const { s } of P.sents) for (const t of tokens(s, b.lang)) {
+      if (!t.w) continue;
+      const k = t.t.toLowerCase();
+      if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k)) continue;
+      const e = m.get(k) || { w: k, lang: b.lang, n: 0, lo: 0, s: s.trim() };
+      e.n++; if (t.t === k) e.lo++; m.set(k, e);
+    }
+  }
+  return [...m.values()].filter(e => e.n >= 2 && e.lo >= 1 && !savedSet.has(e.w) && !isKenal(b.lang, e.w))
+    .sort((x, y) => y.n - x.n || [...y.w].length - [...x.w].length).slice(0, 5);
+}
+function intipHtml(b, cand) {
+  const rows = cand.map((e, i) => { const t = cachedTr(e.w, e.lang, db.my); return `<button class="irow" type="button" data-ik="${i}" aria-label="Simpan kata ${esc(e.w)}"><span class="iw" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</span><span class="im" data-im="${i}" dir="auto" lang="${esc(db.my)}">${t ? esc(t) : ''}</span><span class="ia" aria-hidden="true">${ico('plus')}</span></button>`; }).join('');
+  return `<div class="intip" id="intip" role="group" aria-label="Intip kata bab"><div class="ih"><b>Intip kata bab</b><button class="ix" id="intipX" type="button">Lewati</button></div><div class="isub">Ketuk kata untuk menyimpan</div>${rows}</div>`;
+}
+function intipBind(b, cand) {
+  const box = $('#intip'); if (!box) return;
+  const st = db.intipN = db.intipN || { o: 0, s: 0 };
+  st.o = (st.o || 0) + 1; save();
+  const gone = () => !box.isConnected;
+  $('#intipX').onclick = () => {
+    b.intipOff = 1; st.s = (st.s || 0) + 1; save();
+    box.remove(); layout();
+  };
+  $$('#intip .irow').forEach(btn => btn.onclick = () => {
+    const e = cand[+btn.dataset.ik]; if (!e || btn.disabled) return;
+    if (db.vocab.some(v => sameVocab(v, e.lang, e.w))) return;
+    const c = trCache.get(e.lang + '|' + db.my + '|' + e.w), tp = takeTaps(e.lang, e.w);
+    if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
+    untombVocab(e.lang, e.w);
+    const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
+    db.vocab.unshift(nv); save(); award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
+    btn.disabled = true; btn.classList.add('done'); btn.querySelector('.ia').innerHTML = ico('check'); btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
+    toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
+      const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
+      tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
+      if (btn.isConnected) { btn.disabled = false; btn.classList.remove('done'); btn.querySelector('.ia').innerHTML = ico('plus'); btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
+    } });
+  });
+  /* arti yang belum ada: diambil pelan-pelan setelah jeda, satu per satu, maks 5; offline = tanpa arti */
+  (async () => {
+    await new Promise(r => setTimeout(r, 1500));
+    for (let i = 0; i < cand.length; i++) {
+      if (gone() || navigator.onLine === false) return;
+      const e = cand[i]; if (cachedTr(e.w, e.lang, db.my)) continue;
+      try { await translate(e.w, e.lang, db.my); } catch (x) { return; }
+      const t = cachedTr(e.w, e.lang, db.my), el = box.querySelector('[data-im="' + i + '"]');
+      if (el && t) el.textContent = t;
+      await new Promise(r => setTimeout(r, 500));
+    }
+  })();
+}
 async function viewBaca() {
   stopListenPage();
   const b = book();
@@ -866,6 +928,12 @@ async function viewBaca() {
     }
     return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) || inPhrase.has(i) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
+  let intip = '', intipC = [];
+  if (db.intip !== false && !b.intipOff && !b.si && !RD.toEnd && b.ip !== b.pos) {
+    b.ip = b.pos; save();
+    intipC = intipCands(b, sp, savedSet);
+    if (intipC.length >= 3) intip = intipHtml(b, intipC); else intipC = [];
+  }
   const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
@@ -881,7 +949,7 @@ async function viewBaca() {
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(chTitle)}</div>
-      <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
+      <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
@@ -938,12 +1006,14 @@ async function viewBaca() {
   vp.onclick = e => {
     if (moved) { moved = false; return; }
     setCur(e.target);
+    if (e.target.closest('.intip')) return;
     const w = e.target.closest('.w'); if (w) { stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
   };
   RD.quiet = false;
+  if (intipC.length) intipBind(b, intipC);
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
   if (LIS.chain) { LIS.chain = false; startListenPage(); }
