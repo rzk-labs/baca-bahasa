@@ -326,7 +326,7 @@ function ember(st){st=String(st||'').toLowerCase();
   if(/founder|menunggu keputusan|draft siap dicek|deploy server manual/.test(st))return 'kamu';
   if(/sedang|berjalan|dikerjakan tim|diproses/.test(st))return 'jalan';
   return 'belum'}
-const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Menunggu kamu','t-sun'],belum:['⏸️ Belum / pause',''],selesai:['✅ Selesai','t-mint']};
+const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Perlu keputusanmu','t-sun'],belum:['⏸️ Belum / pause',''],selesai:['✅ Selesai','t-mint']};
 let BKF='';
 function daftarKerja(){
   const B=(HQ&&HQ.roadmap&&HQ.roadmap.backlog)||[];if(!B.length)return '';
