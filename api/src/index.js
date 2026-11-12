@@ -167,6 +167,56 @@ export default {
           return json(req, { ok: true, i, n });
         }
       }
+      // ---------- FYP: status & berbagi bahan bacaan ----------
+      // Posting dari profil publik tampil di FYP semua pengguna. Urutan: baru + dari yang kamu ikuti + disukai.
+      if (p === '/posts' && req.method === 'POST') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const b = await body(req);
+        const text = String(b.text || '').trim().slice(0, 500);
+        if (!text) return err(req, 'Tulis statusnya dulu.');
+        const day = await env.DB.prepare('SELECT COUNT(*) c FROM posts WHERE user_id=? AND created_at>?').bind(u.id, Date.now() - 864e5).first();
+        if (+day.c >= 30) return err(req, 'Maks 30 status per hari.', 429);
+        let share = b.share ? String(b.share).slice(0, 16) : null;
+        if (share && !(await env.DB.prepare('SELECT id FROM shares WHERE id=? AND user_id=?').bind(share, u.id).first())) share = null;
+        const r = await env.DB.prepare('INSERT INTO posts (user_id, text, book, lang, share_id, created_at) VALUES (?,?,?,?,?,?)')
+          .bind(u.id, text, b.book ? String(b.book).slice(0, 120) : null, b.lang ? String(b.lang).slice(0, 5) : null, share, Date.now()).run();
+        return json(req, { ok: true, id: r.meta.last_row_id });
+      }
+      if (p === '/fyp' && req.method === 'GET') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const before = +url.searchParams.get('before') || 9e15;
+        const r = await env.DB.prepare(`SELECT p.id, p.text, p.book, p.lang, p.share_id, p.created_at, x.username, x.nick, x.hide_titles,
+            (SELECT COUNT(*) FROM post_likes l WHERE l.post_id=p.id) suka,
+            (SELECT 1 FROM post_likes l WHERE l.post_id=p.id AND l.user_id=?) aku_suka,
+            (SELECT 1 FROM follows f WHERE f.follower_id=? AND f.followee_id=p.user_id) diikuti
+          FROM posts p JOIN users x ON x.id=p.user_id
+          WHERE p.created_at < ? AND (x.social=1 OR x.id=?) ORDER BY p.created_at DESC LIMIT 120`).bind(u.id, u.id, before, u.id).all();
+        const now = Date.now(), rows = r.results || [];
+        // skor sederhana: makin baru makin tinggi; teman diikuti & disukai naik; status sendiri tetap muncul
+        const skor = x => -((now - x.created_at) / 36e5) + (x.diikuti ? 12 : 0) + Math.min(+x.suka || 0, 20) * 1.5 + (x.username === u.username ? 6 : 0);
+        const top = rows.sort((a, b) => skor(b) - skor(a)).slice(0, 40);
+        return json(req, {
+          posts: top.map(x => ({ id: x.id, text: x.text, book: x.hide_titles && x.username !== u.username ? (x.book ? 'Sebuah buku' : null) : x.book, lang: x.lang, share: x.share_id, at: x.created_at, username: x.username, nick: x.nick, ai: x.username.startsWith('uji_'), suka: +x.suka || 0, akuSuka: !!x.aku_suka, diikuti: !!x.diikuti, milikku: x.username === u.username })),
+          lagi: rows.length === 120 ? Math.min(...rows.map(x => x.created_at)) : null,
+        });
+      }
+      const pm = p.match(/^\/posts\/(\d+)(\/suka)?$/);
+      if (pm) {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const id = +pm[1];
+        if (pm[2] && req.method === 'POST') {
+          const ada = await env.DB.prepare('SELECT 1 k FROM post_likes WHERE post_id=? AND user_id=?').bind(id, u.id).first();
+          await env.DB.prepare(ada ? 'DELETE FROM post_likes WHERE post_id=? AND user_id=?' : 'INSERT OR IGNORE INTO post_likes (post_id, user_id, created_at) VALUES (?,?,' + Date.now() + ')').bind(id, u.id).run();
+          return json(req, { ok: true, suka: !ada });
+        }
+        if (!pm[2] && req.method === 'DELETE') {
+          await env.DB.batch([
+            env.DB.prepare('DELETE FROM post_likes WHERE post_id IN (SELECT id FROM posts WHERE id=? AND user_id=?)').bind(id, u.id),
+            env.DB.prepare('DELETE FROM posts WHERE id=? AND user_id=?').bind(id, u.id),
+          ]);
+          return json(req, { ok: true });
+        }
+      }
       // ---------- Sosial: profil, ikuti, cari teman ----------
       // Privat (bawaan): hanya pemilik yang lihat. Publik: semua pengguna yang masuk bisa lihat & mengikuti.
       if (p === '/social' && req.method === 'PUT') {

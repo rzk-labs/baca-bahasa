@@ -465,6 +465,68 @@ async function openProfile(username) {
   } catch (e) { $('#pfBody').textContent = e.message; }
 }
 
+/* ---------- FYP: status & berbagi bahan bacaan ---------- */
+let fypCache = null;
+const fypRow = p => `<div class="fyp-p" data-pid="${p.id}">
+  <button class="fyp-who" data-u="${esc(p.username)}"><span class="avatar">${esc(initial(p.nick))}</span><span class="fr-in"><b>${esc(p.nick)}</b><span class="mut sm">@${esc(p.username)} · ${lalu(p.at)}${p.diikuti ? ' · teman' : ''}</span></span></button>
+  <div class="fyp-t">${esc(p.text)}</div>
+  ${p.book ? `<div class="fyp-b">${ico('book')}<span>${esc(p.book)}${p.lang ? ' · ' + esc(langName(p.lang)) : ''}</span>${p.share ? `<button class="sec" data-share="${esc(p.share)}">Baca juga</button>` : ''}</div>` : ''}
+  <div class="fyp-a"><button class="ghost fyp-like${p.akuSuka ? ' on' : ''}" data-like="${p.id}" aria-pressed="${p.akuSuka}">${p.akuSuka ? '♥' : '♡'} ${p.suka || ''}</button>${p.milikku ? `<button class="ghost" data-del="${p.id}">Hapus</button>` : ''}</div></div>`;
+function wireFyp(root) {
+  wireRows(root);
+  root.querySelectorAll('[data-share]').forEach(b => b.onclick = () => { history.replaceState(null, '', location.pathname + '?share=' + encodeURIComponent(b.dataset.share)); openSharedFromUrl(); });
+  root.querySelectorAll('[data-like]').forEach(b => b.onclick = async () => {
+    try { const r = await api(`/posts/${b.dataset.like}/suka`, { method: 'POST' }); const n = (parseInt(b.textContent.replace(/\D/g, '')) || 0) + (r.suka ? 1 : -1); b.classList.toggle('on', r.suka); b.setAttribute('aria-pressed', r.suka); b.textContent = (r.suka ? '♥ ' : '♡ ') + (n > 0 ? n : ''); } catch (e) { toast(e.message); }
+  });
+  root.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Yakin hapus?'; return; }
+    try { await api('/posts/' + b.dataset.del, { method: 'DELETE' }); b.closest('.fyp-p').remove(); toast('Status dihapus.'); } catch (e) { toast(e.message); }
+  });
+}
+async function homeFyp() {
+  const host = $('#fypHome'); if (!host || !db.acct) { if (host) host.remove(); return; }
+  const opsi = (db.books || []).slice().sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 12).map(b => `<option value="${esc(b.id)}">${esc(b.title)}</option>`).join('');
+  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>Untuk kamu</h2><button class="ghost" id="fypAll">Lihat semua</button></div>
+    <div class="fyp-new"><textarea id="fypT" rows="2" maxlength="500" placeholder="Lagi baca apa? Bagikan kalimat atau kata favoritmu."></textarea>
+      <div class="row" style="gap:8px;flex-wrap:wrap"><select id="fypB" aria-label="Lampirkan buku"><option value="">Tanpa buku</option>${opsi}</select>
+      <label class="row sm" style="gap:6px;align-items:center"><input type="checkbox" id="fypS" style="width:auto"> Bagikan isinya</label>
+      <button class="pri" id="fypGo">Kirim</button></div>
+      <div class="mut sm" id="fypNote" hidden>Bagikan isi buku hanya bila milikmu sendiri atau bebas hak cipta (domain publik).</div></div>
+    <div id="fypList" class="mut sm" style="margin-top:10px">Memuat…</div></div>`;
+  $('#fypAll').onclick = openFyp;
+  $('#fypS').onchange = e => { $('#fypNote').hidden = !e.target.checked; };
+  $('#fypGo').onclick = async () => {
+    const t = $('#fypT').value.trim(); if (!t) return toast('Tulis statusnya dulu.');
+    const b = db.books.find(x => x.id === $('#fypB').value), btn = $('#fypGo'); btn.disabled = true;
+    try {
+      let share = null;
+      if (b && $('#fypS').checked) { const paras = await getText(b.id); const r = await api('/share', { method: 'POST', body: { title: b.title, lang: b.lang, paras } }); share = r.id; }
+      await api('/posts', { method: 'POST', body: { text: t, book: b ? b.title : null, lang: b ? b.lang : null, share } });
+      toast('Status terkirim.'); homeFyp();
+    } catch (e) { toast(e.message); btn.disabled = false; }
+  };
+  try {
+    fypCache = await api('/fyp');
+    $('#fypList').innerHTML = fypCache.posts.length ? fypCache.posts.slice(0, 5).map(fypRow).join('') : '<div class="mut sm">Belum ada status. Jadi yang pertama.</div>';
+    $('#fypList').classList.remove('mut', 'sm'); wireFyp($('#fypList'));
+  } catch (e) { if (/tidak ditemukan|not found/i.test(e.message)) host.remove(); else $('#fypList').textContent = e.message; }
+}
+async function openFyp() {
+  openSheet(`<div class="sh-head"><h2>Untuk kamu</h2>${closeBtn}</div><div id="fypFull" class="mut sm">Memuat…</div>`, 'Untuk kamu');
+  let lagi = null;
+  const muat = async () => {
+    const r = await api('/fyp' + (lagi ? '?before=' + lagi : ''));
+    const box = $('#fypFull'); if (!box) return;
+    if (!lagi) box.innerHTML = '';
+    box.classList.remove('mut', 'sm');
+    box.insertAdjacentHTML('beforeend', r.posts.map(fypRow).join('') || '<div class="mut sm">Belum ada status.</div>');
+    lagi = r.lagi; wireFyp(box);
+    const old = $('#fypMore'); if (old) old.remove();
+    if (lagi) { box.insertAdjacentHTML('afterend', '<button class="ghost" id="fypMore" style="width:100%;margin-top:10px">Muat lagi</button>'); $('#fypMore').onclick = () => muat().catch(e => toast(e.message)); }
+  };
+  try { await muat(); } catch (e) { $('#fypFull').textContent = e.message; }
+}
+
 /* ---------- Bagikan cerita ---------- */
 async function shareBook(id) {
   const b = db.books.find(x => x.id === id); if (!b) return;
@@ -531,7 +593,8 @@ setTab = function (t) {
   renderAcct();
   if (t === 'rak') {
     const ben = $('.bento');
-    if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
+    if (ben && API && db.acct && !$('#fypHome')) { const y = document.createElement('div'); y.id = 'fypHome'; y.style.marginTop = '12px'; ben.after(y); homeFyp(); }
+    if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ($('#fypHome') || ben).after(d); homeLeaderboard(); }
     if (ben && API && db.acct && !$('#frHome')) { const f = document.createElement('div'); f.id = 'frHome'; f.style.marginTop = '12px'; ($('#lbHome') || ben).after(f); homeFriends(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
