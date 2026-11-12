@@ -1,5 +1,11 @@
 [
   {
+    "n": 780,
+    "judul": "Target harian dorong belajar kata: XP balik halaman dibatasi",
+    "poin": "XP balik halaman kini cuma dihitung 10 per hari ke target harian.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 778,
     "judul": "Ajak ketuk kata pertama: Profil '0 kata' jadi ajakan, kartu Level ada bar",
     "poin": "Kartu Level di Home sekarang punya bar progres tipis.",
@@ -171,12 +177,6 @@
     "n": 718,
     "judul": "[peta 45] Ikon & logo terasa app baca: buku terbuka + stabilo",
     "poin": "Ikon app sekarang buku terbuka dengan satu baris disorot stabilo hijau-kuning.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 719,
-    "judul": "Hemat sinyal: cek jatah AI hanya saat diminta + panduan sebut AI",
-    "poin": "Cek jatah AI tidak jalan otomatis lagi, jadi hemat sinyal.",
     "tgl": "2026-11-12"
   }
 ]

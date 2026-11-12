@@ -124,7 +124,8 @@ function confetti(n = 70) {
   document.body.appendChild(box); setTimeout(() => box.remove(), 2000);
 }
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
-const xpToday = () => db.xpDay[today()] || 0;
+const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
+const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
 const BADGES = [
   ['kepo1', 'eye', 'Keepo Pertama', 'Cek arti 1 kata', () => db.stat.look >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => db.vocab.length >= 10],
@@ -153,10 +154,11 @@ function award(n, stat) {
   if (stat === 'page') { db.pgDay = db.pgDay || {}; const pd = today(); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]]; }
   const before = level();
   if (n) {
-    db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
+    db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = (db.xpDay[d] || 0) + n;
+    if (stat === 'page') { db.pgXpDay = db.pgXpDay || {}; db.pgXpDay[d] = (db.pgXpDay[d] || 0) + n; const gk = Object.keys(db.pgXpDay).sort(); if (gk.length > 60) delete db.pgXpDay[gk[0]]; }
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
-    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
+    const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
