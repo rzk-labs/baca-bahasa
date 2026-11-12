@@ -170,6 +170,7 @@ button:disabled{opacity:.35;pointer-events:none}
 .cover .ct{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
 .cover .ct.c1{font-size:.88em}.cover .ct.c2{font-size:.78em}.cover .ct.c3{font-size:.68em}.cover .ct.c4{font-size:.6em;overflow-wrap:anywhere}
 .cover .ct.cjk{word-break:break-all;overflow-wrap:anywhere}
+.cover .cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
 .hscroll{display:flex;gap:var(--space-3);overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:2px 18px 10px;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
 .hscroll>*{scroll-snap-align:start}
