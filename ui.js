@@ -848,7 +848,7 @@ async function onWord(el, lastEl) {
   /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
   const li = lastEl ? ws.indexOf(lastEl) : -1;
   if (li > lo && li - lo + 1 <= MAXW) { hi = li; ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi)); word = phraseOf(); }
-  const isSaved =() => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
+  const isSaved =() => db.vocab.some(v => sameVocab(v, b.lang, word));
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
@@ -876,7 +876,7 @@ async function onWord(el, lastEl) {
   award(1, 'look');
   const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
   const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
-  const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
+  const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
     $('#wtr').textContent = v.t;
     setWBaca(bacaOf(word, v.baca));
@@ -919,9 +919,23 @@ async function onWord(el, lastEl) {
   $('#wexp').onclick = () => grow(1);
   $('#wexl').onclick = () => grow(-1);
   $('#wsave').onclick = async () => {
-    if (isSaved()) return;
+    const mark = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.toggle('saved', on); });
+    if (isSaved()) {
+      /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
+      const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
+      db.vocab = db.vocab.filter(v => !gone.includes(v)); save(); vib(8); mark(w, false);
+      const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl();
+      toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => {
+        if (!db.vocab.some(v => sameVocab(v, lang, w))) db.vocab.splice(Math.min(at, db.vocab.length), 0, ...gone);
+        save(); mark(w, true);
+        const s2 = $('#wsave'); if (s2 && sameVocab({ lang: b.lang, w: word }, lang, w)) s2.innerHTML = saveLbl();
+        if (kataSeg === 'simpan' && $('#klist')) viewKata();
+      } });
+      return;
+    }
     const sg = $('#wsug'); if (sg) sg.innerHTML = '';
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
+    if (isSaved()) return; /* ketukan ganda saat menunggu terjemahan */
     const tp = takeTaps(b.lang, w);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
