@@ -516,7 +516,22 @@ function cachedTr(q, sl, tl) { const v = trCache.get(sl + '|' + tl + '|' + q); r
 /* ---------- kamus Jepang kecil offline (kamus-ja.txt): dimuat malas hanya saat membaca buku ja ---------- */
 const JA_PART = new Set(['が', 'は', 'を', 'に', 'の', 'で', 'と', 'も', 'へ', 'や', 'か', 'ね', 'よ']);
 /* kata fungsi (partikel dasar ja): tidak dihitung sebagai kata baru (tanpa ketukan, catatan sesi, garis bawah, intip, perkiraan impor) */
-const isKataFungsi = (lang, w) => lang === 'ja' && JA_PART.has(String(w || '').trim());
+/* Korea: 1 suku Hangul yang bukan kata utuh (partikel/potongan salah) dianggap kata fungsi; kata 1 suku umum tetap dihitung */
+const KO_ONE = new Set([...'물책집말밥날꿈손눈비밤길힘문몸발꽃술돈옷차일때것수곳분쌀강산별달해밖안위앞뒤옆키개새꿀땅불벌목뼈피귀입코팔']);
+const KO_PARTS = ['에서', '에게', '으로', '까지', '부터', '한테', '처럼', '보다', '이', '가', '은', '는', '을', '를', '에', '의', '도', '로', '와', '과'];
+const HANGUL_ONLY = /^[가-힣]+$/;
+/* kata ko berpartikel di ujung dengan sisa >=2 suku -> { stem, part }; selain itu null */
+function koSplit(w) {
+  const s = String(w || '').trim();
+  if (!HANGUL_ONLY.test(s)) return null;
+  for (const p of KO_PARTS) if (s.length - p.length >= 2 && s.endsWith(p)) return { stem: s.slice(0, -p.length), part: p };
+  return null;
+}
+const isKataFungsi = (lang, w) => {
+  const s = String(w || '').trim();
+  if (lang === 'ko') return s.length === 1 && HANGUL_ONLY.test(s) && !KO_ONE.has(s);
+  return lang === 'ja' && JA_PART.has(s);
+};
 const isParticle = isKataFungsi;
 let jaDict = null, jaP = null;
 function jaLoad() {

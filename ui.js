@@ -1500,13 +1500,16 @@ async function onWord(el, lastEl) {
   /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
   const li = lastEl ? ws.indexOf(lastEl) : -1;
   if (li > lo && li - lo + 1 <= MAXW) { hi = li; ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi)); word = phraseOf(); }
+  /* ko: kata menempel partikel (아침에) -> arti bentuk dasar; partikel disebut kecil */
+  const qWord = () => { const k = b.lang === 'ko' && lo === hi ? koSplit(word) : null; return k ? k.stem : word; };
+  const partNote = () => { const k = b.lang === 'ko' && lo === hi ? koSplit(word) : null; return k ? k.stem + ' + ' + k.part : ''; };
   const isSaved =() => db.vocab.some(v => sameVocab(v, b.lang, word));
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
     <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span>${['ja', 'zh-CN', 'zh'].includes(b.lang) && [...word].length > 1 && !el.querySelector('ruby') ? '<button class="icon tint wexb" id="wsplit" aria-label="Pecah per huruf" title="Pecah per huruf">✂</button>' : ''}<button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
-    <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
+    <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span><span id="wpart"></span></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="whint" id="whint" hidden></div>
@@ -1573,10 +1576,10 @@ async function onWord(el, lastEl) {
   };
   const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
   const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; retry(); }; };
-  const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my, sig).then(r => {
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(qWord(), b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT);
-    tr = r;
+    tr = r; setTx('#wpart', partNote());
     setTx('#wtr', r.text);
     setWBaca(bacaOf(word, r.baca));
     setTx('#wbase', r.base ? 'Bentuk dasar: ' + r.base : '');
@@ -1598,7 +1601,7 @@ async function onWord(el, lastEl) {
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
-    setTx('#wword', word); setTx('#wpos', ''); setWBaca(''); setTx('#wbase', '');
+    setTx('#wword', word); setTx('#wpos', ''); setWBaca(''); setTx('#wbase', ''); setTx('#wpart', '');
     { const d1 = $('#wdict'), f1 = $('#wfreq'), t1 = $('#wtr'); if (d1) d1.innerHTML = ''; showHint(); if (f1) f1.textContent = ''; showTap(tapsOf(b.lang, word)); if (t1) t1.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; }
     $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
@@ -1634,7 +1637,7 @@ async function onWord(el, lastEl) {
       return;
     }
     const sg = $('#wsug'); if (sg) sg.innerHTML = '';
-    const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
+    const w = word, r = tr || await translate(qWord(), b.lang, db.my).catch(() => null);
     if (isSaved()) return; /* ketukan ganda saat menunggu terjemahan */
     const tp = takeTaps(b.lang, w);
     if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
