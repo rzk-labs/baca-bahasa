@@ -292,6 +292,7 @@ document.addEventListener('visibilitychange', wakeSync);
 /* app ke latar belakang saat membaca: simpan persen terbaru (sumber sama dgn Home/Profil/rak) */
 /* satu rumus persen buku (bobot bab bila ada): bar baca, keluar reader, dan simpan latar memakai ini */
 function readPct(b) {
+  if ((b.pos || 0) >= (b.total || 1) - 1 && RD.page >= RD.n - 1) return 100; /* halaman terakhir bagian terakhir = Tamat = 100% */
   const uOk = Array.isArray(b.units) && b.units.length === (b.total || 1) && b.units.length > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
   return uOk && uSum > 0
     ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, b.pos).reduce((a, x) => a + x, 0) + b.units[b.pos] * (RD.page + 1) / RD.n) / uSum * 100 - 1e-9)))
@@ -951,7 +952,9 @@ function nextBooks(b) {
 }
 function finishBook(b) {
   const ulang = !!b.doneAt;
-  if (!ulang) { b.doneAt = Date.now(); save(); award(10, 'done'); }
+  if (!ulang) { b.doneAt = Date.now(); award(10, 'done'); }
+  b.pct = 100; /* Tamat = 100% di Home, profil, catatan sesi */
+  save();
   setTimeout(() => flushLate(true), 2500);
   const all = countedVocab(b.lang, 0, b.title);
   const ws = all.filter(v => (v.at || 0) >= SESS.t), lama = !ws.length && all.length > 0;
@@ -1368,7 +1371,7 @@ function showPage(p, anim = true) {
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
-    const rem = ml && ml.t ? nw(ml.t) : '';
+    const rem = ml && ml.t && b.pct < 100 ? nw(ml.t) : '';
     const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n}`);
     const wd = secWord(b, b.pos), tb = wd === 'Bab' ? 1 : 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
     const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${b.pct}%`) : '', rem].filter(Boolean).join(' · ');
