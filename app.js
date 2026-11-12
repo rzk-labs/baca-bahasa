@@ -428,7 +428,9 @@ function voiceFor(lang) {
   });
 }
 let speakTok = 0;
+const ttsRate = r => db.ttsRate === 'slow' ? Math.max(0.4, r * 0.75) : r;
 function speak(text, lang, rate = 0.9) {
+  rate = ttsRate(rate);
   if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
   speechSynthesis.cancel();
   const my = ++speakTok;
