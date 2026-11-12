@@ -56,7 +56,7 @@ jobs:
           belum() { jq --arg p "$1" '[.backlog[]|select(.peran==$p)|select(.status|test("^selesai";"i")|not)|select((.status|test("^(spesifikasi )?siap dikerjakan";"i")) or (.status|test("founder|menunggu keputusan|deploy server manual|draft siap dicek";"i")|not))]|length' /tmp/peta.json 2>/dev/null || echo 0; }
           SIAP=$(belum developer); SIAP=${SIAP:-0}; echo "Fitur developer siap dibangun: $SIAP"
           for P in developer desain riset pm marketing; do
-            case "$P" in developer) KUOTA=32;; desain) KUOTA=8;; riset|pm) KUOTA=6;; *) KUOTA=4;; esac
+            case "$P" in developer) KUOTA=48;; desain) KUOTA=8;; riset|pm) KUOTA=6;; *) KUOTA=4;; esac
             PUNYA=$(belum "$P"); PUNYA=${PUNYA:-0}
             # Peran dokumen direm saat developer kebanjiran, KECUALI peran itu masih punya pekerjaan "belum" di peta.
             if [ "$P" != developer ] && [ "$P" != marketing ] && [ "$SIAP" -ge 5 ] && [ "$PUNYA" -eq 0 ]; then echo "$P: rem, $SIAP fitur menunggu developer"; continue; fi
