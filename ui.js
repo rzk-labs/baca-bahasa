@@ -156,7 +156,7 @@ window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
 function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
-function openSheet(html) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
+function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } }
 $('#shade').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
@@ -749,7 +749,7 @@ function syncMarks() {
   const rm = $('#rMk'); if (rm) { rm.hidden = !n; $('#rMkN').textContent = n; }
   if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
 }
-function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); }
+function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); if (!$('#sheet').classList.contains('hide') && $('#sheet .mkgo')) openMarks(); }
 function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
@@ -771,8 +771,8 @@ async function openMarks() {
   const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `Bab ${m.p + 1}`; };
   const snip = t => { t = (t || '').replace(/\s+/g, ' ').trim(); if (t.length <= 120) return t; const cut = t.slice(0, 120), sp = cut.lastIndexOf(' '); return (sp > 80 ? cut.slice(0, sp) : cut).replace(/[\s,;:.\-–—]+$/, '') + '…'; };
   const rel = at => { if (!at) return ''; const d = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 864e5); if (d <= 0) return 'Hari ini'; if (d === 1) return 'Kemarin'; if (d < 30) return `${d} hari lalu`; return new Date(at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: d > 300 ? 'numeric' : undefined }); };
-  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt">${esc(snip(m.t) || '…')}</span><small class="mkat">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
-  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`);
+  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto">${esc(snip(m.t) || '…')}</span><small class="mkat" dir="auto">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`, 'Daftar penanda');
   $$('#sheet .mkgo').forEach(x => x.onclick = () => {
     const m = list[+x.dataset.i]; closeSheet();
     b.pos = Math.min(m.p, Math.max(0, secs.length - 1)); b.si = m.s; RD.quiet = true; save(); viewBaca();
