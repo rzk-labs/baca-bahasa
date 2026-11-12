@@ -1,5 +1,11 @@
 [
   {
+    "n": 442,
+    "judul": "Sheet kata: tombol perluas frasa ‹ › sejajar, jelas & mudah diketuk",
+    "poin": "Tombol perluas frasa di sheet kata kini sejajar, kiri dan kanan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 437,
     "judul": "Tema baca Sepia & Gelap: kontras teks, penanda kata & sheet diperiksa",
     "poin": "Teks di tema Sepia dan Gelap ternyata sudah cukup jelas dibaca.",
@@ -171,12 +177,6 @@
     "n": 285,
     "judul": "Beranda: kartu 'Kata hari ini' dari kata yang pernah kamu ketuk",
     "poin": "Beranda sekarang punya kartu \"Kata hari ini\" dari kata yang pernah kamu ketuk.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 282,
-    "judul": "E-reader: kata sering diketuk diberi tanda halus di teks",
-    "poin": "Di e-reader, kata yang sering kamu ketuk sekarang diberi warna tipis di teks.",
     "tgl": "2026-11-11"
   }
 ]
