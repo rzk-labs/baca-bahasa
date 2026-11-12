@@ -1,5 +1,17 @@
 [
   {
+    "n": 526,
+    "judul": "Impor EPUB/PDF offline: cek pustaka benar-benar tersimpan, pesan jelas",
+    "poin": "Impor EPUB/PDF tanpa sinyal sekarang kasih pesan jelas, tidak gagal diam-diam.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 520,
+    "judul": "Tab Kata & kartu Hafal ikut brand v9: ikon garis, tanpa emoji",
+    "poin": "Tab Kata dan kartu hafalan sekarang pakai ikon garis, emoji hilang.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 516,
     "judul": "Tombol 'Sudah kenal' di arti kata: kata lama tak ramai lagi",
     "poin": "Sheet arti kata kini punya tombol \"Sudah kenal\"; kata itu jadi samar saat baca.",
@@ -165,18 +177,6 @@
     "n": 387,
     "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
     "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 381,
-    "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
-    "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 376,
-    "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
-    "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
     "tgl": "2026-11-12"
   }
 ]

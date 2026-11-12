@@ -188,12 +188,21 @@ const loaded = {};
 function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Gagal memuat pustaka (cek internet)')); }; document.head.appendChild(s); })); }
 const JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
 const PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+// true hanya bila ketiga pustaka benar-benar ada di cache service worker
+async function libsCached() {
+  try {
+    if (!('caches' in window)) return false;
+    const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
+    const r = await Promise.all(urls.map(u => caches.match(u)));
+    return r.every(Boolean);
+  } catch (e) { return false; }
+}
 // siapkan pustaka EPUB/PDF lebih awal (sekali per perangkat) supaya impor tetap jalan offline
 function prefetchImportLibs() {
   try {
     if (localStorage.getItem('kepo_libs_ready') || !navigator.onLine || navigator.connection?.saveData) return;
     const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
-    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } }).catch(() => { });
+    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => libsCached()).then(ok => { if (ok) { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } } }).catch(() => { });
   } catch (e) { }
 }
 window.addEventListener('load', () => {
@@ -362,14 +371,32 @@ async function refillVocab() {
 }
 
 /* ---------- suara: baca (TTS) & dengar (rekognisi) ---------- */
+function findVoice(lang) {
+  const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
+  return (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2))) || null;
+}
+/* Daftar suara bisa kosong saat pertama dimuat: tunggu voiceschanged maks ±1 detik. */
+function voiceFor(lang) {
+  const v = findVoice(lang);
+  if (v || speechSynthesis.getVoices().length) return Promise.resolve(v);
+  return new Promise(res => {
+    let done = false;
+    const fin = () => { if (done) return; done = true; clearTimeout(t); try { speechSynthesis.removeEventListener('voiceschanged', fin); } catch (e) { } res(findVoice(lang)); };
+    const t = setTimeout(fin, 1000);
+    try { speechSynthesis.addEventListener('voiceschanged', fin); } catch (e) { }
+  });
+}
+let speakTok = 0;
 function speak(text, lang, rate = 0.9) {
   if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate;
-  const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
-  const v = (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
-  if (v) u.voice = v;
-  speechSynthesis.speak(u);
+  const my = ++speakTok;
+  voiceFor(lang).then(v => {
+    if (my !== speakTok) return;
+    if (!v) return toast(`HP ini belum punya suara ${(LANGS[lang][0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000);
+    const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate; u.voice = v;
+    speechSynthesis.speak(u);
+  });
 }
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recog = null;
