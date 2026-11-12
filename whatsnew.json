@@ -1,5 +1,11 @@
 [
   {
+    "n": 333,
+    "judul": "HP kecil: streak tetap terlihat & rata teks ikut saat HP diputar",
+    "poin": "Streak api 🔥 sekarang tetap kelihatan di HP kecil, dalam bentuk ringkas.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 329,
     "judul": "Beranda: tombol 'Kata lain' & kartu ajakan saat belum ada kata",
     "poin": "Kartu kata hari ini di Beranda sekarang punya tombol 'Kata lain'.",
@@ -171,12 +177,6 @@
     "n": 163,
     "judul": "Kartu Hafal: kata muncul lagi nanti (jeda 1/3/7/21 hari)",
     "poin": "Kartu Hafal sekarang muncul lagi setelah 1, 3, 7, lalu 21 hari.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 162,
-    "judul": "Minta pilihan suara",
-    "poin": "Sekarang kamu bisa pilih suara pembaca sendiri di Pengaturan.",
     "tgl": "2026-11-11"
   }
 ]
