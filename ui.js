@@ -595,7 +595,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       <div class="rhead">${esc(chTitle)}</div>
@@ -746,6 +746,7 @@ function syncMarks() {
   const b = book(), bt = $('#bmTog'), ls = $('#bmList'); if (!b) return;
   const on = markHere(b).length > 0, n = marksOf(b).length;
   if (bt) { bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false'); bt.innerHTML = `${ico('bm')} ${on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini'}`; }
+  const rm = $('#rMk'); if (rm) { rm.hidden = !n; $('#rMkN').textContent = n; }
   if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
 }
 function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); }

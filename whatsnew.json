@@ -1,5 +1,11 @@
 [
   {
+    "n": 476,
+    "judul": "Bar atas e-reader lega di HP 320px: maks 2 tombol kanan",
+    "poin": "Bar atas baca kini satu baris: judul, bab, dan jumlah penanda.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 471,
     "judul": "Daftar penanda jelas: potongan lebih panjang, tanggal & posisi %",
     "poin": "Daftar penanda sekarang menampilkan cuplikan lebih panjang, bab, persen posisi, dan tanggal.",
@@ -171,12 +177,6 @@
     "n": 323,
     "judul": "Keepo HQ: daftar dokumen rapi (Baru di atas, ringkasan, tabel)",
     "poin": "Daftar dokumen di Keepo HQ kini urut terbaru, dengan lencana Baru dan ringkasan.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 317,
-    "judul": "Sheet kata: tombol '+' bisa perluas ke kiri & ketuk beruntun tak antre",
-    "poin": "Sheet arti kata kini punya tombol ‹ untuk menambah kata sebelumnya.",
     "tgl": "2026-11-11"
   }
 ]
