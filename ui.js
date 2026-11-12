@@ -202,8 +202,39 @@ const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}
 const langOpts = sel => Object.keys(LANGS).map(k => `<option value="${k}"${k === sel ? ' selected' : ''}>${langName(k)}</option>`).join('');
 const book = () => db.books.find(b => b.id === db.cur);
 let cache = { id: null, pages: null };
+/* #770: buku lama (versi deteksi bab < CH_VER) dihitung ulang pembagian babnya dari teks yang ada.
+   Teks, kata tersimpan, penanda tak diubah; hanya pembatas bab disisipkan. Posisi baca & penanda dipetakan lewat urutan kalimat. Gagal = data lama. */
+const migP = {};
+const secCounts = (secs, lang) => secs.map(s => secParas(s, lang).reduce((a, P) => a + P.sents.filter(x => x.i >= 0).length, 0));
+function mapPos(oldC, newC, p, s) {
+  let g = s; for (let i = 0; i < p && i < oldC.length; i++) g += oldC[i];
+  let c = 0;
+  for (let j = 0; j < newC.length; j++) { if (g < c + newC[j]) return { p: j, s: g - c }; c += newC[j]; }
+  const l = Math.max(0, newC.length - 1); return { p: l, s: Math.max(0, (newC[l] || 1) - 1) };
+}
+function migrasiBab(b) {
+  if ((b.cv || 0) >= CH_VER) return Promise.resolve();
+  return migP[b.id] || (migP[b.id] = (async () => {
+    try {
+      const paras = await getText(b.id);
+      if (!Array.isArray(paras) || !paras.length) return;
+      const np = gbChapters(paras);
+      if (np !== paras && np.length !== paras.length) {
+        const oc = secCounts(makeSections(paras), b.lang), nc = secCounts(makeSections(np), b.lang);
+        const hp = mapPos(oc, nc, b.pos || 0, b.si || 0);
+        const marks = Array.isArray(b.marks) ? b.marks.map(m => (m && Number.isFinite(m.p) && Number.isFinite(m.s)) ? Object.assign({}, m, (q => ({ p: q.p, s: q.s }))(mapPos(oc, nc, m.p, m.s))) : m) : b.marks;
+        await putText(b.id, np);
+        b.pos = hp.p; b.si = hp.s; if (marks) b.marks = marks;
+        delete b.units; b.pg = 0; delete b.pgN;
+        if (cache.id === b.id) cache = { id: null, pages: null };
+      }
+      b.cv = CH_VER; save();
+    } catch (e) { /* pakai data lama */ }
+  })().finally(() => { delete migP[b.id]; }));
+}
 async function pagesOf(b) {
   if (cache.id !== b.id) {
+    await migrasiBab(b);
     const paras = await getText(b.id); cache = { id: b.id, pages: makeSections(paras || ['(teks hilang)']) };
     if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; }
     b.total = cache.pages.length; save();
@@ -817,7 +848,7 @@ async function importFile(f, paksa) {
 async function addBook(title, paras, lang, src, cov) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
-  const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() };
+  const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, cv: CH_VER, added: Date.now(), opened: Date.now() };
   const nw = perkiraanBaru(paras, lang); if (nw != null) bk.nw = nw;
   if (cov) { try { await putCover(id, cov); bk.cov = 1; COVERS[id] = cov; } catch (e) { } }
   if (src && src.name) bk.src = { name: src.name, size: src.size };
@@ -1091,7 +1122,7 @@ async function viewBaca() {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
       const t = h ? h.sents.map(x => x.s).join('').trim() : '';
-      return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bagian ' + (i + 1))}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
+      return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bagian ' + (i + 1))/* tanpa judul = Bagian; berjudul bab = judulnya sendiri */}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
     }).join('');
     openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab</span>${closeBtn}</div>${prepHtml()}<div class="chlist">${items}</div>`, 'Daftar bab');
     bindPrep(b, secs[b.pos]);
@@ -1263,12 +1294,15 @@ function progInfo(b) {
 }
 const nw = t => `<span class="nw">${esc(t)}</span>`;
 /* label bagian SATU sumber (bar baca + Beranda): 'Bagian', bukan 'Bab', supaya tak bentrok dgn nomor bab di buku; bagian awal tanpa judul = 'Awal buku' */
-const secLabel = (pos, total, awal) => awal ? 'Awal buku' : `Bagian ${pos}/${total}`;
+/* #770: 'Bab' bila bagian itu diawali judul bab terdeteksi (六、 II. Chapter IV), selain itu 'Bagian'; satu istilah di header, bar, daftar isi */
+const secIsBab = sec => !!(sec && sec[0] && gbHead(String(sec[0]).replace(/^[\u0001\u0002]+/, '')));
+const secWord = (b, i) => { const s = cache.id === b.id && cache.pages ? cache.pages[i] : null; return s ? (secIsBab(s) ? 'Bab' : 'Bagian') : (b.tb ? 'Bab' : 'Bagian'); };
+const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${pos}/${total}`;
 function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return 'Sudah tamat';
   const bits = [];
-  if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false)); /* sama dengan bar baca (hanya buku multi-bab) */
+  if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false, b.tb ? 'Bab' : 'Bagian')); /* sama dengan bar baca (hanya buku multi-bab) */
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
   const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + nw(mins) : '');
   return t + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
@@ -1330,9 +1364,10 @@ function showPage(p, anim = true) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
     const rem = ml && ml.t ? nw(ml.t) : '';
     const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n}`);
-    const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${b.pct}%`) : '', rem].filter(Boolean).join(' · ');
+    const wd = secWord(b, b.pos), tb = wd === 'Bab' ? 1 : 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
+    const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${b.pct}%`) : '', rem].filter(Boolean).join(' · ');
     pgn.title = 'persen dari seluruh buku, perkiraan sisa waktu';
-    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `Bagian ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${b.pct} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
+    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${b.pct} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
     pgn.innerHTML = [l1, l2].filter(Boolean).join(' · ')
       + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '')
       + (multi && lastPg && b.pos < b.total - 1 ? '<span class="mnote">Ujung bab, geser untuk bab berikutnya</span>' : '');
@@ -1431,7 +1466,7 @@ async function openFind() {
     const html = res.map((r, i) => {
       const room = Math.max(0, 60 - q.length), a = Math.max(0, r.at - Math.floor(room / 2)), e = Math.min(r.txt.length, r.at + q.length + Math.ceil(room / 2));
       const pre = r.txt.slice(a, r.at), hit = r.txt.slice(r.at, r.at + q.length), post = r.txt.slice(r.at + q.length, e);
-      return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${a > 0 ? '…' : ''}${esc(pre)}<b>${esc(hit)}</b>${esc(post)}${e < r.txt.length ? '…' : ''}</span><small class="mkat" dir="auto">Bagian ${r.p + 1} ·${r.pct}%</small></button></div>`;
+      return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${a > 0 ? '…' : ''}${esc(pre)}<b>${esc(hit)}</b>${esc(post)}${e < r.txt.length ? '…' : ''}</span><small class="mkat" dir="auto">${secWord(b, r.p)} ${r.p + 1} ·${r.pct}%</small></button></div>`;
     }).join('');
     out.innerHTML = `<div class="chlist">${html}</div>`;
     $$('#fres .mkgo').forEach(x => x.onclick = () => { const r = res[+x.dataset.i]; closeSheet(); b.pos = Math.min(r.p, Math.max(0, secs.length - 1)); b.si = r.s; RD.flash = r.s; RD.quiet = true; save(); viewBaca(); });
@@ -1448,7 +1483,7 @@ async function openMarks() {
   const cnt = secs.map(sc => secParas(sc, b.lang).reduce((n, P) => n + P.sents.filter(x => x.i >= 0).length, 0));
   const total = cnt.reduce((n, c) => n + c, 0) || 1;
   const pctAt = m => { const before = cnt.slice(0, Math.max(0, m.p)).reduce((n, c) => n + c, 0); return Math.min(100, Math.max(0, Math.round((before + (m.s || 0)) / total * 100))); };
-  const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `Bagian ${m.p + 1}`; };
+  const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `${secWord(b, m.p)} ${m.p + 1}`; };
   const snip = t => { t = (t || '').replace(/\s+/g, ' ').trim(); if (t.length <= 120) return t; const cut = t.slice(0, 120), sp = cut.lastIndexOf(' '); return (sp > 80 ? cut.slice(0, sp) : cut).replace(/[\s,;:.\-–—]+$/, '') + '…'; };
   const rel = at => { if (!at) return ''; const d = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 864e5); if (d <= 0) return 'Hari ini'; if (d === 1) return 'Kemarin'; if (d < 30) return `${d} hari lalu`; return new Date(at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: d > 300 ? 'numeric' : undefined }); };
   const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${esc(snip(m.t) || '…')}</span><small class="mkat" dir="auto">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
