@@ -1,5 +1,11 @@
 [
   {
+    "n": 543,
+    "judul": "Sisa emoji di Pengaturan, Masukan, Leaderboard & Bagikan → ikon garis (v9)",
+    "poin": "Emoji di Pengaturan, masukan, leaderboard, dan bagikan sudah jadi ikon garis.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 534,
     "judul": "Cari kata di dalam buku (e-reader): lompat ke hasil",
     "poin": "Sekarang bisa cari kata di dalam buku lewat Pengaturan saat membaca.",
@@ -171,12 +177,6 @@
     "n": 404,
     "judul": "Cache terjemahan lebih ringan & pesan 'ruang penuh' yang jujur",
     "poin": "Pesan \"ruang penuh\" sekarang jujur: buku aman, yang gagal itu progres atau kata.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 399,
-    "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
-    "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
     "tgl": "2026-11-12"
   }
 ]
