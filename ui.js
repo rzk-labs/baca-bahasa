@@ -624,7 +624,7 @@ function weekCard() {
   const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
-  const words = db.vocab.filter(v => v && v.w && langs.has(v.lang) && (v.at || 0) >= since).length; /* hanya kata yang ada di koleksi Kata */
+  const words = countedVocab(langs, since).length; /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
   return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
@@ -910,7 +910,7 @@ function finishBook(b) {
   const ulang = !!b.doneAt;
   if (!ulang) { b.doneAt = Date.now(); save(); award(10, 'done'); }
   setTimeout(() => flushLate(true), 2500);
-  const all = db.vocab.filter(v => v.book === b.title && v.lang === b.lang);
+  const all = countedVocab(b.lang, 0, b.title);
   const ws = all.filter(v => (v.at || 0) >= SESS.t), lama = !ws.length && all.length > 0;
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
@@ -1038,7 +1038,7 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) || inPhrase.has(i) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span class="w${(!part && savedSet.has(t.t.toLowerCase())) || inPhrase.has(i) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
