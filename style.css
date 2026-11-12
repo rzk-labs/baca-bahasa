@@ -368,6 +368,10 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
 .cols .s.say{background:var(--color-hl-sentence);border-radius:4px;box-shadow:0 0 0 2px var(--color-hl-sentence)}
 .rlis.on{background:var(--color-surface-soft)}
+.rrate{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800}.rrate[hidden]{display:none}
+[data-theme=night] .cols .s.say{background:rgba(232,226,218,.28);box-shadow:0 0 0 2px rgba(232,226,218,.28)}
+[data-theme=dark] .cols .s.say{background:rgba(233,240,86,.3);box-shadow:0 0 0 2px rgba(233,240,86,.3)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .cols .s.say{background:rgba(233,240,86,.3);box-shadow:0 0 0 2px rgba(233,240,86,.3)}}
 .lisnote{position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:12px;font-size:12px;line-height:16px;color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);white-space:nowrap}
 .lisnote[hidden]{display:none}
 .cols .s.hl{background:var(--color-hl-sentence);border-radius:4px}
