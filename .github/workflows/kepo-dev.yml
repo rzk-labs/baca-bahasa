@@ -89,6 +89,7 @@ jobs:
           {
             echo "$PERAN_TXT"
             echo "Baca CLAUDE.md, docs/TIM.md, dan docs/roadmap.json dulu untuk konteks."
+            if [ "$PERAN" != "developer" ] && [ "$PERAN" != "marketing" ]; then echo "WAJIB (aturan founder, supaya perintah tidak hilang): bila hasilmu berisi rencana/spesifikasi/perbaikan yang harus dikerjakan developer, TAMBAHKAN item baru di docs/roadmap.json bagian backlog (no = nomor terbesar + 1, peran developer, prioritas P0 bila dari perintah founder, nama ringkas + (#nomor-issue), dokumen = file-mu, status \"siap dikerjakan\"). Tanpa item backlog, rencanamu tidak akan pernah dikerjakan."; fi
             echo "Masukan terbaru dari tester AI (Tari, Bima) & pengguna AI (Nadia, Raka) ada di .kepo-tmp/masukan.txt; pakai bila relevan."
             echo ""
             echo "## Tugas #$N: $(cat $T/judul.txt)"
