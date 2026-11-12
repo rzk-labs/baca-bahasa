@@ -323,6 +323,7 @@ let HF='semua',LAMA=false,HSEG='kerja';
 // Daftar kerja dari roadmap.backlog: kelompok status supaya kelihatan mana selesai, jalan, pause
 function ember(st){st=String(st||'').toLowerCase();
   if(/^selesai/.test(st))return 'selesai';
+  if(/^(spesifikasi )?siap dikerjakan/.test(st))return 'belum';
   if(/founder|menunggu keputusan|draft siap dicek|deploy server manual/.test(st))return 'kamu';
   if(/sedang|berjalan|dikerjakan tim|diproses/.test(st))return 'jalan';
   return 'belum'}
