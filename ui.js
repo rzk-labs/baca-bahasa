@@ -797,11 +797,14 @@ function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
   if (hit.length) { const old = marksOf(b); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, hit, old) }); }
-  if (marksOf(b).length >= MARK_MAX) return toast(`Penanda penuh (maks ${MARK_MAX}). Hapus satu dulu ya.`, 3500);
   const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
   const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : '';
-  b.marks = marksOf(b).concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
-  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai', 1800);
+  const old = marksOf(b); let cur = old, gone = null;
+  if (old.length >= MARK_MAX) { gone = old.reduce((a, m) => !a || (m && (m.at || 0) < (a.at || 0)) ? m : a, null); cur = old.filter(m => m !== gone); }
+  b.marks = cur.concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
+  save(); syncMarks(); vib(10); sfx('pop');
+  if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
+  else toast('Halaman ditandai', 1800);
 }
 async function openMarks() {
   const b = book(); if (!b) return;
@@ -962,11 +965,11 @@ async function onWord(el, lastEl) {
     if (isSaved()) {
       /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
       const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
-      db.vocab = db.vocab.filter(v => !gone.includes(v)); save(); vib(8); mark(w, false);
+      db.vocab = db.vocab.filter(v => !gone.includes(v)); tombVocab(lang, w); save(); vib(8); mark(w, false);
       const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl();
       toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => {
         if (!db.vocab.some(v => sameVocab(v, lang, w))) db.vocab.splice(Math.min(at, db.vocab.length), 0, ...gone);
-        save(); mark(w, true);
+        untombVocab(lang, w); save(); mark(w, true);
         const s2 = $('#wsave'); if (s2 && sameVocab({ lang: b.lang, w: word }, lang, w)) s2.innerHTML = saveLbl();
         if (kataSeg === 'simpan' && $('#klist')) viewKata();
       } });
@@ -1262,8 +1265,8 @@ function viewKata() {
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
-        const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); save(); renderList();
-        toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
+        const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); if (gone) tombVocab(gone.lang, gone.w); save(); renderList();
+        toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); if (gone) untombVocab(gone.lang, gone.w); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
       });
     } else {
       const weak = weakAll.filter(o => !q || o.w.toLowerCase().includes(q)).slice(0, 40);
@@ -1285,7 +1288,7 @@ function deck(kb) {
   const cards = db.vocab.filter(isDue).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
   if (!cards.length) {
     const dues = db.vocab.filter(v => !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, left = db.vocab.some(isDue);
-    kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres 🎉' : 'Semua beres, balik besok ya 🎉', left ? 'Sisa kartu muncul lagi pas kamu balik nanti.' : nd ? `Kartu berikutnya muncul ${nd} hari lagi. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
+    kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? 'Sisa kartu muncul lagi pas kamu balik nanti.' : nd ? `Kartu berikutnya muncul ${nd} hari lagi. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">BELUM</span>
