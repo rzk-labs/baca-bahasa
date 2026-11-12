@@ -1093,7 +1093,10 @@ function layout() {
   if (sig !== RD.sig) { RD.sig = sig; stopListenPage(); }
   const G = 64, per = W >= 900 && (W - G) / 2 >= 360 ? 2 : 1, cw = (W - (per - 1) * G) / per;
   vp.classList.toggle('two', per === 2);
-  Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
+  /* tinggi kolom dibulatkan ke kelipatan tinggi baris: tak ada baris separuh nongol di tepi bawah/atas (JP/KR + ruby) */
+  const lhPx = parseFloat(getComputedStyle(cols).lineHeight) || (parseFloat(cols.style.fontSize) || 17) * (parseFloat(rd && rd.style.getPropertyValue('--reader-lh')) || 1.6);
+  const CH = lhPx >= 10 && H > lhPx * 3 ? Math.floor(H / lhPx) * lhPx : H;
+  Object.assign(cols.style, { height: CH + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
   /* cache halaman tiap kalimat/judul + sisa unit baca per halaman: dihitung sekali per layout, geser halaman cukup membaca array */
