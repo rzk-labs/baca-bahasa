@@ -791,9 +791,9 @@ async function onWord(el, lastEl) {
     $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
-  const wtrEl = $('#wtr'); let slowT = 0;
+  const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
   const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; retry(); }; };
-  const load = () => { const my = ++tok; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my).then(r => {
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT);
     tr = r;
@@ -816,7 +816,7 @@ async function onWord(el, lastEl) {
     if (dir > 0 && hi < ws.length - 1) hi++; else if (dir < 0 && lo > 0) lo--; else return;
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
-    word = phraseOf(); tr = null; tok++; clearTimeout(expT); clearTimeout(slowT);
+    word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
     $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updExp(); keepVisible('.w.sel');
