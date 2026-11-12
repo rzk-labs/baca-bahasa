@@ -99,7 +99,7 @@ const lbl = i => i.labels.map(l => l.name);
 const brief = i => {
   const L = lbl(i);
   const p = L.find(x => x.startsWith('peran:'));
-  return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
+  return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'), terbuka: i.state === 'open',
     qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at,
     ulang: [...new Set([...((i.title || '') + '\n' + (i.body || '')).matchAll(/(?:revisi|ulang|ulangi|pengganti)[^#\n]{0,25}#(\d+)/gi)].map(x => +x[1]))].filter(x => x !== i.number),
     rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
