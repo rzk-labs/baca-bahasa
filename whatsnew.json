@@ -1,5 +1,11 @@
 [
   {
+    "n": 491,
+    "judul": "Penanda: urut sesuai urutan buku & 'Ke penanda' paling dekat posisi baca",
+    "poin": "Daftar penanda sekarang bisa diurutkan: Terbaru atau Urutan buku.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 483,
     "judul": "Daftar penanda rapi untuk Arab & pembaca layar, urungkan segar",
     "poin": "Daftar penanda kini rapi untuk buku Arab dan terbaca benar oleh pembaca layar.",
@@ -171,12 +177,6 @@
     "n": 333,
     "judul": "HP kecil: streak tetap terlihat & rata teks ikut saat HP diputar",
     "poin": "Streak api 🔥 sekarang tetap kelihatan di HP kecil, dalam bentuk ringkas.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 329,
-    "judul": "Beranda: tombol 'Kata lain' & kartu ajakan saat belum ada kata",
-    "poin": "Kartu kata hari ini di Beranda sekarang punya tombol 'Kata lain'.",
     "tgl": "2026-11-12"
   }
 ]
