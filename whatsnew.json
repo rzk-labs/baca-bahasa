@@ -1,5 +1,11 @@
 [
   {
+    "n": 698,
+    "judul": "[peta 43] Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata",
+    "poin": "Judul tugas di papan HQ sekarang dipotong rapi di batas kata.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 696,
     "judul": "Rapikan Home & baca: persen tak dobel, panduan hilang sendiri, target ada satuan",
     "poin": "Home lebih rapi: persen tampil sekali, target harian pakai satuan XP.",
@@ -171,12 +177,6 @@
     "n": 611,
     "judul": "Garis bawah kata tersimpan: muncul langsung di semua jalur simpan",
     "poin": "Kata yang kamu simpan sekarang langsung bergaris bawah di halaman baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 605,
-    "judul": "Sheet arti kalimat: tanda 'arti mesin' + peringatan kalimat panjang",
-    "poin": "Arti kalimat sekarang punya tanda kecil: arti mesin bisa meleset.",
     "tgl": "2026-11-12"
   }
 ]

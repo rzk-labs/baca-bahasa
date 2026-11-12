@@ -48,6 +48,15 @@ async function hmac(env, msg) {
   const s = await crypto.subtle.sign('HMAC', k, new TextEncoder().encode(msg));
   return [...new Uint8Array(s)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
+function rapikanJudul(teks, maks = 70) {
+  let t = String(teks || '').split('\n')[0].replace(/\s+/g, ' ').trim();
+  if (t.length > maks) {
+    const potong = t.slice(0, maks + 1);
+    const sp = potong.lastIndexOf(' ');
+    t = (sp > 0 ? potong.slice(0, sp) : t.slice(0, maks)).replace(/[\s,;:.\-–—]+$/, '') + '…';
+  }
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
 function same(a, b) { if (a.length !== b.length) return false; let x = 0; for (let i = 0; i < a.length; i++) x |= a.charCodeAt(i) ^ b.charCodeAt(i); return x === 0; }
 async function authed(req, env) {
   const t = (req.headers.get('authorization') || '').replace(/^Bearer /, '');
@@ -211,7 +220,7 @@ async function api(req, env, url) {
   if (p === '/tasks' && req.method === 'POST') {
     const isi = String(body.isi || '').trim();
     if (isi.length < 5) return json({ error: 'Tulis permintaannya dulu' }, 400);
-    const judul = String(body.judul || '').trim() || isi.split('\n')[0].slice(0, 70);
+    const judul = String(body.judul || '').trim() || rapikanJudul(isi, 70);
     await gh(env, `/repos/${REPO}/labels`, { method: 'POST', body: JSON.stringify({ name: LABEL, color: 'C6FF3D' }), soft: true });
     const peran = PERAN.includes(body.peran) ? body.peran : 'developer';
     const i = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: judul, body: isi, labels: [LABEL, 'peran:' + peran] }) });
