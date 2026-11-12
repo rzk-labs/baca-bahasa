@@ -45,11 +45,19 @@ let db = (() => {
   try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
   catch (e) { try { localStorage.setItem(KEY + '.rusak', raw); } catch (e2) { } return DEF(); }
 })();
-let fullWarn = 0;
+let fullWarn = 0, trTimer = 0;
 const save = () => {
   try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
   catch (e) {
-    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Memori HP penuh, hapus buku lama dulu', 6000); } catch (e2) { } }
+    // jatah penuh: buang cache terjemahan dulu, lalu coba simpan lagi
+    try {
+      if (trCache.size || localStorage.getItem('bacabahasa.tr')) {
+        trCache.clear(); clearTimeout(trTimer); trTimer = 0;
+        localStorage.removeItem('bacabahasa.tr');
+        localStorage.setItem(KEY, JSON.stringify(db)); return true;
+      }
+    } catch (e3) { }
+    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang penuh: hapus buku lama atau cache, lalu coba lagi.', 6000); } catch (e2) { } }
     return false;
   }
 };
@@ -231,12 +239,16 @@ async function parsePdf(buf, title) {
 }
 
 /* ---------- terjemahan ---------- */
-const TR_KEY = 'bacabahasa.tr', TR_MAX = 500;
+const TR_KEY = 'bacabahasa.tr', TR_MAX = 200;
 const trCache = new Map((() => { try { const x = JSON.parse(localStorage.getItem(TR_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; } })());
-function trPersist() {
+function trFlush() {
+  clearTimeout(trTimer); trTimer = 0;
   while (trCache.size > TR_MAX) trCache.delete(trCache.keys().next().value);
   try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
 }
+function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 1000); }
+document.addEventListener('visibilitychange', () => { if (document.hidden && trTimer) trFlush(); });
+addEventListener('pagehide', () => { if (trTimer) trFlush(); });
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
 const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
 /* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */

@@ -160,6 +160,13 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .read h3{margin:18px 0 6px;font-size:20px}
 .read p{margin:10px 0}
 .read li{margin:6px 0}
+.read .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;max-width:100%}
+.read table{border-collapse:collapse;font-size:15px;line-height:1.5;min-width:100%}
+.read th,.read td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+.read th{background:var(--soft);font-weight:700;white-space:nowrap}
+.read tbody tr:nth-child(even){background:var(--soft)}
+.dsum{margin:4px 0 8px;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.dcard[hidden]{display:none}
 .read details{border-top:2px solid var(--line);padding:14px 0}
 .read details>summary{font-family:Archivo;font-stretch:75%;font-weight:900;text-transform:uppercase;font-size:22px;line-height:1.1}
 .read details[open]>summary{margin-bottom:8px}
@@ -377,6 +384,7 @@ async function dokumen(path,ref,back){
       const html=window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(d.isi)):'<pre>'+esc(d.isi)+'</pre>';
       V.innerHTML=`<button class="back" id="bk">← ${back?'Kembali ke tugas':'Semua dokumen'}</button>${ref?'<div class="note">📝 Draf — belum disetujui</div>':''}<article class="tile read">${html}</article>`;
       $('#bk').onclick=()=>back?detail(back):go('dokumen');
+      V.querySelectorAll('article table').forEach(t=>{const w=document.createElement('div');w.className='tbl';t.replaceWith(w);w.appendChild(t)});
       // ADHD: tiap bagian h2 bisa dilipat, bagian pertama terbuka
       const art=V.querySelector('article');const hs=[...art.querySelectorAll('h2')];
       if(hs.length>2)hs.forEach((h,i)=>{const det=document.createElement('details');if(i===0)det.open=true;const sum=document.createElement('summary');sum.innerHTML=h.innerHTML;det.appendChild(sum);let x=h.nextSibling;while(x&&!(x.nodeType===1&&x.tagName==='H2')){const nx=x.nextSibling;det.appendChild(x);x=nx}h.replaceWith(det)});
@@ -384,8 +392,13 @@ async function dokumen(path,ref,back){
     return;
   }
   const col=n=>n.includes('riset')?'t-blue':n.includes('desain')?'t-pink':n.includes('TIM')?'t-lav':'t-sun';
+  const info=HQ.docs_info||{}, tg=p=>info[p]&&info[p].diubah?new Date(info[p].diubah).getTime():0;
+  const urut=HQ.docs.map((p,i)=>({p,i})).sort((x,y)=>(tg(y.p)-tg(x.p))||(y.i-x.i)).map(x=>x.p);
+  const kartuD=p=>{const n=p.replace('docs/','').replace('.md','').replace(/[-_]/g,' '),m=info[p]||{},baru=m.diubah&&Date.now()-tg(p)<7*864e5;
+    return `<div class="tile c ${col(p)} dcard" data-q="${esc((n+' '+(m.ringkas||'')).toLowerCase())}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div class="row" style="justify-content:space-between"><div style="font-size:26px">📄</div>${baru?'<span class="chip o">Baru</span>':''}</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n)}</h3>${m.ringkas?`<p class="dsum">${esc(m.ringkas)}</p>`:''}${m.diubah?`<span class="mut sm">${lalu(m.diubah)}</span>`:''}</div>`};
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">Hasil kerja riset, desain, dan PM</div><h1>Dokumen</h1></div>
-  ${HQ.docs.length?`<div class="doclist">${HQ.docs.map(p=>{const n=p.replace('docs/','').replace('.md','');return `<div class="tile c ${col(n)}" style="cursor:pointer" onclick="go('dokumen','${esc(p)}')"><div style="font-size:26px">📄</div><h3 style="margin-top:8px;overflow-wrap:anywhere">${esc(n.replace(/[-_]/g,' '))}</h3></div>`}).join('')}</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
+  ${HQ.docs.length?`<input id="cariDok" type="search" placeholder="Cari dokumen…" aria-label="Cari dokumen" style="margin-bottom:14px"><div class="doclist" id="dlist">${urut.map(kartuD).join('')}</div><div class="empty" id="dkosong" hidden>Tidak ada dokumen yang cocok.</div>`:'<div class="empty">Belum ada dokumen. Agent Riset/Desain akan menulis di sini.</div>'}`;
+  const ci=$('#cariDok');if(ci)ci.oninput=()=>{const q=ci.value.trim().toLowerCase();let n=0;V.querySelectorAll('.dcard').forEach(c=>{const ok=!q||c.dataset.q.includes(q);c.hidden=!ok;if(ok)n++});$('#dkosong').hidden=n>0};
 }
 
 // Ambil hasil kerja terakhir dari komentar agent jadi bagian-bagian pendek

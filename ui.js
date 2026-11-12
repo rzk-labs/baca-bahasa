@@ -308,11 +308,14 @@ let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa ceri
 /* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
 function autoLang(text) {
   const g = blManual ? null : guessLang(text);
-  if (!g || g === db.lastLang) return db.lastLang;
+  return g || db.lastLang;
+}
+/* Simpan bahasa tebakan + toast, HANYA dipanggil setelah impor sukses. */
+function commitLang(g) {
+  if (!g || g === db.lastLang || blManual) return;
   db.lastLang = g; save();
   const sel = $('#bl'); if (sel) sel.value = g;
   setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
-  return g;
 }
 /* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
 let wodOff = 0, wodDay = '';
@@ -411,7 +414,7 @@ function viewRak() {
     $('#ps').onclick = async () => {
       const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
       const btn = $('#ps'); btn.disabled = true;
-      try { const ps = cleanParas(x); await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, autoLang(ps.join(' '))); closeSheet(); }
+      try { const ps = cleanParas(x); const lg = autoLang(ps.join(' ')); if (await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, lg)) commitLang(lg); closeSheet(); }
       catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
     };
   };
@@ -427,7 +430,7 @@ $('#file').onchange = async e => {
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, autoLang(r.paras.join(' '))); }
+  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg); }
   catch (err) {
     console.error(err);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
@@ -447,8 +450,9 @@ async function addBook(title, paras, lang) {
   db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
   const prevCur = db.cur;
   db.cur = id;
-  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return; }
+  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
   toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
+  return true;
 }
 
 /* ---------- BACA (e-reader) ---------- */
