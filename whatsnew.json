@@ -1,5 +1,11 @@
 [
   {
+    "n": 718,
+    "judul": "[peta 45] Ikon & logo terasa app baca: buku terbuka + stabilo",
+    "poin": "Ikon app sekarang buku terbuka dengan satu baris disorot stabilo hijau-kuning.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 719,
     "judul": "Hemat sinyal: cek jatah AI hanya saat diminta + panduan sebut AI",
     "poin": "Cek jatah AI tidak jalan otomatis lagi, jadi hemat sinyal.",
@@ -171,12 +177,6 @@
     "n": 660,
     "judul": "[peta 57] Setelah tamat: Baca ulang + saran buku berikutnya",
     "poin": "Buku yang sudah tamat sekarang punya tombol \"Baca ulang\" yang mulai dari awal.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 658,
-    "judul": "[peta 54] Ketuk kata lebih tepat di HP (area ketuk, tanda baca, ja/zh)",
-    "poin": "Ketuk kata di HP lebih tepat: ketukan di celah atau tanda baca kena kata terdekat.",
     "tgl": "2026-11-12"
   }
 ]
