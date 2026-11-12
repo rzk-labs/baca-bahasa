@@ -1,5 +1,11 @@
 [
   {
+    "n": 734,
+    "judul": "Aksesibilitas: tiap sheet punya nama sendiri untuk pembaca layar",
+    "poin": "Semua panel di Kepo sekarang punya nama yang benar untuk pembaca layar.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 732,
     "judul": "Korea: ketuk kata tanpa partikel menempel (아침에→아침), bukan 1 suku",
     "poin": "Ketuk kata Korea yang menempel partikel, artinya sekarang diambil dari kata dasarnya.",
@@ -171,12 +177,6 @@
     "n": 676,
     "judul": "[peta 65] Kartu kata: hitungan 'Lagi dihafal' & 'Udah hafal' terpisah",
     "poin": "Angka \"Lagi dihafal\" kini naik langsung saat kamu ketuk Hafal.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 674,
-    "judul": "[peta 64] Cover asli EPUB tampil di rak & Home",
-    "poin": "Buku EPUB sekarang tampil dengan cover aslinya di rak dan Beranda.",
     "tgl": "2026-11-12"
   }
 ]
