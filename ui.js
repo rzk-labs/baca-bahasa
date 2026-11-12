@@ -185,7 +185,7 @@ function ttsNote(lang) {
   ttsNoteSeen = true;
   return '<div class="ttsnote">Suara bawaan HP, bisa meleset di kanji.</div>';
 }
-function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
+function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -767,7 +767,7 @@ function sessRecap(b) {
     if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
     untombVocab(e.lang, e.w);
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
-    db.vocab.unshift(nv); save(); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
+    db.vocab.unshift(nv); save(); award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
     toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
@@ -780,7 +780,7 @@ function sessRecap(b) {
 function leaveBaca() { stopListenPage(); const b = book(); setTab('rak'); if (b) sessRecap(b); }
 function finishBook(b) {
   if (b.doneAt) return;
-  b.doneAt = Date.now(); save();
+  b.doneAt = Date.now(); save(); award(10, 'done');
   setTimeout(() => flushLate(true), 2500);
   const all = db.vocab.filter(v => v.book === b.title && v.lang === b.lang);
   const ws = all.filter(v => (v.at || 0) >= SESS.t), lama = !ws.length && all.length > 0;
@@ -1687,7 +1687,7 @@ function viewKata() {
           if (isKenal(o.lang, o.w)) setKenal(o.lang, o.w, false);
           untombVocab(o.lang, o.w);
           db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w: o.w, t: r ? r.text : '', baca: r ? bacaOf(o.w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: o.lang, s: '', ctx: '', at: Date.now() });
-          save(); vib(10); sfx('ding');
+          save(); award(2, 'save'); vib(10); sfx('ding');
           if (kataSeg === 'simpan' && $('#klist')) renderList();
           toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya');
         });
