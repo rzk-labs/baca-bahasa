@@ -89,7 +89,7 @@ Celah: tak ada keluhan "kata terlalu kecil" tertulis di LingQ.
 ## 8. Usul P0 (maks 5)
 1. Beri label tiap sheet (Pengaturan, Daftar bab, Kata sesi, dll.); tak ada yang jatuh ke bawaan.
 2. Judul sheet di urutan pertama, tombol tutup sesudahnya; uji VoiceOver & TalkBack.
-3. Rata kiri jadi bawaan; justify pilihan. Tambah opsi "jarak huruf lega".
+3. Rata kiri jadi bawaan; justify pilihan. Tambah opsi "jarak huruf lega". **Butir 3 selesai (#603):** Pengaturan baca punya "Jarak huruf" Normal/Lega; teks RTL & CJK tak ikut.
 4. Longgarkan area ketuk kata (jarak baris, bantalan tak terlihat) mendekati 44px.
 5. Uji ukuran teks sistem besar di iPhone; bar atas & sheet jangan terpotong.
 
