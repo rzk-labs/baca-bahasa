@@ -1930,7 +1930,7 @@ const isLearning = v => !v.known && (v.lv || 0) >= 1;
 const refreshHafal = () => { const a = $('#sumLearn'), b = $('#sumKnown'); if (a) a.textContent = db.vocab.filter(isLearning).length; if (b) b.textContent = db.vocab.filter(v => v.known).length; };
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
 function viewKata() {
-  let mig = false; db.vocab.forEach(v => { if (v.known && (v.lv || 0) < 4) { v.known = false; v.lv = v.lv || 0; v.due = v.due || 0; mig = true; } }); if (mig) save(); deckDone = 0; deckHint = '';
+  deckDone = 0; deckHint = '';
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
   const known = db.vocab.filter(v => v.known).length, learning = db.vocab.filter(isLearning).length;
   $('#view').innerHTML = `
