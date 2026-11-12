@@ -342,7 +342,6 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
 .reader[data-align=l] .cols.page{text-align:start;-webkit-hyphens:manual;hyphens:manual}.reader[data-align=j] .cols.page{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
 .reader:is([lang=ja],[lang=ko],[lang=zh-CN]) .cols.page{font-family:var(--font-cjk);text-align:start}
-@media (max-width:600px){.reader .cols.page{text-align:start}}
 .cols :is(p,h2.ch)[dir=rtl]{text-align:start;letter-spacing:0;word-spacing:normal;line-height:calc(var(--reader-lh,1.7) + .15);-webkit-hyphens:manual;hyphens:manual;font-family:"Geeza Pro","Segoe UI","Noto Naskh Arabic","Noto Sans Arabic","Droid Arabic Naskh",Tahoma,var(--font-ui)}
 .reader.serif .cols :is(p,h2.ch)[dir=rtl]{font-family:"Geeza Pro","Noto Naskh Arabic","Segoe UI",Tahoma,var(--font-reader)}
 .cols h2.ch[dir=rtl]{text-align:center}
