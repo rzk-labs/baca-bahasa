@@ -1,48 +1,53 @@
-# Kepo — Brand & UI v6 "fun tapi profesional"
+# Keepo — Brand v8 (arah A, "perpustakaan santai")
 
-> v6 (2026-11-09): Rizka kirim referensi **Klarna, Klubi, teentalk, Line Pilates** → "fun tapi tetep professional".
-> Riwayat: v5 gelap neon, v4 "Baca Bahasa" (Quiet Teal dari ChatGPT) — ada di riwayat git.
+> Keputusan founder 12 Nov 2026. Detail arah: `docs/desain-arah-brand-baru.md`.
+> Penerapan ke app = tugas desain terpisah. Sampai itu selesai, tampilan app masih v7.
 
-## Brand
-| | |
-|---|---|
-| Nama | **Kepo** (merek/domain belum dicek) |
-| Tagline | **Kepoin bahasa baru.** |
-| Janji | Belajar bahasa asing lewat cerita yang kamu suka — ketuk kata, ngerti, ngomong, dapet XP. |
-| Kepribadian | Penasaran · seru · rapi · suportif · percaya diri |
-| Maskot | **Kepo** (v7): gelembung chat lime bergaris cokelat tua, tangan & kaki putih — konsep A, ilustrasi dibuat ChatGPT (chat "Buat character sheet maskot Kepo"). Pose: `curious` (mikir, tanda tanya), `happy` (melambai), `cheer` (merayakan), `wow` (kaget), `sad` (memeluk hati, menyemangati), `icon` (tanpa tangan/kaki). File: `img/kepo-*.webp` (transparan); ikon app = pose icon di latar lavender. |
+## Intinya
+- Arah A: tenang, hangat, seperti pojok baca. Tanpa maskot.
+- Untuk semua pengguna dan semua bahasa, tidak fokus satu bahasa.
+- Nama Keepo. Tagline: "Baca bukumu sendiri, ngerti bahasanya."
 
-## Warna (terang krem = bawaan)
+## 1. Identitas
+- Nama: **Keepo**.
+- Logo: teks serif, tanpa maskot.
+- Ikon aplikasi: huruf K serif hijau tua.
+
+## 2. Warna
 | Peran | Hex |
 |---|---|
-| Latar krem | #F2EEE5 |
-| Tinta (teks, tombol utama, tab bar) | #2A1215 |
-| Krem terang | #FFF6E5 |
-| Blok warna | lime #D4E94B · lavender #C9BFFF · pink #FFB8DA · coral #FF7A59 · biru #6E8BEA · kuning #F5CF52 · mint #BDE8D4 |
-| Status skor | mint = pas · kuning = dikit lagi · pink + garis gelombang = perlu latihan |
+| Latar | #F4EFE4 |
+| Tinta & hijau tua | #22362B |
+| Aksen | #C4633A |
+| Permukaan | #E7DFCD |
 
-Teks di atas blok warna selalu tinta gelap supaya kontras aman. Mode gelap (cokelat tua #1A1312 + lime) dan sepia tetap tersedia.
+- Teks utama pakai tinta di atas latar atau permukaan.
+- Aksen untuk tombol penting dan sorotan kecil.
+- Cek kontras tiap pasangan warna sebelum dipakai.
 
-## Tipografi
-- Judul: **Archivo** condensed (lebar 72–80%) 800 — tegas ala Klarna.
-- UI: **Plus Jakarta Sans**. Baca: **Literata** (Klasik) atau Plus Jakarta (Modern).
-- Aksen: highlight lime di balik kata ("bahasa **baru.**") dan lingkaran biru coretan tangan ("kepoin").
+## 3. Tipografi
+- Judul & teks baca: **Literata**.
+- UI (tombol, tab, label): **Inter**.
+- Ukuran teks baca tetap bisa diatur pengguna.
 
-## Gaya visual
-- Layout **bento**: blok warna flat bersudut 26 px, tanpa bayangan.
-- Tombol **pil**: tinta gelap (utama), putih (kedua). Tab bar pil gelap, tab aktif lime.
-- Maskot garis dipakai hemat: sapaan, hasil skor, keadaan kosong, naik level.
-- Efek seperlunya: XP melayang, konfeti hanya untuk momen besar, suara bisa dimatikan, menghormati `prefers-reduced-motion`.
+## 4. Gaya visual
+- Ikon garis sederhana, tebal garis seragam.
+- Bidang warna flat, tanpa bayangan berat.
+- Hormati `prefers-reduced-motion`; efek seperlunya.
 
-## Gamifikasi
-- **XP:** ketuk kata +1 · simpan kata +2 · balik halaman +2 · bab baru +5 · tantangan ngomong +2…+10 (+5 bila ≥85%) · kalahkan boss +3 · kartu hafal +2.
-- **Level** tiap 100 XP · **target harian** 30 XP · **streak** hari berturut-turut · **10 lencana**.
+## 5. Nada tulisan
+- Tenang & hangat. Kalimat pendek. Pakai "kamu".
+- Tanpa "yuk" dan "gas". Tanpa tumpukan emoji.
+- Benar: "Lanjut di halaman 48, ya."
+- Salah: "Yuk gas lanjut baca!!! 🔥🔥🔥"
 
-## Layar
-- **Home:** judul besar → maskot + sapaan → bento: Lanjut baca (pink) · Level (lavender) · Target harian (lime) · Streak (kuning) · Skor ngomong (mint) · Tantangan hari ini (krem) → lencana → koleksi → Tambah cerita.
-- **Baca:** e-reader layar penuh; ketuk kata → "1/2 · Arti kata" → "Masih bingung? 👀" → "2/2 · Arti kalimat" → "🎤 Coba ngomongin".
-- **Ngomong:** "Tantangan ngomong", mic bulat tinta, skor per kata (mint/kuning/pink), cincin skor + maskot + XP → **⚔️ BOSS LEVEL**.
-- **Kata:** ⚡ Kartu (tap = balik, geser kanan = hafal, kiri = belum) · Tersimpan · Susah diucap.
+## 6. Tidak dipakai lagi
+- Maskot (gelembung chat lime & semua pose).
+- Krem #F2EEE5 dan tinta #2A1215.
+- Font judul Archivo condensed.
+- Fokus satu bahasa.
 
-## Microcopy
-Santai, pakai "kamu", tanpa kata menghakimi. Skor: ≥85 **Mantap!** · 60–84 **Dikit lagi!** · <60 **Gas latihan!**
+## 7. Yang tetap
+- XP, level, target harian, streak, dan lencana tetap ada.
+- Alur layar Home, Baca, Ngomong, Kata tidak berubah.
+- Skor ucapan: ≥85 Mantap · 60–84 Dikit lagi · <60 Perlu latihan.
