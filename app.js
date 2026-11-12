@@ -71,7 +71,7 @@ const tapsOf = (lang, w) => {
 };
 function countTap(lang, w) {
   const k = tapKey(lang, w), now = Date.now();
-  if (!lang || !String(w || '').trim()) return 0;
+  if (!lang || !String(w || '').trim() || isParticle(lang, w)) return 0;
   const dup = lastTap.k === k && now - lastTap.t < TAP_GAP; lastTap = { k, t: now };
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
   const v = db.vocab.find(x => sameVocab(x, lang, w));
@@ -487,12 +487,113 @@ addEventListener('offline', pfStop);
 document.addEventListener('visibilitychange', () => { if (document.hidden) pfStop(); });
 /* baca cache terjemahan tanpa jaringan & tanpa mengubah urutan LRU; kosong bila belum ada */
 function cachedTr(q, sl, tl) { const v = trCache.get(sl + '|' + tl + '|' + q); return v && v.text ? v.text : ''; }
+/* ---------- kamus Jepang kecil offline (kamus-ja.txt): dimuat malas hanya saat membaca buku ja ---------- */
+const JA_PART = new Set(['が', 'は', 'を', 'に', 'の', 'で', 'と', 'も']);
+/* partikel dasar: tidak dihitung sebagai kata baru (tanpa ketukan, catatan sesi, atau garis bawah) */
+const isParticle = (lang, w) => lang === 'ja' && JA_PART.has(String(w || '').trim());
+let jaDict = null, jaP = null;
+function jaLoad() {
+  if (jaDict) return Promise.resolve(jaDict);
+  if (!jaP) jaP = fetch('kamus-ja.txt').then(r => r.ok ? r.text() : Promise.reject(new Error('kamus'))).then(t => {
+    const m = new Map();
+    for (const ln of t.split('\n')) {
+      if (!ln || ln[0] === '#') continue;
+      const p = ln.trim().split('|'); if (p.length < 4 || !p[0]) continue;
+      const e = { w: p[0], kana: p[1] || p[0], pos: p[2], tr: p.slice(3).join('|') };
+      if (!m.has(e.w)) m.set(e.w, e);
+      if (p[1] && !m.has(p[1])) m.set(p[1], e);
+    }
+    return (jaDict = m);
+  }).catch(() => { jaP = null; return null; });
+  return jaP;
+}
+const KANA_R = {}; (function () {
+  const rows = ['あ a い i う u え e お o', 'か ka き ki く ku け ke こ ko', 'さ sa し shi す su せ se そ so', 'た ta ち chi つ tsu て te と to', 'な na に ni ぬ nu ね ne の no', 'は ha ひ hi ふ fu へ he ほ ho', 'ま ma み mi む mu め me も mo', 'や ya ゆ yu よ yo', 'ら ra り ri る ru れ re ろ ro', 'わ wa を o ん n', 'が ga ぎ gi ぐ gu げ ge ご go', 'ざ za じ ji ず zu ぜ ze ぞ zo', 'だ da ぢ ji づ zu で de ど do', 'ば ba び bi ぶ bu べ be ぼ bo', 'ぱ pa ぴ pi ぷ pu ぺ pe ぽ po'];
+  for (const r of rows) { const a = r.split(' '); for (let i = 0; i < a.length; i += 2) KANA_R[a[i]] = a[i + 1]; }
+})();
+/* kana → romaji (Hepburn sederhana); null bila ada huruf non-kana (kanji) */
+function kanaRomaji(s) {
+  s = String(s || '').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  let o = '', dbl = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === 'っ') { dbl = true; continue; }
+    if (c === 'ー') { o += o.slice(-1); continue; }
+    let r = KANA_R[c]; if (!r) return null;
+    const n = s[i + 1];
+    if (n && 'ゃゅょ'.includes(n) && r.endsWith('i')) {
+      const y = { ゃ: 'a', ゅ: 'u', ょ: 'o' }[n];
+      r = /^(sh|ch|j)i$/.test(r) ? r.slice(0, -1) + y : r.slice(0, -1) + 'y' + y; i++;
+    }
+    if (dbl) { r = (r[0] === 'c' ? 't' : r[0]) + r; dbl = false; }
+    if (c === 'ん' && n && /[あいうえおやゆよ]/.test(n)) r = "n'";
+    o += r;
+  }
+  return o;
+}
+/* bentuk dasar: coba lepas akhiran konjugasi, cocokkan dengan jenis kata di kamus */
+const JA_ROWS = { う: ['わ', 'い', 'え', 'お', 'っ', 'っ'], く: ['か', 'き', 'け', 'こ', 'い', 'い'], ぐ: ['が', 'ぎ', 'げ', 'ご', 'い', 'い'], す: ['さ', 'し', 'せ', 'そ', 'し', 'し'], つ: ['た', 'ち', 'て', 'と', 'っ', 'っ'], ぬ: ['な', 'に', 'ね', 'の', 'ん', 'ん'], ぶ: ['ば', 'び', 'べ', 'ぼ', 'ん', 'ん'], む: ['ま', 'み', 'め', 'も', 'ん', 'ん'], る: ['ら', 'り', 'れ', 'ろ', 'っ', 'っ'] };
+const JA_A = ['ない', 'なかった', 'なくて', 'れる', 'せる', 'ず'], JA_I = ['ます', 'ました', 'ません', 'ませんでした', 'たい', 'たかった', 'ながら', 'に'], JA_ICH = ['ます', 'ました', 'ません', 'ませんでした', 'ない', 'なかった', 'なくて', 'た', 'て', 'たい', 'られる', 'させる', 'れば', 'よう', 'ず', 'ている', 'ていた'];
+function jaCands(w) {
+  const c = [];
+  const add = (stem, end, cls) => c.push([stem + end, cls]);
+  const L = w.length;
+  for (let i = 1; i <= Math.min(L, 8); i++) {
+    const stem = w.slice(0, L - i), suf = w.slice(L - i);
+    if (!stem) continue;
+    for (const s of JA_ICH) if (suf === s) add(stem, 'る', 'v1');
+    for (const [end, f] of Object.entries(JA_ROWS)) {
+      for (const s of JA_A) if (suf === f[0] + s) add(stem, end, 'v5');
+      for (const s of JA_I) if (suf === f[1] + s) add(stem, end, 'v5');
+      if (suf === f[2] + 'ば' || suf === f[2] + 'る') add(stem, end, 'v5');
+      if (suf === f[3] + 'う') add(stem, end, 'v5');
+      const ex = end === 'ぐ' ? ['いで', 'いだ'] : end === 'く' ? ['いて', 'いた'] : end === 'す' ? ['して', 'した'] : 'ぬぶむ'.includes(end) ? ['んで', 'んだ'] : ['って', 'った'];
+      for (const s of ex) for (const t of ['', 'いる', 'いた', 'います', 'いない']) if (suf === s + t) add(stem, end, 'v5');
+    }
+    if (suf === 'って' || suf === 'った') if (w === '行' + suf) add('行', 'く', 'v5');
+    for (const s of ['かった', 'くない', 'くなかった', 'くて', 'ければ', 'く']) if (suf === s) add(stem, 'い', 'adj');
+    for (const s of ['し', 'した', 'して', 'しない', 'します', 'しました', 'しません', 'しよう', 'すれば', 'している']) if (suf === s) { add(stem, 'する', 'vs'); }
+    for (const s of ['た', 'て', 'ない', 'ます', 'ました', 'ません', 'れば']) if (suf === s && /[来]$/.test(stem)) add(stem, 'る', 'vk');
+  }
+  if (/^(来|き|こ)(た|て|ない|ます|ました|ません)$/.test(w)) c.push([w[0] === '来' ? '来る' : w[0] === 'き' ? 'きる' : 'くる', 'vk']);
+  if (/^(し|さ)(た|て|ない|ます|ました|ません|よう)$/.test(w)) c.push(['する', 'vs']);
+  return c;
+}
+const JA_CLS = { v1: ['v1'], v5: ['v5'], adj: ['adj'], vs: ['vs'], vk: ['vk'] };
+function jaFind(m, w) {
+  w = String(w || '').trim();
+  if (!m || !w || /\s/.test(w) || w.length > 12) return null;
+  let e = m.get(w), base = '';
+  if (!e) {
+    for (const [b, cls] of jaCands(w)) { const x = m.get(b); if (x && x.pos === cls) { e = x; base = x.w; break; } }
+    if (!e) return null;
+  }
+  const rom = kanaRomaji(e.kana), kk = { は: 'wa', へ: 'e' }[e.kana];
+  const romaji = e.pos === 'prt' && kk ? kk : rom;
+  const kana = e.kana !== w ? e.kana : '';
+  const baca = [kana, romaji && romaji !== w ? romaji : ''].filter(Boolean).join(' · ');
+  return { e, base: base && base !== w ? base : '', baca };
+}
+const JA_POS = { v1: 'kata kerja', v5: 'kata kerja', vk: 'kata kerja', vs: 'kata kerja', adj: 'kata sifat', na: 'kata sifat', n: 'kata benda', pron: 'kata ganti', prt: 'partikel', adv: 'kata keterangan', conj: 'kata sambung', int: 'kata seru', num: 'bilangan', exp: 'ungkapan', aux: 'kata bantu' };
+async function jaLookup(q, sl) {
+  if (sl !== 'ja') return null;
+  try { return jaFind(await jaLoad(), q); } catch (e) { return null; }
+}
 async function translate(q, sl, tl, signal) {
   pfPause();
   const k = sl + '|' + tl + '|' + q;
-  if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
+  const o = await jaLookup(q, sl);
+  const mix = v => { if (!o || !v) return v; const r = { ...v }; if (!r.baca && o.baca) r.baca = o.baca; if (!r.base && o.base) r.base = o.base; return r; };
+  /* arti kamus offline didahulukan (hanya bila 'Artiin ke' = Indonesia); selain itu cuma cara baca + bentuk dasar */
+  if (o && tl === 'id') {
+    const ts = o.e.tr.split(';').map(x => x.trim()).filter(Boolean);
+    const out = { text: ts.join('; '), baca: o.baca, dict: [{ pos: JA_POS[o.e.pos] || '', terms: ts.slice(1, 5) }], off: 1 };
+    if (o.base) out.base = o.base;
+    return out;
+  }
+  if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
   const stale = trCache.get(k);
-  if (stale && stale.text && navigator.onLine === false) return stale;
+  if (stale && stale.text && navigator.onLine === false) return mix(stale);
   let out;
   try {
     out = await gtxFetch(q, sl, tl, signal);
@@ -504,11 +605,11 @@ async function translate(q, sl, tl, signal) {
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
       out = { text: t, dict: [], baca: '' };
-    } catch (e2) { if (stale && stale.text) return stale; throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
+    } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
   trCache.delete(k); trCache.set(k, out); trPersist();
-  return out;
+  return mix(out);
 }
 
 /* isi ulang arti kata tersimpan yang masih kosong; true bila ada yang terisi */

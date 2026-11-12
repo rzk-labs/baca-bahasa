@@ -72,7 +72,7 @@
     { "no": 65, "peran": "developer", "prioritas": "P0", "nama": "Kartu kata: pisahkan 'Lagi dihafal' dan 'Udah hafal' supaya angka naik saat ketuk Hafal (perintah founder #628)", "dokumen": "docs/spesifikasi-hafal-hitungan.md", "status": "selesai (#676)" },
     { "no": 66, "peran": "developer", "prioritas": "P0", "nama": "Buka ulang buku tepat di halaman terakhir, bukan satu halaman sebelumnya (perintah founder #367; cek dulu, mungkin sudah beres)", "dokumen": "docs/spesifikasi-lanjut-halaman-terakhir.md", "status": "selesai (#678)" },
     { "no": 67, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ Peta ringkas: kartu tahap 1 baris, catatan & sumber dilipat (perintah founder #527)", "dokumen": "docs/pm-peta-hq-rapi.md", "status": "siap dikerjakan" },
-    { "no": 68, "peran": "developer", "prioritas": "P1", "nama": "Kamus offline Jepang kecil: cara baca + bentuk dasar di sheet arti, gtx jadi cadangan (#49)", "dokumen": "docs/riset-sumber-kamus.md", "status": "siap dikerjakan" },
+    { "no": 68, "peran": "developer", "prioritas": "P1", "nama": "Kamus offline Jepang kecil: cara baca + bentuk dasar di sheet arti, gtx jadi cadangan (#49)", "dokumen": "docs/riset-sumber-kamus.md", "status": "selesai (#682)" },
     { "no": 69, "peran": "developer", "prioritas": "P2", "nama": "Saat impor buku: tampilkan 'Perkiraan kata baru ~N%' dari kata yang sudah dikenal (#111)", "dokumen": "docs/riset-level-buku.md", "status": "siap dikerjakan" },
     { "no": 70, "peran": "developer", "prioritas": "P2", "nama": "Ringkasan mingguan saat app dibuka: buku dibaca, kata baru, tanpa hukuman streak (#99)", "dokumen": "docs/riset-kebiasaan-balik-baca.md", "status": "siap dikerjakan" }  ],
   "prioritas": [

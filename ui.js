@@ -420,6 +420,7 @@ function openSettings() {
     <div class="set-grp" id="aturan"><div class="set-gt">Aturan &amp; Hak cipta</div>
     <ul class="rules">
       <li>Baca &amp; bagikan hanya buku milikmu atau domain publik.</li>
+      <li>Kamus Jepang kecil (cara baca &amp; bentuk dasar) disusun dengan rujukan JMdict © EDRDG, lisensi CC BY-SA 4.0.</li>
       <li>Buku dan progresmu tersimpan di HP ini, bukan di server.</li>
       <li>Kalau login, hanya XP, kata, dan buku yang kamu bagikan ikut tersimpan.</li>
       <li>Bagikan = link pribadi. Hanya yang kamu kirimi link yang bisa buka.</li>
@@ -759,7 +760,7 @@ function sesiLoad(bid) {
 }
 function sesiClear(bid) { try { localStorage.removeItem(sesiKey(bid)); } catch (e) { } }
 function recSess(b, w, sent) {
-  if (!b || !w || /\s/.test(String(w).trim())) return;
+  if (!b || !w || /\s/.test(String(w).trim()) || isParticle(b.lang, w)) return;
   const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
   e.n++; SESSW.set(k, e); sesiSave(b.id);
 }
@@ -936,7 +937,7 @@ async function viewBaca() {
     if (db.rt === 2 || +v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1) rtMap.set(v.w.toLowerCase(), r);
   }
   const oftenMemo = new Map();
-  const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
+  const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, !isParticle(b.lang, k) && tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
   /* frasa 2-5 kata tersimpan: indeks sekali per render (kata pertama -> daftar frasa). Bahasa tanpa spasi (ja/zh/th) dilewati. */
   const phraseIdx = new Map();
   if (!['ja', 'zh-CN', 'zh-TW', 'th'].includes(b.lang)) for (const v of db.vocab) {
