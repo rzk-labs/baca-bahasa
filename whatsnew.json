@@ -1,5 +1,11 @@
 [
   {
+    "n": 696,
+    "judul": "Rapikan Home & baca: persen tak dobel, panduan hilang sendiri, target ada satuan",
+    "poin": "Home lebih rapi: persen tampil sekali, target harian pakai satuan XP.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 694,
     "judul": "[peta 42] Keepo HQ pakai brand v9 (Plum Noir, Biru Es, Wasabi)",
     "poin": "Tampilan Keepo HQ sekarang pakai warna dan huruf brand baru.",
@@ -171,12 +177,6 @@
     "n": 605,
     "judul": "Sheet arti kalimat: tanda 'arti mesin' + peringatan kalimat panjang",
     "poin": "Arti kalimat sekarang punya tanda kecil: arti mesin bisa meleset.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 600,
-    "judul": "Frasa 2-5 kata yang disimpan ikut digarisbawahi di halaman baca",
-    "poin": "Frasa yang kamu simpan sekarang ikut bergaris bawah di halaman baca.",
     "tgl": "2026-11-12"
   }
 ]
