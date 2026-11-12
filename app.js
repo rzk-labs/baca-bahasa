@@ -533,6 +533,17 @@ const isKataFungsi = (lang, w) => {
   return lang === 'ja' && JA_PART.has(s);
 };
 const isParticle = isKataFungsi;
+/* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
+const countedVocab = (langs, since = 0, book = null) => (db.vocab || []).filter(v => v && v.w && !isParticle(v.lang, v.w)
+  && (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book));
+/* migrasi sekali jalan: buang entri kata lama yang sebenarnya partikel (tombstone supaya tak balik lewat sinkron) */
+try {
+  if (!localStorage.getItem('kepo.vocabPart1') && Array.isArray(db.vocab)) {
+    const gone = db.vocab.filter(v => v && v.w && isParticle(v.lang, v.w));
+    if (gone.length) { db.vocab = db.vocab.filter(v => !gone.includes(v)); gone.forEach(v => tombVocab(v.lang, v.w)); }
+    if (!gone.length || save()) localStorage.setItem('kepo.vocabPart1', '1');
+  }
+} catch (e) { }
 let jaDict = null, jaP = null;
 function jaLoad() {
   if (jaDict) return Promise.resolve(jaDict);
