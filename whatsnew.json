@@ -1,5 +1,11 @@
 [
   {
+    "n": 678,
+    "judul": "[peta 66] Buka ulang buku tepat di halaman terakhir dibaca",
+    "poin": "Buku sekarang dibuka tepat di halaman terakhir dibaca, tidak mundur lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 676,
     "judul": "[peta 65] Kartu kata: hitungan 'Lagi dihafal' & 'Udah hafal' terpisah",
     "poin": "Angka \"Lagi dihafal\" kini naik langsung saat kamu ketuk Hafal.",
@@ -171,12 +177,6 @@
     "n": 567,
     "judul": "Cadangan penuh: kata tersimpan, 'sudah kenal', XP ikut file",
     "poin": "Cadangan sekarang menyimpan kata, XP, lencana, dan streak, bukan cuma penanda.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 566,
-    "judul": "Sorotan kata di halaman baca: tenang, 3 status mudah dibedakan",
-    "poin": "Halaman baca lebih tenang: kata ditandai garis bawah, bukan blok warna.",
     "tgl": "2026-11-12"
   }
 ]
