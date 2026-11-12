@@ -506,7 +506,7 @@ async function viewBaca() {
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser</b> = ganti halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
@@ -651,7 +651,7 @@ function turn(d) {
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));
-addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
+addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || (e.key === ' ' && /BUTTON|A/.test(e.target.tagName))) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 
 /* ---------- sheet arti kata → kalimat ---------- */
 /* geser isi halaman ke atas (tanpa ganti halaman) supaya kata/kalimat terpilih tidak ketutup sheet */
@@ -790,7 +790,7 @@ function showSentence(word, sent, sIdx, sEl) {
   sEl.classList.add('hl');
   const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
   openSheet(`
-    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span>${closeBtn}</div>
+    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
     <div class="src">${marked}</div>
     <div id="sbaca"></div>
     <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
@@ -824,6 +824,24 @@ function showSentence(word, sent, sIdx, sEl) {
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
   if ($('#sback')) $('#sback').onclick = () => { const sel = sEl.querySelectorAll('.w.sel'); if (sel.length) onWord(sel[0], sel[sel.length - 1]); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
+  /* pindah ke kalimat tetangga: sheet tetap terbuka, sorot ikut pindah, halaman/bab menyusul */
+  const body = () => [...document.querySelectorAll('#cols .s')].filter(e => !e.closest('h2'));
+  const nb = d => { const l = body(), i = l.indexOf(sEl); return i < 0 ? null : l[i + d] || null; };
+  const atEdge = d => !nb(d) && (d > 0 ? b.pos >= (b.total || 1) - 1 : b.pos <= 0);
+  const sp = $('#sprev'), sn = $('#snext');
+  sp.disabled = atEdge(-1); sn.disabled = atEdge(1);
+  sp.style.opacity = sp.disabled ? '.35' : ''; sn.style.opacity = sn.disabled ? '.35' : '';
+  const open = el => { $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); const pg = pageOf(el, $('#cols')); if (pg !== RD.page) showPage(pg); vib(6); showSentence('', el.textContent.trim(), +el.dataset.s, el); };
+  const step = async d => {
+    const el = nb(d); if (el) return open(el);
+    if (d > 0 && b.pos < (b.total || 1) - 1) { b.pos++; b.si = 0; }
+    else if (d < 0 && b.pos > 0) { b.pos--; b.si = 0; RD.toEnd = true; }
+    else return;
+    RD.quiet = true; save(); closeSheet(); await viewBaca();
+    const l = body(), t = d > 0 ? l[0] : l[l.length - 1];
+    if (t) open(t); else toast('Bab ini kosong. Geser halaman aja ya.');
+  };
+  sp.onclick = () => step(-1); sn.onclick = () => step(1);
 }
 
 /* ---------- NGOMONG (tantangan) + BOSS (remedial) ---------- */

@@ -1,5 +1,23 @@
 [
   {
+    "n": 369,
+    "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
+    "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 364,
+    "judul": "E-reader: sorotan kata & seleksi jelas di mode terang, sepia, gelap",
+    "poin": "Kata tersimpan sekarang digaris bawah tegas, jadi beda dari kata yang sering diketuk.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 359,
+    "judul": "Sheet kalimat: tombol ‹ › pindah kalimat tanpa tutup sheet",
+    "poin": "Di jendela arti kalimat ada tombol panah kiri dan kanan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 352,
     "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
     "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
@@ -159,24 +177,6 @@
     "n": 201,
     "judul": "Ekspor CSV siap Anki: kolom tag & buku + petunjuk impor 3 langkah",
     "poin": "Ekspor CSV sekarang punya kolom buku dan tag, siap diimpor ke Anki.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 194,
-    "judul": "Area ketuk tombol kecil di HP dibesarkan jadi minimal 44px",
-    "poin": "Tombol kecil di HP (avatar, Masuk, Simpan, pilihan) sekarang lebih gampang diketuk.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 193,
-    "judul": "Saklar 'Tampilkan cara baca' di Setelan (kartu arti & kartu Hafal)",
-    "poin": "Setelan baru: cara baca (romaji/pinyin) bisa dimatikan. Awalnya tetap nyala.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 185,
-    "judul": "E-reader: sisa waktu baca jujur saat bab lain belum dimuat",
-    "poin": "Sisa waktu baca sekarang jujur: tampil '≥N menit' kalau ada bab belum dihitung.",
     "tgl": "2026-11-11"
   }
 ]
