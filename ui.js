@@ -689,7 +689,7 @@ function showFreq(word, b) {
   box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
 }
 const sugSeen = new Set();
-async function onWord(el) {
+async function onWord(el, lastEl) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
@@ -697,7 +697,10 @@ async function onWord(el) {
   const ws = [...sEl.querySelectorAll('.w')], MAXW = 5;
   let lo = ws.indexOf(el), hi = lo, word = el.textContent, tr = null, tok = 0;
   const phraseOf = () => { const r = document.createRange(); r.setStartBefore(ws[lo]); r.setEndAfter(ws[hi]); return r.toString().replace(/\s+/g, ' ').trim(); };
-  const isSaved = () => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
+  /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
+  const li = lastEl ? ws.indexOf(lastEl) : -1;
+  if (li > lo && li - lo + 1 <= MAXW) { hi = li; ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi)); word = phraseOf(); }
+  const isSaved =() => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
@@ -819,7 +822,7 @@ function showSentence(word, sent, sIdx, sEl) {
   loadSent();
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
-  if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
+  if ($('#sback')) $('#sback').onclick = () => { const sel = sEl.querySelectorAll('.w.sel'); if (sel.length) onWord(sel[0], sel[sel.length - 1]); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
 }
 
