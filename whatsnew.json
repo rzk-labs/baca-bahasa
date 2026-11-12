@@ -1,5 +1,11 @@
 [
   {
+    "n": 744,
+    "judul": "Target harian jelas (XP x/target) & 'Rekor' tak muncul di hari 1",
+    "poin": "Target harian kini selalu menampilkan angka, mis. 20/50 XP.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 742,
     "judul": "Sinkron: halaman dibaca (pgDay) ikut akun & buku cloud tak 'opened 0'",
     "poin": "Halaman yang sudah dibaca sekarang ikut tersimpan di akun dan muncul di perangkat baru.",
@@ -171,12 +177,6 @@
     "n": 686,
     "judul": "[peta 63] Koleksi: hapus aman + toast Target harian pindah ke bawah",
     "poin": "Tombol hapus buku di Koleksi sekarang jauh dari tombol buka dan selalu minta konfirmasi.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 684,
-    "judul": "[peta 62] Beranda rapi: satu tombol Gas baca, kartu kosong hilang",
-    "poin": "Beranda sekarang punya satu tombol utama: Gas baca.",
     "tgl": "2026-11-12"
   }
 ]
