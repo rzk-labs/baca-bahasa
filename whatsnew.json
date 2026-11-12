@@ -1,5 +1,11 @@
 [
   {
+    "n": 667,
+    "judul": "[peta 60] Intip kata bab: tampil di bab 1 & buku ja/ko/zh",
+    "poin": "Kartu Intip kata kini muncul juga di bab 1 buku baru.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 666,
     "judul": "[peta 9] Keepo HQ: pengaturan baca (ukuran teks, tema, kontras)",
     "poin": "Markas tim sekarang punya menu Pengaturan untuk atur ukuran teks dan tema.",
@@ -171,12 +177,6 @@
     "n": 550,
     "judul": "Ketuk tepi lebih sempit + saklar & tombol maju besar (satu tangan)",
     "poin": "Ketuk pinggir layar sekarang lebih sempit, jadi ketuk kata tidak salah ganti halaman.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 544,
-    "judul": "Rekap kata sesi baca: tutup buku, lihat & simpan kata baru",
-    "poin": "Keluar dari buku, kamu lihat kata yang tadi diketuk, lengkap dengan artinya.",
     "tgl": "2026-11-12"
   }
 ]
