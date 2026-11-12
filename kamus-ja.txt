@@ -1,0 +1,406 @@
+# Kamus Jepang kecil Kepo. Format: kata|kana|jenis|arti (arti dipisah ;). Kata tanpa kanji: kana dikosongkan.
+# Jenis: v1=kata kerja -ru, v5=kata kerja -u, vk=kuru, vs=suru, adj=sifat -i, na=sifat -na, n, pron, prt, adv, conj, int, num, exp, aux
+は||prt|penanda topik (dibaca "wa"); sebagai
+が||prt|penanda subjek; tetapi
+を||prt|penanda objek (dibaca "o")
+に||prt|ke; di; pada (arah/waktu/tujuan)
+の||prt|milik "-nya"; penghubung kata benda
+で||prt|di (tempat tindakan); dengan (alat)
+と||prt|dan; dengan; kutipan
+も||prt|juga; pun
+へ||prt|ke (arah, dibaca "e")
+から||prt|dari; sejak; karena
+まで||prt|sampai
+より||prt|daripada; dari
+や||prt|dan (daftar contoh); atau
+か||prt|penanda tanya; atau
+ね||prt|kan?; ya (minta persetujuan)
+よ||prt|lho; kok (penegasan)
+な||prt|jangan (larangan); ya
+だけ||prt|hanya; saja
+しか||prt|hanya (dengan kata negatif)
+ほど||prt|sekitar; sampai sejauh
+ばかり||prt|hanya; baru saja
+さえ||prt|bahkan
+けど||conj|tetapi; walaupun
+けれど||conj|tetapi; walaupun
+けれども||conj|tetapi; walaupun
+でも||conj|tapi; namun
+そして||conj|lalu; dan
+しかし||conj|namun; tetapi
+だから||conj|karena itu; jadi
+それで||conj|karena itu; lalu
+それから||conj|setelah itu
+すると||conj|lalu; maka
+また||adv|lagi; juga
+もし||adv|jika; seandainya
+だ||aux|adalah (bentuk biasa)
+です||aux|adalah (sopan)
+でした||aux|adalah (lampau, sopan)
+じゃ||aux|bentuk lisan dari では
+ではない||exp|bukan
+ない||aux|tidak; tidak ada
+これ||pron|ini
+それ||pron|itu
+あれ||pron|itu (jauh)
+どれ||pron|yang mana
+この||pron|... ini
+その||pron|... itu
+あの||pron|... itu (jauh)
+どの||pron|... yang mana
+ここ||pron|di sini
+そこ||pron|di situ
+あそこ||pron|di sana
+どこ||pron|di mana
+私|わたし|pron|saya; aku
+僕|ぼく|pron|aku (laki-laki)
+俺|おれ|pron|aku (kasar, laki-laki)
+あなた||pron|kamu; Anda
+君|きみ|pron|kamu (akrab)
+彼|かれ|pron|dia (laki-laki); pacar
+彼女|かのじょ|pron|dia (perempuan); pacar
+私たち|わたしたち|pron|kami; kita
+皆|みんな|pron|semuanya; semua orang
+誰|だれ|pron|siapa
+何|なに|pron|apa
+いつ||adv|kapan
+なぜ||adv|mengapa
+どう||adv|bagaimana
+どうして||adv|mengapa
+いくら||adv|berapa
+とても||adv|sangat
+すごく||adv|sangat; hebat
+少し|すこし|adv|sedikit
+ちょっと||adv|sedikit; sebentar
+たくさん||adv|banyak
+全然|ぜんぜん|adv|sama sekali (negatif)
+いつも||adv|selalu
+よく||adv|sering; dengan baik
+時々|ときどき|adv|kadang-kadang
+もう||adv|sudah; lagi
+まだ||adv|masih; belum
+すぐ||adv|segera
+ずっと||adv|terus; jauh lebih
+一緒に|いっしょに|adv|bersama
+本当に|ほんとうに|adv|sungguh
+たぶん||adv|mungkin
+きっと||adv|pasti
+やっぱり||adv|ternyata; memang
+もっと||adv|lebih
+一番|いちばん|adv|paling; nomor satu
+人|ひと|n|orang
+男|おとこ|n|laki-laki
+女|おんな|n|perempuan
+子供|こども|n|anak
+友達|ともだち|n|teman
+先生|せんせい|n|guru; dokter
+学生|がくせい|n|pelajar; mahasiswa
+家族|かぞく|n|keluarga
+父|ちち|n|ayah (milik sendiri)
+母|はは|n|ibu (milik sendiri)
+兄|あに|n|kakak laki-laki
+姉|あね|n|kakak perempuan
+弟|おとうと|n|adik laki-laki
+妹|いもうと|n|adik perempuan
+名前|なまえ|n|nama
+日本|にほん|n|Jepang
+日本語|にほんご|n|bahasa Jepang
+英語|えいご|n|bahasa Inggris
+言葉|ことば|n|kata; bahasa
+話|はなし|n|cerita; pembicaraan
+声|こえ|n|suara
+手|て|n|tangan
+目|め|n|mata
+耳|みみ|n|telinga
+口|くち|n|mulut
+顔|かお|n|wajah
+頭|あたま|n|kepala
+心|こころ|n|hati; perasaan
+体|からだ|n|tubuh
+足|あし|n|kaki
+気|き|n|semangat; perasaan; perhatian
+命|いのち|n|nyawa; hidup
+家|いえ|n|rumah
+部屋|へや|n|kamar
+学校|がっこう|n|sekolah
+会社|かいしゃ|n|perusahaan
+店|みせ|n|toko
+駅|えき|n|stasiun
+道|みち|n|jalan
+町|まち|n|kota kecil; kota
+国|くに|n|negara
+世界|せかい|n|dunia
+山|やま|n|gunung
+川|かわ|n|sungai
+海|うみ|n|laut
+空|そら|n|langit
+雨|あめ|n|hujan
+雪|ゆき|n|salju
+風|かぜ|n|angin
+火|ひ|n|api
+水|みず|n|air
+木|き|n|pohon; kayu
+花|はな|n|bunga
+犬|いぬ|n|anjing
+猫|ねこ|n|kucing
+鳥|とり|n|burung
+魚|さかな|n|ikan
+車|くるま|n|mobil
+電車|でんしゃ|n|kereta listrik
+本|ほん|n|buku
+紙|かみ|n|kertas
+手紙|てがみ|n|surat
+お金|おかね|n|uang
+物|もの|n|benda; barang
+事|こと|n|hal; perkara
+所|ところ|n|tempat
+方|かた|n|orang (sopan); cara; arah
+今|いま|n|sekarang
+今日|きょう|n|hari ini
+明日|あした|n|besok
+昨日|きのう|n|kemarin
+朝|あさ|n|pagi
+昼|ひる|n|siang
+夜|よる|n|malam
+晩|ばん|n|malam
+今年|ことし|n|tahun ini
+毎日|まいにち|n|setiap hari
+時|とき|n|waktu; saat
+時間|じかん|n|waktu; jam
+前|まえ|n|depan; sebelum
+後|あと|n|belakang; sesudah
+上|うえ|n|atas
+下|した|n|bawah
+中|なか|n|dalam; tengah
+外|そと|n|luar
+右|みぎ|n|kanan
+左|ひだり|n|kiri
+間|あいだ|n|antara; selama
+隣|となり|n|sebelah
+朝ご飯|あさごはん|n|sarapan
+ご飯|ごはん|n|nasi; makanan
+食べ物|たべもの|n|makanan
+飲み物|のみもの|n|minuman
+肉|にく|n|daging
+野菜|やさい|n|sayur
+果物|くだもの|n|buah
+お茶|おちゃ|n|teh
+牛乳|ぎゅうにゅう|n|susu
+仕事|しごと|n|pekerjaan
+勉強|べんきょう|n|belajar
+質問|しつもん|n|pertanyaan
+問題|もんだい|n|masalah; soal
+答え|こたえ|n|jawaban
+意味|いみ|n|arti
+夢|ゆめ|n|mimpi
+愛|あい|n|cinta
+恋|こい|n|cinta (romantis)
+力|ちから|n|kekuatan
+色|いろ|n|warna
+音|おと|n|bunyi
+歌|うた|n|lagu
+音楽|おんがく|n|musik
+映画|えいが|n|film
+旅行|りょこう|n|perjalanan
+電話|でんわ|n|telepon
+一|いち|num|satu
+二|に|num|dua
+三|さん|num|tiga
+四|よん|num|empat
+五|ご|num|lima
+六|ろく|num|enam
+七|なな|num|tujuh
+八|はち|num|delapan
+九|きゅう|num|sembilan
+十|じゅう|num|sepuluh
+百|ひゃく|num|seratus
+千|せん|num|seribu
+万|まん|num|sepuluh ribu
+一つ|ひとつ|num|satu (benda)
+二つ|ふたつ|num|dua (benda)
+三つ|みっつ|num|tiga (benda)
+全部|ぜんぶ|n|semuanya
+半分|はんぶん|n|setengah
+する||vs|melakukan; menjadi
+勉強する|べんきょうする|vs|belajar
+愛する|あいする|vs|mencintai
+来る|くる|vk|datang
+行く|いく|v5|pergi
+帰る|かえる|v5|pulang
+戻る|もどる|v5|kembali
+入る|はいる|v5|masuk
+出る|でる|v1|keluar
+着く|つく|v5|tiba
+歩く|あるく|v5|berjalan
+走る|はしる|v5|berlari
+乗る|のる|v5|naik (kendaraan)
+飛ぶ|とぶ|v5|terbang; melompat
+立つ|たつ|v5|berdiri
+座る|すわる|v5|duduk
+待つ|まつ|v5|menunggu
+持つ|もつ|v5|memegang; membawa
+取る|とる|v5|mengambil
+置く|おく|v5|meletakkan
+使う|つかう|v5|memakai
+作る|つくる|v5|membuat
+買う|かう|v5|membeli
+売る|うる|v5|menjual
+食べる|たべる|v1|makan
+飲む|のむ|v5|minum
+見る|みる|v1|melihat
+見える|みえる|v1|terlihat
+見せる|みせる|v1|menunjukkan
+聞く|きく|v5|mendengar; bertanya
+聞こえる|きこえる|v1|terdengar
+話す|はなす|v5|berbicara
+言う|いう|v5|berkata
+読む|よむ|v5|membaca
+書く|かく|v5|menulis
+知る|しる|v5|tahu; mengenal
+分かる|わかる|v5|mengerti
+思う|おもう|v5|berpikir; mengira
+考える|かんがえる|v1|memikirkan
+覚える|おぼえる|v1|mengingat; menghafal
+忘れる|わすれる|v1|lupa
+教える|おしえる|v1|mengajar; memberi tahu
+習う|ならう|v5|belajar (dari guru)
+学ぶ|まなぶ|v5|belajar
+会う|あう|v5|bertemu
+呼ぶ|よぶ|v5|memanggil
+答える|こたえる|v1|menjawab
+笑う|わらう|v5|tertawa
+泣く|なく|v5|menangis
+歌う|うたう|v5|menyanyi
+遊ぶ|あそぶ|v5|bermain
+働く|はたらく|v5|bekerja
+休む|やすむ|v5|istirahat; absen
+寝る|ねる|v1|tidur
+起きる|おきる|v1|bangun
+起こす|おこす|v5|membangunkan; menyebabkan
+生きる|いきる|v1|hidup
+死ぬ|しぬ|v5|mati
+生まれる|うまれる|v1|lahir
+住む|すむ|v5|tinggal
+開ける|あける|v1|membuka
+開く|あく|v5|terbuka
+閉める|しめる|v1|menutup
+始める|はじめる|v1|memulai
+始まる|はじまる|v5|dimulai
+終わる|おわる|v5|selesai
+続ける|つづける|v1|melanjutkan
+続く|つづく|v5|berlanjut
+変わる|かわる|v5|berubah
+変える|かえる|v1|mengubah
+止まる|とまる|v5|berhenti
+止める|やめる|v1|berhenti; menghentikan
+決める|きめる|v1|memutuskan
+選ぶ|えらぶ|v5|memilih
+探す|さがす|v5|mencari
+見つける|みつける|v1|menemukan
+送る|おくる|v5|mengirim; mengantar
+渡す|わたす|v5|menyerahkan
+貸す|かす|v5|meminjamkan
+借りる|かりる|v1|meminjam
+返す|かえす|v5|mengembalikan
+あげる||v1|memberi
+くれる||v1|memberi (kepada saya)
+もらう||v5|menerima
+ある||v5|ada (benda mati)
+いる||v1|ada (makhluk hidup)
+なる||v5|menjadi
+できる||v1|bisa; selesai
+やる||v5|melakukan; memberi
+思い出す|おもいだす|v5|teringat
+信じる|しんじる|v1|percaya
+感じる|かんじる|v1|merasakan
+好き|すき|na|suka; disukai
+嫌い|きらい|na|benci; tidak suka
+大好き|だいすき|na|sangat suka
+上手|じょうず|na|pandai
+下手|へた|na|tidak pandai
+元気|げんき|na|sehat; bersemangat
+静か|しずか|na|tenang
+きれい||na|cantik; bersih
+有名|ゆうめい|na|terkenal
+大切|たいせつ|na|penting; berharga
+大丈夫|だいじょうぶ|na|baik-baik saja
+本当|ほんとう|na|kenyataan; benar
+特別|とくべつ|na|istimewa
+簡単|かんたん|na|mudah
+大変|たいへん|na|susah; gawat
+便利|べんり|na|praktis
+自由|じゆう|na|bebas
+同じ|おなじ|na|sama
+色々|いろいろ|na|bermacam-macam
+大きい|おおきい|adj|besar
+小さい|ちいさい|adj|kecil
+高い|たかい|adj|tinggi; mahal
+安い|やすい|adj|murah
+低い|ひくい|adj|rendah
+長い|ながい|adj|panjang
+短い|みじかい|adj|pendek
+新しい|あたらしい|adj|baru
+古い|ふるい|adj|lama; tua
+良い|よい|adj|baik
+いい||adj|bagus; baik
+悪い|わるい|adj|buruk; jahat
+多い|おおい|adj|banyak
+少ない|すくない|adj|sedikit
+早い|はやい|adj|cepat (waktu); awal
+速い|はやい|adj|cepat (kecepatan)
+遅い|おそい|adj|lambat; terlambat
+強い|つよい|adj|kuat
+弱い|よわい|adj|lemah
+重い|おもい|adj|berat
+軽い|かるい|adj|ringan
+暑い|あつい|adj|panas (cuaca)
+寒い|さむい|adj|dingin (cuaca)
+冷たい|つめたい|adj|dingin (benda)
+熱い|あつい|adj|panas (benda)
+暖かい|あたたかい|adj|hangat
+美味しい|おいしい|adj|enak
+まずい||adj|tidak enak
+楽しい|たのしい|adj|menyenangkan
+嬉しい|うれしい|adj|senang
+悲しい|かなしい|adj|sedih
+寂しい|さびしい|adj|kesepian
+怖い|こわい|adj|menakutkan; takut
+難しい|むずかしい|adj|sulit
+易しい|やさしい|adj|mudah
+優しい|やさしい|adj|baik hati; lembut
+忙しい|いそがしい|adj|sibuk
+欲しい|ほしい|adj|ingin (benda)
+痛い|いたい|adj|sakit
+面白い|おもしろい|adj|menarik; lucu
+つまらない||adj|membosankan
+可愛い|かわいい|adj|imut; lucu
+かっこいい||adj|keren
+若い|わかい|adj|muda
+明るい|あかるい|adj|terang; ceria
+暗い|くらい|adj|gelap
+広い|ひろい|adj|luas
+狭い|せまい|adj|sempit
+近い|ちかい|adj|dekat
+遠い|とおい|adj|jauh
+白い|しろい|adj|putih
+黒い|くろい|adj|hitam
+赤い|あかい|adj|merah
+青い|あおい|adj|biru
+ありがとう||int|terima kasih
+すみません||int|maaf; permisi
+ごめん||int|maaf (akrab)
+ごめんなさい||int|maaf (sopan)
+こんにちは||int|selamat siang; halo
+おはよう||int|selamat pagi
+こんばんは||int|selamat malam
+さようなら||int|selamat tinggal
+はい||int|ya
+いいえ||int|tidak
+ええ||int|ya (santai)
+うん||int|ya (akrab)
+ああ||int|ah; oh
+ねえ||int|hei; dengar
+さあ||int|nah; ayo
+どうぞ||int|silakan
+お願い|おねがい|n|permohonan; tolong
+ください||exp|tolong beri; mohon
