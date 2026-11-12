@@ -111,6 +111,7 @@
 - [pengingat-baca-pwa](riset-pengingat-baca-pwa.md)
 - [penanda-sinkron](riset-penanda-sinkron.md)
 - [petunjuk-onboarding-baca](riset-petunjuk-onboarding-baca.md)
+- [pratinjau-kata-bab](riset-pratinjau-kata-bab.md)
 - [rekap-sesi-baca](riset-rekap-sesi-baca.md)
 - [sesi-pertama](riset-sesi-pertama.md)
 - [skor-ucapan](riset-skor-ucapan.md)
