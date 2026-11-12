@@ -1,5 +1,11 @@
 [
   {
+    "n": 714,
+    "judul": "Bab buku Jepang terdeteksi (六、題名) & nomor bab Home ikut bab dibaca",
+    "poin": "Buku Jepang yang baru diimpor kini terbagi ke bab, mis. \"六、銀河ステーション\".",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 712,
     "judul": "Ringkasan mingguan akurat: hitung halaman dibaca, sembunyi bila kosong",
     "poin": "Kartu Minggu ini sekarang hitung halaman yang kamu baca dan kata disimpan.",
@@ -171,12 +177,6 @@
     "n": 653,
     "judul": "Progres baca konsisten: Home, header, bar baca & label bab",
     "poin": "Angka progres sekarang sama di Home, bar baca, dan label bab.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 651,
-    "judul": "Rapikan Home: 13 bagian jadi 4, pindahkan sisanya",
-    "poin": "Home kini 4 bagian saja; Tantangan, Peringkat, Lencana, Yang baru, Masukan sudah dipindah.",
     "tgl": "2026-11-12"
   }
 ]

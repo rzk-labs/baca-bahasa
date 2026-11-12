@@ -254,11 +254,16 @@ const CH_WORD = '(?:chapter|chap\\.|bab|kapitel|chapitre|cap[ií]tulo|capitolo|k
 const CH_ID = '(?:[ivxlc]{1,7}|\\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|first|second|third)';
 const CH_STRICT = new RegExp('^' + CH_WORD + '\\s+' + CH_ID + '\\b\\.?(?:\\s*[:.\\-–—]?\\s*.{0,60})?$', 'i');
 const CH_ROMAN = /^(?:[IVXL]{1,6})\.(?:\s+.{0,60})?$/;
+/* judul bab Jepang: '六、題名', '一．題名', '第三章 題名', '上 先生と私' (pendek, tanpa tanda kalimat) */
+const CH_JA = /^(?:(?:[一二三四五六七八九十百〇]{1,4}|[0-9０-９]{1,3})[、．.][　 ]*[^\s、。．.][^\n]{0,28}|第[一二三四五六七八九十百〇0-9０-９]{1,4}[章節回話][　 ]*[^\n]{0,28}|[上中下前後][　 ]+[^\s、。][^\n]{0,24})$/;
+const CH_JA1 = /^[一二三四五六七八九十]{1,3}$/;
 function gbHead(p) {
   const t = p.replace(/^[\u0001\u0002]+/, '').trim();
   if (!t || t.length > 90) return 0;
   if (CH_STRICT.test(t)) return 2;
   if (CH_ROMAN.test(t)) return 1;
+  if (CH_JA.test(t) && !/[。！？「」『』]/.test(t)) return 2;
+  if (CH_JA1.test(t)) return 1;
   return 0;
 }
 function gbTrim(txt) {
