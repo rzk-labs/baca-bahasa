@@ -148,6 +148,7 @@ function flushLate(force) {
 new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 function award(n, stat) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
+  if (stat === 'page') { db.pgDay = db.pgDay || {}; const pd = today(); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]]; }
   const before = level();
   if (n) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
@@ -611,11 +612,11 @@ function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
   const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
-  const books = db.books.filter(b => (b.opened || 0) >= since).length;
-  const words = db.vocab.filter(v => (v.at || 0) >= since).length;
-  if (!days && !books && !words) return '';
+  const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
+  const words = db.vocab.filter(v => (v.at || 0) >= since && !v.noTr).length;
+  if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(books, 'buku dibuka')}${it(words, 'kata baru')}</div><div class="sm mut">Santai aja, baca kapan pun kamu mau.</div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${it(words, 'kata disimpan')}</div></div>`;
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -643,7 +644,7 @@ function viewRak() {
         <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
     </div>
     <div class="stat3">
-      <div class="t-sun"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()}</div><div class="lbl2">hari</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Beres! ${xt}/${GOAL} XP` : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
@@ -1043,7 +1044,7 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(chTitle)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat (AI, gratis 5x/hari). <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
