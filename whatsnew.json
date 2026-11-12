@@ -1,5 +1,11 @@
 [
   {
+    "n": 660,
+    "judul": "[peta 57] Setelah tamat: Baca ulang + saran buku berikutnya",
+    "poin": "Buku yang sudah tamat sekarang punya tombol \"Baca ulang\" yang mulai dari awal.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 658,
     "judul": "[peta 54] Ketuk kata lebih tepat di HP (area ketuk, tanda baca, ja/zh)",
     "poin": "Ketuk kata di HP lebih tepat: ketukan di celah atau tanda baca kena kata terdekat.",
@@ -171,12 +177,6 @@
     "n": 534,
     "judul": "Cari kata di dalam buku (e-reader): lompat ke hasil",
     "poin": "Sekarang bisa cari kata di dalam buku lewat Pengaturan saat membaca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 533,
-    "judul": "Home & tab Ngomong ikut brand v9: ikon garis, tanpa emoji",
-    "poin": "Layar Home dan Ngomong sekarang pakai ikon garis, bukan emoji lagi.",
     "tgl": "2026-11-12"
   }
 ]
