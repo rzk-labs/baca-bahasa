@@ -3,7 +3,7 @@ name: Keepo Jaga Tim
 # Memastikan tidak ada anggota tim yang menganggur.
 # Tiap 30 menit (dan setiap kali tugas selesai): untuk tiap peran yang sedang kosong,
 # minta PM memberi tugas baru khusus peran itu.
-# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 32 tugas otomatis per peran per hari.
+# Rem: berhenti bila >= 6 hasil menunggu founder; kuota harian per peran. Ada pekerjaan "belum" di peta + peran kosong = langsung diberi tugas.
 
 on:
   schedule:
@@ -51,19 +51,24 @@ jobs:
           PMRUN=$(gh run list --workflow kepo-pm.yml --limit 20 --json status,displayTitle \
             --jq '[.[]|select(.status!="completed")|.displayTitle]|join(" ")')
           # Kuota per peran: developer (yang mengubah app) paling banyak; peran dokumen dibatasi.
-          SIAP=$(gh api "repos/$GITHUB_REPOSITORY/contents/docs/roadmap.json" -H "Accept: application/vnd.github.raw" \
-            | jq '[.backlog[]|select(.peran=="developer" and (.status|test("^selesai|founder|deploy server manual|menunggu";"i")|not))]|length' 2>/dev/null || echo 0)
-          SIAP=${SIAP:-0}; echo "Fitur developer siap dibangun: $SIAP"
+          gh api "repos/$GITHUB_REPOSITORY/contents/docs/roadmap.json" -H "Accept: application/vnd.github.raw" > /tmp/peta.json 2>/dev/null || echo '{"backlog":[]}' > /tmp/peta.json
+          # Pekerjaan berstatus belum per peran (bukan selesai, bukan menunggu keputusan)
+          belum() { jq --arg p "$1" '[.backlog[]|select(.peran==$p)|select(.status|test("^selesai";"i")|not)|select((.status|test("^(spesifikasi )?siap dikerjakan";"i")) or (.status|test("founder|menunggu keputusan|deploy server manual|draft siap dicek";"i")|not))]|length' /tmp/peta.json 2>/dev/null || echo 0; }
+          SIAP=$(belum developer); SIAP=${SIAP:-0}; echo "Fitur developer siap dibangun: $SIAP"
           for P in developer desain riset pm marketing; do
             case "$P" in developer) KUOTA=32;; desain) KUOTA=8;; riset|pm) KUOTA=6;; *) KUOTA=4;; esac
-            if [ "$P" != developer ] && [ "$P" != marketing ] && [ "$SIAP" -ge 5 ]; then echo "$P: rem, $SIAP fitur menunggu developer"; continue; fi
+            PUNYA=$(belum "$P"); PUNYA=${PUNYA:-0}
+            # Peran dokumen direm saat developer kebanjiran, KECUALI peran itu masih punya pekerjaan "belum" di peta.
+            if [ "$P" != developer ] && [ "$P" != marketing ] && [ "$SIAP" -ge 5 ] && [ "$PUNYA" -eq 0 ]; then echo "$P: rem, $SIAP fitur menunggu developer"; continue; fi
+            # Developer boleh 2 tugas paralel bila antrean peta masih banyak, supaya cepat beres.
+            MAKS=1; if [ "$P" = developer ] && [ "$SIAP" -ge 3 ]; then MAKS=2; fi
             SIBUK=$(gh issue list --label kepo-dev --label "peran:$P" --state open --json labels \
               --jq '[.[]|select([.labels[].name]|(index("siap-dicek") or index("gagal"))|not)]|length')
             HARI_INI=$(gh issue list --label otomatis --label "peran:$P" --state all --limit 100 --json createdAt \
               --jq "[.[]|select(.createdAt|startswith(\"$HARI\"))]|length")
-            if [ "$SIBUK" -gt 0 ]; then echo "$P: sibuk ($SIBUK tugas)"; continue; fi
+            if [ "$SIBUK" -ge "$MAKS" ]; then echo "$P: sibuk ($SIBUK/$MAKS tugas)"; continue; fi
             if echo "$PMRUN" | grep -qw "$P"; then echo "$P: PM sedang memilihkan tugas"; continue; fi
             if [ "$HARI_INI" -ge "$KUOTA" ]; then echo "$P: kuota harian tercapai ($HARI_INI/$KUOTA)"; continue; fi
-            echo "$P: KOSONG → minta PM memberi tugas"
+            echo "$P: KOSONG → minta PM memberi tugas (peta belum: $PUNYA)"
             gh workflow run kepo-pm.yml -f paksa=true -f peran="$P"
           done
