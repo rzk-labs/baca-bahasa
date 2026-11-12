@@ -1,5 +1,11 @@
 [
   {
+    "n": 649,
+    "judul": "Impor buku Gutenberg: lewati judul/daftar isi, mulai Chapter I",
+    "poin": "Buku Gutenberg yang diimpor sekarang langsung mulai dari Bab 1, tanpa halaman judul.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 646,
     "judul": "Halaman baca: tak ada baris terpotong di tepi atas/bawah (JP/KR)",
     "poin": "Baris teks terpotong di tepi halaman baca Jepang/Korea sudah dirapikan.",
@@ -171,12 +177,6 @@
     "n": 509,
     "judul": "Layar kosong tenang: ganti lingkaran warna & emoji 🎉 (brand v9)",
     "poin": "Layar kosong sekarang tenang: satu gaya biru es, tanpa warna-warni.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 507,
-    "judul": "Sinkron dua arah laptop↔HP: gabung data, buku & posisi baca",
-    "poin": "Laptop dan HP sekarang saling gabung data, tidak saling timpa lagi.",
     "tgl": "2026-11-12"
   }
 ]
