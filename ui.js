@@ -768,11 +768,11 @@ function sessRecap(b) {
     if (isKenal(e.lang, e.w)) setKenal(e.lang, e.w, false);
     untombVocab(e.lang, e.w);
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1 }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
-    db.vocab.unshift(nv); save(); vib(10); sfx('ding');
+    db.vocab.unshift(nv); save(); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
     toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
-      tombVocab(e.lang, e.w); save();
+      tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
     } });
   });
@@ -807,7 +807,7 @@ async function viewBaca() {
   const sp = secParas(secs[b.pos], b.lang);
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
-  const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
+  const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && v.w).map(v => String(v.w).trim().toLowerCase()));
   const kenalOk = w => isKenal(b.lang, w) && !savedSet.has(w.toLowerCase());
   const rtMap = new Map();
   if (db.rt && ['ja', 'ko', 'zh-CN'].includes(b.lang)) for (const v of db.vocab) {
@@ -1308,7 +1308,7 @@ async function onWord(el, lastEl) {
     toast(was ? 'Dibatalkan, kata ini muncul lagi' : 'Ditandai sudah kenal', 6000, { label: 'Urungkan', fn: () => apply(was) });
   };
   $('#wsave').onclick = async () => {
-    const mark = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.toggle('saved', on); });
+    const mark = (w, on) => paintSaved(b.lang, w, on);
     if (isSaved()) {
       /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
       const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
@@ -1328,10 +1328,16 @@ async function onWord(el, lastEl) {
     const tp = takeTaps(b.lang, w);
     if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
-    $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
+    mark(w, true);
     $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
+}
+/* tambah/hapus garis bawah kata tersimpan di halaman baca yang tampil (tanpa pindah halaman) */
+function paintSaved(lang, w, on) {
+  const b = book(); if (!b || b.lang !== lang) return;
+  const k = String(w || '').trim().toLowerCase();
+  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) { x.classList.toggle('saved', on); if (on) x.classList.remove('kenal'); } });
 }
 let lastSentLook = '';
 function showSentence(word, sent, sIdx, sEl) {
