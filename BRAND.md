@@ -1,48 +1,49 @@
-# Kepo — Brand & UI v6 "fun tapi profesional"
+# Kepo — Brand & UI v8 "Perpustakaan santai"
 
-> v6 (2026-11-09): Rizka kirim referensi **Klarna, Klubi, teentalk, Line Pilates** → "fun tapi tetep professional".
-> Riwayat: v5 gelap neon, v4 "Baca Bahasa" (Quiet Teal dari ChatGPT) — ada di riwayat git.
+> v8 (2026-11-12): founder pilih arah A, **tanpa maskot** untuk semua pengguna & bahasa. Acuan: `docs/desain-arah-brand-baru.md`.
+> Riwayat: v7 maskot lime, v6 "fun tapi profesional", v5 neon — ada di riwayat git.
 
 ## Brand
 | | |
 |---|---|
-| Nama | **Kepo** (merek/domain belum dicek) |
+| Nama | **Kepo** (logo teks "Keepo" serif) |
 | Tagline | **Kepoin bahasa baru.** |
-| Janji | Belajar bahasa asing lewat cerita yang kamu suka — ketuk kata, ngerti, ngomong, dapet XP. |
-| Kepribadian | Penasaran · seru · rapi · suportif · percaya diri |
-| Maskot | **Kepo** (v7): gelembung chat lime bergaris cokelat tua, tangan & kaki putih — konsep A, ilustrasi dibuat ChatGPT (chat "Buat character sheet maskot Kepo"). Pose: `curious` (mikir, tanda tanya), `happy` (melambai), `cheer` (merayakan), `wow` (kaget), `sad` (memeluk hati, menyemangati), `icon` (tanpa tangan/kaki). File: `img/kepo-*.webp` (transparan); ikon app = pose icon di latar lavender. |
+| Rasa | Hangat · tenang · rapi · seperti pojok baca |
+| Maskot | **Tidak ada.** Pakai blok warna flat + ikon garis (`spot()` di ui.js). File `img/kepo-*.webp` tidak dipakai lagi. |
 
 ## Warna (terang krem = bawaan)
 | Peran | Hex |
 |---|---|
-| Latar krem | #F2EEE5 |
-| Tinta (teks, tombol utama, tab bar) | #2A1215 |
-| Krem terang | #FFF6E5 |
-| Blok warna | lime #D4E94B · lavender #C9BFFF · pink #FFB8DA · coral #FF7A59 · biru #6E8BEA · kuning #F5CF52 · mint #BDE8D4 |
-| Status skor | mint = pas · kuning = dikit lagi · pink + garis gelombang = perlu latihan |
+| Latar krem | #F4EFE4 |
+| Hijau tua (tinta, tombol pil, tab bar) | #22362B |
+| Oranye bata (aksen, garis, CTA besar) | #C4633A |
+| Oranye bata untuk teks kecil | #9A4420 |
+| Beige (kartu, blok) | #E7DFCD |
+| Blok warna (teks selalu hijau tua) | peach #F2C9A6 · khaki #D8CDB0 · tanah #E3B5A4 · jingga #E39A74 · hijau tengah #3F5B4A (teks putih) · ochre #EDD28F · sage #BFD8C0 |
 
-Teks di atas blok warna selalu tinta gelap supaya kontras aman. Mode gelap (cokelat tua #1A1312 + lime) dan sepia tetap tersedia.
+Kontras teks min. 4.5:1 (sudah dicek): hijau tua di krem 11.2 · di beige 9.7 · abu-hijau #4F5C54 di beige 5.3 · #9A4420 di krem 5.7.
+Oranye #C4633A **hanya** untuk garis/ikon/blok besar (kontras 3.5), bukan teks kecil.
+Mode sepia & gelap (hijau malam #15201A) tetap ada; teks redup disesuaikan (≥4.5:1).
 
 ## Tipografi
-- Judul: **Archivo** condensed (lebar 72–80%) 800 — tegas ala Klarna.
-- UI: **Plus Jakarta Sans**. Baca: **Literata** (Klasik) atau Plus Jakarta (Modern).
-- Aksen: highlight lime di balik kata ("bahasa **baru.**") dan lingkaran biru coretan tangan ("kepoin").
+- Judul: **Literata** (serif) 800. Teks UI: **Inter**. Baca: Literata (Klasik) atau Inter (Modern).
+- Google Fonts (preconnect, `display=swap`), di-cache service worker. Cadangan: Georgia / system-ui.
 
 ## Gaya visual
-- Layout **bento**: blok warna flat bersudut 26 px, tanpa bayangan.
-- Tombol **pil**: tinta gelap (utama), putih (kedua). Tab bar pil gelap, tab aktif lime.
-- Maskot garis dipakai hemat: sapaan, hasil skor, keadaan kosong, naik level.
-- Efek seperlunya: XP melayang, konfeti hanya untuk momen besar, suara bisa dimatikan, menghormati `prefers-reduced-motion`.
+- **Bento**: blok warna flat bersudut 26 px, tanpa bayangan.
+- Tombol **pil** hijau tua; tab bar pil gelap, tab aktif peach.
+- Keadaan kosong, sapaan, hasil skor: lingkaran warna + ikon garis.
+- Ikon app: huruf K serif krem di latar #22362B (192, 512, maskable, 180).
 
 ## Gamifikasi
 - **XP:** ketuk kata +1 · simpan kata +2 · balik halaman +2 · bab baru +5 · tantangan ngomong +2…+10 (+5 bila ≥85%) · kalahkan boss +3 · kartu hafal +2.
-- **Level** tiap 100 XP · **target harian** 30 XP · **streak** hari berturut-turut · **10 lencana**.
+- **Level** tiap 100 XP · **target harian** 30 XP · **streak** · **10 lencana**.
 
 ## Layar
-- **Home:** judul besar → maskot + sapaan → bento: Lanjut baca (pink) · Level (lavender) · Target harian (lime) · Streak (kuning) · Skor ngomong (mint) · Tantangan hari ini (krem) → lencana → koleksi → Tambah cerita.
-- **Baca:** e-reader layar penuh; ketuk kata → "1/2 · Arti kata" → "Masih bingung? 👀" → "2/2 · Arti kalimat" → "🎤 Coba ngomongin".
-- **Ngomong:** "Tantangan ngomong", mic bulat tinta, skor per kata (mint/kuning/pink), cincin skor + maskot + XP → **⚔️ BOSS LEVEL**.
-- **Kata:** ⚡ Kartu (tap = balik, geser kanan = hafal, kiri = belum) · Tersimpan · Susah diucap.
+- **Home:** judul → sapaan → bento (Lanjut baca · Level · Target · Streak · Skor · Tantangan) → lencana → koleksi → Tambah cerita.
+- **Baca:** e-reader layar penuh; ketuk kata → arti kata → arti kalimat → coba ngomongin.
+- **Ngomong:** mic bulat hijau tua, skor per kata (sage/ochre/tanah), cincin skor → boss.
+- **Kata:** Kartu · Tersimpan · Susah diucap.
 
 ## Microcopy
 Santai, pakai "kamu", tanpa kata menghakimi. Skor: ≥85 **Mantap!** · 60–84 **Dikit lagi!** · <60 **Gas latihan!**
