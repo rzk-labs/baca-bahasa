@@ -1,5 +1,11 @@
 [
   {
+    "n": 567,
+    "judul": "Cadangan penuh: kata tersimpan, 'sudah kenal', XP ikut file",
+    "poin": "Cadangan sekarang menyimpan kata, XP, lencana, dan streak, bukan cuma penanda.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 566,
     "judul": "Sorotan kata di halaman baca: tenang, 3 status mudah dibedakan",
     "poin": "Halaman baca lebih tenang: kata ditandai garis bawah, bukan blok warna.",
@@ -171,12 +177,6 @@
     "n": 442,
     "judul": "Sheet kata: tombol perluas frasa ‹ › sejajar, jelas & mudah diketuk",
     "poin": "Tombol perluas frasa di sheet kata kini sejajar, kiri dan kanan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 437,
-    "judul": "Tema baca Sepia & Gelap: kontras teks, penanda kata & sheet diperiksa",
-    "poin": "Teks di tema Sepia dan Gelap ternyata sudah cukup jelas dibaca.",
     "tgl": "2026-11-12"
   }
 ]

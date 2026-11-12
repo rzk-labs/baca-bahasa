@@ -262,8 +262,8 @@ addEventListener('online', () => { runSync().catch(() => { }); });
 const NOTE_AKUN = 'Kata, XP, buku, posisi baca &amp; penanda ikut akun.';
 const bkKey = b => (b.lang || '') + '|' + String(b.title || '').trim().toLowerCase();
 function bkCard() {
-  return `<div class="set-row"><div class="mut sm">Kalau masuk akun, buku sudah tersimpan otomatis. Cadangan file ini untuk yang tidak pakai akun (teks buku tidak ikut).</div>
-    <div class="row"><button class="sec" id="bkOut" type="button">Simpan cadangan penanda &amp; posisi baca</button></div>
+  return `<div class="set-row"><div class="mut sm">Kalau masuk akun, semuanya tersimpan otomatis. Cadangan file ini untuk yang tidak pakai akun. Teks buku tidak ikut: impor ulang filenya, lalu pulihkan.</div>
+    <div class="row"><button class="sec" id="bkOut" type="button">Simpan cadangan (kata, penanda, posisi)</button></div>
     <div class="row"><button class="sec" id="bkIn" type="button">Pulihkan dari cadangan</button></div>
     <input type="file" id="bkFile" accept="application/json,.json" hidden></div>`;
 }
@@ -274,17 +274,21 @@ function bkWire() {
 }
 function bkSave() {
   const list = (db.books || []).map(b => ({ title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct, marks: (Array.isArray(b.marks) ? b.marks : []).map(m => ({ p: m.p, s: m.s, t: m.t, at: m.at })) }));
-  if (!list.length) return toast('Belum ada buku buat dicadangkan.');
-  const blob = new Blob([JSON.stringify({ kepo: 'cadangan-penanda', v: 1, at: Date.now(), books: list })], { type: 'application/json' });
+  const vocab = Array.isArray(db.vocab) ? db.vocab.filter(isObj) : [];
+  if (!list.length && !vocab.length && !(db.xp > 0)) return toast('Belum ada data buat dicadangkan.');
+  // v2: tambah data belajar (tanpa token/akun)
+  const out = { kepo: 'cadangan-penanda', v: 2, at: Date.now(), books: list, vocab, kenal: isObj(db.kenal) ? db.kenal : {} };
+  for (const k of ['xp', 'xpDay', 'badges', 'days', 'stat']) if (db[k] != null) out[k] = db[k];
+  const blob = new Blob([JSON.stringify(out)], { type: 'application/json' });
   const u = URL.createObjectURL(blob), a = document.createElement('a');
-  a.href = u; a.download = 'kepo-cadangan-penanda.json'; document.body.append(a); a.click(); a.remove();
+  a.href = u; a.download = 'kepo-cadangan.json'; document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(u), 2000);
   toast('Cadangan tersimpan');
 }
 async function bkRestore(file) {
   let d; try { d = JSON.parse(await file.text()); } catch (e) { d = null; }
   if (!d || d.kepo !== 'cadangan-penanda' || !Array.isArray(d.books)) return toast('Ini bukan file cadangan Kepo.', 4000);
-  let hit = 0, miss = 0, added = 0;
+  let hit = 0, miss = 0, added = 0, words = 0;
   for (const x of d.books) {
     if (!x || typeof x !== 'object') continue;
     const b = (db.books || []).find(y => bkKey(y) === bkKey(x));
@@ -301,8 +305,34 @@ async function bkRestore(file) {
     }
     b.marks = cur;
   }
+  if (+d.v >= 2) {
+    // kata: tambah lalu gabung duplikat (data yang ada tidak ditimpa); XP ambil yang lebih besar
+    if (!Array.isArray(db.vocab)) db.vocab = [];
+    const have = new Set(db.vocab.filter(isObj).map(v => vocabKey(v.lang, v.w))), seen = new Set();
+    for (const v of Array.isArray(d.vocab) ? d.vocab : []) {
+      if (!isObj(v) || !v.w || !v.lang) continue;
+      const k = vocabKey(v.lang, v.w);
+      if (!have.has(k) && !seen.has(k)) words++;
+      seen.add(k); untombVocab(v.lang, v.w);
+      db.vocab.push({ ...v });
+    }
+    dedupeVocab();
+    if (isObj(d.kenal)) {
+      if (!isObj(db.kenal)) db.kenal = {};
+      for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
+    }
+    if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
+    if (isObj(d.xpDay)) { if (!isObj(db.xpDay)) db.xpDay = {}; for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } }
+    if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
+    if (Array.isArray(d.days)) db.days = [...new Set([...(db.days || []), ...d.days])].sort().slice(-400);
+    if (isObj(d.stat)) { if (!isObj(db.stat)) db.stat = {}; for (const k in d.stat) { const n = +d.stat[k] || 0; if (n > (+db.stat[k] || 0)) db.stat[k] = n; } }
+  }
   save();
-  toast(hit ? `Beres: ${added} penanda ditambah${miss ? `. ${miss} buku belum ada di HP ini (unggah dulu, lalu pulihkan lagi)` : ''}.` : 'Belum ada bukunya di HP ini. Unggah bukunya dulu, lalu pulihkan lagi.', 5000);
+  const bits = [];
+  if (+d.v >= 2) bits.push(`${words} kata`);
+  bits.push(`${added} penanda`);
+  const tail = miss ? `. ${miss} buku belum ada di HP ini (impor dulu, lalu pulihkan lagi)` : '';
+  toast(hit || words ? `Beres: ${bits.join(' & ')} dipulihkan${tail}.` : 'Belum ada bukunya di HP ini. Impor bukunya dulu, lalu pulihkan lagi.', 5000);
 }
 
 /* ---------- UI akun ---------- */
