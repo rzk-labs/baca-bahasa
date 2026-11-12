@@ -1,5 +1,11 @@
 [
   {
+    "n": 776,
+    "judul": "Baca: Tamat = 100% di Home & bar bawah baca satu baris",
+    "poin": "Buku yang sudah Tamat sekarang tampil 100% di Home, profil, dan catatan sesi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 774,
     "judul": "Popup 'Level N!' cukup sekali & 'Kata baru' FYP tanpa partikel",
     "poin": "Popup 'Level N!' sekarang cuma muncul sekali, tidak berulang di tab lain.",
@@ -171,12 +177,6 @@
     "n": 716,
     "judul": "Jepang: partikel (が は を…) tak digarisbawahi & tak jadi 'kata baru'",
     "poin": "Buku Jepang: が, は, を, へ, や, か, ね, よ tak lagi dianggap kata baru.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 714,
-    "judul": "Bab buku Jepang terdeteksi (六、題名) & nomor bab Home ikut bab dibaca",
-    "poin": "Buku Jepang yang baru diimpor kini terbagi ke bab, mis. \"六、銀河ステーション\".",
     "tgl": "2026-11-12"
   }
 ]
