@@ -262,24 +262,49 @@ function gbParas(paras, isGb) {
     }
     out.push(p);
   }
-  if (!isGb && !toc) return paras;
+  if (!isGb && !toc) return gbChapters(paras);
   if (isGb) out = out.filter(p => !/^\[?\s*illustration[^\]]{0,80}\]?$/i.test(p.replace(/^[\u0001\u0002]+/, '').trim()));
   const first = out.findIndex((p, i) => i < 80 && gbHead(p) === 2);
   if (first > 0 && out.slice(first).length >= 5) out = out.slice(first);
-  // hitungan bab: tiap judul bab jelas = bab baru (hanya bila belum ada pembatas bab & ada ≥3 judul)
-  if (!out.includes('\u0002') && out.filter(p => gbHead(p) === 2).length >= 3) {
-    const r = []; out.forEach((p, i) => { if (gbHead(p) === 2 && i > 0) r.push('\u0002'); r.push(p); }); out = r;
-  }
+  out = gbChapters(out);
   return out.length >= 3 ? out : paras;
+}
+/* hitungan bab: tiap judul bab jelas = bab baru (hanya bila belum ada pembatas bab & ada ≥3 judul).
+   Judul 'II.' saja dipakai bila tak ada 'Chapter …'. Hasil sama sejak impor. */
+function gbChapters(out) {
+  if (!out || out.includes('\u0002')) return out;
+  let lv = 2, n = out.filter(p => gbHead(p) === 2).length;
+  if (n < 3) { lv = 1; n = out.filter(p => gbHead(p) === 1).length; if (n < 3) return out; }
+  const r = []; let k = 0;
+  out.forEach((p, i) => { if (gbHead(p) === lv) { if (k++ > 0 && i > 0) r.push('\u0002'); } r.push(p); });
+  return r;
+}
+/* penanda miring Gutenberg: _kata_ -> kata (teks biasa) */
+const UL_ITALIC = /(^|[^\p{L}\p{N}_])_([^_\n]{1,200}?)_(?![\p{L}\p{N}_])/gu;
+function noUnderscore(p) { return typeof p === 'string' && p.includes('_') ? p.replace(UL_ITALIC, '$1$2').replace(UL_ITALIC, '$1$2') : p; }
+/* judul hanya untuk baris pendek yang cocok pola judul; kalimat/dialog biasa bukan judul */
+function isHeadLine(raw) {
+  const t = raw.replace(/^[\u0001\u0002]+/, '').trim();
+  if (!t) return false;
+  if (raw.startsWith('\u0001')) return t.length <= 120 && !/^[「『“"‘(（]/.test(t);
+  if (t.length > 60 || /^[「『“"‘'(（—–-]/.test(t)) return false;
+  if (gbHead(t)) return true;
+  if (/^第?[一二三四五六七八九十百〇\d]+[章節节回話话編]?$/.test(t) || /^[上中下前後]?[　 ]?[一二三四五六七八九十]+$/.test(t)) return true;
+  if (/[.!?,;:"”'’)\]」』）。！？、…]$/.test(t)) return false;
+  if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return t.length <= 16 && !/[。、！？「」『』]/.test(t);
+  const w = t.split(/\s+/);
+  if (w.length > 7 || /[,;:.!?"“”]/.test(t)) return false;
+  if (t === t.toUpperCase() && /\p{L}{3}/u.test(t)) return true;
+  return w.filter(x => x.length > 3).every(x => /^\p{Lu}/u.test(x));
 }
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
-  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name).then(r => { try { r.paras = gbParas(r.paras, r.paras.slice(0, 40).some(p => /project gutenberg/i.test(p))); } catch (e) { } return r; }), PARSE_TIMEOUT);
+  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name).then(r => { try { const gb = r.paras.slice(0, 40).some(p => /project gutenberg/i.test(p)); r.paras = gbParas(r.paras, gb); if (gb) r.paras = r.paras.map(noUnderscore); } catch (e) { } return r; }), PARSE_TIMEOUT);
   if (ext === 'pdf') return dgnBatas(parsePdf(await file.arrayBuffer(), name), PARSE_TIMEOUT);
   const g = gbTrim(decodeText(await file.arrayBuffer()));
   let paras = cleanParas(g.text);
-  try { paras = gbParas(paras, g.found); } catch (e) { }
+  try { paras = gbParas(paras, g.found); if (g.found) paras = paras.map(noUnderscore); } catch (e) { }
   return { title: name, paras };
 }
 function decodeText(buf) {
