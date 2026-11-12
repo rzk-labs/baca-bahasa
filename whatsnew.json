@@ -1,5 +1,11 @@
 [
   {
+    "n": 381,
+    "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
+    "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 376,
     "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
     "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
@@ -171,12 +177,6 @@
     "n": 237,
     "judul": "Kartu Hafal: tinggi menyesuaikan isi & kata panjang tidak meluber",
     "poin": "Kartu Hafal sekarang menyesuaikan isinya, kata panjang tidak meluber lagi.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 227,
-    "judul": "Laporan usability (Tahap 17): temuan tester AI + keluhan UX kompetitor",
-    "poin": "Laporan usability selesai: temuan 4 penguji plus 45 keluhan pengguna aplikasi kompetitor.",
     "tgl": "2026-11-11"
   }
 ]
