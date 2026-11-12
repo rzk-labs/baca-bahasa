@@ -1122,7 +1122,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}<button class="icon rrt" id="set" title="Pengaturan baca" aria-label="Pengaturan baca">${ico('sliders')}<span class="rrtl">Atur</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
@@ -1150,9 +1150,9 @@ async function viewBaca() {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
       const t = h ? h.sents.map(x => x.s).join('').trim() : '';
-      return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bagian ' + (i + 1))/* tanpa judul = Bagian; berjudul bab = judulnya sendiri */}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
+      return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || (secWord(b, i) + ' ' + (i + 1)))/* tanpa judul = Bagian; berjudul bab = judulnya sendiri */}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
     }).join('');
-    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab</span>${closeBtn}</div>${prepHtml()}<div class="chlist">${items}</div>`, 'Daftar bab');
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar ${secWord(b, b.pos).toLowerCase()}</span>${closeBtn}</div>${prepHtml()}<div class="chlist">${items}</div>`, 'Daftar ' + secWord(b, b.pos).toLowerCase());
     bindPrep(b, secs[b.pos]);
     $$('#sheet .chi').forEach(x => x.onclick = () => { const i = +x.dataset.ch; closeSheet(); if (i !== b.pos) { b.pos = i; b.si = 0; RD.quiet = true; save(); viewBaca(); } });
     const cur = $('#sheet .chi.on'); if (cur) cur.scrollIntoView({ block: 'center' });
@@ -1366,6 +1366,9 @@ function minsLeft(b) {
   if (!ok) return { t: `bab ini ±${n} mnt`, part: false, bab: true };
   const secs = cache.id === b.id && cache.pages;
   const part = !secs || unseen(b, secs);
+  /* tak masuk akal: sisa jam-jaman padahal halaman bab hampir habis → tampilkan sisa bab ini saja */
+  const here = RD.left[RD.page] || 0;
+  if (RD.n - RD.page <= 3 && m > 180 && m > here) return { t: `bab ini ±${Math.max(1, Math.ceil(here - 1e-9))} mnt`, part: false, bab: true };
   return { t: fmtMins(m, part) || '<1 mnt', part, m };
 }
 function showPage(p, anim = true) {
