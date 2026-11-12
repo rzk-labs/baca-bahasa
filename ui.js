@@ -1217,10 +1217,11 @@ function showPage(p, anim = true) {
   if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${nw(ml.t)}${ml.bab ? '' : ' (sisa buku)'}` : `Hal ${RD.page + 1}/${RD.n} bab ini · Sisa ${nw(ml.t)}${ml.bab ? '' : ' (sisa buku)'}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : (RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n} bab ini`);
   if (pb) pb.style.width = b.pct + '%';
   syncMarks();
-  $('#pv').disabled = RD.page === 0 && b.pos === 0;
+  const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
-  nx.disabled = last && !!b.doneAt;
-  if (last && !b.doneAt) { nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  if (nx) nx.disabled = last && !!b.doneAt;
+  if (!nx) { /* reader sudah ditutup */ }
+  else if (last && !b.doneAt) { nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   pfArm();
 }
@@ -1252,7 +1253,7 @@ function syncMarks() {
   const b = book(), bt = $('#bmTog'), ls = $('#bmList'); if (!b) return;
   const on = markHere(b).length > 0, n = marksOf(b).length;
   if (bt) { bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false'); bt.innerHTML = `${ico('bm')} ${on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini'}`; }
-  const rm = $('#rMk'); if (rm) { rm.hidden = !n; $('#rMkN').textContent = n; }
+  const rm = $('#rMk'); if (rm) { rm.hidden = !n; const rn = $('#rMkN'); if (rn) rn.textContent = n; }
   if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
 }
 function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); if (!$('#sheet').classList.contains('hide') && $('#sheet').getAttribute('aria-label') === 'Daftar penanda') { if (b.marks.length) openMarks(); else closeSheet(); } }
@@ -1433,11 +1434,11 @@ async function onWord(el, lastEl) {
   const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
-    $('#wtr').textContent = v.t;
+    setTx('#wtr', v.t);
     setWBaca(bacaOf(word, v.baca));
     setTx('#wbase', v.base ? 'Bentuk dasar: ' + v.base : '');
     setTx('#wpos', v.pos ? (POS[v.pos] || v.pos) : '');
-    $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
+    { const dc = $('#wdict'); if (dc) dc.innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>'; }
     keepVisible('.w.sel');
   };
   /* lencana "Mungkin frasa": opsional, hanya dari cache terjemahan (tanpa jaringan baru) */
@@ -1473,7 +1474,7 @@ async function onWord(el, lastEl) {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT);
     tr = r;
-    $('#wtr').textContent = r.text;
+    setTx('#wtr', r.text);
     setWBaca(bacaOf(word, r.baca));
     setTx('#wbase', r.base ? 'Bentuk dasar: ' + r.base : '');
     const d = r.dict || [];
@@ -1495,7 +1496,7 @@ async function onWord(el, lastEl) {
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
     setTx('#wword', word); setTx('#wpos', ''); setWBaca(''); setTx('#wbase', '');
-    $('#wdict').innerHTML = ''; showHint(); $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    { const d1 = $('#wdict'), f1 = $('#wfreq'), t1 = $('#wtr'); if (d1) d1.innerHTML = ''; showHint(); if (f1) f1.textContent = ''; showTap(tapsOf(b.lang, word)); if (t1) t1.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; }
     $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
