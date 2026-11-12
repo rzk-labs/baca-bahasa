@@ -1,5 +1,11 @@
 [
   {
+    "n": 483,
+    "judul": "Daftar penanda rapi untuk Arab & pembaca layar, urungkan segar",
+    "poin": "Daftar penanda kini rapi untuk buku Arab dan terbaca benar oleh pembaca layar.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 476,
     "judul": "Bar atas e-reader lega di HP 320px: maks 2 tombol kanan",
     "poin": "Bar atas baca kini satu baris: judul, bab, dan jumlah penanda.",
@@ -172,11 +178,5 @@
     "judul": "Beranda: tombol 'Kata lain' & kartu ajakan saat belum ada kata",
     "poin": "Kartu kata hari ini di Beranda sekarang punya tombol 'Kata lain'.",
     "tgl": "2026-11-12"
-  },
-  {
-    "n": 323,
-    "judul": "Keepo HQ: daftar dokumen rapi (Baru di atas, ringkasan, tabel)",
-    "poin": "Daftar dokumen di Keepo HQ kini urut terbaru, dengan lencana Baru dan ringkasan.",
-    "tgl": "2026-11-11"
   }
 ]
