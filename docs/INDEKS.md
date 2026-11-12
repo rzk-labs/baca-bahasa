@@ -63,6 +63,7 @@
 - [visi-founder](marketing-visi-founder.md)
 
 ## 5. Riset
+- [aksesibilitas-baca](riset-aksesibilitas-baca.md)
 - [arti-kata-sinyal-lemah](riset-arti-kata-sinyal-lemah.md)
 - [baca-malam-offline](riset-baca-malam-offline.md)
 - [bacaan-pemula-legal](riset-bacaan-pemula-legal.md)
