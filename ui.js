@@ -206,6 +206,7 @@ async function pagesOf(b) {
     if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; }
     b.total = cache.pages.length; save();
   }
+  if (b.total !== cache.pages.length) { b.total = cache.pages.length; save(); }
   /* perkiraan unit baca per bab: dihitung sekali, disimpan (buku lama: lazy) */
   if (!Array.isArray(b.units) || b.units.length !== cache.pages.length) {
     b.units = cache.pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
@@ -215,15 +216,16 @@ async function pagesOf(b) {
 function makeSections(paras) {
   const secs = []; let cur = [], n = 0;
   const push = () => { if (cur.length) secs.push(cur); cur = []; n = 0; };
-  for (const p of paras) {
+  for (let p of paras) {
     if (p === '\u0002') { push(); continue; }
+    p = noUnderscore(p);
     if (n > 15000 && !p.startsWith('\u0001')) push();
     cur.push(p); n += p.length;
   }
   push();
   return secs.length ? secs : [['(kosong)']];
 }
-const isHead = raw => raw.startsWith('\u0001') || (raw.length < 80 && !/[.!?,;:"”'’)\]]$/.test(raw.trim()));
+const isHead = raw => isHeadLine(raw);
 function secParas(sec, lang) {
   let k = 0;
   return sec.map(raw => { const h = isHead(raw), p = raw.replace(/^\u0001/, ''); return { h, sents: sentences(p, lang).map(s => ({ s, i: tokens(s, lang).some(t => t.w) ? k++ : -1 })) }; });
