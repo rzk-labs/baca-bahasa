@@ -1370,6 +1370,22 @@ function toggleMark() {
   if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   else toast('Halaman ditandai', 1800);
 }
+/* Kata > Tersimpan: loncat ke kalimat asal kata di e-reader (cari lewat teks; data lama tetap aman) */
+async function lihatDiBuku(v) {
+  const b = v && db.books.find(x => x.title === v.book); if (!b) return toast('Bukunya sudah dihapus');
+  const nz = t => String(t || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const full = nz(v.s), cx = nz(ctxOf(v)).replace(/…$/, '');
+  let hit = null;
+  try {
+    const secs = await pagesOf(b);
+    const data = secs.map(sc => secParas(sc, b.lang).flatMap(P => P.sents.filter(x => x.i >= 0)));
+    const find = fn => { for (let p = 0; p < data.length; p++) for (const x of data[p]) if (fn(nz(x.s))) return { p, s: x.i }; return null; };
+    hit = (full && find(t => t === full)) || (cx.length >= 8 && find(t => t.includes(cx) || cx.includes(t))) || null;
+  } catch (e) { }
+  db.cur = b.id; b.opened = Date.now();
+  if (hit) { b.pos = hit.p; b.si = hit.s; RD.flash = hit.s; RD.quiet = true; } else setTimeout(() => toast('Posisi persisnya tidak ketemu'), 500);
+  save(); setTab('baca');
+}
 /* ---------- cari di buku ---------- */
 async function openFind() {
   const b = book(); if (!b) return;
@@ -1924,7 +1940,7 @@ function viewKata() {
       const inF = v => csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2));
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => inF(v) && (!q || (v.w + ' ' + v.t).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div>${(() => { const m = [bacaOf(v.w, v.baca), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div></div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div>${(() => { const m = [bacaOf(v.w, v.baca), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && db.books.some(b => b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : (q || csvF !== 'all') && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
@@ -2004,6 +2020,7 @@ function viewKata() {
           toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya');
         });
       }
+      $$('[data-go]').forEach(el => el.onclick = () => lihatDiBuku(db.vocab[+el.dataset.go]));
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
         const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); if (gone) tombVocab(gone.lang, gone.w); save(); renderList();

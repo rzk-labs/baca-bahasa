@@ -1,5 +1,11 @@
 [
   {
+    "n": 736,
+    "judul": "Kata: tombol 'Lihat di buku' loncat ke halaman kata itu",
+    "poin": "Di tab Kata, tiap kata punya tombol 'Lihat di buku'.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 734,
     "judul": "Aksesibilitas: tiap sheet punya nama sendiri untuk pembaca layar",
     "poin": "Semua panel di Kepo sekarang punya nama yang benar untuk pembaca layar.",
@@ -171,12 +177,6 @@
     "n": 678,
     "judul": "[peta 66] Buka ulang buku tepat di halaman terakhir dibaca",
     "poin": "Buku sekarang dibuka tepat di halaman terakhir dibaca, tidak mundur lagi.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 676,
-    "judul": "[peta 65] Kartu kata: hitungan 'Lagi dihafal' & 'Udah hafal' terpisah",
-    "poin": "Angka \"Lagi dihafal\" kini naik langsung saat kamu ketuk Hafal.",
     "tgl": "2026-11-12"
   }
 ]
