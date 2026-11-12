@@ -45,6 +45,13 @@ const ICONS = {
   sword: '<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6M16 16l4 4M19 21l2-2"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.7V17c0 .6-.5 1-1.2 1.2C7.8 18.7 7 20 7 22M14 14.7V17c0 .6.5 1 1.2 1.2 1 .5 1.8 1.8 1.8 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/>',
   alert: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+  chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  bug:'<path d="m8 2 1.9 1.9M16 2l-1.9 1.9"/><path d="M9 7.1V6a3 3 0 0 1 6 0v1.1"/><path d="M12 20a6 6 0 0 1-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3a6 6 0 0 1-6 6zM12 20v-9M6.5 13H2M17.5 13H22M6 17l-3 2M18 17l3 2M6 9 3 7M18 9l3-2"/>',
+  bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>',
+  heart:'<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  send:'<path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',
+  eyeoff:'<path d="M10.7 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-2.2 3M6.6 6.6A17 17 0 0 0 2 12s4 7 10 7a9.7 9.7 0 0 0 5.4-1.6M2 2l20 20"/>',
   slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -312,7 +319,7 @@ function openSettings() {
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
-    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
+    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">' + ico('chat') + 'Kirim masukan</button>'}
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
     </div>`);
@@ -344,10 +351,10 @@ function openSettings() {
 const APP_VER = 'v46';
 function openFeedback() {
   if (document.body.classList.contains('reading')) return;
-  const kinds = [['rusak', '🐞', 'Ada yang rusak'], ['ide', '💡', 'Ide'], ['suka', '❤️', 'Suka']];
+  const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka']];
   let kind = 'ide', stars = 0;
   openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
-    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}"><span>${e}</span> ${l}</button>`).join('')}</div>
+    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}">${ico(e)}${l}</button>`).join('')}</div>
     <label class="fb-l">Ceritain aja
       <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?"></textarea></label>
     <div class="mut sm fb-cnt"><span id="fbC">0</span>/500</div>
@@ -375,7 +382,7 @@ function openFeedback() {
       const link = m ? FEEDBACK_KONTAK + '?subject=' + encodeURIComponent('Masukan Keepo') + '&body=' + encodeURIComponent(msg) : FEEDBACK_KONTAK + (FEEDBACK_KONTAK.includes('wa.me') ? '?text=' + encodeURIComponent(msg) : '');
       window.open(link, '_blank', 'noopener'); return;
     }
-    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya! 💚'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
+    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya!'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
     await copy();
   };
 }
@@ -474,7 +481,7 @@ function viewRak() {
     animRing($('#view'));
     heroMins(cur);
   }
-  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
+  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">' + ico('chat') + 'Kirim masukan</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
   blManual = false;
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
@@ -1024,7 +1031,7 @@ async function onWord(el, lastEl) {
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
-  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
+  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}×` : 'Pertama kali kamu cek kata ini'; };
   const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
@@ -1096,7 +1103,7 @@ async function onWord(el, lastEl) {
     if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
-    $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
+    $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
@@ -1356,17 +1363,17 @@ function viewKata() {
           let f = null;
           try { f = new File([blob], fn, { type: 'text/csv' }); } catch (e) {}
           if (f && (iosLike || standalone) && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
-            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan ✨'); }
-            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa 👌'); }
+            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan'); }
+            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa'); }
           }
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
             a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-            toast(`${fn} udah diunduh (${ready} kata) ✨`);
+            toast(`${fn} udah diunduh (${ready} kata)`);
           } catch (e) {
             try {
-              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
-              else toast('Perangkat ini belum bisa unduh CSV 😢');
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan'); }
+              else toast('Perangkat ini belum bisa unduh CSV');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
         };
@@ -1392,7 +1399,7 @@ function viewKata() {
       if ($('#kRem')) $('#kRem').onclick = () => {
         const lang = weak[0].lang, list = weak.filter(o => o.lang === lang).slice(0, 10);
         $('#kwl').remove();
-        remedial(list.map(o => ({ w: o.w, p: o.last })), lang, $('#kbox'), () => { celebrate('Boss kalah!', 'Semua kata sulit udah kamu lawan 💪'); viewKata(); });
+        remedial(list.map(o => ({ w: o.w, p: o.last })), lang, $('#kbox'), () => { celebrate('Boss kalah!', 'Semua kata sulit udah kamu lawan'); viewKata(); });
       };
     }
   };
@@ -1437,6 +1444,6 @@ if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
 window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
-window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
+window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
 bersihYatim();
