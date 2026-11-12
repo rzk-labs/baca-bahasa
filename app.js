@@ -66,7 +66,7 @@ const TAP_MAX = 2000, TAP_GAP = 3000;
 let lastTap = { k: '', t: 0 };
 const tapKey = (lang, w) => lang + '|' + String(w || '').toLowerCase();
 const tapsOf = (lang, w) => {
-  const v = (db.vocab || []).find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w || '').toLowerCase());
+  const v = (db.vocab || []).find(x => sameVocab(x, lang, w));
   return (v && +v.tap > 0 ? +v.tap : 0) + ((db.taps && +db.taps[tapKey(lang, w)]) || 0);
 };
 function countTap(lang, w) {
@@ -74,7 +74,7 @@ function countTap(lang, w) {
   if (!lang || !String(w || '').trim()) return 0;
   const dup = lastTap.k === k && now - lastTap.t < TAP_GAP; lastTap = { k, t: now };
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
-  const v = db.vocab.find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w).toLowerCase());
+  const v = db.vocab.find(x => sameVocab(x, lang, w));
   if (!dup) {
     if (v) v.tap = (+v.tap || 0) + 1;
     else {
@@ -86,6 +86,29 @@ function countTap(lang, w) {
   }
   return tapsOf(lang, w);
 }
+/* ---------- kunci kata tersimpan: kata lowercase + bahasa (dipakai SEMUA jalur simpan/cari/gabung) ---------- */
+const vocabKey = (lang, w) => (lang || '') + '|' + String(w || '').trim().toLowerCase();
+const sameVocab = (v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
+/* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
+function dedupeVocab() {
+  if (!Array.isArray(db.vocab)) return false;
+  const seen = new Map(), out = []; let changed = false;
+  for (const v of db.vocab) {
+    if (!v || typeof v !== 'object') { out.push(v); continue; }
+    const k = vocabKey(v.lang, v.w), a = seen.get(k);
+    if (!a) { seen.set(k, v); out.push(v); continue; }
+    changed = true;
+    for (const f of ['t', 'baca', 's', 'ctx', 'base', 'pos']) if (String(v[f] || '').length > String(a[f] || '').length) a[f] = v[f];
+    const tp = (+a.tap || 0) + (+v.tap || 0); if (tp > 0) a.tap = tp;
+    if (v.at && (!a.at || v.at < a.at)) a.at = v.at;
+    if ((v.lv || 0) > (a.lv || 0)) { a.lv = v.lv; a.due = v.due; }
+    if (v.known) a.known = v.known;
+    if (String(a.t || '').trim()) delete a.noTr;
+  }
+  if (changed) db.vocab = out;
+  return changed;
+}
+try { if (!localStorage.getItem('kepo.vocabDedupe1')) { dedupeVocab(); db.vocab = db.vocab || []; if (save()) localStorage.setItem('kepo.vocabDedupe1', '1'); } } catch (e) { }
 const takeTaps = (lang, w) => { const k = tapKey(lang, w), n = (db.taps && +db.taps[k]) || 0; if (db.taps) delete db.taps[k]; return n; };
 /* ---------- statistik lokal per buku (db.sentLooks: idBuku → {kata, kalimat}; opsional, tidak disinkron) ---------- */
 const SL_MAX = 200;

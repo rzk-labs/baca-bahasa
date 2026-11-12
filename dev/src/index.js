@@ -174,12 +174,15 @@ async function api(req, env, url) {
     });
   }
   if (p === '/hasil' && req.method === 'GET') {
-    const [issues, cs] = await Promise.all([
+    // Komentar repo sangat ramai (QA, antrean, tester), jadi ambil 6 halaman (600 komentar terbaru)
+    // supaya laporan "Siap dicek" tugas yang lebih lama tetap terbaca.
+    const [issues, ...pages] = await Promise.all([
       gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=100&sort=created&direction=desc`),
-      gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100`, { soft: true }),
+      ...[1, 2, 3, 4, 5, 6].map(pg => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true })),
     ]);
+    const cs = pages.flatMap(x => (Array.isArray(x) ? x : []));
     const lap = {};
-    (Array.isArray(cs) ? cs : []).forEach(c => {
+    cs.forEach(c => {
       const n = +String(c.issue_url).split('/').pop();
       if (!lap[n] && /Siap dicek|tidak mengubah/i.test(c.body || '')) lap[n] = { teks: c.body, waktu: c.created_at };
     });

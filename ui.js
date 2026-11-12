@@ -171,6 +171,10 @@ async function pagesOf(b) {
     if (b.v !== 2) { b.v = 2; b.pos = 0; b.si = 0; }
     b.total = cache.pages.length; save();
   }
+  /* perkiraan unit baca per bab: dihitung sekali, disimpan (buku lama: lazy) */
+  if (!Array.isArray(b.units) || b.units.length !== cache.pages.length) {
+    b.units = cache.pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
+  }
   return cache.pages;
 }
 function makeSections(paras) {
@@ -274,7 +278,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
     <div class="set-row"><div class="eyebrow">Huruf baca</div><div class="seg" id="fnt"><button data-v="serif" class="${db.font === 'serif' ? 'on' : ''}" style="font-family:var(--font-reader)">Klasik</button><button data-v="sans" class="${db.font === 'sans' ? 'on' : ''}">Modern</button></div></div>
-    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Rata kiri'], ['j', 'Rata penuh']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Kiri'], ['j', 'Kiri-kanan']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${LHS.map(v => `<button data-v="${v}" class="${nearLh(readLh(b && b.lang)) === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
@@ -522,11 +526,35 @@ function hapusBuku(id) {
 $('#file').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
-  if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
-  toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg); }
+  const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
+  if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
+  if (f.size > 50 * MB) return toast('File-nya kegedean (maks 50 MB).', 5000);
+  const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
+  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: () => importFile(f) });
+  importFile(f);
+};
+const IMPOR_TIMEOUT = 45000;
+async function importFile(f, paksa) {
+  toast('Lagi nyiapin cerita… ⏳', IMPOR_TIMEOUT + 2000);
+  let tm;
+  try {
+    const r = await Promise.race([parseFile(f), new Promise((_, no) => { tm = setTimeout(() => no(Object.assign(new Error('timeout'), { telat: true })), IMPOR_TIMEOUT); })]);
+    clearTimeout(tm);
+    if (!r.paras.length) throw new Error('kosong');
+    if (!paksa) {
+      const len = r.paras.join('').length;
+      for (const b of db.books) {
+        if (b.title !== r.title) continue;
+        let ps = null; try { ps = await getText(b.id); } catch (e) { }
+        if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
+      }
+    }
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg);
+  }
   catch (err) {
+    clearTimeout(tm);
     console.error(err);
+    if (err && err.telat) return toast('Kelamaan. Cek sinyal, lalu coba lagi', 6000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
@@ -537,7 +565,7 @@ $('#file').onchange = async e => {
     else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
     toast(msg, 6000);
   }
-};
+}
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
@@ -668,12 +696,16 @@ function layout() {
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
-  /* cache halaman tiap kalimat/judul sekali per layout, supaya geser halaman tidak mengukur ulang */
+  /* cache halaman tiap kalimat/judul + sisa unit baca per halaman: dihitung sekali per layout, geser halaman cukup membaca array */
   RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols) }));
   RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
+  const suf = new Array(RD.ss.length + 1).fill(0);
+  for (let i = RD.ss.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(RD.ss[i].el.textContent, b.lang);
+  RD.left = []; let j = RD.ss.length;
+  for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && RD.ss[j - 1].pg >= q) j--; RD.left[q] = suf[j]; }
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
-  else if (b.si) { const el = cols.querySelector(`.s[data-s="${b.si}"]`); if (el) p = pageOf(el, cols); }
+  else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
 }
@@ -711,13 +743,15 @@ async function heroMins(b) {
   } catch (e) {}
 }
 function minsLeft(b) {
+  if (!(RD.n > 0) || !RD.left) return null;
+  let m = RD.left[RD.page] || 0;
+  const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
+  if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
+  const n = Math.max(1, Math.ceil(m - 1e-9));
+  if (!ok) return { t: `bab ini ±${n} mnt`, part: false };
   const secs = cache.id === b.id && cache.pages;
-  if (!secs || !secs[b.pos] || !(RD.n > 0)) return null;
-  if (RD.chk !== secs || RD.chl !== b.lang) { RD.chk = secs; RD.chl = b.lang; RD.chu = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0)); }
-  let m = RD.chu[b.pos] * (RD.n - RD.page) / RD.n;
-  for (let i = b.pos + 1; i < secs.length; i++) m += RD.chu[i];
-  const part = unseen(b, secs);
-  return { t: fmtMins(m, part), part };
+  const part = !secs || unseen(b, secs);
+  return { t: fmtMins(m, part) || '<1 mnt', part };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -848,7 +882,7 @@ async function onWord(el, lastEl) {
   /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
   const li = lastEl ? ws.indexOf(lastEl) : -1;
   if (li > lo && li - lo + 1 <= MAXW) { hi = li; ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi)); word = phraseOf(); }
-  const isSaved =() => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
+  const isSaved =() => db.vocab.some(v => sameVocab(v, b.lang, word));
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
@@ -876,7 +910,7 @@ async function onWord(el, lastEl) {
   award(1, 'look');
   const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
   const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
-  const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
+  const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
     $('#wtr').textContent = v.t;
     setWBaca(bacaOf(word, v.baca));
@@ -919,9 +953,23 @@ async function onWord(el, lastEl) {
   $('#wexp').onclick = () => grow(1);
   $('#wexl').onclick = () => grow(-1);
   $('#wsave').onclick = async () => {
-    if (isSaved()) return;
+    const mark = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.toggle('saved', on); });
+    if (isSaved()) {
+      /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
+      const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
+      db.vocab = db.vocab.filter(v => !gone.includes(v)); save(); vib(8); mark(w, false);
+      const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl();
+      toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => {
+        if (!db.vocab.some(v => sameVocab(v, lang, w))) db.vocab.splice(Math.min(at, db.vocab.length), 0, ...gone);
+        save(); mark(w, true);
+        const s2 = $('#wsave'); if (s2 && sameVocab({ lang: b.lang, w: word }, lang, w)) s2.innerHTML = saveLbl();
+        if (kataSeg === 'simpan' && $('#klist')) viewKata();
+      } });
+      return;
+    }
     const sg = $('#wsug'); if (sg) sg.innerHTML = '';
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
+    if (isSaved()) return; /* ketukan ganda saat menunggu terjemahan */
     const tp = takeTaps(b.lang, w);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });

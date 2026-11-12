@@ -1,5 +1,23 @@
 [
   {
+    "n": 158,
+    "judul": "Kata Tersimpan: saring daftar per bahasa/buku lewat chip di atas",
+    "poin": "Di tab Tersimpan, ada chip geser untuk saring kata per bahasa atau buku.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 72,
+    "judul": "E-reader: teks rata kiri di HP biar tak ada celah lebar antar kata",
+    "poin": "Teks baca di HP sekarang rata kiri, jadi tak ada celah lebar antar kata.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 493,
+    "judul": "Kata tersimpan tanpa duplikat + ketuk 'Tersimpan' untuk batal",
+    "poin": "Kata yang sama tidak akan tersimpan dua kali lagi; kata ganda lama digabung otomatis.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 491,
     "judul": "Penanda: urut sesuai urutan buku & 'Ke penanda' paling dekat posisi baca",
     "poin": "Daftar penanda sekarang bisa diurutkan: Terbaru atau Urutan buku.",
@@ -159,24 +177,6 @@
     "n": 350,
     "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
     "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 344,
-    "judul": "Sheet kata/kalimat: spinner lama jadi pesan 'sinyal lemah' + Coba lagi",
-    "poin": "Arti kata/kalimat kini bilang \"Sinyalnya lemah nih…\" setelah 8 detik menunggu.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 341,
-    "judul": "Sheet kalimat: tombol balik pulihkan frasa pilihan, bukan 1 kata",
-    "poin": "Tombol balik dari arti kalimat sekarang mengembalikan frasa pilihanmu, bukan 1 kata.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 333,
-    "judul": "HP kecil: streak tetap terlihat & rata teks ikut saat HP diputar",
-    "poin": "Streak api 🔥 sekarang tetap kelihatan di HP kecil, dalam bentuk ringkas.",
     "tgl": "2026-11-12"
   }
 ]
