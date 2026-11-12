@@ -131,6 +131,7 @@
 - [arti-kata-di-kalimat](spesifikasi-arti-kata-di-kalimat.md)
 - [arti-kata-vs-frasa](spesifikasi-arti-kata-vs-frasa.md)
 - [batal-simpan-kata](spesifikasi-batal-simpan-kata.md)
+- [hafal-hitungan](spesifikasi-hafal-hitungan.md)
 - [cover-epub](spesifikasi-cover-epub.md)
 - [feedback-langsung-hq](spesifikasi-feedback-langsung-hq.md)
 - [feedback-web](spesifikasi-feedback-web.md)
