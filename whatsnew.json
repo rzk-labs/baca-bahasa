@@ -1,5 +1,11 @@
 [
   {
+    "n": 724,
+    "judul": "Baca: judul bab di header pas, bar progres tak loncat",
+    "poin": "Judul bab di atas halaman sekarang tampil pas, tidak dobel lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 722,
     "judul": "Home: kartu Streak/Target jelas isinya & 'kata baru' = kata tersimpan",
     "poin": "Kartu Target harian kini tampil 'XP 54/100' dan 'Beres!' tanpa angka dobel.",
@@ -171,12 +177,6 @@
     "n": 666,
     "judul": "[peta 9] Keepo HQ: pengaturan baca (ukuran teks, tema, kontras)",
     "poin": "Markas tim sekarang punya menu Pengaturan untuk atur ukuran teks dan tema.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 662,
-    "judul": "Home: tombol hapus Koleksi aman & kartu 'Kata hari ini' rapi",
-    "poin": "Tombol hapus buku sekarang di bawah kartu, jauh dari sampul, tidak gampang kepencet.",
     "tgl": "2026-11-12"
   }
 ]
