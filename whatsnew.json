@@ -1,5 +1,11 @@
 [
   {
+    "n": 770,
+    "judul": "Baca: bagian buku lama dihitung ulang & header sama dengan bar",
+    "poin": "Buku lama kini otomatis dibagi ulang per bab saat dibuka.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 768,
     "judul": "Home HP: label 'Ngomong' utuh, angka cincin Target muat, judul tak terpenggal",
     "poin": "Menu bawah: label 'Ngomong' sekarang utuh satu baris di HP kecil.",
@@ -171,12 +177,6 @@
     "n": 710,
     "judul": "Progres Home selalu sama dengan Profil & bar baca, sisa waktu ringkas",
     "poin": "Persen baca di Home kini selalu sama dengan Profil, juga saat app ditutup.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 688,
-    "judul": "[peta 71] Jelaskan kalimat (AI) gratis 5x/hari, hanya saat diminta",
-    "poin": "Tombol \"Jelaskan kalimat ini (AI)\" sudah ada di arti kalimat, jalan hanya saat diketuk.",
     "tgl": "2026-11-12"
   }
 ]
