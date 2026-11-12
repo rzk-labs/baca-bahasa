@@ -32,6 +32,7 @@ const ICONS = {
   trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
   stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
   search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  dl: '<path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/>',
   check: '<path d="M20 6 9 17l-5-5"/>', plus: '<path d="M12 5v14M5 12h14"/>',
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>', pointer: '<path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="m13 10 5 1a2 2 0 0 1 2 2v3a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-3l-3-5a2 2 0 0 1 3-2l1 1"/>', swipe: '<path d="M5 12h14"/><path d="m15 8 4 4-4 4"/><path d="m9 8-4 4 4 4"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>', mute: '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/>', eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
   bolt: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
@@ -290,6 +291,63 @@ const readLh = l => db.lhSet ? db.lh : (LH0[l] || 1.6);
 const LHS = [1.5, 1.7, 1.9];
 const nearLh = v => LHS.reduce((a, c) => Math.abs(c - v) < Math.abs(a - v) ? c : a);
 const PREV = { en: 'The rain stopped, and the street smelled like warm bread. She smiled and kept walking.', ja: '雨が止んで、街はあたたかいパンの匂いがした。彼女は微笑んで歩き続けた。', ko: '비가 그치고 거리에는 따뜻한 빵 냄새가 났다. 그녀는 웃으며 계속 걸었다.', 'zh-CN': '雨停了，街上飘着热面包的香味。她笑了笑，继续往前走。', fr: 'La pluie a cessé, et la rue sentait le pain chaud. Elle sourit et continua de marcher.', de: 'Der Regen hörte auf, und die Straße roch nach warmem Brot. Sie lächelte und ging weiter.', es: 'La lluvia paró y la calle olía a pan caliente. Ella sonrió y siguió caminando.' };
+/* siapkan arti bab untuk offline (#568): manual, maks 150 kata unik, maks 3 paralel, lewat translate() yang sama */
+const PREP_MAX = 150;
+function prepWords(b, sec) {
+  const seen = new Set(), out = [];
+  secParas(sec, b.lang).forEach(P => P.sents.forEach(({ s, i }) => { if (i < 0) return; tokens(s, b.lang).forEach(t => {
+    if (!t.w) return; const k = t.t.toLowerCase(); if (seen.has(k) || isKenal(b.lang, t.t)) return; seen.add(k); out.push(t.t);
+  }); }));
+  return out.slice(0, PREP_MAX);
+}
+const prepHas = (b, q) => { const v = trCache.get(b.lang + '|' + db.my + '|' + q); return !!v && ('baca' in v || !NONLATIN.test(q)); };
+function prepHtml() {
+  return `<div class="prep" id="prepBox"><div class="prep-t">${ico('dl')}<b>Arti bab ini tanpa sinyal</b></div><div class="mut sm" id="prepMsg" role="status">Unduh arti kata bab ini sekali, biar tetap kebuka di KRL.</div><div class="prep-bar" id="prepBar" hidden><i></i></div><div class="prep-acts"><button class="sec" id="prepGo" type="button">Siapkan arti bab ini</button><button class="ghost" id="prepCancel" type="button" hidden>Batal</button></div></div>`;
+}
+function bindPrep(b, sec) {
+  const box = $('#prepBox'); if (!box) return;
+  const go = $('#prepGo'), cancel = $('#prepCancel'), msg = $('#prepMsg'), bar = $('#prepBar');
+  const words = prepWords(b, sec); let run = 0;
+  const live = () => box.isConnected;
+  const sync = () => {
+    if (run || !live()) return;
+    const n = words.filter(q => prepHas(b, q)).length;
+    if (!words.length) { go.disabled = true; go.textContent = 'Tidak ada kata baru'; return; }
+    if (n >= words.length) { go.disabled = true; go.textContent = 'Sudah siap semua'; msg.textContent = `${n} kata siap dibaca tanpa sinyal`; return; }
+    if (navigator.onLine === false) { go.disabled = true; go.textContent = 'Butuh internet sekali'; if (n) msg.textContent = `${n} dari ${words.length} kata sudah siap.`; return; }
+    go.disabled = false; go.textContent = 'Siapkan arti bab ini';
+    msg.textContent = n ? `${n} dari ${words.length} kata sudah siap tanpa sinyal.` : `${words.length} kata menunggu. Butuh internet sekali.`;
+  };
+  sync();
+  const start = async () => {
+    const my = ++run; let ok = 0, done = 0, stop = false;
+    const todo = words.filter(q => !prepHas(b, q)), total = words.length, base = total - todo.length;
+    const show = () => { msg.textContent = `${base + ok} dari ${total} kata siap`; bar.hidden = false; bar.firstElementChild.style.width = Math.round((base + done) / total * 100) + '%'; };
+    go.hidden = true; cancel.hidden = false; show(); let idx = 0;
+    cancel.onclick = () => { stop = true; };
+    const worker = async () => {
+      while (!stop && live() && my === run && navigator.onLine !== false) {
+        const q = todo[idx++]; if (q === undefined) return;
+        try { await translate(q, b.lang, db.my); ok++; } catch (e) { }
+        done++; if (live()) show();
+        await new Promise(r => setTimeout(r, 250));
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    trFlush(); if (!live() || my !== run) return;
+    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true; go.disabled = false;
+    const n = words.filter(q => prepHas(b, q)).length;
+    if (stop || navigator.onLine === false) msg.textContent = `${n} dari ${total} kata siap. Nanti dicoba lagi ya.`;
+    else if (n < total) msg.textContent = `${n} kata siap dibaca tanpa sinyal. ${total - n} kata belum, nanti dicoba lagi ya.`;
+    else msg.textContent = `${n} kata siap dibaca tanpa sinyal`;
+    if (n < total) go.textContent = 'Coba lagi yang belum'; else { go.disabled = true; go.textContent = 'Sudah siap semua'; }
+  };
+  go.onclick = () => {
+    if (navigator.connection && navigator.connection.saveData && go.dataset.ok !== '1') { go.dataset.ok = '1'; msg.textContent = 'Hemat Data lagi nyala. Unduh ini pakai kuota. Ketuk lagi kalau tetap mau.'; go.textContent = 'Tetap unduh'; return; }
+    go.dataset.ok = ''; start();
+  };
+  addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
+}
 function openSettings() {
   const b = book();
   const th = [['paper', 'Kertas'], ['sepia', 'Sepia'], ['green', 'Hijau'], ['night', 'Malam']];
@@ -311,6 +369,7 @@ function openSettings() {
     </div>
     <div class="set-grp"><div class="set-gt">Bantuan kata</div>
     ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
+    ${b && document.body.classList.contains('reading') ? `<div class="set-row">${prepHtml()}</div>` : ''}
     <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div>` : ''}
@@ -340,6 +399,7 @@ function openSettings() {
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
   if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
+  if ($('#prepBox')) pagesOf(b).then(sc => { if ($('#prepBox')) bindPrep(b, sc[Math.min(b.pos || 0, sc.length - 1)]); });
   if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
@@ -746,7 +806,8 @@ async function viewBaca() {
       const t = h ? h.sents.map(x => x.s).join('').trim() : '';
       return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bab ' + (i + 1))}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
     }).join('');
-    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab</span>${closeBtn}</div><div class="chlist">${items}</div>`);
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab</span>${closeBtn}</div>${prepHtml()}<div class="chlist">${items}</div>`);
+    bindPrep(b, secs[b.pos]);
     $$('#sheet .chi').forEach(x => x.onclick = () => { const i = +x.dataset.ch; closeSheet(); if (i !== b.pos) { b.pos = i; b.si = 0; RD.quiet = true; save(); viewBaca(); } });
     const cur = $('#sheet .chi.on'); if (cur) cur.scrollIntoView({ block: 'center' });
   };
@@ -1067,10 +1128,10 @@ async function onWord(el, lastEl) {
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
+    <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
-    <div class="tr" id="wtr" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
@@ -1183,9 +1244,9 @@ function showSentence(word, sent, sIdx, sEl) {
   const wordGloss = wMean ? `<div class="wgloss"><span class="wg-w" dir="auto" lang="${esc(b.lang)}">${esc(word)}</span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(db.my)}">${esc(wMean)}</span></div>` : '';
   openSheet(`
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
-    <div class="src">${marked}</div>${wordGloss}
+    <div class="src" dir="auto" lang="${esc(b.lang)}">${marked}</div>${wordGloss}
     <div id="sbaca"></div>
-    <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
+    <div class="tr sent" id="str" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     ${ttsNote(b.lang)}
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">${ico('mic')} Coba ngomongin</button></div>
@@ -1207,7 +1268,7 @@ function showSentence(word, sent, sIdx, sEl) {
     } else trEl.textContent = r.text;
     const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
     if (bc && sb) {
-      const v = `<div class="sbaca" lang="${esc(b.lang)}">${esc(bc)}</div>`;
+      const v = `<div class="sbaca" dir="auto" lang="${esc(b.lang)}">${esc(bc)}</div>`;
       sb.innerHTML = db.showBaca ? v : `<button class="ghost sbaca-peek" id="speek" type="button">Lihat cara baca</button>` + v.replace('class="sbaca"', 'class="sbaca hide" id="speekv"');
       if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
     }
