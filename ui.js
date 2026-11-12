@@ -522,11 +522,35 @@ function hapusBuku(id) {
 $('#file').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
-  if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
-  toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg); }
+  const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
+  if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
+  if (f.size > 50 * MB) return toast('File-nya kegedean (maks 50 MB).', 5000);
+  const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
+  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: () => importFile(f) });
+  importFile(f);
+};
+const IMPOR_TIMEOUT = 45000;
+async function importFile(f, paksa) {
+  toast('Lagi nyiapin cerita… ⏳', IMPOR_TIMEOUT + 2000);
+  let tm;
+  try {
+    const r = await Promise.race([parseFile(f), new Promise((_, no) => { tm = setTimeout(() => no(Object.assign(new Error('timeout'), { telat: true })), IMPOR_TIMEOUT); })]);
+    clearTimeout(tm);
+    if (!r.paras.length) throw new Error('kosong');
+    if (!paksa) {
+      const len = r.paras.join('').length;
+      for (const b of db.books) {
+        if (b.title !== r.title) continue;
+        let ps = null; try { ps = await getText(b.id); } catch (e) { }
+        if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
+      }
+    }
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg);
+  }
   catch (err) {
+    clearTimeout(tm);
     console.error(err);
+    if (err && err.telat) return toast('Kelamaan. Cek sinyal, lalu coba lagi', 6000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
@@ -537,7 +561,7 @@ $('#file').onchange = async e => {
     else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
     toast(msg, 6000);
   }
-};
+}
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
