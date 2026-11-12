@@ -924,7 +924,7 @@ function intipCands(b, sp, savedSet) {
     for (const { s } of P.sents) for (const t of tokens(s, b.lang)) {
       if (!t.w) continue;
       const k = t.t.toLowerCase();
-      if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k)) continue;
+      if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k) || isKataFungsi(b.lang, k)) continue;
       if (cjk && ((/^[\p{Script=Hiragana}ー]+$/u.test(k) && [...k].length < 3) || /^[\p{Script=Latin}]+$/u.test(k))) continue; /* partikel hiragana pendek & huruf latin dilewati */
       const e = m.get(k) || { w: k, lang: b.lang, n: 0, lo: 0, s: s.trim() };
       e.n++; if (t.t === k) e.lo++; m.set(k, e);

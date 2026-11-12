@@ -514,9 +514,10 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) pfSto
 /* baca cache terjemahan tanpa jaringan & tanpa mengubah urutan LRU; kosong bila belum ada */
 function cachedTr(q, sl, tl) { const v = trCache.get(sl + '|' + tl + '|' + q); return v && v.text ? v.text : ''; }
 /* ---------- kamus Jepang kecil offline (kamus-ja.txt): dimuat malas hanya saat membaca buku ja ---------- */
-const JA_PART = new Set(['が', 'は', 'を', 'に', 'の', 'で', 'と', 'も']);
-/* partikel dasar: tidak dihitung sebagai kata baru (tanpa ketukan, catatan sesi, atau garis bawah) */
-const isParticle = (lang, w) => lang === 'ja' && JA_PART.has(String(w || '').trim());
+const JA_PART = new Set(['が', 'は', 'を', 'に', 'の', 'で', 'と', 'も', 'へ', 'や', 'か', 'ね', 'よ']);
+/* kata fungsi (partikel dasar ja): tidak dihitung sebagai kata baru (tanpa ketukan, catatan sesi, garis bawah, intip, perkiraan impor) */
+const isKataFungsi = (lang, w) => lang === 'ja' && JA_PART.has(String(w || '').trim());
+const isParticle = isKataFungsi;
 let jaDict = null, jaP = null;
 function jaLoad() {
   if (jaDict) return Promise.resolve(jaDict);
