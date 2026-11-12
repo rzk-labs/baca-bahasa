@@ -176,7 +176,7 @@ function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
-function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); }
 $('#shade').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
@@ -240,7 +240,7 @@ addEventListener('popstate', () => {
   rdHist = false; setTab('rak');
 });
 function setTab(t) {
-  if (t !== 'baca') rdLeave();
+  if (t !== 'baca') { rdLeave(); pfDisarm(); }
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
@@ -531,7 +531,7 @@ function hapusBuku(id) {
   const book = db.books[i], wasCur = db.cur === id;
   db.books = db.books.filter(b => b.id !== id); if (wasCur) db.cur = null;
   save(); yatimTambah(id);
-  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } }, 5000));
+  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } if (typeof bookGone === 'function') bookGone(book).catch(() => { }); }, 5000));
   toast('Cerita dihapus.', 5000, { label: 'Urungkan', fn: () => {
     if (!pendingDel.has(id)) return;
     clearTimeout(pendingDel.get(id)); pendingDel.delete(id); yatimBuang(id);
@@ -795,6 +795,22 @@ function showPage(p, anim = true) {
   nx.disabled = last && !!b.doneAt;
   if (last && !b.doneAt) { nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
+  pfArm();
+}
+/* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
+let pfIdle = 0;
+function pfDisarm() { clearTimeout(pfIdle); pfIdle = 0; if (typeof pfStop === 'function') pfStop(); }
+function pfArm() {
+  pfDisarm(); const b = book(); if (!b || !pfOk()) return;
+  pfIdle = setTimeout(() => {
+    pfIdle = 0;
+    const go = () => {
+      if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || !pfOk()) return;
+      const l = RD.ss.filter(x => x.pg === RD.page && x.el.isConnected).map(x => x.el.textContent.trim());
+      pfStart(l, b.lang, db.my);
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 2000 }); else setTimeout(go, 0);
+  }, 1500);
 }
 /* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
 const MARK_MAX = 20;
