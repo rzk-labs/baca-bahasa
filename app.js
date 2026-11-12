@@ -540,6 +540,8 @@ const isParticle = isKataFungsi;
 /* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
 const countedVocab = (langs, since = 0, book = null) => (db.vocab || []).filter(v => v && v.w && !isParticle(v.lang, v.w)
   && (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book));
+/* SATU hitungan 'kata baru minggu ini' = kata tersimpan di tab Kata (bukan ketukan/lookup) */
+const kataBaruMinggu = (langs = null) => countedVocab(langs, Date.now() - 7 * 864e5 + 1).length;
 /* migrasi sekali jalan: buang entri kata lama yang sebenarnya partikel (tombstone supaya tak balik lewat sinkron) */
 try {
   if (!localStorage.getItem('kepo.vocabPart1') && Array.isArray(db.vocab)) {

@@ -92,7 +92,24 @@ function applyTheme() {
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', tr: 'Turki', id: 'Indonesia' };
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', tr: '🇹🇷', id: '🇮🇩' };
 const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0]);
-const pctOf = b => b.pct != null ? b.pct : b.total ? Math.max(1, Math.ceil((b.pos + 1) / b.total * 100 - 1e-9)) : 0;
+/* SATU rumus persen buku (bobot bab bila units valid) untuk SEMUA layar: Home, bar baca, Profil, Koleksi, Sosial.
+   Dihitung ulang saat render dari pos + halaman tersimpan, bukan dari b.pct lama yang bisa basi. Tamat = 100. */
+function pctCalc(b, page, n) {
+  const total = b.total || 1, pos = b.pos || 0;
+  if (pos >= total - 1 && page >= n - 1) return 100;
+  const uOk = Array.isArray(b.units) && b.units.length === total && total > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
+  const f = (page + 1) / n;
+  return uOk && uSum > 0
+    ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, pos).reduce((a, x) => a + x, 0) + (b.units[pos] || 0) * f) / uSum * 100 - 1e-9)))
+    : Math.max(1, Math.min(100, Math.ceil((pos + f) / total * 100 - 1e-9)));
+}
+const pctOf = b => {
+  if (!b) return 0;
+  if (b.pct >= 100) return 100; /* Tamat */
+  if (!b.total) return b.pct != null ? b.pct : 0;
+  const hasPg = b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === (b.pos || 0);
+  return pctCalc(b, hasPg ? b.pg : 0, hasPg ? b.pgN : 1);
+};
 const progress = p => { $('#prog').innerHTML = p == null ? '' : `<i style="width:${p}%"></i>`; };
 const SCORE = p => p >= PASS ? ['g', 'Mantap!', 'Pengucapanmu udah jelas banget.', 'cheer'] : p >= 60 ? ['m', 'Dikit lagi!', 'Udah deket. Perhatiin bunyinya ya.', 'wow'] : ['b', 'Gas latihan!', 'Santai, kita latih pelan-pelan.', 'sad'];
 const chip = (p, txt) => `<span class="chip ${SCORE(p)[0]}">${txt ? esc(txt) + ' · ' : ''}${p}%</span>`;
@@ -294,11 +311,7 @@ document.addEventListener('visibilitychange', wakeSync);
 /* app ke latar belakang saat membaca: simpan persen terbaru (sumber sama dgn Home/Profil/rak) */
 /* satu rumus persen buku (bobot bab bila ada): bar baca, keluar reader, dan simpan latar memakai ini */
 function readPct(b) {
-  if ((b.pos || 0) >= (b.total || 1) - 1 && RD.page >= RD.n - 1) return 100; /* halaman terakhir bagian terakhir = Tamat = 100% */
-  const uOk = Array.isArray(b.units) && b.units.length === (b.total || 1) && b.units.length > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
-  return uOk && uSum > 0
-    ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, b.pos).reduce((a, x) => a + x, 0) + b.units[b.pos] * (RD.page + 1) / RD.n) / uSum * 100 - 1e-9)))
-    : Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
+  return pctCalc(b, RD.page, RD.n);
 }
 function flushReadPct() {
   try {
@@ -670,7 +683,7 @@ function weekCard() {
   const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
-  const words = countedVocab(langs, since).length; /* hanya kata yang ada di koleksi Kata */
+  const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
   return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
@@ -1365,7 +1378,7 @@ function showPage(p, anim = true) {
   let sx = RD.ss.find(x => x.pg >= RD.page);
   if (!sx || sx.pg > RD.page) { for (let i = RD.ss.length - 1; i >= 0; i--) if (RD.ss[i].pg < RD.page) { sx = RD.ss[i]; break; } }
   if (sx) b.si = +sx.el.dataset.s;
-  b.pg = RD.page; b.pgN = RD.n;
+  b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
