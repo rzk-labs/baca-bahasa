@@ -1069,6 +1069,7 @@ async function viewBaca() {
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
   tipN = 0;
+  if (!db.seenTip) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
   if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) pauseListenPage(); else startListenPage(); };
@@ -1299,6 +1300,7 @@ function minsLeft(b) {
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
+  if (RD.page > 2) dismissTip(); /* buku sudah dibaca / loncat jauh: panduan tak perlu lagi (semua jalur pindah halaman lewat sini) */
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
   /* kalimat pertama yang mulai di halaman ini; bila tak ada (kalimat panjang menyambung / halaman akhir), pakai kalimat terakhir yang mulai sebelumnya */
