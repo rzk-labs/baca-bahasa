@@ -1,5 +1,11 @@
 [
   {
+    "n": 350,
+    "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
+    "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 344,
     "judul": "Sheet kata/kalimat: spinner lama jadi pesan 'sinyal lemah' + Coba lagi",
     "poin": "Arti kata/kalimat kini bilang \"Sinyalnya lemah nih…\" setelah 8 detik menunggu.",
@@ -171,12 +177,6 @@
     "n": 182,
     "judul": "Kartu arti: saran 'Sudah 3× diketuk, simpan?' + ketukan pertama terasa",
     "poin": "Kartu arti kini menyarankan \"Simpan\" setelah kata diketuk 3 kali.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 174,
-    "judul": "Daftar Tersimpan: rapikan lencana ketukan, kata panjang, & menu urut",
-    "poin": "Lencana ketukan \"N×\" sekarang tampil rapi dengan huruf kecil.",
     "tgl": "2026-11-11"
   }
 ]
