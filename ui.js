@@ -613,12 +613,12 @@ function viewRak() {
     <h1 class="big">${hi},<br><span class="circle-txt">kepoin</span> apa?</h1>
     <div class="mut sm" style="margin:-4px 0 12px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)}${progInfo(cur).pct > 0 ? ` · ${progInfo(cur).pct}% kelar` : ''}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
     </div>
     <div class="stat3">
       <div class="t-sun"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()}</div><div class="lbl2">hari</div></div>
-      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}</div><div class="lbl2">${xt >= GOAL ? `Beres! ${GOAL} XP` : `dari ${GOAL} XP`}</div></div>
+      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Beres! ${xt}/${GOAL} XP` : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -1021,6 +1021,7 @@ async function viewBaca() {
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
+  tipN = 0;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
   if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) pauseListenPage(); else startListenPage(); };
@@ -1075,7 +1076,7 @@ async function viewBaca() {
     if (e.target.closest('.intip')) return;
     let w = e.target.closest('.w');
     if (!w && !e.target.closest('button,a,input,.intip') && e.clientX) w = nearWord(vp, e.clientX, e.clientY);
-    if (w) { RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
+    if (w) { dismissTip(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
@@ -1205,9 +1206,9 @@ function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return 'Sudah tamat';
   const bits = [];
-  if (p.bab) bits.push(`Bab ${p.pos} dari ${p.total}`);
+  if (p.bab) bits.push(`Bab ${p.pos}/${p.total}`);
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
-  const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + `sisa ${nw(mins)}` : '');
+  const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + nw(mins) : '');
   return t + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
 }
 /* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
@@ -1261,7 +1262,7 @@ function showPage(p, anim = true) {
   if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${nw(ml.t)}${ml.bab ? '' : ' (sisa buku)'}` : `Hal ${RD.page + 1}/${RD.n} bab ini · Sisa ${nw(ml.t)}${ml.bab ? '' : ' (sisa buku)'}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : (RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n} bab ini`);
+  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} tersisa` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}`, rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
   if (pb) pb.style.width = b.pct + '%';
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
@@ -1373,10 +1374,13 @@ async function openMarks() {
     toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   });
 }
+let tipN = 0;
+function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
+function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
 function turn(d) {
   const b = book(); closeSheet(); stopListenPage();
   const np = RD.page + d;
-  if (np >= 0 && np < RD.n) { vib(4); showPage(np); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page'); return; }
+  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page'); return; }
   if (d > 0 && b.pos < b.total - 1) { b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page'); viewBaca(); }
   else if (d < 0 && b.pos > 0) { b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { finishBook(b); }
