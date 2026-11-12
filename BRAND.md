@@ -1,79 +1,94 @@
-# Kepo — Brand & UI v8 "Perpustakaan santai"
+# Keepo — Brand & UI v9 "Halaman tenang, stabilo yang kepo"
 
-> v8 (2026-11-12): founder pilih arah A, **tanpa maskot** untuk semua pengguna & bahasa. Acuan: `docs/desain-arah-brand-baru.md`.
-> Riwayat: v7 maskot lime, v6 "fun tapi profesional", v5 neon — ada di riwayat git.
-
-## Brand
-| | |
-|---|---|
-| Nama | **Kepo** (logo teks "Keepo" serif) |
-| Tagline | **Kepoin bahasa baru.** (alternatif: "Baca bukumu sendiri, ngerti bahasanya.") |
-| Rasa | Hangat · tenang · rapi · seperti pojok baca |
-| Maskot | **Tidak ada.** Pakai blok warna flat + ikon garis (`spot()` di ui.js). File `img/kepo-*.webp` tidak dipakai lagi. |
+> v9 (2026-11-12): hasil riset brand mendalam, disetujui founder. Riset & sumber: `docs/riset-brand-identitas.md`.
+> Menggantikan v8 "Perpustakaan santai" (krem/hijau tua/bata, Literata). Riwayat lama ada di git.
 
 ## Intinya
-- Arah A: tenang, hangat, seperti pojok baca. Tanpa maskot.
-- Untuk semua pengguna dan semua bahasa, tidak fokus satu bahasa.
+- **Halaman baca milik pembaca:** polos, tenang, tanpa warna brand.
+- **Satu tanda khas:** kuning stabilo hanya untuk kata yang ditandai.
+- **Tanpa maskot, tanpa neon, tanpa tulisan sok gaul.** Untuk semua pengguna & semua bahasa.
 
 ## 1. Identitas
-- Nama: **Keepo**.
-- Logo: teks serif, tanpa maskot.
-- Ikon aplikasi: huruf K serif hijau tua.
-
-## 2. Warna
-| Peran | Hex |
+| | |
 |---|---|
-| Latar krem | #F4EFE4 |
-| Hijau tua (tinta, tombol pil, tab bar) | #22362B |
-| Oranye bata (aksen, garis, CTA besar) | #C4633A |
-| Oranye bata untuk teks kecil | #9A4420 |
-| Beige (kartu, blok) | #E7DFCD |
-| Blok warna (teks selalu hijau tua) | peach #F2C9A6 · khaki #D8CDB0 · tanah #E3B5A4 · jingga #E39A74 · hijau tengah #3F5B4A (teks putih) · ochre #EDD28F · sage #BFD8C0 |
+| Nama | **Keepo** |
+| Tagline | **Baca bukumu sendiri, ngerti bahasanya.** |
+| Ide brand | Rasa kepo = menandai kata yang bikin penasaran, seperti stabilo di buku. |
+| Rasa | Tenang · jernih · ingin tahu · tidak menggurui |
+| Logo | Kata **"Keepo"** Bricolage Grotesque 800, tinta Plum Noir, dengan **coretan stabilo Wasabi** di separuh bawah huruf (bukan titik, bukan maskot). |
+| Ikon app | Huruf **"K"** Bricolage 800 warna Biru Es di latar Plum Noir, coretan stabilo Wasabi di bawahnya. Ukuran 180/192/512 + maskable. |
+| Maskot | **Tidak ada.** File `img/kepo-*.webp` tidak dipakai. |
 
-Kontras teks min. 4.5:1 (sudah dicek): hijau tua di krem 11.2 · di beige 9.7 · abu-hijau #4F5C54 di beige 5.3 · #9A4420 di krem 5.7.
-Oranye #C4633A **hanya** untuk garis/ikon/blok besar (kontras 3.5), bukan teks kecil.
-Mode sepia & gelap (hijau malam #15201A) tetap ada; teks redup disesuaikan (≥4.5:1).
+Aturan logo: jangan ubah warna stabilo, jangan miring/bayangan, ruang kosong minimal setinggi huruf "e".
 
-- Teks utama pakai tinta di atas latar atau permukaan.
-- Aksen untuk tombol penting dan sorotan kecil.
-- Cek kontras tiap pasangan warna sebelum dipakai.
+## 2. Warna — sistem dua lapis
+### Lapis brand (beranda, menu, tombol, kartu, konten media sosial)
+| Nama | Hex | Peran |
+|---|---|---|
+| Plum Noir | `#351E28` | Tinta: teks, tombol utama, tab bar, logo |
+| Stabilo Wasabi | `#E9F056` | **Hanya** kata ditandai, coretan logo, isi progres |
+| Biru Es | `#D7EFFF` | Latar beranda & menu |
+| Jade | `#AEB8A0` | Kartu sekunder, status |
+| Kertas | `#FAF7F0` | Permukaan kartu, teks di atas Plum |
+| Abu plum | `#6B5E66` | Teks redup (kontras 5,7 di Kertas) |
+
+### Lapis baca (halaman buku; dipilih pengguna di pengaturan baca)
+| Tema | Latar | Teks | Kontras | Kapan |
+|---|---|---|---|---|
+| Kertas (bawaan) | `#FAF7F0` | `#2B2228` | 14,4 | Siang, baca biasa |
+| Sepia | `#F3E9D7` | `#3B2F25` | 10,8 | Baca lama |
+| Hijau tenang | `#E3EEDC` | `#22301F` | 11,6 | Mata lelah |
+| Malam | `#1E1A1D` | `#E8E2DA` | 13,4 | Sebelum tidur |
+
+- Kata ditandai di semua tema: latar `#E9F056`, teks `#351E28` (kontras 12,5).
+- **Jangan** pakai putih murni `#FFF` atau hitam murni `#000` untuk teks/latar baca.
+- Warna brand (Biru Es, Jade) **tidak** masuk ke halaman baca.
+- Kontras teks minimal 4,5:1; teks baca diusahakan ≥7:1.
+- Hindari hijau cerah (milik Duolingo) dan oranye (milik Migaku) sebagai warna utama.
 
 ## 3. Tipografi
-- Judul: **Literata** (serif) 800. Teks UI: **Inter**. Baca: Literata (Klasik) atau Inter (Modern).
-- Google Fonts (preconnect, `display=swap`), di-cache service worker. Cadangan: Georgia / system-ui.
-- Ukuran teks baca tetap bisa diatur pengguna.
+| Peran | Huruf | Ukuran |
+|---|---|---|
+| Judul & logo | **Bricolage Grotesque** 800 | 24–40 px |
+| Antarmuka | **Inter** 400–600 | 13–16 px |
+| Baca Latin | Inter (Modern) atau Literata (Klasik), pilihan pengguna | 17 px, baris 1,6, maks ±65 huruf |
+| Baca Jepang/Mandarin | Noto Sans JP / sistem | 18 px, baris 1,8; furigana min. 9–10 px |
+| Baca Korea | Noto Sans KR / sistem | 17 px, baris 1,7 |
+
+Google Fonts (preconnect, `display=swap`), di-cache service worker. Ukuran teks baca tetap bisa diatur pengguna.
 
 ## 4. Gaya visual
-- **Bento**: blok warna flat bersudut 26 px, tanpa bayangan.
-- Tombol **pil** hijau tua; tab bar pil gelap, tab aktif peach.
-- Keadaan kosong, sapaan, hasil skor: lingkaran warna + ikon garis.
-- Ikon app: huruf K serif krem di latar #22362B (192, 512, maskable, 180).
-- Ikon garis sederhana, tebal garis seragam.
-- Hormati `prefers-reduced-motion`; efek seperlunya.
+- Sudut kartu 16–20 px, tanpa bayangan berat.
+- Tombol **pil**: utama Plum Noir + teks Kertas; kedua permukaan lembut + teks Plum.
+- Ikon garis sederhana, tebal seragam (1,8 px pada 24 px).
+- Gerak seperlunya; hormati `prefers-reduced-motion`.
+- Fokus keyboard terlihat jelas (garis Plum, atau Wasabi di tema Malam).
 
 ## 5. Nada tulisan
-- Tenang & hangat. Kalimat pendek. Pakai "kamu".
-- Tanpa "yuk" dan "gas". Tanpa tumpukan emoji.
-- Benar: "Lanjut di halaman 48, ya."
-- Salah: "Yuk gas lanjut baca!!! 🔥🔥🔥"
+- Seperti teman sekelas yang suka baca: tenang, jelas, pakai "kamu".
+- Kalimat pendek. Fakta, bukan sorak.
+- Tanpa "yuk", "gas", "dong". Emoji maksimal satu, hanya bila membantu arti.
+
+| Hindari | Pakai |
+|---|---|
+| Lanjut baca, yuk! 🔥 | Lanjut di halaman 48. |
+| GAS simpan katanya!! ✨ | 静か masuk daftar kata. |
+| Waduh error nih 😭 | Gagal memuat. Coba lagi sebentar. |
+| Kamu keren banget!! | 12 kata baru minggu ini. |
 
 ## Gamifikasi
 - **XP:** ketuk kata +1 · simpan kata +2 · balik halaman +2 · bab baru +5 · tantangan ngomong +2…+10 (+5 bila ≥85%) · kalahkan boss +3 · kartu hafal +2.
 - **Level** tiap 100 XP · **target harian** 30 XP · **streak** · **10 lencana**.
+- Ditampilkan sebagai angka tenang ("5 hari membaca"), bukan sorakan.
 
 ## Layar
-- **Home:** judul → sapaan → bento (Lanjut baca · Level · Target · Streak · Skor · Tantangan) → lencana → koleksi → Tambah cerita.
-- **Baca:** e-reader layar penuh; ketuk kata → arti kata → arti kalimat → coba ngomongin.
-- **Ngomong:** mic bulat hijau tua, skor per kata (sage/ochre/tanah), cincin skor → boss.
+- **Home:** logo → sapaan → Lanjut baca → angka minggu ini → koleksi → Tambah cerita. Latar Biru Es.
+- **Baca:** layar penuh, lapis baca; ketuk kata → stabilo + lembar arti dari bawah.
+- **Ngomong:** mic bulat Plum Noir, skor per kata, cincin skor → boss.
 - **Kata:** Kartu · Tersimpan · Susah diucap.
-
-## 6. Tidak dipakai lagi
-- Maskot (gelembung chat lime & semua pose).
-- Krem #F2EEE5 dan tinta #2A1215.
-- Font judul Archivo condensed.
-- Fokus satu bahasa.
-
-## 7. Yang tetap
-- XP, level, target harian, streak, dan lencana tetap ada.
-- Alur layar Home, Baca, Ngomong, Kata tidak berubah.
 - Skor ucapan: ≥85 Mantap · 60–84 Dikit lagi · <60 Perlu latihan.
+
+## Tidak dipakai lagi
+- Maskot apa pun. Neon. Archivo condensed.
+- Palet v8: krem `#F4EFE4`, hijau tua `#22362B`, bata `#C4633A`, beige `#E7DFCD`, Literata untuk judul.
+- Fokus satu bahasa.

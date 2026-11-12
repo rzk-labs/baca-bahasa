@@ -40,3 +40,8 @@
 ## 6. Catatan untuk developer
 - File: `ui.js` (`viewBaca`, handler `#rThm`, `#rSpeak`), `style.css` (`.rbar`, `.rtitle`, blok `@media (max-width:360px)`).
 - Hapus handler yang tak dipakai bersama tombolnya.
+
+## 7. Hasil #466: ikon garis ganti emoji di area baca
+- Emoji penanda, tema malam, petunjuk, bab, tamat, arti kata, mic, suara diganti ikon garis.
+- Ikon ikut warna teks tema baca; tombol tetap 44px dan aman di 320px.
+- Fungsi tidak berubah; versi cache naik ke kepo-v133.
