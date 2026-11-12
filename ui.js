@@ -613,10 +613,18 @@ function weekCard() {
   const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
   const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
-  const words = db.vocab.filter(v => (v.at || 0) >= since && !v.noTr).length;
+  const words = db.vocab.filter(v => v && (v.at || 0) >= since).length;
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${it(words, 'kata disimpan')}</div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
+}
+/* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
+function streakInfo() {
+  const cur = streak(), ds = db.days.slice().sort();
+  let best = 0, run = 0, prev = null;
+  for (const d of ds) { run = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1 ? run + 1 : 1; if (run > best) best = run; prev = d; }
+  if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
+  return best > cur ? `Rekor ${best} hari` : cur > 0 ? 'Rekor barumu!' : 'Mulai hari ini yuk';
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -644,8 +652,8 @@ function viewRak() {
         <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
     </div>
     <div class="stat3">
-      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div></div>
-      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Beres! ${xt}/${GOAL} XP` : `XP ${xt}/${GOAL}`}</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
+      <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, `${xt}<small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Beres!' : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
     </div>
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
