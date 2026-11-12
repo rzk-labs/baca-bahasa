@@ -1,5 +1,11 @@
 [
   {
+    "n": 399,
+    "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
+    "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 391,
     "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
     "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
@@ -171,12 +177,6 @@
     "n": 248,
     "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
     "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 246,
-    "judul": "HP kecil: header tak sesak, tab bawah lega, sheet arti tanpa '1/2'",
-    "poin": "Header di HP kecil lebih rapi: tombol dikecilkan, logo tidak terpotong.",
     "tgl": "2026-11-11"
   }
 ]
