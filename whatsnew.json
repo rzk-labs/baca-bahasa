@@ -1,5 +1,11 @@
 [
   {
+    "n": 590,
+    "judul": "Papan Keepo HQ HP: kolom kosong ciut, chip otomatis & QA mudah diketuk",
+    "poin": "Papan HQ di HP lebih rapi: kolom kosong ciut jadi satu baris.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 582,
     "judul": "Rekap kata sesi baca: simpan sementara, tampil walau 1 kata",
     "poin": "Kata yang kamu ketuk kini aman, walau aplikasi tertutup mendadak.",
@@ -171,12 +177,6 @@
     "n": 466,
     "judul": "Ikon garis menggantikan emoji di e-reader & penanda (brand v9)",
     "poin": "Tombol penanda dan bar baca sekarang pakai ikon garis, bukan emoji.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 461,
-    "judul": "Sampul buku & rak ikut brand v9: palet Plum/Biru Es, tanpa emoji",
-    "poin": "Sampul buku kini pakai warna Plum, Biru Es, dan Jade, tanpa emoji.",
     "tgl": "2026-11-12"
   }
 ]
