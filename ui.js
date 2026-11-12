@@ -207,7 +207,17 @@ function wakeSync() {
   } catch (e) { wakeBusy = false; }
 }
 document.addEventListener('visibilitychange', wakeSync);
+/* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
+let rdHist = false, rdSkip = 0;
+function rdLeave() { if (!rdHist) return; rdHist = false; rdSkip++; history.back(); }
+addEventListener('popstate', () => {
+  if (rdSkip) { rdSkip--; return; }
+  if (!rdHist) return;
+  if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
+  rdHist = false; setTab('rak');
+});
 function setTab(t) {
+  if (t !== 'baca') rdLeave();
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
@@ -550,8 +560,9 @@ function finishBook(b) {
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget 🎉'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>'}
-    <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
+    <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
   const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
+  $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
 async function viewBaca() {
   const b = book();
@@ -560,6 +571,8 @@ async function viewBaca() {
   const secs = await pagesOf(b);
   b.pos = Math.max(0, Math.min(b.pos, secs.length - 1));
   document.body.classList.add('reading'); wakeSync();
+  if (!rdHist) { rdHist = true; try { history.pushState({ kepo: 'baca' }, ''); } catch (e) { rdHist = false; } }
+  if (!db.seenHomeHint) { db.seenHomeHint = true; save(); setTimeout(() => toast('Ketuk tengah layar buat menu & balik ke Home'), 600); }
   const sp = secParas(secs[b.pos], b.lang);
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
