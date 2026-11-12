@@ -56,6 +56,35 @@ async function authed(req, env) {
   return same(sig, await hmac(env, exp));
 }
 
+// Tanggal ubah terakhir + ringkasan 1 baris tiap dokumen (1 panggilan GraphQL; gagal = kosong)
+async function docInfo(env, paths) {
+  if (!paths.length) return {};
+  try {
+    const [owner, name] = REPO.split('/');
+    const hist = paths.map((p, i) => `h${i}:history(path:"${p}",first:1){nodes{committedDate}}`).join(' ');
+    const q = `{repository(owner:"${owner}",name:"${name}"){ref:ref(qualifiedName:"refs/heads/main"){target{...on Commit{${hist}}}} tree:object(expression:"main:docs"){...on Tree{entries{name object{...on Blob{text}}}}}}}`;
+    const r = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: { authorization: 'Bearer ' + env.GH_TOKEN, 'user-agent': 'kepo-dev', 'content-type': 'application/json' },
+      body: JSON.stringify({ query: q }),
+    });
+    const d = await r.json();
+    const repo = d && d.data && d.data.repository;
+    if (!repo) return {};
+    const tgt = (repo.ref && repo.ref.target) || {};
+    const teks = {};
+    ((repo.tree && repo.tree.entries) || []).forEach(e => { if (e.object && e.object.text != null) teks['docs/' + e.name] = e.object.text; });
+    const out = {};
+    paths.forEach((p, i) => {
+      const n = tgt['h' + i] && tgt['h' + i].nodes && tgt['h' + i].nodes[0];
+      const baris = String(teks[p] || '').split('\n').map(x => x.trim()).find(x => x && !/^#/.test(x) && !/^[-=*_]{3,}$/.test(x)) || '';
+      const jd = (String(teks[p] || '').split('\n').find(x => /^#\s+\S/.test(x)) || '').replace(/^#\s+/, '').replace(/[*_`]/g, '').trim().slice(0, 90);
+      out[p] = { judul: jd, diubah: n ? n.committedDate : null, ringkas: baris.replace(/[*_`>#]/g, '').replace(/^[-+]\s+/, '').slice(0, 100) };
+    });
+    return out;
+  } catch (e) { return {}; }
+}
+
 function status(issue) {
   const L = issue.labels.map(l => l.name);
   if (L.includes('live')) return 'live';
@@ -71,7 +100,9 @@ const brief = i => {
   const L = lbl(i);
   const p = L.find(x => x.startsWith('peran:'));
   return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'),
-    qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at };
+    qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at,
+    ulang: [...new Set([...((i.title || '') + '\n' + (i.body || '')).matchAll(/(?:revisi|ulang|ulangi|pengganti)[^#\n]{0,25}#(\d+)/gi)].map(x => +x[1]))].filter(x => x !== i.number),
+    rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
 };
 const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing'];
 const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm', 'kepo-pengguna.yml': 'pengguna' };
@@ -112,6 +143,8 @@ async function api(req, env, url) {
       gh(env, `/repos/${REPO}/actions/runs?per_page=15`, { soft: true }),
       gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }),
     ]);
+    const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
+    const docs_info = await docInfo(env, dl);
     let masukan = [];
     const mn = Array.isArray(mi) && mi[0] ? mi[0].number : 0;
     if (mn) {
@@ -120,10 +153,20 @@ async function api(req, env, url) {
       const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
       if (Array.isArray(cs)) masukan = cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at }));
     }
+    const tasks = issues.filter(i => !i.pull_request).map(brief);
+    // isi catatan QA (1 baris) diambil dari komentar, hanya untuk tugas berlabel qa-catatan
+    await Promise.all(tasks.filter(t => t.qa === 'catatan').slice(0, 10).map(async t => {
+      const cs = await gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true });
+      const c = Array.isArray(cs) && cs.filter(x => x.body.includes('QA ada catatan')).pop();
+      if (!c) return;
+      const tx = c.body.split('QA ada catatan**')[1] || '';
+      const ln = tx.split('\n').map(x => x.replace(/^[\s>*#\-•]+/, '').replace(/[*_`]/g, '').trim()).find(x => x.length > 2 && !/^QA agent tidak menulis/.test(x));
+      if (ln) t.qaTeks = ln.slice(0, 200);
+    }));
     return json({
-      tasks: issues.filter(i => !i.pull_request).map(brief),
+      tasks,
       roadmap: road,
-      masukan, masukan_issue: mn,
+      masukan, masukan_issue: mn, docs_info,
       docs: Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md')).map(d => d.path) : [],
       runs: runs && runs.workflow_runs ? runs.workflow_runs.filter(r => WF[r.path.split('/').pop()]).map(r => ({
         jenis: WF[r.path.split('/').pop()], judul: r.display_title, status: r.status, hasil: r.conclusion, mulai: r.run_started_at || r.created_at, url: r.html_url,

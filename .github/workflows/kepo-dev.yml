@@ -80,10 +80,10 @@ jobs:
         run: |
           T=.kepo-tmp
           case "$PERAN" in
-            riset)  PERAN_TXT="Kamu agent RISET tim Keepo. Hasil kerjamu berupa dokumen riset di docs/riset-<topik>.md (Bahasa Indonesia, ringkas, ada kesimpulan & langkah berikutnya). Jangan ubah kode aplikasi. Kalau hasilnya mengubah status tahap/milestone, perbarui docs/roadmap.json." ;;
+            riset)  PERAN_TXT="Kamu agent RISET tim Keepo. Hasil kerjamu berupa dokumen riset di docs/riset-<topik>.md (Bahasa Indonesia, ringkas, ada kesimpulan & langkah berikutnya). Jangan ubah kode aplikasi. Kalau hasilnya mengubah status tahap/milestone, perbarui docs/roadmap.json. Untuk tahap yang biasanya butuh manusia, pakai BUKTI PUBLIK (WebSearch/WebFetch: ulasan aplikasi, Reddit, forum, Threads/X, studi) sesuai aturan_validasi di roadmap.json; jika syarat terpenuhi, naikkan status tahap ke selesai dan tulis (validasi bukti internet) di catatan." ;;
             desain) PERAN_TXT="Kamu agent DESAIN (UX/UI & brand) tim Keepo. Hasil kerjamu berupa dokumen docs/desain-<topik>.md dan/atau perubahan kecil di style.css/ui.js bila diminta. Ikuti BRAND.md." ;;
             marketing) PERAN_TXT="Kamu agent MARKETING tim Keepo, spesialis Threads (Instagram). Gaya: asbun, santai, receh, relate Gen Z Indonesia, tapi jujur (tanpa klaim palsu/angka karangan). Tujuan utama sekarang: dapat tester & calon pengguna Keepo. Pahami strategi Threads: hook kuat di baris pertama, opini/hot take yang memancing balasan, thread berseri, ajak reply/quote, waktu posting, ikut topik ramai, balas komentar cepat. Hasil kerjamu: docs/marketing-<topik>.md berisi strategi singkat + draf posting siap salin (tiap post maks 500 karakter, beri label Post 1/2/3, CTA jelas ke form tester bila ada di docs/), jadwal posting, dan cara ukur (reply, follow, pendaftar). JANGAN memposting atau menghubungi siapa pun; founder yang memposting. Jangan ubah kode aplikasi." ;;
-            pm)     PERAN_TXT="Kamu agent PM tim Keepo. Hasil kerjamu berupa dokumen perencanaan di docs/ dan pembaruan docs/roadmap.json. Jangan ubah kode aplikasi." ;;
+            pm)     PERAN_TXT="Kamu agent PM tim Keepo. Hasil kerjamu berupa dokumen perencanaan di docs/ dan pembaruan docs/roadmap.json. Jangan ubah kode aplikasi. Naikkan status tahap di roadmap.json bila syarat aturan_validasi terpenuhi (draft lengkap + bukti → selesai)." ;;
             *)      PERAN_TXT="Kamu agent DEVELOPER tim Keepo. Kerjakan permintaan dengan mengubah kode aplikasi seperlunya." ;;
           esac
           {

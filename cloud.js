@@ -7,7 +7,7 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak'];
+const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps'];
 
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
@@ -28,7 +28,15 @@ function isoWeekKey(d = new Date()) {
   return `${y}-W${String(w).padStart(2, '0')}`;
 }
 function weekXp() { const wk = isoWeekKey(); return Object.entries(db.xpDay || {}).filter(([d]) => isoWeekKey(new Date(d + 'T12:00:00')) === wk).reduce((a, [, v]) => a + v, 0); }
-const progressData = () => Object.fromEntries(SYNC_KEYS.map(k => [k, db[k]]));
+// taps: kirim maks 1000 kata teratas (ukuran tetap jauh di bawah batas server)
+const topTaps = (t, n = 1000) => Object.fromEntries(Object.entries(t && typeof t === 'object' ? t : {}).sort((a, b) => b[1] - a[1]).slice(0, n));
+const progressData = () => Object.fromEntries(SYNC_KEYS.map(k => [k, k === 'taps' ? topTaps(db.taps) : db[k]]));
+// gabung ketukan: angka terbesar per kunci 'bahasa|kata'
+function mergeTaps(srv) {
+  if (!srv || typeof srv !== 'object') return;
+  if (!db.taps || typeof db.taps !== 'object') db.taps = {};
+  for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
+}
 let lastSync = '';
 async function pushSync(force) {
   if (!db.acct || !API) return;
@@ -37,18 +45,67 @@ async function pushSync(force) {
   await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
   lastSync = sig;
 }
-function applyServer(data) { SYNC_KEYS.forEach(k => { if (data[k] != null) db[k] = data[k]; }); save(); }
+function applyServer(data) { SYNC_KEYS.forEach(k => { if (k === 'taps') mergeTaps(data.taps); else if (data[k] != null) db[k] = data[k]; }); save(); }
 async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden };
   const d = res.data;
   // pilih progres yang lebih maju: data server kalau XP-nya >= XP di HP ini
   if (d && (d.xp || 0) >= (db.xp || 0)) { applyServer(d); toast(`Hai ${db.acct.nick}! Progres kamu sudah dipulihkan ✨`); }
-  else { save(); toast(`Hai ${db.acct.nick}! Progres di HP ini disimpan ke akun ✨`); }
+  else { if (d) mergeTaps(d.taps); save(); toast(`Hai ${db.acct.nick}! Progres di HP ini disimpan ke akun ✨`); }
   await pushSync(true).catch(() => { });
   closeSheet(); setTab(db.tab || 'rak');
+  // catatan jujur: tampil sekali saja setelah login
+  if (!localStorage.getItem('kepo.noteAkun')) { try { localStorage.setItem('kepo.noteAkun', '1'); } catch (e) { } setTimeout(() => toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000), 600); }
 }
 setInterval(() => pushSync().catch(() => { }), 20000);
 addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') pushSync().catch(() => { }); });
+
+/* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
+const NOTE_AKUN = 'Yang ikut akun: XP, kata, lencana. Buku &amp; penanda masih di HP ini.';
+const bkKey = b => (b.lang || '') + '|' + String(b.title || '').trim().toLowerCase();
+function bkCard() {
+  return `<div class="set-row"><div class="mut sm">Simpan cadangan biar aman kalau ganti HP. Teks buku tidak ikut, jadi unggah ulang bukunya.</div>
+    <div class="row"><button class="sec" id="bkOut" type="button">Simpan cadangan penanda &amp; posisi baca</button></div>
+    <div class="row"><button class="sec" id="bkIn" type="button">Pulihkan dari cadangan</button></div>
+    <input type="file" id="bkFile" accept="application/json,.json" hidden></div>`;
+}
+function bkWire() {
+  const o = $('#bkOut'), i = $('#bkIn'), f = $('#bkFile'); if (!o || !i || !f) return;
+  o.onclick = bkSave; i.onclick = () => f.click();
+  f.onchange = () => { const file = f.files && f.files[0]; f.value = ''; if (file) bkRestore(file); };
+}
+function bkSave() {
+  const list = (db.books || []).map(b => ({ title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct, marks: (Array.isArray(b.marks) ? b.marks : []).map(m => ({ p: m.p, s: m.s, t: m.t, at: m.at })) }));
+  if (!list.length) return toast('Belum ada buku buat dicadangkan.');
+  const blob = new Blob([JSON.stringify({ kepo: 'cadangan-penanda', v: 1, at: Date.now(), books: list })], { type: 'application/json' });
+  const u = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = u; a.download = 'kepo-cadangan-penanda.json'; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 2000);
+  toast('Cadangan tersimpan ✅');
+}
+async function bkRestore(file) {
+  let d; try { d = JSON.parse(await file.text()); } catch (e) { d = null; }
+  if (!d || d.kepo !== 'cadangan-penanda' || !Array.isArray(d.books)) return toast('Ini bukan file cadangan Kepo.', 4000);
+  let hit = 0, miss = 0, added = 0;
+  for (const x of d.books) {
+    if (!x || typeof x !== 'object') continue;
+    const b = (db.books || []).find(y => bkKey(y) === bkKey(x));
+    if (!b) { miss++; continue; }
+    hit++;
+    // posisi: hanya diisi kalau buku di HP ini belum dibaca (tidak menimpa)
+    if (!(b.pos > 0) && !(b.si > 0) && Number.isFinite(x.pos) && x.pos > 0) { b.pos = x.pos; b.si = Number.isFinite(x.si) ? x.si : 0; if (x.pct != null) b.pct = x.pct; }
+    const cur = Array.isArray(b.marks) ? b.marks : [];
+    for (const m of Array.isArray(x.marks) ? x.marks : []) {
+      if (!m || !Number.isFinite(m.p) || !Number.isFinite(m.s)) continue;
+      if (cur.some(c => c.p === m.p && c.s === m.s)) continue;
+      if (cur.length >= (typeof MARK_MAX === 'number' ? MARK_MAX : 20)) break;
+      cur.push({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 140), at: m.at || Date.now() }); added++;
+    }
+    b.marks = cur;
+  }
+  save();
+  toast(hit ? `Beres: ${added} penanda ditambah${miss ? `. ${miss} buku belum ada di HP ini (unggah dulu, lalu pulihkan lagi)` : ''}.` : 'Belum ada bukunya di HP ini. Unggah bukunya dulu, lalu pulihkan lagi.', 5000);
+}
 
 /* ---------- UI akun ---------- */
 const initial = n => (n || '?').trim().charAt(0).toUpperCase();
@@ -64,8 +121,9 @@ function openAccount(mode) {
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
       <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">🏆 Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">🙈 Sembunyikan</button></div></div>
-      <div class="mut sm">XP, streak, lencana, dan kata tersimpan otomatis tersinkron ke akun. File cerita tetap di HP ini.</div>
+      <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
+    bkWire();
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
     $('#aSync').onclick = async () => { try { await pushSync(true); toast('Tersinkron ✅'); } catch (e) { toast(e.message); } };
@@ -75,7 +133,7 @@ function openAccount(mode) {
   let m = mode === 'daftar' ? 'daftar' : 'masuk';
   const draw = () => {
     openSheet(`<div class="sh-head"><h2>${m === 'masuk' ? 'Masuk' : 'Bikin akun'}</h2>${closeBtn}</div>
-      <div class="hello-sub">${mascot('happy')}<div class="mut sm">${m === 'masuk' ? 'Lanjutin progres kamu di HP mana aja.' : 'Simpan XP & streak, ikut leaderboard, dan bagikan cerita ke teman.'}</div></div>
+      <div class="hello-sub">${spot('happy')}<div class="mut sm">${m === 'masuk' ? 'Lanjutin progres kamu di HP mana aja.' : 'Simpan XP & streak, ikut leaderboard, dan bagikan cerita ke teman.'}</div></div>
       <div class="seg" id="aMode"><button data-v="masuk" class="${m === 'masuk' ? 'on' : ''}">Masuk</button><button data-v="daftar" class="${m === 'daftar' ? 'on' : ''}">Daftar</button></div>
       <form id="aForm" autocomplete="on">
         <label class="eyebrow" style="display:block;margin-top:14px">Username<input id="aU" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, angka, _" required></label>
@@ -154,7 +212,7 @@ async function openSharedFromUrl() {
   try {
     const s = await api('/share/' + encodeURIComponent(id));
     const exists = db.books.find(b => b.shareId === s.id);
-    $('#shIn').outerHTML = `<div class="hello-sub">${mascot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
+    $('#shIn').outerHTML = `<div class="hello-sub">${spot('wow')}<div><b>${esc(s.by)}</b> ngajak kamu baca:</div></div>
       <div class="vitem">${cover({ title: s.title })}<div class="inf"><div class="w1">${esc(s.title)}</div><div class="s1">${langName(s.lang)} · ${s.paras.length} paragraf</div></div></div>
       <div class="row"><button class="pri" id="shAdd">${exists ? 'Buka cerita' : '➕ Tambah ke koleksi'}</button></div>`;
     $('#shAdd').onclick = async () => {

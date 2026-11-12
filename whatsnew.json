@@ -1,110 +1,182 @@
 [
   {
-    "n": 90,
-    "judul": "E-reader: sisa waktu baca akurat & footer halaman tak terpotong",
-    "poin": "Sisa waktu baca sekarang lebih jujur, dan geser halaman lebih mulus.",
-    "tgl": "2026-11-11"
+    "n": 491,
+    "judul": "Penanda: urut sesuai urutan buku & 'Ke penanda' paling dekat posisi baca",
+    "poin": "Daftar penanda sekarang bisa diurutkan: Terbaru atau Urutan buku.",
+    "tgl": "2026-11-12"
   },
   {
-    "n": 89,
-    "judul": "E-reader: footer halaman tak terpotong di HP kecil & tombol dengar rapi",
-    "poin": "Teks halaman di bawah layar baca sekarang lebih pendek, tidak terpotong di HP kecil.",
-    "tgl": "2026-11-11"
+    "n": 483,
+    "judul": "Daftar penanda rapi untuk Arab & pembaca layar, urungkan segar",
+    "poin": "Daftar penanda kini rapi untuk buku Arab dan terbaca benar oleh pembaca layar.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Ekspor CSV Anki: aman, tanpa kartu kosong, tombol di atas",
-    "n": 80,
-    "tgl": "2026-11-11",
-    "poin": "Ekspor CSV sekarang melewati kata yang belum ada artinya, jadi tak ada kartu kosong."
+    "n": 476,
+    "judul": "Bar atas e-reader lega di HP 320px: maks 2 tombol kanan",
+    "poin": "Bar atas baca kini satu baris: judul, bab, dan jumlah penanda.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "E-reader: pengaturan lebar margin & mode fokus baris",
-    "n": 74,
-    "tgl": "2026-11-11",
-    "poin": "Pengaturan baca kini punya pilihan lebar margin: sempit, sedang, atau lebar."
+    "n": 471,
+    "judul": "Daftar penanda jelas: potongan lebih panjang, tanggal & posisi %",
+    "poin": "Daftar penanda sekarang menampilkan cuplikan lebih panjang, bab, persen posisi, dan tanggal.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Daftar Tersimpan: tombol hapus kata dijauhkan & dibuat beda dari suara",
-    "n": 64,
-    "tgl": "2026-11-11",
-    "poin": "Tombol hapus kata sekarang jauh dari tombol suara, di ujung kanan."
+    "n": 466,
+    "judul": "Ikon garis menggantikan emoji di e-reader & penanda (brand v9)",
+    "poin": "Tombol penanda dan bar baca sekarang pakai ikon garis, bukan emoji.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "E-reader: tombol dengar kalimat versi pelan di kartu arti",
-    "n": 63,
-    "tgl": "2026-11-11",
-    "poin": "Kartu arti kalimat sekarang punya tombol Pelan untuk dengar kalimat lebih lambat."
+    "n": 461,
+    "judul": "Sampul buku & rak ikut brand v9: palet Plum/Biru Es, tanpa emoji",
+    "poin": "Sampul buku kini pakai warna Plum, Biru Es, dan Jade, tanpa emoji.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "E-reader: sorotan kata & garis bawah jelas di tema Sepia/Gelap",
-    "n": 55,
-    "tgl": "2026-11-11",
-    "poin": "Sorotan kata di tema Terang dan Sepia kini punya garis tebal, jadi jelas terlihat."
+    "n": 452,
+    "judul": "Lapis baca v9: 4 tema (Kertas, Sepia, Hijau, Malam) & tipografi per bahasa",
+    "poin": "Halaman baca kini punya 4 tema: Kertas, Sepia, Hijau, Malam.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Ringkasan kata baru setelah selesai baca satu buku",
-    "n": 54,
-    "tgl": "2026-11-11",
-    "poin": "Selesai baca buku, muncul ringkasan kata baru dari sesi itu."
+    "n": 451,
+    "judul": "Terapkan brand v9: palet Plum/Biru Es/Wasabi, logo & ikon K",
+    "poin": "Warna app sekarang ikut brand baru: Plum, Biru Es, Jade, dan stabilo kuning.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Kartu arti kata: jangan tutupi kalimat yang lagi dibaca",
-    "n": 48,
-    "tgl": "2026-11-11",
-    "poin": "Kartu arti kata sekarang lebih pendek dan lebih rapat."
+    "n": 448,
+    "judul": "Tab Kata 'Tersimpan': toolbar rapi di HP, kartu kata tenang",
+    "poin": "Tab Kata: kotak cari + jumlah di atas, Urutkan & Saring sebaris di bawahnya.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Ekspor kata tersimpan ke CSV (siap impor Anki)",
-    "n": 47,
-    "tgl": "2026-11-11",
-    "poin": "Kata tersimpan sekarang bisa diunduh jadi file untuk aplikasi kartu hafalan."
+    "n": 442,
+    "judul": "Sheet kata: tombol perluas frasa ‹ › sejajar, jelas & mudah diketuk",
+    "poin": "Tombol perluas frasa di sheet kata kini sejajar, kiri dan kanan.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Anti-rusak: simpan penuh, cache offline aman, impor offline",
-    "n": 41,
-    "tgl": "2026-11-11",
-    "poin": "Memori HP penuh sekarang diberi tahu, bukan bikin aplikasi error."
+    "n": 437,
+    "judul": "Tema baca Sepia & Gelap: kontras teks, penanda kata & sheet diperiksa",
+    "poin": "Teks di tema Sepia dan Gelap ternyata sudah cukup jelas dibaca.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "E-reader: tahan lama di kalimat langsung munculkan arti kalimat",
-    "n": 39,
-    "tgl": "2026-11-11",
-    "poin": "Tahan satu kalimat di e-reader, arti kalimatnya langsung muncul."
+    "n": 433,
+    "judul": "Sheet arti kata lebih tenang: arti besar, info kecil jadi 1 baris",
+    "poin": "Sheet arti kata lebih tenang: arti besar tepat di bawah kata.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Tab Kata: hapus bisa diurungkan & kata Hafal muncul lagi nanti",
-    "n": 33,
-    "tgl": "2026-11-11",
-    "poin": "Hapus kata sekarang bisa diurungkan lewat tombol \"Urungkan\" beberapa detik."
+    "n": 428,
+    "judul": "Kartu Lanjut baca di Home: pintasan 'Ke penanda' 1 ketuk",
+    "poin": "Kartu \"Lanjut baca\" di Home kini punya tombol \"🔖 Ke penanda\".",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Rapikan ukuran tombol & teks kecil di HP (style.css)",
-    "n": 31,
-    "tgl": "2026-11-11",
-    "poin": "Tombol hapus, bagikan, dan tutup tips lebih besar, tidak mudah salah pencet."
+    "n": 422,
+    "judul": "Toast error: bilang progres aman + tombol Muat ulang",
+    "poin": "Pesan error sekarang tenang: bilang bacaan dan katamu tetap aman.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Arti kata tahan offline: simpan permanen, isi ulang, data aman",
-    "n": 22,
-    "tgl": "2026-11-11",
-    "poin": "Bentrok dengan update terbaru sudah digabung, dua-duanya tetap jalan."
+    "n": 417,
+    "judul": "Bar baca ringan: maks 2 tombol kanan & penanda ada Urungkan",
+    "poin": "Bar baca lebih lega: tombol kanan tinggal Cara baca dan Pengaturan.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Peta masalah membaca dari masukan pengguna AI (Discovery tahap 5 & 8)",
-    "n": 21,
-    "tgl": "2026-11-11",
-    "poin": "Bentrok dengan versi terbaru sudah digabung; catatan kedua pihak tetap ada."
+    "n": 408,
+    "judul": "Terapkan brand A 'Perpustakaan santai': tanpa maskot, serif Literata",
+    "poin": "Tampilan baru \"Perpustakaan santai\" jadi: krem, hijau tua, oranye bata, judul berserif.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Terjemah frasa di e-reader: tap kata lalu perluas ke kata sebelah",
-    "n": 18,
-    "tgl": "2026-11-11",
-    "poin": "Di e-reader, tap kata lalu tekan tombol plus untuk menambah kata sebelah."
+    "n": 404,
+    "judul": "Cache terjemahan lebih ringan & pesan 'ruang penuh' yang jujur",
+    "poin": "Pesan \"ruang penuh\" sekarang jujur: buku aman, yang gagal itu progres atau kata.",
+    "tgl": "2026-11-12"
   },
   {
-    "judul": "Tandai kata tersimpan di teks bacaan (garis bawah halus)",
-    "n": 15,
-    "tgl": "2026-11-11",
-    "poin": "Kata yang sudah kamu simpan sekarang bergaris bawah titik-titik biru di bacaan."
+    "n": 399,
+    "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
+    "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 391,
+    "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
+    "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 387,
+    "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
+    "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 381,
+    "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
+    "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 376,
+    "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
+    "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 369,
+    "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
+    "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 364,
+    "judul": "E-reader: sorotan kata & seleksi jelas di mode terang, sepia, gelap",
+    "poin": "Kata tersimpan sekarang digaris bawah tegas, jadi beda dari kata yang sering diketuk.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 359,
+    "judul": "Sheet kalimat: tombol ‹ › pindah kalimat tanpa tutup sheet",
+    "poin": "Di jendela arti kalimat ada tombol panah kiri dan kanan.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 352,
+    "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
+    "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 350,
+    "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
+    "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 344,
+    "judul": "Sheet kata/kalimat: spinner lama jadi pesan 'sinyal lemah' + Coba lagi",
+    "poin": "Arti kata/kalimat kini bilang \"Sinyalnya lemah nih…\" setelah 8 detik menunggu.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 341,
+    "judul": "Sheet kalimat: tombol balik pulihkan frasa pilihan, bukan 1 kata",
+    "poin": "Tombol balik dari arti kalimat sekarang mengembalikan frasa pilihanmu, bukan 1 kata.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 333,
+    "judul": "HP kecil: streak tetap terlihat & rata teks ikut saat HP diputar",
+    "poin": "Streak api 🔥 sekarang tetap kelihatan di HP kecil, dalam bentuk ringkas.",
+    "tgl": "2026-11-12"
   }
 ]

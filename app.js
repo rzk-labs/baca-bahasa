@@ -9,6 +9,32 @@ const LANGS = {
   pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
 };
 const CJK = l => l === 'ja' || l === 'zh-CN';
+/* Tebak bahasa cerita dari 1.500 karakter pertama; ragu → null. */
+const LANG_HINT = {
+  en: ['the', 'and', 'of', 'to', 'was', 'with', 'that', 'his', 'her'], es: ['el', 'los', 'las', 'del', 'que', 'una', 'por', 'con', 'es'],
+  fr: ['le', 'les', 'des', 'est', 'une', 'que', 'pas', 'dans', 'et'], de: ['der', 'die', 'und', 'das', 'nicht', 'ist', 'ein', 'mit', 'ich'],
+  id: ['yang', 'dan', 'di', 'itu', 'dengan', 'untuk', 'tidak', 'dia', 'ini'], it: ['il', 'di', 'che', 'una', 'per', 'con', 'sono', 'della', 'non'],
+  pt: ['os', 'uma', 'para', 'com', 'não', 'que', 'por', 'do', 'da'], nl: ['de', 'het', 'een', 'van', 'en', 'niet', 'is', 'dat', 'ik'],
+  tr: ['ve', 'bir', 'bu', 'için', 'ile', 'çok', 'da', 'ne', 'ama'], ru: []
+};
+function guessLang(text) {
+  const s = String(text || '').slice(0, 1500);
+  const n = re => (s.match(re) || []).length;
+  if (n(/[぀-ヿ]/g) >= 3) return 'ja';
+  if (n(/[가-힯]/g) >= 3) return 'ko';
+  if (n(/[一-鿿]/g) >= 3) return 'zh-CN';
+  if (n(/[Ѐ-ӿ]/g) >= 10) return 'ru';
+  if (n(/[؀-ۿ]/g) >= 10) return 'ar';
+  const w = s.toLowerCase().match(/[a-zà-ÿ']+/g) || [];
+  if (w.length < 15) return null;
+  let best = null, bs = 0, second = 0;
+  for (const k in LANG_HINT) {
+    if (!LANGS[k]) continue;
+    const set = new Set(LANG_HINT[k]); let c = 0; for (const x of w) if (set.has(x)) c++;
+    if (c > bs) { second = bs; bs = c; best = k; } else if (c > second) second = c;
+  }
+  return bs >= 3 && bs >= second * 1.5 && bs / w.length > 0.05 ? best : null;
+}
 const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */
@@ -19,16 +45,67 @@ let db = (() => {
   try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
   catch (e) { try { localStorage.setItem(KEY + '.rusak', raw); } catch (e2) { } return DEF(); }
 })();
-let fullWarn = 0;
+let fullWarn = 0, trTimer = 0;
 const save = () => {
   try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
   catch (e) {
-    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Memori HP penuh, hapus buku lama dulu', 6000); } catch (e2) { } }
+    // jatah penuh: buang cache terjemahan dulu, lalu coba simpan lagi
+    try {
+      if (trCache.size || localStorage.getItem('bacabahasa.tr')) {
+        trCache.clear(); clearTimeout(trTimer); trTimer = 0;
+        localStorage.removeItem('bacabahasa.tr');
+        localStorage.setItem(KEY, JSON.stringify(db)); return true;
+      }
+    } catch (e3) { }
+    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang browser penuh. Hapus kata yang tak perlu atau kosongkan cache terjemahan (buku kamu aman), lalu coba lagi.', 6000); } catch (e2) { } }
     return false;
   }
 };
-const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 1); r.onupgradeneeded = () => r.result.createObjectStore('t'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+/* ---------- hitung ketukan kata (db.taps: "bahasa|kata" → angka; data lama tanpa kolom = 0) ---------- */
+const TAP_MAX = 2000, TAP_GAP = 3000;
+let lastTap = { k: '', t: 0 };
+const tapKey = (lang, w) => lang + '|' + String(w || '').toLowerCase();
+const tapsOf = (lang, w) => {
+  const v = (db.vocab || []).find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w || '').toLowerCase());
+  return (v && +v.tap > 0 ? +v.tap : 0) + ((db.taps && +db.taps[tapKey(lang, w)]) || 0);
+};
+function countTap(lang, w) {
+  const k = tapKey(lang, w), now = Date.now();
+  if (!lang || !String(w || '').trim()) return 0;
+  const dup = lastTap.k === k && now - lastTap.t < TAP_GAP; lastTap = { k, t: now };
+  if (!db.taps || typeof db.taps !== 'object') db.taps = {};
+  const v = db.vocab.find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w).toLowerCase());
+  if (!dup) {
+    if (v) v.tap = (+v.tap || 0) + 1;
+    else {
+      db.taps[k] = (+db.taps[k] || 0) + 1;
+      const ks = Object.keys(db.taps);
+      if (ks.length > TAP_MAX) ks.filter(x => x !== k).sort((a, b) => db.taps[a] - db.taps[b]).slice(0, ks.length - TAP_MAX).forEach(x => delete db.taps[x]);
+    }
+    save();
+  }
+  return tapsOf(lang, w);
+}
+const takeTaps = (lang, w) => { const k = tapKey(lang, w), n = (db.taps && +db.taps[k]) || 0; if (db.taps) delete db.taps[k]; return n; };
+/* ---------- statistik lokal per buku (db.sentLooks: idBuku → {kata, kalimat}; opsional, tidak disinkron) ---------- */
+const SL_MAX = 200;
+function bumpSentLook(bookId, field) {
+  if (!bookId || (field !== 'kata' && field !== 'kalimat')) return;
+  if (!db.sentLooks || typeof db.sentLooks !== 'object' || Array.isArray(db.sentLooks)) db.sentLooks = {};
+  const old = db.sentLooks[bookId]; delete db.sentLooks[bookId]; // masukkan ulang → urutan terbaru di belakang
+  const o = db.sentLooks[bookId] = { kata: +(old && old.kata) || 0, kalimat: +(old && old.kalimat) || 0 };
+  o[field]++;
+  const ks = Object.keys(db.sentLooks);
+  if (ks.length > SL_MAX) ks.slice(0, ks.length - SL_MAX).forEach(x => delete db.sentLooks[x]);
+  save();
+}
+const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; return { kata: +(o && o.kata) || 0, kalimat: +(o && o.kalimat) || 0 }; };
+// Minta penyimpanan permanen (diam-diam, tanpa pesan). Hasil disimpan di STORAGE_PERSISTED.
+let STORAGE_PERSISTED = null;
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then(ok => { STORAGE_PERSISTED = !!ok; }, () => {}); } catch (e) {}
+const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
+const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
 const delText = id => idbOp('readwrite', s => s.delete(id));
@@ -80,26 +157,56 @@ function paginate(paras, lang) {
 /* ---------- impor file ---------- */
 const loaded = {};
 function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Gagal memuat pustaka (cek internet)')); }; document.head.appendChild(s); })); }
+const JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+const PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+// siapkan pustaka EPUB/PDF lebih awal (sekali per perangkat) supaya impor tetap jalan offline
+function prefetchImportLibs() {
+  try {
+    if (localStorage.getItem('kepo_libs_ready') || !navigator.onLine || navigator.connection?.saveData) return;
+    const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
+    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } }).catch(() => { });
+  } catch (e) { }
+}
+window.addEventListener('load', () => {
+  const go = () => setTimeout(prefetchImportLibs, 0);
+  if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 8000 }); else setTimeout(prefetchImportLibs, 4000);
+});
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
   if (ext === 'epub') return parseEpub(await file.arrayBuffer(), name);
   if (ext === 'pdf') return parsePdf(await file.arrayBuffer(), name);
-  return { title: name, paras: cleanParas(await file.text()) };
+  return { title: name, paras: cleanParas(decodeText(await file.arrayBuffer())) };
+}
+function decodeText(buf) {
+  let s = null;
+  try { s = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+  catch (e) {
+    let best = null, bestBad = Infinity;
+    for (const enc of ['shift_jis', 'gbk', 'big5', 'euc-kr', 'windows-1252']) {
+      let t; try { t = new TextDecoder(enc).decode(buf); } catch (e2) { continue; }
+      const bad = (t.match(/�/g) || []).length;
+      if (bad < bestBad) { best = t; bestBad = bad; }
+      if (bad === 0) break;
+    }
+    s = best != null ? best : new TextDecoder('utf-8').decode(buf);
+  }
+  return s.replace(/^﻿/, '');
 }
 async function parseEpub(buf, fallback) {
-  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+  await loadScript(JSZIP_URL);
   const z = await JSZip.loadAsync(buf);
   const idx = {}; Object.keys(z.files).forEach(k => idx[k.replace(/\\/g, '/').toLowerCase()] = z.files[k]);
   const zf = p => idx[p.toLowerCase()] || null;
   const cf = zf('META-INF/container.xml'); if (!cf) throw new Error('File EPUB tidak valid');
   const cont = await cf.async('string');
-  const opfPath = cont.match(/full-path="([^"]+)"/)[1];
+  const opfPath = (cont.match(/full-path="([^"]+)"/) || [])[1]; if (!opfPath) throw new Error('File EPUB tidak valid');
   const base = opfPath.includes('/') ? opfPath.replace(/[^/]+$/, '') : '';
-  const opf = new DOMParser().parseFromString(await zf(opfPath).async('string'), 'application/xml');
+  const opfFile = zf(opfPath); if (!opfFile) throw new Error('File EPUB tidak valid');
+  const opf = new DOMParser().parseFromString(await opfFile.async('string'), 'application/xml');
   const title = opf.getElementsByTagNameNS('*', 'title')[0]?.textContent?.trim() || fallback;
   const man = {}; for (const it of opf.getElementsByTagNameNS('*', 'item')) man[it.getAttribute('id')] = it.getAttribute('href');
-  const resolve = h => { const parts = (base + decodeURIComponent(h.split('#')[0])).split('/'); const o = []; for (const p of parts) { if (p === '..') o.pop(); else if (p !== '.') o.push(p); } return o.join('/'); };
+  const resolve = h => { let raw = h.split('#')[0]; try { raw = decodeURIComponent(raw); } catch (e) { } const parts = (base + raw).split('/'); const o = []; for (const p of parts) { if (p === '..') o.pop(); else if (p !== '.') o.push(p); } return o.join('/'); };
   const paras = [];
   let chLen = 0;
   for (const ref of opf.getElementsByTagNameNS('*', 'itemref')) {
@@ -116,7 +223,7 @@ async function parseEpub(buf, fallback) {
   return { title, paras: splitLong(paras) };
 }
 async function parsePdf(buf, title) {
-  const V = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  const V = PDFJS_BASE;
   await loadScript(V + 'pdf.min.js');
   pdfjsLib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js';
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
@@ -148,12 +255,16 @@ async function parsePdf(buf, title) {
 }
 
 /* ---------- terjemahan ---------- */
-const TR_KEY = 'bacabahasa.tr', TR_MAX = 500;
+const TR_KEY = 'bacabahasa.tr', TR_MAX = 300;
 const trCache = new Map((() => { try { const x = JSON.parse(localStorage.getItem(TR_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; } })());
-function trPersist() {
+function trFlush() {
+  clearTimeout(trTimer); trTimer = 0;
   while (trCache.size > TR_MAX) trCache.delete(trCache.keys().next().value);
   try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
 }
+function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 3000); }
+document.addEventListener('visibilitychange', () => { if (document.hidden && trTimer) trFlush(); });
+addEventListener('pagehide', () => { if (trTimer) trFlush(); });
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
 const NONLATIN = /[^\u0000-ɏḀ-ỿ\s\d\p{P}]/u;
 /* cara baca (romanisasi): hanya untuk tulisan non-Latin & bila beda dari kata aslinya */
@@ -167,30 +278,40 @@ function ctxOf(v, max) {
 function vocabCSV(list) {
   const q = s => { s = String(s == null ? '' : s).replace(/\r?\n|\r/g, ' ').trim(); if (/^[=+\-@\t]/.test(s)) s = "'" + s; return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const ok = (list || []).filter(v => v && !v.noTr && String(v.t || '').trim());
-  const rows = [['kata', 'arti', 'cara baca', 'bentuk dasar', 'kalimat contoh', 'bahasa']].concat(ok.map(v => [v.w, v.t, bacaOf(v.w, v.baca), baseOf(v.w, v.base), ctxOf(v), (LANGS[v.lang] || [v.lang])[0]]));
+  const tg = x => String(x || '').trim().toLowerCase().replace(/\s+/g, '_').replace(/[^\p{L}\p{N}_]/gu, '').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+  const tagOf = v => { const l = tg((LANGS[v.lang] || [v.lang])[0]), b = tg(v.book); return ['keepo', l && 'bahasa_' + l, b && 'buku_' + b].filter(Boolean).join(' '); };
+  const rows = [['kata', 'arti', 'bentuk dasar', 'cara baca', 'kalimat contoh', 'buku', 'tag', 'diketuk']].concat(ok.map(v => [v.w, v.t, baseOf(v.w, v.base), bacaOf(v.w, v.baca), ctxOf(v), String(v.book || '').trim(), tagOf(v), +v.tap > 0 ? +v.tap : 0]));
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
 /* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
 function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
-async function translate(q, sl, tl) {
+async function fetchTimeout(url, ms = 8000, ext) {
+  const ac = new AbortController(), t = setTimeout(() => ac.abort(), ms);
+  const onAb = () => ac.abort(); if (ext) { if (ext.aborted) ac.abort(); else ext.addEventListener('abort', onAb); }
+  try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
+}
+async function translate(q, sl, tl, signal) {
   const k = sl + '|' + tl + '|' + q;
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
+  const stale = trCache.get(k);
+  if (stale && stale.text && navigator.onLine === false) return stale;
   let out;
   try {
-    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`);
+    const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
     if (!r.ok) throw new Error('gtx ' + r.status);
     const j = await r.json();
     out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
     const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   } catch (e) {
+    if (signal && signal.aborted) throw new Error('dibatalkan');
     try {
-      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`);
+      const r = await fetchTimeout(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`, 8000, signal);
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
       out = { text: t, dict: [], baca: '' };
-    } catch (e2) { throw new Error('Terjemahan gagal (offline atau kuota habis)'); }
+    } catch (e2) { if (stale && stale.text) return stale; throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
   trCache.delete(k); trCache.set(k, out); trPersist();
@@ -216,7 +337,8 @@ function speak(text, lang, rate = 0.9) {
   if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate;
-  const v = speechSynthesis.getVoices().find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
+  const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
+  const v = (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
   if (v) u.voice = v;
   speechSynthesis.speak(u);
 }

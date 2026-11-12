@@ -6,9 +6,9 @@ Live: https://rzk-labs.github.io/baca-bahasa/ (GitHub Pages dari branch `main`, 
 ## Struktur
 - `index.html` — kerangka halaman.
 - `app.js` — logika: penyimpanan IndexedDB, parsing .txt/.epub/.pdf, terjemahan (Google gtx, cadangan MyMemory), suara (Web Speech API), skor ucapan, XP/lencana.
-- `ui.js` — semua tampilan & interaksi (render tab Home/Baca/Ngomong/Kata, e-reader, maskot, pengaturan).
+- `ui.js` — semua tampilan & interaksi (render tab Home/Baca/Ngomong/Kata, e-reader, pengaturan).
 - `cloud.js` — akun, sinkron, leaderboard, bagikan (bicara ke Worker `api/`).
-- `style.css` — gaya. Ikuti `BRAND.md` (latar krem #F2EEE5, tinta #2A1215, blok warna flat, judul Archivo condensed, tombol pil gelap).
+- `style.css` — gaya. Ikuti `BRAND.md` v9 (dua lapis: brand Plum Noir #351E28 / Biru Es #D7EFFF / stabilo Wasabi #E9F056; halaman baca netral 4 tema; Bricolage Grotesque + Inter; tanpa maskot).
 - `sw.js` — service worker. **Setiap kali mengubah file yang di-cache, naikkan versi konstanta `C`** (mis. `kepo-v9` → `kepo-v10`) supaya pengguna dapat versi baru.
 - `img/` — maskot WebP. `api/` — Cloudflare Worker + D1 (jangan diubah kecuali diminta; deploy-nya manual).
 - `dev/` — web "Keepo HQ" (markas tim agent, Cloudflare Worker). Boleh diubah HANYA untuk tugas tentang Keepo HQ (mis. dari masukan Dina). Cek `node --check dev/src/index.js`.

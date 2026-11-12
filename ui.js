@@ -1,10 +1,20 @@
 'use strict';
-/* KEPO v6 — fun tapi profesional (krem, blok warna, maskot doodle). Maskot, XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
-db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; db.mg = db.mg || 'm'; db.focus = !!db.focus;
+/* KEPO v8 — Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
+db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0;
+const effAlign = () => db.align || (window.matchMedia('(max-width:600px)').matches ? 'l' : 'j');
 db.xp = db.xp || 0; db.xpDay = db.xpDay || {}; db.badges = db.badges || []; if (db.sfx == null) db.sfx = true;
 db.stat = Object.assign({ look: 0, save: 0, page: 0, speak: 0, perfect: 0, rem: 0, flash: 0 }, db.stat || {});
-if (!db.v6) { db.v6 = 1; db.theme = 'light'; } db.theme = db.theme || 'light';
+/* Migrasi v9 (sekali): tema lama -> 4 tema baca. 'Ikut HP' dihapus (paling sederhana): auto dipetakan sekali ke Malam bila HP gelap, selain itu Kertas. */
+const THEMES = ['paper', 'sepia', 'green', 'night'];
+if (!db.v9) {
+  const old = db.theme;
+  db.theme = old === 'sepia' ? 'sepia' : old === 'dark' ? 'night' : old === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'paper') : 'paper';
+  if (db.lh && db.lh !== 1.7) db.lhSet = true; /* jarak baris pilihan sendiri tetap dihormati */
+  db.v9 = 1; save();
+}
+if (!THEMES.includes(db.theme)) db.theme = 'paper';
 const GOAL = 30;
+const FEEDBACK_KONTAK = ''; /* isi tautan WhatsApp (https://wa.me/...) atau mailto: tim kalau sudah ada; kosong = hanya bagikan/salin */
 
 /* ---------- ikon ---------- */
 const BM = '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>';
@@ -13,23 +23,26 @@ const ICONS = {
   book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
   mic: '<path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/>',
   cards: '<rect x="3" y="6" width="13" height="16" rx="2.5"/><path d="M8 2h10.5A2.5 2.5 0 0 1 21 4.5V17"/>',
+  bm: BM,
   bmplus: BM + '<path d="M12 7v6M15 10H9"/>', bmcheck: BM + '<path d="m9 10 2 2 4-4"/>',
   vol: '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',
   sliders: '<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
+  ruby: '<path d="M6 6h3M12 6h3"/><path d="M4 12h16"/><path d="M4 18h10"/>',
   left: '<path d="m15 18-6-6 6-6"/>', right: '<path d="m9 18 6-6-6-6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>',
   trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
   stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
   search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
   check: '<path d="M20 6 9 17l-5-5"/>', plus: '<path d="M12 5v14M5 12h14"/>',
-  slow: '<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>', pointer: '<path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="m13 10 5 1a2 2 0 0 1 2 2v3a6 6 0 0 1-6 6h-2a6 6 0 0 1-5-3l-3-5a2 2 0 0 1 3-2l1 1"/>', swipe: '<path d="M5 12h14"/><path d="m15 8 4 4-4 4"/><path d="m9 8-4 4 4 4"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>', mute: '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/>', eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 
-/* ---------- maskot Kepo: gelembung chat lime (ilustrasi ChatGPT, konsep A) ---------- */
-const MOODS = ['curious', 'happy', 'cheer', 'wow', 'sad', 'icon'];
-function mascot(mood = 'curious', cls = '') {
-  if (!MOODS.includes(mood)) mood = 'curious';
-  return `<img class="mascot ${cls}" src="img/kepo-${mood}.webp" alt="" draggable="false" decoding="async">`;
+/* ---------- penanda visual: blok warna flat + ikon sederhana (brand A, tanpa maskot) ---------- */
+const SPOT_ICON = { curious: 'search', happy: 'mic', cheer: 'check', wow: 'mic', sad: 'book', icon: 'book' };
+function spot(mood = 'curious', cls = '') {
+  if (!SPOT_ICON[mood]) mood = 'curious';
+  return `<span class="spot s-${mood} ${cls}" aria-hidden="true">${ico(SPOT_ICON[mood])}</span>`;
 }
 
 /* ---------- utilitas ---------- */
@@ -38,13 +51,12 @@ const today = () => new Date().toISOString().slice(0, 10);
 function markDay() { const d = today(); if (!db.days.includes(d)) { db.days.push(d); db.days = db.days.slice(-400); save(); } }
 function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(d.toISOString().slice(0, 10))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
 function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
-const EMO = ['📖', '🌙', '🚀', '🦊', '🌊', '🍜', '🎧', '🌸', '⚡', '🐉', '🎮', '🍓'];
-const CCOL = ['#D4E94B', '#C9BFFF', '#FFB8DA', '#FF7A59', '#6E8BEA', '#F5CF52', '#BDE8D4', '#FFF6E5'];
-function cover(b) { const h = hue(b.title); return `<div class="cover" style="background:${CCOL[h % CCOL.length]}"><span class="em">${EMO[h % EMO.length]}</span><span>${esc(b.title.slice(0, 34))}</span></div>`; }
+// Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
+const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
+function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = (b.title || '').trim(), ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span><span class="ct">${esc(t.slice(0, 34))}</span></div>`; }
 function applyTheme() {
   document.documentElement.dataset.theme = db.theme;
-  const dark = db.theme === 'dark' || (db.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  document.querySelector('meta[name=theme-color]').content = dark ? '#1A1312' : db.theme === 'sepia' ? '#F4EAD5' : '#F2EEE5';
+  document.querySelector('meta[name=theme-color]').content = { paper: '#FAF7F0', sepia: '#F3E9D7', green: '#E3EEDC', night: '#1E1A1D' }[db.theme] || '#FAF7F0';
 }
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', tr: 'Turki', id: 'Indonesia' };
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', tr: '🇹🇷', id: '🇮🇩' };
@@ -76,7 +88,7 @@ function sfx(kind) {
 function confetti(n = 70) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const box = document.createElement('div'); box.className = 'confetti';
-  const cols = ['#D4E94B', '#C9BFFF', '#FFB8DA', '#FF7A59', '#6E8BEA', '#F5CF52'];
+  const cols = ['#D7EFFF', '#C3E1F4', '#AEB8A0', '#E9F056', '#351E28', '#FAF7F0'];
   for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + 'vw'; p.style.background = cols[i % cols.length]; p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px'); p.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); p.style.animationDelay = Math.random() * .3 + 's'; box.appendChild(p); }
   document.body.appendChild(box); setTimeout(() => box.remove(), 2000);
 }
@@ -95,34 +107,58 @@ const BADGES = [
   ['lv5', '👑', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
 ];
 let badgeQ = Promise.resolve();
+/* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
+const lateQ = []; let lateT = null;
+const isReading = () => document.body.classList.contains('reading');
+function notifyLater(fn) { if (isReading()) lateQ.push(fn); else fn(); }
+function flushLate(force) {
+  if (lateT || !lateQ.length || (isReading() && force !== true)) return;
+  const step = () => { lateT = null; if (!lateQ.length || (isReading() && force !== true)) return; lateQ.shift()(); if (lateQ.length) lateT = setTimeout(step, 2000); };
+  step();
+}
+new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 function award(n, stat) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   const before = level();
   if (n) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = had + n;
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
-    const f = document.createElement('div'); f.className = 'xpfly'; f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), 1200);
-    if (had < GOAL && had + n >= GOAL) setTimeout(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }, 600);
+    const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
+    if (had < GOAL && had + n >= GOAL) setTimeout(() => notifyLater(() => { toast('🎯 Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
-  if (level() > before) setTimeout(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl'), 700);
-  newB.forEach(([, em, name], i) => setTimeout(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }, 1300 + i * 1800));
+  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago 🚀', 'lvl')), 700);
+  newB.forEach(([, em, name], i) => setTimeout(() => notifyLater(() => { toast(`${em} Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
   const el = document.createElement('div'); el.className = 'lvlup';
-  el.innerHTML = `<div class="card">${mascot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
+  el.innerHTML = `<div class="card">${spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
 function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.innerHTML = `🔥 ${streak()}`; if (x) x.innerHTML = `⚡ ${db.xp}`; }
 
 /* ---------- kerangka ---------- */
 let toastT;
+const MSG_SIMPAN_GAGAL = 'Gagal nyimpen bukunya, coba lagi ya. Kalau terus gagal, hapus buku lama dulu.';
+let lastErrToast = 0;
+function globalErr(ev) {
+  const r = ev && (ev.reason || ev.error), msg = String((r && r.message) || (ev && ev.message) || r || '');
+  if (/ResizeObserver|AbortError|Script error/i.test(msg) || (ev && ev.type === 'error' && !ev.error && !ev.message)) return;
+  if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
+  const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
+  console.error(r || msg);
+  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => location.reload() });
+}
+window.addEventListener('error', globalErr);
+window.addEventListener('unhandledrejection', globalErr);
 function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = m; if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(' · ', b); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hide'), ms); }
-function openSheet(html) { $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); }
-function closeSheet() { if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); }
+let sheetRet = null;
+const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
+function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#sheet').setAttribute('aria-label', label || 'Arti kata dan kalimat'); try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } }
 $('#shade').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
@@ -159,9 +195,35 @@ function secParas(sec, lang) {
 }
 const TABS = { rak: ['home', 'Home'], baca: ['book', 'Baca'], bicara: ['mic', 'Ngomong'], kata: ['cards', 'Kata'] };
 $('#tabs').innerHTML = Object.entries(TABS).map(([k, [i, l]]) => `<button data-t="${k}">${ico(i)}<span>${l}</span></button>`).join('');
-const BRAND_TTL = `${mascot('icon')}<span>KEEPO</span>`;
+const BRAND_TTL = `<span>Keepo</span>`;
+// Layar tetap menyala saat e-reader terbuka (Wake Lock). Diam jika gagal/tidak didukung.
+let wakeLock = null, wakeBusy = false;
+function wakeSync() {
+  try {
+    const want = document.body.classList.contains('reading') && db.wake !== false && document.visibilityState === 'visible';
+    if (!want) { if (wakeLock) { const l = wakeLock; wakeLock = null; l.release().catch(() => {}); } return; }
+    if (wakeLock || wakeBusy || !navigator.wakeLock) return;
+    wakeBusy = true;
+    navigator.wakeLock.request('screen').then(l => {
+      wakeBusy = false;
+      if (!(document.body.classList.contains('reading') && db.wake !== false)) { l.release().catch(() => {}); return; }
+      wakeLock = l; l.addEventListener('release', () => { if (wakeLock === l) wakeLock = null; });
+    }, () => { wakeBusy = false; });
+  } catch (e) { wakeBusy = false; }
+}
+document.addEventListener('visibilitychange', wakeSync);
+/* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
+let rdHist = false, rdSkip = 0;
+function rdLeave() { if (!rdHist) return; rdHist = false; rdSkip++; history.back(); }
+addEventListener('popstate', () => {
+  if (rdSkip) { rdSkip--; return; }
+  if (!rdHist) return;
+  if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
+  rdHist = false; setTab('rak');
+});
 function setTab(t) {
-  db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading');
+  if (t !== 'baca') rdLeave();
+  db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
   $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button>`;
@@ -172,43 +234,179 @@ function setTab(t) {
   if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
-const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mascot(mood, 'bob')}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
+const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${spot(mood)}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
 
 /* ---------- pengaturan ---------- */
+function voiceRow(lang) {
+  const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
+  const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
+  if (!vs.length) {
+    const loaded = speechSynthesis.getVoices().length > 0;
+    if (!loaded && !voiceRow.wait) {
+      voiceRow.wait = true;
+      speechSynthesis.addEventListener('voiceschanged', () => {
+        voiceRow.wait = false;
+        const el = $('#vrow'), b = book();
+        if (el && b) el.outerHTML = voiceRow(b.lang);
+        const s = $('#vsel'); if (s) s.onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
+      }, { once: true });
+    }
+    return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><div class="mut sm">${loaded ? 'Perangkat ini belum punya suara untuk bahasa ini' : 'Suara belum termuat, coba buka lagi sebentar'}</div></div>`;
+  }
+  return `<div class="set-row" id="vrow"><div class="eyebrow">Suara baca cerita ini</div><select id="vsel"><option value="">Otomatis</option>${vs.map(v => `<option value="${esc(v.voiceURI)}"${v.voiceURI === cur ? ' selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>`;
+}
+// Ukuran huruf efektif: pilihan pengguna menang; kalau belum pernah diubah, pakai default per bahasa.
+/* Tipografi per bahasa (hanya DEFAULT; pilihan pengguna db.fs/db.fsSet/db.lh/db.lhSet menang). Latin 17/1.6, JP & ZH 18/1.8, KO 17/1.7. */
+const FS0 = { ja: 18, 'zh-CN': 18, ko: 17 };
+const LH0 = { ja: 1.8, 'zh-CN': 1.8, ko: 1.7 };
+const readFs = l => (db.fsSet || (db.fs && db.fs !== 19)) ? db.fs : (FS0[l] || 17);
+const readLh = l => db.lhSet ? db.lh : (LH0[l] || 1.6);
+const LHS = [1.5, 1.7, 1.9];
+const nearLh = v => LHS.reduce((a, c) => Math.abs(c - v) < Math.abs(a - v) ? c : a);
+const PREV = { en: 'The rain stopped, and the street smelled like warm bread. She smiled and kept walking.', ja: '雨が止んで、街はあたたかいパンの匂いがした。彼女は微笑んで歩き続けた。', ko: '비가 그치고 거리에는 따뜻한 빵 냄새가 났다. 그녀는 웃으며 계속 걸었다.', 'zh-CN': '雨停了，街上飘着热面包的香味。她笑了笑，继续往前走。', fr: 'La pluie a cessé, et la rue sentait le pain chaud. Elle sourit et continua de marcher.', de: 'Der Regen hörte auf, und die Straße roch nach warmem Brot. Sie lächelte und ging weiter.', es: 'La lluvia paró y la calle olía a pan caliente. Ella sonrió y siguió caminando.' };
 function openSettings() {
   const b = book();
-  const th = [['light', 'Terang'], ['sepia', 'Sepia'], ['dark', 'Gelap'], ['auto', 'Ikut HP']];
-  const sw = { auto: 'linear-gradient(180deg,#F2EEE5 58%,#1A1312 58%)', light: '#F2EEE5', sepia: '#F4EAD5', dark: '#1A1312' };
-  const ink = { auto: '#2A1215', light: '#2A1215', sepia: '#2E2216', dark: '#FFF6E5' };
-  openSheet(`<div class="sh-head"><h2>Pengaturan</h2>${closeBtn}</div>
-    <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small${k === 'auto' ? ' style="color:#FFF6E5"' : ''}>${l}</small></button>`).join('')}</div></div>
-    <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${db.fs} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
+  const th = [['paper', 'Kertas'], ['sepia', 'Sepia'], ['green', 'Hijau'], ['night', 'Malam']];
+  const sw = { paper: '#FAF7F0', sepia: '#F3E9D7', green: '#E3EEDC', night: '#1E1A1D' };
+  const ink = { paper: '#2B2228', sepia: '#3B2F25', green: '#22301F', night: '#E8E2DA' };
+  const pl = b && PREV[b.lang] ? b.lang : 'en';
+  openSheet(`<div class="sh-head sticky"><h2>Pengaturan</h2>${closeBtn}</div>
+    <div class="set-prev${db.font === 'serif' ? ' serif' : ''}" id="spv" lang="${pl}" aria-hidden="true" style="--reader-lh:${readLh(pl)};font-size:${readFs(b && b.lang)}px;text-align:${effAlign() === 'j' ? 'justify' : 'left'}">${esc(PREV[pl])}</div>
+    ${b && document.body.classList.contains('reading') ? `<div class="set-grp"><div class="set-gt">Penanda &amp; latihan</div>
+    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
+    <div class="set-grp"><div class="set-gt">Tampilan baca</div>
+    <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
     <div class="set-row"><div class="eyebrow">Huruf baca</div><div class="seg" id="fnt"><button data-v="serif" class="${db.font === 'serif' ? 'on' : ''}" style="font-family:var(--font-reader)">Klasik</button><button data-v="sans" class="${db.font === 'sans' ? 'on' : ''}">Modern</button></div></div>
-    <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${[1.5, 1.7, 1.9].map(v => `<button data-v="${v}" class="${db.lh === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Rata teks</div><div class="seg" id="als">${[['l', 'Rata kiri'], ['j', 'Rata penuh']].map(([v, t]) => `<button data-v="${v}" class="${effAlign() === v ? 'on' : ''}">${t}</button>`).join('')}</div></div>
+    <div class="set-row"><div class="eyebrow">Jarak baris</div><div class="seg" id="lhs">${LHS.map(v => `<button data-v="${v}" class="${nearLh(readLh(b && b.lang)) === v ? 'on' : ''}">${v}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Margin halaman</div><div class="seg" id="mgs">${[['s', 'Sempit'], ['m', 'Sedang'], ['l', 'Lebar']].map(([k, l]) => `<button data-v="${k}" class="${db.mg === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Fokus baris</div><div class="seg" id="fcs"><button data-v="0" class="${db.focus ? '' : 'on'}">Mati</button><button data-v="1" class="${db.focus ? 'on' : ''}">Nyala</button></div></div>
-    <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">🔊 Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">🔇 Mati</button></div></div>
+    </div>
+    <div class="set-grp"><div class="set-gt">Bantuan kata</div>
+    ${b && ['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<div class="set-row"><div class="eyebrow">Cara baca di atas kata</div><div class="seg" id="rts">${[[0, 'Mati'], [1, 'Pernah kuketuk'], [2, 'Semua tersimpan']].map(([k, l]) => `<button data-v="${k}" class="${db.rt === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>` : ''}
+    <div class="set-row"><div class="eyebrow">Tandai kata yang sering kuketuk</div><div class="seg" id="mos"><button data-v="1" class="${db.markOften === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.markOften === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata yang diketuk 3× atau lebih dikasih latar tipis di teks.</div></div>
+    <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
+    <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
+    </div>
+    <div class="set-grp"><div class="set-gt">Lainnya</div>
+    <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">${ico('vol')} Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">${ico('mute')} Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
+    ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
     <div class="set-row"><div class="eyebrow">Artiin ke</div><select id="mylang">${langOpts(db.my)}</select></div>
-    <button class="ghost full" id="rst">Balikin setelan awal</button>`);
-  const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = db.fs + 'px'; $('#reader').style.setProperty('--reader-lh', db.lh); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
-  const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
-  $('#fsm').onclick = () => setFs(db.fs - 1); $('#fsp').onclick = () => setFs(db.fs + 1);
+    ${document.body.classList.contains('reading') ? '' : '<button class="sec full fb-open" id="fbSet">Kirim masukan 💬</button>'}
+    ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
+    <button class="ghost full" id="rst">Balikin setelan awal</button>
+    </div>`);
+  if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
+  if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
+  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
+  $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
+  const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
+  const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); db.fsSet = true; save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
+  $('#fsm').onclick = () => setFs(readFs(b && b.lang) - 1); $('#fsp').onclick = () => setFs(readFs(b && b.lang) + 1);
   $$('#thm button').forEach(x => x.onclick = () => { db.theme = x.dataset.v; save(); applyTheme(); $$('#thm button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#fnt button').forEach(x => x.onclick = () => { db.font = x.dataset.v; save(); $$('#fnt button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('serif', db.font === 'serif'); layout(); } });
-  $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
+  $$('#als button').forEach(x => x.onclick = () => { db.align = x.dataset.v; save(); $$('#als button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
+  $$('#lhs button').forEach(x => x.onclick = () => { db.lh = +x.dataset.v; db.lhSet = true; save(); $$('#lhs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#mgs button').forEach(x => x.onclick = () => { db.mg = x.dataset.v; save(); $$('#mgs button').forEach(y => y.classList.toggle('on', y === x)); relayout(); });
   $$('#fcs button').forEach(x => x.onclick = () => { db.focus = x.dataset.v === '1'; save(); $$('#fcs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) { r.classList.toggle('focus', db.focus); $$('.cols .cur').forEach(e => e.classList.remove('cur')); const c = $('#cols'); if (c) c.classList.remove('has-cur'); } });
+  $$('#rts button').forEach(x => x.onclick = () => { db.rt = +x.dataset.v; save(); $$('#rts button').forEach(y => y.classList.toggle('on', y === x)); if (document.body.classList.contains('reading')) viewBaca(); });
+  $$('#mos button').forEach(x => x.onclick = () => { db.markOften = x.dataset.v === '1'; save(); $$('#mos button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-often', !db.markOften); });
+  $$('#bcs button').forEach(x => x.onclick = () => { db.showBaca = x.dataset.v === '1'; save(); $$('#bcs button').forEach(y => y.classList.toggle('on', y === x)); const wb = $('#wbaca'); if (wb) wb.textContent = db.showBaca && wb.dataset.b ? wb.dataset.b : ''; });
+  $$('#wks button').forEach(x => x.onclick = () => { db.wake = x.dataset.v === '1'; save(); $$('#wks button').forEach(y => y.classList.toggle('on', y === x)); wakeSync(); });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
-  $('#rst').onclick = () => { db.fs = 19; db.lh = 1.7; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'light'; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
+  $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.lhSet = false; db.align = null; db.mg = 'm'; db.focus = false; db.font = 'serif'; db.theme = 'paper'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
+  if (typeof bkWire === 'function') bkWire();
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
+}
+
+/* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
+const APP_VER = 'v46';
+function openFeedback() {
+  if (document.body.classList.contains('reading')) return;
+  const kinds = [['rusak', '🐞', 'Ada yang rusak'], ['ide', '💡', 'Ide'], ['suka', '❤️', 'Suka']];
+  let kind = 'ide', stars = 0;
+  openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
+    <div class="seg fb-kind" id="fbK">${kinds.map(([k, e, l]) => `<button data-v="${k}" class="${k === kind ? 'on' : ''}"><span>${e}</span> ${l}</button>`).join('')}</div>
+    <label class="fb-l">Ceritain aja
+      <textarea id="fbT" maxlength="500" rows="5" placeholder="Apa yang bikin kamu kesel, kepikiran, atau seneng?"></textarea></label>
+    <div class="mut sm fb-cnt"><span id="fbC">0</span>/500</div>
+    <div class="eyebrow">Nilai app (boleh dilewati)</div>
+    <div class="fb-stars" id="fbS">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" aria-label="${n} bintang">★</button>`).join('')}</div>
+    <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP (browser, ukuran layar, versi app)</span></label>
+    <div class="mut sm">Yang kamu tulis dibaca tim Keepo.</div>
+    <button class="pri full" id="fbSend" style="margin-top:12px">Kirim</button>`);
+  $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
+  $$('#fbS button').forEach(x => x.onclick = () => { const n = +x.dataset.n; stars = stars === n ? 0 : n; $$('#fbS button').forEach(y => y.classList.toggle('on', +y.dataset.n <= stars)); });
+  $('#fbT').oninput = e => { $('#fbC').textContent = e.target.value.length; };
+  $('#fbSend').onclick = async () => {
+    const txt = $('#fbT').value.trim().slice(0, 500);
+    if (!txt) { toast('Tulis dulu ya, sedikit aja cukup.'); $('#fbT').focus(); return; }
+    const kl = kinds.find(k => k[0] === kind);
+    let msg = `[Keepo] ${kl[1]} ${kl[2]}\n${txt}`;
+    if (stars) msg += `\nBintang: ${stars}/5`;
+    if ($('#fbI').checked) msg += `\nInfo HP: ${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`;
+    try { await putFeedback({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg }); } catch (e) { }
+    const copy = async () => { try { await navigator.clipboard.writeText(msg); toast('Tersalin! Tempel ke pesan buat tim Keepo.', 4500); } catch (e) { toast('Gagal menyalin. Salinan tersimpan di HP-mu.', 4500); } };
+    closeSheet();
+    if (/^(https?:|mailto:)/.test(FEEDBACK_KONTAK)) {
+      await copy();
+      const m = FEEDBACK_KONTAK.startsWith('mailto:');
+      const link = m ? FEEDBACK_KONTAK + '?subject=' + encodeURIComponent('Masukan Keepo') + '&body=' + encodeURIComponent(msg) : FEEDBACK_KONTAK + (FEEDBACK_KONTAK.includes('wa.me') ? '?text=' + encodeURIComponent(msg) : '');
+      window.open(link, '_blank', 'noopener'); return;
+    }
+    if (navigator.share) { try { await navigator.share({ text: msg }); toast('Makasih masukannya! 💚'); return; } catch (e) { if (e && e.name === 'AbortError') { toast('Dibatalin. Salinan tersimpan di HP-mu.'); return; } } }
+    await copy();
+  };
 }
 
 /* ---------- HOME ---------- */
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
-  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#2A1215" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
+  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
+}
+let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa cerita
+/* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
+function autoLang(text) {
+  const g = blManual ? null : guessLang(text);
+  return g || db.lastLang;
+}
+/* Simpan bahasa tebakan + toast, HANYA dipanggil setelah impor sukses. */
+function commitLang(g) {
+  if (!g || g === db.lastLang || blManual) return;
+  db.lastLang = g; save();
+  const sel = $('#bl'); if (sel) sel.value = g;
+  setTimeout(() => toast(`Kelihatannya cerita ${LANG_ID[g] || (LANGS[g] || [g])[0]}, kuganti ya. Salah? Ubah di sini.`, 5000), 400);
+}
+/* Kata hari ini: 1 kata dari vocab (sudah ada arti), deterministik per tanggal, offline. */
+let wodPick = null, wodDay = ''; // wodPick: pilihan 'Kata lain', hanya hidup di sesi
+function wordOfDay(pick = null) {
+  const ok = db.vocab.filter(v => v && !v.noTr && String(v.t || '').trim() && v.w);
+  if (!ok.length) return null;
+  const now = Date.now(), due = ok.filter(v => !v.known && (v.due || 0) <= now);
+  const pool = (due.length ? due : ok).slice().sort((a, b) => ((a.due || a.at || 0) - (b.due || b.at || 0)) || String(a.w).localeCompare(String(b.w)));
+  const top = pool.slice(0, 7), d = new Date(), key = d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate();
+  const v = (pick && ok.includes(pick) && pick) || top[key % top.length];
+  return { n: ok.length, v, b: db.books.find(b => b.title === v.book && b.lang === v.lang) || null };
+}
+function wodHtml() {
+  const day = new Date().toDateString(); if (day !== wodDay) { wodDay = day; wodPick = null; }
+  const k = wordOfDay(wodPick);
+  if (!k) return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-t">Ketuk kata di bukumu, simpan, nanti muncul di sini 👀</div><div class="hero-act"><button class="pri" id="wodRead" style="min-height:44px">Gas baca →</button></div></div>`;
+  const { v, b, n } = k, br = bacaOf(v.w, v.baca), cx = ctxOf(v, 90);
+  return `<div class="tile t-blue wide wod" id="wod"><div class="eyebrow">Kata hari ini</div><div class="wod-w" lang="${esc(v.lang)}">${esc(v.w)}</div>${br ? `<div class="sm">${esc(br)}</div>` : ''}<div class="wod-t">${esc(v.t)}</div>${cx ? `<div class="sm wod-s" lang="${esc(v.lang)}">“${esc(cx)}”</div>` : ''}<div class="hero-act">${b ? `<button class="pri" id="wodOpen" data-bk="${esc(b.id)}" style="min-height:44px">Buka di bukunya →</button>` : ''}${n > 1 ? `<button class="sec" id="wodNext" aria-label="Kata lain" title="Kata lain" style="min-height:44px"><span aria-hidden="true">↻</span> Kata lain</button>` : ''}</div></div>`;
+}
+function bindWod() {
+  if ($('#wodOpen')) $('#wodOpen').onclick = e => { const b = db.books.find(x => String(x.id) === e.currentTarget.dataset.bk); if (b) { db.cur = b.id; save(); setTab('baca'); } };
+  if ($('#wodRead')) $('#wodRead').onclick = () => setTab('baca');
+  if ($('#wodNext')) $('#wodNext').onclick = () => {
+    const cur = wordOfDay(wodPick).v, has = v => v && !v.noTr && String(v.t || '').trim() && v.w;
+    const pool = db.vocab.filter(v => has(v) && v !== cur && v.w !== cur.w);
+    if (pool.length) wodPick = pool[Math.floor(Math.random() * pool.length)];
+    $('#wod').outerHTML = wodHtml(); bindWod(); const nb = $('#wodNext'); if (nb) nb.focus();
+  };
 }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
@@ -220,12 +418,13 @@ function viewRak() {
   const line = lines[(new Date().getDate() + db.books.length) % lines.length];
   const addCard = `<div class="card">
       <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
+      ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
       <div class="add-grid"><button class="main" id="up"><span class="em">📤</span>Upload file</button><button id="paste"><span class="em">📋</span>Tempel teks</button><button id="sample"><span class="em">✨</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur) {
     $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1>
-      <div class="hello-sub">${mascot('cheer', 'bob')}<div class="mut">Halo, aku KEEPO! Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</div></div>
+      <div class="hello-sub">${spot('cheer')}<div class="mut">Halo, aku KEEPO! Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</div></div>
       <div class="steps3"><div class="t-pink"><b>1</b>Masukin cerita favoritmu</div><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
       <div class="sec-h"><h2>Mulai dari sini</h2></div>${addCard}`;
   } else {
@@ -233,15 +432,16 @@ function viewRak() {
     $('#view').innerHTML = `
     <h1 class="big">${hi === 'Pagi' ? 'Pagi' : hi === 'Siang' ? 'Siang' : hi === 'Sore' ? 'Sore' : 'Malam'},<br><span class="circle-txt">kepoin</span> apa?</h1>
     <div class="mut sm" style="margin:-4px 0 8px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
-    <div class="hello-sub">${mascot('curious', 'bob')}<div class="mut">${line}</div></div>
+    <div class="hello-sub">${spot('curious')}<div class="mut">${line}</div></div>
     <div class="bento">
-      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
+      <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca</div><div class="t">${esc(cur.title)}</div><div class="sm">${langName(cur.lang)} · ${pctOf(cur)}% kelar</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka e-reader di penanda terdekat posisi baca">${ico('bm')} Ke penanda</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button></div></div>
+      ${wodHtml()}
       <div class="tile t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:10px"><i style="width:${inLv}%"></i></div></div>
       <div class="tile t-lime"><div class="eyebrow">Target harian</div><div class="goal-row" style="margin-top:6px">${ringSmall(xt / GOAL, `${Math.min(xt, GOAL)}`)}<div class="lbl2">${xt >= GOAL ? 'Beres! 🎉' : `${GOAL - xt} XP lagi`}</div></div></div>
       <div class="tile t-sun"><div class="eyebrow">Streak</div><div class="num">🔥${streak()}</div><div class="lbl2">hari berturut-turut</div></div>
       <div class="tile t-mint"><div class="eyebrow">Skor ngomong</div><div class="num">${avg}</div><div class="lbl2">${db.vocab.length} kata disimpan</div></div>
-      <div class="tile t-cream wide chal" id="hSpeak">${mascot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div><span style="font:800 28px var(--font-display)">→</span></div>
+      <div class="tile t-cream wide chal" id="hSpeak">${spot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div><span style="font:800 28px var(--font-display)">→</span></div>
     </div>
     <div class="sec-h"><h2>Lencana</h2><span class="mut sm">${db.badges.length}/${BADGES.length} kebuka</span></div>
     <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${BCOL[i]}${db.badges.includes(id) ? '' : ' off'}" title="${esc(desc)}"><span class="em">${em}</span><b>${name}</b><span class="d">${desc}</span></div>`).join('')}</div>
@@ -251,19 +451,28 @@ function viewRak() {
     <div class="sec-h"><h2>Tambah cerita</h2></div>${addCard}`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); open('baca'); }; $('#hSpeak').onclick = () => open('bicara');
+    const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = nearMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
+    bindWod();
     animRing($('#view'));
+    heroMins(cur);
   }
-  $('#bl').onchange = e => { db.lastLang = e.target.value; save(); };
+  { const fl = document.createElement('div'); fl.className = 'fb-link'; fl.innerHTML = '<button class="ghost" id="fbHome">Kirim masukan 💬</button>'; $('#view').appendChild(fl); $('#fbHome').onclick = openFeedback; }
+  blManual = false;
+  $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
+  const startSample = async l => {
+    const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
+    if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
+    try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); }
+  };
+  $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   $('#sample').onclick = () => {
     openSheet(`<div class="sh-head"><h2>Cerita contoh</h2>${closeBtn}</div><div class="mut sm">Pilih bahasa ceritanya</div>
       <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span></button>`).join('')}</div>`);
     $$('[data-sl]').forEach(el => el.onclick = () => {
-      const l = el.dataset.sl, S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
       closeSheet();
-      if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
-      addBook(S.title, cleanParas(S.text), l);
+      startSample(el.dataset.sl);
     });
   };
   $('#paste').onclick = () => {
@@ -271,31 +480,77 @@ function viewRak() {
       <label class="eyebrow" style="display:block;margin-top:16px">Judul<input id="pt" placeholder="Contoh: Lirik favorit, cerpen, artikel"></label>
       <label class="eyebrow" style="display:block;margin-top:12px">Teks<textarea id="px" placeholder="Tempel teks bahasa asing di sini…"></textarea></label>
       <div class="row"><button class="sec" data-close>Batal</button><button class="pri" id="ps">Masukin ✨</button></div>`);
-    $('#ps').onclick = () => { const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.'); closeSheet(); addBook($('#pt').value.trim() || x.slice(0, 30) + '…', cleanParas(x), db.lastLang); };
+    $('#ps').onclick = async () => {
+      const x = $('#px').value.trim(); if (!x) return toast('Teksnya masih kosong nih.');
+      const btn = $('#ps'); btn.disabled = true;
+      try { const ps = cleanParas(x); const lg = autoLang(ps.join(' ')); if (await addBook($('#pt').value.trim() || x.slice(0, 30) + '…', ps, lg)) commitLang(lg); closeSheet(); }
+      catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); if (btn.isConnected) btn.disabled = false; }
+    };
   };
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
   $$('[data-del]').forEach(el => el.onclick = async e => {
     e.stopPropagation();
     if (!el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash'); } }, 3000); return; }
-    const id = el.dataset.del; db.books = db.books.filter(b => b.id !== id); if (db.cur === id) db.cur = null; save(); await delText(id); toast('Cerita dihapus.'); viewRak();
+    hapusBuku(el.dataset.del);
   });
+}
+// Hapus buku: teks ditunda 5 dtk biar bisa Urungkan. Id disimpan di daftar 'yatim' (localStorage) kalau app ditutup/gagal; dibersihkan saat app dibuka.
+const YATIM_K = 'kepo-yatim';
+const yatimGet = () => { try { const a = JSON.parse(localStorage.getItem(YATIM_K) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+const yatimSet = a => { try { if (a.length) localStorage.setItem(YATIM_K, JSON.stringify(a)); else localStorage.removeItem(YATIM_K); } catch (e) { } };
+const yatimTambah = id => { const a = yatimGet(); if (!a.includes(id)) yatimSet([...a, id]); };
+const yatimBuang = id => yatimSet(yatimGet().filter(x => x !== id));
+const pendingDel = new Map();
+async function bersihYatim() {
+  for (const id of yatimGet()) {
+    if (db.books.some(b => b.id === id)) { yatimBuang(id); continue; }
+    if (pendingDel.has(id)) continue;
+    try { await delText(id); yatimBuang(id); } catch (e) { }
+  }
+}
+function hapusBuku(id) {
+  const i = db.books.findIndex(b => b.id === id); if (i < 0) return;
+  const book = db.books[i], wasCur = db.cur === id;
+  db.books = db.books.filter(b => b.id !== id); if (wasCur) db.cur = null;
+  save(); yatimTambah(id);
+  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } }, 5000));
+  toast('Cerita dihapus.', 5000, { label: 'Urungkan', fn: () => {
+    if (!pendingDel.has(id)) return;
+    clearTimeout(pendingDel.get(id)); pendingDel.delete(id); yatimBuang(id);
+    if (!db.books.some(b => b.id === id)) db.books.splice(Math.min(i, db.books.length), 0, book);
+    if (wasCur && !db.cur) db.cur = id;
+    save(); viewRak();
+  } });
+  viewRak();
 }
 $('#file').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   if (f.size > 50 * 1024 * 1024) return toast('File-nya kegedean (maks 50 MB).', 5000);
   toast('Lagi nyiapin cerita… ⏳', 60000);
-  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); await addBook(r.title, r.paras, db.lastLang); }
-  catch (err) { console.error(err); toast(/scan|gambar|kosong/.test(err.message) ? 'PDF ini isinya gambar/scan, teksnya nggak kebaca.' : /internet|pustaka/.test(err.message) ? 'Koneksi putus. Coba lagi pas ada internet.' : 'File ini nggak bisa dibuka. Coba file lain ya.', 6000); }
+  try { const r = await parseFile(f); if (!r.paras.length) throw new Error('kosong'); const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg); }
+  catch (err) {
+    console.error(err);
+    if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
+    const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
+    let msg;
+    if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
+    else if (/scan|gambar/.test(m) || (/kosong/.test(m) && isPdf)) msg = 'PDF ini isinya gambar/scan, teksnya nggak kebaca.';
+    else if (/kosong/.test(m)) msg = 'File ini kosong, nggak ada teks yang kebaca.';
+    else if (/internet|pustaka/.test(m) || (!navigator.onLine && (isEpub || isPdf))) msg = 'Impor EPUB/PDF butuh internet sekali dulu. Sambungkan, lalu coba lagi.';
+    else msg = 'File ini nggak bisa dibuka. Coba file lain ya.';
+    toast(msg, 6000);
+  }
 };
 async function addBook(title, paras, lang) {
   const id = 'b' + Date.now().toString(36);
-  await putText(id, paras);
+  try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
   db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
   const prevCur = db.cur;
   db.cur = id;
-  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return; }
+  if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
   toast('Cerita masuk koleksi! 🎉'); sfx('ding'); setTab('baca');
+  return true;
 }
 
 /* ---------- BACA (e-reader) ---------- */
@@ -303,14 +558,16 @@ const SESS = { id: null, t: 0 };
 function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
+  setTimeout(() => flushLate(true), 2500);
   const ws = db.vocab.filter(v => v.book === b.title && v.lang === b.lang && (v.at || 0) >= SESS.t);
-  const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
+  const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   sfx('win'); confetti(60);
-  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat 📚</span>${closeBtn}</div>
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget 🎉'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>'}
-    <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
+    <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
   const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
+  $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
 async function viewBaca() {
   const b = book();
@@ -318,39 +575,53 @@ async function viewBaca() {
   b.opened = Date.now(); if (SESS.id !== b.id) { SESS.id = b.id; SESS.t = Date.now(); } save();
   const secs = await pagesOf(b);
   b.pos = Math.max(0, Math.min(b.pos, secs.length - 1));
-  document.body.classList.add('reading');
+  document.body.classList.add('reading'); wakeSync();
+  if (!rdHist) { rdHist = true; try { history.pushState({ kepo: 'baca' }, ''); } catch (e) { rdHist = false; } }
+  if (!db.seenHomeHint) { db.seenHomeHint = true; save(); setTimeout(() => toast('Ketuk tengah layar buat menu & balik ke Home'), 600); }
   const sp = secParas(secs[b.pos], b.lang);
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
   const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
-  const wordsHtml = s => tokens(s, b.lang).map(t => t.w ? `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}">${esc(t.t)}</span>` : esc(t.t)).join('');
+  const rtMap = new Map();
+  if (db.rt && ['ja', 'ko', 'zh-CN'].includes(b.lang)) for (const v of db.vocab) {
+    const r = v.lang === b.lang && bacaOf(v.w, v.baca); if (!r) continue;
+    if (db.rt === 2 || +v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1) rtMap.set(v.w.toLowerCase(), r);
+  }
+  const oftenMemo = new Map();
+  const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
+  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+  const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
-    return P.h ? `<h2 class="ch">${inner}</h2>` : `<p>${inner}</p>`;
+    return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
   }).join('');
+  const hr = new Date().getHours();
+  const nightChip = db.theme === 'paper' && !db.themeSet && (hr >= 19 || hr < 5 || matchMedia('(prefers-color-scheme: dark)').matches);
   $('#view').innerHTML = `
-    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}" id="reader" lang="${esc(b.lang)}" style="--reader-lh:${db.lh};--reader-mg:${MG[db.mg] || 24}px">
+    <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} dari ${secs.length} ▾</button><span> ⚡ ${xpToday()} XP hari ini</span>` : `<span>⚡ ${xpToday()} XP hari ini</span>`}</div>
-        <button class="icon" id="rSpeak" aria-label="Tantangan ngomong">${ico('mic')}</button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+      ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       <div class="rhead">${esc(chTitle)}</div>
-      <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${db.fs}px">${html}</div></div>
+      <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${html}</div></div>
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div>👆 <b>Ketuk kata</b> = langsung tau artinya<br>✋ <b>Tahan kalimat</b> = arti langsung<br>👉 <b>Geser</b> = ganti halaman<br>☰ <b>Ketuk tengah</b> = menu</div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><div class="rtl"><div>${ico('pointer')}<span><b>Ketuk kata</b> = langsung tau artinya</span></div><div>${ico('pointer')}<span><b>Tahan kalimat</b> = arti langsung</span></div><div>${ico('swipe')}<span><b>Geser / ketuk tepi</b> = ganti halaman (laptop: ← →)</span></div><div>${ico('menu')}<span><b>Ketuk tengah</b> = menu</span></div></div><button id="tipx" aria-label="Tutup petunjuk">${ico('x')}</button></div>`}
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => setTab('rak');
-  $('#rSpeak').onclick = () => setTab('bicara');
-  $('#set').onclick = openSettings;
+  $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
+  if ($('#rRt')) $('#rRt').onclick = () => { db.rt = db.rt ? 0 : 1; save(); viewBaca(); };
+  $('#reader #set').onclick = openSettings;
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
       const t = h ? h.sents.map(x => x.s).join('').trim() : '';
       return `<button class="chi${i === b.pos ? ' on' : ''}" data-ch="${i}"${i === b.pos ? ' aria-current="true"' : ''}><em>${i + 1}</em><span>${esc(t || 'Bab ' + (i + 1))}</span>${i === b.pos ? '<b>Sekarang</b>' : ''}</button>`;
     }).join('');
-    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab 📖</span>${closeBtn}</div><div class="chlist">${items}</div>`);
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Daftar bab</span>${closeBtn}</div><div class="chlist">${items}</div>`);
     $$('#sheet .chi').forEach(x => x.onclick = () => { const i = +x.dataset.ch; closeSheet(); if (i !== b.pos) { b.pos = i; b.si = 0; RD.quiet = true; save(); viewBaca(); } });
     const cur = $('#sheet .chi.on'); if (cur) cur.scrollIntoView({ block: 'center' });
   };
@@ -401,42 +672,132 @@ function layout() {
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
   const total = Math.max(1, Math.round((cols.scrollWidth + G) / (cw + G)));
   RD.step = W + G; RD.n = Math.max(1, Math.ceil(total / per));
-  /* hitung sekali per tata letak: halaman tiap kalimat, kalimat pertama & sisa unit per halaman */
-  const els = [...cols.querySelectorAll('.s')], pg = els.map(el => pageOf(el, cols)), suf = new Array(els.length + 1).fill(0);
-  for (let i = els.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(els[i].textContent, b.lang);
-  RD.first = []; RD.left = []; let j = els.length;
-  for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && pg[j - 1] >= q) j--; RD.first[q] = j < els.length ? +els[j].dataset.s : null; RD.left[q] = suf[j]; }
-  RD.heads = [...cols.querySelectorAll('h2.ch')].map(h => ({ p: pageOf(h, cols), t: h.textContent.trim() }));
+  /* cache halaman tiap kalimat/judul + sisa unit baca per halaman: dihitung sekali per layout, geser halaman cukup membaca array */
+  RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols) }));
+  RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
+  const suf = new Array(RD.ss.length + 1).fill(0);
+  for (let i = RD.ss.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(RD.ss[i].el.textContent, b.lang);
+  RD.left = []; let j = RD.ss.length;
+  for (let q = RD.n - 1; q >= 0; q--) { while (j > 0 && RD.ss[j - 1].pg >= q) j--; RD.left[q] = suf[j]; }
   let p = 0;
   if (RD.toEnd) p = RD.n - 1;
-  else if (b.si) { const k = els.findIndex(el => +el.dataset.s === b.si); if (k >= 0) p = pg[k]; }
+  else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
-/* sisa waktu baca: 150 kata/menit; Jepang/Korea 400 karakter/menit */
-const unitsOf = (t, lang) => /^(ja|ko)/.test(lang) ? t.replace(/\s/g, '').length / 400 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+/* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
+   Latin ~150 kata/mnt; Jepang/Korea/Mandarin ~250 huruf/mnt. Total per bab dihitung sekali per buku. */
+const unitsOf = (t, lang) => {
+  t = t.replace(/\u0001/g, '');
+  return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+};
+/* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
+function heroPos(b, mins, part) {
+  const where = (b.total || 1) > 1 ? `Bab ${(b.pos || 0) + 1} dari ${b.total}` : `Lanjut dari ${pctOf(b)}%`;
+  return esc(where + (mins ? ` · sisa ${mins}` : '')) + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
+}
+/* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
+function fmtMins(m, part) {
+  const n = Math.ceil(m - 1e-9);
+  if (!part) return n < 1 ? '' : `±${Math.max(1, Math.round(m))} mnt`;
+  return n < 1 ? '—' : `≥${n} mnt`;
+}
+const unseen = (b, secs) => !secs.length || (b.total || 1) > secs.length || (secs.length === 1 && secs[0].length === 1 && /^\((kosong|teks hilang)\)$/.test(secs[0][0]));
+async function heroMins(b) {
+  try {
+    const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
+    if (!secs.length) return;
+    const per = secs.map(s => s.reduce((a, p) => a + unitsOf(p, b.lang), 0));
+    const pos = Math.max(0, Math.min(b.pos || 0, secs.length - 1));
+    const frac = secs.length > 1 ? Math.max(0, Math.min(1, pctOf(b) / 100 * secs.length - pos)) : pctOf(b) / 100;
+    let m = per[pos] * (1 - frac);
+    for (let i = pos + 1; i < secs.length; i++) m += per[i];
+    const part = unseen(b, secs), el = $('#heroPos');
+    if (!el || db.cur !== b.id) return;
+    el.innerHTML = heroPos(b, fmtMins(m, part), part);
+  } catch (e) {}
+}
 function minsLeft(b) {
-  let m = RD.left ? RD.left[RD.page] || 0 : 0;
-  const ok = Array.isArray(b.units) && b.units.length === b.total;
+  if (!(RD.n > 0) || !RD.left) return null;
+  let m = RD.left[RD.page] || 0;
+  const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
   if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
   const n = Math.max(1, Math.ceil(m - 1e-9));
-  return ok ? (m < 1e-9 ? '<1 mnt' : `±${n} mnt`) : `bab ini ±${n} mnt`;
+  if (!ok) return { t: `bab ini ±${n} mnt`, part: false };
+  const secs = cache.id === b.id && cache.pages;
+  const part = !secs || unseen(b, secs);
+  return { t: fmtMins(m, part) || '<1 mnt', part };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
-  if (RD.first && RD.first[RD.page] != null) b.si = RD.first[RD.page];
-  let hd = null; for (const h of RD.heads || []) { if (h.p <= RD.page) hd = h; else break; }
-  if (hd) $('.rhead').textContent = hd.t;
+  for (const x of RD.ss) { if (x.pg >= RD.page) { b.si = +x.el.dataset.s; break; } }
+  let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
+  if (hd) $('.rhead').textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
-  $('#pgn').textContent = `Hal ${RD.page + 1}/${RD.n} · ${minsLeft(b)}`;
+  const ml = minsLeft(b);
+  $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
   $('#pbar').style.width = b.pct + '%';
+  syncMarks();
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
-  $('#nx').disabled = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
-  if ($('#nx').disabled && !RD.quiet && !b.doneAt) setTimeout(() => { if (document.body.classList.contains('reading') && RD.page === RD.n - 1) finishBook(b); }, 600);
+  const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
+  nx.disabled = last && !!b.doneAt;
+  if (last && !b.doneAt) { nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else { nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
+}
+/* penanda halaman: b.marks = [{p: bab, s: nomor kalimat, t: potongan teks, at}], maks 20; buku lama tanpa marks tetap aman */
+const MARK_MAX = 20;
+const marksOf = b => Array.isArray(b.marks) ? b.marks : [];
+const okMark = m => m && Number.isFinite(m.p) && Number.isFinite(m.s);
+/* penanda terdekat posisi baca terakhir (bab dulu, lalu kalimat); tanpa posisi -> terbaru */
+const nearMark = b => { if (!Number.isFinite(b.pos) || !Number.isFinite(b.si)) return lastMark(b); const d = m => Math.abs((m.p - b.pos) * 1e6 + (m.s - b.si)); return marksOf(b).filter(okMark).reduce((a, m) => !a || d(m) < d(a) || (d(m) === d(a) && (m.at || 0) > (a.at || 0)) ? m : a, null); };
+const lastMark = b => marksOf(b).reduce((a, m) => m && Number.isFinite(m.p) && Number.isFinite(m.s) && (!a || (m.at || 0) >= (a.at || 0)) ? m : a, null);
+const markHere = b => { const on = new Set(RD.ss.filter(x => x.pg === RD.page).map(x => +x.el.dataset.s)); return marksOf(b).filter(m => m.p === b.pos && on.has(m.s)); };
+function syncMarks() {
+  const b = book(), bt = $('#bmTog'), ls = $('#bmList'); if (!b) return;
+  const on = markHere(b).length > 0, n = marksOf(b).length;
+  if (bt) { bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false'); bt.innerHTML = `${ico('bm')} ${on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini'}`; }
+  const rm = $('#rMk'); if (rm) { rm.hidden = !n; $('#rMkN').textContent = n; }
+  if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
+}
+function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filter(m => cur.includes(m) || gone.includes(m)); save(); syncMarks(); if (!$('#sheet').classList.contains('hide') && $('#sheet').getAttribute('aria-label') === 'Daftar penanda') { if (b.marks.length) openMarks(); else closeSheet(); } }
+function toggleMark() {
+  const b = book(); if (!b) return;
+  const hit = markHere(b);
+  if (hit.length) { const old = marksOf(b); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, hit, old) }); }
+  if (marksOf(b).length >= MARK_MAX) return toast(`Penanda penuh (maks ${MARK_MAX}). Hapus satu dulu ya.`, 3500);
+  const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
+  const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : '';
+  b.marks = marksOf(b).concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
+  save(); syncMarks(); vib(10); sfx('pop'); toast('Halaman ditandai', 1800);
+}
+async function openMarks() {
+  const b = book(); if (!b) return;
+  const secs = await pagesOf(b);
+  let ord = 'baru'; try { if (localStorage.getItem('kepo_markord') === 'buku') ord = 'buku'; } catch (e) {}
+  const list = marksOf(b).slice().sort(ord === 'buku' ? (p, q) => p.p - q.p || p.s - q.s || (q.at || 0) - (p.at || 0) : (p, q) => (q.at || 0) - (p.at || 0) || p.p - q.p || p.s - q.s);
+  /* persen posisi = kalimat ke-s / total kalimat buku (tak berubah saat ukuran font diganti) */
+  const cnt = secs.map(sc => secParas(sc, b.lang).reduce((n, P) => n + P.sents.filter(x => x.i >= 0).length, 0));
+  const total = cnt.reduce((n, c) => n + c, 0) || 1;
+  const pctAt = m => { const before = cnt.slice(0, Math.max(0, m.p)).reduce((n, c) => n + c, 0); return Math.min(100, Math.max(0, Math.round((before + (m.s || 0)) / total * 100))); };
+  const nameOf = m => { const sc = secs[m.p]; const h = sc && secParas(sc, b.lang).find(P => P.h); const t = h ? h.sents.map(x => x.s).join('').replace(/\s+/g, ' ').trim() : ''; return t ? (t.length > 28 ? t.slice(0, 27).trimEnd() + '…' : t) : `Bab ${m.p + 1}`; };
+  const snip = t => { t = (t || '').replace(/\s+/g, ' ').trim(); if (t.length <= 120) return t; const cut = t.slice(0, 120), sp = cut.lastIndexOf(' '); return (sp > 80 ? cut.slice(0, sp) : cut).replace(/[\s,;:.\-–—]+$/, '') + '…'; };
+  const rel = at => { if (!at) return ''; const d = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(at).setHours(0, 0, 0, 0)) / 864e5); if (d <= 0) return 'Hari ini'; if (d === 1) return 'Kemarin'; if (d < 30) return `${d} hari lalu`; return new Date(at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: d > 300 ? 'numeric' : undefined }); };
+  const items = list.map((m, i) => { const r = rel(m.at); return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${esc(snip(m.t) || '…')}</span><small class="mkat" dir="auto">${esc(nameOf(m))} · ${pctAt(m)}%${r ? ` · ${r}` : ''}</small></button><button class="icon mkdel" data-i="${i}" aria-label="Hapus penanda ${i + 1}">${ico('trash')}</button></div>`; }).join('');
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('bm')} Penanda ${list.length}/${MARK_MAX}</span>${closeBtn}</div>${list.length > 1 ? `<div class="seg" id="mkOrd" role="group" aria-label="Urutan penanda"><button data-v="baru" aria-pressed="${ord === 'baru'}" class="${ord === 'baru' ? 'on' : ''}">Terbaru</button><button data-v="buku" aria-pressed="${ord === 'buku'}" class="${ord === 'buku' ? 'on' : ''}">Urutan buku</button></div>` : ''}${list.length ? `<div class="chlist">${items}</div>` : '<div class="mut sm">Belum ada penanda. Buka Pengaturan (ikon slider di bar atas), lalu ketuk Tandai halaman ini.</div>'}`, 'Daftar penanda');
+  $$('#mkOrd button').forEach(x => x.onclick = () => { try { localStorage.setItem('kepo_markord', x.dataset.v); } catch (e) {} openMarks(); });
+  $$('#sheet .mkgo').forEach(x => x.onclick = () => {
+    const m = list[+x.dataset.i]; closeSheet();
+    b.pos = Math.min(m.p, Math.max(0, secs.length - 1)); b.si = m.s; RD.quiet = true; save(); viewBaca();
+  });
+  $$('#sheet .mkdel').forEach(x => x.onclick = () => {
+    const gone = list[+x.dataset.i], old = marksOf(b); b.marks = old.filter(m => m !== gone); save(); syncMarks();
+    if (b.marks.length) openMarks(); else closeSheet();
+    toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
+  });
 }
 function turn(d) {
   const b = book(); closeSheet();
@@ -447,8 +808,8 @@ function turn(d) {
   else if (d > 0) { finishBook(b); }
   else toast('Ini halaman pertama.');
 }
-let rsT; addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) layout(); }, 150); });
-addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
+let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));
+addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || (e.key === ' ' && /BUTTON|A/.test(e.target.tagName))) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 
 /* ---------- sheet arti kata → kalimat ---------- */
 /* geser isi halaman ke atas (tanpa ganti halaman) supaya kata/kalimat terpilih tidak ketutup sheet */
@@ -463,7 +824,30 @@ function keepVisible(sel) {
   RD.dy = -Math.round(Math.min(need, Math.max(0, top - vp.getBoundingClientRect().top - 4)));
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy}px)`;
 }
-async function onWord(el) {
+/* hitung kemunculan kata di buku: dibangun malas sekali per buku (Map kata->jumlah) */
+let freq = { id: null, lang: null, pages: null, map: null, part: false };
+function freqOf(b) {
+  const full = cache.id === b.id && cache.pages;
+  if (!full) { /* teks belum ter-cache: hitung dari halaman yang sedang terbuka, jangan disimpan */
+    const m = new Map(); for (const el of document.querySelectorAll('#cols .w')) { const k = norm(el.textContent); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    return { map: m, part: true };
+  }
+  if (freq.id !== b.id || freq.lang !== b.lang || freq.pages !== full) {
+    const m = new Map();
+    for (const sec of full) for (const p of sec) for (const t of tokens(p, b.lang)) { if (!t.w) continue; const k = norm(t.t); if (k) m.set(k, (m.get(k) || 0) + 1); }
+    freq = { id: b.id, lang: b.lang, pages: full, map: m, part: false };
+  }
+  return freq;
+}
+function showFreq(word, b) {
+  const box = $('#wfreq'); if (!box) return;
+  const k = norm(word);
+  if (!k || /\s/.test(word.trim())) { box.textContent = ''; return; }
+  const f = freqOf(b), n = f.map.get(k) || 0;
+  box.textContent = n >= 3 ? `Muncul ${n}× ${f.part ? 'di bagian yang sudah dibuka' : 'di buku ini'}` : '';
+}
+const sugSeen = new Set();
+async function onWord(el, lastEl) {
   const b = book();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
@@ -471,71 +855,151 @@ async function onWord(el) {
   const ws = [...sEl.querySelectorAll('.w')], MAXW = 5;
   let lo = ws.indexOf(el), hi = lo, word = el.textContent, tr = null, tok = 0;
   const phraseOf = () => { const r = document.createRange(); r.setStartBefore(ws[lo]); r.setEndAfter(ws[hi]); return r.toString().replace(/\s+/g, ' ').trim(); };
-  const isSaved = () => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
+  /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
+  const li = lastEl ? ws.indexOf(lastEl) : -1;
+  if (li > lo && li - lo + 1 <= MAXW) { hi = li; ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi)); word = phraseOf(); }
+  const isSaved =() => db.vocab.some(v => v.w.toLowerCase() === word.toLowerCase() && v.lang === b.lang);
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
-    <div class="sh-head"><span class="stepchip">1/2 · Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexp" aria-label="Perluas ke kata sebelah" title="Perluas" style="margin-left:auto">${ico('plus')}</button></div>
-    <span class="pos" id="wpos"></span>
-    <div class="mut sm" id="wbaca"></div>
-    <div class="mut sm" id="wbase"></div>
-    <div class="tr" id="wtr"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
+    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
+    <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
+    <div class="tr" id="wtr" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
+    <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
-    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" id="wnext">Masih bingung? 👀</button></div>`);
+    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" data-close id="wdone">Selesai</button></div>
+    <div class="row" style="margin-top:10px"><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`);
+  const showSug = n => {
+    const g = $('#wsug'); if (!g) return;
+    const k = b.lang + '|' + word.toLowerCase();
+    if (n < 3 || isSaved() || sugSeen.has(k)) { g.hidden = true; g.innerHTML = ''; return; }
+    sugSeen.add(k);
+    g.innerHTML = `<span>Sudah ${n}× diketuk. Simpan biar gampang diulang?</span><button class="pill-sm" id="wsug-b">Simpan</button>`;
+    g.hidden = false;
+    $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
+  };
+  const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; if (n >= 3) $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('often'); }); showSug(n); };
+  showTap(countTap(b.lang, word));
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
-  const load = () => { const my = ++tok; return translate(word, b.lang, db.my).then(r => {
+  const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}× 👀` : 'Pertama kali kamu cek kata ini'; };
+  const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
+  const savedOf = () => db.vocab.find(v => v.t && v.lang === b.lang && v.w.toLowerCase() === word.toLowerCase());
+  const showSaved = v => {
+    $('#wtr').textContent = v.t;
+    setWBaca(bacaOf(word, v.baca));
+    $('#wbase').textContent = v.base ? 'Bentuk dasar: ' + v.base : '';
+    $('#wpos').textContent = v.pos ? (POS[v.pos] || v.pos) : '';
+    $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
+    keepVisible('.w.sel');
+  };
+  const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
+  const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; retry(); }; };
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(word, b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
+    clearTimeout(slowT);
     tr = r;
     $('#wtr').textContent = r.text;
-    $('#wbaca').textContent = bacaOf(word, r.baca);
+    setWBaca(bacaOf(word, r.baca));
     $('#wbase').textContent = r.base ? 'Bentuk dasar: ' + r.base : '';
     const d = r.dict || [];
     $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
+    setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel');
-  }).catch(() => { if (my === tok && $('#wtr')) { $('#wtr').innerHTML = `<span class="loading">Artinya belum kebuka.</span> <button class="ghost" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
-  load();
-  const updExp = () => { const can = hi - lo + 1 < MAXW && (hi < ws.length - 1 || lo > 0); $('#wexp').disabled = !can; $('#wexp').style.opacity = can ? '' : '.35'; };
+  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
+  load(); bumpLook();
+  const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
   updExp();
-  $('#wexp').onclick = () => {
+  let expT = 0;
+  const grow = dir => {
     if (hi - lo + 1 >= MAXW) return;
-    if (hi < ws.length - 1) hi++; else if (lo > 0) lo--; else return;
+    if (dir > 0 && hi < ws.length - 1) hi++; else if (dir < 0 && lo > 0) lo--; else return;
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
-    word = phraseOf(); tr = null;
-    $('#wword').textContent = word; $('#wpos').textContent = ''; $('#wbaca').textContent = ''; $('#wbase').textContent = '';
-    $('#wdict').innerHTML = ''; $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); load(); keepVisible('.w.sel');
+    word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
+    $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
+    $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
+    $('#wsave').innerHTML = saveLbl(); updExp(); keepVisible('.w.sel');
+    expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
+  $('#wexp').onclick = () => grow(1);
+  $('#wexl').onclick = () => grow(-1);
   $('#wsave').onclick = async () => {
     if (isSaved()) return;
+    const sg = $('#wsug'); if (sg) sg.innerHTML = '';
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
-    db.vocab.unshift({ w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
+    const tp = takeTaps(b.lang, w);
+    db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
     $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
+let lastSentLook = '';
 function showSentence(word, sent, sIdx, sEl) {
   const b = book();
+  /* hitung sekali per kalimat baru (balik ke kata lalu buka lagi kalimat yang sama tidak dihitung ulang) */
+  const slk = b.id + '|' + b.pos + '|' + sIdx + '|' + sent.slice(0, 40);
+  if (slk !== lastSentLook) { lastSentLook = slk; bumpSentLook(b.id, 'kalimat'); }
   sEl.classList.add('hl');
   const marked = !word ? esc(sent) : esc(sent).replace(new RegExp('(^|[^\\p{L}])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=[^\\p{L}]|$)', 'u'), '$1<mark>$2</mark>');
   openSheet(`
-    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">${word ? '2/2 · ' : ''}Arti kalimat</span>${closeBtn}</div>
+    <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
     <div class="src">${marked}</div>
-    <div class="tr sent" id="str"><span class="loading">Lagi nerjemahin kalimat…</span></div>
+    <div id="sbaca"></div>
+    <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
-    <div class="row"><button class="lime" id="spr">🎤 Coba ngomongin</button></div>
+    <div class="row"><button class="lime" id="spr">${ico('mic')} Coba ngomongin</button></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`);
   keepVisible('.s.hl');
-  translate(sent, b.lang, db.my).then(r => { if ($('#str')) { $('#str').textContent = r.text; keepVisible('.s.hl'); } }).catch(() => { if ($('#str')) $('#str').innerHTML = '<span class="loading">Artinya belum kebuka. Coba lagi nanti ya.</span>'; });
+  const strEl = $('#str');
+  const alive = () => $('#str') === strEl;
+  let sSlow = 0, sTok = 0;
+  const loadSent = () => { const my = ++sTok; clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
+    if (!alive() || my !== sTok) return;
+    clearTimeout(sSlow);
+    $('#str').textContent = r.text;
+    const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
+    if (bc && sb) {
+      const v = `<div class="sbaca" lang="${esc(b.lang)}">${esc(bc)}</div>`;
+      sb.innerHTML = db.showBaca ? v : `<button class="ghost sbaca-peek" id="speek" type="button">Lihat cara baca</button>` + v.replace('class="sbaca"', 'class="sbaca hide" id="speekv"');
+      if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
+    }
+    keepVisible('.s.hl');
+  }).catch(() => {
+    if (!alive() || my !== sTok) return;
+    clearTimeout(sSlow);
+    const off = !navigator.onLine;
+    $('#str').innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Artinya belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="sretry">Coba lagi</button>`;
+    $('#sretry').onclick = () => { $('#str').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; loadSent(); };
+  }); };
+  loadSent();
   $('#ssp').onclick = () => speak(sent, b.lang);
   $('#ssl').onclick = () => speak(sent, b.lang, 0.6);
-  if ($('#sback')) $('#sback').onclick = () => { const el = sEl.querySelector('.w.sel'); if (el) onWord(el); };
+  if ($('#sback')) $('#sback').onclick = () => { const sel = sEl.querySelectorAll('.w.sel'); if (sel.length) onWord(sel[0], sel[sel.length - 1]); };
   $('#spr').onclick = () => { b.si = sIdx; save(); setTab('bicara'); };
+  /* pindah ke kalimat tetangga: sheet tetap terbuka, sorot ikut pindah, halaman/bab menyusul */
+  const body = () => [...document.querySelectorAll('#cols .s')].filter(e => !e.closest('h2'));
+  const nb = d => { const l = body(), i = l.indexOf(sEl); return i < 0 ? null : l[i + d] || null; };
+  const atEdge = d => !nb(d) && (d > 0 ? b.pos >= (b.total || 1) - 1 : b.pos <= 0);
+  const sp = $('#sprev'), sn = $('#snext');
+  sp.disabled = atEdge(-1); sn.disabled = atEdge(1);
+  sp.style.opacity = sp.disabled ? '.35' : ''; sn.style.opacity = sn.disabled ? '.35' : '';
+  const open = el => { $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); const pg = pageOf(el, $('#cols')); if (pg !== RD.page) showPage(pg); vib(6); showSentence('', el.textContent.trim(), +el.dataset.s, el); };
+  const step = async d => {
+    const el = nb(d); if (el) return open(el);
+    if (d > 0 && b.pos < (b.total || 1) - 1) { b.pos++; b.si = 0; }
+    else if (d < 0 && b.pos > 0) { b.pos--; b.si = 0; RD.toEnd = true; }
+    else return;
+    RD.quiet = true; save(); closeSheet(); await viewBaca();
+    const l = body(), t = d > 0 ? l[0] : l[l.length - 1];
+    if (t) open(t); else toast('Bab ini kosong. Geser halaman aja ya.');
+  };
+  sp.onclick = () => step(-1); sn.onclick = () => step(1);
 }
 
 /* ---------- NGOMONG (tantangan) + BOSS (remedial) ---------- */
@@ -605,7 +1069,7 @@ async function viewBicara() {
     micState(btn, lbl, 'idle', 'Coba lagi'); $('#rech').textContent = '';
     const [k, label, msg, mood] = SCORE(avg);
     const gain = Math.max(2, Math.round(avg / 10)) + (avg >= PASS ? 5 : 0);
-    $('#res').innerHTML = `<div class="result">${mascot(mood, 'jump')}${ringHtml(avg)}<h2>${label}</h2><div class="sm">${msg}</div><div class="chips" style="justify-content:center"><span class="chip ${k}">${sc.filter(x => x >= PASS).length}/${sc.length} kata pas</span><span class="chip xp">+${gain} XP</span></div></div>`;
+    $('#res').innerHTML = `<div class="result">${spot(mood, 'jump')}${ringHtml(avg)}<h2>${label}</h2><div class="sm">${msg}</div><div class="chips" style="justify-content:center"><span class="chip ${k}">${sc.filter(x => x >= PASS).length}/${sc.length} kata pas</span><span class="chip xp">+${gain} XP</span></div></div>`;
     animRing($('#res'));
     if (avg >= PASS) { sfx('win'); confetti(); vib([10, 40, 10]); } else sfx('soft');
     award(gain, 'speak'); if (avg >= 95) award(0, 'perfect');
@@ -616,7 +1080,7 @@ async function viewBicara() {
       <div class="chips">${worst.map(x => chip(x.p, x.w)).join('')}</div>
       <div class="row"><button class="pri" id="goRem">⚔️ Lawan ${worst.length} kata</button></div></div>`;
     $('#goRem').onclick = () => remedial(worst, b.lang, $('#remed'), () => {
-      $('#remed').innerHTML = `<div class="card center">${mascot('cheer', 'jump')}<h2>Boss kalah! 🎉</h2><div class="mut sm">Sekarang coba ngomongin kalimatnya utuh lagi.</div><div class="row"><button class="lime" id="again">🎤 Ngomong lagi</button></div></div>`;
+      $('#remed').innerHTML = `<div class="card center">${spot('cheer', 'jump')}<h2>Boss kalah! 🎉</h2><div class="mut sm">Sekarang coba ngomongin kalimatnya utuh lagi.</div><div class="row"><button class="lime" id="again">🎤 Ngomong lagi</button></div></div>`;
       sfx('win'); confetti();
       $('#again').onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); btn.click(); };
     });
@@ -670,47 +1134,80 @@ function remedial(list, lang, box, done) {
 }
 
 /* ---------- KATA: kartu swipe + daftar ---------- */
-let kataSeg = 'kartu', kataQ = '', flipped = false;
-const REVIEW_DAYS = [1, 3, 7, 14], DAY_MS = 864e5;
-const isDue = v => v.known && (v.kd || 0) + REVIEW_DAYS[Math.min(v.kn || 0, 3)] * DAY_MS <= Date.now();
+let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru';
+const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
+let deckDone = 0, deckHint = '';
+const isDue = v => !v.known && (v.due || 0) <= Date.now();
 function viewKata() {
-  let mig = false; db.vocab.forEach(v => { if (v.known && !v.kd) { v.kd = Date.now(); v.kn = 0; mig = true; } }); if (mig) save();
+  let mig = false; db.vocab.forEach(v => { if (v.known && (v.lv || 0) < 4) { v.known = false; v.lv = v.lv || 0; v.due = v.due || 0; mig = true; } }); if (mig) save(); deckDone = 0; deckHint = '';
   const weakAll = Object.values(db.weak).filter(o => o.last < PASS).sort((a, b) => a.last - b.last);
   const known = db.vocab.filter(v => v.known).length;
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
     <div class="sum"><div class="t-lime"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="t-lav"><b>${known}</b><span>Udah hafal</span></div><div class="t-pink"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
+    ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
     <div class="seg" id="kseg"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}">⚡ Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}">Susah diucap</button></div>
     <div id="kbody"></div>`;
   $$('#kseg button').forEach(x => x.onclick = () => { kataSeg = x.dataset.v; sfx('pop'); viewKata(); });
   const kb = $('#kbody');
   if (kataSeg === 'kartu') return deck(kb);
-  kb.innerHTML = `<div class="search">${ico('search')}<input id="kq" type="search" placeholder="Cari kata…" value="${esc(kataQ)}" aria-label="Cari kata"></div><div id="klist"></div>`;
+  kb.innerHTML = `<div class="ksrow"><div class="search">${ico('search')}<input id="kq" type="search" placeholder="Cari kata…" value="${esc(kataQ)}" aria-label="Cari kata"></div><div class="csvcnt" id="kcnt" aria-live="polite"></div></div><div id="klist"></div>`;
   $('#kq').oninput = e => { kataQ = e.target.value; renderList(); };
   const renderList = () => {
     const q = kataQ.toLowerCase(), kl = $('#klist');
     if (kataSeg === 'simpan') {
-      const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => !q || (v.w + ' ' + v.t).toLowerCase().includes(q));
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(v.lang)}">${esc(v.w)} ${v.known ? '✅' : ''}</div>${bacaOf(v.w, v.baca) ? `<div class="mut sm">${esc(bacaOf(v.w, v.baca))}</div>` : ''}<div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div><div class="s1">${esc(ctxOf(v))}</div></div>
+      const langs = [...new Set(db.vocab.map(v => v.lang).filter(Boolean))], books = [...new Set(db.vocab.map(v => v.book).filter(Boolean))];
+      if (csvF !== 'all' && !langs.some(l => csvF === 'l:' + l) && !books.some(b => csvF === 'b:' + b)) csvF = 'all';
+      const inF = v => csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2));
+      const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => inF(v) && (!q || (v.w + ' ' + v.t).toLowerCase().includes(q)));
+      if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ' <span class="vok" title="Udah hafal" aria-label="Udah hafal">✓</span>' : ''}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div>${(() => { const m = [bacaOf(v.w, v.baca), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div></div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
-        : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
+        : (q || csvF !== 'all') && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('curious', 'Belum ada kata', 'Pas baca, ketuk kata → Simpan. Nanti muncul di sini.', 'Mulai baca', "setTab('baca')");
       if (db.vocab.length) {
-        kl.insertAdjacentHTML('afterbegin', `<div class="row"><button class="pri" id="kCsv" style="min-height:48px">⬇️ Ekspor CSV</button></div>`);
-        $('#kCsv').onclick = async () => {
-          const ready = db.vocab.filter(v => !v.noTr && (v.t || '').trim()).length;
+        const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
+        const opt = (val, txt) => `<option value="${esc(val)}"${csvF === val ? ' selected' : ''}>${esc(txt)}</option>`;
+        const filt = langs.length + books.length > 2 || langs.length > 1 || books.length > 1
+          ? `<select id="kCsvF" aria-label="Saring kata per bahasa atau buku">${opt('all', 'Semua kata')}${langs.length > 1 ? `<optgroup label="Per bahasa">${langs.map(l => opt('l:' + l, langName(l))).join('')}</optgroup>` : ''}${books.length > 1 ? `<optgroup label="Per buku">${books.map(b => opt('b:' + b, b)).join('')}</optgroup>` : ''}</select>` : '';
+        const sortSel =`<select id="kSort" class="csvsort" aria-label="Urutkan kata"><option value="baru"${kataSort === 'baru' ? ' selected' : ''}>Urutan: Terbaru</option><option value="tap"${kataSort === 'tap' ? ' selected' : ''}>Paling sering diketuk</option></select>`;
+        $('#kcnt').innerHTML = csvF === 'all' ? `<b>${db.vocab.length}</b> kata` : `<b>${db.vocab.filter(inF).length}</b> dari ${db.vocab.length}`;
+        kl.insertAdjacentHTML('afterbegin', `<div class="csvbar">${sortSel}${filt}</div>`);
+        if (vocab.length) kl.insertAdjacentHTML('beforeend', `<button class="ghost csvexp" id="kCsvHow">Ekspor ke Anki</button>`);
+        $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
+        if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; renderList(); };
+        const exportCsv = async () => {
+          const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya 😅');
-          const blob = new Blob([vocabCSV(db.vocab)], { type: 'text/csv;charset=utf-8' });
+          const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+          const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
+          const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
+          // iPhone/PWA: unduh lewat <a download> sering diam, jadi menu Bagikan dulu.
+          const iosLike = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+          const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+          let f = null;
+          try { f = new File([blob], fn, { type: 'text/csv' }); } catch (e) {}
+          if (f && (iosLike || standalone) && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
+            try { await navigator.share({ files: [f], title: fn }); return toast('Siap dibagikan ✨'); }
+            catch (e) { if (e && e.name === 'AbortError') return toast('Dibatalin, nggak apa-apa 👌'); }
+          }
           try {
             const a = document.createElement('a'), u = URL.createObjectURL(blob);
-            a.href = u; a.download = 'kepo-kata.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
-            toast(`kepo-kata.csv udah diunduh (${ready} kata) ✨`);
+            a.href = u; a.download = fn; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+            toast(`${fn} udah diunduh (${ready} kata) ✨`);
           } catch (e) {
             try {
-              const f = new File([blob], 'kepo-kata.csv', { type: 'text/csv' });
-              if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: 'kepo-kata.csv' }); toast('Siap dibagikan ✨'); }
+              if (f && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: fn }); toast('Siap dibagikan ✨'); }
               else toast('Perangkat ini belum bisa unduh CSV 😢');
             } catch (e2) { if (e2 && e2.name !== 'AbortError') toast('Gagal ekspor, coba lagi ya'); }
           }
+        };
+        if ($('#kCsvHow')) $('#kCsvHow').onclick = () => {
+          openSheet(`<div class="sh-head"><h2>Ekspor ke Anki</h2>${closeBtn}</div>
+          <button class="csvbtn csvgo" id="kCsv">Unduh CSV (${readyN()} kata)</button>
+          <p class="mut sm">Cara impor: pakai Anki di laptop.</p>
+          <ol class="csvsteps"><li>Buka <b>File → Import</b>, pilih file CSV Keepo.</li><li>Atur <b>kolom 1 = Depan</b>, kolom lainnya = Belakang.</li><li>Pilih <b>perbarui catatan</b> yang ada, lalu Import.</li></ol>
+          <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`);
+          $('#kCsv').onclick = exportCsv;
         };
       }
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
@@ -735,24 +1232,28 @@ function viewKata() {
 }
 function deck(kb) {
   if (db.vocab.some(x => x.noTr)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
-  const cards = db.vocab.filter(v => !v.known || isDue(v));
-  if (!cards.length) { kb.innerHTML = db.vocab.length ? emptyState('cheer', 'Semua kartu udah hafal! 🧠', 'Keren banget. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
+  const cards = db.vocab.filter(isDue).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
+  if (!cards.length) {
+    const dues = db.vocab.filter(v => !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, left = db.vocab.some(isDue);
+    kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres 🎉' : 'Semua beres, balik besok ya 🎉', left ? 'Sisa kartu muncul lagi pas kamu balik nanti.' : nd ? `Kartu berikutnya muncul ${nd} hari lagi. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
-  kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
+  kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">BELUM</span>
-        <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu</div>
-        <div class="fw" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${esc(v.t)}</div><div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div></div>
+        <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${(v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
+        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${esc(v.t)}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div></div>
         <div class="tap" id="tapl">Tap buat liat artinya 👆</div></div></div>
     <div class="deck-act"><button class="no" id="fNo">✕ Belum</button><button class="icon tint" id="fSp" aria-label="Dengerin">${ico('vol')}</button><button class="yes" id="fYes">✓ Hafal</button></div>
-    <div class="mut sm center" style="margin-top:12px">Geser kanan = hafal · geser kiri = belum</div>`;
+    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Geser kanan = hafal · geser kiri = belum'}</div>`;
   const card = $('#card');
   const flip = () => { flipped = !flipped; $('#back').classList.toggle('hide', !flipped); $('#tapl').classList.toggle('hide', flipped); sfx('pop'); };
   const decide = ok => {
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
-    if (ok) { v.kn = v.known && v.kd ? Math.min((v.kn || 0) + 1, 3) : 0; v.known = true; v.kd = Date.now(); save(); sfx('ding'); award(2, 'flash'); } else { if (v.known) { v.kn = 0; v.kd = Date.now(); } db.vocab.splice(db.vocab.indexOf(v), 1); db.vocab.push(v); save(); sfx('soft'); }
+    deckDone++;
+    if (ok) { const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran 🎉'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Muncul lagi ${d} hari lagi`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = ''; save(); sfx('soft'); }
     setTimeout(() => deck(kb), 280);
   };
   $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fSp').onclick = () => speak(v.w, v.lang, 0.8);
+  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }
   let sx = null, dx = 0;
   card.addEventListener('pointerdown', e => { sx = e.clientX; dx = 0; card.style.transition = 'none'; card.setPointerCapture(e.pointerId); });
   card.addEventListener('pointermove', e => { if (sx == null) return; dx = e.clientX - sx; card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`; card.querySelector('.yes').style.opacity = Math.max(0, dx / 100); card.querySelector('.no').style.opacity = Math.max(0, -dx / 100); });
@@ -764,5 +1265,9 @@ applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
 if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
+const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
+window.addEventListener('offline', syncOff);
+window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
+bersihYatim();

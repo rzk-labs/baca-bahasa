@@ -61,7 +61,7 @@ Dicek ke kode saat ini.
 
 | # | Status | Catatan |
 |---|---|---|
-| 1 | 🟡 Sebagian | Tema gelap & "Ikut HP" ada di pengaturan; bawaan tetap terang. |
+| 1 | 🟢 Ditangani | Saran tema gelap/Ikut HP sekali di e-reader malam hari + tombol "Tema" 1 ketukan (#272). |
 | 2 | ❌ Belum | XP melayang dan toast lencana selalu muncul; tak ada mode tenang. |
 | 3 | ❌ Belum | Bahasa cerita dan "artiin ke" dipilih manual. |
 | 4 | ❌ Belum | Cache arti hanya di memori; hilang saat app ditutup. |
@@ -70,8 +70,15 @@ Dicek ke kode saat ini.
 | 7 | ❌ Belum | Kata offline disimpan dengan arti kosong. |
 | 8 | ❌ Belum | Data lama dibaca tanpa penjaga; data rusak bisa bikin app kosong. |
 | 9 | ❌ Belum | Terjemahan cadangan tak mengecek pesan error. |
-| 10 | 🟡 Sebagian | Tombol umum 44px; hapus/bagikan 34px, tutup tips 32px, tab 11px. |
+| 10 | ✅ Ditangani | Semua tombol (pil, avatar, hapus, bagikan, tutup tips, tab, ringkasan CSV) area ketuk min 44px. Chip & label hanya teks, bukan tombol. Header 320px aman. |
 
 - Sudah ada: tombol "Coba lagi" saat arti gagal dibuka (menolong masalah 4 sedikit).
 - Urutan perbaikan usulan untuk developer: 8, 7, 9 (keandalan), lalu 4, 2, 5.
 - Dokumen ini tidak mengubah kode; tiap perbaikan jadi tugas terpisah.
+
+## Catatan #282: tanda kata sering diketuk
+- Kata diketuk 3× atau lebih diberi latar oranye tipis di teks e-reader.
+- Tidak bentrok: garis titik biru (tersimpan) dan blok lime (dipilih) tetap utuh.
+- Token `--color-often-bg` aman di tema terang, sepia, dan gelap; tinggi baris tetap.
+- Pengaturan baca: toggle "Tandai kata yang sering kuketuk", default nyala, ikut reset.
+- Tanda muncul saat halaman dirender dan langsung saat ketukan ke-3.

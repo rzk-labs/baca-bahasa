@@ -3,7 +3,7 @@ name: Keepo Jaga Tim
 # Memastikan tidak ada anggota tim yang menganggur.
 # Tiap 30 menit (dan setiap kali tugas selesai): untuk tiap peran yang sedang kosong,
 # minta PM memberi tugas baru khusus peran itu.
-# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 20 tugas otomatis per peran per hari.
+# Rem pengaman: berhenti bila >= 6 hasil menunggu founder, dan maks 40 tugas otomatis per peran per hari.
 
 on:
   schedule:
@@ -12,7 +12,7 @@ on:
 
 permissions:
   contents: read
-  issues: read
+  issues: write
   actions: write
 
 concurrency:
@@ -33,17 +33,31 @@ jobs:
           if [ "$TUNGGU" -ge 6 ]; then
             echo "::notice title=Tim menunggu kamu::$TUNGGU hasil menunggu dicek. Tim tidak diberi tugas baru dulu."; exit 0
           fi
+          # Kartu yang sudah live tapi masih terbuka: tutup.
+          for N in $(gh issue list --label kepo-dev --label live --state open --json number --jq '.[].number'); do
+            gh issue close "$N" && echo "#$N live → ditutup"
+          done
+          # Coba ulang tugas gagal: maks 2x per tugas, 3 tugas per putaran. Tugas brand lama (A/v8) dilewati.
+          for N in $(gh issue list --label kepo-dev --label gagal --state open --limit 40 --json number,title,labels \
+              --jq '[.[]|select(([.labels[].name]|index("ulang-2"))|not)|select(.title|test("brand A";"i")|not)]|.[:3][]|.number'); do
+            L=$(gh issue view "$N" --json labels --jq 'if ([.labels[].name]|index("ulang-1")) then "ulang-2" else "ulang-1" end')
+            gh label create "$L" --color BFD4F2 2>/dev/null || true
+            gh issue edit "$N" --add-label "$L" --remove-label gagal
+            gh issue comment "$N" --body "🔁 Dicoba ulang otomatis ($L dari 2)."
+            gh workflow run kepo-dev.yml -f issue="$N"
+            echo "#$N gagal → dicoba ulang ($L)"
+          done
           HARI=$(date -u +%Y-%m-%d)
           PMRUN=$(gh run list --workflow kepo-pm.yml --limit 20 --json status,displayTitle \
             --jq '[.[]|select(.status!="completed")|.displayTitle]|join(" ")')
           for P in riset desain developer pm marketing; do
             SIBUK=$(gh issue list --label kepo-dev --label "peran:$P" --state open --json labels \
               --jq '[.[]|select([.labels[].name]|(index("siap-dicek") or index("gagal"))|not)]|length')
-            HARI_INI=$(gh issue list --label otomatis --label "peran:$P" --state all --limit 50 --json createdAt \
+            HARI_INI=$(gh issue list --label otomatis --label "peran:$P" --state all --limit 100 --json createdAt \
               --jq "[.[]|select(.createdAt|startswith(\"$HARI\"))]|length")
             if [ "$SIBUK" -gt 0 ]; then echo "$P: sibuk ($SIBUK tugas)"; continue; fi
             if echo "$PMRUN" | grep -qw "$P"; then echo "$P: PM sedang memilihkan tugas"; continue; fi
-            if [ "$HARI_INI" -ge 20 ]; then echo "$P: batas harian tercapai ($HARI_INI)"; continue; fi
+            if [ "$HARI_INI" -ge 40 ]; then echo "$P: batas harian tercapai ($HARI_INI)"; continue; fi
             echo "$P: KOSONG → minta PM memberi tugas"
             gh workflow run kepo-pm.yml -f paksa=true -f peran="$P"
           done
