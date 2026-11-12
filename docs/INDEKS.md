@@ -99,6 +99,7 @@
 - [pasar-ukuran](riset-pasar-ukuran.md)
 - [peluang-masalah](riset-peluang-masalah.md)
 - [pemotongan-kata-jp-kr](riset-pemotongan-kata-jp-kr.md)
+- [pengingat-baca-pwa](riset-pengingat-baca-pwa.md)
 - [penanda-sinkron](riset-penanda-sinkron.md)
 - [sesi-pertama](riset-sesi-pertama.md)
 - [skor-ucapan](riset-skor-ucapan.md)
