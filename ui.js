@@ -1050,7 +1050,7 @@ async function viewBaca() {
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
-      <div class="rhead">${esc(chTitle)}</div>
+      <div class="rhead">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
       ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat${db.aiJelas === false ? '' : ' (+ Jelaskan AI, gratis 5x/hari)'}. <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
@@ -1291,15 +1291,19 @@ function showPage(p, anim = true) {
   if (sx) b.si = +sx.el.dataset.s;
   b.pg = RD.page; b.pgN = RD.n;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
-  const rh = $('.rhead'); if (rh && hd) rh.textContent = hd.textContent.trim();
+  const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
-  b.pct = Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
+  /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
+  const uOk = Array.isArray(b.units) && b.units.length === (b.total || 1) && b.units.length > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
+  b.pct = uOk && uSum > 0
+    ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, b.pos).reduce((a, x) => a + x, 0) + b.units[b.pos] * (RD.page + 1) / RD.n) / uSum * 100 - 1e-9)))
+    : Math.max(1, Math.min(100, Math.ceil((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100 - 1e-9)));
   const ml = minsLeft(b);
   if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} lagi` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}`, rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
-  if (pb) pb.style.width = b.pct + '%';
+  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} lagi` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}${(b.total || 1) > 1 ? ' di bab ini' : ''}`, (b.total || 1) > 1 ? nw(`${b.pct}% buku`) : '', rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
+  if (pb) { pb.style.width = b.pct + '%'; if (pb.parentElement) pb.parentElement.title = `${b.pct}% dari seluruh buku`; }
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
