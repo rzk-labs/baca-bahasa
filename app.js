@@ -185,7 +185,21 @@ function paginate(paras, lang) {
 
 /* ---------- impor file ---------- */
 const loaded = {};
-function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Gagal memuat pustaka (cek internet)')); }; document.head.appendChild(s); })); }
+const LOAD_TIMEOUT = 20000, PARSE_TIMEOUT = 90000;
+function loadScript(src) {
+  return loaded[src] || (loaded[src] = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    const gagal = msg => { clearTimeout(tm); delete loaded[src]; s.onload = s.onerror = null; s.remove(); rej(new Error(msg)); };
+    const tm = setTimeout(() => gagal('Pustaka lama dimuat, cek sinyal lalu coba lagi'), LOAD_TIMEOUT);
+    s.src = src; s.onload = () => { clearTimeout(tm); res(); };
+    s.onerror = () => gagal('Gagal memuat pustaka (cek internet)');
+    document.head.appendChild(s);
+  }));
+}
+function dgnBatas(p, ms) {
+  let tm;
+  return Promise.race([p, new Promise((_, no) => { tm = setTimeout(() => no(Object.assign(new Error('timeout'), { telat: true })), ms); })]).finally(() => clearTimeout(tm));
+}
 const JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
 const PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
 // true hanya bila ketiga pustaka benar-benar ada di cache service worker
@@ -212,8 +226,8 @@ window.addEventListener('load', () => {
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
-  if (ext === 'epub') return parseEpub(await file.arrayBuffer(), name);
-  if (ext === 'pdf') return parsePdf(await file.arrayBuffer(), name);
+  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name), PARSE_TIMEOUT);
+  if (ext === 'pdf') return dgnBatas(parsePdf(await file.arrayBuffer(), name), PARSE_TIMEOUT);
   return { title: name, paras: cleanParas(decodeText(await file.arrayBuffer())) };
 }
 function decodeText(buf) {
@@ -272,7 +286,7 @@ async function parsePdf(buf, title) {
     for (const it of tc.items) { line += it.str; if (it.hasEOL) { lines.push(line.trim()); line = ''; } }
     if (line.trim()) lines.push(line.trim());
     lines.push('');
-    if (i % 10 === 0) toast(`Membaca PDF… halaman ${i}/${pdf.numPages}`);
+    if (i % 10 === 0 && typeof imporStatus === 'function') imporStatus(`Membaca PDF… halaman ${i}/${pdf.numPages}`);
   }
   // gabungkan baris jadi paragraf: putus kalau baris kosong atau baris pendek berakhir tanda titik
   const lens = lines.filter(Boolean).map(l => l.length).sort((a, b) => a - b);
