@@ -223,12 +223,61 @@ window.addEventListener('load', () => {
   const go = () => setTimeout(prefetchImportLibs, 0);
   if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 8000 }); else setTimeout(prefetchImportLibs, 4000);
 });
+/* ---------- Project Gutenberg: buang lisensi, daftar isi, halaman judul; mulai dari bab pertama ---------- */
+const GB_START = /\*\*\*\s*START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\*\*\*[^\n]*\n?/i;
+const GB_END = /\*\*\*\s*END OF (?:THE|THIS) PROJECT GUTENBERG/i;
+const CH_WORD = '(?:chapter|chap\\.|bab|kapitel|chapitre|cap[ií]tulo|capitolo|kapitola|hoofdstuk)';
+const CH_ID = '(?:[ivxlc]{1,7}|\\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|first|second|third)';
+const CH_STRICT = new RegExp('^' + CH_WORD + '\\s+' + CH_ID + '\\b\\.?(?:\\s*[:.\\-–—]?\\s*.{0,60})?$', 'i');
+const CH_ROMAN = /^(?:[IVXL]{1,6})\.(?:\s+.{0,60})?$/;
+function gbHead(p) {
+  const t = p.replace(/^[\u0001\u0002]+/, '').trim();
+  if (!t || t.length > 90) return 0;
+  if (CH_STRICT.test(t)) return 2;
+  if (CH_ROMAN.test(t)) return 1;
+  return 0;
+}
+function gbTrim(txt) {
+  let t = txt, found = false;
+  const m = t.match(GB_START);
+  if (m) { t = t.slice(m.index + m[0].length); found = true; }
+  const e = t.search(GB_END); if (e >= 0) { t = t.slice(0, e); found = true; }
+  return { text: t, found };
+}
+function gbParas(paras, isGb) {
+  if (!paras || paras.length < 8) return paras;
+  const re = new RegExp(CH_WORD + '\\s+' + CH_ID + '\\b', 'gi');
+  let toc = false, out = [];
+  for (let i = 0; i < paras.length; i++) {
+    const p = paras[i];
+    if (i < 120) {
+      // satu paragraf berisi banyak judul bab beruntun = daftar isi yang menyatu
+      if (p.length < 1500 && (p.match(re) || []).length >= 4) { toc = true; continue; }
+      // beberapa paragraf pendek beruntun berisi judul bab
+      let j = i; while (j < paras.length && j < 160 && paras[j].length < 90 && gbHead(paras[j])) j++;
+      if (j - i >= 4) { toc = true; i = j - 1; continue; }
+    }
+    out.push(p);
+  }
+  if (!isGb && !toc) return paras;
+  if (isGb) out = out.filter(p => !/^\[?\s*illustration[^\]]{0,80}\]?$/i.test(p.replace(/^[\u0001\u0002]+/, '').trim()));
+  const first = out.findIndex((p, i) => i < 80 && gbHead(p) === 2);
+  if (first > 0 && out.slice(first).length >= 5) out = out.slice(first);
+  // hitungan bab: tiap judul bab jelas = bab baru (hanya bila belum ada pembatas bab & ada ≥3 judul)
+  if (!out.includes('\u0002') && out.filter(p => gbHead(p) === 2).length >= 3) {
+    const r = []; out.forEach((p, i) => { if (gbHead(p) === 2 && i > 0) r.push('\u0002'); r.push(p); }); out = r;
+  }
+  return out.length >= 3 ? out : paras;
+}
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
-  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name), PARSE_TIMEOUT);
+  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name).then(r => { try { r.paras = gbParas(r.paras, r.paras.slice(0, 40).some(p => /project gutenberg/i.test(p))); } catch (e) { } return r; }), PARSE_TIMEOUT);
   if (ext === 'pdf') return dgnBatas(parsePdf(await file.arrayBuffer(), name), PARSE_TIMEOUT);
-  return { title: name, paras: cleanParas(decodeText(await file.arrayBuffer())) };
+  const g = gbTrim(decodeText(await file.arrayBuffer()));
+  let paras = cleanParas(g.text);
+  try { paras = gbParas(paras, g.found); } catch (e) { }
+  return { title: name, paras };
 }
 function decodeText(buf) {
   let s = null;
