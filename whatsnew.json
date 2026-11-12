@@ -1,5 +1,11 @@
 [
   {
+    "n": 742,
+    "judul": "Sinkron: halaman dibaca (pgDay) ikut akun & buku cloud tak 'opened 0'",
+    "poin": "Halaman yang sudah dibaca sekarang ikut tersimpan di akun dan muncul di perangkat baru.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 740,
     "judul": "Baca: ukuran teks HP besar tak memotong bar atas & sheet",
     "poin": "Layar baca kini tahan teks HP besar: bar dan tab tidak terpotong.",
@@ -171,12 +177,6 @@
     "n": 684,
     "judul": "[peta 62] Beranda rapi: satu tombol Gas baca, kartu kosong hilang",
     "poin": "Beranda sekarang punya satu tombol utama: Gas baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 682,
-    "judul": "[peta 68] Kamus Jepang kecil: cara baca + bentuk dasar di sheet arti",
-    "poin": "Kata Jepang kini tampil dengan cara baca dan bentuk dasar, arti offline lebih dulu.",
     "tgl": "2026-11-12"
   }
 ]

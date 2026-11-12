@@ -7,7 +7,7 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal', 'bkGone'];
+const SYNC_KEYS = ['xp', 'xpDay', 'pgDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal', 'bkGone'];
 const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
 const TOMB_TTL = 90 * 864e5;
 
@@ -58,7 +58,7 @@ function mergeBooks(srvB) {
     if (!l) { keep[k] = x; continue; }
     if (!((+x.at || 0) > l.at) || !Number.isFinite(x.pos) || (open && bkKey(open) === k)) continue; // yang terbaru menang; buku yang lagi dibaca tidak digeser
     const b = db.books.find(y => bkKey(y) === k); if (!b) continue;
-    b.pos = x.pos; b.si = Number.isFinite(x.si) ? x.si : 0; if (x.pct != null) b.pct = x.pct;
+    b.pos = x.pos; if (!b.opened && x.pos > 0) b.opened = +x.at || Date.now(); b.si = Number.isFinite(x.si) ? x.si : 0; if (x.pct != null) b.pct = x.pct;
     const mx = typeof MARK_MAX === 'number' ? MARK_MAX : 20;
     b.marks = (Array.isArray(x.marks) ? x.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).slice(0, mx).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 140), at: m.at || Date.now() }));
     db.bkAt[k] = { sig: bkState(b).sig, at: +x.at };
@@ -105,6 +105,7 @@ function mergeSrv(d) {
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
   if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
+  if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
   if (Array.isArray(d.days)) db.days = [...new Set([...(db.days || []), ...d.days])].sort().slice(-400);
   if (isObj(d.stat)) for (const k in d.stat) { const n = +d.stat[k] || 0; if (n > (+db.stat[k] || 0)) db.stat[k] = n; }
@@ -229,7 +230,7 @@ async function syncBooks() {
         if (!Array.isArray(paras) || !paras.length) continue;
         const id = 'b' + Date.now().toString(36) + added;
         await putText(id, paras);
-        db.books.push({ id, title: r.meta.title || 'Tanpa judul', lang: r.meta.lang || 'en', pos: 0, si: 0, total: 0, v: 2, added: r.meta.added || Date.now(), opened: 0, cloud: Date.now() });
+        db.books.push({ id, title: r.meta.title || 'Tanpa judul', lang: r.meta.lang || 'en', pos: 0, si: 0, total: 0, v: 2, added: r.meta.added || Date.now(), opened: +r.meta.opened || 0, cloud: Date.now() });
         added++; save();
       } catch (e) { }
     }
@@ -279,7 +280,7 @@ function bkSave() {
   if (!list.length && !vocab.length && !(db.xp > 0)) return toast('Belum ada data buat dicadangkan.');
   // v2: tambah data belajar (tanpa token/akun)
   const out = { kepo: 'cadangan-penanda', v: 2, at: Date.now(), books: list, vocab, kenal: isObj(db.kenal) ? db.kenal : {} };
-  for (const k of ['xp', 'xpDay', 'badges', 'days', 'stat']) if (db[k] != null) out[k] = db[k];
+  for (const k of ['xp', 'xpDay', 'pgDay', 'badges', 'days', 'stat']) if (db[k] != null) out[k] = db[k];
   const blob = new Blob([JSON.stringify(out)], { type: 'application/json' });
   const u = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = u; a.download = 'kepo-cadangan.json'; document.body.append(a); a.click(); a.remove();
@@ -325,6 +326,7 @@ async function bkRestore(file) {
     }
     if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
     if (isObj(d.xpDay)) { if (!isObj(db.xpDay)) db.xpDay = {}; for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } }
+    if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } }
     if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
     if (Array.isArray(d.days)) db.days = [...new Set([...(db.days || []), ...d.days])].sort().slice(-400);
     if (isObj(d.stat)) { if (!isObj(db.stat)) db.stat = {}; for (const k in d.stat) { const n = +d.stat[k] || 0; if (n > (+db.stat[k] || 0)) db.stat[k] = n; } }
@@ -423,7 +425,7 @@ async function openLeaderboard() {
 // ringkasan profil yang dikirim saat sinkron: hanya judul, bahasa, % baca. Tanpa teks buku.
 function profileData() {
   const wk = Date.now() - 7 * 864e5;
-  const reading = (db.books || []).filter(b => b.opened).sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 3)
+  const reading = (db.books || []).filter(b => b.opened || b.pos > 0).sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 3)
     .map(b => ({ t: String(b.title || '').slice(0, 80), lang: b.lang, pct: typeof pctOf === 'function' ? pctOf(b) : 0, at: b.opened || 0 }));
   return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: (db.vocab || []).filter(v => (v.at || 0) > wk).length, streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
 }
