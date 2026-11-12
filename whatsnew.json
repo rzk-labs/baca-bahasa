@@ -1,5 +1,11 @@
 [
   {
+    "n": 712,
+    "judul": "Ringkasan mingguan akurat: hitung halaman dibaca, sembunyi bila kosong",
+    "poin": "Kartu Minggu ini sekarang hitung halaman yang kamu baca dan kata disimpan.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 710,
     "judul": "Progres Home selalu sama dengan Profil & bar baca, sisa waktu ringkas",
     "poin": "Persen baca di Home kini selalu sama dengan Profil, juga saat app ditutup.",
@@ -171,12 +177,6 @@
     "n": 651,
     "judul": "Rapikan Home: 13 bagian jadi 4, pindahkan sisanya",
     "poin": "Home kini 4 bagian saja; Tantangan, Peringkat, Lencana, Yang baru, Masukan sudah dipindah.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 649,
-    "judul": "Impor buku Gutenberg: lewati judul/daftar isi, mulai Chapter I",
-    "poin": "Buku Gutenberg yang diimpor sekarang langsung mulai dari Bab 1, tanpa halaman judul.",
     "tgl": "2026-11-12"
   }
 ]
