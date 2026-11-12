@@ -1,5 +1,23 @@
 [
   {
+    "n": 399,
+    "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
+    "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 391,
+    "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
+    "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
+    "tgl": "2026-11-12"
+  },
+  {
+    "n": 387,
+    "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
+    "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 381,
     "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
     "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
@@ -159,24 +177,6 @@
     "n": 248,
     "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
     "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 246,
-    "judul": "HP kecil: header tak sesak, tab bawah lega, sheet arti tanpa '1/2'",
-    "poin": "Header di HP kecil lebih rapi: tombol dikecilkan, logo tidak terpotong.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 238,
-    "judul": "Terjemahan: batas waktu 8 detik + pesan gagal jelas saat sinyal lemah",
-    "poin": "Arti kata kini berhenti nunggu setelah 8 detik, lalu muncul pesan dan tombol coba lagi.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 237,
-    "judul": "Kartu Hafal: tinggi menyesuaikan isi & kata panjang tidak meluber",
-    "poin": "Kartu Hafal sekarang menyesuaikan isinya, kata panjang tidak meluber lagi.",
     "tgl": "2026-11-11"
   }
 ]

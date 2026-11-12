@@ -355,8 +355,11 @@ async function papan(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='papan')return;
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
-  const by=k=>HQ.tasks.filter(t=>k==='gagal'?(t.status==='gagal'||t.status==='ditolak'):t.status===k);
-  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa)}</div><b>${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div>`;
+  // tugas gagal yang sudah punya pengganti (tugas lebih baru merujuk #nomornya) disembunyikan
+  const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.rujuk||[]).includes(t.n));
+  const by=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
+  const jdl=s=>{s=String(s||'').replace(/\s+/g,' ').trim();if(s.length<=70)return s;const c=s.slice(0,69),i=c.lastIndexOf(' ');return (i>40?c.slice(0,i):c).replace(/[\s,.;:–-]+$/,'')+'…'};
+  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'<span class="chip o">🤖 otomatis</span>':''}${chipQ(t.qa)}</div><b title="${esc(t.judul)}">${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">✎ Revisi</button>`:''}</div>`;
   V.innerHTML=`<div class="row" style="margin-bottom:16px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">＋ Perintah</button></div>
   <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL;return `<div class="col k-${k}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?[...L].sort((a,b)=>new Date(b.diubah)-new Date(a.diubah)).slice(0,5):L).map(kartuP).join(''):'<div class="empty sm">Kosong</div>'}${k==='live'&&L.length>5?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
   auto(papan);
