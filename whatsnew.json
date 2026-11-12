@@ -1,5 +1,11 @@
 [
   {
+    "n": 728,
+    "judul": "Baca: bar progres jelas 'Bab X/Y · Hal a/b' & total halaman stabil",
+    "poin": "Bar baca sekarang jelas: \"Bab 3/11 · Hal 17/17\", persen buku, satu sisa waktu.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 726,
     "judul": "Bar menu bawah rapi: alas penuh, kartu tak mengintip di celah",
     "poin": "Menu bawah sekarang rapi: area di belakangnya tertutup penuh sampai tepi layar.",
@@ -171,12 +177,6 @@
     "n": 670,
     "judul": "[peta 59] Beranda jujur: progres, bab/halaman & sisa waktu sama",
     "poin": "Beranda tidak lagi menulis 0% atau \"Bab 1 dari 1\" sebelum bab dihitung.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 667,
-    "judul": "[peta 60] Intip kata bab: tampil di bab 1 & buku ja/ko/zh",
-    "poin": "Kartu Intip kata kini muncul juga di bab 1 buku baru.",
     "tgl": "2026-11-12"
   }
 ]

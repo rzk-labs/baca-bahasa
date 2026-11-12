@@ -1193,6 +1193,9 @@ function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
   const b = book(), W = vp.clientWidth, H = vp.clientHeight;
   const rd = $('#reader'), sig = [W, H, cols.style.fontSize, rd && rd.style.getPropertyValue('--reader-lh'), rd && rd.style.getPropertyValue('--reader-mg')].join('|');
+  const same = sig === RD.sig && RD.cEl === cols && RD.cLen === cols.textContent.length && RD.ss && RD.ss.length && RD.n > 0 && RD.flash == null && !RD.toEnd;
+  if (same) return; /* ukuran/font sama & isi sama: total halaman jangan dihitung ulang */
+  RD.cEl = cols; RD.cLen = cols.textContent.length;
   if (sig !== RD.sig) { RD.sig = sig; stopListenPage(); }
   const G = 64, per = W >= 900 && (W - G) / 2 >= 360 ? 2 : 1, cw = (W - (per - 1) * G) / per;
   vp.classList.toggle('two', per === 2);
@@ -1302,7 +1305,14 @@ function showPage(p, anim = true) {
   if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
-  if (pgn) { const rem = ml && ml.t ? `${nw(ml.t.replace(/^bab ini /, ''))} lagi` : ''; pgn.innerHTML = [RD.n === 1 ? '' : `Hal ${RD.page + 1}/${RD.n}${(b.total || 1) > 1 ? ' di bab ini' : ''}`, (b.total || 1) > 1 ? nw(`${b.pct}% buku`) : '', rem].filter(Boolean).join(' · ') + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : ''); }
+  if (pgn) {
+    const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
+    const rem = ml && ml.t ? `${nw(ml.t)} lagi` : '';
+    const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n}`);
+    pgn.innerHTML = [multi ? nw(`Bab ${b.pos + 1}/${b.total}`) : '', hal, multi ? nw(`${b.pct}% buku`) : '', rem].filter(Boolean).join(' · ')
+      + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '')
+      + (multi && lastPg && b.pos < b.total - 1 ? '<span class="mnote">Ujung bab, geser untuk bab berikutnya</span>' : '');
+  }
   if (pb) { pb.style.width = b.pct + '%'; if (pb.parentElement) pb.parentElement.title = `${b.pct}% dari seluruh buku`; }
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
