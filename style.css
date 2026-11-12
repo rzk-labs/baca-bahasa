@@ -726,3 +726,9 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .goal-row .ring .score small{font:700 9px/10px var(--font-ui)}
 .hero .t{word-break:keep-all;overflow-wrap:anywhere}
 .hero .t .t-au{display:block;font:500 13px/17px var(--font-ui);color:var(--color-text-muted);margin-top:2px}
+/* #772 sampul: satu inisial besar di tengah; judul & penulis rapi di kartu */
+.cover{align-items:center;justify-content:center}
+.cover .em{font-size:44px}
+.bk .cover .em{font-size:64px}
+.bk .t,.hero .t{word-break:keep-all;overflow-wrap:break-word;line-break:strict}
+.bk .t .t-au{display:block;font:500 12px/16px var(--font-ui);color:var(--color-text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
