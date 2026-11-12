@@ -92,3 +92,4 @@
 ## 7. Langkah berikutnya
 - Tugas riset kecil: uji 25 nama nyata ke gtx/MyMemory, catat yang diartikan harfiah.
 - Tugas developer setelah itu: "Ini nama" per buku (bagian 6).
+- Update #764: fitur "Ini nama" sudah dibuat (tombol di sheet arti, nama per buku, ada Urungkan). Tebakan kapital belum.
