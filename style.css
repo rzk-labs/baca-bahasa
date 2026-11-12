@@ -443,6 +443,22 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .csvbtn{flex:0 0 auto;min-height:44px;padding:0 16px;border:0;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font:700 14px/1 var(--font-ui);white-space:nowrap;cursor:pointer}
 .csvbar .csvhow{order:4;flex:1 1 100%;min-height:44px;padding:0;text-align:left;font-size:13px;background:none;border:0;cursor:pointer}
 .csvsteps{margin:8px 0;padding-left:22px;display:grid;gap:8px;font-size:15px}
+/* Tab Kata › Tersimpan: toolbar rapi (#448) */
+.ksrow{display:flex;align-items:center;gap:12px;margin:var(--space-3) 0}
+.ksrow .search{flex:1 1 auto;min-width:0;margin:0}
+.ksrow .search input{min-height:44px}
+.ksrow .csvcnt{flex:0 0 auto;font:600 14px/1.2 var(--font-ui);color:var(--color-text-muted);white-space:nowrap}
+.ksrow .csvcnt b{color:var(--color-text)}
+.csvbar{flex-wrap:nowrap}
+.csvbar select,.csvbar select.csvsort{flex:1 1 0;min-width:0;order:0;margin:0;min-height:44px}
+.csvexp{display:block;width:100%;min-height:44px;margin:8px 0 16px;font-weight:700}
+.csvgo{width:100%;margin:8px 0 12px}
+.vitem .w1{font-size:24px;line-height:28px}
+.vitem .t1{font-size:16px;line-height:23px}
+.vitem .vmeta{font-size:12px;line-height:18px;color:var(--color-text-muted);margin-top:2px}
+.vitem .vok{font:700 14px/1 var(--font-ui);color:var(--color-text-muted);vertical-align:middle}
+.vitem .icon.vdel{margin-left:24px}
+@media (max-width:359px){.vitem .icon.vdel{margin-left:20px}}
 /* Area ketuk min. 44px tanpa mengubah tampilan (#194) */
 button.avatar,.pill.login,.wsug .pill-sm{position:relative}
 button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
