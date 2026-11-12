@@ -1,4 +1,4 @@
-# Kamus Jepang kecil Kepo. Format: kata|kana|jenis|arti (arti dipisah ;). Kata tanpa kanji: kana dikosongkan.
+# Kamus Jepang kecil Keepo. Format: kata|kana|jenis|arti (arti dipisah ;). Kata tanpa kanji: kana dikosongkan.
 # Jenis: v1=kata kerja -ru, v5=kata kerja -u, vk=kuru, vs=suru, adj=sifat -i, na=sifat -na, n, pron, prt, adv, conj, int, num, exp, aux
 は||prt|penanda topik (dibaca "wa"); sebagai
 が||prt|penanda subjek; tetapi

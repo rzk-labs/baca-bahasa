@@ -2,7 +2,7 @@
 
 PWA belajar bahasa asing lewat cerita sendiri, untuk anak muda. Live: https://rzk-labs.github.io/baca-bahasa/
 
-- **Home**: maskot Kepo, level & XP, target harian, streak, lencana, koleksi cerita. Upload `.txt` / `.epub` / `.pdf` atau tempel teks (disimpan lokal, IndexedDB).
+- **Home**: maskot Keepo, level & XP, target harian, streak, lencana, koleksi cerita. Upload `.txt` / `.epub` / `.pdf` atau tempel teks (disimpan lokal, IndexedDB).
 - **Baca**: e-reader layar penuh. Ketuk kata → arti kata → "Masih bingung?" → arti kalimat.
 - **Ngomong**: tantangan baca kalimat, skor % per kata, Boss Level (latih kata terjelek sampai ≥85%).
 - **Kata**: kartu hafalan swipe, daftar tersimpan, kata susah diucap.

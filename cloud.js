@@ -1,5 +1,5 @@
 'use strict';
-/* Kepo cloud: akun (login/daftar), sinkron progres, leaderboard mingguan, bagikan cerita. Server: api/ (Cloudflare Worker + D1). */
+/* Keepo cloud: akun (login/daftar), sinkron progres, leaderboard mingguan, bagikan cerita. Server: api/ (Cloudflare Worker + D1). */
 const API_PROD = 'https://kepo-api.rizkachoirunnisa0403.workers.dev'; // Cloudflare Worker (api/)
 const API = (() => {
   const q = new URLSearchParams(location.search).get('api');
@@ -289,7 +289,7 @@ function bkSave() {
 }
 async function bkRestore(file) {
   let d; try { d = JSON.parse(await file.text()); } catch (e) { d = null; }
-  if (!d || d.kepo !== 'cadangan-penanda' || !Array.isArray(d.books)) return toast('Ini bukan file cadangan Kepo.', 4000);
+  if (!d || d.kepo !== 'cadangan-penanda' || !Array.isArray(d.books)) return toast('Ini bukan file cadangan Keepo.', 4000);
   let hit = 0, miss = 0, added = 0, words = 0;
   for (const x of d.books) {
     if (!x || typeof x !== 'object') continue;
