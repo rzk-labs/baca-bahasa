@@ -698,24 +698,59 @@ async function addBook(title, paras, lang, src) {
 
 /* ---------- BACA (e-reader) ---------- */
 const SESS = { id: null, t: 0 };
-/* Rekap kata sesi: ketukan dicatat di memori saja, ditampilkan saat keluar buku */
+/* Rekap kata sesi: ketukan dicatat di memori + localStorage (kepo_sesi_<idBuku>), ditampilkan saat keluar/buka buku */
 const SESSW = new Map();
+const sesiKey = id => 'kepo_sesi_' + id;
+function sesiSave(bid) {
+  try {
+    const arr = [...SESSW.values()].filter(e => e.bid === bid);
+    if (arr.length) localStorage.setItem(sesiKey(bid), JSON.stringify(arr)); else localStorage.removeItem(sesiKey(bid));
+  } catch (e) { }
+}
+function sesiLoad(bid) {
+  try { const a = JSON.parse(localStorage.getItem(sesiKey(bid)) || '[]'); return Array.isArray(a) ? a.filter(e => e && e.w && e.lang) : []; } catch (e) { return []; }
+}
+function sesiClear(bid) { try { localStorage.removeItem(sesiKey(bid)); } catch (e) { } }
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim())) return;
   const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
-  e.n++; SESSW.set(k, e);
+  e.n++; SESSW.set(k, e); sesiSave(b.id);
 }
+/* sisa sesi (app mati / tab ketutup): tampilkan sekali lalu hapus */
+function sesiSisa(b) {
+  if (!b) return false;
+  const saved = sesiLoad(b.id);
+  if (!saved.length) return false;
+  for (const e of saved) { const k = vocabKey(e.lang, e.w); if (!SESSW.has(k)) SESSW.set(k, { ...e, bid: b.id }); }
+  return sessRecap(b);
+}
+const trKey = e => e.lang + '|' + db.my + '|' + e.w;
+/* terjemahkan kata rekap yang belum punya arti, lalu perbarui kartunya */
+async function isiArtiRekap(cand) {
+  if (navigator.onLine === false) return;
+  for (let i = 0; i < cand.length; i++) {
+    const e = cand[i], c0 = trCache.get(trKey(e));
+    if (c0 && c0.text) continue;
+    try { await translate(e.w, e.lang, db.my); } catch (x) { return; }
+    const c = trCache.get(trKey(e)), el = document.querySelector('#rsl [data-rt="' + i + '"]');
+    if (el && c && c.text) { el.textContent = c.text; el.classList.remove('noarti'); }
+  }
+}
+let rekapAktif = null;
 function sessRecap(b) {
   const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
-  SESSW.clear();
-  if (all.length < 2) return false;
+  for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
+  if (b) sesiClear(b.id);
+  if (!all.length) return false;
   const cand = all.filter(e => !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKenal(e.lang, e.w)).sort((x, y) => y.n - x.n).slice(0, 8);
   if (!cand.length) return false;
-  const row = (e, i) => { const c = trCache.get(e.lang + '|' + db.my + '|' + e.w); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1">${c && c.text ? esc(c.text) : '<i>arti belum ada</i>'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
+  rekapAktif = cand;
+  const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
     <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">Simpan yang mau dihafal.</p>
     <div id="rsl">${cand.map(row).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
+  isiArtiRekap(cand);
   $$('[data-rs]').forEach(btn => btn.onclick = () => {
     const e = cand[+btn.dataset.rs], c = trCache.get(e.lang + '|' + db.my + '|' + e.w);
     if (db.vocab.some(v => sameVocab(v, e.lang, e.w))) return;
@@ -752,7 +787,8 @@ async function viewBaca() {
   stopListenPage();
   const b = book();
   if (!b) { $('#view').innerHTML = emptyState('curious', 'Belum ada cerita', 'Masukin cerita dulu yuk, terus kepoin kata-katanya.', 'Tambah cerita', "setTab('rak')"); return; }
-  b.opened = Date.now(); if (SESS.id !== b.id) { SESS.id = b.id; SESS.t = Date.now(); } save();
+  b.opened = Date.now(); const baruBuka = SESS.id !== b.id; if (baruBuka) { SESS.id = b.id; SESS.t = Date.now(); } save();
+  if (baruBuka) setTimeout(() => sesiSisa(b), 400);
   const secs = await pagesOf(b);
   b.pos = Math.max(0, Math.min(b.pos, secs.length - 1));
   document.body.classList.add('reading'); wakeSync();
@@ -1637,6 +1673,8 @@ if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
 window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
+window.addEventListener('online', () => { if (rekapAktif && $('#rsl')) isiArtiRekap(rekapAktif); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
 bersihYatim();
+setTimeout(() => { const b = book(); if (b && db.tab !== 'baca') sesiSisa(b); }, 600);
