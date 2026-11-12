@@ -168,7 +168,7 @@ async function doSync(opt) {
   const changed = mergeSrv(r.data); save();
   const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
   if (opt.force || sig !== lastSync) {
-    await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
+    await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick, profile: profileData() } });
     lastSync = sig;
   }
   if (changed && !opt.noRefresh) syncRefresh(opt.manual);
@@ -244,7 +244,7 @@ async function runSync(opt = {}) {
 }
 const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
-  db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden };
+  db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
@@ -349,9 +349,17 @@ function openAccount(mode) {
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
       <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">${ico('trophy')}Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">${ico('eyeoff')}Sembunyikan</button></div></div>
+      <div class="set-row"><div class="eyebrow">Profil sosial</div><div class="seg" id="aPub"><button data-v="0" class="${db.acct.publik ? '' : 'on'}">Privat</button><button data-v="1" class="${db.acct.publik ? 'on' : ''}">Publik</button></div>
+        <div class="mut sm" style="margin-top:6px">Publik: orang lain bisa cari kamu dan lihat buku yang sedang kamu baca. Teks buku tidak pernah dibagikan.</div>
+        <label class="row" style="gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="aHideT" style="width:auto" ${db.acct.hideTitles ? 'checked' : ''}> <span class="sm">Sembunyikan judul buku</span></label>
+        <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
     bkWire();
+    const setSocial = async () => { try { await api('/social', { method: 'PUT', body: { publik: !!db.acct.publik, hideTitles: !!db.acct.hideTitles } }); save(); } catch (e) { toast(e.message); } };
+    $$('#aPub button').forEach(b => b.onclick = () => { db.acct.publik = b.dataset.v === '1'; $$('#aPub button').forEach(x => x.classList.toggle('on', x === b)); setSocial().then(() => toast(db.acct.publik ? 'Profilmu sekarang publik.' : 'Profilmu sekarang privat.')); });
+    $('#aHideT').onchange = e => { db.acct.hideTitles = e.target.checked; setSocial(); };
+    $('#aMe').onclick = () => openProfile(db.acct.username);
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
     $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { toast(e.message); } };
@@ -407,6 +415,52 @@ async function openLeaderboard() {
     $('#lbFull').innerHTML = (r.top.length ? r.top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada peserta minggu ini.</div>')
       + (r.me && !r.me.hidden && !r.top.some(t => t.username === r.me.username) ? '<div class="lb-gap">···</div>' + lbRow(r.me, true) : '');
   } catch (e) { $('#lbFull').textContent = e.message; }
+}
+
+/* ---------- Sosial: profil & teman membaca ---------- */
+// ringkasan profil yang dikirim saat sinkron: hanya judul, bahasa, % baca. Tanpa teks buku.
+function profileData() {
+  const wk = Date.now() - 7 * 864e5;
+  const reading = (db.books || []).filter(b => b.opened).sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 3)
+    .map(b => ({ t: String(b.title || '').slice(0, 80), lang: b.lang, pct: typeof pctOf === 'function' ? pctOf(b) : 0, at: b.opened || 0 }));
+  return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: (db.vocab || []).filter(v => (v.at || 0) > wk).length, streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
+}
+const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };
+const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b>${esc(r.t)}</b> <span class="mut">· ${r.pct}%</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
+const frRow = u => `<button class="fr-row" data-u="${esc(u.username)}"><span class="avatar">${esc(initial(u.nick))}</span><span class="fr-in"><b>${esc(u.nick)}</b> <span class="mut sm">@${esc(u.username)}</span>${u.reading && u.reading[0] ? `<span class="sm">Sedang baca <b>${esc(u.reading[0].t)}</b> · ${u.reading[0].pct}%</span>` : '<span class="mut sm">Belum mulai membaca</span>'}</span></button>`;
+const wireRows = root => root.querySelectorAll('[data-u]').forEach(b => b.onclick = () => openProfile(b.dataset.u));
+async function homeFriends() {
+  const host = $('#frHome'); if (!host || !db.acct) { if (host) host.remove(); return; }
+  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>Teman membaca</h2><button class="ghost" id="frFind">Cari teman</button></div><div id="frList" class="mut sm">Memuat…</div></div>`;
+  $('#frFind').onclick = openFriends;
+  try {
+    const r = await api('/teman');
+    $('#frList').innerHTML = r.users.length ? r.users.slice(0, 5).map(frRow).join('') : `<div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div>`;
+    wireRows($('#frList'));
+  } catch (e) { $('#frList').textContent = e.message; }
+}
+async function openFriends() {
+  openSheet(`<div class="sh-head"><h2>Teman</h2>${closeBtn}</div>
+    <input id="frQ" type="search" placeholder="Cari nama atau @username" aria-label="Cari teman" autocomplete="off">
+    <div id="frRes" style="margin-top:12px"></div><div class="sec-h" style="margin:16px 0 6px"><h2 style="font-size:18px">Yang kamu ikuti</h2></div><div id="frMine" class="mut sm">Memuat…</div>`, 'Teman');
+  let tm;
+  $('#frQ').oninput = e => { clearTimeout(tm); const q = e.target.value.trim(); tm = setTimeout(async () => {
+    if (q.length < 2) { $('#frRes').innerHTML = ''; return; }
+    try { const r = await api('/cari?q=' + encodeURIComponent(q)); $('#frRes').innerHTML = r.users.length ? r.users.map(frRow).join('') : '<div class="mut sm">Tidak ada profil publik dengan nama itu.</div>'; wireRows($('#frRes')); } catch (x) { $('#frRes').textContent = x.message; }
+  }, 300); };
+  try { const r = await api('/teman'); $('#frMine').innerHTML = r.users.length ? r.users.map(frRow).join('') : 'Belum ada.'; wireRows($('#frMine')); } catch (e) { $('#frMine').textContent = e.message; }
+}
+async function openProfile(username) {
+  openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
+  try {
+    const p = await api('/u/' + encodeURIComponent(username));
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
+      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div><div><b>${p.kata7}</b><span>kata minggu ini</span></div><div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
+      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${p.reading.length ? p.reading.map(bacaBaris).join('') : '<div class="mut sm">Belum ada buku yang dibuka.</div>'}
+      ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
+      ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
+    const f = $('#pfFol'); if (f) f.onclick = async () => { f.disabled = true; try { await api('/ikuti/' + encodeURIComponent(p.username), { method: p.diikuti ? 'DELETE' : 'POST' }); toast(p.diikuti ? `Berhenti mengikuti ${p.nick}.` : `Kamu mengikuti ${p.nick}.`); openProfile(p.username); if ($('#frHome')) homeFriends(); } catch (e) { toast(e.message); f.disabled = false; } };
+  } catch (e) { $('#pfBody').textContent = e.message; }
 }
 
 /* ---------- Bagikan cerita ---------- */
@@ -476,6 +530,7 @@ setTab = function (t) {
   if (t === 'rak') {
     const ben = $('.bento');
     if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
+    if (ben && API && db.acct && !$('#frHome')) { const f = document.createElement('div'); f.id = 'frHome'; f.style.marginTop = '12px'; ($('#lbHome') || ben).after(f); homeFriends(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
 };

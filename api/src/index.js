@@ -37,7 +37,13 @@ async function authUser(req, env) {
   if (!t) return null;
   return env.DB.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?').bind(t).first();
 }
-const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden });
+const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden, publik: !!u.social, hideTitles: !!u.hide_titles });
+// kartu profil publik: judul buku diganti "Sebuah buku" bila pemilik menyembunyikan judul
+function cardOf(x) {
+  let pf = {}; try { pf = JSON.parse(x.profile || '{}') || {}; } catch (e) { }
+  const reading = (Array.isArray(pf.reading) ? pf.reading : []).slice(0, 3).map(r => ({ t: x.hide_titles ? 'Sebuah buku' : String(r.t || '').slice(0, 80), lang: String(r.lang || '').slice(0, 5), pct: Math.max(0, Math.min(100, +r.pct || 0)), at: +r.at || 0 }));
+  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0 };
+}
 async function body(req) { try { return await req.json(); } catch (e) { return {}; } }
 async function newSession(env, uid) { const t = tokenStr(); await env.DB.prepare('INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)').bind(t, uid, Date.now()).run(); return t; }
 
@@ -84,6 +90,11 @@ export default {
         const nick = b.nick ? String(b.nick).trim().slice(0, 24) : u.nick;
         await env.DB.prepare('UPDATE users SET data=?, xp=?, week=?, week_xp=?, hidden=?, nick=?, updated_at=? WHERE id=?')
           .bind(data, xp, week, wx, b.hidden ? 1 : 0, nick || u.nick, Date.now(), u.id).run();
+        // ringkasan profil sosial (yang sedang dibaca, kata minggu ini, streak). Teks buku tidak pernah dikirim.
+        if (b.profile && typeof b.profile === 'object') {
+          const pf = JSON.stringify(b.profile);
+          if (pf.length <= 6000) await env.DB.prepare('UPDATE users SET profile=? WHERE id=?').bind(pf, u.id).run();
+        }
         return json(req, { ok: true, week });
       }
       // Buku di akun: teks per buku disimpan terkompresi (gzip+base64) dan dipotong per BK_CHUNK.
@@ -138,6 +149,52 @@ export default {
           }
           return json(req, { ok: true, i, n });
         }
+      }
+      // ---------- Sosial: profil, ikuti, cari teman ----------
+      // Privat (bawaan): hanya pemilik yang lihat. Publik: semua pengguna yang masuk bisa lihat & mengikuti.
+      if (p === '/social' && req.method === 'PUT') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const b = await body(req);
+        await env.DB.prepare('UPDATE users SET social=?, hide_titles=? WHERE id=?').bind(b.publik ? 1 : 0, b.hideTitles ? 1 : 0, u.id).run();
+        if (!b.publik) await env.DB.prepare('DELETE FROM follows WHERE followee_id=?').bind(u.id).run();
+        return json(req, { ok: true });
+      }
+      if (p === '/cari' && req.method === 'GET') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const q = String(url.searchParams.get('q') || '').trim().toLowerCase().replace(/[%_]/g, '').slice(0, 24);
+        if (q.length < 2) return json(req, { users: [] });
+        const r = await env.DB.prepare('SELECT username, nick, profile FROM users WHERE social=1 AND id<>? AND (username LIKE ? OR LOWER(nick) LIKE ?) ORDER BY updated_at DESC LIMIT 20').bind(u.id, q + '%', '%' + q + '%').all();
+        return json(req, { users: (r.results || []).map(x => cardOf(x)) });
+      }
+      if (p === '/teman' && req.method === 'GET') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const r = await env.DB.prepare('SELECT x.username, x.nick, x.profile, x.hide_titles FROM follows f JOIN users x ON x.id=f.followee_id WHERE f.follower_id=? AND x.social=1 ORDER BY x.updated_at DESC LIMIT 100').bind(u.id).all();
+        return json(req, { users: (r.results || []).map(x => cardOf(x)) });
+      }
+      const um = p.match(/^\/u\/([a-z0-9_]{3,20})$/);
+      if (um && req.method === 'GET') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const x = await env.DB.prepare('SELECT id, username, nick, xp, profile, social, hide_titles, created_at FROM users WHERE username=?').bind(um[1]).first();
+        const self = x && x.id === u.id;
+        if (!x || (!x.social && !self)) return err(req, 'Profil ini privat.', 404);
+        const [fo, fi, me] = await Promise.all([
+          env.DB.prepare('SELECT COUNT(*) c FROM follows f JOIN users y ON y.id=f.follower_id WHERE f.followee_id=?').bind(x.id).first(),
+          env.DB.prepare('SELECT COUNT(*) c FROM follows WHERE follower_id=?').bind(x.id).first(),
+          env.DB.prepare('SELECT 1 k FROM follows WHERE follower_id=? AND followee_id=?').bind(u.id, x.id).first(),
+        ]);
+        return json(req, { ...cardOf(self ? { ...x, hide_titles: 0 } : x), xp: x.xp, publik: !!x.social, self, diikuti: !!me, pengikut: +fo.c, mengikuti: +fi.c, sejak: x.created_at });
+      }
+      const fm = p.match(/^\/ikuti\/([a-z0-9_]{3,20})$/);
+      if (fm && (req.method === 'POST' || req.method === 'DELETE')) {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const x = await env.DB.prepare('SELECT id, social FROM users WHERE username=?').bind(fm[1]).first();
+        if (!x || x.id === u.id) return err(req, 'Pengguna tidak ditemukan.', 404);
+        if (req.method === 'DELETE') { await env.DB.prepare('DELETE FROM follows WHERE follower_id=? AND followee_id=?').bind(u.id, x.id).run(); return json(req, { ok: true }); }
+        if (!x.social) return err(req, 'Profil ini privat.', 403);
+        const n = await env.DB.prepare('SELECT COUNT(*) c FROM follows WHERE follower_id=?').bind(u.id).first();
+        if (+n.c >= 300) return err(req, 'Maks 300 teman yang diikuti.', 400);
+        await env.DB.prepare('INSERT OR IGNORE INTO follows (follower_id, followee_id, created_at) VALUES (?,?,?)').bind(u.id, x.id, Date.now()).run();
+        return json(req, { ok: true });
       }
       if (p === '/leaderboard' && req.method === 'GET') {
         const week = isoWeek(), u = await authUser(req, env);

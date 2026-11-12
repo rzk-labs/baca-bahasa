@@ -25,6 +25,8 @@ const ICONS = {
   cards: '<rect x="3" y="6" width="13" height="16" rx="2.5"/><path d="M8 2h10.5A2.5 2.5 0 0 1 21 4.5V17"/>',
   bm: BM,
   bmplus: BM + '<path d="M12 7v6M15 10H9"/>', bmcheck: BM + '<path d="m9 10 2 2 4-4"/>',
+  pause: '<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
   vol: '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',
   sliders: '<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
   ruby: '<path d="M6 6h3M12 6h3"/><path d="M4 12h16"/><path d="M4 18h10"/>',
@@ -632,10 +634,21 @@ $('#file').onchange = async e => {
   const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
   if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
   if (f.size > 50 * MB) return toast('File-nya kegedean (maks 50 MB).', 5000);
+  const lanjut = () => cekKembar(f);
+  if (isDoc && f.size > 25 * MB) return toast('File besar, bisa berat di HP. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
   const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
-  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: () => importFile(f) });
-  importFile(f);
+  if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
+  lanjut();
 };
+/* file kembar: nama + ukuran sama dengan buku yang ada (buku lama tanpa src dilewati) */
+function cekKembar(f) {
+  const ada = db.books.find(b => b && b.src && b.src.name === f.name && b.src.size === f.size);
+  if (!ada) return importFile(f);
+  openSheet(`<div class="sh-head"><h2>Buku ini sudah ada</h2>${closeBtn}</div><div class="mut sm">Buku ini sudah ada. Impor lagi?</div>
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="dupBuka">Buka yang lama</button><button class="btn ghost" id="dupLagi">Impor lagi</button></div>`, 'Buku sudah ada');
+  $('#dupBuka').onclick = () => { closeSheet(); db.cur = ada.id; save(); setTab('baca'); };
+  $('#dupLagi').onclick = () => { closeSheet(); importFile(f, true); };
+}
 const IMPOR_TIMEOUT = 45000;
 async function importFile(f, paksa) {
   if (/\.(epub|pdf)$/i.test(f.name || '') && !navigator.onLine && !(await libsCached())) return toast('EPUB/PDF butuh internet sekali buat siapin alat baca. Sambungkan dulu, atau pakai .txt.', 6000);
@@ -653,12 +666,12 @@ async function importFile(f, paksa) {
         if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
       }
     }
-    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg)) commitLang(lg);
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }))commitLang(lg);
   }
   catch (err) {
     clearTimeout(tm);
     console.error(err);
-    if (err && err.telat) return toast('Kelamaan. Cek sinyal, lalu coba lagi', 6000);
+    if (err && err.telat) return toast('Gagal: kelamaan (lebih dari 45 detik). Cek sinyal, tutup tab lain, lalu coba lagi.', 9000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
@@ -670,10 +683,12 @@ async function importFile(f, paksa) {
     toast(msg, 6000);
   }
 }
-async function addBook(title, paras, lang) {
+async function addBook(title, paras, lang, src) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
-  db.books.push({ id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() });
+  const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() };
+  if (src && src.name) bk.src = { name: src.name, size: src.size };
+  db.books.push(bk);
   const prevCur = db.cur;
   db.cur = id;
   if (!save()) { db.books = db.books.filter(b => b.id !== id); db.cur = prevCur; try { await delText(id); } catch (e) { } return false; }
@@ -767,7 +782,7 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar bab, sekarang bab ${b.pos + 1} dari ${secs.length}">Bab ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}</button>` : ''}<button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(chTitle)}</div>
@@ -779,7 +794,8 @@ async function viewBaca() {
     </div>`;
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); };
   $('#rHome').onclick = () => leaveBaca();
-  if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) stopListenPage(); else startListenPage(); };
+  if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) pauseListenPage(); else startListenPage(); };
+  if ($('#rRate')) $('#rRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); lisUi(); if (LIS.on && LIS.cur) startListenPage(true); };
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   if ($('#rRt')) $('#rRt').onclick = () => {
     db.rt = db.rt ? 0 : 1; save(); viewBaca();
@@ -835,39 +851,71 @@ async function viewBaca() {
   RD.quiet = false;
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if ($('#cols')) layout(); });
+  if (LIS.chain) { LIS.chain = false; startListenPage(); }
 }
 /* Dengar halaman: putar kalimat halaman aktif satu per satu, sorot yang sedang dibaca */
-const LIS = { on: false, id: 0 };
-function stopListenPage() {
-  if (!LIS.on) return;
-  LIS.on = false; LIS.id++; stopSpeak();
-  $$('.cols .s.say').forEach(x => x.classList.remove('say'));
-  const bt = $('#rLis'); if (bt) { bt.classList.remove('on'); bt.setAttribute('aria-pressed', 'false'); bt.setAttribute('aria-label', 'Dengar halaman'); }
-  const n = $('#lisNote'); if (n) n.hidden = true;
+/* Tiga keadaan: Mulai / Jeda / Lanjut. Jeda lanjut dari kalimat terakhir; di ujung halaman pindah sendiri ke halaman/bab berikut */
+const LIS = { on: false, paused: false, id: 0, si: null, cur: null, chain: false };
+function lisUi() {
+  const bt = $('#rLis'), rt = $('#rRate'), act = LIS.on || LIS.paused;
+  if (bt) {
+    bt.classList.toggle('on', LIS.on); bt.setAttribute('aria-pressed', LIS.on ? 'true' : 'false');
+    bt.setAttribute('aria-label', LIS.on ? 'Jeda dengar' : LIS.paused ? 'Lanjut dengar' : 'Dengar halaman');
+    bt.innerHTML = ico(LIS.on ? 'pause' : LIS.paused ? 'play' : 'vol');
+  }
+  if (rt) { rt.hidden = !act; const sl = db.ttsRate === 'slow'; rt.textContent = sl ? 'Lambat' : 'Normal'; rt.setAttribute('aria-label', 'Laju suara: ' + (sl ? 'lambat' : 'normal') + '. Ketuk untuk ganti'); }
+  const n = $('#lisNote'); if (n) n.hidden = !act;
 }
-function startListenPage() {
+const lisClear = () => $$('.cols .s.say').forEach(x => x.classList.remove('say'));
+function stopListenPage() {
+  if (!LIS.on && !LIS.paused) return;
+  LIS.on = false; LIS.paused = false; LIS.si = null; LIS.cur = null; LIS.id++; stopSpeak();
+  lisClear(); lisUi();
+}
+function pauseListenPage(quiet) {
+  if (!LIS.on) return;
+  LIS.on = false; LIS.paused = true; LIS.id++; stopSpeak();
+  if (LIS.cur) LIS.si = +LIS.cur.dataset.s;
+  if (quiet) lisClear();
+  lisUi();
+}
+function startListenPage(restart) {
   const b = book(); if (!b || !RD.ss) return;
   const q = RD.ss.filter(x => x.pg === RD.page).map(x => x.el).filter(el => el.textContent.trim());
   if (!q.length) return toast('Nggak ada teks di halaman ini');
-  const id = ++LIS.id; LIS.on = true;
-  const bt = $('#rLis'); if (bt) { bt.classList.add('on'); bt.setAttribute('aria-pressed', 'true'); bt.setAttribute('aria-label', 'Berhenti dengar halaman'); }
-  const n = $('#lisNote'); if (n) n.hidden = false;
   let i = 0;
+  if (restart && LIS.cur) i = Math.max(0, q.indexOf(LIS.cur));
+  else if (LIS.paused && LIS.si != null) { const k = q.findIndex(el => +el.dataset.s >= LIS.si); if (k >= 0) i = k; }
+  const id = ++LIS.id; LIS.on = true; LIS.paused = false; lisUi();
   const next = () => {
     if (!LIS.on || LIS.id !== id) return;
-    $$('.cols .s.say').forEach(x => x.classList.remove('say'));
-    if (i >= q.length) return stopListenPage();
-    const el = q[i++]; el.classList.add('say');
+    lisClear();
+    if (i >= q.length) return lisAdvance();
+    const el = LIS.cur = q[i++]; LIS.si = +el.dataset.s; el.classList.add('say');
     speak(el.textContent.replace(/\u0001/g, '').trim(), b.lang, 0.9, { end: next, fail: () => { if (LIS.id === id) stopListenPage(); } });
   };
   next();
 }
+/* ujung halaman: lanjut ke halaman berikut, lalu bab berikut; berhenti di akhir buku */
+function lisAdvance() {
+  const b = book(); if (!b) return stopListenPage();
+  LIS.si = null; LIS.cur = null; LIS.paused = false;
+  if (RD.page < RD.n - 1) { showPage(RD.page + 1); $('#reader').classList.remove('chrome'); return startListenPage(); }
+  if (b.pos < b.total - 1) {
+    LIS.on = false; LIS.id++; stopSpeak(); LIS.chain = true;
+    b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page'); viewBaca(); return;
+  }
+  stopListenPage(); toast('Udah sampai akhir buku');
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && LIS.on) { pauseListenPage(true); toast('Dengar dijeda'); } });
 const MG = { s: 12, m: 24, l: 48 };
 const setCur = el => { const c = $('#cols'), r = $('#reader'), p = el && el.closest ? el.closest('p,h2') : null; if (!c || !r || !r.classList.contains('focus') || !p) return; $$('.cols .cur').forEach(x => x !== p && x.classList.remove('cur')); p.classList.add('cur'); c.classList.add('has-cur'); };
 const RD = { ss: [], hs: [], dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
   const b = book(), W = vp.clientWidth, H = vp.clientHeight;
+  const rd = $('#reader'), sig = [W, H, cols.style.fontSize, rd && rd.style.getPropertyValue('--reader-lh'), rd && rd.style.getPropertyValue('--reader-mg')].join('|');
+  if (sig !== RD.sig) { RD.sig = sig; stopListenPage(); }
   const G = 64, per = W >= 900 && (W - G) / 2 >= 360 ? 2 : 1, cw = (W - (per - 1) * G) / per;
   vp.classList.toggle('two', per === 2);
   Object.assign(cols.style, { height: H + 'px', width: W + 'px', columnWidth: cw + 'px', columnGap: G + 'px', transition: 'none', transform: 'none' });
@@ -1115,10 +1163,10 @@ async function onWord(el, lastEl) {
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
+    <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
-    <div class="tr" id="wtr" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
+    <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
@@ -1231,9 +1279,9 @@ function showSentence(word, sent, sIdx, sEl) {
   const wordGloss = wMean ? `<div class="wgloss"><span class="wg-w" dir="auto" lang="${esc(b.lang)}">${esc(word)}</span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(db.my)}">${esc(wMean)}</span></div>` : '';
   openSheet(`
     <div class="sh-head">${word ? `<button class="icon" id="sback" aria-label="Balik ke arti kata">${ico('left')}</button>` : ''}<span class="stepchip" style="margin-right:auto">Arti kalimat</span><button class="icon snav" id="sprev" aria-label="Kalimat sebelumnya">${ico('left')}</button><button class="icon snav" id="snext" aria-label="Kalimat berikutnya">${ico('right')}</button>${closeBtn}</div>
-    <div class="src">${marked}</div>${wordGloss}
+    <div class="src" dir="auto" lang="${esc(b.lang)}">${marked}</div>${wordGloss}
     <div id="sbaca"></div>
-    <div class="tr sent" id="str" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
+    <div class="tr sent" id="str" lang="${esc(db.my)}" aria-live="polite"><span class="loading">Lagi nerjemahin kalimat…</span></div>
     ${ttsNote(b.lang)}
     <div class="sheet-aux"><button class="ghost" id="ssp">${ico('vol')} Dengerin kalimatnya</button><button class="ghost" id="ssl">${ico('slow')} Pelan</button></div>
     <div class="row"><button class="lime" id="spr">${ico('mic')} Coba ngomongin</button></div>
@@ -1255,7 +1303,7 @@ function showSentence(word, sent, sIdx, sEl) {
     } else trEl.textContent = r.text;
     const bc = bacaOf(sent, r.baca), sb = $('#sbaca');
     if (bc && sb) {
-      const v = `<div class="sbaca" lang="${esc(b.lang)}">${esc(bc)}</div>`;
+      const v = `<div class="sbaca" dir="auto" lang="${esc(b.lang)}">${esc(bc)}</div>`;
       sb.innerHTML = db.showBaca ? v : `<button class="ghost sbaca-peek" id="speek" type="button">Lihat cara baca</button>` + v.replace('class="sbaca"', 'class="sbaca hide" id="speekv"');
       if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
     }
