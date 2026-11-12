@@ -87,6 +87,19 @@ function countTap(lang, w) {
   return tapsOf(lang, w);
 }
 const takeTaps = (lang, w) => { const k = tapKey(lang, w), n = (db.taps && +db.taps[k]) || 0; if (db.taps) delete db.taps[k]; return n; };
+/* ---------- statistik lokal per buku (db.sentLooks: idBuku → {kata, kalimat}; opsional, tidak disinkron) ---------- */
+const SL_MAX = 200;
+function bumpSentLook(bookId, field) {
+  if (!bookId || (field !== 'kata' && field !== 'kalimat')) return;
+  if (!db.sentLooks || typeof db.sentLooks !== 'object' || Array.isArray(db.sentLooks)) db.sentLooks = {};
+  const old = db.sentLooks[bookId]; delete db.sentLooks[bookId]; // masukkan ulang → urutan terbaru di belakang
+  const o = db.sentLooks[bookId] = { kata: +(old && old.kata) || 0, kalimat: +(old && old.kalimat) || 0 };
+  o[field]++;
+  const ks = Object.keys(db.sentLooks);
+  if (ks.length > SL_MAX) ks.slice(0, ks.length - SL_MAX).forEach(x => delete db.sentLooks[x]);
+  save();
+}
+const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; return { kata: +(o && o.kata) || 0, kalimat: +(o && o.kalimat) || 0 }; };
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
