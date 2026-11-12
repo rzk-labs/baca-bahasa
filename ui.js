@@ -1133,7 +1133,7 @@ async function viewBaca() {
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
-  tipN = 0;
+  tipN = 0; nudgePg = new Set();
   if (!db.seenTip) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
@@ -1189,7 +1189,7 @@ async function viewBaca() {
     if (e.target.closest('.intip')) return;
     let w = e.target.closest('.w');
     if (!w && !e.target.closest('button,a,input,.intip') && e.clientX) w = nearWord(vp, e.clientX, e.clientY);
-    if (w) { dismissTip(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
+    if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
@@ -1385,6 +1385,7 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
+  nudgeTap(b);
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
   b.pct = readPct(b);
   const ml = minsLeft(b);
@@ -1530,7 +1531,18 @@ async function openMarks() {
     toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   });
 }
-let tipN = 0;
+let tipN = 0, nudgePg = new Set(), nudgeT = 0;
+const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
+function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
+/* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
+function nudgeTap(b) {
+  nudgePg.add(b.pos + ':' + RD.page);
+  if (nudgePg.size < 5 || db.seenNudgeTap || !db.seenTip || db.vocab.length || Object.keys(db.looks || {}).length) return;
+  if ($('#tip') || $('#nchip') || $('#sheet.open')) return; /* satu pesan sekali waktu; coba lagi di halaman berikut */
+  db.seenNudgeTap = true; save();
+  toast(NUDGE_MSG, 5000);
+  clearTimeout(nudgeT); nudgeT = setTimeout(nudgeOff, 5000);
+}
 function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
 function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
 function turn(d) {
