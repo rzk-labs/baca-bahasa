@@ -1,5 +1,11 @@
 [
   {
+    "n": 749,
+    "judul": "Baca: bar progres ringkas 1 baris & persen Home sama dengan bar",
+    "poin": "Bar baca kini ringkas: \"Bab 2/37 · Hal 11/19\" lalu \"5% · ±669 mnt\".",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 746,
     "judul": "Baca: ikon header berlabel jelas (dengar, pengaturan, cara baca)",
     "poin": "Tombol di atas halaman baca sekarang bertulisan: Dengar, Atur, Cara baca.",
@@ -171,12 +177,6 @@
     "n": 692,
     "judul": "[peta 69] Saat impor: tampilkan 'Perkiraan kata baru ~N%'",
     "poin": "Habis impor buku, muncul \"Perkiraan kata baru ~N%\" di notifikasi dan kartu rak.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 690,
-    "judul": "[peta 34] Tombol feedback kirim langsung ke HQ, tanpa salin-tempel",
-    "poin": "Tombol Kirim masukan sekarang langsung sampai ke tim, tanpa salin-tempel.",
     "tgl": "2026-11-12"
   }
 ]
