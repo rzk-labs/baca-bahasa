@@ -51,7 +51,8 @@
     { "no": 44, "peran": "pm", "prioritas": "P3", "nama": "Sosial ringan: profil, teman, feed 'sedang dibaca' + akun uji AI (#539)", "dokumen": "docs/spesifikasi-sosial-profil.md", "status": "dispesifikasi, menunggu keputusan; butuh deploy server manual" },
     { "no": 45, "peran": "desain", "prioritas": "P1", "nama": "Ikon & logo terasa app baca: buku terbuka + stabilo Wasabi, tanpa maskot (#584)", "dokumen": "docs/desain-ikon-logo-baca.md", "status": "siap dikerjakan" },
     { "no": 46, "peran": "developer", "prioritas": "P1", "nama": "Keepo HQ: kartu Hasil punya status 3 jenis: Belum diproses, Progres, Selesai (#586)", "dokumen": "docs/spesifikasi-hq-status-kartu-hasil.md", "status": "spesifikasi siap dikerjakan" },
-    { "no": 47, "peran": "pm", "prioritas": "P1", "nama": "Audit ulang tugas terlewat: spesifikasi belum jadi kode, verifikasi #35 #36 #38 #40 (#594)", "dokumen": "docs/pm-audit-tugas-terlewat.md", "status": "selesai (audit); tugas lanjutan diusulkan di dokumen" }
+    { "no": 47, "peran": "pm", "prioritas": "P1", "nama": "Audit ulang tugas terlewat: spesifikasi belum jadi kode, verifikasi #35 #36 #38 #40 (#594)", "dokumen": "docs/pm-audit-tugas-terlewat.md", "status": "selesai (audit); tugas lanjutan diusulkan di dokumen" },
+    { "no": 48, "peran": "pm", "prioritas": "P3", "nama": "Akun tester/pengguna AI di leaderboard + profil publik + daftar Jelajah ala FYP (#613)", "dokumen": "docs/pm-leaderboard-akun-ai-jelajah.md", "status": "dispesifikasi, menunggu keputusan; bentrok dengan aturan #539 (AI tidak di leaderboard)" }
   ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
