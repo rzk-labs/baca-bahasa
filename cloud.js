@@ -45,7 +45,7 @@ async function pushSync(force) {
   await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick } });
   lastSync = sig;
 }
-function applyServer(data) { SYNC_KEYS.forEach(k => { if (k === 'taps') mergeTaps(data.taps); else if (data[k] != null) db[k] = data[k]; }); save(); }
+function applyServer(data) { SYNC_KEYS.forEach(k => { if (k === 'taps') mergeTaps(data.taps); else if (data[k] != null) db[k] = data[k]; }); dedupeVocab(); save(); }
 async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden };
   const d = res.data;
