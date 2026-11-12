@@ -809,7 +809,7 @@ async function onWord(el, lastEl) {
   const saveLbl = () => isSaved() ? `${ico('bmcheck')} Tersimpan` : `${ico('bmplus')} Simpan`;
   openSheet(`
     <div class="sh-head"><span class="stepchip">Arti kata</span>${closeBtn}</div>
-    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><button class="icon tint" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya" style="margin-left:auto;font:800 24px/1 var(--font-ui)">‹</button><button class="icon tint" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">${ico('plus')}</button></div>
+    <div class="wd"><b id="wword">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span><button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     <div class="wmeta"><span class="pos" id="wpos"></span><span id="wbaca"></span><span id="wbase"></span></div>
     <div class="tr" id="wtr" aria-live="polite"><span class="loading">Lagi nyari artinya…</span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
@@ -859,7 +859,7 @@ async function onWord(el, lastEl) {
     keepVisible('.w.sel');
   }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Kata ini belum tersimpan; arti muncul begitu ada sinyal.' : 'Sinyal lemah, arti belum kebuka. Coba lagi ya.'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>'; load(); }; } }); };
   load(); bumpLook();
-  const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; e.style.opacity = can ? '' : '.35'; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
+  const updExp = () => { const room = hi - lo + 1 < MAXW; const set = (id, can) => { const e = $(id); if (e) { e.disabled = !can; } }; set('#wexp', room && hi < ws.length - 1); set('#wexl', room && lo > 0); };
   updExp();
   let expT = 0;
   const grow = dir => {
