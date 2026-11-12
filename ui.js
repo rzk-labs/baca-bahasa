@@ -161,11 +161,16 @@ function award(n, stat) {
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
-  if (level() > before) setTimeout(() => notifyLater(() => celebrate(`Level ${level()}!`, 'Naik level! Kamu makin jago', 'lvl')), 700);
+  if (!(db.lvlSeen >= 1)) { db.lvlSeen = before; save(); } // migrasi: level saat ini dianggap sudah dirayakan
+  if (level() > before) setTimeout(() => notifyLater(() => {
+    const lv = level(); if (lv <= db.lvlSeen) return; // sudah dirayakan: jangan muncul lagi
+    db.lvlSeen = lv; save(); celebrate(`Level ${lv}!`, 'Naik level! Kamu makin jago', 'lvl');
+  }), 700);
   newB.forEach(([, , name], i) => setTimeout(() => notifyLater(() => { toast(`Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
+  document.querySelectorAll('.lvlup').forEach(x => x.remove());
   const el = document.createElement('div'); el.className = 'lvlup';
   el.innerHTML = `<div class="card">${spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
