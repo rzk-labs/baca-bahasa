@@ -1991,7 +1991,7 @@ function viewKata() {
           openSheet(`<div class="sh-head"><h2>Ekspor ke Anki</h2>${closeBtn}</div>
           <button class="csvbtn csvgo" id="kCsv">Unduh CSV (${readyN()} kata)</button>
           <p class="mut sm">Cara impor: pakai Anki di laptop.</p>
-          <ol class="csvsteps"><li>Buka <b>File → Import</b>, pilih file CSV Keepo.</li><li>Atur <b>kolom 1 = Depan</b>, kolom lainnya = Belakang.</li><li>Pilih <b>perbarui catatan</b> yang ada, lalu Import.</li></ol>
+          <ol class="csvsteps"><li>Buka <b>File → Import</b>, pilih file CSV Keepo.</li><li>Atur <b>kolom 1 = Depan</b>, kolom lainnya = Belakang. Centang <b>izinkan HTML</b>.</li><li>Pilih <b>perbarui catatan</b> yang ada, lalu Import.</li></ol>
           <p class="mut sm">Di HP: impor di laptop, sinkron AnkiWeb, belajar di HP.</p>`, 'Ekspor ke Anki');
           $('#kCsv').onclick = exportCsv;
         };
