@@ -681,6 +681,9 @@ function streakInfo() {
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
   return best > cur ? `Rekor ${best} hari` : cur >= 2 ? 'Rekor barumu!' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
+const NUDGE_TXT = 'Ketuk satu kata di bacaan untuk mulai';
+/* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
+function firstWordNudge() { return !countedVocab(null).length && Object.values(db.pgDay || {}).some(n => n >= 1); }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -709,8 +712,9 @@ function viewRak() {
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, xt > GOAL ? `<span class="gn">${xt}</span><small>dari ${GOAL}</small>` : `<span class="gn">${xt}/${GOAL}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Target ${GOAL} XP tercapai` : `XP ${xt}/${GOAL}`}</div></div>
-      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div></div>
+      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
+    ${firstWordNudge() ? `<div class="mut sm" id="fwNudge" style="margin:-4px 0 12px">${NUDGE_TXT}</div>` : ''}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
