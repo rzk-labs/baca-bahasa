@@ -154,7 +154,7 @@ button:disabled{opacity:.35;pointer-events:none}
 .goal-row .ring{width:58px;height:58px}.goal-row .ring svg{width:58px;height:58px}.goal-row .ring circle{stroke-width:8}
 .goal-row .ring .bg{stroke:rgba(53,30,40,.14)}
 .goal-row .ring .score{font:800 15px var(--font-ui)}
-.wod-w{font:800 30px/32px var(--font-display);overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px;flex-wrap:wrap}.wod .hero-act button{flex:1 1 130px}
+.wod-w{font:800 30px/32px var(--font-display);overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px;flex-wrap:wrap}.wod .hero-act button{flex:1 1 130px;white-space:nowrap}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer}
 .stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
@@ -184,8 +184,9 @@ button:disabled{opacity:.35;pointer-events:none}
 .bk .cover .em{font-size:44px}
 .bk .t{font-weight:700;font-size:14px;line-height:19px;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bk .m{font-size:12px;line-height:16px;color:var(--color-text-muted);font-weight:600}
-.bk .del{position:absolute;top:6px;right:6px;width:44px;height:44px;min-height:0;padding:0;background:rgba(255,255,255,.75);color:var(--ink)}
-.bk .del.sure{width:auto;padding:0 10px;background:var(--color-poor);color:#fff;font-size:12px}
+.bk .bk-act{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+.bk .del{position:static;min-width:44px;height:44px;min-height:0;padding:0 12px;gap:6px;font-size:12px;font-weight:700;background:rgba(0,0,0,.06);color:var(--ink)}
+.bk .del.sure{background:var(--color-poor);color:#fff;white-space:nowrap}
 .add-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:var(--space-4)}
 .add-grid button{flex-direction:column;gap:6px;min-height:96px;padding:10px 6px;border-radius:var(--radius-lg);background:var(--color-surface-soft);color:var(--color-text);font-size:13px;line-height:16px;text-align:center;white-space:normal}
 .add-grid button .em{font-size:26px;line-height:1}
@@ -480,7 +481,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .lb-gap{text-align:center;color:var(--color-text-muted);letter-spacing:4px}
 .lb-cta{display:flex;align-items:center;gap:12px}.lb-cta>div{flex:1}.lb-cta b{display:block;font:800 21px/1.15 var(--font-display);margin-top:2px}
 .lb-cta .lime{min-height:46px}
-.bk .shr{position:absolute;top:58px;right:6px;width:44px;height:44px;min-height:0;padding:0;background:rgba(255,255,255,.75);color:var(--ink);font-size:18px;font-weight:800}
+.bk .shr{position:static;width:44px;height:44px;min-height:0;padding:0;background:rgba(255,255,255,.75);color:var(--ink);font-size:18px;font-weight:800}
 .share-link{display:flex;gap:8px;margin-top:14px}.share-link input{margin:0;flex:1;min-width:0;font-size:16px}.share-link button{min-height:52px}
 .sample-pick{display:grid;gap:10px;margin-top:14px}.sample-pick button{min-height:56px;display:flex;align-items:center;gap:10px;justify-content:flex-start;text-align:left;padding:8px 18px}.sample-pick .mut{margin-left:auto;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Yang baru */
