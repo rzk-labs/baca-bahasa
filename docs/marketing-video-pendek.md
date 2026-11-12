@@ -1,115 +1,119 @@
-# Kit 3 skrip video 15 detik: ketuk kata di Keepo (Tugas #151)
+# 3 skrip video pendek demo Keepo (Reels/TikTok) + teks bio (Tugas #87)
 
 ## Intinya
-- 3 skrip video 15 detik, rekam layar HP saja, tanpa editing rumit.
-- Satu pesan: baca buku sendiri, ketuk kata, langsung paham.
-- Kerja founder sekitar 10 menit per video. Posting ke Reels, TikTok, Threads.
+- 3 video 15-25 detik: rekam layar HP, tanpa muka, tanpa edit rumit.
+- Satu rekaman sesi, total kerja founder maks 20 menit.
+- Semua fitur di skrip sudah ada di app. Tidak ada klaim palsu.
 
 Catatan jujur:
-- Link form tester belum ada di docs. Pakai link app; taruh `[link form]` di komentar/DM.
-- Hadiah cuma akses awal gratis. Jangan janjikan hadiah atau fitur lain.
-- Pakai buku domain publik (contoh: Pride and Prejudice). Lihat `docs/riset-hak-cipta.md`.
+- Link form tester belum ada di docs. Tulis `[link form]`; ganti sebelum posting.
+- Hadiah hanya akses awal gratis. Jangan janji voucher/uang.
+- Nada mengikuti `docs/marketing-threads-tester.md`.
 
-Link CTA semua video: https://rzk-labs.github.io/baca-bahasa/
+## 1. Skrip A: ketuk kata, langsung arti + cara baca
+Bahasa: Korea atau Jepang. Pakai cerita contoh bawaan (tombol "Cerita contoh" di Home). Aman hak cipta.
 
-Rujukan, tidak diulang di sini:
-- Carousel gambar diam: `docs/marketing-carousel-kata.md`.
-- Draf Threads & balasan DM: `docs/marketing-threads-tester.md`.
+**Hook (detik 0-2):** teks besar "Huruf Korea ini apa sih artinya? 😭"
 
-## 1. Skrip A: "Kata ini bikin aku berhenti baca" (Inggris)
-Buku: Pride and Prejudice. Kata: acknowledged.
+Urutan layar:
+- 0-2: layar baca, kalimat Korea/Jepang penuh. Hook muncul.
+- 2-6: jari ngambang di satu kata, lalu ketuk.
+- 6-12: kartu kata muncul: arti Indonesia + cara baca. Diam 3 detik biar terbaca.
+- 12-16: ketuk tombol suara biar kata dibacakan.
+- 16-20: ketuk "Simpan", lalu "Selesai".
+- 20-23: layar akhir: teks ajakan.
 
-**Hook (detik 0-2):** teks besar "Novel klasik, 1 kata, langsung nyerah 😭"
-
-Langkah rekam per detik:
-- 0-2: layar Home Keepo, teks hook muncul.
-- 2-5: ketuk buku Pride and Prejudice, e-reader terbuka.
-- 5-8: layar di kalimat pembuka, jari berhenti di "acknowledged".
-- 8-11: ketuk kata, kartu arti muncul: "diakui".
-- 11-13: ketuk simpan kata.
-- 13-15: tunjukkan tab Kata berisi kata tersimpan.
-
-Teks di layar:
-- 0-2: "Novel klasik, 1 kata, langsung nyerah 😭"
-- 8-11: "Ketuk. Langsung paham."
-- 13-15: "Baca buku sendiri. Gratis dicoba."
+Teks overlay:
+- 0-2: "Huruf Korea ini apa sih artinya? 😭"
+- 6-12: "Ketuk 1 kata. Arti + cara baca langsung muncul."
+- 20-23: "Gratis dicoba. Link di bio."
 
 Caption:
-> Biasanya aku buka kamus, lupa baca sampai mana. Di Keepo tinggal ketuk kata. Kamu nyerah di kata ke berapa? 👇
+> Dulu nyerah di kata pertama. Sekarang tinggal ketuk, ada arti dan cara bacanya. Kamu pernah nyerah di huruf apa? 👇 Cari 15 tester, daftar: [link form]
 
-Hashtag: #BelajarBahasaInggris #KepoBahasa #BacaBuku
+Tagar: #BelajarBahasaKorea #KepoBahasa #BelajarBahasa
 
-CTA: "Coba di link bio: https://rzk-labs.github.io/baca-bahasa/"
+Ajakan: "Mau jadi tester? 1 menit daftar di [link form]"
 
-## 2. Skrip B: "Kamus 12 tab vs 1 ketukan"
-Buku: cerita apa pun yang sudah ada di rak kamu.
+## 2. Skrip B: tahan kalimat untuk arti kalimat
+Bahasa: Jepang atau Korea. Cerita contoh yang sama atau lain.
 
-**Hook (detik 0-2):** teks "Cara lama vs cara Keepo. Tebak mana yang waras."
+**Hook (detik 0-2):** teks "Tiap kata paham, kalimatnya tetap nggak nyambung 🤡"
 
-Langkah rekam per detik:
-- 0-2: potongan layar kamus/terjemahan (rekam terpisah 2 detik), teks hook.
-- 2-5: pindah ke Keepo, buka buku, scroll dua kalimat.
-- 5-8: ketuk satu kata sulit.
-- 8-11: arti muncul, tetap di halaman yang sama.
-- 11-13: ketuk simpan kata.
-- 13-15: lanjut scroll baca, tanpa pindah aplikasi.
+Urutan layar:
+- 0-2: kalimat panjang di layar baca. Hook muncul.
+- 2-5: ketuk satu kata dulu. Kartu muncul, lalu tutup.
+- 5-9: tahan satu kalimat sampai bergetar/menyala.
+- 9-16: kartu kalimat muncul: arti satu kalimat. Diam 4 detik.
+- 16-20: scroll ke kalimat berikutnya, lanjut baca.
+- 20-23: layar akhir: teks ajakan.
 
-Teks di layar:
-- 0-2: "Cara lama vs cara Keepo 👀"
-- 5-8: "Ketuk 1 kata"
-- 11-15: "Bacaan nggak putus."
-
-Caption:
-> Ganti-ganti tab tiap ketemu kata baru tuh capek. Ini versi aku: ketuk, paham, lanjut. Kamu tim mana? 👇
-
-Hashtag: #BelajarBahasa #KepoBahasa #BacaBuku
-
-CTA: "Cobain gratis: https://rzk-labs.github.io/baca-bahasa/"
-
-## 3. Skrip C: "Upload ceritamu sendiri" (nilai P0)
-Isi: file cerita/buku milik sendiri (txt, epub, atau pdf). Contoh: cerita Jepang atau Korea.
-
-**Hook (detik 0-2):** teks "Bukunya kamu yang pilih, bukan aplikasinya."
-
-Langkah rekam per detik:
-- 0-2: layar Baca, teks hook.
-- 2-5: pilih file buku sendiri, buku masuk rak.
-- 5-8: buka buku, halaman pertama tampil.
-- 8-11: ketuk satu kata, arti muncul.
-- 11-13: ketuk simpan kata.
-- 13-15: tunjukkan tab Kata berisi kata tadi.
-
-Teks di layar:
-- 0-2: "Bukunya kamu yang pilih 📚"
-- 8-11: "Ketuk kata, langsung paham"
-- 13-15: "Kata tersimpan. Gampang diulang."
+Teks overlay:
+- 0-2: "Tiap kata paham, kalimat nggak 🤡"
+- 5-9: "Tahan kalimatnya"
+- 9-16: "Arti satu kalimat. Alur nggak putus."
 
 Caption:
-> Belajar bahasa paling jalan kalau bacaannya kamu suka. Masukin ceritamu sendiri, ketuk kata, selesai. Kamu mau baca apa? 👇
+> Kata-per-kata udah ngerti, tetep bingung kalimatnya. Di Keepo tahan aja kalimatnya, artinya muncul. Relate nggak? 👇 Daftar tester: [link form]
 
-Hashtag: #BelajarBahasaJepang #KepoBahasa #BacaBuku
+Tagar: #BelajarBahasaJepang #KepoBahasa #BacaCerita
 
-CTA: "Link di bio: https://rzk-labs.github.io/baca-bahasa/"
+Ajakan: "Coba duluan, jadi tester di [link form]"
 
-## 4. Cara rekam 10 menit
-- Siapkan: buku sudah di rak, Jangan Ganggu nyala, baterai di atas 30%.
-- Rekam: Pusat Kontrol, ketuk tombol rekam layar, tunggu hitung mundur 3 detik.
-- Selesai: ketuk status merah, Stop. Pangkas awal-akhir di Foto, pilih Edit.
+## 3. Skrip C: unggah buku sendiri lalu baca
+Isi: file milikmu sendiri atau domain publik. Format TXT, EPUB, atau PDF yang ada teksnya.
 
-Tips cepat:
-- Ketuk pelan dan jelas. Tahan 1 detik biar arti terbaca.
-- Teks di layar: tulis di editor bawaan TikTok/Reels, tanpa aplikasi lain.
-- Rekam 2 take, pilih yang paling bersih.
+**Hook (detik 0-2):** teks "Bacaannya kamu yang pilih, bukan aplikasinya 📚"
 
-Kalau tombol rekam layar belum ada:
-- Pengaturan, Pusat Kontrol, tambahkan Perekaman Layar.
+Urutan layar:
+- 0-2: tab Home, gulir ke "Tambah cerita". Hook muncul.
+- 2-5: pilih bahasa cerita, ketuk "Upload file".
+- 5-9: pilih file. Tunggu sampai masuk "Koleksi kamu".
+- 9-13: ketuk buku, halaman baca terbuka.
+- 13-19: ketuk satu kata, arti muncul.
+- 19-23: layar akhir: teks ajakan.
 
-## 5. Checklist sebelum posting
-- Notifikasi dan nama pribadi tidak terlihat di rekaman.
-- Buku domain publik atau milik sendiri. Arti di layar terbaca jelas.
-- Hook ada di 2 detik pertama. Caption, 3 hashtag, link sudah ditempel.
+Teks overlay:
+- 0-2: "Bacaannya kamu yang pilih 📚"
+- 5-9: "Upload file sendiri"
+- 13-19: "Ketuk kata, langsung paham"
 
-## 6. Jadwal & cara ukur
-- Posting satu video per minggu, malam 19.30-21.00. Urutan A, C, B.
-- Balas komentar dalam 1 jam pertama, dengan pertanyaan balik.
-- Catat tiap minggu: tayangan, komentar, follow, pendaftar tester. Bandingkan antar skrip.
+Caption:
+> Belajar bahasa paling jalan kalau bacaannya kamu suka. Masukin ceritamu, ketuk kata, selesai. Kamu mau baca apa? 👇 Daftar tester: [link form]
+
+Tagar: #BelajarBahasa #KepoBahasa #BacaBuku
+
+Ajakan: "Link form tester di bio: [link form]"
+
+## 4. Teks bio (pilih satu per platform)
+**Versi 1 (Threads)**
+> Temen receh yang kepo bahasa. Baca cerita sendiri, ketuk kata, paham. 🫶
+
+**Versi 2 (Instagram)**
+> Kepoin bahasa baru lewat cerita. Ketuk kata, ada arti. Lagi cari 15 tester.
+
+**Versi 3 (TikTok)**
+> Belajar Korea/Jepang dari cerita. Ketuk kata, langsung paham. 👇
+
+Kalimat tautan (taruh di bawah bio):
+> Mau jadi tester? Daftar 1 menit: [link form]
+
+## 5. Checklist rekam (maks 20 menit total)
+- Tema Malam di Pengaturan baca. Layar terang penuh, kecerahan 70%.
+- Jangan Ganggu nyala. Bersihkan notifikasi, tutup aplikasi lain.
+- Siapkan cerita contoh/buku milikmu di rak. Baterai di atas 30%.
+- Rekam layar 3 take per skrip (sekitar 1 menit tiap take). Pilih yang paling bersih.
+- Tempel teks overlay di editor bawaan TikTok/Reels. Tempel caption, 3 tagar.
+
+## 6. Cara ukur & aturan dilarang
+Cara ukur (catat tiap Minggu, 3 angka):
+- Tontonan tiap video.
+- Klik tautan di bio.
+- Pendaftar form yang menyebut video sebagai sumber.
+
+Bandingkan A, B, C. Skrip dengan pendaftar terbanyak, ulangi dengan cerita lain.
+
+Dilarang:
+- Klaim palsu: angka karangan, "terbaik/tercepat", fitur yang belum ada.
+- Buku berhak cipta di layar. Pakai cerita contoh, domain publik, atau tulisan sendiri (lihat `docs/riset-hak-cipta.md`).
+- Menjanjikan hadiah selain akses awal gratis.
