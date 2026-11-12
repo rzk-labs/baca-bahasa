@@ -622,7 +622,9 @@ function weekCard() {
   const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
   const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
-  const words = db.vocab.filter(v => v && (v.at || 0) >= since).length;
+  if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
+  const langs = new Set(db.books.map(b => b.lang));
+  const words = db.vocab.filter(v => v && v.w && langs.has(v.lang) && (v.at || 0) >= since).length; /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
   return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
@@ -1254,7 +1256,7 @@ function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return 'Sudah tamat';
   const bits = [];
-  if (p.bab) bits.push(`Bab ${p.pos}/${p.total}`);
+  if (p.bab && p.total > 1) bits.push(`Bab ${p.pos}/${p.total}`); /* sama dengan bar baca (hanya buku multi-bab) */
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
   const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + nw(mins) : '');
   return t + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
