@@ -352,7 +352,7 @@ async function markas(again){
   auto(markas);
 }
 
-let HF='semua',LAMA=false,HSEG='kerja';
+let HF='semua',SF='',LAMA=false,HSEG='kerja';
 // Daftar kerja dari roadmap.backlog: kelompok status supaya kelihatan mana selesai, jalan, pause
 function ember(st){st=String(st||'').toLowerCase();
   if(/^selesai/.test(st))return 'selesai';
@@ -382,6 +382,8 @@ async function hasilKerja(again){
   if(cur!=='hasil')return;
   if(!HQ){try{await load()}catch(e){}}
   const OK={menuju:[I.roket+' Menuju live','t-blue'],live:[I.cek+' Live','t-mint'],siap:[I.jam+' Menunggu kamu','t-sun'],dikerjakan:[I.alat+' Dikerjakan','t-lav'],antre:[I.jam+' Antre','t-lav'],ditolak:[I.silang+' Ditolak',''],gagal:[I.tanda+' Gagal','']};
+  const ST={antre:['belum','Belum diproses','t-coral'],dikerjakan:['progres','Progres','t-sun'],siap:['progres','Progres','t-sun'],menuju:['progres','Progres','t-sun'],gagal:['progres','Progres','t-sun'],live:['selesai','Selesai','t-mint'],ditolak:['selesai','Ditutup','t-ink']};
+  const stK=t=>(ST[t.status]||ST.antre)[0];
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
   const per=['riset','desain','developer','marketing','pm'];
@@ -393,16 +395,20 @@ async function hasilKerja(again){
   all.sort((x,y)=>new Date(y.w)-new Date(x.w));
   const batas=Date.now()-7*864e5, nLama=all.filter(x=>new Date(x.w)<batas).length;
   if(!LAMA)all=all.filter(x=>new Date(x.w)>=batas);
+  const nS=k=>all.filter(x=>!x.masukan&&stK(x)===k).length;
+  if(SF&&HF!=='penguji')all=all.filter(x=>stK(x)===SF);
   const hari=d=>new Date(d).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
   const grp=[];all.forEach(x=>{const h=hari(x.w);let g=grp.find(g=>g.h===h);if(!g)grp.push(g={h,xs:[]});g.xs.push(x)});
   const kartu=x=>{
     if(x.masukan){const u=UJI.find(u=>u.n===x.nama)||{e:'👥',c:'t-pink',d:'Tester'};
       return `<div class="tile hk"><div class="row"><span class="chip">${u.e} ${esc(x.nama)}</span><span class="mut sm">${esc(u.d)}</span></div><b style="display:block;margin:8px 0 4px">Masukan untuk tim</b><ul class="pts sm2">${x.poin.slice(0,3).map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`;}
-    const [lb,c]=OK[x.status]||[x.status,''];
+    const [lb]=OK[x.status]||[x.status,''];
+    const sx=ST[x.status]||ST.antre;
     const pts=x.h?x.h.poin.slice(0,3):[];
-    return `<div class="tile hk" style="cursor:pointer" onclick="detail(${x.n})"><div class="row">${chipP(x.peran)}<span class="chip ${c}">${lb}</span>${x.qa?chipQ(x.qa):''}<span class="sp"></span><span class="mut sm">#${x.n}</span></div><b style="display:block;margin:8px 0 4px">${esc(x.judul)}</b>${pts.length?`<ul class="pts sm2">${pts.map(p=>`<li>${inl(p)}</li>`).join('')}</ul>`:`<div class="mut sm">${x.status==='dikerjakan'||x.status==='antre'?'Sedang dikerjakan, laporan muncul setelah selesai.':'Laporan tidak ditemukan, buka untuk lihat detail.'}</div>`}</div>`;
+    return `<div class="tile hk" style="cursor:pointer" onclick="detail(${x.n})"><div class="row">${chipP(x.peran)}<span class="chip ${sx[2]}">${sx[1]}</span>${x.qa?chipQ(x.qa):''}<span class="sp"></span><span class="mut sm">#${x.n}</span></div><b style="display:block;margin:8px 0 2px">${esc(x.judul)}</b><div class="mut sm" style="margin-bottom:4px">${lb}</div>${pts.length?`<ul class="pts sm2">${pts.map(p=>`<li>${inl(p)}</li>`).join('')}</ul>`:`<div class="mut sm">${x.status==='dikerjakan'||x.status==='antre'?'Sedang dikerjakan, laporan muncul setelah selesai.':'Laporan tidak ditemukan, buka untuk lihat detail.'}</div>`}</div>`;
   };
   const f=(k,l)=>`<button class="chip ${HF===k?'on':''}" onclick="HF='${k}';hasilKerja(true)">${l}</button>`;
+  const sf=(k,l)=>`<button class="chip ${SF===k?'on':''}" onclick="SF='${k}';hasilKerja(true)">${l}${k?' <b>'+nS(k)+'</b>':''}</button>`;
   // Evaluasi singkat dari 100 kartu terakhir: porsi tiap peran, live, gagal
   const tot=L.length||1, pr=k=>Math.round(L.filter(t=>t.peran===k).length/tot*100);
   const gg=L.filter(t=>t.status==='gagal').length;
@@ -415,6 +421,7 @@ async function hasilKerja(again){
   const isi=HSEG==='kerja'?daftarKerja():HSEG==='tester'?(mas.length?`<div class="grid" style="margin-top:12px">${mas.slice().sort((x,y)=>new Date(y.w)-new Date(x.w)).map(kartu).join('')}</div>`:'<div class="empty">Belum ada masukan tester.</div>'):`
   <div class="tb" style="margin-top:14px"><input id="qt" type="search" placeholder="Cari hasil, isi laporan, atau #nomor…" aria-label="Cari hasil" value="${esc(Q)}"></div>
   <div class="row hf" style="margin:10px 0 6px;flex-wrap:wrap;gap:8px">${f('semua','Semua')}${per.map(k=>f(k,TIM[k].e+' '+TIM[k].n+' '+cnt(k))).join('')}</div>
+  <div class="row hf" style="margin:0 0 6px;flex-wrap:wrap;gap:8px">${sf('','Semua')}${sf('belum','Belum diproses')}${sf('progres','Progres')}${sf('selesai','Selesai')}</div>
   ${grp.length?grp.map(g=>`<div class="sec"><h2 style="font-size:20px">${esc(g.h)}</h2></div><div class="grid">${g.xs.map(kartu).join('')}</div>`).join(''):'<div class="empty">Belum ada hasil 7 hari terakhir.</div>'}${nLama?`<div style="margin:14px 0"><button class="btn ghost more-btn" style="width:100%" onclick="LAMA=!LAMA;hasilKerja(true)">${LAMA?'Lipat yang lama':'Tampilkan lebih lama ('+nLama+')'}</button></div>`:''}`;
   V.innerHTML=`
   <div style="margin-bottom:14px"><div class="eyebrow mut">Progres & hasil tim</div><h1>Hasil kerja</h1></div>
