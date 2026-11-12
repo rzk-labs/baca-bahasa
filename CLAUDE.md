@@ -1,6 +1,6 @@
-# Kepo — panduan untuk AI agent
+# Keepo — panduan untuk AI agent
 
-Kepo ("Kepoin bahasa baru") = PWA belajar bahasa asing lewat cerita/buku sendiri, untuk Gen Z. Bahasa UI: **Bahasa Indonesia** santai.
+Keepo ("Kepoin bahasa baru") = PWA belajar bahasa asing lewat cerita/buku sendiri, untuk Gen Z. Bahasa UI: **Bahasa Indonesia** santai.
 Live: https://rzk-labs.github.io/baca-bahasa/ (GitHub Pages dari branch `main`, folder root, tanpa build step).
 
 ## Struktur

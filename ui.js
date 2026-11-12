@@ -1,5 +1,5 @@
 'use strict';
-/* KEPO v8 — Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
+/* KEEPO v8— Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
 db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; if (db.spacing !== 'w') db.spacing = 'n'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0;
 const SPC = { n: ['', ''], w: ['.04em', '.12em'] };
 const spcSet = (el, k) => { const [ls, ws] = SPC[k] || SPC.n; if (ls) { el.style.setProperty('--reader-ls', ls); el.style.setProperty('--reader-ws', ws); } else { el.style.removeProperty('--reader-ls'); el.style.removeProperty('--reader-ws'); } };
@@ -124,7 +124,7 @@ function confetti(n = 70) {
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 const xpToday = () => db.xpDay[today()] || 0;
 const BADGES = [
-  ['kepo1', 'eye', 'Kepo Pertama', 'Cek arti 1 kata', () => db.stat.look >= 1],
+  ['kepo1', 'eye', 'Keepo Pertama', 'Cek arti 1 kata', () => db.stat.look >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => db.vocab.length >= 10],
   ['kutubuku', 'book', 'Kutu Buku', 'Balik 20 halaman', () => db.stat.page >= 20],
   ['berani', 'mic', 'Berani Ngomong', 'Selesaikan 1 tantangan', () => db.stat.speak >= 1],
@@ -1869,7 +1869,7 @@ function viewKata() {
           const ready = readyN(), list = db.vocab.filter(inF);
           if (!ready) return toast('Belum ada kata yang ada artinya');
           const slug = csvF === 'all' ? '' : '-' + (csvF.startsWith('l:') ? langName(csvF.slice(2)) : csvF.slice(2)).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 30);
-          const fn = `kepo-kata${slug === '-' ? '' : slug}.csv`;
+          const fn = `keepo-kata${slug === '-' ? '' : slug}.csv`;
           const blob = new Blob([vocabCSV(list)], { type: 'text/csv;charset=utf-8' });
           // iPhone/PWA: unduh lewat <a download> sering diam, jadi menu Bagikan dulu.
           const iosLike = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
