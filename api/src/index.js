@@ -42,7 +42,7 @@ const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hi
 function cardOf(x) {
   let pf = {}; try { pf = JSON.parse(x.profile || '{}') || {}; } catch (e) { }
   const reading = (Array.isArray(pf.reading) ? pf.reading : []).slice(0, 3).map(r => ({ t: x.hide_titles ? 'Sebuah buku' : String(r.t || '').slice(0, 80), lang: String(r.lang || '').slice(0, 5), pct: Math.max(0, Math.min(100, +r.pct || 0)), at: +r.at || 0 }));
-  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0 };
+  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0, ai: String(x.username).startsWith('uji_') };
 }
 async function body(req) { try { return await req.json(); } catch (e) { return {}; } }
 async function newSession(env, uid) { const t = tokenStr(); await env.DB.prepare('INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)').bind(t, uid, Date.now()).run(); return t; }
@@ -58,13 +58,30 @@ export default {
         const { username = '', password = '', nick = '' } = await body(req);
         const un = String(username).trim().toLowerCase();
         if (!/^[a-z0-9_]{3,20}$/.test(un)) return err(req, 'Username 3–20 huruf kecil, angka, atau _.');
+        if (un.startsWith('uji_')) return err(req, 'Username ini khusus akun uji. Pilih yang lain.');
         if (String(password).length < 6) return err(req, 'Password minimal 6 karakter.');
         const nk = String(nick || un).trim().slice(0, 24) || un;
         if (await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(un).first()) return err(req, 'Username sudah dipakai.', 409);
         const salt = b64(rand(16)), h = await hashPass(String(password), salt), now = Date.now();
-        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week) VALUES (?,?,?,?,?,?,?)').bind(un, nk, h, salt, now, now, isoWeek()).run();
+        // profil sosial publik secara bawaan (keputusan founder); pengguna bisa ubah ke privat di Akun
+        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, social) VALUES (?,?,?,?,?,?,?,1)').bind(un, nk, h, salt, now, now, isoWeek()).run();
         const uid = r.meta.last_row_id;
-        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false }, data: null });
+        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false, publik: true, hideTitles: false }, data: null });
+      }
+      // Akun uji AI (Tari, Bima, Nadia, Raka, Dina): dibuat/masuk hanya dengan kunci rahasia BOT_KEY (wrangler secret).
+      // Tanpa password (tidak bisa login biasa), publik, label "Uji AI", tidak ikut leaderboard.
+      if (p === '/bot/sesi' && req.method === 'POST') {
+        if (!env.BOT_KEY || req.headers.get('X-Bot-Key') !== env.BOT_KEY) return err(req, 'Tidak boleh.', 403);
+        const nm = String((await body(req)).nama || '').toLowerCase();
+        if (!['tari', 'bima', 'nadia', 'raka', 'dina'].includes(nm)) return err(req, 'Nama uji tidak dikenal.');
+        const un = 'uji_' + nm, nk = 'Uji AI · ' + nm[0].toUpperCase() + nm.slice(1), now = Date.now();
+        let u = await env.DB.prepare('SELECT * FROM users WHERE username=?').bind(un).first();
+        if (!u) {
+          const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, hidden, social) VALUES (?,?,?,?,?,?,?,1,1)').bind(un, nk, b64(rand(32)), b64(rand(16)), now, now, isoWeek()).run();
+          u = await env.DB.prepare('SELECT * FROM users WHERE id=?').bind(r.meta.last_row_id).first();
+        }
+        await env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(u.id).run();
+        return json(req, { token: await newSession(env, u.id), user: pub(u), data: u.data ? JSON.parse(u.data) : null });
       }
       if (p === '/login' && req.method === 'POST') {
         const { username = '', password = '' } = await body(req);
@@ -87,7 +104,7 @@ export default {
         const data = JSON.stringify(b.data || {});
         if (data.length > MAX_DATA) return err(req, 'Data terlalu besar.', 413);
         const week = isoWeek(), wx = Math.max(0, Math.min(MAX_WEEK_XP, b.weekXp | 0)), xp = Math.max(0, b.xp | 0);
-        const nick = b.nick ? String(b.nick).trim().slice(0, 24) : u.nick;
+        const nick = u.username.startsWith('uji_') ? u.nick : b.nick ? String(b.nick).trim().slice(0, 24) : u.nick;
         await env.DB.prepare('UPDATE users SET data=?, xp=?, week=?, week_xp=?, hidden=?, nick=?, updated_at=? WHERE id=?')
           .bind(data, xp, week, wx, b.hidden ? 1 : 0, nick || u.nick, Date.now(), u.id).run();
         // ringkasan profil sosial (yang sedang dibaca, kata minggu ini, streak). Teks buku tidak pernah dikirim.

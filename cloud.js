@@ -165,6 +165,7 @@ async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
   const r = opt.pre || await api('/me');
   if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
+  if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; }
   const changed = mergeSrv(r.data); save();
   const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
   if (opt.force || sig !== lastSync) {
