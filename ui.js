@@ -782,13 +782,14 @@ function finishBook(b) {
   if (b.doneAt) return;
   b.doneAt = Date.now(); save();
   setTimeout(() => flushLate(true), 2500);
-  const ws = db.vocab.filter(v => v.book === b.title && v.lang === b.lang && (v.at || 0) >= SESS.t);
+  const all = db.vocab.filter(v => v.book === b.title && v.lang === b.lang);
+  const ws = all.filter(v => (v.at || 0) >= SESS.t), lama = !ws.length && all.length > 0;
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   sfx('win'); confetti(60);
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     <h2>${ws.length ? `${ws.length} kata baru dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>'}
-    <div class="row" style="gap:8px;margin-top:12px">${ws.length ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (lama ? '<p class="mut">Kata kamu dari buku ini sudah tersimpan, latih di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
+    <div class="row" style="gap:8px;margin-top:12px">${ws.length || lama ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length || lama ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>`);
   const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
@@ -1053,11 +1054,12 @@ function showPage(p, anim = true) {
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
   for (const x of RD.ss) { if (x.pg >= RD.page) { b.si = +x.el.dataset.s; break; } }
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
-  if (hd) $('.rhead').textContent = hd.textContent.trim();
+  const rh = $('.rhead'); if (rh && hd) rh.textContent = hd.textContent.trim();
   b.pct = Math.round((b.pos + (RD.page + 1) / RD.n) / (b.total || 1) * 100); save();
   const ml = minsLeft(b);
-  $('#pgn').innerHTML = ml && ml.t ? `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}` + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
-  $('#pbar').style.width = b.pct + '%';
+  const pgn = $('#pgn'), pb = $('#pbar');
+  if (pgn) pgn.innerHTML = ml && ml.t ? (RD.n === 1 ? `Sisa ${ml.t}` : `Hal ${RD.page + 1}/${RD.n} · Sisa ${ml.t}`) + (ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '') : `Hal ${RD.page + 1} dari ${RD.n}`;
+  if (pb) pb.style.width = b.pct + '%';
   syncMarks();
   $('#pv').disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
@@ -1258,13 +1260,14 @@ async function onWord(el, lastEl) {
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
   const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}×` : 'Pertama kali kamu cek kata ini'; };
-  const setWBaca = t => { const e = $('#wbaca'); e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
+  const setTx = (sel, t) => { const e = $(sel); if (e) e.textContent = t; };
+  const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
     $('#wtr').textContent = v.t;
     setWBaca(bacaOf(word, v.baca));
-    $('#wbase').textContent = v.base ? 'Bentuk dasar: ' + v.base : '';
-    $('#wpos').textContent = v.pos ? (POS[v.pos] || v.pos) : '';
+    setTx('#wbase', v.base ? 'Bentuk dasar: ' + v.base : '');
+    setTx('#wpos', v.pos ? (POS[v.pos] || v.pos) : '');
     $('#wdict').innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>';
     keepVisible('.w.sel');
   };
@@ -1303,9 +1306,9 @@ async function onWord(el, lastEl) {
     tr = r;
     $('#wtr').textContent = r.text;
     setWBaca(bacaOf(word, r.baca));
-    $('#wbase').textContent = r.base ? 'Bentuk dasar: ' + r.base : '';
+    setTx('#wbase', r.base ? 'Bentuk dasar: ' + r.base : '');
     const d = r.dict || [];
-    $('#wpos').textContent = d.length ? (POS[d[0].pos] || d[0].pos) : '';
+    setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
@@ -1321,7 +1324,7 @@ async function onWord(el, lastEl) {
     vib(8); sfx('pop');
     ws.forEach((w, i) => w.classList.toggle('sel', i >= lo && i <= hi));
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
-    $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
+    setTx('#wword', word); setTx('#wpos', ''); setWBaca(''); setTx('#wbase', '');
     $('#wdict').innerHTML = ''; showHint(); $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
     $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);

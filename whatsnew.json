@@ -1,5 +1,11 @@
 [
   {
+    "n": 619,
+    "judul": "Baca aman: cegah error 'Ada yang macet' & pesan Tamat sesuai kondisi",
+    "poin": "Error \"Ada yang macet\" saat baca sudah dicegah.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 611,
     "judul": "Garis bawah kata tersimpan: muncul langsung di semua jalur simpan",
     "poin": "Kata yang kamu simpan sekarang langsung bergaris bawah di halaman baca.",
@@ -171,12 +177,6 @@
     "n": 493,
     "judul": "Kata tersimpan tanpa duplikat + ketuk 'Tersimpan' untuk batal",
     "poin": "Kata yang sama tidak akan tersimpan dua kali lagi; kata ganda lama digabung otomatis.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 491,
-    "judul": "Penanda: urut sesuai urutan buku & 'Ke penanda' paling dekat posisi baca",
-    "poin": "Daftar penanda sekarang bisa diurutkan: Terbaru atau Urutan buku.",
     "tgl": "2026-11-12"
   }
 ]
