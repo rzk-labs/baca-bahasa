@@ -1,5 +1,11 @@
 [
   {
+    "n": 534,
+    "judul": "Cari kata di dalam buku (e-reader): lompat ke hasil",
+    "poin": "Sekarang bisa cari kata di dalam buku lewat Pengaturan saat membaca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 533,
     "judul": "Home & tab Ngomong ikut brand v9: ikon garis, tanpa emoji",
     "poin": "Layar Home dan Ngomong sekarang pakai ikon garis, bukan emoji lagi.",
@@ -171,12 +177,6 @@
     "n": 399,
     "judul": "Aksesibilitas e-reader: cincin fokus keyboard & label tombol ikon",
     "poin": "Pengguna keyboard sekarang lihat garis fokus jelas di tombol dan tab.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 391,
-    "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
-    "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
     "tgl": "2026-11-12"
   }
 ]

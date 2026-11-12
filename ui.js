@@ -291,7 +291,7 @@ function openSettings() {
   openSheet(`<div class="sh-head sticky"><h2>Pengaturan</h2>${closeBtn}</div>
     <div class="set-prev${db.font === 'serif' ? ' serif' : ''}" id="spv" lang="${pl}" aria-hidden="true" style="--reader-lh:${readLh(pl)};font-size:${readFs(b && b.lang)}px;text-align:${effAlign() === 'j' ? 'justify' : 'left'}">${esc(PREV[pl])}</div>
     ${b && document.body.classList.contains('reading') ? `<div class="set-grp"><div class="set-gt">Penanda &amp; latihan</div>
-    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
+    <div class="set-row set-acts"><button class="sec full" id="bmTog" type="button"></button><button class="sec full" id="bmList" type="button"></button><button class="sec full" id="bkFind" type="button">${ico('search')} Cari di buku</button><button class="sec full" id="goSpeak" type="button">${ico('mic')} Tantangan ngomong</button></div></div>` : ''}
     <div class="set-grp"><div class="set-gt">Tampilan baca</div>
     <div class="set-row"><div class="eyebrow">Tema</div><div class="swatch" id="thm">${th.map(([k, l]) => `<button data-v="${k}" class="${db.theme === k ? 'on' : ''}" style="background:${sw[k]};color:${ink[k]}"><span>Aa</span><small>${l}</small></button>`).join('')}</div></div>
     <div class="set-row"><div class="eyebrow">Ukuran huruf baca</div><div class="stepper"><button id="fsm" aria-label="Perkecil huruf">A−</button><b id="fsv">${readFs(b && b.lang)} px</b><button id="fsp" aria-label="Perbesar huruf">A+</button></div></div>
@@ -318,7 +318,7 @@ function openSettings() {
     </div>`);
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = openFeedback;
-  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
+  if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; };
   const relayout = () => { const p = $('#cols'); if (p) { p.style.fontSize = readFs(b && b.lang) + 'px'; $('#reader').style.setProperty('--reader-lh', readLh(b && b.lang)); $('#reader').dataset.align = effAlign(); $('#reader').style.setProperty('--reader-mg', (MG[db.mg] || 24) + 'px'); layout(); } };
   const setFs = v => { db.fs = Math.max(16, Math.min(28, v)); db.fsSet = true; save(); $('#fsv').textContent = db.fs + ' px'; relayout(); };
@@ -732,6 +732,7 @@ function layout() {
   else if (b.si) { const x = RD.ss.find(y => +y.el.dataset.s === b.si); if (x) p = x.pg; }
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
+  if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
@@ -841,6 +842,37 @@ function toggleMark() {
   save(); syncMarks(); vib(10); sfx('pop');
   if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   else toast('Halaman ditandai', 1800);
+}
+/* ---------- cari di buku ---------- */
+async function openFind() {
+  const b = book(); if (!b) return;
+  const secs = await pagesOf(b);
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${ico('search')} Cari di buku</span>${closeBtn}</div><div class="search"><input id="fq" type="search" dir="auto" lang="${esc(b.lang)}" placeholder="Ketik kata atau kalimat…" aria-label="Cari kata di seluruh bab buku ini" autocomplete="off" enterkeyhint="search"></div><div id="fres" aria-live="polite"><div class="mut sm">Ketik minimal 2 huruf.</div></div>`, 'Cari di buku');
+  const data = secs.map(sc => secParas(sc, b.lang).flatMap(P => P.sents.filter(x => x.i >= 0)));
+  const total = data.reduce((n, d) => n + d.length, 0) || 1;
+  const fq = $('#fq'), out = $('#fres'); let t;
+  const run = () => {
+    const q = fq.value.replace(/\s+/g, ' ').trim(), ql = q.toLowerCase();
+    if (q.length < 2) { out.innerHTML = '<div class="mut sm">Ketik minimal 2 huruf.</div>'; return; }
+    const res = []; let before = 0;
+    outer: for (let p = 0; p < data.length; p++) {
+      for (const x of data[p]) {
+        const txt = x.s.replace(/\s+/g, ' ').trim(), at = txt.toLowerCase().indexOf(ql);
+        if (at >= 0) { res.push({ p, s: x.i, txt, at, pct: Math.min(100, Math.round((before + x.i) / total * 100)) }); if (res.length >= 30) break outer; }
+      }
+      before += data[p].length;
+    }
+    if (!res.length) { out.innerHTML = '<div class="mut sm">Tidak ketemu. Coba kata lain.</div>'; return; }
+    const html = res.map((r, i) => {
+      const room = Math.max(0, 60 - q.length), a = Math.max(0, r.at - Math.floor(room / 2)), e = Math.min(r.txt.length, r.at + q.length + Math.ceil(room / 2));
+      const pre = r.txt.slice(a, r.at), hit = r.txt.slice(r.at, r.at + q.length), post = r.txt.slice(r.at + q.length, e);
+      return `<div class="mki"><button class="mkgo" data-i="${i}"><span class="mkt" dir="auto" lang="${esc(b.lang)}">${a > 0 ? '…' : ''}${esc(pre)}<b>${esc(hit)}</b>${esc(post)}${e < r.txt.length ? '…' : ''}</span><small class="mkat" dir="auto">Bab ${r.p + 1} · ${r.pct}%</small></button></div>`;
+    }).join('');
+    out.innerHTML = `<div class="chlist">${html}</div>`;
+    $$('#fres .mkgo').forEach(x => x.onclick = () => { const r = res[+x.dataset.i]; closeSheet(); b.pos = Math.min(r.p, Math.max(0, secs.length - 1)); b.si = r.s; RD.flash = r.s; RD.quiet = true; save(); viewBaca(); });
+  };
+  fq.oninput = () => { clearTimeout(t); t = setTimeout(run, 200); };
+  try { fq.focus({ preventScroll: true }); } catch (e) { }
 }
 async function openMarks() {
   const b = book(); if (!b) return;
