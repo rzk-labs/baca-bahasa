@@ -427,7 +427,7 @@ function profileData() {
   const wk = Date.now() - 7 * 864e5;
   const reading = (db.books || []).filter(b => b.opened || b.pos > 0).sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 3)
     .map(b => ({ t: String(b.title || '').slice(0, 80), lang: b.lang, pct: typeof pctOf === 'function' ? pctOf(b) : 0, at: b.opened || 0 }));
-  return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: countedVocab(null, wk + 1).length, streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
+  return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
 }
 const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };
 const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b>${esc(r.t)}</b> <span class="mut">· ${r.pct}%</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
@@ -458,7 +458,7 @@ async function openProfile(username) {
   openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
   try {
     const p = await api('/u/' + encodeURIComponent(username));
-    if (p.self) p.kata7 = countedVocab(null, Date.now() - 7 * 864e5 + 1).length; /* dari kata tersimpan lokal, bukan data sinkron lama */
+    if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
     const zero = !(+p.kata7 > 0);
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
