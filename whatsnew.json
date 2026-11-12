@@ -1,5 +1,11 @@
 [
   {
+    "n": 369,
+    "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
+    "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 364,
     "judul": "E-reader: sorotan kata & seleksi jelas di mode terang, sepia, gelap",
     "poin": "Kata tersimpan sekarang digaris bawah tegas, jadi beda dari kata yang sering diketuk.",
@@ -171,12 +177,6 @@
     "n": 201,
     "judul": "Ekspor CSV siap Anki: kolom tag & buku + petunjuk impor 3 langkah",
     "poin": "Ekspor CSV sekarang punya kolom buku dan tag, siap diimpor ke Anki.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 194,
-    "judul": "Area ketuk tombol kecil di HP dibesarkan jadi minimal 44px",
-    "poin": "Tombol kecil di HP (avatar, Masuk, Simpan, pilihan) sekarang lebih gampang diketuk.",
     "tgl": "2026-11-11"
   }
 ]
