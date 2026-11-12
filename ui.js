@@ -442,8 +442,37 @@ function viewRak() {
   $$('[data-del]').forEach(el => el.onclick = async e => {
     e.stopPropagation();
     if (!el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash'); } }, 3000); return; }
-    const id = el.dataset.del; db.books = db.books.filter(b => b.id !== id); if (db.cur === id) db.cur = null; save(); await delText(id); toast('Cerita dihapus.'); viewRak();
+    hapusBuku(el.dataset.del);
   });
+}
+// Hapus buku: teks ditunda 5 dtk biar bisa Urungkan. Id disimpan di daftar 'yatim' (localStorage) kalau app ditutup/gagal; dibersihkan saat app dibuka.
+const YATIM_K = 'kepo-yatim';
+const yatimGet = () => { try { const a = JSON.parse(localStorage.getItem(YATIM_K) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+const yatimSet = a => { try { if (a.length) localStorage.setItem(YATIM_K, JSON.stringify(a)); else localStorage.removeItem(YATIM_K); } catch (e) { } };
+const yatimTambah = id => { const a = yatimGet(); if (!a.includes(id)) yatimSet([...a, id]); };
+const yatimBuang = id => yatimSet(yatimGet().filter(x => x !== id));
+const pendingDel = new Map();
+async function bersihYatim() {
+  for (const id of yatimGet()) {
+    if (db.books.some(b => b.id === id)) { yatimBuang(id); continue; }
+    if (pendingDel.has(id)) continue;
+    try { await delText(id); yatimBuang(id); } catch (e) { }
+  }
+}
+function hapusBuku(id) {
+  const i = db.books.findIndex(b => b.id === id); if (i < 0) return;
+  const book = db.books[i], wasCur = db.cur === id;
+  db.books = db.books.filter(b => b.id !== id); if (wasCur) db.cur = null;
+  save(); yatimTambah(id);
+  pendingDel.set(id, setTimeout(async () => { pendingDel.delete(id); try { await delText(id); yatimBuang(id); } catch (e) { } }, 5000));
+  toast('Cerita dihapus.', 5000, { label: 'Urungkan', fn: () => {
+    if (!pendingDel.has(id)) return;
+    clearTimeout(pendingDel.get(id)); pendingDel.delete(id); yatimBuang(id);
+    if (!db.books.some(b => b.id === id)) db.books.splice(Math.min(i, db.books.length), 0, book);
+    if (wasCur && !db.cur) db.cur = id;
+    save(); viewRak();
+  } });
+  viewRak();
 }
 $('#file').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
@@ -1166,3 +1195,4 @@ window.addEventListener('offline', syncOff);
 window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi ✨'); }); });
 setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
+bersihYatim();
