@@ -1,5 +1,11 @@
 [
   {
+    "n": 774,
+    "judul": "Popup 'Level N!' cukup sekali & 'Kata baru' FYP tanpa partikel",
+    "poin": "Popup 'Level N!' sekarang cuma muncul sekali, tidak berulang di tab lain.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 772,
     "judul": "Sampul buku Home: satu huruf besar, judul & penulis tak patah jelek",
     "poin": "Sampul buku kini cuma satu huruf besar, tanpa judul patah.",
@@ -171,12 +177,6 @@
     "n": 714,
     "judul": "Bab buku Jepang terdeteksi (六、題名) & nomor bab Home ikut bab dibaca",
     "poin": "Buku Jepang yang baru diimpor kini terbagi ke bab, mis. \"六、銀河ステーション\".",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 712,
-    "judul": "Ringkasan mingguan akurat: hitung halaman dibaca, sembunyi bila kosong",
-    "poin": "Kartu Minggu ini sekarang hitung halaman yang kamu baca dan kata disimpan.",
     "tgl": "2026-11-12"
   }
 ]
