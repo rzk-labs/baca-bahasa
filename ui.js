@@ -265,9 +265,33 @@ function setTab(t) {
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata })[t]();
   if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
+  if (t === 'rak') setTimeout(cadNote, 2500);
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${spot(mood)}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
+
+/* ---------- pengaman data (Safari tab biasa) ---------- */
+const isStandalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+const dataRisk = () => !isStandalone() && STORAGE_PERSISTED !== true && !db.acct;
+function dataWarn() {
+  if (!dataRisk()) return '';
+  return `<div class="set-row" id="dataWarn"><div class="eyebrow">Data HP ini</div><div class="mut sm">Data kamu bisa terhapus sendiri oleh Safari kalau lama tak dibuka. Pasang ke Layar Utama atau simpan cadangan.</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="sec" id="dwHow" type="button">Cara pasang</button><button class="sec" id="dwSave" type="button">Simpan cadangan</button></div></div>`;
+}
+function dataWarnWire() {
+  if ($('#dwSave')) $('#dwSave').onclick = () => { if (typeof bkSave === 'function') bkSave(); };
+  if ($('#dwHow')) $('#dwHow').onclick = () => openSheet(`<h2>Pasang ke Layar Utama</h2><ol class="rules"><li>Ketuk tombol Bagikan di Safari.</li><li>Pilih "Tambah ke Layar Utama".</li><li>Ketuk Tambah, lalu buka Kepo dari ikonnya.</li></ol><button class="pri full" data-close>Oke, paham</button>`, 'Cara pasang ke Layar Utama');
+}
+function cadNote() {
+  try {
+    if (!dataRisk() || isReading()) return;
+    if ((db.vocab || []).length < 5 || localStorage.getItem('kepo.bkDone')) return;
+    const last = +localStorage.getItem('kepo.noteCad') || 0;
+    if (Date.now() - last < 14 * 864e5) return;
+    if (!$('#sheet').classList.contains('hide') || !$('#toast').classList.contains('hide') || !db.seenTip || db.tab !== 'rak') return;
+    localStorage.setItem('kepo.noteCad', String(Date.now()));
+    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 8000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
+  } catch (e) { }
+}
 
 /* ---------- pengaturan ---------- */
 function voiceRow(lang) {
@@ -400,6 +424,7 @@ function openSettings() {
     </ul>
     ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
+    ${dataWarn()}
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
     </div>`);
@@ -428,7 +453,7 @@ function openSettings() {
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
   $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.lhSet = false; db.align = null; db.mg = 'm'; db.spacing = 'n'; db.focus = false; db.font = 'serif'; db.theme = 'paper'; db.showBaca = true; db.rt = 0; db.markOften = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
-  if (typeof bkWire === 'function') bkWire();
+  if (typeof bkWire === 'function') bkWire(); dataWarnWire();
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
 
