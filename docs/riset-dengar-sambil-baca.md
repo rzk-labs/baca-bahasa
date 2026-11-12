@@ -91,7 +91,7 @@ Total 43 butir (35 dihitung ketat, 8 pendukung). Jenis sumber: 5.
 | H3 | Suara sering salah baca kanji/nama | **Terbukti** | Galat ±20% pada kanji, bacaan salah dalam kalimat (K1-K5). Catatan: ini suara cloud LingQ; bawaan HP belum diuji. |
 | H4 | Laju lambat penting untuk pemula | **Terbukti sebagian** | Kompetitor menjual laju lambat/atur (L1, L2). Bukti studi langsung belum ada. |
 | H5 | Kontrol ukuran/jarak teks perlu | **Terbukti sebagian** | Ukuran berpengaruh (T1), jarak baris kurang jelas (T2). WCAG minta tak rusak (T5, T6). App sudah punya. |
-| H6 | Putar otomatis mengganggu baca tenang | **Belum jelas** | Tak ada bukti langsung. Prinsip "baca tenang" mendukung bawaan mati; tombol manual cukup. |
+| H6 | Putar otomatis mengganggu baca tenang | **Belum jelas** (diperbarui #575: terbukti sebagian, opsi nyala-padam; lihat riset-dengar-otomatis-lanjut.md) | Tak ada bukti langsung. Prinsip "baca tenang" mendukung bawaan mati; tombol manual cukup. |
 
 Hasil: 1 terbukti, 3 terbukti sebagian, 1 gugur, 1 belum jelas.
 
