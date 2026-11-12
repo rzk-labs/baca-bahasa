@@ -1,5 +1,11 @@
 [
   {
+    "n": 758,
+    "judul": "Baca: panduan ketuk tak muncul lagi di tengah buku (hal 20)",
+    "poin": "Panduan ketuk tidak muncul lagi di tengah buku.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 756,
     "judul": "Baca: partikel (が は を) tak digarisbawahi lagi & bersih dari Kata",
     "poin": "Partikel seperti が tak digarisbawahi lagi di halaman baca.",
@@ -171,12 +177,6 @@
     "n": 700,
     "judul": "Rapikan Profil & kartu buku: lencana tak mepet, judul rapi, progres sama",
     "poin": "Lencana di Profil tidak lagi mepet tepi layar.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 698,
-    "judul": "[peta 43] Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata",
-    "poin": "Judul tugas di papan HQ sekarang dipotong rapi di batas kata.",
     "tgl": "2026-11-12"
   }
 ]
