@@ -226,7 +226,7 @@ function secParas(sec, lang) {
   let k = 0;
   return sec.map(raw => { const h = isHead(raw), p = raw.replace(/^\u0001/, ''); return { h, sents: sentences(p, lang).map(s => ({ s, i: tokens(s, lang).some(t => t.w) ? k++ : -1 })) }; });
 }
-const TABS = { rak: ['home', 'Home'], baca: ['book', 'Baca'], bicara: ['mic', 'Ngomong'], kata: ['cards', 'Kata'] };
+const TABS = { rak: ['home', 'Home'], baca: ['book', 'Baca'], bicara: ['mic', 'Ngomong'], kata: ['cards', 'Kata'], sosial: ['chat', 'Sosial'] };
 $('#tabs').innerHTML = Object.entries(TABS).map(([k, [i, l]]) => `<button data-t="${k}">${ico(i)}<span>${l}</span></button>`).join('');
 const BRAND_TTL = `<span>Keepo</span>`;
 // Layar tetap menyala saat e-reader terbuka (Wake Lock). Diam jika gagal/tidak didukung.
@@ -263,7 +263,7 @@ function setTab(t) {
   refreshPills(); $('#set').onclick = openSettings;
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
-  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata })[t]();
+  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: () => typeof viewSosial === 'function' ? viewSosial() : viewRak() })[t]();
   if (t === 'rak' && typeof homeWhatsNew === 'function' && !$('#wnHome')) { const w = document.createElement('div'); w.id = 'wnHome'; w.style.marginTop = '12px'; const ben = $('.bento'); if (ben) ben.after(w); else $('#view').appendChild(w); homeWhatsNew(); }
   if (t === 'rak') setTimeout(cadNote, 2500);
 }
@@ -1863,6 +1863,6 @@ window.addEventListener('offline', syncOff);
 window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
 window.addEventListener('online', () => { if (rekapAktif && $('#rsl')) isiArtiRekap(rekapAktif); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
-setTab(db.tab && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
+setTab(db.tab && db.tab !== 'sosial' && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
 bersihYatim();
 setTimeout(() => { const b = book(); if (b && db.tab !== 'baca') sesiSisa(b); }, 600);

@@ -437,7 +437,7 @@ async function homeFriends() {
   $('#frFind').onclick = openFriends;
   try {
     const r = await api('/teman');
-    $('#frList').innerHTML = r.users.length ? r.users.slice(0, 5).map(frRow).join('') : `<div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div>`;
+    $('#frList').innerHTML = r.users.length ? r.users.map(frRow).join('') : `<div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div>`;
     wireRows($('#frList'));
   } catch (e) { $('#frList').textContent = e.message; }
 }
@@ -486,14 +486,14 @@ function wireFyp(root) {
 async function homeFyp() {
   const host = $('#fypHome'); if (!host || !db.acct) { if (host) host.remove(); return; }
   const opsi = (db.books || []).slice().sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 12).map(b => `<option value="${esc(b.id)}">${esc(b.title)}</option>`).join('');
-  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>Untuk kamu</h2><button class="ghost" id="fypAll">Lihat semua</button></div>
+  host.innerHTML = `<div class="card lb"><div class="sec-h" style="margin:0 0 8px"><h2>Untuk kamu</h2></div>
     <div class="fyp-new"><textarea id="fypT" rows="2" maxlength="500" placeholder="Lagi baca apa? Bagikan kalimat atau kata favoritmu."></textarea>
       <div class="row" style="gap:8px;flex-wrap:wrap"><select id="fypB" aria-label="Lampirkan buku"><option value="">Tanpa buku</option>${opsi}</select>
       <label class="row sm" style="gap:6px;align-items:center"><input type="checkbox" id="fypS" style="width:auto"> Bagikan isinya</label>
       <button class="pri" id="fypGo">Kirim</button></div>
       <div class="mut sm" id="fypNote" hidden>Bagikan isi buku hanya bila milikmu sendiri atau bebas hak cipta (domain publik).</div></div>
     <div id="fypList" class="mut sm" style="margin-top:10px">Memuat…</div></div>`;
-  $('#fypAll').onclick = openFyp;
+  if ($('#fypAll')) $('#fypAll').onclick = openFyp;
   $('#fypS').onchange = e => { $('#fypNote').hidden = !e.target.checked; };
   $('#fypGo').onclick = async () => {
     const t = $('#fypT').value.trim(); if (!t) return toast('Tulis statusnya dulu.');
@@ -507,7 +507,7 @@ async function homeFyp() {
   };
   try {
     fypCache = await api('/fyp');
-    $('#fypList').innerHTML = fypCache.posts.length ? fypCache.posts.slice(0, 5).map(fypRow).join('') : '<div class="mut sm">Belum ada status. Jadi yang pertama.</div>';
+    $('#fypList').innerHTML = fypCache.posts.length ? fypCache.posts.map(fypRow).join('') : '<div class="mut sm">Belum ada status. Jadi yang pertama.</div>';
     $('#fypList').classList.remove('mut', 'sm'); wireFyp($('#fypList'));
   } catch (e) { if (/tidak ditemukan|not found/i.test(e.message)) host.remove(); else $('#fypList').textContent = e.message; }
 }
@@ -587,15 +587,27 @@ async function homeWhatsNew() {
 }
 
 /* ---------- pasang ke UI yang ada ---------- */
+// Tab Sosial: FYP (status & bahan bacaan), teman, profil
+let sosSeg = 'fyp';
+function viewSosial() {
+  const V = $('#view');
+  if (!API) { V.innerHTML = emptyState('curious', 'Sosial belum aktif', 'Server akun belum tersambung. Coba lagi nanti.'); return; }
+  if (!db.acct) { V.innerHTML = emptyState('happy', 'Baca bareng teman', 'Masuk untuk lihat apa yang dibaca orang lain, bagikan status, dan bahan bacaan.', 'Masuk', "openAccount('daftar')"); return; }
+  const seg = (k, l) => `<button data-sg="${k}" class="${sosSeg === k ? 'on' : ''}">${l}</button>`;
+  V.innerHTML = `<div class="sec-h"><h2>Sosial</h2><button class="ghost" id="sosMe">Profilku</button></div>
+    <div class="seg" id="sosSeg" style="margin-bottom:12px">${seg('fyp', 'Untuk kamu')}${seg('teman', 'Teman')}</div>
+    <div id="${sosSeg === 'fyp' ? 'fypHome' : 'frHome'}"></div>`;
+  $$('#sosSeg button').forEach(b => b.onclick = () => { sosSeg = b.dataset.sg; viewSosial(); });
+  $('#sosMe').onclick = () => openProfile(db.acct.username);
+  if (sosSeg === 'fyp') homeFyp(); else homeFriends();
+}
 const _setTab = setTab;
 setTab = function (t) {
   _setTab(t);
   renderAcct();
   if (t === 'rak') {
     const ben = $('.bento');
-    if (ben && API && db.acct && !$('#fypHome')) { const y = document.createElement('div'); y.id = 'fypHome'; y.style.marginTop = '12px'; ben.after(y); homeFyp(); }
-    if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ($('#fypHome') || ben).after(d); homeLeaderboard(); }
-    if (ben && API && db.acct && !$('#frHome')) { const f = document.createElement('div'); f.id = 'frHome'; f.style.marginTop = '12px'; ($('#lbHome') || ben).after(f); homeFriends(); }
+    if (ben && API) { const d = document.createElement('div'); d.id = 'lbHome'; d.style.marginTop = '12px'; ben.after(d); homeLeaderboard(); }
     if (API) $$('.bk[data-open]').forEach(el => { const b = document.createElement('button'); b.className = 'shr'; b.setAttribute('aria-label', 'Bagikan cerita'); b.textContent = '↗'; b.onclick = e => { e.stopPropagation(); shareBook(el.dataset.open); }; el.appendChild(b); });
   }
 };

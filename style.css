@@ -652,3 +652,5 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .intip .ia{flex:none;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}
 .intip .ia svg.i{width:16px;height:16px}
 .intip .irow.done{opacity:.6}
+/* 5 tab: label tetap muat di HP kecil */
+@media (max-width:389px){#tabs{gap:4px;padding:5px}#tabs button{font-size:11px;gap:3px}#tabs button svg{width:20px;height:20px}}
