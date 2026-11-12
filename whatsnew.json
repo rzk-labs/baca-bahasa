@@ -1,5 +1,11 @@
 [
   {
+    "n": 778,
+    "judul": "Ajak ketuk kata pertama: Profil '0 kata' jadi ajakan, kartu Level ada bar",
+    "poin": "Kartu Level di Home sekarang punya bar progres tipis.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 776,
     "judul": "Baca: Tamat = 100% di Home & bar bawah baca satu baris",
     "poin": "Buku yang sudah Tamat sekarang tampil 100% di Home, profil, dan catatan sesi.",
@@ -171,12 +177,6 @@
     "n": 719,
     "judul": "Hemat sinyal: cek jatah AI hanya saat diminta + panduan sebut AI",
     "poin": "Cek jatah AI tidak jalan otomatis lagi, jadi hemat sinyal.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 716,
-    "judul": "Jepang: partikel (が は を…) tak digarisbawahi & tak jadi 'kata baru'",
-    "poin": "Buku Jepang: が, は, を, へ, や, か, ね, よ tak lagi dianggap kata baru.",
     "tgl": "2026-11-12"
   }
 ]
