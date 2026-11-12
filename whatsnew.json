@@ -1,5 +1,11 @@
 [
   {
+    "n": 672,
+    "judul": "[peta 58] Hilangkan spanduk 'Ada yang macet' & error textContent null",
+    "poin": "Spanduk \"Ada yang macet\" tidak muncul lagi saat buka buku.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 670,
     "judul": "[peta 59] Beranda jujur: progres, bab/halaman & sisa waktu sama",
     "poin": "Beranda tidak lagi menulis 0% atau \"Bab 1 dari 1\" sebelum bab dihitung.",
@@ -171,12 +177,6 @@
     "n": 557,
     "judul": "Papan Keepo HQ di HP: Gagal di atas, tanpa emoji, chip QA jelas",
     "poin": "Di HP, tugas gagal kini muncul paling atas, emoji diganti ikon garis.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 553,
-    "judul": "Pilihan laju suara Normal/Lambat di Pengaturan baca",
-    "poin": "Di Pengaturan baca ada pilihan \"Laju suara\": Normal atau Lambat.",
     "tgl": "2026-11-12"
   }
 ]
