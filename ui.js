@@ -606,6 +606,7 @@ async function viewBaca() {
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
   const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && !v.known).map(v => v.w.toLowerCase()));
+  const kenalOk = w => isKenal(b.lang, w) && !savedSet.has(w.toLowerCase());
   const rtMap = new Map();
   if (db.rt && ['ja', 'ko', 'zh-CN'].includes(b.lang)) for (const v of db.vocab) {
     const r = v.lang === b.lang && bacaOf(v.w, v.baca); if (!r) continue;
@@ -613,7 +614,7 @@ async function viewBaca() {
   }
   const oftenMemo = new Map();
   const isOften = w => { const k = w.toLowerCase(); if (!oftenMemo.has(k)) oftenMemo.set(k, tapsOf(b.lang, k) >= 3); return oftenMemo.get(k); };
-  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+  const wordsHtml = s => tokens(s, b.lang).map(t => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()); return `<span class="w${savedSet.has(t.t.toLowerCase()) ? ' saved' : ''}${isOften(t.t) ? ' often' : ''}${kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
@@ -900,8 +901,11 @@ async function onWord(el, lastEl) {
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
-    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="pri" data-close id="wdone">Selesai</button></div>
+    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="pri" data-close id="wdone">Selesai</button></div>
     <div class="row" style="margin-top:10px"><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`);
+  const kenalLbl = () => isKenal(b.lang, word) ? `${ico('bmcheck')} Belum kenal` : 'Sudah kenal';
+  const updKenal = () => { const k = $('#wkenal'); if (!k) return; k.hidden = isSaved(); k.innerHTML = kenalLbl(); };
+  const paintKenal = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase() && !x.classList.contains('saved')) x.classList.toggle('kenal', on); });
   const showSug = n => {
     const g = $('#wsug'); if (!g) return;
     const k = b.lang + '|' + word.toLowerCase();
@@ -955,18 +959,24 @@ async function onWord(el, lastEl) {
     word = phraseOf(); tr = null; tok++; if (trAc) trAc.abort(); clearTimeout(expT); clearTimeout(slowT);
     $('#wword').textContent = word; $('#wpos').textContent = ''; setWBaca(''); $('#wbase').textContent = '';
     $('#wdict').innerHTML = ''; $('#wfreq').textContent = ''; showTap(tapsOf(b.lang, word)); $('#wtr').innerHTML = '<span class="loading">Lagi nyari artinya…</span>';
-    $('#wsave').innerHTML = saveLbl(); updExp(); keepVisible('.w.sel');
+    $('#wsave').innerHTML = saveLbl(); updKenal(); updExp(); keepVisible('.w.sel');
     expT = setTimeout(() => { if ($('#wtr')) { load(); bumpLook(); } }, 350);
   };
   $('#wexp').onclick = () => grow(1);
   $('#wexl').onclick = () => grow(-1);
+  updKenal();
+  $('#wkenal').onclick = () => {
+    const w = word, lang = b.lang, was = isKenal(lang, w), apply = on => { setKenal(lang, w, on); paintKenal(w, on); const k = $('#wkenal'); if (k && word === w) k.innerHTML = kenalLbl(); };
+    apply(!was); vib(8);
+    toast(was ? 'Dibatalkan, kata ini muncul lagi' : 'Ditandai sudah kenal', 6000, { label: 'Urungkan', fn: () => apply(was) });
+  };
   $('#wsave').onclick = async () => {
     const mark = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.toggle('saved', on); });
     if (isSaved()) {
       /* ketuk lagi = hapus dari kata tersimpan, bisa diurungkan */
       const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
       db.vocab = db.vocab.filter(v => !gone.includes(v)); tombVocab(lang, w); save(); vib(8); mark(w, false);
-      const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl();
+      const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl(); updKenal();
       toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => {
         if (!db.vocab.some(v => sameVocab(v, lang, w))) db.vocab.splice(Math.min(at, db.vocab.length), 0, ...gone);
         untombVocab(lang, w); save(); mark(w, true);
@@ -979,9 +989,10 @@ async function onWord(el, lastEl) {
     const w = word, r = tr || await translate(w, b.lang, db.my).catch(() => null);
     if (isSaved()) return; /* ketukan ganda saat menunggu terjemahan */
     const tp = takeTaps(b.lang, w);
+    if (isKenal(b.lang, w)) setKenal(b.lang, w, false);
     db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: r ? r.text : '', baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), ...(r ? {} : { noTr: 1 }), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang: b.lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() }); save(); vib(10); sfx('ding');
     $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase()) x.classList.add('saved'); });
-    $('#wsave').innerHTML = saveLbl(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
+    $('#wsave').innerHTML = saveLbl(); updKenal(); award(2, 'save'); toast(r ? 'Masuk ke kartu kata kamu ⭐' : 'Lagi offline, arti nyusul ya');
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
