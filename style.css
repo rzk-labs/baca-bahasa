@@ -107,7 +107,7 @@ button:disabled{opacity:.35;pointer-events:none}
 #tabs{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 10px);z-index:6;display:flex;gap:8px;min-height:var(--tabbar-h);padding:6px;max-width:480px;margin:0 auto;background:var(--ink);border-radius:var(--radius-full)}
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 24px);background:var(--color-bg);z-index:5;pointer-events:none}
 body.reading::after{display:none}
-#tabs button{flex:1;flex-direction:column;gap:4px;min-height:48px;padding:6px 2px;min-width:0;font-size:.8125rem;line-height:1.2;text-align:center;overflow-wrap:anywhere;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
+#tabs button{flex:1;flex-direction:column;gap:4px;min-height:48px;padding:6px 2px;min-width:0;font-size:.8125rem;line-height:1.2;text-align:center;white-space:nowrap;overflow-wrap:normal;font-weight:700;color:var(--cream);border-radius:var(--radius-full)}
 #tabs button svg{width:22px;height:22px}
 #tabs button.on{color:var(--ink);background:var(--lime)}
 @media (min-width:1024px){
@@ -717,3 +717,12 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wnamerow{margin:6px 0 10px}
 .wnamerow button{font-size:13px;padding:6px 10px}
 #wnama[hidden],#wsave[hidden]{display:none}
+/* #768 Home HP: label tab utuh, angka cincin muat, penulis di judul kartu Lanjut */
+#tabs button span{white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
+@media (max-width:389px){#tabs button{font-size:.6875rem}}
+.goal-row .ring{width:64px;height:64px;flex:none}.goal-row .ring svg{width:64px;height:64px}
+.goal-row .ring .score{padding:0 9px;box-sizing:border-box;white-space:nowrap;line-height:1}
+.goal-row .ring .score .gn{font:800 14px/16px var(--font-ui);letter-spacing:-.02em}
+.goal-row .ring .score small{font:700 9px/10px var(--font-ui)}
+.hero .t{word-break:keep-all;overflow-wrap:anywhere}
+.hero .t .t-au{display:block;font:500 13px/17px var(--font-ui);color:var(--color-text-muted);margin-top:2px}
