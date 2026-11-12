@@ -7,6 +7,8 @@ const BK_CHUNK = 600 * 1024;      // satu potongan teks buku (gzip+base64) per b
 const BK_MAX = 12 * 1024 * 1024;  // maks satu buku di akun (terkompresi)
 const BK_USER_MAX = 80 * 1024 * 1024; // maks semua buku satu akun (terkompresi)
 
+const AI_JATAH = 5;               // jatah "Jelaskan kalimat (AI)" gratis per hari per akun/perangkat
+
 const enc = new TextEncoder();
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
 const rand = n => { const a = new Uint8Array(n); crypto.getRandomValues(a); return a; };
@@ -293,6 +295,42 @@ export default {
         if (!s) return err(req, 'Link cerita tidak ditemukan.', 404);
         await env.DB.prepare('UPDATE shares SET opens = opens + 1 WHERE id = ?').bind(m[1]).run();
         return json(req, { id: s.id, title: s.title, lang: s.lang, by: s.nick, paras: JSON.parse(s.body) });
+      }
+      // Jelaskan kalimat (AI gratis, Workers AI): hanya saat diminta, jatah harian per akun/perangkat.
+      if (p === '/jelaskan' && req.method === 'POST') {
+        const b = await body(req), u = await authUser(req, env);
+        const dev = String(b.dev || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
+        if (!u && dev.length < 8) return err(req, 'Perangkat belum dikenali.');
+        const who = u ? 'u' + u.id : 'd' + dev, day = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+        await env.DB.prepare('CREATE TABLE IF NOT EXISTS ai_kuota (who TEXT NOT NULL, day TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (who, day))').run();
+        const row = await env.DB.prepare('SELECT n FROM ai_kuota WHERE who=? AND day=?').bind(who, day).first();
+        const used = row ? row.n : 0;
+        if (b.cek) return json(req, { sisa: Math.max(0, AI_JATAH - used), jatah: AI_JATAH });
+        const sent = String(b.sent || '').trim().slice(0, 600);
+        if (!sent) return err(req, 'Kalimatnya kosong.');
+        if (used >= AI_JATAH) return json(req, { error: 'Jatah AI hari ini habis. Balik lagi besok ya.', habis: true, sisa: 0, jatah: AI_JATAH }, 429);
+        if (!env.AI) return err(req, 'Fitur AI belum aktif di server.', 503);
+        const lang = String(b.lang || '').slice(0, 10), arti = String(b.arti || '').slice(0, 600);
+        // jatah dipotong dulu supaya tidak bisa ditembus permintaan paralel
+        await env.DB.prepare('INSERT INTO ai_kuota (who, day, n) VALUES (?,?,1) ON CONFLICT(who, day) DO UPDATE SET n = n + 1').bind(who, day).run();
+        let out = '';
+        try {
+          const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', { max_tokens: 350, messages: [
+            { role: 'system', content: 'Kamu guru bahasa untuk pembelajar level A2-B1. Jawab HANYA dalam Bahasa Indonesia santai, singkat (maks 90 kata), format 3 baris: "Arti: ...", "Struktur: ..." (peran kata/tata bahasa penting), "Nuansa: ..." (nada, kesopanan, atau idiom; tulis "tidak ada yang khusus" bila tak ada). Jangan mengarang; kalau ragu, bilang ragu.' },
+            { role: 'user', content: `Bahasa kalimat: ${lang}\nKalimat: ${sent}` + (arti ? `\nArti dari mesin (bisa meleset): ${arti}` : '') }] });
+          out = String(r && (r.response || r.result || '')).trim().slice(0, 1200);
+        } catch (e) { out = ''; }
+        if (!out) {
+          await env.DB.prepare('UPDATE ai_kuota SET n = MAX(0, n - 1) WHERE who=? AND day=?').bind(who, day).run();
+          return err(req, 'AI lagi sibuk. Coba lagi sebentar ya.', 502);
+        }
+        return json(req, { teks: out, sisa: Math.max(0, AI_JATAH - used - 1), jatah: AI_JATAH });
+      }
+      if (p === '/jelaskan/lapor' && req.method === 'POST') {
+        const b = await body(req), u = await authUser(req, env);
+        await env.DB.prepare('CREATE TABLE IF NOT EXISTS ai_lapor (id INTEGER PRIMARY KEY AUTOINCREMENT, who TEXT, lang TEXT, sent TEXT, teks TEXT, at INTEGER)').run();
+        await env.DB.prepare('INSERT INTO ai_lapor (who, lang, sent, teks, at) VALUES (?,?,?,?,?)').bind(u ? 'u' + u.id : 'd' + String(b.dev || '').slice(0, 40), String(b.lang || '').slice(0, 10), String(b.sent || '').slice(0, 600), String(b.teks || '').slice(0, 1200), Date.now()).run();
+        return json(req, { ok: true });
       }
       return err(req, 'Tidak ditemukan.', 404);
     } catch (e) {
