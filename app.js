@@ -100,6 +100,9 @@ function bumpSentLook(bookId, field) {
   save();
 }
 const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; return { kata: +(o && o.kata) || 0, kalimat: +(o && o.kalimat) || 0 }; };
+// Minta penyimpanan permanen (diam-diam, tanpa pesan). Hasil disimpan di STORAGE_PERSISTED.
+let STORAGE_PERSISTED = null;
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then(ok => { STORAGE_PERSISTED = !!ok; }, () => {}); } catch (e) {}
 const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
