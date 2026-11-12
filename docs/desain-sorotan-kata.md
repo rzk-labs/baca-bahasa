@@ -22,3 +22,10 @@ Tugas #566 · Peran desain
 - Arab (RTL): garis bawah tak bergantung arah.
 - Fokus keyboard dan data pengguna tidak diubah.
 - Hover desktop: latar lembut, bukan Wasabi.
+
+## 4. Sorotan kalimat "Dengar halaman" (#579)
+- Latar kalimat aktif lebih pekat: malam .30 (dulu .14), terang/sepia/abu .16–.17, gelap .30.
+- Penanda non-warna: garis tebal 3px di kiri kalimat, warna teks tema.
+- Kontras teks di atas sorotan ≥ 4.5:1 (hitungan kira-kira: malam 5.6, gelap 7, terang 11).
+- Beda dari status kata: itu garis bawah, ini latar + garis kiri.
+- Tanpa animasi baru; tata letak tak bergeser, aman di 320px.

@@ -18,7 +18,7 @@
   --color-bg:#D7EFFF;--color-surface:#FAF7F0;--color-surface-soft:#C3E1F4;
   --color-text:#351E28;--color-text-muted:#5F5059;--color-border:#B2CFE2;
   --color-success:#17623A;--color-medium:#7A4600;--color-poor:#A3262F;
-  --color-hl-word:#F1F5A0;--color-hl-sentence:rgba(233,240,86,.4);--color-record:#C8323B;
+  --color-hl-word:#F1F5A0;--color-hl-sentence:rgba(233,240,86,.4);--color-say:rgba(43,34,40,.16);--color-record:#C8323B;
   --color-scrim:rgba(53,30,40,.5);
   --color-sel-edge:#351E28;--color-saved-line:#351E28;--color-often-bg:rgba(233,240,86,.5);
   --radius-sm:12px;--radius-md:16px;--radius-lg:20px;--radius-xl:26px;--radius-2xl:30px;--radius-full:9999px;
@@ -31,21 +31,21 @@
 /* Lapis baca v9: 4 tema netral. Penanda kata sama di semua tema: latar #E9F056, teks #351E28. */
 [data-theme=paper]{
   --color-bg:#FAF7F0;--color-surface:#F1ECE1;--color-surface-soft:#E7E1D3;
-  --color-text:#2B2228;--color-text-muted:#5C5258;--color-border:#DDD6C8;--color-hl-sentence:rgba(43,34,40,.09);
+  --color-text:#2B2228;--color-text-muted:#5C5258;--color-border:#DDD6C8;--color-hl-sentence:rgba(43,34,40,.09);--color-say:rgba(43,34,40,.16);
 }
 [data-theme=sepia]{
   --color-bg:#F3E9D7;--color-surface:#FAF3E4;--color-surface-soft:#E8DCC3;
-  --color-text:#3B2F25;--color-text-muted:#66584A;--color-border:#DCCDB0;--color-hl-sentence:rgba(59,47,37,.1);
+  --color-text:#3B2F25;--color-text-muted:#66584A;--color-border:#DCCDB0;--color-hl-sentence:rgba(59,47,37,.1);--color-say:rgba(59,47,37,.17);
 }
 [data-theme=green]{
   --color-bg:#E3EEDC;--color-surface:#EDF4E8;--color-surface-soft:#D2E2C9;
-  --color-text:#22301F;--color-text-muted:#4A5C45;--color-border:#C3D6B8;--color-hl-sentence:rgba(34,48,31,.1);
+  --color-text:#22301F;--color-text-muted:#4A5C45;--color-border:#C3D6B8;--color-hl-sentence:rgba(34,48,31,.1);--color-say:rgba(34,48,31,.17);
 }
 [data-theme=night]{
   --color-primary:#F2C9A6;--color-on-primary:#22362B;--color-secondary:#E39A74;
   --color-bg:#1E1A1D;--color-surface:#2A2528;--color-surface-soft:#352F33;--color-text:#E8E2DA;--color-text-muted:#B5ADA8;--color-border:#403940;
   --color-success:#7FD9A3;--color-medium:#EDD28F;--color-poor:#FF8A80;
-  --color-hl-sentence:rgba(232,226,218,.14);--color-record:#FF6B6B;
+  --color-hl-sentence:rgba(232,226,218,.14);--color-say:rgba(232,226,218,.3);--color-record:#FF6B6B;
   --color-scrim:rgba(0,0,0,.6);--shadow-sheet:0 -12px 40px rgba(0,0,0,.5);
 }
 [data-theme=dark]{
@@ -53,7 +53,7 @@
   --color-primary:#D7EFFF;--color-on-primary:#351E28;--color-secondary:#AEB8A0;
   --color-bg:#1E1519;--color-surface:#2A1D24;--color-surface-soft:#38272F;--color-text:#FAF7F0;--color-text-muted:#C9BDC3;--color-border:#4A343E;
   --color-success:#8FDDAA;--color-medium:#EBD98A;--color-poor:#FF9A92;
-  --color-hl-word:rgba(233,240,86,.3);--color-hl-sentence:rgba(233,240,86,.16);--color-record:#FF6B6B;
+  --color-hl-word:rgba(233,240,86,.3);--color-hl-sentence:rgba(233,240,86,.16);--color-say:rgba(233,240,86,.3);--color-record:#FF6B6B;
   --color-scrim:rgba(0,0,0,.6);--shadow-sheet:0 -12px 40px rgba(0,0,0,.5);
   --color-sel-edge:#E9F056;--color-saved-line:#E9F056;--color-often-bg:rgba(233,240,86,.22);
 }
@@ -62,7 +62,7 @@
   --color-primary:#D7EFFF;--color-on-primary:#351E28;--color-secondary:#AEB8A0;
   --color-bg:#1E1519;--color-surface:#2A1D24;--color-surface-soft:#38272F;--color-text:#FAF7F0;--color-text-muted:#C9BDC3;--color-border:#4A343E;
   --color-success:#8FDDAA;--color-medium:#EBD98A;--color-poor:#FF9A92;
-  --color-hl-word:rgba(233,240,86,.3);--color-hl-sentence:rgba(233,240,86,.16);--color-record:#FF6B6B;
+  --color-hl-word:rgba(233,240,86,.3);--color-hl-sentence:rgba(233,240,86,.16);--color-say:rgba(233,240,86,.3);--color-record:#FF6B6B;
   --color-scrim:rgba(0,0,0,.6);--shadow-sheet:0 -12px 40px rgba(0,0,0,.5);
   --color-sel-edge:#E9F056;--color-saved-line:#E9F056;--color-often-bg:rgba(233,240,86,.22);
 }}
@@ -366,7 +366,7 @@ body.reading #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 70px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 .cols{-webkit-touch-callout:none}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
-.cols .s.say{background:var(--color-hl-sentence);border-radius:4px;box-shadow:0 0 0 2px var(--color-hl-sentence)}
+.cols .s.say{background:var(--color-say);border-radius:4px;box-shadow:-3px 0 0 0 var(--color-text),0 0 0 2px var(--color-say);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .rlis.on{background:var(--color-surface-soft)}
 .lisnote{position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:12px;font-size:12px;line-height:16px;color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);white-space:nowrap}
 .lisnote[hidden]{display:none}
