@@ -113,6 +113,7 @@
 - [petunjuk-onboarding-baca](riset-petunjuk-onboarding-baca.md)
 - [pratinjau-kata-bab](riset-pratinjau-kata-bab.md)
 - [rekap-sesi-baca](riset-rekap-sesi-baca.md)
+- [setelah-tamat-buku](riset-setelah-tamat-buku.md)
 - [sesi-pertama](riset-sesi-pertama.md)
 - [skor-ucapan](riset-skor-ucapan.md)
 - [sumber-kamus](riset-sumber-kamus.md)
