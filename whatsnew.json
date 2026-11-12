@@ -1,5 +1,11 @@
 [
   {
+    "n": 674,
+    "judul": "[peta 64] Cover asli EPUB tampil di rak & Home",
+    "poin": "Buku EPUB sekarang tampil dengan cover aslinya di rak dan Beranda.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 672,
     "judul": "[peta 58] Hilangkan spanduk 'Ada yang macet' & error textContent null",
     "poin": "Spanduk \"Ada yang macet\" tidak muncul lagi saat buka buku.",
@@ -171,12 +177,6 @@
     "n": 559,
     "judul": "Dengar halaman: putar kalimat satu per satu dengan sorotan",
     "poin": "Ada tombol speaker di bar atas baca: kalimat halaman dibacakan satu per satu.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 557,
-    "judul": "Papan Keepo HQ di HP: Gagal di atas, tanpa emoji, chip QA jelas",
-    "poin": "Di HP, tugas gagal kini muncul paling atas, emoji diganti ikon garis.",
     "tgl": "2026-11-12"
   }
 ]

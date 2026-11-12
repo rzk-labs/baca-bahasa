@@ -77,7 +77,9 @@ function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today
 function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
 // Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
-function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = (b.title || '').trim(), ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span><span class="ct${coverSz(t.slice(0, 34))}" dir="auto">${esc(t.slice(0, 34))}</span></div>`; }
+const COVERS = {};
+async function muatCover() { let ada = false; for (const b of db.books) { if (b.cov && !COVERS[b.id]) { try { const u = await getCover(b.id); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
+function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = (b.title || '').trim(), ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span><span class="ct${coverSz(t.slice(0, 34))}" dir="auto">${esc(t.slice(0, 34))}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
 function applyTheme() {
@@ -706,7 +708,7 @@ async function importFile(f, paksa) {
         if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
       }
     }
-    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }))commitLang(lg);
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }, r.cover))commitLang(lg);
   }
   catch (err) {
     console.error(err);
@@ -725,10 +727,11 @@ async function importFile(f, paksa) {
   }
   finally { if (imporBatal === me) imporBatal = null; }
 }
-async function addBook(title, paras, lang, src) {
+async function addBook(title, paras, lang, src, cov) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
   const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, added: Date.now(), opened: Date.now() };
+  if (cov) { try { await putCover(id, cov); bk.cov = 1; COVERS[id] = cov; } catch (e) { } }
   if (src && src.name) bk.src = { name: src.name, size: src.size };
   db.books.push(bk);
   const prevCur = db.cur;
@@ -1932,5 +1935,5 @@ window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry
 window.addEventListener('online', () => { if (rekapAktif && $('#rsl')) isiArtiRekap(rekapAktif); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
 setTab(db.tab && db.tab !== 'sosial' && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
-bersihYatim();
+bersihYatim(); muatCover();
 setTimeout(() => { const b = book(); if (b && db.tab !== 'baca') sesiSisa(b); }, 600);

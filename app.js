@@ -137,7 +137,10 @@ const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx =
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
-const delText = id => idbOp('readwrite', s => s.delete(id));
+const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); return s.delete(id); });
+// Cover EPUB: gambar kecil (data URL) di IndexedDB kunci 'c_<id>', terpisah dari teks & localStorage
+const putCover = (id, url) => idbOp('readwrite', s => s.put(url, 'c_' + id));
+const getCover = id => idbOp('readonly', s => s.get('c_' + id));
 
 /* ---------- teks: kalimat & kata ---------- */
 const segCache = {};
@@ -321,7 +324,28 @@ async function parseEpub(buf, fallback) {
     if (blocks.length) blocks.forEach(b => { if (!b.querySelector('p')) { const t = b.textContent.replace(/\s+/g, ' ').trim(); if (t) add(/^H[1-4]$/.test(b.tagName) ? '\u0001' + t : t); } });
     else if (doc.body) cleanParas(doc.body.textContent).forEach(add);
   }
-  return { title, paras: splitLong(paras) };
+  let cover = null; try { cover = await epubCover(opf, zf, resolve); } catch (e) { }
+  return { title, paras: splitLong(paras), cover };
+}
+// Ambil gambar cover EPUB, kecilkan (maks 300px, JPEG). Gagal = null (impor tetap jalan).
+async function epubCover(opf, zf, resolve) {
+  const items = [...opf.getElementsByTagNameNS('*', 'item')];
+  const img = it => /^image\//.test(it.getAttribute('media-type') || '');
+  let it = items.find(i => /(^|\s)cover-image(\s|$)/.test(i.getAttribute('properties') || '') && img(i));
+  if (!it) { const m = [...opf.getElementsByTagNameNS('*', 'meta')].find(x => x.getAttribute('name') === 'cover'); const id = m && m.getAttribute('content'); if (id) it = items.find(i => i.getAttribute('id') === id && img(i)); }
+  if (!it) it = items.find(i => img(i) && /cover/i.test((i.getAttribute('id') || '') + (i.getAttribute('href') || '')));
+  if (!it) return null;
+  const f = zf(resolve(it.getAttribute('href') || '')); if (!f) return null;
+  const u = URL.createObjectURL(new Blob([await f.async('arraybuffer')], { type: it.getAttribute('media-type') }));
+  try {
+    const im = new Image(); im.src = u; await im.decode();
+    const w0 = im.naturalWidth, h0 = im.naturalHeight; if (!w0 || !h0) return null;
+    const k = Math.min(1, 300 / Math.max(w0, h0)), cv = document.createElement('canvas');
+    cv.width = Math.max(1, Math.round(w0 * k)); cv.height = Math.max(1, Math.round(h0 * k));
+    const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0, cv.width, cv.height);
+    const url = cv.toDataURL('image/jpeg', 0.8); cv.width = cv.height = 0;
+    return url.length < 120000 && url.startsWith('data:image/') ? url : null;
+  } finally { URL.revokeObjectURL(u); }
 }
 async function parsePdf(buf, title) {
   const V = PDFJS_BASE;
