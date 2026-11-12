@@ -1,5 +1,11 @@
 [
   {
+    "n": 746,
+    "judul": "Baca: ikon header berlabel jelas (dengar, pengaturan, cara baca)",
+    "poin": "Tombol di atas halaman baca sekarang bertulisan: Dengar, Atur, Cara baca.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 744,
     "judul": "Target harian jelas (XP x/target) & 'Rekor' tak muncul di hari 1",
     "poin": "Target harian kini selalu menampilkan angka, mis. 20/50 XP.",
@@ -171,12 +177,6 @@
     "n": 690,
     "judul": "[peta 34] Tombol feedback kirim langsung ke HQ, tanpa salin-tempel",
     "poin": "Tombol Kirim masukan sekarang langsung sampai ke tim, tanpa salin-tempel.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 686,
-    "judul": "[peta 63] Koleksi: hapus aman + toast Target harian pindah ke bawah",
-    "poin": "Tombol hapus buku di Koleksi sekarang jauh dari tombol buka dan selalu minta konfirmasi.",
     "tgl": "2026-11-12"
   }
 ]
