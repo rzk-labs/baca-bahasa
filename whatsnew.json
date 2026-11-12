@@ -1,5 +1,11 @@
 [
   {
+    "n": 466,
+    "judul": "Ikon garis menggantikan emoji di e-reader & penanda (brand v9)",
+    "poin": "Tombol penanda dan bar baca sekarang pakai ikon garis, bukan emoji.",
+    "tgl": "2026-11-12"
+  },
+  {
     "n": 461,
     "judul": "Sampul buku & rak ikut brand v9: palet Plum/Biru Es, tanpa emoji",
     "poin": "Sampul buku kini pakai warna Plum, Biru Es, dan Jade, tanpa emoji.",
@@ -171,12 +177,6 @@
     "n": 315,
     "judul": "Sheet arti kalimat: tombol 'Coba lagi' & offline jelas saat gagal",
     "poin": "Arti kalimat kini punya tombol \"Coba lagi\" saat sinyal putus.",
-    "tgl": "2026-11-11"
-  },
-  {
-    "n": 308,
-    "judul": "E-reader: pintasan 'Cara baca' di bar baca untuk JP/KR/ZH (kecil)",
-    "poin": "Buku Jepang/Korea/Mandarin kini punya tombol kecil \"Cara baca\" di bar atas.",
     "tgl": "2026-11-11"
   }
 ]
