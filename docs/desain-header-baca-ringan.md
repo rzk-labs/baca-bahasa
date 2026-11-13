@@ -45,3 +45,10 @@
 - Emoji penanda, tema malam, petunjuk, bab, tamat, arti kata, mic, suara diganti ikon garis.
 - Ikon ikut warna teks tema baca; tombol tetap 44px dan aman di 320px.
 - Fungsi tidak berubah; versi cache naik ke kepo-v133.
+
+## 8. Hasil #829: judul buku utuh 2 baris
+- Judul boleh 2 baris; tak lagi tinggal 1-3 huruf + "…".
+- "Bab N ▾", penanda, dan Offline pindah ke baris kecil di bawah judul.
+- Tinggi header 56px → 64px; tombol berlabel tetap ada (label tersembunyi di <360px).
+- Diperiksa lewat baca kode (belum di perangkat): 320, 360, 390, laptop; judul Latin panjang dan Jepang/Korea pendek.
+- Warna ikut 4 tema baca; versi cache naik ke kepo-v279.
