@@ -176,16 +176,21 @@ function flushLate(force) {
   step();
 }
 new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-function award(n, stat) {
+function award(n, stat, pk0) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
-  if (stat === 'page') { db.pgDay = db.pgDay || {}; const pd = today(); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]]; }
+  if (stat === 'page') {
+    db.pgDay = db.pgDay || {}; db.pgSeen = db.pgSeen || {}; const pd = today(), sk = pk0 || '?', seen = db.pgSeen[pd] = db.pgSeen[pd] || [];
+    if (!seen.includes(sk)) { seen.push(sk); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; } /* halaman unik per hari per buku */
+    const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]];
+    const sg = Object.keys(db.pgSeen).sort(); while (sg.length > 8) delete db.pgSeen[sg.shift()];
+  }
   const before = level();
   if (n) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = (db.xpDay[d] || 0) + n;
     if (stat === 'page') { db.pgXpDay = db.pgXpDay || {}; db.pgXpDay[d] = (db.pgXpDay[d] || 0) + n; const gk = Object.keys(db.pgXpDay).sort(); if (gk.length > 60) delete db.pgXpDay[gk[0]]; }
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
-    const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres! Keren!'); sfx('win'); confetti(50); }), 600);
+    const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres!', 2000); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
@@ -705,7 +710,8 @@ function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
   const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
-  const pages = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
+  const pages0 = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
+  const pages = Math.min(pages0, db.books.reduce((n, b) => n + (b.total || 0), 0)); /* tak melebihi jumlah halaman buku */
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
@@ -716,10 +722,10 @@ function weekCard() {
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
 function streakInfo() {
   const cur = streak(), ds = db.days.slice().sort();
-  let best = 0, run = 0, prev = null;
-  for (const d of ds) { run = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1 ? run + 1 : 1; if (run > best) best = run; prev = d; }
+  let best = 0, run = 0, prev = null, before = 0; /* before = rekor sebelum rangkaian terakhir */
+  for (const d of ds) { const nx = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1; if (!nx && run > before) before = run; run = nx ? run + 1 : 1; if (run > best) best = run; prev = d; }
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
-  return best > cur ? `Rekor ${best} hari` : cur >= 2 ? 'Rekor barumu!' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
+  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? 'Rekor barumu!' : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? `${cur} hari berturut` : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
 const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
@@ -728,6 +734,7 @@ function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
   const xt = xpToday(), lv = level(), inLv = db.xp % 100;
+  const other = cur && pctOf(cur) >= 100 ? list.find(b => b.id !== cur.id && pctOf(b) < 100) : null; /* buku belum tamat yang terakhir dibaca */
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
   const addCard = () => `<div class="card">
       <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
@@ -747,7 +754,7 @@ function viewRak() {
     ${weekCard()}
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${pctOf(cur) >= 100 ? 'Sudah tamat' : 'Lagi dibaca'}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${pctOf(cur)}%"></i></div></div></div>
-        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button></div></div>
+        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button>${other ? `<button class="sec" id="hOther" style="min-height:44px">Lanjut buku lain</button>` : ''}</div></div>
     </div>
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
@@ -762,6 +769,7 @@ function viewRak() {
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
+    const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); };
@@ -1609,8 +1617,8 @@ function turn(d) {
   const b = book(); closeSheet(); const was = LIS.on && !!db.lisAuto; stopListenPage();
   const np = RD.page + d;
   const resume = () => { if (!was) return; const id = ++LIS.id; LIS.on = true; setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400); };
-  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page'); resume(); return; }
-  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page'); viewBaca(); }
+  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page', b.id + ':' + b.pos + ':' + np); resume(); return; }
+  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos + ':0'); viewBaca(); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { finishBook(b); }
   else toast('Ini halaman pertama.');
