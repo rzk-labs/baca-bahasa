@@ -2330,7 +2330,7 @@ function viewKata() {
           $('#kChips').scrollLeft = oldScroll;
           $$('#kChips .fchip').forEach(b => b.onclick = () => { kataChipScroll = $('#kChips').scrollLeft; csvF = b.dataset.f; sfx('pop'); renderList(); });
         }
-        if (vocab.length) kl.insertAdjacentHTML('beforeend', `<button class="ghost csvexp" id="kCsvHow">Ekspor ke Anki</button>`);
+        if (vocab.length) kl.insertAdjacentHTML('beforeend', `<button class="ghost csvexp" id="kCsvHow">Ekspor ke Anki</button><details class="csvguide"><summary>Cara impor ke Anki</summary><ol class="csvsteps"><li>Di Anki laptop: File → Import, pilih CSV Keepo.</li><li>Kolom 1 jadi Depan, sisanya Belakang. Centang izinkan HTML.</li><li>Pilih perbarui catatan yang ada, lalu Import.</li></ol></details>`);
         $('#kSort').onchange = e => { kataSort = e.target.value; renderList(); };
         if ($('#kCsvF')) $('#kCsvF').onchange = e => { csvF = e.target.value; kataChipScroll = 0; renderList(); };
         const exportCsv = async () => {
