@@ -1,5 +1,11 @@
 [
   {
+    "n": 872,
+    "judul": "Sheet arti kata: tak pernah kosong, ada 'Memuat…' & tombol Coba lagi",
+    "poin": "Sheet arti kata sudah selalu tampil, dengan tulisan \"Lagi nyari arti…\".",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 870,
     "judul": "Angka 'kata disimpan' sama di Home, Profil, Minggu ini & Tamat",
     "poin": "Angka kata disimpan sekarang sama di Home, Profil, Minggu ini, dan Tamat.",
@@ -171,12 +177,6 @@
     "n": 790,
     "judul": "Dengar halaman: opsi 'Lanjut otomatis' ke halaman berikutnya",
     "poin": "Dengar halaman kini bisa lanjut sendiri ke halaman berikutnya. Bawaannya mati.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 788,
-    "judul": "Baca: colek lembut ketuk kata pertama bila 4 halaman tanpa ketukan",
-    "poin": "Pembaca baru yang 4 halaman belum ketuk kata dapat colekan ramah, sekali saja.",
     "tgl": "2026-11-12"
   }
 ]
