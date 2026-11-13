@@ -528,6 +528,7 @@ function guessBase(w, lang) {
   const ir = has(EU_IRR[l], lo) ? EU_IRR[l][lo] : (l === 'de' && has(EU_IRR.deN, lo) ? EU_IRR.deN[lo] : '');
   if (ir) return ir.toLowerCase() === lo ? '' : ir;
   if (l === 'de' && x[0] !== lo[0]) return '';
+  if (l === 'en' && /eed$/.test(lo)) return ''; // proceed/agreed/succeed: lebih baik kosong daripada tebakan salah ("proce")
   if (EU_INF[l] && EU_INF[l].test(lo) && !(l === 'de' && /[^aeiouäöü]ten$/.test(lo))) return '';
   for (const [suf, rep, min] of EU_SUF[l]) {
     if (!lo.endsWith(suf)) continue;
