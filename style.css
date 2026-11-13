@@ -394,7 +394,11 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
 .reader[data-align=l] .cols.page{text-align:start;-webkit-hyphens:manual;hyphens:manual}.reader[data-align=j] .cols.page{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
 .reader:is([lang=ja],[lang=ko],[lang=zh-CN]) .cols.page{font-family:var(--font-cjk);text-align:start;letter-spacing:0;word-spacing:normal}
-.cols :is(p,h2.ch)[dir=rtl]{text-align:start;letter-spacing:0;word-spacing:normal;line-height:calc(var(--reader-lh,1.7) + .15);-webkit-hyphens:manual;hyphens:manual;font-family:"Geeza Pro","Segoe UI","Noto Naskh Arabic","Noto Sans Arabic","Droid Arabic Naskh",Tahoma,var(--font-ui)}
+.reader:is([lang=ar],[lang=he],[lang=fa],[lang=ur],[lang=hi],[lang=th]) .cols.page{text-align:start;letter-spacing:0;word-spacing:normal;-webkit-hyphens:manual;hyphens:manual;line-height:max(var(--reader-lh,1.7),1.8)}
+.reader[lang=hi] .cols.page{font-family:"Kohinoor Devanagari","Noto Sans Devanagari","Nirmala UI","Mangal","Devanagari Sangam MN",var(--font-ui)}
+.reader[lang=th] .cols.page{font-family:"Thonburi","Sukhumvit Set","Noto Sans Thai","Leelawadee UI",Tahoma,var(--font-ui)}
+.reader[lang=he] .cols.page{font-family:"Arial Hebrew","Noto Sans Hebrew","Segoe UI",Arial,var(--font-ui)}
+.cols :is(p,h2.ch)[dir=rtl]{text-align:start;letter-spacing:0;word-spacing:normal;line-height:max(calc(var(--reader-lh,1.7) + .15),1.8);-webkit-hyphens:manual;hyphens:manual;font-family:"Geeza Pro","Segoe UI","Noto Naskh Arabic","Noto Sans Arabic","Droid Arabic Naskh",Tahoma,var(--font-ui)}
 .reader.serif .cols :is(p,h2.ch)[dir=rtl]{font-family:"Geeza Pro","Noto Naskh Arabic","Segoe UI",Tahoma,var(--font-reader)}
 .cols h2.ch[dir=rtl]{text-align:center}
 .flash .fw[dir=auto],.vitem .w1[dir=auto]{unicode-bidi:plaintext}

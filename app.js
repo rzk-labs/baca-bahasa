@@ -6,7 +6,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const LANGS = {
   en: ['English', 'en-US'], ja: ['Jepang 日本語', 'ja-JP'], ko: ['Korea 한국어', 'ko-KR'], 'zh-CN': ['Mandarin 中文', 'zh-CN'],
   fr: ['Prancis', 'fr-FR'], de: ['Jerman', 'de-DE'], es: ['Spanyol', 'es-ES'], it: ['Italia', 'it-IT'], nl: ['Belanda', 'nl-NL'],
-  pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
+  pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], th: ['Thai ไทย', 'th-TH'], hi: ['Hindi हिन्दी', 'hi-IN'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
 };
 const CJK = l => l === 'ja' || l === 'zh-CN';
 /* Tebak bahasa cerita dari 1.500 karakter pertama; ragu → null. */
@@ -25,6 +25,8 @@ function guessLang(text) {
   if (n(/[一-鿿]/g) >= 3) return 'zh-CN';
   if (n(/[Ѐ-ӿ]/g) >= 10) return 'ru';
   if (n(/[؀-ۿ]/g) >= 10) return 'ar';
+  if (n(/[฀-๿]/g) >= 10) return 'th';
+  if (n(/[ऀ-ॿ]/g) >= 10) return 'hi';
   const w = s.toLowerCase().match(/[a-zà-ÿ']+/g) || [];
   if (w.length < 15) return null;
   let best = null, bs = 0, second = 0;
@@ -164,7 +166,8 @@ function tokens(text, lang) {
   if (s) return [...s.segment(text)].map(x => ({ t: x.segment, w: !!x.isWordLike }));
   return text.split(/([\p{L}\p{N}\p{M}'’-]+)/u).filter(Boolean).map(t => ({ t, w: /[\p{L}\p{N}]/u.test(t) }));
 }
-const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '');
+/* Kunci kata: harakat Arab & niqqud Ibrani diabaikan (berharakat = tanpa harakat). Kata lama tersimpan tak diubah. */
+const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '').replace(/[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ֑-ׇֽֿׁׂׅׄ]/g, '');
 /* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
 function perkiraanBaru(paras, lang) {
   const known = new Set();
