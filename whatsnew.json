@@ -1,5 +1,11 @@
 [
   {
+    "n": 796,
+    "judul": "Home: ajakan 'Ketuk satu kata' jadi kartu kecil berjarak & bisa diketuk",
+    "poin": "Ajakan \"Ketuk satu kata\" di Home sekarang jadi kartu kecil yang jelas.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 794,
     "judul": "Home: 'Kata baru' hanya kata bahasa buku yang dibaca",
     "poin": "Kata dari bahasa lain tidak lagi nyasar ke catatan buku yang dibaca.",
@@ -171,12 +177,6 @@
     "n": 736,
     "judul": "Kata: tombol 'Lihat di buku' loncat ke halaman kata itu",
     "poin": "Di tab Kata, tiap kata punya tombol 'Lihat di buku'.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 734,
-    "judul": "Aksesibilitas: tiap sheet punya nama sendiri untuk pembaca layar",
-    "poin": "Semua panel di Kepo sekarang punya nama yang benar untuk pembaca layar.",
     "tgl": "2026-11-12"
   }
 ]
