@@ -36,7 +36,7 @@ const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
 // keadaan baca ringan per buku (tanpa teks). Waktu ubah dicatat di db.bkAt saat posisi/penanda berubah.
 function bkState(b) {
   const marks = (Array.isArray(b.marks) ? b.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 80), at: m.at || 0 }));
-  const st = { title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct == null ? null : b.pct, marks };
+  const st = { title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct == null ? null : (typeof bookPct === 'function' ? bookPct(b) : b.pct), marks };
   st.sig = JSON.stringify([st.pos, st.si, st.pct, marks]);
   return st;
 }
@@ -275,7 +275,7 @@ function bkWire() {
   f.onchange = () => { const file = f.files && f.files[0]; f.value = ''; if (file) bkRestore(file); };
 }
 function bkSave() {
-  const list = (db.books || []).map(b => ({ title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct, marks: (Array.isArray(b.marks) ? b.marks : []).map(m => ({ p: m.p, s: m.s, t: m.t, at: m.at })) }));
+  const list = (db.books || []).map(b => ({ title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: typeof bookPct === 'function' ? bookPct(b) : b.pct, marks: (Array.isArray(b.marks) ? b.marks : []).map(m => ({ p: m.p, s: m.s, t: m.t, at: m.at })) }));
   const vocab = Array.isArray(db.vocab) ? db.vocab.filter(isObj) : [];
   if (!list.length && !vocab.length && !(db.xp > 0)) return toast('Belum ada data buat dicadangkan.');
   // v2: tambah data belajar (tanpa token/akun)

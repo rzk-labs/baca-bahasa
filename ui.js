@@ -95,11 +95,17 @@ const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨�
 const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0]);
 /* SATU rumus persen buku (bobot bab bila units valid) untuk SEMUA layar: Home, bar baca, Profil, Koleksi, Sosial.
    Dihitung ulang saat render dari pos + halaman tersimpan, bukan dari b.pct lama yang bisa basi. Tamat = 100. */
-function pctCalc(b, page, n) {
+/* posisi dalam bab = pecahan stabil b.frac (0-1, milik bab b.fracPos); buku lama: dari pg/pgN; tak ada = awal bab */
+function fracOf(b) {
+  const pos = b.pos || 0;
+  if (typeof b.frac === 'number' && b.fracPos === pos && b.frac >= 0 && b.frac <= 1) return b.frac;
+  if (b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === pos) return (b.pg + 1) / b.pgN;
+  return 0;
+}
+function pctCalc(b, f) {
   const total = b.total || 1, pos = b.pos || 0;
-  if (pos >= total - 1 && page >= n - 1) return 100;
+  if (pos >= total - 1 && f >= 1) return 100;
   const uOk = Array.isArray(b.units) && b.units.length === total && total > 1, uSum = uOk ? b.units.reduce((a, x) => a + x, 0) : 0;
-  const f = (page + 1) / n;
   return uOk && uSum > 0
     ? Math.max(1, Math.min(100, Math.ceil((b.units.slice(0, pos).reduce((a, x) => a + x, 0) + (b.units[pos] || 0) * f) / uSum * 100 - 1e-9)))
     : Math.max(1, Math.min(100, Math.ceil((pos + f) / total * 100 - 1e-9)));
@@ -108,9 +114,9 @@ const pctOf = b => {
   if (!b) return 0;
   if (b.pct >= 100) return 100; /* Tamat */
   if (!b.total) return b.pct != null ? b.pct : 0;
-  const hasPg = b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === (b.pos || 0);
-  return pctCalc(b, hasPg ? b.pg : 0, hasPg ? b.pgN : 1);
+  return pctCalc(b, fracOf(b));
 };
+const bookPct = pctOf; /* SATU pintu persen buku untuk semua layar (jangan baca b.pct langsung) */
 const progress = p => { $('#prog').innerHTML = p == null ? '' : `<i style="width:${p}%"></i>`; };
 const SCORE = p => p >= PASS ? ['g', 'Mantap!', 'Pengucapanmu udah jelas banget.', 'cheer'] : p >= 60 ? ['m', 'Dikit lagi!', 'Udah deket. Perhatiin bunyinya ya.', 'wow'] : ['b', 'Gas latihan!', 'Santai, kita latih pelan-pelan.', 'sad'];
 const chip = (p, txt) => `<span class="chip ${SCORE(p)[0]}">${txt ? esc(txt) + ' · ' : ''}${p}%</span>`;
@@ -267,11 +273,25 @@ async function pagesOf(b) {
     b.total = cache.pages.length; save();
   }
   if (b.total !== cache.pages.length) { b.total = cache.pages.length; save(); }
-  /* perkiraan unit baca per bab: dihitung sekali, disimpan (buku lama: lazy) */
-  if (!Array.isArray(b.units) || b.units.length !== cache.pages.length) {
-    b.units = cache.pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
-  }
+  calcUnits(b, cache.pages);
   return cache.pages;
+}
+/* bobot bab (b.units): SATU fungsi, dihitung sekali dari teks; buku lama dihitung saat Home dibuka (ensureUnits) */
+function calcUnits(b, pages) {
+  if (Array.isArray(b.units) && b.units.length === pages.length) return false;
+  b.units = pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
+  return true;
+}
+const unitsBusy = {};
+async function ensureUnits(b) {
+  if (unitsBusy[b.id] || (Array.isArray(b.units) && b.total && b.units.length === b.total)) return;
+  unitsBusy[b.id] = 1;
+  try {
+    const paras = await getText(b.id); if (!paras) return;
+    const pages = makeSections(paras);
+    if (!b.total) b.total = pages.length;
+    if (b.total === pages.length && calcUnits(b, pages) && $('#hero') && !document.body.classList.contains('reading')) viewRak();
+  } catch (e) {} finally { delete unitsBusy[b.id]; }
 }
 function makeSections(paras) {
   const secs = []; let cur = [], n = 0;
@@ -312,7 +332,7 @@ document.addEventListener('visibilitychange', wakeSync);
 /* app ke latar belakang saat membaca: simpan persen terbaru (sumber sama dgn Home/Profil/rak) */
 /* satu rumus persen buku (bobot bab bila ada): bar baca, keluar reader, dan simpan latar memakai ini */
 function readPct(b) {
-  return pctCalc(b, RD.page, RD.n);
+  return pctCalc(b, (RD.page + 1) / RD.n);
 }
 function flushReadPct() {
   try {
@@ -735,6 +755,7 @@ function viewRak() {
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
+    db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
@@ -965,7 +986,7 @@ function sessRecap(b) {
 }
 function leaveBaca() { stopListenPage(); const b = book(); if (b && RD && RD.n && RD.page != null && b.total) { b.pct = readPct(b); save(); } setTab('rak'); if (b) sessRecap(b); }
 /* Baca ulang: balik ke awal; tanda tamat (doneAt) dibiarkan supaya XP tamat tak dobel */
-function restartBook(b) { b.pos = 0; b.si = 0; b.pct = 1; RD.quiet = true; save(); }
+function restartBook(b) { b.pos = 0; b.si = 0; b.pct = 1; b.frac = 0; b.fracPos = 0; RD.quiet = true; save(); }
 /* saran berikutnya: buku belum selesai, bahasa sama, panjang mirip/sedikit lebih panjang (belum ada data level buku) */
 function nextBooks(b) {
   const t = b.total || 1;
@@ -1386,7 +1407,7 @@ function showPage(p, anim = true) {
   let sx = RD.ss.find(x => x.pg >= RD.page);
   if (!sx || sx.pg > RD.page) { for (let i = RD.ss.length - 1; i >= 0; i--) if (RD.ss[i].pg < RD.page) { sx = RD.ss[i]; break; } }
   if (sx) b.si = +sx.el.dataset.s;
-  b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos;
+  b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos; b.frac = (RD.page + 1) / RD.n; b.fracPos = b.pos;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
@@ -1399,17 +1420,17 @@ function showPage(p, anim = true) {
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
-    const rem = ml && ml.t && b.pct < 100 ? nw(ml.t) : '';
-    const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n}`);
+    const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? nw(ml.t) : '';
+    const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n} di ${multi ? 'bab' : 'buku'} ini`);
     const wd = secWord(b, b.pos), tb = wd === 'Bab' ? 1 : 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
-    const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${b.pct}%`) : '', rem].filter(Boolean).join(' · ');
+    const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${bp}% buku`) : '', rem].filter(Boolean).join(' · ');
     pgn.title = 'persen dari seluruh buku, perkiraan sisa waktu';
-    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${b.pct} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
+    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
     pgn.innerHTML = [l1, l2].filter(Boolean).join(' · ')
       + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '')
       + (multi && lastPg && b.pos < b.total - 1 ? '<span class="mnote">Ujung bab, geser untuk bab berikutnya</span>' : '');
   }
-  if (pb) { pb.style.width = b.pct + '%'; if (pb.parentElement) pb.parentElement.title = `${b.pct}% dari seluruh buku`; }
+  if (pb) { const bp = bookPct(b); pb.style.width = bp + '%'; if (pb.parentElement) pb.parentElement.title = `${bp}% dari seluruh buku`; }
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
