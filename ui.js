@@ -154,8 +154,8 @@ const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0)
 const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10 };
 const badgeShown = id => db.badges.includes(id) && !(id in BADGE_VOCAB_MIN && countedVocab(null).length < BADGE_VOCAB_MIN[id]);
 const BADGES = [
-  ['kepo1', 'eye', 'Keepo Pertama', 'Ketuk 1 kata & simpan', () => db.vocab.length >= 1],
-  ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => db.vocab.length >= 10],
+  ['kepo1', 'eye', 'Keepo Pertama', 'Ketuk 1 kata & simpan', () => countedVocab(null).length >= 1],
+  ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => countedVocab(null).length >= 10],
   ['kutubuku', 'book', 'Kutu Buku', 'Balik 20 halaman', () => db.stat.page >= 20],
   ['berani', 'mic', 'Berani Ngomong', 'Selesaikan 1 tantangan', () => db.stat.speak >= 1],
   ['perfect', 'target', 'Sempurna', 'Skor kalimat 95%+', () => db.stat.perfect >= 1],
@@ -176,6 +176,7 @@ function flushLate(force) {
   step();
 }
 new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+const XP_WHY = { save: 'kata disimpan', page: 'halaman selesai', done: 'buku tamat', look: 'kata dicek', speak: 'ngomong', rem: 'kata sulit' };
 function award(n, stat, pk0) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   if (stat === 'page') {
@@ -189,7 +190,7 @@ function award(n, stat, pk0) {
     db.xp += n; const d = today(); const had = xpToday(); db.xpDay[d] = (db.xpDay[d] || 0) + n;
     if (stat === 'page') { db.pgXpDay = db.pgXpDay || {}; db.pgXpDay[d] = (db.pgXpDay[d] || 0) + n; const gk = Object.keys(db.pgXpDay).sort(); if (gk.length > 60) delete db.pgXpDay[gk[0]]; }
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
-    const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP`; document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
+    const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP` + (XP_WHY[stat] ? ` · ${XP_WHY[stat]}` : ''); document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
     const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres!', 2000); sfx('win'); confetti(50); }), 600);
   }
   markDay(); save(); refreshPills();
@@ -2196,7 +2197,7 @@ let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'ba
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 let deckDone = 0, deckHint = '';
 const isLearning = v => !v.known && (v.lv || 0) >= 1;
-const refreshHafal = () => { const a = $('#sumLearn'), b = $('#sumKnown'); if (a) a.textContent = db.vocab.filter(isLearning).length; if (b) b.textContent = db.vocab.filter(v => v.known).length; };
+const refreshHafal = () => { const a = $('#sumLearn'), b = $('#sumKnown'), c = $('#sumSaved'); if (c) c.textContent = countedVocab(null).length; if (a) a.textContent = db.vocab.filter(isLearning).length; if (b) b.textContent = db.vocab.filter(v => v.known).length; };
 const isDue = v => !v.known && (v.due || 0) <= Date.now();
 function viewKata() {
   deckDone = 0; deckHint = '';
@@ -2204,7 +2205,7 @@ function viewKata() {
   const known = db.vocab.filter(v => v.known).length, learning = db.vocab.filter(isLearning).length;
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
-    <div class="sum"><div class="s1"><b>${db.vocab.length}</b><span>Disimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Lagi dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Udah hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
+    <div class="sum"><div class="s1"><b id="sumSaved">${countedVocab(null).length}</b><span>Disimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Lagi dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Udah hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<div class="mut sm" id="kdue" style="margin:-2px 2px 10px">${n} kata siap diulas</div>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
     <div class="seg" id="kseg"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}">Susah diucap</button></div>
@@ -2305,7 +2306,7 @@ function viewKata() {
       $$('[data-go]').forEach(el => el.onclick = () => lihatDiBuku(db.vocab[+el.dataset.go]));
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
-        const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); if (gone) tombVocab(gone.lang, gone.w); save(); renderList();
+        const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); if (gone) tombVocab(gone.lang, gone.w); save(); renderList(); refreshHafal(); refreshPills();
         toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); if (gone) untombVocab(gone.lang, gone.w); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
       });
     } else {
