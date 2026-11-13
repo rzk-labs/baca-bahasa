@@ -459,11 +459,14 @@ async function openProfile(username) {
   try {
     const p = await api('/u/' + encodeURIComponent(username));
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
+    if (p.self) p.reading = profileData().reading; /* persen terbaru dari buku lokal */
     const zero = !(+p.kata7 > 0);
+    const rd = p.reading || [], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
-      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${p.reading.length ? p.reading.map(bacaBaris).join('') : '<div class="mut sm">Belum ada buku yang dibuka.</div>'}
+      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Lagi nggak ada yang dibaca.' : 'Belum ada buku yang dibuka.'}</div>`}
+      ${rdDone.length ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
       <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : id === 'kepo1' && zero ? ' next' : ' off'}" title="${esc(desc)}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${id === 'kepo1' && zero && !badgeShown(id) ? 'Langkah berikutnya: ' + desc : desc}</span></div>`).join('')}</div>` : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
