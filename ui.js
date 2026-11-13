@@ -1659,13 +1659,14 @@ async function onWord(el, lastEl) {
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
   const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}×` : 'Pertama kali kamu cek kata ini'; };
+  const baseLabel = (w, lang, base) => { const x = baseOf(w, base); if (x) return 'Bentuk dasar: ' + x; const g = baseOf(w, guessBase(w, lang)); return g ? 'Bentuk dasar: ' + g + ' (tebakan)' : ''; };
   const setTx = (sel, t) => { const e = $(sel); if (e) e.textContent = t; };
   const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const showSaved = v => {
     setTx('#wtr', v.t);
     setWBaca(bacaOf(word, v.baca));
-    setTx('#wbase', v.base ? 'Bentuk dasar: ' + v.base : '');
+    setTx('#wbase', baseLabel(word, b.lang, v.base));
     setTx('#wpos', v.pos ? (POS[v.pos] || v.pos) : '');
     { const dc = $('#wdict'); if (dc) dc.innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>'; }
     keepVisible('.w.sel');
@@ -1714,7 +1715,7 @@ async function onWord(el, lastEl) {
     tr = r; setTx('#wpart', partNote());
     setTx('#wtr', r.text);
     setWBaca(bacaOf(word, r.baca));
-    setTx('#wbase', r.base ? 'Bentuk dasar: ' + r.base : '');
+    setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
     const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
