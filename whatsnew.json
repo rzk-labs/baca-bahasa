@@ -1,5 +1,11 @@
 [
   {
+    "n": 825,
+    "judul": "Baca: sisa waktu bar baca tak jam-jaman, tampil per bab",
+    "poin": "Bar baca kini menulis sisa waktu per bab, bukan total buku.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 821,
     "judul": "Layar Tamat: kartu 'Berikutnya' rapi, judul & info tak patah",
     "poin": "Layar Tamat: kartu 'Berikutnya' kini rapi, judul tak patah lagi.",
@@ -171,12 +177,6 @@
     "n": 754,
     "judul": "Baca: nomor bab di bar tak bentrok dengan 'Chapter IV' di buku",
     "poin": "Bar baca kini bilang \"Bagian\", bukan \"Bab\", jadi tak bentrok dengan nomor di buku.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 752,
-    "judul": "[peta 72] Home rapi: tinggi 3 kartu sama, kata disimpan jujur, alas menu",
-    "poin": "Kartu Minggu ini kini hanya hitung kata yang benar-benar ada di tab Kata.",
     "tgl": "2026-11-12"
   }
 ]
