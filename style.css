@@ -823,3 +823,9 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
   .ring,.ring svg{width:128px;height:128px}
   .rem-word{font-size:clamp(34px,13vw,52px);overflow-wrap:anywhere}
 }
+/* #862 header baca: tinggi mengikuti isi, judul maks 2 baris, Bagian + penanda + Offline satu baris di bawahnya */
+.rbar{height:auto;min-height:calc(64px + env(safe-area-inset-top));padding-top:calc(env(safe-area-inset-top) + 4px);padding-bottom:4px;box-sizing:border-box}
+.rtitle{overflow:visible;flex-direction:row;flex-wrap:wrap;align-items:center;align-content:center;justify-content:center;padding:2px 0}
+.rtitle b{flex:0 0 100%}
+.rtitle .rchap{margin:0;min-height:28px;flex:none}
+.rtitle .rmk,.rtitle .roff{flex:none;margin:0}
