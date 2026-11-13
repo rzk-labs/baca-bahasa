@@ -1,5 +1,11 @@
 [
   {
+    "n": 860,
+    "judul": "Baca: bar bawah satu baris, tanpa titik '·' menggantung",
+    "poin": "Bar bawah halaman baca sekarang satu baris, tanpa titik menggantung.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 858,
     "judul": "Home: Target harian angka sekali saja & Tamat langsung 100%",
     "poin": "Target harian di Home kini menampilkan angka XP sekali saja.",
@@ -171,12 +177,6 @@
     "n": 778,
     "judul": "Ajak ketuk kata pertama: Profil '0 kata' jadi ajakan, kartu Level ada bar",
     "poin": "Kartu Level di Home sekarang punya bar progres tipis.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 776,
-    "judul": "Baca: Tamat = 100% di Home & bar bawah baca satu baris",
-    "poin": "Buku yang sudah Tamat sekarang tampil 100% di Home, profil, dan catatan sesi.",
     "tgl": "2026-11-12"
   }
 ]
