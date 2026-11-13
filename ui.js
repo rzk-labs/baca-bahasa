@@ -183,6 +183,10 @@ new MutationObserver(flushLate).observe(document.body, { attributes: true, attri
 const XP_WHY = { save: 'kata disimpan', page: 'halaman selesai', done: 'buku tamat', look: 'kata dicek', speak: 'ngomong', rem: 'kata sulit' };
 /* popup Level: tampil sekali per level (lvlSeen di penyimpanan lokal); ditunda saat lembar Tamat terbuka */
 let lvlPending = false;
+const sheetOpen = () => { const sh = $('#sheet'); return !!sh && !sh.classList.contains('hide'); };
+/* popup/toast hadiah tak boleh menimpa sheet (arti kata dll): tunda sampai sheet ditutup */
+let sheetQ = [];
+function afterSheet(fn) { if (sheetOpen()) sheetQ.push(fn); else fn(); }
 const tamatOpen = () => { const sh = $('#sheet'); return !!sh && !sh.classList.contains('hide') && sh.getAttribute('aria-label') === 'Tamat'; };
 function showLevelUp() {
   lvlPending = false;
@@ -208,17 +212,17 @@ function award(n, stat, pk0) {
     if (stat === 'page') { db.pgXpDay = db.pgXpDay || {}; db.pgXpDay[d] = (db.pgXpDay[d] || 0) + n; const gk = Object.keys(db.pgXpDay).sort(); if (gk.length > 60) delete db.pgXpDay[gk[0]]; }
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP` + (XP_WHY[stat] ? ` · ${XP_WHY[stat]}` : ''); document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
-    const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { toast('Target harian beres!', 2000); sfx('win'); confetti(50); }), 600);
+    const now = xpToday(); if (had < GOAL && now >= GOAL) setTimeout(() => notifyLater(() => { afterSheet(() => { toast('Target harian beres!', 2000); sfx('win'); confetti(50); }); }), 600);
   }
   markDay(); save(); refreshPills();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
   if (!(db.lvlSeen >= 1)) { db.lvlSeen = before; save(); } // migrasi: level saat ini dianggap sudah dirayakan
   if (level() > before) setTimeout(() => notifyLater(() => {
-    if (tamatOpen()) { lvlPending = true; return; } // tunda sampai lembar Tamat ditutup
+    if (sheetOpen()) { lvlPending = true; return; } // tunda sampai sheet apa pun ditutup
     showLevelUp();
   }), 700);
-  newB.forEach(([, , name], i) => setTimeout(() => notifyLater(() => { toast(`Lencana baru: ${name}!`); sfx('ding'); }), 1300 + i * 1800));
+  newB.forEach(([, , name], i) => setTimeout(() => notifyLater(() => afterSheet(() => { toast(`Lencana baru: ${name}!`); sfx('ding'); })), 1300 + i * 1800));
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
@@ -254,7 +258,7 @@ function toast(m, ms = 3200, act) { const t = $('#toast'); t.textContent = ''; c
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
-function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (lvlPending && wasOpen) setTimeout(() => { if (lvlPending && !tamatOpen()) notifyLater(showLevelUp); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); }
 $('#shade').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
@@ -1751,6 +1755,7 @@ function nearWord(vp, x, y) {
 }
 async function onWord(el, lastEl) {
   const b = book();
+  document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); }
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
   const sEl = el.closest('.s'), sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
