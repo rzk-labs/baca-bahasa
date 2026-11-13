@@ -1,5 +1,11 @@
 [
   {
+    "n": 926,
+    "judul": "[peta 85] Tuntaskan arti nyusul: tanda tak hilang, penanda di daftar Kata",
+    "poin": "Arti kata offline kini tak hilang tandanya dan terisi sendiri saat sinyal balik.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 932,
     "judul": "EVALUASI UI UIX NYA",
     "poin": "Tulisan \"Keepo\" di atas layar HP sekarang tidak terpotong lagi.",
@@ -171,12 +177,6 @@
     "n": 854,
     "judul": "[peta 81] Impor EPUB Jepang: huruf mirip jadi biasa, teks di luar <p>",
     "poin": "Buku Jepang yang diimpor sekarang hurufnya rapi, tidak aneh lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 852,
-    "judul": "Baca: colek 'ketuk kata' tetap muncul walau halaman dibaca lintas sesi",
-    "poin": "Colek 'ketuk kata' sekarang muncul setelah 4 halaman, walau buku sering ditutup.",
     "tgl": "2026-11-13"
   }
 ]
