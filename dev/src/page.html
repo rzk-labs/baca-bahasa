@@ -217,6 +217,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .tb{display:flex;gap:10px;align-items:center}
 .tb input{flex:1;min-width:0}
 .tb select{width:auto;flex:none}
+@media (max-width:759px){.tb{flex-wrap:wrap}.tb input[type=search]{flex:1 1 100%;min-width:0;width:100%;font-size:16px;min-height:44px}.tb select{min-height:44px;font-size:16px}.board{grid-auto-columns:minmax(84vw,1fr)}.sumt{flex:1 1 100%!important;max-width:100%}.chip{min-height:32px;display:inline-flex;align-items:center}.btn{min-height:44px}.row{flex-wrap:wrap}.main{padding-left:12px;padding-right:12px}}
 </style></head><body>
 <div class="app">
   <aside class="side">
@@ -495,9 +496,9 @@ async function papan(again){
   ${alatTugas(()=>papan(true),true)}
   ${saring?`<div class="mut sm" style="margin:-4px 0 12px">${nCocok} tugas cocok · <a href="#" id="resetQ">hapus saringan</a></div>`:''}
   ${(()=>{const menunggu=HQ.tasks.filter(t=>t.status==='menuju'&&t.terbuka);const macet=HQ.tasks.filter(t=>(t.status==='dikerjakan'||t.status==='antre')&&t.terbuka&&Date.now()-new Date(t.diubah)>12*36e5);const gagalN=HQ.tasks.filter(t=>t.status==='gagal').length;const ada=L=>L.length?L.map(t=>'#'+t.n).join(' · '):'tidak ada';const tl=HQ.tasks.filter(t=>t.status==='live').map(t=>new Date(t.diubah)).sort((a,b)=>b-a)[0];const runAt=j=>{const r=(HQ.runs||[]).find(x=>x.jenis===j);return r?lalu(r.mulai):'belum ada'};return `<div class="sm mut" style="margin-bottom:10px">⏱ Tugas live terakhir: ${tl?esc(lalu(tl)):'belum ada'} · PM: ${esc(runAt('pm'))} · Agen kerja: ${esc(runAt('kerja'))}</div><div class="row" style="gap:10px;flex-wrap:wrap;margin-bottom:12px">
-    <div class="tile c t-blue" style="flex:1;min-width:170px"><div class="eyebrow">Menunggu publish</div><div class="big">${menunggu.length}</div><div class="sm">${esc(ada(menunggu))} · butuh keputusanmu</div></div>
-    <div class="tile c t-sun" style="flex:1;min-width:170px"><div class="eyebrow">Macet &gt; 12 jam</div><div class="big">${macet.length}</div><div class="sm">${esc(ada(macet))}</div></div>
-    <div class="tile c t-coral" style="flex:1;min-width:170px"><div class="eyebrow">Gagal</div><div class="big">${gagalN}</div><div class="sm">perlu revisi</div></div></div>`})()}
+    <div class="tile c t-blue sumt" style="min-width:170px"><div class="eyebrow">Menunggu publish</div><div class="big">${menunggu.length}</div><div class="sm">${esc(ada(menunggu))} · butuh keputusanmu</div></div>
+    <div class="tile c t-sun sumt" style="min-width:170px"><div class="eyebrow">Macet &gt; 12 jam</div><div class="big">${macet.length}</div><div class="sm">${esc(ada(macet))}</div></div>
+    <div class="tile c t-coral sumt" style="min-width:170px"><div class="eyebrow">Gagal</div><div class="big">${gagalN}</div><div class="sm">perlu revisi</div></div></div>`})()}
   <div class="board">${cols.map(([k,l,c])=>{const L=by(k);const lipat=k==='live'&&L.length>5&&!LIVEALL&&!saring;return `<div class="col k-${k}${k==='gagal'&&L.length?' ada':''}${L.length?'':' kosong'}"><h3><span>${l}</span><span class="chip ${c}">${L.length}</span></h3>${L.length?(lipat?L.slice(0,5):L).map(kartuP).join(''):`<div class="empty sm">${saring?'Tidak ada yang cocok':'Kosong'}</div>`}${lipat||(k==='live'&&LIVEALL&&L.length>5&&!saring)?`<button class="btn ghost more-btn" onclick="LIVEALL=!LIVEALL;papan(true)">${LIVEALL?'Lipat':'Lihat semua ('+L.length+')'}</button>`:''}</div>`}).join('')}</div>`;
   pasangAlat(()=>papan(true));
   const r=$('#resetQ');if(r)r.onclick=e=>{e.preventDefault();Q='';PF='semua';papan(true)};
