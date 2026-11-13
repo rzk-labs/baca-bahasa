@@ -93,7 +93,7 @@ Tugas #548 · Peran riset · (validasi bukti internet)
 - Kalimat panjang: beri tanda ragu, bukan larangan. Mutu mesin turun saat kalimat panjang.
 
 ## 6. Usul tugas app (P0 kecil, belum dikerjakan)
-- **Buka terjemahan di tempat**: ketuk kalimat → terjemahan muncul di bawah kalimat itu, bisa ditutup. Pakai prafetch yang ada. Tidak tumpang tindih dengan sheet arti kalimat; ini jalan pintas.
+- **Buka terjemahan di tempat** (selesai, #907; gestur: ketuk dua kali kalimat): ketuk kalimat → terjemahan muncul di bawah kalimat itu, bisa ditutup. Pakai prafetch yang ada. Tidak tumpang tindih dengan sheet arti kalimat; ini jalan pintas.
 - **Tanda "kalimat panjang, arti bisa meleset"**: muncul bila kalimat lebih dari ±25 kata. Tambah satu baris di sheet arti kalimat.
 - **Penghitung lembut "kalimat dibuka hari ini"**: bukan larangan. Ukur H1 di beta sebelum menambah fitur sejajar.
 

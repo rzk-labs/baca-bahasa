@@ -260,7 +260,15 @@ let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); }
-$('#shade').onclick = closeSheet;
+$('#shade').onclick = e => {
+  /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
+  const d = RD.dt; RD.dt = null; let sx = null;
+  if (d && d.el.isConnected && Date.now() - d.t < 380 && e && e.clientX && document.body.classList.contains('reading')) {
+    const hit = (document.elementsFromPoint ? document.elementsFromPoint(e.clientX, e.clientY) : []).find(n => n.closest && n.closest('#cols .s'));
+    const s2 = hit && hit.closest('.s'); if (s2 === d.el) sx = s2;
+  }
+  closeSheet(); if (sx) { stopListenPage(); toggleInline(sx); }
+};
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
 const langOpts = sel => Object.keys(LANGS).map(k => `<option value="${k}"${k === sel ? ' selected' : ''}>${langName(k)}</option>`).join('');
@@ -1300,6 +1308,14 @@ async function viewBaca() {
     if (e.target.closest('.intip')) return;
     let w = e.target.closest('.w');
     if (!w && !e.target.closest('button,a,input,.intip') && e.clientX) w = nearWord(vp, e.clientX, e.clientY);
+    if (e.target.closest('.itr')) { if (!e.target.closest('button')) closeInline(); return; }
+    { /* ketuk dua kali satu kalimat = terjemahan di tempat (#907) */
+      const sx = (w || e.target.closest('.s')); const s1 = sx && sx.closest ? sx.closest('.s') : null, now = Date.now();
+      if (s1 && !s1.closest('h2')) {
+        if (RD.dt && RD.dt.el === s1 && now - RD.dt.t < 380) { RD.dt = null; dismissTip(); nudgeOff(); stopListenPage(); toggleInline(s1); return; }
+        RD.dt = { el: s1, t: now };
+      } else RD.dt = null;
+    }
     if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
@@ -1381,6 +1397,7 @@ const SESPG = new Set(); /* halaman layar yang dibuka sesi ini (satuan sama deng
 const RD = { ss: [], hs: [], dy: 0, page: 0, n: 1, step: 1, toEnd: false, quiet: false };
 function layout() {
   const vp = $('#vp'), cols = $('#cols'); if (!vp || !cols) return;
+  closeInline();
   const b = book(); let W = vp.clientWidth, H = vp.clientHeight;
   /* ukuran nyaris sama (bar alamat Safari naik-turun, bar muncul-hilang): pakai ukuran layout terakhir agar total halaman stabil */
   if (RD.cEl === cols && RD.lw && Math.abs(W - RD.lw) <= 2 && Math.abs(H - RD.lh) <= 140) { W = RD.lw; H = RD.lh; }
@@ -1514,6 +1531,7 @@ function minsLeft(b) {
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
+  closeInline();
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   if (RD.page > 2) dismissTip(); /* buku sudah dibaca / loncat jauh: panduan tak perlu lagi (semua jalur pindah halaman lewat sini) */
   cols.style.transition = anim ? '' : 'none';
@@ -1527,7 +1545,7 @@ function showPage(p, anim = true) {
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
-  nudgeTap(b);
+  nudgeTap(b); inlineHint();
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
   b.pct = readPct(b);
   const ml = minsLeft(b);
@@ -1692,6 +1710,54 @@ function nudgeTap(b) {
   db.seenNudgeTap = true; save();
   toast(NUDGE_MSG, 5000);
   clearTimeout(nudgeT); nudgeT = setTimeout(nudgeOff, 5000);
+}
+/* Terjemahan kalimat di tempat (#907): ketuk dua kali kalimat -> baris kecil tepat di bawahnya. Tahan = sheet (tetap); ketuk kata = arti kata (tetap) */
+function closeInline() {
+  const o = RD.itr; RD.itr = null; if (!o) return;
+  o.tok++; if (o.el.isConnected) o.el.remove(); if (o.sEl) o.sEl.classList.remove('itrs');
+}
+function inlineHint() {
+  if (db.seenInlineTr || !db.seenTip || !(nudgePg && nudgePg.size >= 3)) return;
+  if ($('#tip') || $('#nchip') || !$('#sheet').classList.contains('hide') || !$('#toast').classList.contains('hide')) return; /* satu pesan sekali waktu */
+  db.seenInlineTr = true; save(); toast('Ketuk dua kali satu kalimat = arti singkat di bawahnya', 5000);
+}
+function toggleInline(sEl) {
+  const b = book(); if (!b || !sEl || !sEl.isConnected) return;
+  const same = RD.itr && RD.itr.sEl === sEl; closeInline(); if (same) return;
+  $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
+  try { getSelection().removeAllRanges(); } catch (_) {}
+  vib(8);
+  const sent = sEl.textContent.trim(), cjk = /^(ja|ko|zh)/i.test(b.lang), long = cjk ? [...sent].length > 80 : sent.split(/\s+/).length > 25;
+  const el = document.createElement('span');
+  el.className = 'itr'; el.setAttribute('role', 'note');
+  sEl.after(el); sEl.classList.add('itrs');
+  const o = RD.itr = { el, sEl, tok: 0 };
+  const fits = () => { const vr = $('#vp').getBoundingClientRect(), r = el.getBoundingClientRect(); return r.left >= vr.left - 1 && r.right <= vr.right + 1 && r.top >= vr.top - 1 && r.bottom <= vr.bottom + 1; };
+  /* tak muat di halaman ini (kalimat di dasar kolom) -> jalan pintas gagal, pakai sheet seperti biasa */
+  const fallback = () => { closeInline(); showSentence('', sent, +sEl.dataset.s, sEl); award(1, 'look'); };
+  const run = () => {
+    const my = ++o.tok;
+    const cached = cachedTr(sent, b.lang, db.my);
+    el.innerHTML = cached ? '' : '<span class="itr-t loading">Memuat…</span>';
+    if (!cached && !fits()) return fallback();
+    const show = r => {
+      el.innerHTML = '';
+      const t = document.createElement('span'); t.className = 'itr-t'; t.dir = 'auto'; t.lang = db.my; t.textContent = r.text;
+      const m = document.createElement('span'); m.className = 'itr-m'; m.textContent = long ? 'Kalimat panjang, arti mesin sering meleset. Baca bagian per bagian.' : 'Arti mesin, bisa meleset';
+      el.append(t, m);
+      if (!fits()) fallback();
+    };
+    if (cached) return show({ text: cached });
+    translate(sent, b.lang, db.my).then(r => { if (RD.itr !== o || my !== o.tok) return; if (!r || !r.text) throw new Error('kosong'); show(r); }).catch(() => {
+      if (RD.itr !== o || my !== o.tok) return;
+      el.innerHTML = '<span class="itr-t">Arti belum kebuka.</span> ';
+      const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'itr-r'; bt.textContent = 'Coba lagi'; bt.onclick = ev => { ev.stopPropagation(); run(); };
+      el.append(bt);
+      if (!fits()) fallback();
+    });
+  };
+  bumpSentLook(b.id, 'kalimat');
+  run();
 }
 function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
 function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
