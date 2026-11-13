@@ -1005,7 +1005,7 @@ function finishBook(b) {
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
   const ring = [ws.length ? `${ws.length} kata disimpan` : '', mnt >= 1 && mnt < 600 ? `baca ±${mnt} mnt` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
-  const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" style="min-height:44px;margin-top:6px;text-align:left"><span style="overflow-wrap:anywhere">${esc(x.title)}</span> <span class="mut sm">${langName(x.lang)} · ${pctOf(x)}%</span></button>`).join('')}`
+  const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
     : `<p class="mut sm" style="margin-top:14px">Mau cerita baru? Impor buku atau teks lain buat dikepoin.</p><button class="sec full" id="fbadd" style="min-height:44px">Impor buku baru</button>`;
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
