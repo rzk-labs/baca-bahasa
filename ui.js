@@ -1659,9 +1659,8 @@ async function onWord(el, lastEl) {
     ${db.seenExpHint ? '' : '<div class="mut sm" id="wonce">Mau lebih dari satu kata? Ketuk ‹ ›</div>'}
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
-    <div class="wnamerow"><button class="ghost" id="wnama" type="button" hidden></button></div>
-    <div class="row"><button class="sec" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="pri" data-close id="wdone">Selesai</button></div>
-    <div class="row" style="margin-top:10px"><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`, 'Arti kata');
+    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
+    <div class="wact2"><button class="ghost" data-close id="wdone">Selesai</button><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`, 'Arti kata');
   const kenalLbl = () => isKenal(b.lang, word) ? `${ico('bmcheck')} Belum kenal` : 'Sudah kenal';
   const updKenal = () => { const k = $('#wkenal'); if (!k) return; k.hidden = isSaved() || isNama(b, word); k.innerHTML = kenalLbl(); };
   const paintKenal = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase() && !x.classList.contains('saved')) x.classList.toggle('kenal', on); });
