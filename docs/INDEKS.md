@@ -108,6 +108,7 @@
 - [opini-internet](riset-opini-internet.md)
 - [pasar-ukuran](riset-pasar-ukuran.md)
 - [peluang-masalah](riset-peluang-masalah.md)
+- [pdf-teks-berantakan](riset-pdf-teks-berantakan.md)
 - [pemotongan-kata-jp-kr](riset-pemotongan-kata-jp-kr.md)
 - [pengingat-baca-pwa](riset-pengingat-baca-pwa.md)
 - [penanda-sinkron](riset-penanda-sinkron.md)
