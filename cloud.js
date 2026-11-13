@@ -425,8 +425,13 @@ async function openLeaderboard() {
 // ringkasan profil yang dikirim saat sinkron: hanya judul, bahasa, % baca. Tanpa teks buku.
 function profileData() {
   const wk = Date.now() - 7 * 864e5;
-  const reading = (db.books || []).filter(b => b.opened || b.pos > 0).sort((a, b) => (b.opened || 0) - (a.opened || 0)).slice(0, 3)
-    .map(b => ({ t: String(b.title || '').slice(0, 80), lang: b.lang, pct: typeof pctOf === 'function' ? pctOf(b) : 0, at: b.opened || 0 }));
+  const seen = new Map(); /* satu baris per buku (judul+bahasa sama digabung, persen tertinggi) */
+  (db.books || []).filter(b => b.opened || b.pos > 0).sort((a, b) => (b.opened || 0) - (a.opened || 0)).forEach(b => {
+    const k = String(b.title || '').trim() + '|' + b.lang, pct = typeof pctOf === 'function' ? pctOf(b) : 0, o = seen.get(k);
+    if (!o) seen.set(k, { t: String(b.title || '').slice(0, 80), lang: b.lang, pct, at: b.opened || 0 });
+    else o.pct = Math.max(o.pct, pct);
+  });
+  const reading = [...seen.values()].slice(0, 3);
   return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
 }
 const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };

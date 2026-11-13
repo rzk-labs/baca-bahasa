@@ -1,5 +1,11 @@
 [
   {
+    "n": 888,
+    "judul": "Jumlah bab/bagian tetap sama di Home, Baca & Profil",
+    "poin": "Jumlah bab di Home sekarang dihitung ulang dan sama dengan layar Baca.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 885,
     "judul": "[peta 82] Keepo HQ: gambar di masukan (/feedback) & perintah ke tim",
     "poin": "Perintah ke tim di Keepo HQ sekarang bisa disertai sampai 3 gambar.",
@@ -171,12 +177,6 @@
     "n": 812,
     "judul": "[peta 75] Sheet arti kata: uji 320px & 4 tema baca, rapikan",
     "poin": "Sheet arti kata dicek di layar kecil dan keempat tema baca.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 806,
-    "judul": "[peta 74] Bentuk dasar kata Eropa: pelepas akhiran es/fr/de/en",
-    "poin": "Ketuk kata seperti \"went\" atau \"hablaban\", sheet arti kini menampilkan kata dasarnya.",
     "tgl": "2026-11-13"
   }
 ]

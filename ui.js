@@ -297,13 +297,16 @@ function calcUnits(b, pages) {
 }
 const unitsBusy = {};
 async function ensureUnits(b) {
-  if (unitsBusy[b.id] || (b.uv === 2 && Array.isArray(b.units) && b.total && b.units.length === b.total)) return;
+  if (unitsBusy[b.id] || ((b.cv || 0) >= CH_VER && b.uv === 2 && Array.isArray(b.units) && b.total && b.units.length === b.total)) return;
   unitsBusy[b.id] = 1;
   try {
+    await migrasiBab(b); /* total bab dihitung dari teks (sama dgn layar Baca), bukan dari angka lama */
     const paras = await getText(b.id); if (!paras) return;
     const pages = makeSections(paras);
-    if (!b.total) b.total = pages.length;
-    if (b.total === pages.length && calcUnits(b, pages) && $('#hero') && !document.body.classList.contains('reading')) viewRak();
+    let ch = false;
+    if (b.total !== pages.length) { b.total = pages.length; b.pos = Math.min(b.pos || 0, pages.length - 1); delete b.units; save(); ch = true; }
+    if (calcUnits(b, pages)) ch = true;
+    if (ch && $('#hero') && !document.body.classList.contains('reading')) viewRak();
   } catch (e) {} finally { delete unitsBusy[b.id]; }
 }
 function makeSections(paras) {
