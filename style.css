@@ -879,4 +879,19 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle b{min-width:8em}.rmore .rmob{display:none}
 @media (max-width:430px){.rbar{gap:4px;padding-left:4px;padding-right:4px}#rRt,#rLis{display:none}.rmore .rmob{display:flex}.rmore .chi b.rst{background:var(--ink);color:var(--cream);padding:3px 10px;font-size:12px}}
 .rmore .chi .i{width:20px;height:20px;flex:none}.rmore .chi b{background:none;color:inherit;padding:0;font-size:inherit;font-weight:800}
+/* #932 logo Keepo utuh di HP: logo tidak menyusut; pil XP disembunyikan (XP ada di Home & Profil) */
+@media (max-width:430px){#top h1{flex:0 0 auto;min-width:max-content;overflow:visible}#hdx{margin-left:auto}#pXp{display:none}}
 @media (max-width:359px){.goal-row .ring,.goal-row .ring svg{width:56px;height:56px}.goal-row .ring .score{padding:0 6px}.goal-row .ring .score .gn{font-size:12px;letter-spacing:-.04em}.goal-row .ring .score small{font-size:8px}}
+
+/* #944 sheet arti rapi: Simpan satu baris penuh, tombol tak patah huruf, judul lega, loading titik */
+.wact>#wsave{flex:1 1 100%}
+.wact>button:not(#wsave){flex:1 1 120px;min-width:0;white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
+.wd{column-gap:var(--space-3);row-gap:4px}
+.wex{gap:6px}
+.wexlbl{padding:0 6px}
+@media (max-width:340px){.wact>button:not(#wsave){flex-basis:104px;padding:8px 8px;font-size:14px}.wexlbl{padding:0 4px}}
+.ldots{display:inline-flex;align-items:center;gap:6px;height:22px}
+.ldots i{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.3;animation:ldot 1.2s ease-in-out infinite}
+.ldots i:nth-child(2){animation-delay:.18s}.ldots i:nth-child(3){animation-delay:.36s}
+@keyframes ldot{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:.9;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.ldots i{animation:none;opacity:.6}}
