@@ -1,5 +1,11 @@
 [
   {
+    "n": 894,
+    "judul": "XP jujur: tak naik sendiri; pesan Tamat sesuai jumlah kata disimpan",
+    "poin": "Baca ulang halaman yang sama tak lagi menambah XP maupun hitungan halaman.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 892,
     "judul": "Baca HP: kartu 'Intip kata bab' utuh, tak terpotong; Profil tak dobel",
     "poin": "Kartu 'Intip kata' di HP sekarang utuh, tidak tertutup header lagi.",
@@ -171,12 +177,6 @@
     "n": 821,
     "judul": "Layar Tamat: kartu 'Berikutnya' rapi, judul & info tak patah",
     "poin": "Layar Tamat: kartu 'Berikutnya' kini rapi, judul tak patah lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 819,
-    "judul": "[peta 76] Impor EPUB Jepang: buang furigana <rt>/<rp> dari teks baca",
-    "poin": "Buku Jepang sekarang tak lagi menampilkan bacaan furigana dobel di teks.",
     "tgl": "2026-11-13"
   }
 ]
