@@ -1,5 +1,11 @@
 [
   {
+    "n": 898,
+    "judul": "Profil: buku tak dobel; Home: sapaan rapi; header Baca mudah diketuk",
+    "poin": "Profil kini menampilkan satu entri per buku, dengan kemajuan tertinggi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 896,
     "judul": "Intip kata bab: tiap kata selalu ada arti, tanpa teks janggal",
     "poin": "Kartu Intip kata bab kini selalu ada arti atau tulisan ajakan.",
@@ -171,12 +177,6 @@
     "n": 829,
     "judul": "Header baca: judul buku utuh 2 baris, tombol Bab pindah ke bawahnya",
     "poin": "Judul buku di layar baca sekarang terbaca utuh, sampai 2 baris.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 825,
-    "judul": "Baca: sisa waktu bar baca tak jam-jaman, tampil per bab",
-    "poin": "Bar baca kini menulis sisa waktu per bab, bukan total buku.",
     "tgl": "2026-11-13"
   }
 ]

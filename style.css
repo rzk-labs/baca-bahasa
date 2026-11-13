@@ -861,3 +861,10 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fb-th button .i{width:12px;height:12px;padding:3px;margin:3px;border-radius:50%;background:#351E28;color:#fff;box-sizing:content-box}
 .fb-add{min-height:44px;margin-bottom:4px}.fb-add .i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
 @media (max-width:380px){#rFb .rrtl{display:none}}
+/* #898 sapaan Home: lingkaran 'kepoin' di dalam margin, jarak >=8px; header Baca: tombol 44px, teks >=13px */
+.circle-txt{margin:8px 12px}
+.rrtl{font-size:13px}
+.rtitle .rchap,.rmk{font-size:13px}
+.rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
+.rrt,.rlis{min-width:44px;min-height:44px}
+@media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
