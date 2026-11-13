@@ -278,13 +278,13 @@ async function pagesOf(b) {
 }
 /* bobot bab (b.units): SATU fungsi, dihitung sekali dari teks; buku lama dihitung saat Home dibuka (ensureUnits) */
 function calcUnits(b, pages) {
-  if (Array.isArray(b.units) && b.units.length === pages.length) return false;
-  b.units = pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
+  if (b.uv === 2 && Array.isArray(b.units) && b.units.length === pages.length) return false;
+  b.uv = 2; b.units = pages.map(sec => Math.round(sec.reduce((a, p) => a + unitsOf(p.replace(/^[\u0001\u0002]/, ''), b.lang), 0) * 1000) / 1000); save();
   return true;
 }
 const unitsBusy = {};
 async function ensureUnits(b) {
-  if (unitsBusy[b.id] || (Array.isArray(b.units) && b.total && b.units.length === b.total)) return;
+  if (unitsBusy[b.id] || (b.uv === 2 && Array.isArray(b.units) && b.total && b.units.length === b.total)) return;
   unitsBusy[b.id] = 1;
   try {
     const paras = await getText(b.id); if (!paras) return;
@@ -1332,11 +1332,42 @@ function layout() {
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
-   Latin ~150 kata/mnt; Jepang/Korea/Mandarin ~250 huruf/mnt. Total per bab dihitung sekali per buku. */
+   Kecepatan awal: Latin 130 kata/mnt; Jepang/Korea/Mandarin 160 huruf/mnt. Total per bab dihitung sekali per buku.
+   Hasil unitsOf = menit pada kecepatan awal; kecepatan pribadi mengalikannya lewat spdFactor (#833). */
 const unitsOf = (t, lang) => {
   t = t.replace(/\u0001/g, '');
-  return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 250 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 150;
+  return /^(ja|ko|zh)/.test(lang) ? t.replace(/\s/g, '').length / 160 : (t.trim() ? t.trim().split(/\s+/).length : 0) / 130;
 };
+/* kecepatan pribadi (#833): rasio = kecepatan nyata ÷ kecepatan awal tiap halaman sah (4-180 dtk), per bahasa (10 terakhir) di localStorage */
+const SPD_KEY = 'kepo.spd';
+const spdLang = l => String(l || 'x').slice(0, 2);
+function spdLoad(l) { try { const o = JSON.parse(localStorage.getItem(SPD_KEY) || '{}'); const a = o && o[spdLang(l)]; return Array.isArray(a) ? a.filter(x => Number.isFinite(x) && x > 0) : []; } catch (e) { return []; } }
+function spdAdd(l, r) { try { const o = JSON.parse(localStorage.getItem(SPD_KEY) || '{}') || {}, k = spdLang(l), a = Array.isArray(o[k]) ? o[k] : []; a.push(r); o[k] = a.slice(-10); localStorage.setItem(SPD_KEY, JSON.stringify(o)); } catch (e) { } }
+const spdValid = l => spdLoad(l).length;
+/* pengali waktu: 1 = kecepatan awal; 3-9 halaman sah campur 50/50; 10+ pribadi penuh; terkunci 0,5x-2x */
+function spdFactor(l) {
+  const a = spdLoad(l); if (a.length < 3) return 1;
+  const s = a.slice().sort((x, y) => x - y), h = s.length >> 1, med = s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2;
+  return 1 / Math.max(0.5, Math.min(2, a.length >= 10 ? med : (med + 1) / 2));
+}
+/* ukur halaman, dipanggil tiap showPage: hanya maju 1 halaman (atau ke bab berikutnya) yang dihitung; loncat = buang 1 halaman */
+function spdTrack(b) {
+  const now = Date.now(), pt = RD.pt, key = b.pos + ':' + RD.page;
+  if (pt && pt.id === b.id && pt.key === key) return;
+  if (pt && pt.id === b.id) {
+    const seq = (pt.pos === b.pos && RD.page === pt.page + 1) || (b.pos === pt.pos + 1 && RD.page === 0 && pt.page === pt.n - 1), dt = (now - pt.t) / 1000;
+    if (seq && dt >= 4 && dt <= 180 && pt.mins > 0.05) spdAdd(b.lang, pt.mins * 60 / dt);
+  }
+  const mins = RD.left ? (RD.left[RD.page] || 0) - (RD.left[RD.page + 1] != null ? RD.left[RD.page + 1] : 0) : 0;
+  RD.pt = { id: b.id, key, pos: b.pos, page: RD.page, n: RD.n, t: now, mins };
+}
+/* sisa bab: <1 mnt = 'Sebentar lagi'; >90 mnt = '±1,5 jam' (bulat 5 mnt) */
+function fmtChap(m) {
+  const n = Math.ceil(m - 1e-9);
+  if (n < 1) return 'Sebentar lagi';
+  if (n > 90) return `±${String(Math.round(Math.round(n / 5) * 5 / 6) / 10).replace('.', ',')} jam`;
+  return `±${Math.max(1, Math.round(m))} mnt`;
+}
 /* kartu 'Lanjut baca' di Beranda: posisi + sisa menit (nomor halaman asli baru ada setelah layout, jadi pakai bab) */
 /* SATU sumber angka progres (Beranda, bar baca, catatan sesi): persen hanya bila sudah ada;
    jumlah bab dianggap siap hanya bila sudah dihitung (units cocok dgn total), supaya tak muncul 'Bab 1 dari 1' lalu loncat */
@@ -1365,6 +1396,7 @@ function heroPos(b, mins, part) {
 function fmtMins(m, part) {
   const n = Math.ceil(m - 1e-9);
   /* sisa seluruh buku > 120 mnt → jam bulat (tak pernah '±554 mnt') */
+  if (n > 1200) return '20+ jam';
   if (n > 120) return part ? `≥${Math.floor(n / 60)} jam` : `±${Math.round(n / 60)} jam`;
   if (!part) return n < 1 ? '' : `±${Math.max(1, Math.round(m))} mnt`;
   return n < 1 ? '—' : `≥${n} mnt`;
@@ -1380,22 +1412,22 @@ async function heroMins(b) {
     let m = per[pos] * (1 - frac);
     for (let i = pos + 1; i < secs.length; i++) m += per[i];
     const part = unseen(b, secs), el = $('#heroPos');
-    if (typeof b.mleft === 'number' && b.mleft >= 0 && !part) m = b.mleft; /* angka sama persis dgn bar baca */
+    if (typeof b.mlb === 'number' && b.mlb >= 0 && !part && b.uv === 2) m = b.mlb; /* angka sama persis dgn bar baca */
     if (!el || db.cur !== b.id) return;
-    el.innerHTML = heroPos(b, fmtMins(m, part), part);
+    el.innerHTML = heroPos(b, spdValid(b.lang) < 3 ? '' : fmtMins(m * spdFactor(b.lang), part), part); /* sisa buku tersembunyi sebelum 3 halaman sah */
   } catch (e) {}
 }
 function minsLeft(b) {
   if (!(RD.n > 0) || !RD.left) return null;
   let m = RD.left[RD.page] || 0;
-  const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
+  const ok = b.uv === 2 && Array.isArray(b.units) && b.units.length === (b.total || 1);
   if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
-  const here = RD.left[RD.page] || 0, n = Math.max(1, Math.ceil(here - 1e-9));
+  const here = (RD.left[RD.page] || 0) * spdFactor(b.lang);
   const secs = cache.id === b.id && cache.pages;
   const mpart = !ok || !secs || unseen(b, secs);
   /* bar baca: sisa waktu SELALU sisa bab/bagian ini; total buku hanya utk Beranda lewat b.mleft (satu sumber, fmtMins) */
-  if ((b.total || 1) > 1) return { t: `${secWord(b, b.pos) === 'Bab' ? 'bab' : 'bagian'} ini ±${n} mnt`, part: false, bab: true, m: ok ? m : null, mpart };
-  return { t: fmtMins(here, false) || '<1 mnt', part: false, m: ok ? m : null, mpart };
+  if ((b.total || 1) > 1) return { t: here < 1 - 1e-9 ? 'Sebentar lagi' : `${secWord(b, b.pos) === 'Bab' ? 'bab' : 'bagian'} ini ${fmtChap(here)}`, part: false, bab: true, m: ok ? m : null, mpart };
+  return { t: fmtChap(here), part: false, m: ok ? m : null, mpart };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -1414,8 +1446,9 @@ function showPage(p, anim = true) {
   nudgeTap(b);
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
   b.pct = readPct(b);
+  spdTrack(b);
   const ml = minsLeft(b);
-  if (ml && ml.m != null && !ml.mpart) b.mleft = ml.m;
+  if (ml && ml.m != null && !ml.mpart) b.mlb = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
