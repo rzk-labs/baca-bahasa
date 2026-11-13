@@ -78,8 +78,9 @@
     { "no": 71, "peran": "developer", "prioritas": "P1", "nama": "Jelaskan kalimat (AI) GRATIS 5x/hari, hanya saat diminta: tombol di sheet arti kalimat, label 'Penjelasan AI, bisa meleset' + tombol Lapor, bisa dimatikan di Pengaturan (keputusan founder #524)", "dokumen": "docs/riset-bantuan-ai-jelaskan-kalimat.md", "status": "selesai (#688; endpoint POST /jelaskan di api/ pakai Cloudflare Workers AI gratis, jatah 5/hari per akun/perangkat; founder deploy api setelah PR)" },
     { "no": 72, "peran": "developer", "prioritas": "P0", "nama": "Perbaiki tampilan Home: progres sama dengan bar baca, nomor bab jujur, Minggu ini & kartu Streak rapi, alas bar menu bawah (#748)", "dokumen": "docs/spesifikasi-home-rapi-2.md", "status": "selesai (#752)" },
     { "no": 73, "peran": "developer", "prioritas": "P0", "nama": "Baca: persen buku satu angka di Home, bar baca & Profil; Kata baru per bahasa buku (#797)", "dokumen": "docs/spesifikasi-persen-buku-satu-angka.md", "status": "selesai (#805)" },
-    { "no": 74, "peran": "developer", "prioritas": "P0", "nama": "Bentuk dasar kata Eropa: pelepas akhiran kecil (es/fr/de/en) + label 'Bentuk dasar' di sheet arti, tanda tebakan (#795)", "dokumen": "docs/riset-bentuk-dasar-kata.md", "status": "siap dikerjakan" },
-    { "no": 75, "peran": "developer", "prioritas": "P1", "nama": "Uji sheet arti kata baru di 320px & 4 tema baca, rapikan bila patah (#804)", "dokumen": "docs/desain-sheet-arti-kata.md", "status": "siap dikerjakan" }  ],
+    { "no": 74, "peran": "developer", "prioritas": "P0", "nama": "Bentuk dasar kata Eropa: pelepas akhiran kecil (es/fr/de/en) + label 'Bentuk dasar' di sheet arti, tanda tebakan (#795)", "dokumen": "docs/riset-bentuk-dasar-kata.md", "status": "selesai (#806)" },
+    { "no": 75, "peran": "developer", "prioritas": "P1", "nama": "Uji sheet arti kata baru di 320px & 4 tema baca, rapikan bila patah (#804)", "dokumen": "docs/desain-sheet-arti-kata.md", "status": "siap dikerjakan" }
+  ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
     { "level": "P0", "isi": "Bantuan memahami kata dan kalimat" },
