@@ -1299,7 +1299,7 @@ async function viewBaca() {
     if (e.target.closest('.intip')) return;
     let w = e.target.closest('.w');
     if (!w && !e.target.closest('button,a,input,.intip') && e.clientX) w = nearWord(vp, e.clientX, e.clientY);
-    if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w); return; }
+    if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
@@ -1760,8 +1760,8 @@ async function onWord(el, lastEl) {
   document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); }
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
-  const sEl = el.closest('.s'), sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
-  const ws = [...sEl.querySelectorAll('.w')], MAXW = 5;
+  const sEl = el.closest('.s') || el.parentElement || el, sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
+  const ws = [...sEl.querySelectorAll('.w')], MAXW = 5; if (!ws.includes(el)) ws.push(el);
   let lo = ws.indexOf(el), hi = lo, word = el.textContent, tr = null, tok = 0;
   const phraseOf = () => { const r = document.createRange(); r.setStartBefore(ws[lo]); r.setEndAfter(ws[hi]); return r.toString().replace(/\s+/g, ' ').trim(); };
   /* pulihkan frasa pilihan (dari tombol balik sheet kalimat); kalau rentang tak valid, tetap 1 kata */
