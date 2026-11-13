@@ -19,3 +19,10 @@
 - Uji di iPhone SE asli dan Android kecil.
 - Sheet penanda & Tamat hanya dicek lewat kode; belum dilihat langsung.
 - Header e-reader tidak disentuh (sudah beres di #398).
+
+## 4. Layar Tamat: kartu "Berikutnya" (#821)
+- Kartu penuh lebar, min 44px; judul maks 2 baris, elipsis rapi.
+- Baris bawah satu baris: "Bahasa · persen"; 0% tampil "Belum mulai".
+- Warna ikut tema sheet, jadi aman di 4 tema baca.
+- Judul CJK dan sangat panjang: tak patah per huruf, terpotong elipsis.
+- Dicek lewat baca CSS di 320px; belum dilihat di HP asli.
