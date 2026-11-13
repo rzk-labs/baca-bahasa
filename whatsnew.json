@@ -1,5 +1,11 @@
 [
   {
+    "n": 896,
+    "judul": "Intip kata bab: tiap kata selalu ada arti, tanpa teks janggal",
+    "poin": "Kartu Intip kata bab kini selalu ada arti atau tulisan ajakan.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 894,
     "judul": "XP jujur: tak naik sendiri; pesan Tamat sesuai jumlah kata disimpan",
     "poin": "Baca ulang halaman yang sama tak lagi menambah XP maupun hitungan halaman.",
@@ -171,12 +177,6 @@
     "n": 825,
     "judul": "Baca: sisa waktu bar baca tak jam-jaman, tampil per bab",
     "poin": "Bar baca kini menulis sisa waktu per bab, bukan total buku.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 821,
-    "judul": "Layar Tamat: kartu 'Berikutnya' rapi, judul & info tak patah",
-    "poin": "Layar Tamat: kartu 'Berikutnya' kini rapi, judul tak patah lagi.",
     "tgl": "2026-11-13"
   }
 ]
