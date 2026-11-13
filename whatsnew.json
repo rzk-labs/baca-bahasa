@@ -1,5 +1,11 @@
 [
   {
+    "n": 876,
+    "judul": "Lanjut baca: 'Kata baru' tak lagi tampil kata Korea/partikel (が, 落ち)",
+    "poin": "Status \"Lanjut\" kini hanya menyebut kata sesuai bahasa buku.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 874,
     "judul": "Tambah Thai & Hindi + aman untuk skrip Arab/Hindi/Thai",
     "poin": "Thai dan Hindi sekarang ada di pilihan bahasa, dan terdeteksi otomatis.",
@@ -172,11 +178,5 @@
     "judul": "Home: 'Kata baru' hanya kata bahasa buku yang dibaca",
     "poin": "Kata dari bahasa lain tidak lagi nyasar ke catatan buku yang dibaca.",
     "tgl": "2026-11-13"
-  },
-  {
-    "n": 792,
-    "judul": "Baca: tombol 'Sudah kenal semua' untuk kata tersorot di halaman ini",
-    "poin": "Di Pengaturan baca ada tombol baru: tandai semua kata sorotan halaman ini sudah kenal.",
-    "tgl": "2026-11-12"
   }
 ]
