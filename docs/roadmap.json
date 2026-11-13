@@ -620,7 +620,7 @@
       "prioritas": "P0",
       "nama": "Paket bug berulang: header Baca ringkas & tombol besar, tombol Home satu baris (Buku lain), popup Level sekali saja, kartu Tamat satu aksi utama, logo tak terpotong (#919)",
       "dokumen": "docs/pm-audit-integrasi-kerja-tim.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#935)"
     },
     {
       "no": 84,
@@ -644,6 +644,30 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: samakan Hasil, Papan, Siap kamu cek (satu kamus status, satu kartu, satu bar saring) (#923)",
       "dokumen": "docs/pm-rapikan-hasil-papan-siap-cek.md",
+      "status": "selesai (#937)"
+    },
+    {
+      "no": 87,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: Setujui massal untuk tugas Siap dicek (kotak centang, pilih semua, laporan gagal sebagian) (#925)",
+      "dokumen": "docs/spesifikasi-hq-setujui-massal.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 88,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: form Perintah ke tim rapi di HP (tanpa zoom, 5 peran muat, tidak terpotong) (#931)",
+      "dokumen": "docs/spesifikasi-hq-form-perintah-hp.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 89,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sheet arti kata rapi: tombol Sudah kenal/Ini nama tak patah per huruf, Simpan satu baris penuh, tebakan bentuk dasar -eed (proceed) dihapus, baris judul lega (#941)",
+      "dokumen": "docs/spesifikasi-sheet-arti-rapi-3.md",
       "status": "siap dikerjakan"
     }
   ],
