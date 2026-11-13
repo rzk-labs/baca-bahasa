@@ -1452,15 +1452,17 @@ function showPage(p, anim = true) {
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
-    const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? nw(ml.t) : '';
-    const hal = RD.n === 1 ? '' : nw(`Hal ${RD.page + 1}/${RD.n} di ${multi ? 'bab' : 'buku'} ini`);
+    const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? ml.t.replace(/^(bab|bagian) ini /, '') : '';
     const wd = secWord(b, b.pos), tb = wd === 'Bab' ? 1 : 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
-    const l1 = [multi ? nw(secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd)) : '', hal].filter(Boolean).join(' · '), l2 = [multi ? nw(`${bp}% buku`) : '', rem].filter(Boolean).join(' · ');
-    pgn.title = 'persen dari seluruh buku, perkiraan sisa waktu';
-    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].filter(Boolean).join(', '));
-    pgn.innerHTML = [l1, l2].filter(Boolean).join(' · ')
-      + (ml && ml.part ? '<span class="mnote">bab lain belum dihitung</span>' : '')
-      + (multi && lastPg && b.pos < b.total - 1 ? '<span class="mnote">Ujung bab, geser untuk bab berikutnya</span>' : '');
+    const sec = multi ? secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd) : '';
+    const notes = [ml && ml.part ? 'bab lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Ujung bab, geser untuk bab berikutnya' : ''].filter(Boolean);
+    pgn.title = ['persen dari seluruh buku, perkiraan sisa waktu'].concat(notes).join('. ');
+    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
+    /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
+    const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(nw).join(' · '); };
+    fill([sec, `${bp}%`, (window.innerWidth || 400) <= 360 ? '' : rem]);
+    if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, `${bp}%`]);
+    if (pgn.scrollWidth > pgn.clientWidth + 1) fill([`${bp}%`]);
   }
   if (pb) { const bp = bookPct(b); pb.style.width = bp + '%'; if (pb.parentElement) pb.parentElement.title = `${bp}% dari seluruh buku`; }
   syncMarks();
