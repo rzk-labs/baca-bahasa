@@ -357,7 +357,7 @@ async function markas(again){
     <button class="btn ghost" id="pmnow" ${pmRun?'disabled':''}>${pmRun?'<i class="dot"></i> PM sedang bekerja…':IC.play+' Jalankan PM sekarang'}</button></div>
   <div class="bento">
     <div class="tile c t-lime span2"><div class="row" style="align-items:center;gap:16px"><div class="ring" style="--p:${p}"><b>${p}%</b></div><div style="min-width:0"><div class="eyebrow">Fase sekarang</div><h2 style="margin:4px 0 6px">${esc(R?.fase_sekarang||'—')}</h2><div class="sm">${esc(R?.prinsip||'')}</div></div></div></div>
-    <div class="tile c ${siap.length?'t-sun':'t-mint'}" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${siap.length}</div><div class="sm">${siap.length?'hasil siap dicek →':'Semua beres ✨'}</div></div>
+    <div class="tile c ${siap.length?'t-sun':'t-mint'}" style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Siap dicek</div><div class="big">${siap.length}</div><div class="sm">${siap.length?'hasil siap dicek →':'Semua beres ✨'}</div></div>
     <div class="tile c t-pink"><div class="eyebrow">Sudah live</div><div class="big">${live}</div><div class="sm">${jalan.length} sedang dikerjakan</div></div>
   </div>
   ${siap.length?`<div class="sec"><h2>Siap kamu cek</h2></div><div class="grid">${siap.map(t=>`<div class="tile row" style="cursor:pointer" onclick="detail(${t.n})"><div style="min-width:0;flex:1"><div class="row">${chipP(t.peran)}${chipQ(t.qa)}${t.otomatis?'':`<span class="chip">${I.pena} dari kamu</span>`}</div><b style="display:block;margin-top:6px">${esc(t.judul)}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span></div><span class="btn lime">Cek →</span></div>`).join('')}</div>`:''}
@@ -379,7 +379,7 @@ function ember(st){st=String(st||'').toLowerCase();
   if(/founder|menunggu keputusan|draft siap dicek|deploy server manual/.test(st))return 'kamu';
   if(/sedang|berjalan|dikerjakan tim|diproses/.test(st))return 'jalan';
   return 'belum'}
-const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Perlu keputusanmu','t-sun'],belum:['⏸️ Belum / pause',''],selesai:['✅ Selesai','t-mint']};
+const EMB={jalan:['⏳ Sedang dikerjakan','t-lav'],kamu:['❓ Tunggu keputusanmu (ide)','t-sun'],belum:['⏸️ Belum / pause',''],selesai:['✅ Selesai','t-mint']};
 let BKF='';
 function daftarKerja(){
   const B=(HQ&&HQ.roadmap&&HQ.roadmap.backlog)||[];if(!B.length)return '';
@@ -400,7 +400,7 @@ async function hasilKerja(again){
   let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   if(cur!=='hasil')return;
   if(!HQ){try{await load()}catch(e){}}
-  const OK={menuju:[I.roket+' Menuju live','t-blue'],live:[I.cek+' Live','t-mint'],siap:[I.jam+' Menunggu kamu','t-sun'],dikerjakan:[I.alat+' Dikerjakan','t-lav'],antre:[I.jam+' Antre','t-lav'],ditolak:[I.silang+' Ditolak',''],gagal:[I.tanda+' Gagal','']};
+  const OK={menuju:[I.roket+' Menuju live','t-blue'],live:[I.cek+' Live','t-mint'],siap:[I.jam+' Siap dicek (hasil jadi)','t-sun'],dikerjakan:[I.alat+' Dikerjakan','t-lav'],antre:[I.jam+' Antre','t-lav'],ditolak:[I.silang+' Ditolak',''],gagal:[I.tanda+' Gagal','']};
   const ST={antre:['belum','Belum diproses','t-coral'],dikerjakan:['progres','Progres','t-sun'],siap:['progres','Progres','t-sun'],menuju:['progres','Progres','t-sun'],gagal:['progres','Progres','t-sun'],live:['selesai','Selesai','t-mint'],ditolak:['selesai','Ditutup','t-ink']};
   const stK=t=>(ST[t.status]||ST.antre)[0];
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
@@ -447,7 +447,7 @@ async function hasilKerja(again){
   <div class="tile evl">
     <div class="evs">
       <div><div class="eyebrow">Live</div><div class="big">${lv}</div></div>
-      <div style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Menunggu kamu</div><div class="big">${sp}</div></div>
+      <div style="cursor:pointer" onclick="go('papan')"><div class="eyebrow">Siap dicek</div><div class="big">${sp}</div></div>
       <div><div class="eyebrow">Gagal</div><div class="big">${gg}</div></div>
       <div><div class="eyebrow">Siap dibangun</div><div class="big">${siapBangun}</div></div>
     </div>
@@ -575,7 +575,7 @@ async function detail(n){
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
   const LIM=4;
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
-  const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasilnya siap. Cek, lalu putuskan.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
+  const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
   <div class="dt">
   <section class="tile c ${warna} hero">
