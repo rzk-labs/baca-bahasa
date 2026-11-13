@@ -409,30 +409,44 @@ async function parsePdf(buf, title) {
   await loadScript(V + 'pdf.min.js');
   pdfjsLib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js';
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  const lines = [];
+  const LIG = { 'ﬀ': 'ff', 'ﬁ': 'fi', 'ﬂ': 'fl', 'ﬃ': 'ffi', 'ﬄ': 'ffl', 'ﬅ': 'st', 'ﬆ': 'st' };
+  const pages = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const tc = await (await pdf.getPage(i)).getTextContent();
-    let line = '';
-    for (const it of tc.items) { line += it.str; if (it.hasEOL) { lines.push(line.trim()); line = ''; } }
-    if (line.trim()) lines.push(line.trim());
-    lines.push('');
+    const pl = []; let line = '';
+    for (const it of tc.items) { line += String(it.str || '').replace(/[ﬀ-ﬆ]/g, c => LIG[c] || c); if (it.hasEOL) { pl.push(line.trim()); line = ''; } }
+    if (line.trim()) pl.push(line.trim());
+    pages.push(pl);
     if (i % 10 === 0 && typeof imporStatus === 'function') imporStatus(`Membaca PDF… halaman ${i}/${pdf.numPages}`);
   }
+  // header/footer/nomor halaman: pola baris pertama & terakhir (angka jadi #) yang berulang di banyak halaman dibuang
+  const pola = l => l.toLowerCase().replace(/\d+/g, '#').replace(/\s+/g, ' ').trim();
+  const edge = pl => { const f = pl.findIndex(Boolean); let e = -1; for (let k = pl.length - 1; k >= 0; k--) if (pl[k]) { e = k; break; } return f < 0 ? [] : f === e ? [f] : [f, e]; };
+  const hitung = new Map();
+  for (const pl of pages) for (const p of new Set(edge(pl).map(k => pola(pl[k])))) hitung.set(p, (hitung.get(p) || 0) + 1);
+  const ulang = new Set([...hitung].filter(([p, n]) => p.length > 1 && n >= 3 && n >= pages.length * 0.4).map(x => x[0]));
+  const lines = [];
+  for (const pl of pages) { const ed = new Set(edge(pl).filter(k => ulang.has(pola(pl[k])))); pl.forEach((l, k) => { if (!ed.has(k)) lines.push(l); }); lines.push(''); }
   // gabungkan baris jadi paragraf: putus kalau baris kosong atau baris pendek berakhir tanda titik
   const lens = lines.filter(Boolean).map(l => l.length).sort((a, b) => a - b);
   const typical = lens[Math.floor(lens.length * 0.8)] || 60;
+  const AWALAN = /(?:^|[^\p{L}])(self|well|non|ex|anti|co|semi|half|all|cross|post|pre|vice)-$/iu;
   const paras = []; let cur = '';
   for (const l of lines) {
     if (!l) { if (cur) { paras.push(cur); cur = ''; } continue; }
     if (/^\d+$/.test(l)) continue; // nomor halaman
-    cur = cur ? (/-$/.test(cur) ? cur.slice(0, -1) + l : cur + ' ' + l) : l;
+    if (!cur) cur = l;
+    else if (/\p{L}-$/u.test(cur) && /^\p{Ll}/u.test(l) && !AWALAN.test(cur)) cur = cur.slice(0, -1) + l; // kata terpotong: sambung
+    else if (/\p{L}-$/u.test(cur) && /^\p{L}/u.test(l)) cur += l; // tanda hubung asli (self-aware, Jean-Paul): pertahankan
+    else cur += ' ' + l;
     if (/[.!?:"”’。！？]$/.test(l) && l.length < typical * 0.85) { paras.push(cur); cur = ''; }
   }
   if (cur) paras.push(cur);
   // paragraf yang terpotong pergantian halaman: sambung kalau tidak diakhiri tanda baca
   const merged = [];
   for (const p of paras) { const last = merged[merged.length - 1]; if (last && !/[.!?:"”’。！？)]$/.test(last) && /^[\p{Ll}]/u.test(p)) merged[merged.length - 1] = last + ' ' + p; else merged.push(p); }
-  if (!merged.join('').trim()) throw new Error('PDF ini berupa gambar/scan, teksnya tidak bisa dibaca');
+  const huruf = (merged.join('').match(/\p{L}/gu) || []).length;
+  if (!huruf || huruf / Math.max(1, pdf.numPages) < 40) throw new Error('PDF ini kelihatannya scan (gambar), jadi teksnya tak terbaca. Coba versi EPUB atau TXT-nya.');
   return { title, paras: splitLong(merged) };
 }
 
