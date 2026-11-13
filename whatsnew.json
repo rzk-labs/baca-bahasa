@@ -1,5 +1,11 @@
 [
   {
+    "n": 937,
+    "judul": "[peta 86] Keepo HQ: samakan Hasil, Papan, Siap kamu cek",
+    "poin": "Halaman Markas, Papan, dan Hasil di Keepo HQ sekarang tampil seragam.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 935,
     "judul": "[peta 83] Header Baca HP: judul & tombol Bab tak nabrak, maks 3 tombol",
     "poin": "Header baca di HP kini lega: cuma tombol Kembali, Bab, dan Lainnya.",
@@ -171,12 +177,6 @@
     "n": 847,
     "judul": "[peta 80] Kata baru tanpa partikel & kata umum: satu fungsi saring",
     "poin": "Daftar kata baru sekarang bersih dari partikel, huruf tunggal, dan kata paling umum.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 843,
-    "judul": "Tab Sosial & Profil: rapi di 320px, area ketuk 44px, kontras",
-    "poin": "Tab Sosial dan Profil dirapikan: tombol dan baris lebih mudah diketuk di HP.",
     "tgl": "2026-11-13"
   }
 ]
