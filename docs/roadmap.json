@@ -669,6 +669,14 @@
       "nama": "Sheet arti kata rapi: tombol Sudah kenal/Ini nama tak patah per huruf, Simpan satu baris penuh, tebakan bentuk dasar -eed (proceed) dihapus, baris judul lega (#941)",
       "dokumen": "docs/spesifikasi-sheet-arti-rapi-3.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 90,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: klik cepat (cache server, panggilan GitHub bersamaan, layar langsung berubah, segar-ulang di belakang) (#943)",
+      "dokumen": "docs/spesifikasi-hq-klik-cepat.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
