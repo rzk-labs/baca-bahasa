@@ -21,6 +21,7 @@ const FEEDBACK_KONTAK = ''; /* isi tautan WhatsApp (https://wa.me/...) atau mail
 /* ---------- ikon ---------- */
 const BM = '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>';
 const ICONS = {
+  more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
   home: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
   mic: '<path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/>',
@@ -1232,7 +1233,7 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}<button class="icon rrt" id="rFb" type="button" title="Kirim masukan" aria-label="Kirim masukan">${ico('chat')}<span class="rrtl">Masukan</span></button><button class="icon rrt" id="set" title="Pengaturan baca" aria-label="Pengaturan baca">${ico('sliders')}<span class="rrtl">Atur</span></button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(b.title)}</div>
@@ -1247,15 +1248,22 @@ async function viewBaca() {
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
   if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) pauseListenPage(); else startListenPage(); };
-  if ($('#rRate')) $('#rRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); lisUi(); if (LIS.on && LIS.cur) startListenPage(true); };
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
   if ($('#rRt')) $('#rRt').onclick = () => {
     db.rt = db.rt ? 0 : 1; save(); viewBaca();
     const any = db.vocab.some(v => v.lang === b.lang && bacaOf(v.w, v.baca) && (+v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1));
     toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
   };
-  $('#reader #set').onclick = openSettings;
-  $('#rFb').onclick = () => openFeedback();
+  $('#rMore').onclick = () => {
+    const sl = () => db.ttsRate === 'slow' ? 'Lambat' : 'Normal';
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Lainnya</span>${closeBtn}</div><div class="chlist rmore">
+      <button class="chi" id="rmSet">${ico('sliders')}<span>Pengaturan baca</span></button>
+      <button class="chi" id="rmFb">${ico('chat')}<span>Kirim masukan</span></button>
+      ${'speechSynthesis' in window ? `<button class="chi" id="rmRate">${ico('slow')}<span>Laju suara: <b id="rmRateV">${sl()}</b></span></button>` : ''}</div>`, 'Menu lainnya');
+    $('#rmSet').onclick = () => { closeSheet(); openSettings(); };
+    $('#rmFb').onclick = () => { closeSheet(); openFeedback(); };
+    if ($('#rmRate')) $('#rmRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); $('#rmRateV').textContent = sl(); if (LIS.on && LIS.cur) startListenPage(true); };
+  };
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
@@ -1322,13 +1330,12 @@ async function viewBaca() {
 /* Tiga keadaan: Mulai / Jeda / Lanjut. Jeda lanjut dari kalimat terakhir; di ujung halaman pindah sendiri ke halaman/bab berikut */
 const LIS = { on: false, paused: false, id: 0, si: null, cur: null, chain: false };
 function lisUi() {
-  const bt = $('#rLis'), rt = $('#rRate'), act = LIS.on || LIS.paused;
+  const bt = $('#rLis'), act = LIS.on || LIS.paused;
   if (bt) {
     bt.classList.toggle('on', LIS.on); bt.setAttribute('aria-pressed', LIS.on ? 'true' : 'false');
     bt.setAttribute('aria-label', LIS.on ? 'Jeda dengar' : LIS.paused ? 'Lanjut dengar' : 'Dengar halaman');
     bt.innerHTML = ico(LIS.on ? 'pause' : LIS.paused ? 'play' : 'vol') + `<span class="rrtl">${LIS.on ? 'Jeda' : LIS.paused ? 'Lanjut' : 'Dengar'}</span>`;
   }
-  if (rt) { rt.hidden = !act; const sl = db.ttsRate === 'slow'; rt.textContent = sl ? 'Lambat' : 'Normal'; rt.setAttribute('aria-label', 'Laju suara: ' + (sl ? 'lambat' : 'normal') + '. Ketuk untuk ganti'); }
   const n = $('#lisNote'); if (n) n.hidden = !act;
 }
 const lisClear = () => $$('.cols .s.say').forEach(x => x.classList.remove('say'));

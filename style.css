@@ -873,3 +873,10 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
 @media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
+/* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
+.rbar{gap:8px;padding-left:8px;padding-right:8px}
+.rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
+.rtitle b{max-width:100%;-webkit-line-clamp:1;line-clamp:1}
+.rrt,.rlis{flex:none}
+@media (max-width:359px){.rbar{gap:8px;padding-left:4px;padding-right:4px}}
+.rmore .chi .i{width:20px;height:20px;flex:none}.rmore .chi b{background:none;color:inherit;padding:0;font-size:inherit;font-weight:800}
