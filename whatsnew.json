@@ -1,5 +1,11 @@
 [
   {
+    "n": 856,
+    "judul": "Lencana & 'Kata baru' jujur: sesuai kata tersimpan & bahasa buku",
+    "poin": "Lencana \"Keepo Pertama\" kini terkunci lagi kalau kata tersimpan masih 0.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 854,
     "judul": "[peta 81] Impor EPUB Jepang: huruf mirip jadi biasa, teks di luar <p>",
     "poin": "Buku Jepang yang diimpor sekarang hurufnya rapi, tidak aneh lagi.",
@@ -171,12 +177,6 @@
     "n": 774,
     "judul": "Popup 'Level N!' cukup sekali & 'Kata baru' FYP tanpa partikel",
     "poin": "Popup 'Level N!' sekarang cuma muncul sekali, tidak berulang di tab lain.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 772,
-    "judul": "Sampul buku Home: satu huruf besar, judul & penulis tak patah jelek",
-    "poin": "Sampul buku kini cuma satu huruf besar, tanpa judul patah.",
     "tgl": "2026-11-12"
   }
 ]

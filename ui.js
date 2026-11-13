@@ -150,6 +150,9 @@ function confetti(n = 70) {
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
+/* tampilan lencana jujur: lencana berbasis kata tersimpan hanya tampil terbuka bila syaratnya masih terpenuhi (db.badges tak diubah) */
+const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10 };
+const badgeShown = id => db.badges.includes(id) && !(id in BADGE_VOCAB_MIN && countedVocab(null).length < BADGE_VOCAB_MIN[id]);
 const BADGES = [
   ['kepo1', 'eye', 'Keepo Pertama', 'Ketuk 1 kata & simpan', () => db.vocab.length >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => db.vocab.length >= 10],
