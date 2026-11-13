@@ -1,5 +1,11 @@
 [
   {
+    "n": 843,
+    "judul": "Tab Sosial & Profil: rapi di 320px, area ketuk 44px, kontras",
+    "poin": "Tab Sosial dan Profil dirapikan: tombol dan baris lebih mudah diketuk di HP.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 841,
     "judul": "Target harian: tak lewat batas ('114 dari 30'), XP halaman jelas",
     "poin": "Kartu target harian kini mentok di 30/30, tidak lagi '114 dari 30'.",
@@ -171,12 +177,6 @@
     "n": 764,
     "judul": "Tombol 'Ini nama' di sheet arti: nama tokoh tak jadi kata belajar",
     "poin": "Sekarang ada tombol \"Ini nama\" di arti kata, jadi nama tokoh tak salah diartikan.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 762,
-    "judul": "Baca: total halaman 'Hal a/b' tak loncat saat balik halaman",
-    "poin": "Total halaman di buku tak loncat lagi saat balik halaman.",
     "tgl": "2026-11-12"
   }
 ]
