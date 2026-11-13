@@ -151,7 +151,7 @@ const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
 const BADGES = [
-  ['kepo1', 'eye', 'Keepo Pertama', 'Cek arti 1 kata', () => db.stat.look >= 1],
+  ['kepo1', 'eye', 'Keepo Pertama', 'Ketuk 1 kata & simpan', () => db.vocab.length >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => db.vocab.length >= 10],
   ['kutubuku', 'book', 'Kutu Buku', 'Balik 20 halaman', () => db.stat.page >= 20],
   ['berani', 'mic', 'Berani Ngomong', 'Selesaikan 1 tantangan', () => db.stat.speak >= 1],
@@ -1354,7 +1354,7 @@ const secWord = (b, i) => { const s = cache.id === b.id && cache.pages ? cache.p
 const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${pos}/${total}`;
 function heroPos(b, mins, part) {
   const p = progInfo(b);
-  if (p.done) return 'Sudah tamat';
+  if (p.done) return 'Baca lagi dari awal';
   const bits = [];
   if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false, b.tb ? 'Bab' : 'Bagian')); /* sama dengan bar baca (hanya buku multi-bab) */
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
@@ -1364,6 +1364,8 @@ function heroPos(b, mins, part) {
 /* teks sisa waktu jujur: ada bab belum terhitung → '≥N mnt' (batas bawah), kalau 0 → '—'; tidak pernah 'kurang dari 1 menit' */
 function fmtMins(m, part) {
   const n = Math.ceil(m - 1e-9);
+  /* sisa seluruh buku > 120 mnt → jam bulat (tak pernah '±554 mnt') */
+  if (n > 120) return part ? `≥${Math.floor(n / 60)} jam` : `±${Math.round(n / 60)} jam`;
   if (!part) return n < 1 ? '' : `±${Math.max(1, Math.round(m))} mnt`;
   return n < 1 ? '—' : `≥${n} mnt`;
 }
@@ -1388,14 +1390,12 @@ function minsLeft(b) {
   let m = RD.left[RD.page] || 0;
   const ok = Array.isArray(b.units) && b.units.length === (b.total || 1);
   if (ok) for (let i = b.pos + 1; i < b.units.length; i++) m += b.units[i];
-  const n = Math.max(1, Math.ceil(m - 1e-9));
-  if (!ok) return { t: `bab ini ±${n} mnt`, part: false, bab: true };
+  const here = RD.left[RD.page] || 0, n = Math.max(1, Math.ceil(here - 1e-9));
   const secs = cache.id === b.id && cache.pages;
-  const part = !secs || unseen(b, secs);
-  /* tak masuk akal: sisa jam-jaman padahal halaman bab hampir habis → tampilkan sisa bab ini saja */
-  const here = RD.left[RD.page] || 0;
-  if (RD.n - RD.page <= 3 && m > 180 && m > here) return { t: `bab ini ±${Math.max(1, Math.ceil(here - 1e-9))} mnt`, part: false, bab: true };
-  return { t: fmtMins(m, part) || '<1 mnt', part, m };
+  const mpart = !ok || !secs || unseen(b, secs);
+  /* bar baca: sisa waktu SELALU sisa bab/bagian ini; total buku hanya utk Beranda lewat b.mleft (satu sumber, fmtMins) */
+  if ((b.total || 1) > 1) return { t: `${secWord(b, b.pos) === 'Bab' ? 'bab' : 'bagian'} ini ±${n} mnt`, part: false, bab: true, m: ok ? m : null, mpart };
+  return { t: fmtMins(here, false) || '<1 mnt', part: false, m: ok ? m : null, mpart };
 }
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
@@ -1415,7 +1415,7 @@ function showPage(p, anim = true) {
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
   b.pct = readPct(b);
   const ml = minsLeft(b);
-  if (ml && ml.m != null && !ml.part) b.mleft = ml.m;
+  if (ml && ml.m != null && !ml.mpart) b.mleft = ml.m;
   save();
   const pgn = $('#pgn'), pb = $('#pbar');
   if (pgn) {
