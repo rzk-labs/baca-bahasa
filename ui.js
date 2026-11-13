@@ -190,6 +190,11 @@ function showLevelUp() {
   db.lvlSeen = lv; save(); celebrate(`Level ${lv}!`, 'Naik level! Kamu makin jago', 'lvl');
 }
 function award(n, stat, pk0) {
+  if (stat === 'page') {
+    /* halaman yang sama (baca ulang / bolak-balik) tak memberi XP maupun hitungan lagi */
+    db.pgSeen = db.pgSeen || {}; const sd = today(), sk0 = pk0 || '?';
+    if ((db.pgSeen[sd] || []).includes(sk0)) return;
+  }
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   if (stat === 'page') {
     db.pgDay = db.pgDay || {}; db.pgSeen = db.pgSeen || {}; const pd = today(), sk = pk0 || '?', seen = db.pgSeen[pd] = db.pgSeen[pd] || [];
@@ -1077,13 +1082,14 @@ function finishBook(b) {
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (total > 0 ? `<p class="mut">${total} kata tersimpan, latih di tab Kata.</p>` : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (total > 0 ? `<p class="mut">${total} kata disimpan, siap dilatih.</p><button class="sec full" id="fbk" style="margin-top:8px">Latih di tab Kata</button>` : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
     <div class="fb-acts"><button class="pri full" id="fbh">Ke Home</button></div>${nxHtml}
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button>${nx.length ? '<button class="lnk" id="fbadd">Impor buku baru</button>' : ''}</div>`, 'Tamat');
   $('#fbr').onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
+  const fk = $('#fbk'); if (fk) fk.onclick = () => { closeSheet(); setTab('kata'); };
 }
 /* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
 const INTIP_SKIP = ['th']; /* Thai: pemotongan kata belum andal. ja/ko/zh memakai pemotong kata Intl (#658) */
