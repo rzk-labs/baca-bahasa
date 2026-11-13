@@ -841,3 +841,18 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle b{flex:0 0 100%}
 .rtitle .rchap{margin:0;min-height:28px;flex:none}
 .rtitle .rmk,.rtitle .roff{flex:none;margin:0}
+
+/* #882: tombol Masukan di header + lampiran gambar */
+#hdx .hfb{width:auto;min-width:44px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:14px}
+#hdx .hfb .i{width:20px;height:20px}
+@media (max-width:640px){#hdx .hfb{width:44px;padding:0}.hfbl{display:none}}
+@media (max-width:340px){#hdx .hfb{width:40px}}
+.fb-img{margin:6px 0 8px}
+.fb-thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.fb-thumbs:not(:empty){margin-bottom:8px}
+.fb-th{position:relative;width:72px;height:72px;border-radius:12px;overflow:hidden;border:1px solid var(--color-border)}
+.fb-th img{width:100%;height:100%;object-fit:cover;display:block}
+.fb-th button{position:absolute;top:0;right:0;width:44px;height:44px;padding:0;border:0;background:none;display:flex;align-items:flex-start;justify-content:flex-end}
+.fb-th button .i{width:12px;height:12px;padding:3px;margin:3px;border-radius:50%;background:#351E28;color:#fff;box-sizing:content-box}
+.fb-add{min-height:44px;margin-bottom:4px}.fb-add .i{width:18px;height:18px;margin-right:6px;vertical-align:-4px}
+@media (max-width:380px){#rFb .rrtl{display:none}}

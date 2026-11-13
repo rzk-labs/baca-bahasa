@@ -1,5 +1,11 @@
 [
   {
+    "n": 882,
+    "judul": "[peta 82] Tombol Masukan di header Home & baca + lampiran gambar (app)",
+    "poin": "Tombol Masukan sekarang ada di atas layar Home dan saat baca.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 879,
     "judul": "Home: toast tak menutupi kartu, Level pakai bar, status tamat seragam",
     "poin": "Pesan pop-up kini lebih kecil dan naik, tidak menutup kartu Home lagi.",
@@ -171,12 +177,6 @@
     "n": 802,
     "judul": "Home: 'Koleksi kamu' tak tertutup menu bawah, judul buku terlihat",
     "poin": "Daftar 'Koleksi kamu' di Home tidak tertutup menu bawah lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 796,
-    "judul": "Home: ajakan 'Ketuk satu kata' jadi kartu kecil berjarak & bisa diketuk",
-    "poin": "Ajakan \"Ketuk satu kata\" di Home sekarang jadi kartu kecil yang jelas.",
     "tgl": "2026-11-13"
   }
 ]
