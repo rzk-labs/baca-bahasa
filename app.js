@@ -615,7 +615,7 @@ const isKataFungsi = (lang, w) => {
 const isParticle = isKataFungsi;
 /* #847: daftar awal kata fungsi per bahasa (huruf kecil); tambah lewat masukan tester, bukan kamus besar */
 const FUNC_WORDS = {
-  ja: 'から まで より です ます だ して ない ある いる この その あの これ それ ので けど',
+  ja: 'だから しかし でも そして それで すると ところが また から まで より です ます だ して ない ある いる この その あの これ それ ので けど',
   ko: '은 는 이 가 을 를 에 의 도 로 와 과 에서 에게 으로 까지 부터 한테 처럼 보다 하다 있다 없다 그 저 것 수',
   zh: '的 了 在 是 我 你 他 她 它 们 这 那 有 不 也 都 和 就 吗 呢 吧 啊 着 过 个 很 要 会 说 到',
   es: 'el la los las un una de del y o a en que se no por con para es lo su al más pero como le me te mi tu',

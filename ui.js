@@ -1112,8 +1112,10 @@ function intipCands(b, sp, savedSet) {
   return [...m.values()].filter(e => e.n >= 2 && e.lo >= 1 && !isKataSampah(b.lang, e.w, { b, kenal: true, saved: savedSet }))
     .sort((x, y) => y.n - x.n || [...y.w].length - [...x.w].length).slice(0, 5);
 }
+/* buang awalan janggal ('Itu disebut ...') dari arti */
+function intipArti(t) { return String(t || '').replace(/^\s*(itu|ini)?\s*disebut\s*[:,-]?\s*/i, '').trim(); }
 function intipHtml(b, cand) {
-  const rows = cand.map((e, i) => { const t = cachedTr(e.w, e.lang, db.my); return `<button class="irow" type="button" data-ik="${i}" aria-label="Simpan kata ${esc(e.w)}"><span class="iw" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</span><span class="im" data-im="${i}" dir="auto" lang="${esc(db.my)}">${t ? esc(t) : ''}</span><span class="ia" aria-hidden="true">${ico('plus')}</span></button>`; }).join('');
+  const rows = cand.map((e, i) => { const t = intipArti(cachedTr(e.w, e.lang, db.my)); return `<button class="irow" type="button" data-ik="${i}" aria-label="Simpan kata ${esc(e.w)}"><span class="iw" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</span><span class="im" data-im="${i}" dir="auto" lang="${esc(db.my)}">${t ? esc(t) : 'Ketuk untuk lihat arti'}</span><span class="ia" aria-hidden="true">${ico('plus')}</span></button>`; }).join('');
   return `<div class="intip" id="intip" role="group" aria-label="Intip kata bab"><div class="ih"><b>Intip kata bab</b><button class="ix" id="intipX" type="button">Lewati</button></div><div class="isub">Ketuk kata untuk menyimpan</div>${rows}</div>`;
 }
 function intipBind(b, cand) {
@@ -1145,11 +1147,17 @@ function intipBind(b, cand) {
   (async () => {
     await new Promise(r => setTimeout(r, 1500));
     for (let i = 0; i < cand.length; i++) {
-      if (gone() || navigator.onLine === false) return;
-      const e = cand[i]; if (cachedTr(e.w, e.lang, db.my)) continue;
-      try { await translate(e.w, e.lang, db.my); } catch (x) { return; }
-      const t = cachedTr(e.w, e.lang, db.my), el = box.querySelector('[data-im="' + i + '"]');
-      if (el && t) el.textContent = t;
+      if (gone()) return;
+      const e = cand[i], el = box.querySelector('[data-im="' + i + '"]');
+      if (cachedTr(e.w, e.lang, db.my)) continue;
+      let t = '';
+      for (let k = 0; k < 2 && !t; k++) { /* coba ulang sekali */
+        if (gone() || navigator.onLine === false) break;
+        try { const r = await translate(e.w, e.lang, db.my); t = intipArti((r && r.text) || cachedTr(e.w, e.lang, db.my)); } catch (x) { t = ''; }
+        if (!t && k === 0) await new Promise(r => setTimeout(r, 800));
+      }
+      if (gone()) return;
+      if (el) { if (t) el.textContent = t; else if (navigator.onLine === false) { el.textContent = 'Arti belum tersedia'; el.style.fontSize = '.8em'; } }
       await new Promise(r => setTimeout(r, 500));
     }
   })();
