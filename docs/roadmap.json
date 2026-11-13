@@ -637,6 +637,14 @@
       "nama": "Tuntaskan #909: tanda nyusul tak hilang saat gabung kata ganda, penanda menunggu arti di daftar Kata, isi arti saat sinyal balik di halaman baca (#919)",
       "dokumen": "docs/pm-audit-integrasi-kerja-tim.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 86,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: samakan Hasil, Papan, Siap kamu cek (satu kamus status, satu kartu, satu bar saring) (#923)",
+      "dokumen": "docs/pm-rapikan-hasil-papan-siap-cek.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
