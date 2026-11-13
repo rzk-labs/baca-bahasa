@@ -1,5 +1,11 @@
 [
   {
+    "n": 868,
+    "judul": "Lencana Home/Profil: nama tak patah 5 baris, jelas bisa digeser",
+    "poin": "Nama lencana tidak lagi patah lima baris; kartu dilebarkan dan rapi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 866,
     "judul": "Home jujur: halaman minggu ini tak dobel, rekor streak, toast",
     "poin": "Angka 'Minggu ini' jujur: halaman yang dibaca ulang tak dihitung dobel.",
@@ -171,12 +177,6 @@
     "n": 786,
     "judul": "Baca: ikon ↗ di header berlabel + judul utuh; Koleksi tampil judul",
     "poin": "Tombol ↗ di layar baca sekarang berlabel \"Bagikan\".",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 784,
-    "judul": "Baca: header & bar satu istilah (Bab/Bagian) + sisa waktu masuk akal",
-    "poin": "Judul atas, daftar isi, dan bar bawah sekarang pakai istilah sama: Bab atau Bagian.",
     "tgl": "2026-11-12"
   }
 ]
