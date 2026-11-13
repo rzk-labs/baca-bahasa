@@ -1011,16 +1011,14 @@ function finishBook(b) {
   const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
     : `<p class="mut sm" style="margin-top:14px">Mau cerita baru? Impor buku atau teks lain buat dikepoin.</p><button class="sec full" id="fbadd" style="min-height:44px">Impor buku baru</button>`;
   if (!ulang) { sfx('win'); confetti(60); }
-  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
+  openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (lama ? '<p class="mut">Kata kamu dari buku ini sudah tersimpan, latih di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
-    <div class="row" style="gap:8px;margin-top:12px">${ws.length || lama ? '<button class="pri" id="fbl">Latih di Kata</button>' : ''}<button class="${ws.length || lama ? 'sec' : 'pri'}" id="fbh" style="min-height:44px">Ke Home</button><button class="ghost" data-close style="min-height:44px">Tutup</button></div>
-    <div class="row" style="margin-top:8px"><button class="ghost" id="fbr" style="min-height:44px">Baca ulang dari awal</button></div>${nxHtml}`, 'Tamat');
+    <div class="row fb-acts"><button class="pri" id="fbh">Ke Home</button><button class="sec" id="fbr">Baca ulang</button></div>${nxHtml}`, 'Tamat');
   $('#fbr').onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
-  const l = $('#fbl'); if (l) l.onclick = () => { closeSheet(); setTab('kata'); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
 }
 /* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
