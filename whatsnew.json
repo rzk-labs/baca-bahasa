@@ -1,5 +1,41 @@
 [
   {
+    "n": 926,
+    "judul": "[peta 85] Tuntaskan arti nyusul: tanda tak hilang, penanda di daftar Kata",
+    "poin": "Arti kata offline kini tak hilang tandanya dan terisi sendiri saat sinyal balik.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 932,
+    "judul": "EVALUASI UI UIX NYA",
+    "poin": "Tulisan \"Keepo\" di atas layar HP sekarang tidak terpotong lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 928,
+    "judul": "[peta 84] Satu sumber angka: persen buku, Bab/Bagian, XP tak naik sendiri",
+    "poin": "Persen buku dan istilah \"Bab\" kini sama di Home, Baca, dan Daftar bab.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 937,
+    "judul": "[peta 86] Keepo HQ: samakan Hasil, Papan, Siap kamu cek",
+    "poin": "Halaman Markas, Papan, dan Hasil di Keepo HQ sekarang tampil seragam.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 935,
+    "judul": "[peta 83] Header Baca HP: judul & tombol Bab tak nabrak, maks 3 tombol",
+    "poin": "Header baca di HP kini lega: cuma tombol Kembali, Bab, dan Lainnya.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 939,
+    "judul": "Siap cek di papan , sama menunggu keputusan mu di hasil bedanya apa",
+    "poin": "\"Siap dicek\" = hasil sudah jadi, tinggal kamu setujui, revisi, atau tolak.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 917,
     "judul": "Header Baca HP lega: tombol Bab utuh, tombol dirampingkan jadi 3",
     "poin": "Header Baca lebih lega: tombol kanan tinggal tiga, tidak berdempetan.",
@@ -141,42 +177,6 @@
     "n": 854,
     "judul": "[peta 81] Impor EPUB Jepang: huruf mirip jadi biasa, teks di luar <p>",
     "poin": "Buku Jepang yang diimpor sekarang hurufnya rapi, tidak aneh lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 852,
-    "judul": "Baca: colek 'ketuk kata' tetap muncul walau halaman dibaca lintas sesi",
-    "poin": "Colek 'ketuk kata' sekarang muncul setelah 4 halaman, walau buku sering ditutup.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 848,
-    "judul": "Tab Ngomong & Pengaturan: rapi di 320px, ketuk 44px, kontras",
-    "poin": "Tab Ngomong dan Pengaturan kini rapi di layar HP kecil.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 847,
-    "judul": "[peta 80] Kata baru tanpa partikel & kata umum: satu fungsi saring",
-    "poin": "Daftar kata baru sekarang bersih dari partikel, huruf tunggal, dan kata paling umum.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 843,
-    "judul": "Tab Sosial & Profil: rapi di 320px, area ketuk 44px, kontras",
-    "poin": "Tab Sosial dan Profil dirapikan: tombol dan baris lebih mudah diketuk di HP.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 841,
-    "judul": "Target harian: tak lewat batas ('114 dari 30'), XP halaman jelas",
-    "poin": "Kartu target harian kini mentok di 30/30, tidak lagi '114 dari 30'.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 834,
-    "judul": "Area ketuk min 44px: tombol kecil di halaman baca & Kata (HP)",
-    "poin": "Tombol kecil di halaman baca dan Kata kini lebih mudah diketuk jempol.",
     "tgl": "2026-11-13"
   }
 ]

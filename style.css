@@ -484,8 +484,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rtip>span{display:flex;gap:8px;align-items:center;min-width:0;flex:1}
 .rtip svg.i{flex:none;width:18px;height:18px;stroke:var(--lime)}
 .rtip button{min-height:44px;min-width:44px;flex:none;padding:0 12px;color:inherit;font-weight:800;font-size:13px;border-radius:var(--radius-full);background:var(--lime);color:var(--ink)}
-.rrt,.rlis{width:auto;min-width:44px;height:44px;padding:0 4px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:800}.rrt .i,.rlis .i{width:20px;height:20px}.rrtl{font-size:10px;line-height:1;font-weight:700;white-space:nowrap}.rrt.on{background:var(--color-surface-soft)}@media (max-width:360px){.rbar{gap:2px}}
-.rthm{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800;letter-spacing:.02em}
+.rrt,.rlis{width:auto;min-width:44px;height:44px;padding:0 4px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:800}.rrt .i,.rlis .i{width:20px;height:20px}.rrtl{font-size:10px;line-height:1;font-weight:700;white-space:nowrap}.rrt.on{background:var(--color-surface-soft)}.rthm{width:auto;min-width:44px;padding:0 8px;font-size:12px;font-weight:800;letter-spacing:.02em}
 .nchip{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 12px 0;padding:4px 4px 4px 12px;border-radius:var(--radius-lg);background:var(--color-surface-soft);color:var(--color-text);border:1px solid var(--color-border);font-size:13px;line-height:18px;font-weight:600}
 .nchip span{flex:1 1 150px}
 .nchip button{min-height:44px;min-width:44px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font-size:13px;font-weight:800}
@@ -756,7 +755,6 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 /* #786: ikon bagikan berlabel, judul baca dapat ruang, Koleksi tak tertutup menu bawah */
 .rrt .rrti{font-size:20px;line-height:20px;height:20px}
 .rtitle{overflow:hidden}
-@media (max-width:359px){.rbar{gap:0;padding-left:4px;padding-right:4px}.rrt,.rlis{min-width:38px;padding:0 2px}.rrtl{display:none}}
 .bk .t{min-height:38px;overflow-wrap:break-word}
 .hscroll{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
 /* #804 sheet arti kata: arti utama paling besar, aksi satu baris */
@@ -872,11 +870,15 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap,.rmk{font-size:13px}
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
-@media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
 /* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
 .rbar{gap:8px;padding-left:8px;padding-right:8px}
 .rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
 .rtitle b{max-width:100%;-webkit-line-clamp:1;line-clamp:1}
 .rrt,.rlis{flex:none}
-@media (max-width:359px){.rbar{gap:8px;padding-left:4px;padding-right:4px}}
+/* #935 HP <=430px: bar atas hanya Kembali, Bab utuh, Lainnya; Cara baca & Dengar pindah ke menu Lainnya; judul min ±8 huruf CJK */
+.rtitle b{min-width:8em}.rmore .rmob{display:none}
+@media (max-width:430px){.rbar{gap:4px;padding-left:4px;padding-right:4px}#rRt,#rLis{display:none}.rmore .rmob{display:flex}.rmore .chi b.rst{background:var(--ink);color:var(--cream);padding:3px 10px;font-size:12px}}
 .rmore .chi .i{width:20px;height:20px;flex:none}.rmore .chi b{background:none;color:inherit;padding:0;font-size:inherit;font-weight:800}
+/* #932 logo Keepo utuh di HP: logo tidak menyusut; pil XP disembunyikan (XP ada di Home & Profil) */
+@media (max-width:430px){#top h1{flex:0 0 auto;min-width:max-content;overflow:visible}#hdx{margin-left:auto}#pXp{display:none}}
+@media (max-width:359px){.goal-row .ring,.goal-row .ring svg{width:56px;height:56px}.goal-row .ring .score{padding:0 6px}.goal-row .ring .score .gn{font-size:12px;letter-spacing:-.04em}.goal-row .ring .score small{font-size:8px}}
