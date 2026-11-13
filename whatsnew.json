@@ -1,5 +1,11 @@
 [
   {
+    "n": 854,
+    "judul": "[peta 81] Impor EPUB Jepang: huruf mirip jadi biasa, teks di luar <p>",
+    "poin": "Buku Jepang yang diimpor sekarang hurufnya rapi, tidak aneh lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 852,
     "judul": "Baca: colek 'ketuk kata' tetap muncul walau halaman dibaca lintas sesi",
     "poin": "Colek 'ketuk kata' sekarang muncul setelah 4 halaman, walau buku sering ditutup.",
@@ -171,12 +177,6 @@
     "n": 772,
     "judul": "Sampul buku Home: satu huruf besar, judul & penulis tak patah jelek",
     "poin": "Sampul buku kini cuma satu huruf besar, tanpa judul patah.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 770,
-    "judul": "Baca: bagian buku lama dihitung ulang & header sama dengan bar",
-    "poin": "Buku lama kini otomatis dibagi ulang per bab saat dibuka.",
     "tgl": "2026-11-12"
   }
 ]
