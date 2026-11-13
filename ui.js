@@ -698,9 +698,9 @@ function streakInfo() {
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
   return best > cur ? `Rekor ${best} hari` : cur >= 2 ? 'Rekor barumu!' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
-const NUDGE_TXT = 'Ketuk satu kata di bacaan untuk mulai';
+const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
-function firstWordNudge() { return !countedVocab(null).length && Object.values(db.pgDay || {}).some(n => n >= 1); }
+function firstWordNudge() { return !countedVocab(null).length; }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -913,7 +913,7 @@ function sesiSisa(b) {
   if (!b) return false;
   const saved = sesiLoad(b.id);
   if (!saved.length) return false;
-  for (const e of saved) { const k = vocabKey(e.lang, e.w); if (!SESSW.has(k)) SESSW.set(k, { ...e, bid: b.id }); }
+  for (const e of saved) { if (e.lang !== b.lang) continue; const k = vocabKey(e.lang, e.w); if (!SESSW.has(k)) SESSW.set(k, { ...e, bid: b.id }); }
   return sessRecap(b);
 }
 const trKey = e => e.lang + '|' + db.my + '|' + e.w;
@@ -930,7 +930,7 @@ async function isiArtiRekap(cand) {
 }
 let rekapAktif = null;
 function sessRecap(b) {
-  const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
+  const all = [...SESSW.values()].filter(e => b && e.bid === b.id && e.lang === b.lang);
   const pgs = b ? [...SESPG].filter(k => k.startsWith(b.id + ':')).length : 0;
   if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
