@@ -1,5 +1,11 @@
 [
   {
+    "n": 928,
+    "judul": "[peta 84] Satu sumber angka: persen buku, Bab/Bagian, XP tak naik sendiri",
+    "poin": "Persen buku dan istilah \"Bab\" kini sama di Home, Baca, dan Daftar bab.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 937,
     "judul": "[peta 86] Keepo HQ: samakan Hasil, Papan, Siap kamu cek",
     "poin": "Halaman Markas, Papan, dan Hasil di Keepo HQ sekarang tampil seragam.",
@@ -171,12 +177,6 @@
     "n": 848,
     "judul": "Tab Ngomong & Pengaturan: rapi di 320px, ketuk 44px, kontras",
     "poin": "Tab Ngomong dan Pengaturan kini rapi di layar HP kecil.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 847,
-    "judul": "[peta 80] Kata baru tanpa partikel & kata umum: satu fungsi saring",
-    "poin": "Daftar kata baru sekarang bersih dari partikel, huruf tunggal, dan kata paling umum.",
     "tgl": "2026-11-13"
   }
 ]

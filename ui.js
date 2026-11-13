@@ -152,6 +152,8 @@ function confetti(n = 70) {
   for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + 'vw'; p.style.background = cols[i % cols.length]; p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px'); p.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); p.style.animationDelay = Math.random() * .3 + 's'; box.appendChild(p); }
   document.body.appendChild(box); setTimeout(() => box.remove(), 2000);
 }
+/* asal XP singkat ('dari halaman, kata, tamat'); hanya tampilan, tak pernah mengubah db.xp */
+const xpAsal = () => { const s = db.xpSrc || {}, g = { halaman: s.page, kata: (s.save || 0) + (s.look || 0) + (s.rem || 0), tamat: s.done, ngomong: s.speak, 'perangkat lain': s.sync }; const t = Object.keys(g).filter(k => g[k] > 0).sort((a, b) => g[b] - g[a]).slice(0, 3); return t.length ? 'dari ' + t.join(', ') : ''; };
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
@@ -202,6 +204,7 @@ function award(n, stat, pk0) {
     if ((db.pgSeen[sd] || []).includes(sk0)) return;
   }
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
+  if (n && stat) { db.xpSrc = db.xpSrc || {}; db.xpSrc[stat] = (db.xpSrc[stat] || 0) + n; } /* asal XP, hanya untuk tampilan */
   if (stat === 'page') {
     db.pgDay = db.pgDay || {}; db.pgSeen = db.pgSeen || {}; const pd = today(), sk = pk0 || '?', seen = db.pgSeen[pd] = db.pgSeen[pd] || [];
     if (!seen.includes(sk)) { seen.push(sk); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; } /* halaman unik per hari per buku */
@@ -539,7 +542,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Jelaskan kalimat (AI)</div><div class="seg" id="ais"><button data-v="1" class="${db.aiJelas === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.aiJelas === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Tombol penjelas di arti kalimat. Cuma jalan kalau diketuk, gratis 5x sehari.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div><div class="set-row"><div class="eyebrow">Lanjut otomatis</div><div class="seg" id="las"><button data-v="1" class="${db.lisAuto ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.lisAuto ? '' : 'on'}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Dengar halaman lanjut sendiri ke halaman berikutnya. Berhenti di akhir bab. Di iPhone, suara berhenti saat layar mati. Biarkan layar menyala.</div></div>` : ''}
-    <div class="set-row"><div class="eyebrow">Bar progres</div><div class="seg" id="pbs"><button data-v="1" class="${db.progBar === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.progBar === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = teks Bagian/Hal/Sisa dan bar tipis di bawah disembunyiin. Tombol panah tetap ada.</div></div>
+    <div class="set-row"><div class="eyebrow">Bar progres</div><div class="seg" id="pbs"><button data-v="1" class="${db.progBar === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.progBar === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = teks Bab/Hal/Sisa dan bar tipis di bawah disembunyiin. Tombol panah tetap ada.</div></div>
     <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
@@ -645,7 +648,7 @@ function openFeedback(opt = {}) {
     const btn = $('#fbSend'); btn.disabled = true; btn.textContent = 'Mengirim…';
     const rec = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg, terkirim: false, gagal: 0 };
     if ($('#fbI').checked) { rec.info = `${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`; rec.msg += `\nInfo HP: ${rec.info}`;
-      if (reading) { const bk = book(); if (bk) { const ex = ` · buku "${bk.title}" · bagian ${(bk.pos || 0) + 1}/${bk.total || 1}`; rec.info += ex; rec.msg += ex; } } }
+      if (reading) { const bk = book(); if (bk) { const ex = ` · buku "${bk.title}" · bab ${(bk.pos || 0) + 1}/${bk.total || 1}`; rec.info += ex; rec.msg += ex; } } }
     if (imgs.length) rec.gambar = imgs.slice();
     try { await putFeedback(rec); } catch (e) { }
     const r = await kirimFeedback(rec);
@@ -1448,13 +1451,13 @@ const nw = t => `<span class="nw">${esc(t)}</span>`;
 /* label bagian SATU sumber (bar baca + Beranda): 'Bagian', bukan 'Bab', supaya tak bentrok dgn nomor bab di buku; bagian awal tanpa judul = 'Awal buku' */
 /* #770: 'Bab' bila bagian itu diawali judul bab terdeteksi (六、 II. Chapter IV), selain itu 'Bagian'; satu istilah di header, bar, daftar isi */
 const secIsBab = sec => !!(sec && sec[0] && gbHead(String(sec[0]).replace(/^[\u0001\u0002]+/, '')));
-const secWord = (b, i) => { const s = cache.id === b.id && cache.pages ? cache.pages[i] : null; return s ? (secIsBab(s) ? 'Bab' : 'Bagian') : (b.tb ? 'Bab' : 'Bagian'); };
-const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${pos}/${total}`;
+const secWord = (b, i) => 'Bab'; /* #928: satu istilah 'Bab' di Home, Baca, Daftar bab; jumlah bab = b.total (dihitung dari teks, disimpan di data buku) */
+const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bab'} ${pos}/${total}`;
 function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return statusPct(100).txt;
   const bits = [];
-  if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false, b.tb ? 'Bab' : 'Bagian')); /* sama dengan bar baca (hanya buku multi-bab) */
+  if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false, 'Bab')); /* sama dengan bar baca (hanya buku multi-bab) */
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
   const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + nw(mins) : '');
   return t + (part ? '<span class="mnote">bab lain belum dihitung</span>' : '');
@@ -1551,7 +1554,7 @@ function showPage(p, anim = true) {
     const sec = multi ? secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd) : '';
     const notes = [ml && ml.part ? 'bab lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Ujung bab, geser untuk bab berikutnya' : ''].filter(Boolean);
     pgn.title = ['persen dari seluruh buku, perkiraan sisa waktu'].concat(notes).join('. ');
-    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
+    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bab` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(nw).join(' · '); };
     const bs = statusPct(bp);

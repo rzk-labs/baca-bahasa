@@ -879,3 +879,4 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle b{min-width:8em}.rmore .rmob{display:none}
 @media (max-width:430px){.rbar{gap:4px;padding-left:4px;padding-right:4px}#rRt,#rLis{display:none}.rmore .rmob{display:flex}.rmore .chi b.rst{background:var(--ink);color:var(--cream);padding:3px 10px;font-size:12px}}
 .rmore .chi .i{width:20px;height:20px;flex:none}.rmore .chi b{background:none;color:inherit;padding:0;font-size:inherit;font-weight:800}
+@media (max-width:359px){.goal-row .ring,.goal-row .ring svg{width:56px;height:56px}.goal-row .ring .score{padding:0 6px}.goal-row .ring .score .gn{font-size:12px;letter-spacing:-.04em}.goal-row .ring .score small{font-size:8px}}
