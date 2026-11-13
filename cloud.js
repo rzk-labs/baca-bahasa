@@ -466,7 +466,9 @@ async function openProfile(username) {
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
     if (p.self) p.reading = profileData().reading; /* persen terbaru dari buku lokal */
     const zero = !(+p.kata7 > 0);
-    const rd = p.reading || [], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
+    const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
+    (p.reading || []).forEach(r => { const k = r.lang + '|' + String(r.t || '').trim().toLowerCase(), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
+    const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
