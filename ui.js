@@ -958,7 +958,7 @@ function sessRecap(b) {
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
   if (b) sesiClear(b.id);
   if (!all.length) return false;
-  const cand = all.filter(e => !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKenal(e.lang, e.w) && !isNama(b, e.w)).sort((x, y) => y.n - x.n).slice(0, 8);
+  const cand = all.filter(e => !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true })).sort((x, y) => y.n - x.n).slice(0, 8);
   if (!cand.length) return false;
   rekapAktif = cand;
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
@@ -1032,13 +1032,13 @@ function intipCands(b, sp, savedSet) {
     for (const { s } of P.sents) for (const t of tokens(s, b.lang)) {
       if (!t.w) continue;
       const k = t.t.toLowerCase();
-      if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k) || isKataFungsi(b.lang, k)) continue;
+      if ([...k].length < minLen || /^[\p{N}\p{P}]+$/u.test(k) || isKataSampah(b.lang, k, { b })) continue;
       if (cjk && ((/^[\p{Script=Hiragana}ー]+$/u.test(k) && [...k].length < 3) || /^[\p{Script=Latin}]+$/u.test(k))) continue; /* partikel hiragana pendek & huruf latin dilewati */
       const e = m.get(k) || { w: k, lang: b.lang, n: 0, lo: 0, s: s.trim() };
       e.n++; if (t.t === k) e.lo++; m.set(k, e);
     }
   }
-  return [...m.values()].filter(e => e.n >= 2 && e.lo >= 1 && !savedSet.has(e.w) && !isKenal(b.lang, e.w) && !isNama(b, e.w))
+  return [...m.values()].filter(e => e.n >= 2 && e.lo >= 1 && !isKataSampah(b.lang, e.w, { b, kenal: true, saved: savedSet }))
     .sort((x, y) => y.n - x.n || [...y.w].length - [...x.w].length).slice(0, 5);
 }
 function intipHtml(b, cand) {

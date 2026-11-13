@@ -1,5 +1,11 @@
 [
   {
+    "n": 847,
+    "judul": "[peta 80] Kata baru tanpa partikel & kata umum: satu fungsi saring",
+    "poin": "Daftar kata baru sekarang bersih dari partikel, huruf tunggal, dan kata paling umum.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 843,
     "judul": "Tab Sosial & Profil: rapi di 320px, area ketuk 44px, kontras",
     "poin": "Tab Sosial dan Profil dirapikan: tombol dan baris lebih mudah diketuk di HP.",
@@ -171,12 +177,6 @@
     "n": 766,
     "judul": "Sheet arti kalimat: kata di kalimat bisa diketuk, arti muncul di tempat",
     "poin": "Di arti kalimat, tiap kata sekarang bisa diketuk, artinya muncul langsung di tempat.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 764,
-    "judul": "Tombol 'Ini nama' di sheet arti: nama tokoh tak jadi kata belajar",
-    "poin": "Sekarang ada tombol \"Ini nama\" di arti kata, jadi nama tokoh tak salah diartikan.",
     "tgl": "2026-11-12"
   }
 ]
