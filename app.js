@@ -114,7 +114,7 @@ function dedupeVocab() {
     if (v.at && (!a.at || v.at < a.at)) a.at = v.at;
     if ((v.lv || 0) > (a.lv || 0)) { a.lv = v.lv; a.due = v.due; }
     if (v.known) a.known = v.known;
-    if (String(a.t || '').trim()) delete a.noTr; delete a.nyusul;
+    if (String(a.t || '').trim()) { delete a.noTr; delete a.nyusul; }
   }
   if (changed) db.vocab = out;
   return changed;
