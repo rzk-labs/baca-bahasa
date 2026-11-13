@@ -718,7 +718,8 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 /* #868: lencana lebih lebar, nama maks 2 baris, tepi kanan memudar sebagai petunjuk geser */
 .badge{width:120px;min-width:96px;min-height:44px}
 .badge b{text-wrap:balance;overflow-wrap:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
-.badge .d{overflow-wrap:break-word}
+.badge .d{overflow-wrap:anywhere}
+.badge{padding-right:14px}
 .hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
 .hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
 .wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
