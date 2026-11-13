@@ -1,5 +1,17 @@
 [
   {
+    "n": 819,
+    "judul": "[peta 76] Impor EPUB Jepang: buang furigana <rt>/<rp> dari teks baca",
+    "poin": "Buku Jepang sekarang tak lagi menampilkan bacaan furigana dobel di teks.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 813,
+    "judul": "[peta 75] Uji sheet arti kata di 320px & 4 tema baca, rapikan",
+    "poin": "Sheet arti kata dirapikan untuk HP kecil dan keempat tema baca.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 812,
     "judul": "[peta 75] Sheet arti kata: uji 320px & 4 tema baca, rapikan",
     "poin": "Sheet arti kata dicek di layar kecil dan keempat tema baca.",
@@ -165,18 +177,6 @@
     "n": 749,
     "judul": "Baca: bar progres ringkas 1 baris & persen Home sama dengan bar",
     "poin": "Bar baca kini ringkas: \"Bab 2/37 · Hal 11/19\" lalu \"5% · ±669 mnt\".",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 746,
-    "judul": "Baca: ikon header berlabel jelas (dengar, pengaturan, cara baca)",
-    "poin": "Tombol di atas halaman baca sekarang bertulisan: Dengar, Atur, Cara baca.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 744,
-    "judul": "Target harian jelas (XP x/target) & 'Rekor' tak muncul di hari 1",
-    "poin": "Target harian kini selalu menampilkan angka, mis. 20/50 XP.",
     "tgl": "2026-11-12"
   }
 ]
