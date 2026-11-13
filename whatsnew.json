@@ -1,5 +1,11 @@
 [
   {
+    "n": 935,
+    "judul": "[peta 83] Header Baca HP: judul & tombol Bab tak nabrak, maks 3 tombol",
+    "poin": "Header baca di HP kini lega: cuma tombol Kembali, Bab, dan Lainnya.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 939,
     "judul": "Siap cek di papan , sama menunggu keputusan mu di hasil bedanya apa",
     "poin": "\"Siap dicek\" = hasil sudah jadi, tinggal kamu setujui, revisi, atau tolak.",
@@ -171,12 +177,6 @@
     "n": 843,
     "judul": "Tab Sosial & Profil: rapi di 320px, area ketuk 44px, kontras",
     "poin": "Tab Sosial dan Profil dirapikan: tombol dan baris lebih mudah diketuk di HP.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 841,
-    "judul": "Target harian: tak lewat batas ('114 dari 30'), XP halaman jelas",
-    "poin": "Kartu target harian kini mentok di 30/30, tidak lagi '114 dari 30'.",
     "tgl": "2026-11-13"
   }
 ]
