@@ -1,5 +1,11 @@
 [
   {
+    "n": 852,
+    "judul": "Baca: colek 'ketuk kata' tetap muncul walau halaman dibaca lintas sesi",
+    "poin": "Colek 'ketuk kata' sekarang muncul setelah 4 halaman, walau buku sering ditutup.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 848,
     "judul": "Tab Ngomong & Pengaturan: rapi di 320px, ketuk 44px, kontras",
     "poin": "Tab Ngomong dan Pengaturan kini rapi di layar HP kecil.",
@@ -171,12 +177,6 @@
     "n": 770,
     "judul": "Baca: bagian buku lama dihitung ulang & header sama dengan bar",
     "poin": "Buku lama kini otomatis dibagi ulang per bab saat dibuka.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 768,
-    "judul": "Home HP: label 'Ngomong' utuh, angka cincin Target muat, judul tak terpenggal",
-    "poin": "Menu bawah: label 'Ngomong' sekarang utuh satu baris di HP kecil.",
     "tgl": "2026-11-12"
   }
 ]
