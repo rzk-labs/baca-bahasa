@@ -185,12 +185,9 @@ jobs:
           fi
           if [ "$V" = "LOLOS" ]; then L=qa-lolos; H="✅ QA lolos"; else L=qa-catatan; H="⚠️ QA ada catatan"; fi
           gh issue comment "$N" --body-file <(printf '**Siap dicek.**\n\n%s\n\n---\n**%s**\n%s' "$(cat $T/ringkasan.md)" "$H" "$QA")
-          # Auto-setujui SEMUA hasil (permintaan founder): langsung masuk antrean live.
-          # Catatan QA tetap tersimpan di komentar; founder bisa Revisi/Tolak setelah live.
-          gh label create antre-live --color 7DD3FC 2>/dev/null || true
-          gh issue edit "$N" --add-label antre-live --add-label "$L" --remove-label sedang-dikerjakan
-          gh issue comment "$N" --body "🚀 **Otomatis disetujui** ($H), masuk antrean live."
-          gh workflow run kepo-gabung.yml
+          # Tanpa auto-setujui: hasil menunggu tombol Setujui founder di Keepo HQ.
+          gh issue edit "$N" --add-label siap-dicek --add-label "$L" --remove-label sedang-dikerjakan
+          gh issue comment "$N" --body "⏳ Menunggu Setujui dari founder ($H)."
 
       - name: Tandai gagal
         if: failure()
