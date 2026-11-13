@@ -1,5 +1,11 @@
 [
   {
+    "n": 874,
+    "judul": "Tambah Thai & Hindi + aman untuk skrip Arab/Hindi/Thai",
+    "poin": "Thai dan Hindi sekarang ada di pilihan bahasa, dan terdeteksi otomatis.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 872,
     "judul": "Sheet arti kata: tak pernah kosong, ada 'Memuat…' & tombol Coba lagi",
     "poin": "Sheet arti kata sudah selalu tampil, dengan tulisan \"Lagi nyari arti…\".",
@@ -171,12 +177,6 @@
     "n": 792,
     "judul": "Baca: tombol 'Sudah kenal semua' untuk kata tersorot di halaman ini",
     "poin": "Di Pengaturan baca ada tombol baru: tandai semua kata sorotan halaman ini sudah kenal.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 790,
-    "judul": "Dengar halaman: opsi 'Lanjut otomatis' ke halaman berikutnya",
-    "poin": "Dengar halaman kini bisa lanjut sendiri ke halaman berikutnya. Bawaannya mati.",
     "tgl": "2026-11-12"
   }
 ]
