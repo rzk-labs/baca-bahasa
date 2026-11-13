@@ -757,3 +757,9 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wact2{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;margin-top:6px}
 .wact2>button{min-height:44px;font-size:14px}
 @media (max-width:340px){.wd b{font-size:18px}#sheet .tr:not(.sent){font-size:26px;line-height:32px}.wact>button{min-width:84px}}
+/* #802 Home: Koleksi tak tertutup menu bawah — ruang bawah lebih lega, judul buku selalu di bawah sampul */
+body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 104px)}
+.bk{display:flex;flex-direction:column;align-items:stretch}
+.bk .cover,.bk .t,.bk .m{flex:none}
+.bk .t{position:relative;z-index:1;min-height:38px}
+.hscroll{scroll-padding-bottom:calc(var(--tabbar-h) + 48px)}
