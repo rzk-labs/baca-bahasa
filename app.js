@@ -498,7 +498,7 @@ function vocabCSV(list) {
   const ok = (list || []).filter(v => v && !v.noTr && String(v.t || '').trim());
   const tg = x => String(x || '').trim().toLowerCase().replace(/\s+/g, '_').replace(/[^\p{L}\p{N}_]/gu, '').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
   const tagOf = v => { const l = tg((LANGS[v.lang] || [v.lang])[0]), b = tg(v.book); return ['keepo', l && 'bahasa_' + l, b && 'buku_' + b].filter(Boolean).join(' '); };
-  const rows = [['kata', 'arti', 'bentuk dasar', 'cara baca', 'kalimat contoh', 'buku', 'tag', 'diketuk']].concat(ok.map(v => [v.w, v.t, baseOf(v.w, v.base), bacaOf(v.w, v.baca), ctxOf(v), String(v.book || '').trim().replace(/\s+/g, '_'), tagOf(v), +v.tap > 0 ? +v.tap : 0]));
+  const rows = [['kata', 'arti', 'bentuk dasar', 'cara baca', 'kalimat contoh', 'buku', 'tag']].concat(ok.map(v => [v.w, v.t, baseOf(v.w, v.base), bacaOf(v.w, v.baca), ctxOf(v), String(v.book || '').trim().replace(/\s+/g, '_'), tagOf(v)]));
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
