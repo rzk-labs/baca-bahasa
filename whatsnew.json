@@ -1,5 +1,11 @@
 [
   {
+    "n": 939,
+    "judul": "Siap cek di papan , sama menunggu keputusan mu di hasil bedanya apa",
+    "poin": "\"Siap dicek\" = hasil sudah jadi, tinggal kamu setujui, revisi, atau tolak.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 917,
     "judul": "Header Baca HP lega: tombol Bab utuh, tombol dirampingkan jadi 3",
     "poin": "Header Baca lebih lega: tombol kanan tinggal tiga, tidak berdempetan.",
@@ -171,12 +177,6 @@
     "n": 841,
     "judul": "Target harian: tak lewat batas ('114 dari 30'), XP halaman jelas",
     "poin": "Kartu target harian kini mentok di 30/30, tidak lagi '114 dari 30'.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 834,
-    "judul": "Area ketuk min 44px: tombol kecil di halaman baca & Kata (HP)",
-    "poin": "Tombol kecil di halaman baca dan Kata kini lebih mudah diketuk jempol.",
     "tgl": "2026-11-13"
   }
 ]
