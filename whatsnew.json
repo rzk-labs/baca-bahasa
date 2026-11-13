@@ -1,5 +1,11 @@
 [
   {
+    "n": 870,
+    "judul": "Angka 'kata disimpan' sama di Home, Profil, Minggu ini & Tamat",
+    "poin": "Angka kata disimpan sekarang sama di Home, Profil, Minggu ini, dan Tamat.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 868,
     "judul": "Lencana Home/Profil: nama tak patah 5 baris, jelas bisa digeser",
     "poin": "Nama lencana tidak lagi patah lima baris; kartu dilebarkan dan rapi.",
@@ -171,12 +177,6 @@
     "n": 788,
     "judul": "Baca: colek lembut ketuk kata pertama bila 4 halaman tanpa ketukan",
     "poin": "Pembaca baru yang 4 halaman belum ketuk kata dapat colekan ramah, sekali saja.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 786,
-    "judul": "Baca: ikon ↗ di header berlabel + judul utuh; Koleksi tampil judul",
-    "poin": "Tombol ↗ di layar baca sekarang berlabel \"Bagikan\".",
     "tgl": "2026-11-12"
   }
 ]
