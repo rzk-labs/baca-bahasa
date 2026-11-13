@@ -430,8 +430,8 @@ function profileData() {
   return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
 }
 const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };
-const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b>${esc(r.t)}</b> <span class="mut">· ${r.pct}%</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
-const frRow = u => `<button class="fr-row" data-u="${esc(u.username)}"><span class="avatar">${esc(initial(u.nick))}</span><span class="fr-in"><b>${esc(u.nick)}</b> <span class="mut sm">@${esc(u.username)}</span>${u.reading && u.reading[0] ? `<span class="sm">Sedang baca <b>${esc(u.reading[0].t)}</b> · ${u.reading[0].pct}%</span>` : '<span class="mut sm">Belum mulai membaca</span>'}</span></button>`;
+const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b>${esc(r.t)}</b> <span class="mut">· ${typeof statusPct === 'function' ? statusPct(r.pct).txt : r.pct + '%'}</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
+const frRow = u => `<button class="fr-row" data-u="${esc(u.username)}"><span class="avatar">${esc(initial(u.nick))}</span><span class="fr-in"><b>${esc(u.nick)}</b> <span class="mut sm">@${esc(u.username)}</span>${u.reading && u.reading[0] ? `<span class="sm">${u.reading[0].pct >= 100 ? 'Selesai baca' : 'Sedang baca'} <b>${esc(u.reading[0].t)}</b> · ${typeof statusPct === 'function' ? statusPct(u.reading[0].pct).txt : u.reading[0].pct + '%'}</span>` : '<span class="mut sm">Belum mulai membaca</span>'}</span></button>`;
 const wireRows = root => root.querySelectorAll('[data-u]').forEach(b => b.onclick = () => openProfile(b.dataset.u));
 async function homeFriends() {
   const host = $('#frHome'); if (!host || !db.acct) { if (host) host.remove(); return; }
