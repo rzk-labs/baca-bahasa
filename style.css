@@ -707,6 +707,12 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fr-stats span{overflow:hidden;text-overflow:ellipsis}
 @media(max-width:360px){.fr-stats{gap:6px}.fr-stats span{font-size:10px}}
 .wk{margin:0 0 12px;padding:12px 14px}
+/* #868: lencana lebih lebar, nama maks 2 baris, tepi kanan memudar sebagai petunjuk geser */
+.badge{width:120px;min-width:96px;min-height:44px}
+.badge b{text-wrap:balance;overflow-wrap:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.badge .d{overflow-wrap:break-word}
+.hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+.hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
 .wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .wk-g div{display:flex;flex-direction:column;min-width:0}
