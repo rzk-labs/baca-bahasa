@@ -51,6 +51,7 @@ const ICONS = {
   sword: '<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6M16 16l4 4M19 21l2-2"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.7V17c0 .6-.5 1-1.2 1.2C7.8 18.7 7 20 7 22M14 14.7V17c0 .6.5 1 1.2 1.2 1 .5 1.8 1.8 1.8 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/>',
   alert: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
   chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
   bug:'<path d="m8 2 1.9 1.9M16 2l-1.9 1.9"/><path d="M9 7.1V6a3 3 0 0 1 6 0v1.1"/><path d="M12 20a6 6 0 0 1-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3a6 6 0 0 1-6 6zM12 20v-9M6.5 13H2M17.5 13H22M6 17l-3 2M18 17l3 2M6 9 3 7M18 9l3-2"/>',
   bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>',
@@ -370,8 +371,8 @@ function setTab(t) {
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
-  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button>`;
-  refreshPills(); $('#set').onclick = openSettings;
+  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button>`;
+  refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: () => typeof viewSosial === 'function' ? viewSosial() : viewRak() })[t]();
@@ -580,7 +581,7 @@ function openSettings() {
 const APP_VER = 'v46';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
-  if (document.body.classList.contains('reading')) return;
+  const reading = document.body.classList.contains('reading');
   const kinds = [['rusak', 'bug', 'Ada yang rusak'], ['ide', 'bulb', 'Ide'], ['suka', 'heart', 'Suka'], ['takedown', 'flag', 'Takedown']];
   let kind = opt.kind || 'ide', stars = 0;
   openSheet(`<div class="sh-head"><h2>Kirim masukan</h2>${closeBtn}</div>
@@ -591,11 +592,27 @@ function openFeedback(opt = {}) {
     <div class="mut sm fb-cnt"><span id="fbC">${(opt.text || '').length}</span>/500</div>
     <div class="eyebrow">Nilai app (boleh dilewati)</div>
     <div class="fb-stars" id="fbS">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" aria-label="${n} bintang">★</button>`).join('')}</div>
-    <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP (browser, ukuran layar, versi app)</span></label>
+    <div class="fb-img"><div class="fb-thumbs" id="fbImgs"></div>
+      <button type="button" class="sec fb-add" id="fbAdd">${ico('image')}Tambah gambar</button>
+      <input type="file" id="fbFile" accept="image/*" multiple hidden>
+      <div class="mut sm">Maks 3 gambar. Jangan sertakan data pribadi di gambar.</div></div>
+    <label class="fb-chk"><input type="checkbox" id="fbI"><span>Sertakan info HP${reading ? ', judul buku &amp; posisi baca' : ''} (browser, ukuran layar, versi app)</span></label>
     <div class="mut sm">Yang kamu tulis dibaca tim Keepo.</div>
     <button class="pri full" id="fbSend" style="margin-top:12px">Kirim</button>`, 'Kirim masukan');
   $$('#fbK button').forEach(x => x.onclick = () => { kind = x.dataset.v; $('#fbHint').hidden = kind !== 'takedown'; $$('#fbK button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#fbS button').forEach(x => x.onclick = () => { const n = +x.dataset.n; stars = stars === n ? 0 : n; $$('#fbS button').forEach(y => y.classList.toggle('on', +y.dataset.n <= stars)); });
+  const imgs = [];
+  const drawImgs = () => { $('#fbImgs').innerHTML = imgs.map((u, i) => `<div class="fb-th"><img src="${u}" alt="Gambar ${i + 1}"><button type="button" data-i="${i}" aria-label="Hapus gambar ${i + 1}">${ico('x')}</button></div>`).join(''); $$('#fbImgs button').forEach(x => x.onclick = () => { imgs.splice(+x.dataset.i, 1); drawImgs(); }); $('#fbAdd').hidden = imgs.length >= 3; };
+  $('#fbAdd').onclick = () => $('#fbFile').click();
+  $('#fbFile').onchange = async e => {
+    const fs = [...e.target.files]; e.target.value = '';
+    for (const f of fs) {
+      if (imgs.length >= 3) { toast('Maksimal 3 gambar ya.'); break; }
+      if (!f.type || !/^image\/(jpeg|png|webp|gif|heic|heif|bmp)$/i.test(f.type)) { toast('Hanya foto/tangkapan layar ya.'); continue; }
+      const u = await fbKecilkan(f); if (u) { imgs.push(u); drawImgs(); } else toast('Hanya foto/tangkapan layar ya.');
+    }
+  };
+  drawImgs();
   $('#fbT').oninput = e => { $('#fbC').textContent = e.target.value.length; };
   $('#fbSend').onclick = async () => {
     const txt = $('#fbT').value.trim().slice(0, 500);
@@ -605,7 +622,9 @@ function openFeedback(opt = {}) {
     if (stars) msg += `\nBintang: ${stars}/5`;
     const btn = $('#fbSend'); btn.disabled = true; btn.textContent = 'Mengirim…';
     const rec = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), t: Date.now(), kind, stars, text: txt, msg, terkirim: false, gagal: 0 };
-    if ($('#fbI').checked) { rec.info = `${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`; rec.msg += `\nInfo HP: ${rec.info}`; }
+    if ($('#fbI').checked) { rec.info = `${navigator.userAgent} · layar ${screen.width}x${screen.height} · app ${APP_VER}`; rec.msg += `\nInfo HP: ${rec.info}`;
+      if (reading) { const bk = book(); if (bk) { const ex = ` · buku "${bk.title}" · bagian ${(bk.pos || 0) + 1}/${bk.total || 1}`; rec.info += ex; rec.msg += ex; } } }
+    if (imgs.length) rec.gambar = imgs.slice();
     try { await putFeedback(rec); } catch (e) { }
     const r = await kirimFeedback(rec);
     closeSheet();
@@ -622,14 +641,34 @@ function openFeedback(opt = {}) {
 async function kirimFeedback(rec) {
   let r = 'gagal';
   try {
-    const res = await fetch(FEEDBACK_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jenis: rec.kind, teks: rec.text, bintang: rec.stars || 0, info: rec.info || '', versi: APP_VER, waktu: rec.t, dev: fbDevId() }) });
+    const res = await fetch(FEEDBACK_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jenis: rec.kind, teks: rec.text, bintang: rec.stars || 0, info: rec.info || '', versi: APP_VER, waktu: rec.t, dev: fbDevId(), gambar: rec.gambar || [] }) });
     r = res.ok ? 'ok' : (res.status >= 400 && res.status < 500 && res.status !== 429 ? 'ditolak' : 'gagal');
+    if (r !== 'ok' && res.status !== 429 && rec.gambar && rec.gambar.length) { /* server belum terima gambar: kirim teksnya saja */
+      const r2 = await fetch(FEEDBACK_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jenis: rec.kind, teks: rec.text, bintang: rec.stars || 0, info: rec.info || '', versi: APP_VER, waktu: rec.t, dev: fbDevId() }) });
+      if (r2.ok) r = 'ok';
+    }
   } catch (e) { }
   try {
     if (r === 'ok') await markFeedbackSent(rec.id);
     else { if (r === 'ditolak') rec.gagal = (rec.gagal || 0) + 1; await putFeedback(rec); }
   } catch (e) { }
   return r;
+}
+/* Kecilkan gambar: sisi maks 1280px, JPEG ~0,7, <= ~300 KB. Return data URL, atau '' bila bukan gambar. */
+async function fbKecilkan(f) {
+  try {
+    if (!/^image\//i.test(f.type) || /svg/i.test(f.type)) return '';
+    const bmp = await new Promise((res, rej) => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => { URL.revokeObjectURL(u); res(im); }; im.onerror = () => { URL.revokeObjectURL(u); rej(); }; im.src = u; });
+    let k = Math.min(1, 1280 / Math.max(bmp.naturalWidth, bmp.naturalHeight)), q = 0.7, out = '';
+    for (let i = 0; i < 5; i++) {
+      const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.naturalWidth * k)); c.height = Math.max(1, Math.round(bmp.naturalHeight * k));
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(bmp, 0, 0, c.width, c.height);
+      out = c.toDataURL('image/jpeg', q);
+      if (out.length * 0.75 <= 300 * 1024) break;
+      k *= 0.8; q = Math.max(0.5, q - 0.05);
+    }
+    return out.startsWith('data:image/jpeg') ? out : '';
+  } catch (e) { return ''; }
 }
 function fbDevId() {
   let v = ''; try { v = localStorage.getItem('kepo_fbdev'); if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem('kepo_fbdev', v); } } catch (e) { }
@@ -1160,7 +1199,7 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}<button class="icon rrt" id="set" title="Pengaturan baca" aria-label="Pengaturan baca">${ico('sliders')}<span class="rrtl">Atur</span></button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rrate" id="rRate" type="button" hidden></button><button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}<button class="icon rrt" id="rFb" type="button" title="Kirim masukan" aria-label="Kirim masukan">${ico('chat')}<span class="rrtl">Masukan</span></button><button class="icon rrt" id="set" title="Pengaturan baca" aria-label="Pengaturan baca">${ico('sliders')}<span class="rrtl">Atur</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(b.title)}</div>
@@ -1183,6 +1222,7 @@ async function viewBaca() {
     toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
   };
   $('#reader #set').onclick = openSettings;
+  $('#rFb').onclick = () => openFeedback();
   if ($('#rChap')) $('#rChap').onclick = () => {
     const items = secs.map((s, i) => {
       const h = secParas(s, b.lang).find(P => P.h);
