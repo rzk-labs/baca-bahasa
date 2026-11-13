@@ -1,5 +1,11 @@
 [
   {
+    "n": 866,
+    "judul": "Home jujur: halaman minggu ini tak dobel, rekor streak, toast",
+    "poin": "Angka 'Minggu ini' jujur: halaman yang dibaca ulang tak dihitung dobel.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 864,
     "judul": "Tamat rapi: sheet satu pegangan & 2 tombol; Profil buku tamat 'Selesai'",
     "poin": "Layar Tamat kini rapi: satu garis pegangan, dua tombol, kartu tidak terpotong.",
@@ -171,12 +177,6 @@
     "n": 784,
     "judul": "Baca: header & bar satu istilah (Bab/Bagian) + sisa waktu masuk akal",
     "poin": "Judul atas, daftar isi, dan bar bawah sekarang pakai istilah sama: Bab atau Bagian.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 782,
-    "judul": "Satu sumber angka: persen buku & 'kata/minggu' sama di semua layar",
-    "poin": "Persen buku sekarang sama di Home, bar baca, Profil, dan Sosial.",
     "tgl": "2026-11-12"
   }
 ]
