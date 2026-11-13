@@ -114,7 +114,7 @@ function dedupeVocab() {
     if (v.at && (!a.at || v.at < a.at)) a.at = v.at;
     if ((v.lv || 0) > (a.lv || 0)) { a.lv = v.lv; a.due = v.due; }
     if (v.known) a.known = v.known;
-    if (String(a.t || '').trim()) delete a.noTr; delete a.nyusul;
+    if (String(a.t || '').trim()) { delete a.noTr; delete a.nyusul; }
   }
   if (changed) db.vocab = out;
   return changed;
@@ -778,12 +778,14 @@ async function translate(q, sl, tl, signal) {
 }
 
 /* isi ulang arti kata tersimpan yang masih kosong; true bila ada yang terisi */
+/* kata tanpa arti (termasuk data lama tanpa tanda) dianggap nyusul */
+const needsArti = v => !!(v && v.w && !String(v.t || '').trim());
 let refilling = false;
 async function refillVocab() {
   if (refilling || navigator.onLine === false) return false;
   refilling = true; let n = 0;
   try {
-    const todo = db.vocab.filter(x => x.noTr || x.nyusul).slice(0, 20);
+    const todo = db.vocab.filter(needsArti).slice(0, 8);
     let i = 0, stop = false;
     /* maks 2 permintaan bersamaan + jeda kecil; gagal = berhenti (tanpa loop), dicoba lagi lain waktu */
     const worker = async () => {
