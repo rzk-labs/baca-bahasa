@@ -1,5 +1,11 @@
 [
   {
+    "n": 821,
+    "judul": "Layar Tamat: kartu 'Berikutnya' rapi, judul & info tak patah",
+    "poin": "Layar Tamat: kartu 'Berikutnya' kini rapi, judul tak patah lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 819,
     "judul": "[peta 76] Impor EPUB Jepang: buang furigana <rt>/<rp> dari teks baca",
     "poin": "Buku Jepang sekarang tak lagi menampilkan bacaan furigana dobel di teks.",
@@ -171,12 +177,6 @@
     "n": 752,
     "judul": "[peta 72] Home rapi: tinggi 3 kartu sama, kata disimpan jujur, alas menu",
     "poin": "Kartu Minggu ini kini hanya hitung kata yang benar-benar ada di tab Kata.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 749,
-    "judul": "Baca: bar progres ringkas 1 baris & persen Home sama dengan bar",
-    "poin": "Bar baca kini ringkas: \"Bab 2/37 · Hal 11/19\" lalu \"5% · ±669 mnt\".",
     "tgl": "2026-11-12"
   }
 ]
