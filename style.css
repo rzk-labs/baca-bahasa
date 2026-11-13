@@ -782,3 +782,17 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #834 area ketuk min 44px: perbesar lewat ::after transparan, tampilan tetap */
 .rchap,.rrt,.rlis,.wg-save,.src .sw,.fyp-b button,.wsug .pill-sm,#hdx .icon{position:relative}
 .rchap::after,.rrt::after,.rlis::after,.wg-save::after,.src .sw::after,.fyp-b button::after,.wsug .pill-sm::after,#hdx .icon::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+/* #843 Sosial & Profil: area ketuk 44px, jarak konsisten, nama satu baris, 320px rapi */
+.fr-row{min-height:44px;align-items:center}
+.fr-row+.fr-row{margin-top:2px}
+.fyp-who{min-height:44px;width:100%;min-width:0}
+.fyp-who .fr-in{flex:1}
+.fyp-a .ghost{min-height:44px;min-width:44px}
+.fyp-b span{overflow-wrap:anywhere}
+.lb-row{min-height:44px}
+.lb-row .xp{flex:none;white-space:nowrap}
+.lb-row .rk,.lb-row .avatar{flex:none}
+.lb-cta .lime{min-height:44px;flex:none;white-space:nowrap}
+.fr-stats b{line-height:1.2}
+.fr-stats span{line-height:1.3}
+@media(max-width:360px){.lb-row{gap:8px}.lb-row .rk{width:28px}.fr-stats div{padding:10px 4px}}
