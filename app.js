@@ -591,8 +591,37 @@ const isKataFungsi = (lang, w) => {
   return lang === 'ja' && JA_PART.has(s);
 };
 const isParticle = isKataFungsi;
+/* #847: daftar awal kata fungsi per bahasa (huruf kecil); tambah lewat masukan tester, bukan kamus besar */
+const FUNC_WORDS = {
+  ja: 'から まで より です ます だ して ない ある いる この その あの これ それ ので けど',
+  ko: '은 는 이 가 을 를 에 의 도 로 와 과 에서 에게 으로 까지 부터 한테 처럼 보다 하다 있다 없다 그 저 것 수',
+  zh: '的 了 在 是 我 你 他 她 它 们 这 那 有 不 也 都 和 就 吗 呢 吧 啊 着 过 个 很 要 会 说 到',
+  es: 'el la los las un una de del y o a en que se no por con para es lo su al más pero como le me te mi tu',
+  fr: 'le la les un une des de du et ou à en que qui ne pas pour avec est sur dans au aux ce se sa son je tu il elle nous vous',
+  de: 'der die das den dem des ein eine und oder zu in von mit ist nicht auf für er sie es ich du wir ihr auch',
+  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by'
+};
+const FUNC_SET = {};
+for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
+/* SATU saringan 'kata baru': true = bukan kandidat. Dipakai Home, ringkasan, catatan sesi, Intip kata bab.
+   ctx: { b: buku (untuk nama), kenal: true (buang kata sudah kenal), saved: Set kata tersimpan }. Hanya saat TAMPIL; data tak dihapus. */
+function isKataSampah(lang, w, ctx) {
+  const raw = String(w == null ? '' : w).trim(), c = ctx || {};
+  if (!raw || /^[\p{N}\p{P}\p{S}\s]+$/u.test(raw)) return true;
+  const lg = String(lang || '').toLowerCase().split('-')[0], k = raw.toLowerCase();
+  if (isKataFungsi(lang, raw)) return true;
+  if (!/^(ja|ko|zh)$/.test(lg) && [...raw].length === 1) return true; /* huruf tunggal */
+  if (/^(ja|zh)$/.test(lg) && /[가-힣]/.test(raw)) return true; /* kata Korea di buku Jepang/Mandarin */
+  if (lg === 'ko' && /[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(raw)) return true;
+  if (FUNC_SET[lg] && FUNC_SET[lg].has(k)) return true;
+  if (lg === 'ja' && /^[一二三四五六七八九十百千万]+$/.test(raw)) return true;
+  if (c.kenal && isKenal(lang, raw)) return true;
+  if (c.saved && c.saved.has(k)) return true;
+  if (c.b && isNama(c.b, raw)) return true;
+  return false;
+}
 /* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
-const countedVocab = (langs, since = 0, book = null) => (db.vocab || []).filter(v => v && v.w && !isParticle(v.lang, v.w)
+const countedVocab = (langs, since = 0, book = null) => (db.vocab || []).filter(v => v && v.w && !isKataSampah(v.lang, v.w)
   && (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book));
 /* SATU hitungan 'kata baru minggu ini' = kata tersimpan di tab Kata (bukan ketukan/lookup) */
 const kataBaruMinggu = (langs = null) => countedVocab(langs, Date.now() - 7 * 864e5 + 1).length;
