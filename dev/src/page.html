@@ -591,7 +591,7 @@ async function detail(n){
   ${h.tugas.length?`<section class="tile c t-sun"><div class="lbl">👉 Tugas kamu</div><ul class="pts">${h.tugas.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></section>`:''}
   ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'o'}">${h.qaOk?I.cek+' QA lolos':'QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
   <details class="tile more"><summary>Detail lengkap (perintah &amp; riwayat)</summary>
-    <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div></div>
+    <div class="msg ${hq.otomatis?'':'kamu'}"><small>${hq.otomatis?'PM agent':'Kamu'} · ${tgl(t.dibuat)}</small><div class="md">${md(t.isi)}</div>${kthumb({gambar:t.gambar})}</div>
     ${t.riwayat.map(m=>`<div class="msg ${m.dari}"><small>${m.dari==='kamu'?'Kamu':'Tim agent'} · ${tgl(m.waktu)}</small><div class="md">${md(m.teks)}</div></div>`).join('')}
     <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
   </details>

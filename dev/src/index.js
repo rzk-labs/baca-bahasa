@@ -365,6 +365,12 @@ export default {
         try { return await feedback(req, env); } catch (e) { return fbJson({ error: 'Gagal menyimpan' }, 502); }
       }
       if (url.pathname.startsWith('/api/')) return await api(req, env, url);
+      const gm = url.pathname.match(/^\/g\/([\w-]+\.(?:jpg|png|webp))$/);
+      if (gm) {
+        const r = await gh(env, `/repos/${REPO}/contents/masukan-img/${gm[1]}?ref=main`, { raw: true });
+        if (!r.ok) return new Response('Tidak ditemukan', { status: 404 });
+        return new Response(r.body, { headers: { 'content-type': MIME[gm[1].split('.').pop()] || 'application/octet-stream', 'cache-control': 'public, max-age=86400', 'x-content-type-options': 'nosniff' } });
+      }
       const pm = url.pathname.match(/^\/p\/(\d+)(\/.*)?$/);
       if (pm) {
         if (!pm[2]) return Response.redirect(url.origin + `/p/${pm[1]}/`, 302);
