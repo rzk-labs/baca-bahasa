@@ -123,7 +123,7 @@ jobs:
           prompt: Baca file ${{ env.PROMPT_FILE }} lalu kerjakan instruksinya.
           claude_args: >-
             --max-turns 80
-            --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(node:*),Bash(ls:*),Bash(cat:*),Bash(grep:*),Bash(git diff:*),Bash(git status:*)"
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(node:*),Bash(ls:*),Bash(cat:*),Bash(grep:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*),Bash(sed:*),Bash(head:*),Bash(tail:*),Bash(find:*),Bash(wc:*)"
 
       - name: Commit, push, PR
         id: pr
