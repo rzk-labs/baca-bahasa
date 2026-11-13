@@ -1,5 +1,17 @@
 [
   {
+    "n": 812,
+    "judul": "[peta 75] Sheet arti kata: uji 320px & 4 tema baca, rapikan",
+    "poin": "Sheet arti kata dicek di layar kecil dan keempat tema baca.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 806,
+    "judul": "[peta 74] Bentuk dasar kata Eropa: pelepas akhiran es/fr/de/en",
+    "poin": "Ketuk kata seperti \"went\" atau \"hablaban\", sheet arti kini menampilkan kata dasarnya.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 804,
     "judul": "Sheet arti kata: arti utama besar & jelas, tombol aksi rapi",
     "poin": "Sheet arti kata: arti jadi paling besar, kata asli lebih kecil.",
@@ -165,18 +177,6 @@
     "n": 744,
     "judul": "Target harian jelas (XP x/target) & 'Rekor' tak muncul di hari 1",
     "poin": "Target harian kini selalu menampilkan angka, mis. 20/50 XP.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 742,
-    "judul": "Sinkron: halaman dibaca (pgDay) ikut akun & buku cloud tak 'opened 0'",
-    "poin": "Halaman yang sudah dibaca sekarang ikut tersimpan di akun dan muncul di perangkat baru.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 740,
-    "judul": "Baca: ukuran teks HP besar tak memotong bar atas & sheet",
-    "poin": "Layar baca kini tahan teks HP besar: bar dan tab tidak terpotong.",
     "tgl": "2026-11-12"
   }
 ]
