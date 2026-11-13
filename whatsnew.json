@@ -1,5 +1,11 @@
 [
   {
+    "n": 890,
+    "judul": "Tamat & Home: tombol 'Buku lain' satu baris, popup Level tak menimpa",
+    "poin": "Tombol \"Buku lain\" di Home kini satu baris dan seukuran \"Baca ulang\".",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 888,
     "judul": "Jumlah bab/bagian tetap sama di Home, Baca & Profil",
     "poin": "Jumlah bab di Home sekarang dihitung ulang dan sama dengan layar Baca.",
@@ -171,12 +177,6 @@
     "n": 813,
     "judul": "[peta 75] Uji sheet arti kata di 320px & 4 tema baca, rapikan",
     "poin": "Sheet arti kata dirapikan untuk HP kecil dan keempat tema baca.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 812,
-    "judul": "[peta 75] Sheet arti kata: uji 320px & 4 tema baca, rapikan",
-    "poin": "Sheet arti kata dicek di layar kecil dan keempat tema baca.",
     "tgl": "2026-11-13"
   }
 ]
