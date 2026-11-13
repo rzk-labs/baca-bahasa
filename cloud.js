@@ -407,7 +407,7 @@ async function homeLeaderboard() {
     await pushSync(true).catch(() => { });
     const r = await api('/leaderboard');
     const top = r.top.slice(0, 5), meIn = r.me && top.some(t => t.username === r.me.username);
-    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada yang dapet XP minggu ini. Jadi yang pertama!</div>')
+    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada yang dapat XP minggu ini. Jadilah yang pertama.</div>')
       + (r.me && !meIn ? (r.me.hidden ? '<div class="mut sm" style="margin-top:8px">Kamu disembunyikan dari leaderboard.</div>' : lbRow({ ...r.me, rank: r.me.rank }, true)) : '');
   } catch (e) { $('#lbList').textContent = e.message; }
 }
