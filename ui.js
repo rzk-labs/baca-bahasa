@@ -698,9 +698,9 @@ function streakInfo() {
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
   return best > cur ? `Rekor ${best} hari` : cur >= 2 ? 'Rekor barumu!' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
-const NUDGE_TXT = 'Ketuk satu kata di bacaan untuk mulai';
+const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
-function firstWordNudge() { return !countedVocab(null).length && Object.values(db.pgDay || {}).some(n => n >= 1); }
+function firstWordNudge() { return !countedVocab(null).length; }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
@@ -731,13 +731,14 @@ function viewRak() {
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(xt / GOAL, xt > GOAL ? `<span class="gn">${xt}</span><small>dari ${GOAL}</small>` : `<span class="gn">${xt}/${GOAL}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `Target ${GOAL} XP tercapai` : `XP ${xt}/${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
-    ${firstWordNudge() ? `<div class="mut sm" id="fwNudge" style="margin:-4px 0 12px">${NUDGE_TXT}</div>` : ''}
+    ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${pctOf(b)}%</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
+    const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); };
     animRing($('#view'));
@@ -913,7 +914,7 @@ function sesiSisa(b) {
   if (!b) return false;
   const saved = sesiLoad(b.id);
   if (!saved.length) return false;
-  for (const e of saved) { const k = vocabKey(e.lang, e.w); if (!SESSW.has(k)) SESSW.set(k, { ...e, bid: b.id }); }
+  for (const e of saved) { if (e.lang !== b.lang) continue; const k = vocabKey(e.lang, e.w); if (!SESSW.has(k)) SESSW.set(k, { ...e, bid: b.id }); }
   return sessRecap(b);
 }
 const trKey = e => e.lang + '|' + db.my + '|' + e.w;
@@ -930,7 +931,7 @@ async function isiArtiRekap(cand) {
 }
 let rekapAktif = null;
 function sessRecap(b) {
-  const all = [...SESSW.values()].filter(e => b && e.bid === b.id);
+  const all = [...SESSW.values()].filter(e => b && e.bid === b.id && e.lang === b.lang);
   const pgs = b ? [...SESPG].filter(k => k.startsWith(b.id + ':')).length : 0;
   if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));

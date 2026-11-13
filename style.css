@@ -161,6 +161,11 @@ body.reading::after{display:none}
 .wod-w{font:800 30px/32px var(--font-display);overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px;flex-wrap:wrap}.wod .hero-act button{flex:1 1 130px;white-space:nowrap}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer}
 .stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.fw-nudge{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:12px 0 -8px;padding:12px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);font:700 14px/18px var(--font-body,inherit);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fw-nudge svg.i{flex:none;width:20px;height:20px}
+.fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
+.fw-nudge:active{transform:scale(.98)}
+.fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
 .stat3 .eyebrow{color:rgba(53,30,40,.75);font-size:11px}
 .stat3 .num{font:800 28px/30px var(--font-display);display:flex;align-items:center;justify-content:center;gap:4px}
