@@ -372,6 +372,8 @@ async function parseEpub(buf, fallback) {
     const href = man[ref.getAttribute('idref')]; if (!href) continue;
     const f = zf(resolve(href)); if (!f) continue;
     const doc = new DOMParser().parseFromString(await f.async('string'), 'text/html');
+    // furigana: buang <rt>/<rp>/<rtc> supaya bacaan tak tercampur di teks (teks dasar <ruby>/<rb> tetap)
+    doc.querySelectorAll('rt,rp,rtc').forEach(n => n.remove());
     // bab baru (\u0002) per file spine, kecuali bab sebelumnya masih sangat pendek (sampul, halaman judul)
     if (chLen >= 800) { paras.push('\u0002'); chLen = 0; }
     const blocks = doc.body ? doc.body.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,blockquote,pre') : [];
