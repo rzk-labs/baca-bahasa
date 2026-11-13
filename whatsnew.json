@@ -1,5 +1,17 @@
 [
   {
+    "n": 806,
+    "judul": "[peta 74] Bentuk dasar kata Eropa: pelepas akhiran es/fr/de/en",
+    "poin": "Ketuk kata seperti \"went\" atau \"hablaban\", sheet arti kini menampilkan kata dasarnya.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 804,
+    "judul": "Sheet arti kata: arti utama besar & jelas, tombol aksi rapi",
+    "poin": "Sheet arti kata: arti jadi paling besar, kata asli lebih kecil.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 802,
     "judul": "Home: 'Koleksi kamu' tak tertutup menu bawah, judul buku terlihat",
     "poin": "Daftar 'Koleksi kamu' di Home tidak tertutup menu bawah lagi.",
@@ -165,18 +177,6 @@
     "n": 742,
     "judul": "Sinkron: halaman dibaca (pgDay) ikut akun & buku cloud tak 'opened 0'",
     "poin": "Halaman yang sudah dibaca sekarang ikut tersimpan di akun dan muncul di perangkat baru.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 740,
-    "judul": "Baca: ukuran teks HP besar tak memotong bar atas & sheet",
-    "poin": "Layar baca kini tahan teks HP besar: bar dan tab tidak terpotong.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 738,
-    "judul": "Ekspor Anki rapi: kolom buku + tag, urutan baru, panduan impor",
-    "poin": "Ekspor Anki sekarang rapi: ada kolom buku dan tag, urutan kolom baru.",
     "tgl": "2026-11-12"
   }
 ]
