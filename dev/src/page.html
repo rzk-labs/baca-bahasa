@@ -147,6 +147,9 @@ a{color:inherit}
 .msg.kamu{border-color:var(--wasabi)}.msg small{display:block;color:var(--mut);font-weight:800;margin-bottom:2px}
 textarea,input,select{width:100%;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
 textarea{min-height:120px;resize:vertical}
+.gb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.gb .th{position:relative;width:64px;height:64px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--soft);flex:none}.gb .th img{width:100%;height:100%;object-fit:cover;display:block}.gb .th button{position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);background:var(--wasabi);color:#351E28;font-weight:800;line-height:1;cursor:pointer;padding:0}.gb .hint{flex-basis:100%;font-size:12px;color:var(--mut)}
+.kth{display:flex;gap:6px;margin-top:8px}.kth img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid var(--ink)}
+.md img{max-width:100%;height:auto;border-radius:12px;border:1.5px solid var(--ink)}
 textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0 4.5px #351E28}
 .err{color:var(--ink);border-left:3px solid var(--ink);padding-left:8px;font-weight:700;font-size:14px}
 .back{border:0;background:none;font-weight:800;cursor:pointer;padding:6px 0;margin-bottom:8px}
@@ -487,7 +490,7 @@ async function papan(again){
   const saring=Q||PF!=='semua';
   const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const jdl=s=>{s=String(s||'').replace(/\s+/g,' ').trim();return s};
-  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'':`<span class="chip">${I.pena} dari kamu</span>`}${t.status==='live'&&t.terbuka?`<span class="chip belum" title="Issue masih terbuka">${I.buka} belum ditutup</span>`:''}${chipQ(t.qa,t.qaTeks)}</div><b>${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">${I.pena} Revisi</button>`:''}</div>`;
+  const kartuP=t=>`<div class="card" onclick="detail(${t.n})"><div class="row">${chipP(t.peran)}${t.otomatis?'':`<span class="chip">${I.pena} dari kamu</span>`}${t.status==='live'&&t.terbuka?`<span class="chip belum" title="Issue masih terbuka">${I.buka} belum ditutup</span>`:''}${chipQ(t.qa,t.qaTeks)}</div><b>${esc(jdl(t.judul))}</b><span class="mut sm">#${t.n} · ${lalu(t.diubah)}</span>${kthumb(t)}${t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">${I.pena} Revisi</button>`:''}</div>`;
   V.innerHTML=`<div class="row" style="margin-bottom:12px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">${I.tambah} Perintah</button></div>
   ${alatTugas(()=>papan(true),true)}
   ${saring?`<div class="mut sm" style="margin:-4px 0 12px">${nCocok} tugas cocok · <a href="#" id="resetQ">hapus saringan</a></div>`:''}
@@ -577,7 +580,7 @@ async function detail(n){
     ${t.status==='live'?`<div class="acts"><a class="btn" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a></div>`:''}
     <div id="e" class="err"></div>
   </section>
-  <div id="rvbox" class="tile" style="display:${t.status==='gagal'||t.status==='live'?'block':'none'}"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut">Satu kalimat cukup. Tim lanjut dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: pertanyaannya kebanyakan, jadikan 10 saja."></textarea><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>
+  <div id="rvbox" class="tile" style="display:${t.status==='gagal'||t.status==='live'?'block':'none'}"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut">Satu kalimat cukup. Tim lanjut dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: pertanyaannya kebanyakan, jadikan 10 saja."></textarea><div id="rvg"></div><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>
   ${h&&!kerja?`
   <section class="tile">
     <div class="lbl">✨ Hasilnya</div>
@@ -598,9 +601,33 @@ async function detail(n){
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
   if($('#no'))$('#no').onclick=e=>{const b=e.currentTarget;if(b.dataset.y)act('tolak',0,b);else{b.dataset.y=1;b.textContent='Yakin tolak?'}};
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
-  if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value},e.currentTarget);
+  const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
+  if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
   if(kerja)timer=setTimeout(()=>detail(n),12000);
 }
+/* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
+function kecilkan(f){return new Promise(ok=>{
+  if(!f||!/^image\/(jpeg|png|webp)$/i.test(f.type))return ok('');
+  const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{try{
+    const k=Math.min(1,1280/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');
+    c.width=Math.max(1,Math.round(im.naturalWidth*k));c.height=Math.max(1,Math.round(im.naturalHeight*k));
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+    let q=.8,d=c.toDataURL('image/jpeg',q);
+    while(d.length>520000&&q>.4){q-=.1;d=c.toDataURL('image/jpeg',q)}
+    ok(d)}catch(e){ok('')}URL.revokeObjectURL(u)};
+  im.onerror=()=>{URL.revokeObjectURL(u);ok('')};im.src=u})}
+function lampiran(kotak,area){
+  const L=[];
+  kotak.innerHTML=`<div class="gb"><span class="ths" style="display:contents"></span><button type="button" class="btn ghost" data-add>${I.tambah} Tambah gambar</button><input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><span class="hint">Maks 3. Bisa juga tempel (paste). Jangan sertakan data pribadi.</span></div>`;
+  const ths=kotak.querySelector('.ths'),inp=kotak.querySelector('input'),add=kotak.querySelector('[data-add]');
+  const gambar=()=>{ths.innerHTML=L.map((u,i)=>`<span class="th"><img src="${u}" alt="Gambar ${i+1}"><button type="button" data-x="${i}" aria-label="Hapus gambar ${i+1}">×</button></span>`).join('');
+    ths.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{L.splice(+b.dataset.x,1);gambar()});add.hidden=L.length>=3};
+  const tambah=async fs=>{for(const f of fs){if(L.length>=3)break;const d=await kecilkan(f);if(d)L.push(d);else alert('Hanya foto/tangkapan layar (JPEG, PNG, WebP) ya.')}gambar()};
+  add.onclick=()=>inp.click();inp.onchange=()=>{tambah([...inp.files]);inp.value=''};
+  area.addEventListener('paste',e=>{const fs=[...(e.clipboardData?.files||[])].filter(f=>f.type.startsWith('image/'));if(fs.length){e.preventDefault();tambah(fs)}});
+  return L}
+const kthumb=t=>(t.gambar&&t.gambar.length)?`<div class="kth">${t.gambar.map(u=>`<img src="${esc(u)}" alt="" loading="lazy">`).join('')}</div>`:'';
 function md(s){return window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(String(s||''))):esc(s).replace(/\n/g,'<br>')}
 
 function perintah(){
@@ -609,10 +636,12 @@ function perintah(){
   <p class="mut sm">Pilih siapa yang mengerjakan, lalu jelaskan seperti ngobrol.</p>
   <div class="roles">${['developer','desain','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
   <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
+  <div id="isig"></div>
   <div class="row" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
   $('#isi').focus();
+  const gL=lampiran($('#isig'),$('#isi'));
   $('#kirim').onclick=async e=>{const b=e.currentTarget;b.disabled=true;
-    try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value});tutup();await load();detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false}};
+    try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value,gambar:gL.slice()});tutup();await load();if(t.catatan)alert('Tugas terkirim, tapi '+t.catatan+'.');detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false}};
 }
 function pengaturan(){
   $('#veil').classList.add('on');
