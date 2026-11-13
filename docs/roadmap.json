@@ -79,7 +79,8 @@
     { "no": 72, "peran": "developer", "prioritas": "P0", "nama": "Perbaiki tampilan Home: progres sama dengan bar baca, nomor bab jujur, Minggu ini & kartu Streak rapi, alas bar menu bawah (#748)", "dokumen": "docs/spesifikasi-home-rapi-2.md", "status": "selesai (#752)" },
     { "no": 73, "peran": "developer", "prioritas": "P0", "nama": "Baca: persen buku satu angka di Home, bar baca & Profil; Kata baru per bahasa buku (#797)", "dokumen": "docs/spesifikasi-persen-buku-satu-angka.md", "status": "selesai (#805)" },
     { "no": 74, "peran": "developer", "prioritas": "P0", "nama": "Bentuk dasar kata Eropa: pelepas akhiran kecil (es/fr/de/en) + label 'Bentuk dasar' di sheet arti, tanda tebakan (#795)", "dokumen": "docs/riset-bentuk-dasar-kata.md", "status": "siap dikerjakan" },
-    { "no": 75, "peran": "developer", "prioritas": "P1", "nama": "Uji sheet arti kata baru di 320px & 4 tema baca, rapikan bila patah (#804)", "dokumen": "docs/desain-sheet-arti-kata.md", "status": "siap dikerjakan" }  ],
+    { "no": 75, "peran": "developer", "prioritas": "P1", "nama": "Uji sheet arti kata baru di 320px & 4 tema baca, rapikan bila patah (#804)", "dokumen": "docs/desain-sheet-arti-kata.md", "status": "siap dikerjakan" },
+    { "no": 76, "peran": "developer", "prioritas": "P1", "nama": "Home: kartu tamat tak dobel 'Sudah tamat' (teks bawah jadi 'Baca lagi dari awal') & lencana Keepo Pertama = 1 kata tersimpan, lencana lama tetap (#814)", "dokumen": "docs/spesifikasi-home-tamat-lencana.md", "status": "siap dikerjakan" }  ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
     { "level": "P0", "isi": "Bantuan memahami kata dan kalimat" },
