@@ -10,7 +10,7 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (20 tahap, prioritas P0-P3, mi
 | Desain | `peran:desain` | UX/UI, alur, microcopy, brand | Dokumen `docs/desain-*.md` dan/atau perubahan CSS/UI kecil |
 | Developer | `peran:developer` | Mengubah kode aplikasi | Perubahan kode + PR |
 | Tester AI (Tari, Bima) | otomatis | Tiap 2 jam & setelah update live: mencari bug: tampilan HP & keandalan | Komentar di issue "Masukan pengguna AI" |
-| Pengguna AI (Nadia, Raka, Dina) | otomatis | Tiap 2 jam & setelah update live: mencoba app (Dina: Keepo HQ) | Komentar di issue "Masukan pengguna AI"; dibaca PM |
+| Pengguna AI (Nadia, Raka, Sinta, Ilham, Dina) | otomatis | Tiap 2 jam & setelah update live: mencoba app (Dina: Keepo HQ) | Komentar di issue "Masukan pengguna AI"; dibaca PM |
 | Marketing | `peran:marketing` | Strategi Threads IG gaya asbun untuk cari tester & pengguna; draf posting siap salin (founder yang posting) | Dokumen `docs/marketing-*.md` |
 | QA | otomatis | Memeriksa setiap PR: sintaks, risiko, kesesuaian dengan permintaan | Komentar "QA lolos" / "QA catatan" |
 

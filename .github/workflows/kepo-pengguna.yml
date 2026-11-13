@@ -1,6 +1,6 @@
 name: Keepo Pengguna & Tester AI
 
-# Tiap hari 07.00 WIB (sebelum PM jam 08.00): 2 tester AI + 2 pengguna AI mencoba Keepo
+# Tiap 2 jam: 2 tester AI + 4 pengguna AI (+1 pengguna HQ) mencoba Keepo
 # (dengan membaca kode aplikasi live di main) lalu menulis masukan di issue "Masukan pengguna AI".
 # PM membaca masukan ini saat memilih tugas.
 
@@ -38,7 +38,7 @@ jobs:
           N=$(gh issue list --label masukan-pengguna --state open --limit 1 --json number --jq '.[0].number // empty')
           if [ -z "$N" ]; then
             URL=$(gh issue create --title "Masukan pengguna AI" --label masukan-pengguna \
-              --body "Tiap hari 2 tester AI + 2 pengguna AI mencoba Keepo dan menulis masukan di sini. PM membacanya.")
+              --body "Tiap 2 jam 2 tester AI + 4 pengguna AI mencoba Keepo dan menulis masukan di sini. PM membacanya.")
             N=${URL##*/}
           fi
           echo "n=$N" >> "$GITHUB_OUTPUT"
@@ -74,6 +74,14 @@ jobs:
             ikon: "💼"
             jenis: pengguna
             profil: "Pengguna AI. 24 tahun, karyawan Jakarta, belajar bahasa Korea/Jepang level B1, baca artikel & web novel saat di KRL, ingin cepat paham kata tanpa pindah aplikasi."
+          - nama: Sinta
+            ikon: "🧕"
+            jenis: pengguna
+            profil: "Pengguna AI. 31 tahun, ibu rumah tangga di Surabaya, belajar bahasa Mandarin untuk HSK 3, baca cerita pendek dan buku anak dua bahasa sambil menunggu anak tidur. Ingin kata yang sulit diingat bisa diulang lagi nanti, dan tidak mau pusing dengan pengaturan."
+          - nama: Ilham
+            ikon: "🎮"
+            jenis: pengguna
+            profil: "Pengguna AI. 17 tahun, siswa SMA di Makassar, ingin mengerti novel dan komik berbahasa Inggris tanpa harus buka kamus terus. Suka tantangan dan lencana, tapi cepat bosan kalau aplikasi terasa lambat atau banyak iklan teks."
           - nama: Dina
             ikon: "🗂️"
             jenis: hq
