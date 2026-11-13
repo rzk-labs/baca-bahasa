@@ -640,8 +640,8 @@ function isKataSampah(lang, w, ctx) {
   return false;
 }
 /* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
-const countedVocab = (langs, since = 0, book = null) => (db.vocab || []).filter(v => v && v.w && !isKataSampah(v.lang, v.w)
-  && (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book));
+const countedVocab = (langs, since = 0, book = null) => { const seen = new Set(); return (db.vocab || []).filter(v => { if (!v || !v.w || v.noTr || !String(v.t || '').trim() || isKataSampah(v.lang, v.w)) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; })
+  .filter(v => (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book)); };
 /* SATU hitungan 'kata baru minggu ini' = kata tersimpan di tab Kata (bukan ketukan/lookup) */
 const kataBaruMinggu = (langs = null) => countedVocab(langs, Date.now() - 7 * 864e5 + 1).length;
 /* migrasi sekali jalan: buang entri kata lama yang sebenarnya partikel (tombstone supaya tak balik lewat sinkron) */
