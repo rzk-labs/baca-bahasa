@@ -1591,8 +1591,10 @@ const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
 function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
 /* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
 function nudgeTap(b) {
-  nudgePg.add(b.pos + ':' + RD.page);
-  if (nudgePg.size < 5 || db.seenNudgeTap || !db.seenTip || db.vocab.length || Object.keys(db.looks || {}).length) return;
+  if (db.seenNudgeTap) return;
+  const k = b.pos + ':' + RD.page;
+  if (!nudgePg.has(k)) { nudgePg.add(k); db.nudgeN = (+db.nudgeN || 0) + 1; save(); } /* hitungan lintas sesi */
+  if (db.nudgeN < 4 || !db.seenTip || db.vocab.length || Object.keys(db.looks || {}).length) return;
   if ($('#tip') || $('#nchip') || $('#sheet.open')) return; /* satu pesan sekali waktu; coba lagi di halaman berikut */
   db.seenNudgeTap = true; save();
   toast(NUDGE_MSG, 5000);
