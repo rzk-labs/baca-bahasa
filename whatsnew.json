@@ -1,5 +1,11 @@
 [
   {
+    "n": 909,
+    "judul": "Baca offline: kata tetap tersimpan, 'arti nyusul' saat sinyal balik",
+    "poin": "Offline, kata tetap bisa disimpan dan tampil dengan label \"arti nyusul\".",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 898,
     "judul": "Profil: buku tak dobel; Home: sapaan rapi; header Baca mudah diketuk",
     "poin": "Profil kini menampilkan satu entri per buku, dengan kemajuan tertinggi.",
@@ -171,12 +177,6 @@
     "n": 833,
     "judul": "[peta 78] Sisa waktu baca: kecepatan pribadi, 'Sebentar lagi', batas 20+ jam",
     "poin": "Sisa waktu baca kini ikut kecepatan baca kamu sendiri, bukan angka tetap.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 829,
-    "judul": "Header baca: judul buku utuh 2 baris, tombol Bab pindah ke bawahnya",
-    "poin": "Judul buku di layar baca sekarang terbaca utuh, sampai 2 baris.",
     "tgl": "2026-11-13"
   }
 ]

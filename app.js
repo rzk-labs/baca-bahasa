@@ -114,7 +114,7 @@ function dedupeVocab() {
     if (v.at && (!a.at || v.at < a.at)) a.at = v.at;
     if ((v.lv || 0) > (a.lv || 0)) { a.lv = v.lv; a.due = v.due; }
     if (v.known) a.known = v.known;
-    if (String(a.t || '').trim()) delete a.noTr;
+    if (String(a.t || '').trim()) delete a.noTr; delete a.nyusul;
   }
   if (changed) db.vocab = out;
   return changed;
@@ -782,9 +782,17 @@ async function refillVocab() {
   if (refilling || navigator.onLine === false) return false;
   refilling = true; let n = 0;
   try {
-    for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
-      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
-    }
+    const todo = db.vocab.filter(x => x.noTr || x.nyusul).slice(0, 20);
+    let i = 0, stop = false;
+    /* maks 2 permintaan bersamaan + jeda kecil; gagal = berhenti (tanpa loop), dicoba lagi lain waktu */
+    const worker = async () => {
+      while (!stop && i < todo.length) {
+        const v = todo[i++];
+        try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; delete v.nyusul; n++; } catch (err) { stop = true; break; }
+        await new Promise(res => setTimeout(res, 250));
+      }
+    };
+    await Promise.all([worker(), worker()]);
     if (n) save();
   } finally { refilling = false; }
   return n > 0;
