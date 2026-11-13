@@ -26,3 +26,15 @@
 - Warna ikut tema sheet, jadi aman di 4 tema baca.
 - Judul CJK dan sangat panjang: tak patah per huruf, terpotong elipsis.
 - Dicek lewat baca CSS di 320px; belum dilihat di HP asli.
+
+## 5. Area ketuk min 44px (#834)
+Cara: ::after transparan 44x44. Tampilan & tinggi bar tak berubah.
+- Judul bab header baca (.rchap): 28px → 44px.
+- Kontrol bar baca di <359px (.rrt/.rlis): lebar 38px → 44px.
+- Ikon header Home di ≤340px: lebar 40px → 44px.
+- Simpan di kartu kata (.wg-save): 32px → 44px.
+- Kata di teks sumber (.src .sw): 32px → 44px.
+- Tombol di kotak FYP (.fyp-b): 36px → 44px.
+- Tombol Simpan saran (.pill-sm): 32px → 44px.
+- Sudah 44px: hapus kata, Paham, Lewati, ‹ ›, tab bawah, bar baca.
+- Dicek lewat baca CSS; belum dilihat di HP asli.

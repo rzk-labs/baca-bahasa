@@ -779,3 +779,6 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle{flex-wrap:wrap;align-content:center;justify-content:center;column-gap:4px;row-gap:0;text-align:center}
 .rtitle b{flex:0 0 100%;min-width:0;max-width:100%;white-space:normal;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow-wrap:anywhere;font-size:14px;line-height:1.2}
 .rtitle .rchap{min-height:28px;font-size:12px}
+/* #834 area ketuk min 44px: perbesar lewat ::after transparan, tampilan tetap */
+.rchap,.rrt,.rlis,.wg-save,.src .sw,.fyp-b button,.wsug .pill-sm,#hdx .icon{position:relative}
+.rchap::after,.rrt::after,.rlis::after,.wg-save::after,.src .sw::after,.fyp-b button::after,.wsug .pill-sm::after,#hdx .icon::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
