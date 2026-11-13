@@ -189,6 +189,7 @@ let sheetQ = [];
 function afterSheet(fn) { if (sheetOpen()) sheetQ.push(fn); else fn(); }
 const tamatOpen = () => { const sh = $('#sheet'); return !!sh && !sh.classList.contains('hide') && sh.getAttribute('aria-label') === 'Tamat'; };
 function showLevelUp() {
+  if (sheetOpen()) { lvlPending = true; return; }
   lvlPending = false;
   const lv = level(); if (lv <= db.lvlSeen) return; // sudah dirayakan: jangan muncul lagi
   db.lvlSeen = lv; save(); celebrate(`Level ${lv}!`, 'Naik level! Kamu makin jago', 'lvl');
@@ -1290,6 +1291,7 @@ async function viewBaca() {
     lpStop(); if (lpDone) { e.preventDefault(); return; }
     if (!tx) return; const t = e.changedTouches[0], dx = t.clientX - tx[0], dy = t.clientY - tx[1]; tx = null;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; turn(dx < 0 ? 1 : -1); }
+    if (moved) setTimeout(() => { moved = false; }, 400); // klik susulan tak datang -> jangan telan ketukan berikutnya
   });
   vp.onclick = e => {
     if (moved) { moved = false; return; }
