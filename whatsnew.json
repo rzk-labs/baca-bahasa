@@ -1,5 +1,11 @@
 [
   {
+    "n": 879,
+    "judul": "Home: toast tak menutupi kartu, Level pakai bar, status tamat seragam",
+    "poin": "Pesan pop-up kini lebih kecil dan naik, tidak menutup kartu Home lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 876,
     "judul": "Lanjut baca: 'Kata baru' tak lagi tampil kata Korea/partikel (が, 落ち)",
     "poin": "Status \"Lanjut\" kini hanya menyebut kata sesuai bahasa buku.",
@@ -171,12 +177,6 @@
     "n": 796,
     "judul": "Home: ajakan 'Ketuk satu kata' jadi kartu kecil berjarak & bisa diketuk",
     "poin": "Ajakan \"Ketuk satu kata\" di Home sekarang jadi kartu kecil yang jelas.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 794,
-    "judul": "Home: 'Kata baru' hanya kata bahasa buku yang dibaca",
-    "poin": "Kata dari bahasa lain tidak lagi nyasar ke catatan buku yang dibaca.",
     "tgl": "2026-11-13"
   }
 ]
