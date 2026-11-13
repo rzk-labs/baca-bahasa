@@ -109,6 +109,7 @@ const brief = i => {
   const L = lbl(i);
   const p = L.find(x => x.startsWith('peran:'));
   return { n: i.number, judul: i.title, status: status(i), peran: p ? p.slice(6) : 'developer', otomatis: L.includes('otomatis'), terbuka: i.state === 'open',
+    gambar: [...new Set([...(i.body || '').matchAll(/masukan-img\/([\w-]+\.(?:jpg|png|webp))/g)].map(x => x[1]))].slice(0, 3),
     qa: L.includes('qa-lolos') ? 'lolos' : L.includes('qa-catatan') ? 'catatan' : null, dibuat: i.created_at, diubah: i.updated_at,
     ulang: [...new Set([...((i.title || '') + '\n' + (i.body || '')).matchAll(/(?:revisi|ulang|ulangi|pengganti)[^#\n]{0,25}#(\d+)/gi)].map(x => +x[1]))].filter(x => x !== i.number),
     rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
@@ -132,6 +133,39 @@ async function preview(env, n, path) {
   const ext = path.split('.').pop().toLowerCase();
   return new Response(r.body, { headers: { 'content-type': MIME[ext] || 'application/octet-stream', 'cache-control': 'no-store' } });
 }
+
+// ---- gambar lampiran: data URL -> file di repo (masukan-img/) ----
+const IMG_MAKS = 3, IMG_FILE = 400 * 1024, IMG_TOTAL = 1024 * 1024;
+const jenisGambar = b => (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff ? 'jpg' : b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47 ? 'png'
+  : b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50 ? 'webp' : '');
+// Hasil: { nama: [nama file tersimpan], gagal: jumlah, alasan }
+async function simpanGambar(env, daftar, ket) {
+  const out = { nama: [], gagal: 0, alasan: '' };
+  if (!Array.isArray(daftar) || !daftar.length) return out;
+  let total = 0;
+  const pakai = daftar.slice(0, IMG_MAKS);
+  out.gagal += daftar.length - pakai.length;
+  if (out.gagal) out.alasan = 'Maksimal 3 gambar.';
+  for (const d of pakai) {
+    try {
+      const m = /^data:image\/(?:jpeg|png|webp);base64,([A-Za-z0-9+\/]+={0,2})$/.exec(String(d || ''));
+      if (!m) throw new Error('Hanya foto/tangkapan layar ya.');
+      const b64 = m[1];
+      if (b64.length > IMG_FILE * 1.4) throw new Error('Gambar terlalu besar (maks 400 KB per gambar).');
+      const bin = atob(b64);
+      if (bin.length > IMG_FILE) throw new Error('Gambar terlalu besar (maks 400 KB per gambar).');
+      if (total + bin.length > IMG_TOTAL) throw new Error('Total gambar terlalu besar (maks 1 MB).');
+      const ext = jenisGambar(Uint8Array.from(bin.slice(0, 12), c => c.charCodeAt(0)));
+      if (!ext) throw new Error('Hanya foto/tangkapan layar ya.');
+      const nama = Date.now().toString(36) + '-' + crypto.randomUUID().slice(0, 8) + '.' + ext;
+      await gh(env, `/repos/${REPO}/contents/masukan-img/${nama}`, { method: 'PUT', body: JSON.stringify({ message: 'Lampiran gambar: ' + (ket || ''), content: b64, branch: 'main' }) });
+      total += bin.length;
+      out.nama.push(nama);
+    } catch (e) { out.gagal++; out.alasan = out.alasan || String(e.message || 'Gambar gagal disimpan.'); }
+  }
+  return out;
+}
+const blokGambar = nama => nama.length ? `\n\n**Gambar terlampir** (file di repo, bisa dibaca agent):\n${nama.map(n => '- `masukan-img/' + n + '`').join('\n')}\n\n${nama.map(n => `![gambar](https://github.com/${REPO}/blob/main/masukan-img/${n}?raw=true)`).join('\n')}` : '';
 
 async function api(req, env, url) {
   const p = url.pathname.replace(/^\/api/, '');
@@ -223,8 +257,9 @@ async function api(req, env, url) {
     const judul = String(body.judul || '').trim() || rapikanJudul(isi, 70);
     await gh(env, `/repos/${REPO}/labels`, { method: 'POST', body: JSON.stringify({ name: LABEL, color: 'C6FF3D' }), soft: true });
     const peran = PERAN.includes(body.peran) ? body.peran : 'developer';
-    const i = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: judul, body: isi, labels: [LABEL, 'peran:' + peran] }) });
-    return json(brief(i));
+    const gb = await simpanGambar(env, body.gambar, 'tugas baru');
+    const i = await gh(env, `/repos/${REPO}/issues`, { method: 'POST', body: JSON.stringify({ title: judul, body: isi + blokGambar(gb.nama), labels: [LABEL, 'peran:' + peran] }) });
+    return json({ ...brief(i), gambar_gagal: gb.gagal, pesan: gb.gagal ? gb.alasan : '' });
   }
 
   const m = p.match(/^\/tasks\/(\d+)(?:\/(\w+))?$/);
@@ -253,10 +288,11 @@ async function api(req, env, url) {
   if (act === 'revisi') {
     const isi = String(body.isi || '').trim();
     if (isi.length < 3) return json({ error: 'Tulis revisinya dulu' }, 400);
+    const gb = await simpanGambar(env, body.gambar, 'revisi #' + n);
     if (issue.state === 'closed') await gh(env, `/repos/${REPO}/issues/${n}`, { method: 'PATCH', body: JSON.stringify({ state: 'open' }) });
     await gh(env, `/repos/${REPO}/issues/${n}/labels`, { method: 'PUT', body: JSON.stringify({ labels: [...lbl(issue).filter(x => x === LABEL || x.startsWith('peran:') || x === 'otomatis'), 'sedang-dikerjakan'] }) });
-    await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body: 'Revisi: ' + isi }) });
-    return json({ ok: true });
+    await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body: 'Revisi: ' + isi + blokGambar(gb.nama) }) });
+    return json({ ok: true, gambar_gagal: gb.gagal, pesan: gb.gagal ? gb.alasan : '' });
   }
   if (act === 'setujui') {
     const pr = await openPR(env, n);
@@ -301,6 +337,8 @@ async function feedback(req, env) {
   if (bin) body += `\n\nBintang: ${bin}/5`;
   const info = fbClean(b.info, 300);
   if (info) body += `\n\nInfo HP: ${info}`;
+  const gb = await simpanGambar(env, b.gambar, 'masukan pengguna');
+  body += blokGambar(gb.nama);
   const m = await gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`);
   let n = Array.isArray(m) && m[0] ? m[0].number : 0;
   if (!n) {
@@ -311,7 +349,7 @@ async function feedback(req, env) {
   if (!n) return fbJson({ error: 'Gagal menyimpan' }, 502);
   await gh(env, `/repos/${REPO}/issues/${n}/comments`, { method: 'POST', body: JSON.stringify({ body }) });
   hits.push(now); fbHits.set(dev, hits);
-  return fbJson({ ok: true });
+  return fbJson({ ok: true, gambar_gagal: gb.gagal, pesan: gb.gagal ? 'Teks terkirim, tapi gambar gagal: ' + gb.alasan : '' });
 }
 
 export default {
@@ -322,6 +360,12 @@ export default {
         try { return await feedback(req, env); } catch (e) { return fbJson({ error: 'Gagal menyimpan' }, 502); }
       }
       if (url.pathname.startsWith('/api/')) return await api(req, env, url);
+      const gm = url.pathname.match(/^\/g\/([\w-]+\.(?:jpg|png|webp))$/);
+      if (gm) {
+        const r = await gh(env, `/repos/${REPO}/contents/masukan-img/${gm[1]}?ref=main`, { raw: true });
+        if (!r.ok) return new Response('Tidak ditemukan', { status: 404 });
+        return new Response(r.body, { headers: { 'content-type': MIME[gm[1].split('.').pop()] || 'application/octet-stream', 'cache-control': 'public, max-age=86400', 'x-content-type-options': 'nosniff' } });
+      }
       const pm = url.pathname.match(/^\/p\/(\d+)(\/.*)?$/);
       if (pm) {
         if (!pm[2]) return Response.redirect(url.origin + `/p/${pm[1]}/`, 302);
