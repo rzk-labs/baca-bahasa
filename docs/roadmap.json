@@ -82,8 +82,9 @@
     { "no": 75, "peran": "developer", "prioritas": "P1", "nama": "Uji sheet arti kata baru di 320px & 4 tema baca, rapikan bila patah (#804)", "dokumen": "docs/desain-sheet-arti-kata.md", "status": "selesai (#812, #813)" },
     { "no": 76, "peran": "developer", "prioritas": "P0", "nama": "Impor EPUB Jepang: buang <rt>/<rp> furigana dari teks baca, uji '坊ちゃん' (#807)", "dokumen": "docs/riset-furigana-ruby-epub.md", "status": "selesai (#819)" },
     { "no": 77, "peran": "developer", "prioritas": "P1", "nama": "Home: kartu tamat tak dobel 'Sudah tamat' (teks bawah jadi 'Baca lagi dari awal') & lencana Keepo Pertama = 1 kata tersimpan, lencana lama tetap (#814)", "dokumen": "docs/spesifikasi-home-tamat-lencana.md", "status": "selesai (#824)" },
-    { "no": 78, "peran": "developer", "prioritas": "P0", "nama": "Bar baca: sisa waktu dari kecepatan pribadi, per bab, batas wajar (riset-sisa-waktu-baca) (#818)", "dokumen": "docs/riset-sisa-waktu-baca.md", "status": "selesai (#831)" },
-    { "no": 79, "peran": "developer", "prioritas": "P1", "nama": "parsePdf: pesan PDF scan jelas, tanda hubung aman (self-/well-known), buang header/footer berulang; lalu ligatur, kolom, dialog (#828)", "dokumen": "docs/riset-pdf-teks-berantakan.md", "status": "siap dikerjakan" }  ],
+    { "no": 78, "peran": "developer", "prioritas": "P0", "nama": "Bar baca: sisa waktu dari kecepatan pribadi, per bab, batas wajar (riset-sisa-waktu-baca) (#818)", "dokumen": "docs/riset-sisa-waktu-baca.md", "status": "selesai (#831, #833)" },
+    { "no": 79, "peran": "developer", "prioritas": "P1", "nama": "parsePdf: pesan PDF scan jelas, tanda hubung aman (self-/well-known), buang header/footer berulang; lalu ligatur, kolom, dialog (#828)", "dokumen": "docs/riset-pdf-teks-berantakan.md", "status": "siap dikerjakan" }
+  ],
   "prioritas": [
     { "level": "P0", "isi": "Pengalaman membaca yang nyaman" },
     { "level": "P0", "isi": "Bantuan memahami kata dan kalimat" },
