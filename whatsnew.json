@@ -1,5 +1,11 @@
 [
   {
+    "n": 862,
+    "judul": "Baca: header judul 2 baris tak menimpa tombol Bagian",
+    "poin": "Header baca dirapikan: judul maksimal 2 baris, tombol Bagian tidak tertimpa lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 860,
     "judul": "Baca: bar bawah satu baris, tanpa titik '·' menggantung",
     "poin": "Bar bawah halaman baca sekarang satu baris, tanpa titik menggantung.",
@@ -171,12 +177,6 @@
     "n": 780,
     "judul": "Target harian dorong belajar kata: XP balik halaman dibatasi",
     "poin": "XP balik halaman kini cuma dihitung 10 per hari ke target harian.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 778,
-    "judul": "Ajak ketuk kata pertama: Profil '0 kata' jadi ajakan, kartu Level ada bar",
-    "poin": "Kartu Level di Home sekarang punya bar progres tipis.",
     "tgl": "2026-11-12"
   }
 ]
