@@ -1,5 +1,11 @@
 [
   {
+    "n": 794,
+    "judul": "Home: 'Kata baru' hanya kata bahasa buku yang dibaca",
+    "poin": "Kata dari bahasa lain tidak lagi nyasar ke catatan buku yang dibaca.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 792,
     "judul": "Baca: tombol 'Sudah kenal semua' untuk kata tersorot di halaman ini",
     "poin": "Di Pengaturan baca ada tombol baru: tandai semua kata sorotan halaman ini sudah kenal.",
@@ -171,12 +177,6 @@
     "n": 734,
     "judul": "Aksesibilitas: tiap sheet punya nama sendiri untuk pembaca layar",
     "poin": "Semua panel di Kepo sekarang punya nama yang benar untuk pembaca layar.",
-    "tgl": "2026-11-12"
-  },
-  {
-    "n": 732,
-    "judul": "Korea: ketuk kata tanpa partikel menempel (아침에→아침), bukan 1 suku",
-    "poin": "Ketuk kata Korea yang menempel partikel, artinya sekarang diambil dari kata dasarnya.",
     "tgl": "2026-11-12"
   }
 ]
