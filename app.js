@@ -528,6 +528,7 @@ function guessBase(w, lang) {
   const ir = has(EU_IRR[l], lo) ? EU_IRR[l][lo] : (l === 'de' && has(EU_IRR.deN, lo) ? EU_IRR.deN[lo] : '');
   if (ir) return ir.toLowerCase() === lo ? '' : ir;
   if (l === 'de' && x[0] !== lo[0]) return '';
+  if (l === 'en' && /eed$/.test(lo)) return ''; // proceed/agreed/succeed: lebih baik kosong daripada tebakan salah ("proce")
   if (EU_INF[l] && EU_INF[l].test(lo) && !(l === 'de' && /[^aeiouäöü]ten$/.test(lo))) return '';
   for (const [suf, rep, min] of EU_SUF[l]) {
     if (!lo.endsWith(suf)) continue;
@@ -777,12 +778,14 @@ async function translate(q, sl, tl, signal) {
 }
 
 /* isi ulang arti kata tersimpan yang masih kosong; true bila ada yang terisi */
+/* kata tanpa arti (termasuk data lama tanpa tanda) dianggap nyusul */
+const needsArti = v => !!(v && v.w && !String(v.t || '').trim());
 let refilling = false;
 async function refillVocab() {
   if (refilling || navigator.onLine === false) return false;
   refilling = true; let n = 0;
   try {
-    const todo = db.vocab.filter(x => x.noTr || x.nyusul).slice(0, 20);
+    const todo = db.vocab.filter(needsArti).slice(0, 8);
     let i = 0, stop = false;
     /* maks 2 permintaan bersamaan + jeda kecil; gagal = berhenti (tanpa loop), dicoba lagi lain waktu */
     const worker = async () => {
