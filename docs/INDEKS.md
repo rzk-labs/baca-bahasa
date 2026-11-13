@@ -151,3 +151,4 @@
 - [sinkron-buku](spesifikasi-sinkron-buku.md)
 - [garis-bawah-frasa-langsung](spesifikasi-garis-bawah-frasa-langsung.md)
 - [bentuk-dasar-kata](riset-bentuk-dasar-kata.md)
+- [furigana-ruby-epub](riset-furigana-ruby-epub.md)

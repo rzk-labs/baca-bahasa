@@ -749,7 +749,9 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wd{margin:0}
 #sheet .tr:not(.sent){font:800 30px/36px var(--font-display);letter-spacing:-.01em;margin:4px 0 var(--space-2);overflow-wrap:anywhere}
 #sheet .tr .loading{font:600 15px/22px var(--font-ui)}
-#sheet .dict{font-size:12px}
+#sheet .dict{font-size:12px;line-height:18px}
+#sheet .wd b,#sheet .wmeta{overflow-wrap:anywhere}
+@media (max-width:359px){.wact2{justify-content:flex-start}.wact2>button{flex:1 1 130px}}
 .wact{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-3)}
 .wact>button{flex:1 1 0;min-width:96px;min-height:48px;padding:8px 12px}
 .wact>#wsave{flex:2 1 140px;min-height:52px}
