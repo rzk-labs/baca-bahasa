@@ -426,6 +426,10 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w{-webkit-box-decoration-break:clone;box-decoration-break:clone;text-decoration-skip-ink:auto}
 .cols .w.saved{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:var(--color-text);text-decoration-thickness:1.5px;text-underline-offset:.2em}
 .cols .w.often:not(.saved){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:2px;text-underline-offset:.22em}
+.cols .w.saved.hafal{text-decoration-thickness:1px;text-decoration-color:var(--color-text-muted)}
+.cols .w.hafal.often:not(.sel){text-decoration-style:solid;text-decoration-thickness:1px}
+.wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
+.wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
@@ -573,6 +577,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .csvbar{flex-wrap:nowrap}
 .csvbar select,.csvbar select.csvsort{flex:1 1 0;min-width:0;order:0;margin:0;min-height:44px}
 .csvexp{display:block;width:100%;min-height:44px;margin:8px 0 16px;font-weight:700}
+.csvguide{margin:-8px 0 16px;font-size:13px}.csvguide summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600}.csvguide .csvsteps{margin:0;padding-left:20px;overflow-wrap:anywhere}
 /* Saring kata per bahasa/buku (chip geser) */
 .fchips{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 0 8px;padding:2px 0;max-width:100%}
 .fchips::-webkit-scrollbar{display:none}
