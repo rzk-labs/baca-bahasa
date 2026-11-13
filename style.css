@@ -796,3 +796,30 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fr-stats b{line-height:1.2}
 .fr-stats span{line-height:1.3}
 @media(max-width:360px){.lb-row{gap:8px}.lb-row .rk{width:28px}.fr-stats div{padding:10px 4px}}
+/* #848 Ngomong & Pengaturan: 320px rapi, ketuk 44px, kontras */
+.seg button{min-width:0;line-height:1.2;text-align:center;overflow-wrap:anywhere;padding-top:4px;padding-bottom:4px}
+.swatch button{min-width:0;padding:0 2px}
+.stepper button{min-width:44px;min-height:44px}
+.target{overflow-wrap:anywhere;padding-bottom:var(--space-2)}
+.hint,.heard,.mic-lbl{overflow-wrap:anywhere}
+.aux{flex-wrap:wrap}
+.pager{gap:var(--space-2)}
+.pager span{min-width:0;white-space:nowrap}
+.pager #sn{flex:none;min-height:44px;padding:0 14px;white-space:normal;text-align:center;line-height:1.2}
+.pager .icon{flex:none;min-width:44px}
+.chips{justify-content:center}
+.chip{height:auto;min-height:32px;padding:4px 12px;white-space:normal;text-align:center}
+.result .sm{overflow-wrap:anywhere}
+[data-theme=night] .mic.rec,[data-theme=dark] .mic.rec{color:var(--ink)}
+[data-theme=dark] .mic{background:var(--lime);color:var(--ink)}
+[data-theme=dark] .mic.rec{background:var(--color-record)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .mic{background:var(--lime);color:var(--ink)}[data-theme=auto] .mic.rec{background:var(--color-record);color:var(--ink)}}
+#sheet select{max-width:100%;text-overflow:ellipsis}
+@media(max-width:360px){
+  .target{font-size:22px}
+  .mic{width:96px;height:96px}
+  .seg button{font-size:13px;padding-left:4px;padding-right:4px}
+  .swatch{gap:6px}
+  .ring,.ring svg{width:128px;height:128px}
+  .rem-word{font-size:clamp(34px,13vw,52px);overflow-wrap:anywhere}
+}

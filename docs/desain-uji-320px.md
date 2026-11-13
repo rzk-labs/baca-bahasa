@@ -38,3 +38,14 @@ Cara: ::after transparan 44x44. Tampilan & tinggi bar tak berubah.
 - Tombol Simpan saran (.pill-sm): 32px → 44px.
 - Sudah 44px: hapus kata, Paham, Lewati, ‹ ›, tab bawah, bar baca.
 - Dicek lewat baca CSS; belum dilihat di HP asli.
+
+## 7. Ngomong & Pengaturan (#848)
+Dicek lewat baca CSS di 320px & 4 tema; belum di HP asli.
+- Pilihan "Pernah kuketuk"/"Semua tersimpan" sesak: teks kini boleh turun baris, tinggi 44px tetap.
+- Pager kalimat: tombol "Kalimat berikutnya" boleh 2 baris; ikon ‹ tetap 44px.
+- Tombol rekam di tema Gelap/Malam/Auto-gelap: ikon kini gelap di merah muda (kontras ≥4.5:1, sebelumnya putih).
+- Tombol mikrofon tema Gelap kini terang (sebelumnya plum di atas plum).
+- Skor, chip hasil, kata target: tak terpotong; chip boleh turun baris.
+- Di ≤360px: kata target, tombol rekam, lingkaran skor, pilihan tema dirapatkan.
+- Sheet sudah punya jarak aman iPhone di bawah; tak diubah.
+- Penanda bahasa/Tamat: sudah beres di bagian 4.
