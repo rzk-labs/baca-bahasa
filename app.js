@@ -352,6 +352,18 @@ function decodeText(buf) {
   }
   return s.replace(/^﻿/, '');
 }
+// Teks buku Jepang sering memakai huruf kompatibilitas (⽂, Ａ, ㈱). NFKC mengubahnya ke huruf biasa.
+// Tanda baca penting (「」『』、。…・ー) tidak diubah oleh NFKC; kalau ada yang berubah, teks asli dipakai.
+const JA_PUNCT = /[「」『』、。…・ー]/g;
+function normJa(s) {
+  const n = s.normalize('NFKC');
+  return (s.match(JA_PUNCT) || []).join('') === (n.match(JA_PUNCT) || []).join('') ? n : s;
+}
+// Halaman dengan sedikit blok <p> tapi banyak teks di luarnya (mis. hanya <br>) -> pakai teks body.
+function needBodyFallback(nBlocks, blockLen, bodyLen) {
+  const outside = bodyLen - blockLen;
+  return nBlocks <= 3 && outside >= 200 && outside > blockLen * 2;
+}
 async function parseEpub(buf, fallback) {
   await loadScript(JSZIP_URL);
   const z = await JSZip.loadAsync(buf);
@@ -378,9 +390,16 @@ async function parseEpub(buf, fallback) {
     if (chLen >= 800) { paras.push('\u0002'); chLen = 0; }
     const blocks = doc.body ? doc.body.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,blockquote,pre') : [];
     const add = t => { paras.push(t); chLen += t.length; };
-    if (blocks.length) blocks.forEach(b => { if (!b.querySelector('p')) { const t = b.textContent.replace(/\s+/g, ' ').trim(); if (t) add(/^H[1-4]$/.test(b.tagName) ? '\u0001' + t : t); } });
-    else if (doc.body) cleanParas(doc.body.textContent).forEach(add);
+    let blockLen = 0;
+    const got = [];
+    blocks.forEach(b => { if (!b.querySelector('p')) { const t = b.textContent.replace(/\s+/g, ' ').trim(); if (t) { blockLen += t.length; got.push(/^H[1-4]$/.test(b.tagName) ? '\u0001' + t : t); } } });
+    const bodyLen = doc.body ? doc.body.textContent.replace(/\s+/g, '').length : 0;
+    if (doc.body && (!blocks.length || needBodyFallback(got.length, blockLen, bodyLen))) {
+      doc.body.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+      cleanParas(doc.body.textContent).forEach(add);
+    } else got.forEach(add);
   }
+  for (let i = 0; i < paras.length; i++) paras[i] = normJa(paras[i]);
   let cover = null; try { cover = await epubCover(opf, zf, resolve); } catch (e) { }
   return { title, paras: splitLong(paras), cover };
 }
