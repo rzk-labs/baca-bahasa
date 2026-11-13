@@ -770,3 +770,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .bk .cover,.bk .t,.bk .m{flex:none}
 .bk .t{position:relative;z-index:1;min-height:38px}
 .hscroll{scroll-padding-bottom:calc(var(--tabbar-h) + 48px)}
+/* Layar Tamat: kartu "Berikutnya" (#821) */
+.fb-next{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
+.fb-next .fbn-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;overflow-wrap:break-word;word-break:normal;line-height:1.3;text-align:start}
+.fb-next .fbn-m{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
