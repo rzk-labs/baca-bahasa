@@ -693,6 +693,14 @@
       "nama": "Keepo HQ: tombol Perintah tidak menutupi isi, pindah ke tempat tetap (#921)",
       "dokumen": "docs/spesifikasi-hq-tombol-perintah.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 90,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: klik cepat (cache server, panggilan GitHub bersamaan, layar langsung berubah, segar-ulang di belakang) (#943)",
+      "dokumen": "docs/spesifikasi-hq-klik-cepat.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
