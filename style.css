@@ -744,3 +744,16 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 @media (max-width:359px){.rbar{gap:0;padding-left:4px;padding-right:4px}.rrt,.rlis{min-width:38px;padding:0 2px}.rrtl{display:none}}
 .bk .t{min-height:38px;overflow-wrap:break-word}
 .hscroll{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+/* #804 sheet arti kata: arti utama paling besar, aksi satu baris */
+.wd b{font:700 20px/26px var(--font-display);color:var(--color-text-muted)}
+.wd{margin:0}
+#sheet .tr:not(.sent){font:800 30px/36px var(--font-display);letter-spacing:-.01em;margin:4px 0 var(--space-2);overflow-wrap:anywhere}
+#sheet .tr .loading{font:600 15px/22px var(--font-ui)}
+#sheet .dict{font-size:12px;opacity:.85}
+.wact{display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-3)}
+.wact>button{flex:1 1 0;min-width:96px;min-height:48px;padding:8px 12px}
+.wact>#wsave{flex:2 1 140px;min-height:52px}
+.wact>button[hidden]{display:none}
+.wact2{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;margin-top:6px}
+.wact2>button{min-height:44px;font-size:14px}
+@media (max-width:340px){.wd b{font-size:18px}#sheet .tr:not(.sent){font-size:26px;line-height:32px}.wact>button{min-width:84px}}
