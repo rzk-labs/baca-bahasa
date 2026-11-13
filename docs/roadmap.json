@@ -653,6 +653,14 @@
       "nama": "Keepo HQ: Setujui massal untuk tugas Siap dicek (kotak centang, pilih semua, laporan gagal sebagian) (#925)",
       "dokumen": "docs/spesifikasi-hq-setujui-massal.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 88,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: form Perintah ke tim rapi di HP (tanpa zoom, 5 peran muat, tidak terpotong) (#931)",
+      "dokumen": "docs/spesifikasi-hq-form-perintah-hp.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
