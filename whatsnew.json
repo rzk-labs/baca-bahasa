@@ -1,5 +1,11 @@
 [
   {
+    "n": 932,
+    "judul": "EVALUASI UI UIX NYA",
+    "poin": "Tulisan \"Keepo\" di atas layar HP sekarang tidak terpotong lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 928,
     "judul": "[peta 84] Satu sumber angka: persen buku, Bab/Bagian, XP tak naik sendiri",
     "poin": "Persen buku dan istilah \"Bab\" kini sama di Home, Baca, dan Daftar bab.",
@@ -171,12 +177,6 @@
     "n": 852,
     "judul": "Baca: colek 'ketuk kata' tetap muncul walau halaman dibaca lintas sesi",
     "poin": "Colek 'ketuk kata' sekarang muncul setelah 4 halaman, walau buku sering ditutup.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 848,
-    "judul": "Tab Ngomong & Pengaturan: rapi di 320px, ketuk 44px, kontras",
-    "poin": "Tab Ngomong dan Pengaturan kini rapi di layar HP kecil.",
     "tgl": "2026-11-13"
   }
 ]
