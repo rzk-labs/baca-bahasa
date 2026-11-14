@@ -187,6 +187,15 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 .say{font-size:calc(var(--fs)*1.2);font-weight:700}
 .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .mock{display:flex;flex-direction:column;align-items:center;gap:10px}.hp{width:min(100%,300px);border:3px solid var(--ink);border-radius:34px;padding:10px;background:#111;box-shadow:0 6px 0 var(--ink)}.hpv{overflow:hidden;border-radius:24px;background:#fff}.hp iframe{display:block;border:0;background:#fff;transform-origin:0 0}.hp .poni{width:70px;height:6px;border-radius:9px;background:#333;margin:0 auto 8px}
+.mk-s{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.mk-i{flex:0 0 100%;scroll-snap-align:center;border:1.5px solid var(--ink);border-radius:14px;background:#fff;padding:0;cursor:zoom-in;overflow:hidden;min-height:44px}
+.mk-i img{display:block;width:100%;height:auto}
+.mk-n{margin-top:8px}
+.zoom{position:fixed;inset:0;z-index:100;background:rgba(53,30,40,.94);overflow:auto;display:flex;flex-direction:column;align-items:center;padding:60px 12px 20px}
+.zoom img{width:100%;max-width:520px;height:auto;background:#fff;border-radius:12px;cursor:zoom-in}
+.zoom.big{align-items:flex-start}
+.zoom.big img{max-width:none;width:200%;cursor:zoom-out}
+.zoom .zx{position:fixed;top:10px;right:10px;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid #351E28;background:var(--wasabi);color:#351E28;font-weight:800;cursor:pointer}
 .big-b{padding:13px 20px;font-size:16px}
 .lbl{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:20px;margin-bottom:8px}
 .pts{margin:0;padding-left:22px;font-size:calc(var(--fs)*1.13);line-height:1.6}
@@ -649,7 +658,7 @@ function hasil(riwayat){
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
 // Detail tugas: tugas+komentar+PR datang bersamaan dari server; daftar file PR menyusul (disimpan di FILES agar buka kedua kali instan)
-const FILES={},DET={};
+const FILES={},GAMBAR={},DET={};
 async function detail(n,again){
   clearTimeout(timer);if(!again){VIEW++;scrollTo(0,0)}const mv=VIEW;
   // data lama tampil dulu, segarkan di belakang
@@ -659,9 +668,9 @@ async function detail(n,again){
   DET[n]=t;patchTugas(n,{status:t.status,qa:t.qa,diubah:t.diubah,terbuka:t.terbuka});
   tampilDetail(t,n,mv);
   if(t.pr&&!(t.pr.n in FILES)){
-    try{const f=await call('/pr/'+t.pr.n+'/files');FILES[t.pr.n]=f.files||[]}catch(e){return}
+    try{const f=await call('/pr/'+t.pr.n+'/files');FILES[t.pr.n]=f.files||[];GAMBAR[t.pr.n]=f.gambar||[]}catch(e){return}
     const ae=document.activeElement;
-    if(mv===VIEW&&!(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))&&!document.querySelector('#mock iframe')&&!document.querySelector('details[open]')){const y=scrollY;tampilDetail(t,n,mv);scrollTo(0,y)}
+    if(mv===VIEW&&!(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))&&!document.querySelector('#mock iframe')&&!document.querySelector('details[open]')&&!document.querySelector('.zoom')){const y=scrollY;tampilDetail(t,n,mv);scrollTo(0,y)}
   }
 }
 function tampilDetail(t,n,mv){
@@ -675,6 +684,10 @@ function tampilDetail(t,n,mv){
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
   const MOCK=(t.files||[]).includes('docs/mockup-'+n+'.html')&&t.preview&&!t.pr?.merged?t.preview+'docs/mockup-'+n+'.html':'';
   const LIM=4;
+  // Gambar mockup: file docs/mockup/*.svg|png di PR (lewat rute preview) + gambar di isi PR
+  const GBR=[...(t.files||[]).filter(f=>/^docs\/mockup\/[\w.-]+\.(svg|png)$/i.test(f)&&t.preview&&!t.pr?.merged).map(f=>t.preview+f),...((t.pr&&GAMBAR[t.pr.n])||[])];
+  const mockSec=t.status==='siap'||GBR.length?`<section class="tile mk"><div class="lbl">🖼️ Mockup</div>${GBR.length?`<div class="mk-s">${GBR.map((u,i)=>`<button class="mk-i" data-z="${i}" aria-label="Perbesar mockup ${i+1}"><img src="${esc(u)}" alt="Mockup ${i+1}" loading="lazy"></button>`).join('')}</div><div class="mk-n sm mut" id="mkn">${GBR.length>1?`1/${GBR.length} · geser untuk lihat lainnya`:'Ketuk gambar untuk memperbesar'}</div>`:'<span class="chip o">Belum ada gambar</span>'}</section>`:'';
+  const aksi=t.status==='siap'?`<div class="acts aks"><button class="btn big-b" id="ok">${I.cek} Setujui</button><button class="btn ghost big-b" id="rvb">${I.pena} Revisi</button><button class="btn ghost big-b" id="no">${I.silang} Tolak</button></div>`:'';
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
   const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
   V.innerHTML=`<button class="back" onclick="go(cur)">← Kembali</button>
@@ -683,7 +696,6 @@ function tampilDetail(t,n,mv){
     <div class="row">${chipP(peran)}${hq.otomatis?`<span class="chip o">${I.oto} otomatis</span>`:''}<span class="sp"></span><span class="sm">#${t.n}</span></div>
     <h2 class="ttl">${esc(t.judul)}</h2>
     <div class="say">${t.status==='dikerjakan'?'<i class="dot" style="display:inline-block"></i> ':''}${pesan}</div>
-    ${t.status==='siap'?`<div class="acts"><button class="btn big-b" id="ok">${I.cek} Setujui</button><button class="btn ghost big-b" id="rvb">${I.pena} Revisi</button><button class="btn ghost big-b" id="no">${I.silang} Tolak</button></div>`:''}
     ${kerja?`<div class="acts"><a class="btn ghost" target="_blank" href="${t.actions}">Lihat log</a></div>`:''}
     ${t.status==='live'?`<div class="acts"><a class="btn" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a></div>`:''}
     <div id="e" class="err"></div>
@@ -697,6 +709,9 @@ function tampilDetail(t,n,mv){
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
   ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><button class="btn lime" id="mockbtn">Tampilkan mockup</button></div></section>`:''}
+  `:''}
+  ${!kerja?mockSec+aksi:''}
+  ${h&&!kerja?`
   ${h.tugas.length?`<section class="tile c t-sun"><div class="lbl">👉 Tugas kamu</div><ul class="pts">${h.tugas.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></section>`:''}
   ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'o'}">${h.qaOk?I.cek+' QA lolos':'QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
   <details class="tile more"><summary>Detail lengkap (perintah &amp; riwayat)</summary>
@@ -706,6 +721,19 @@ function tampilDetail(t,n,mv){
   </details>
   </div>`;
   if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
+  const mks=V.querySelector('.mk-s');
+  if(mks){
+    const nn=$('#mkn');
+    if(GBR.length>1)mks.onscroll=()=>{const i=Math.round(mks.scrollLeft/(mks.clientWidth||1));nn.textContent=(i+1)+'/'+GBR.length+' · geser untuk lihat lainnya'};
+    mks.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{
+      const o=document.createElement('div');o.className='zoom';o.setAttribute('role','dialog');o.setAttribute('aria-label','Mockup diperbesar');
+      o.innerHTML='<button class="zx" aria-label="Tutup">✕ Tutup</button><img alt="Mockup diperbesar" src="'+esc(GBR[+b.dataset.z])+'">';
+      o.querySelector('img').onclick=e=>{e.stopPropagation();o.classList.toggle('big')};
+      const kb=e=>{if(e.key==='Escape')tutup()};
+      const tutup=()=>{o.remove();document.removeEventListener('keydown',kb)};
+      o.onclick=tutup;document.addEventListener('keydown',kb);document.body.appendChild(o);o.querySelector('.zx').focus();
+    });
+  }
   V.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{clearTimeout(timer);dokumen(b.dataset.doc,ref,n)});
   // Optimistis: kartu langsung berubah; bila gagal dikembalikan dengan pesan jelas. Sukses: perbarui kartu ini saja (bukan seluruh Markas).
   const act=async(a,b,el)=>{
