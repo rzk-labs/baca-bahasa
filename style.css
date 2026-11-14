@@ -724,7 +724,8 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 /* #868: lencana lebih lebar, nama maks 2 baris, tepi kanan memudar sebagai petunjuk geser */
 .badge{width:120px;min-width:96px;min-height:44px}
 .badge b{text-wrap:balance;overflow-wrap:break-word;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
-.badge .d{overflow-wrap:break-word}
+.badge .d{overflow-wrap:anywhere}
+.badge{padding-right:14px}
 .hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
 .hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
 .wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -800,6 +801,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fb-next{padding:10px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
 .fb-next .fbn-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;overflow-wrap:break-word;word-break:normal;line-height:1.3;text-align:start}
 .fb-next .fbn-m{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.endcard{position:absolute;left:0;right:0;bottom:8px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;border:1.5px solid var(--color-border);border-radius:16px;background:var(--color-surface);z-index:2}
+.endcard .sec{flex:1 1 130px;min-height:44px;padding:0 12px;font-size:14px}
 /* #829 header baca: judul utuh (maks 2 baris), Bab + penanda + Offline di baris bawah */
 .rbar{height:calc(64px + env(safe-area-inset-top))}
 .rtitle{flex-wrap:wrap;align-content:center;justify-content:center;column-gap:4px;row-gap:0;text-align:center}
@@ -876,6 +879,13 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap,.rmk{font-size:13px}
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
+@media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
+/* terjemahan kalimat di tempat (#907): baris kecil tepat di bawah kalimat; ikut warna 4 tema baca */
+.cols .s.itrs{background:var(--color-hl-sentence);border-radius:4px}
+.cols .itr{display:block;margin:.25em 0 .6em;padding:6px 10px;border-inline-start:3px solid var(--color-text-muted);border-radius:6px;background:var(--color-surface-soft);color:var(--color-text);font-size:.85em;line-height:1.4;text-align:start;letter-spacing:0;word-spacing:normal;-webkit-hyphens:manual;hyphens:manual;overflow-wrap:anywhere;break-inside:avoid;cursor:pointer;-webkit-user-select:none;user-select:none}
+.cols .itr .loading{color:var(--color-text-muted)}
+.cols .itr-m{display:block;margin-top:2px;font-size:.8em;line-height:1.3;color:var(--color-text-muted)}
+.cols .itr-r{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:var(--radius-full);background:var(--color-text);color:var(--color-bg);font-weight:700;font-size:.9em}
 /* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
 .rbar{gap:8px;padding-left:8px;padding-right:8px}
 .rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
@@ -907,3 +917,11 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .goal-row .ring .score .gn{font:800 20px/20px var(--font-display);letter-spacing:-.02em}
 .goal-row .ring .score small{display:block;font:700 9px/9px var(--font-ui);letter-spacing:.04em;color:var(--color-text-muted)}
 @media (max-width:359px){.goal-row .ring .score .gn{font-size:17px;line-height:17px}.goal-row .ring .score small{font-size:8px;line-height:8px}}
+/* #961: lencana terkunci jelas, baris buku Profil rapi */
+.badge.off .d{display:flex;gap:4px;align-items:flex-start}
+.badge .lk{flex:none;width:12px;height:12px;margin-top:2px}
+.fr-read{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
+.fr-read .lg{flex:none}
+.fr-read .ttl{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-read .st{flex:none;font-size:13px}
+.fr-read .bar{flex:0 0 100%}
