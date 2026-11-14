@@ -701,6 +701,22 @@
       "nama": "Keepo HQ: klik cepat (cache server, panggilan GitHub bersamaan, layar langsung berubah, segar-ulang di belakang) (#943)",
       "dokumen": "docs/spesifikasi-hq-klik-cepat.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 93,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: mockup visual di setiap hasil yang perlu disetujui (#957)",
+      "dokumen": "docs/spesifikasi-hq-mockup-persetujuan.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 94,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: visual loading seragam (bilah tipis, kerangka di semua tab, tombol proses) (#965)",
+      "dokumen": "docs/spesifikasi-hq-visual-loading.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [

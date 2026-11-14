@@ -1,5 +1,23 @@
 [
   {
+    "n": 961,
+    "judul": "Profil & kartu rapi: lencana jelas, baris Selesai utuh, toast isi arti",
+    "poin": "Lencana terkunci kini redup, bergembok, dan jelas syaratnya.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 969,
+    "judul": "Baca ulang aman: bisa Urungkan + ajakan di halaman terakhir",
+    "poin": "Mockup sudah dibuat: halaman terakhir dan layar sesudah Baca ulang.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 911,
+    "judul": "Halaman dibaca jujur: ganti huruf/layout tak menghitung dobel",
+    "poin": "Hitungan halaman dibaca kini jujur: ganti huruf atau layar tidak menambah angka.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 947,
     "judul": "[peta 88] Tamat & Profil konsisten: Baca ulang, satu info kata, ke Kata",
     "poin": "Layar Tamat kini rapi: jumlah kata sekali, ada tombol Lihat kata.",
@@ -159,24 +177,6 @@
     "n": 872,
     "judul": "Sheet arti kata: tak pernah kosong, ada 'Memuat…' & tombol Coba lagi",
     "poin": "Sheet arti kata sudah selalu tampil, dengan tulisan \"Lagi nyari arti…\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 870,
-    "judul": "Angka 'kata disimpan' sama di Home, Profil, Minggu ini & Tamat",
-    "poin": "Angka kata disimpan sekarang sama di Home, Profil, Minggu ini, dan Tamat.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 868,
-    "judul": "Lencana Home/Profil: nama tak patah 5 baris, jelas bisa digeser",
-    "poin": "Nama lencana tidak lagi patah lima baris; kartu dilebarkan dan rapi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 866,
-    "judul": "Home jujur: halaman minggu ini tak dobel, rekor streak, toast",
-    "poin": "Angka 'Minggu ini' jujur: halaman yang dibaca ulang tak dihitung dobel.",
     "tgl": "2026-11-13"
   }
 ]
