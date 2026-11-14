@@ -347,6 +347,15 @@ function renderAcct() {
   slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Akun ${esc(db.acct.nick)}">${esc(initial(db.acct.nick))}</button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
   $('#acctBtn').onclick = openAccount;
 }
+/* pesan gagal masuk/daftar: ramah + satu langkah lanjut */
+function friendlyAuthError(err) {
+  const t = String((err && err.message) || '');
+  if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return 'Lagi tak bisa nyambung. Cek internet, lalu coba lagi. Bacaanmu tetap aman di HP.';
+  if (/username atau password salah|tidak dikenal/i.test(t)) return 'Username atau password belum pas. Cek ejaannya dan coba lagi, atau ketuk Daftar untuk bikin akun baru.';
+  if (/sudah dipakai/i.test(t)) return 'Username itu sudah dipakai. Coba username lain, atau ketuk Masuk kalau itu akunmu.';
+  if (/username 3|username ini khusus|password minimal/i.test(t)) return t;
+  return 'Belum berhasil. Coba lagi sebentar lagi.';
+}
 function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
@@ -379,17 +388,20 @@ function openAccount(mode) {
         <label class="eyebrow" style="display:block;margin-top:14px">Username<input id="aU" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, angka, _" required></label>
         ${m === 'daftar' ? `<label class="eyebrow" style="display:block;margin-top:12px">Nama panggilan<input id="aN" maxlength="24" placeholder="Tampil di leaderboard"></label>` : ''}
         <label class="eyebrow" style="display:block;margin-top:12px">Password<input id="aP" type="password" name="password" autocomplete="${m === 'masuk' ? 'current-password' : 'new-password'}" placeholder="min. 6 karakter" required></label>
+        <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden></div>
         <div class="row"><button class="pri" type="submit" id="aGo">${m === 'masuk' ? 'Masuk' : 'Daftar & masuk'}</button></div>
       </form>`);
     $$('#aMode button').forEach(b => b.onclick = () => { m = b.dataset.v; draw(); });
+    const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; el.textContent = ''; } };
+    $$('#aForm input').forEach(i => i.addEventListener('input', clearErr));
     $('#aForm').onsubmit = async e => {
-      e.preventDefault(); const bt = $('#aGo'); bt.disabled = true;
+      e.preventDefault(); const bt = $('#aGo'); bt.disabled = true; clearErr();
       try {
         const body = { username: $('#aU').value.trim(), password: $('#aP').value };
         if (m === 'daftar') body.nick = ($('#aN').value || '').trim();
         await afterLogin(await api(m === 'masuk' ? '/login' : '/signup', { method: 'POST', body }));
         if (m === 'daftar') { sfx('win'); confetti(50); }
-      } catch (err) { toast(err.message, 5000); bt.disabled = false; }
+      } catch (err) { const el = $('#aErr'); if (el) { el.textContent = friendlyAuthError(err); el.hidden = false; } else toast(friendlyAuthError(err), 5000); bt.disabled = false; }
     };
   };
   draw();
