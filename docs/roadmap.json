@@ -725,6 +725,14 @@
       "nama": "Profil: Rak buku dengan tema & susunan sesuai selera pengguna, tahap 1 lokal (#967)",
       "dokumen": "docs/spesifikasi-profil-rak-tema.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 96,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Penanda 'N kata siap diulang' di Home + kabar sisa kartu + pesan jadwal rapi (#955)",
+      "dokumen": "docs/riset-kartu-latihan-konteks.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
