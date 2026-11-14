@@ -164,6 +164,8 @@ body.reading::after{display:none}
 .fw-nudge{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:12px 0 -8px;padding:12px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);font:700 14px/18px var(--font-body,inherit);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .fw-nudge svg.i{flex:none;width:20px;height:20px}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
+.due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
