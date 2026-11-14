@@ -757,6 +757,31 @@
       "nama": "Tombol 'Muat ulang versi terbaru' + baris versi app di Pengaturan (#999)",
       "dokumen": "docs/spesifikasi-muat-ulang-paksa-999.md",
       "status": "selesai (#1018)"
+    },
+    {
+      "no": 100,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Angka Home & Minggu ini cocok: halaman unik, satu hitungan kata, persen/XP tanpa loncat (#1015)",
+      "dokumen": "docs/spesifikasi-angka-home-cocok-1015.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 101,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Ganti sampul buku sendiri dari foto/galeri: menu ⋯ di kartu buku, Ganti/Hapus sampul (#1009)",
+      "dokumen": "docs/spesifikasi-ganti-sampul-1009.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 102,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal + 'Ulang kata baru' di tab Kata (#1016)",
+      "dokumen": "docs/riset-kartu-ingat-dulu.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) 36 butir, 6 jenis sumber. Mockup: docs/mockup-1016.html."
     }
   ],
   "prioritas": [
