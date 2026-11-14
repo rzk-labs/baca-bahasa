@@ -463,6 +463,53 @@ async function openFriends() {
   }, 300); };
   try { const r = await api('/teman'); $('#frMine').innerHTML = r.users.length ? r.users.map(frRow).join('') : 'Belum ada.'; wireRows($('#frMine')); } catch (e) { $('#frMine').textContent = e.message; }
 }
+/* ---------- Rak buku di Profil (#972, tahap 1: lokal saja) ----------
+   db.rakTema (nama tema), db.rak = { urut, susun:[idBuku] }. Data lama tanpa kolom = bawaan; tidak ikut sinkron. */
+const RAK_TEMA = ['Kayu hangat', 'Plum Noir', 'Biru Es', 'Polos'];
+const RAK_URUT = [['terakhir', 'Terakhir dibaca'], ['az', 'Judul A–Z'], ['bahasa', 'Bahasa'], ['susun', 'Susunan sendiri']];
+const RAK_MAX = 12;
+let rakSemua = false;
+function rakState() { /* migrasi aman: nilai rusak/lama jadi bawaan */
+  if (!RAK_TEMA.includes(db.rakTema)) db.rakTema = 'Plum Noir';
+  if (!db.rak || typeof db.rak !== 'object' || Array.isArray(db.rak)) db.rak = {};
+  if (!RAK_URUT.some(u => u[0] === db.rak.urut)) db.rak.urut = 'terakhir';
+  const ids = new Set((db.books || []).map(b => b.id));
+  db.rak.susun = (Array.isArray(db.rak.susun) ? db.rak.susun : []).filter((id, i, a) => ids.has(id) && a.indexOf(id) === i); /* buku dihapus → ikut dibuang */
+  return db.rak;
+}
+function rakList() {
+  const r = rakState(), L = (db.books || []).slice();
+  if (r.urut === 'az') L.sort((a, b) => String(a.title).localeCompare(String(b.title), 'id'));
+  else if (r.urut === 'bahasa') L.sort((a, b) => String(a.lang).localeCompare(String(b.lang)) || (b.opened || 0) - (a.opened || 0));
+  else if (r.urut === 'susun') { const ix = id => { const i = r.susun.indexOf(id); return i < 0 ? 1e6 : i; }; L.sort((a, b) => ix(a.id) - ix(b.id) || (b.opened || 0) - (a.opened || 0)); }
+  else L.sort((a, b) => (b.opened || 0) - (a.opened || 0));
+  return L;
+}
+function rakHtml() {
+  const r = rakState(), L = rakList(), tm = ['kayu', 'plum', 'es', 'polos'][RAK_TEMA.indexOf(db.rakTema)];
+  const head = `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Rak</h2><span class="mut sm">${L.length} buku</span></div>`;
+  if (!L.length) return `<div id="rakBox">${head}<div class="rk-empty"><b>Rak masih kosong</b><span class="mut sm">Buku yang kamu tambah akan berdiri di sini sebagai sampul.</span><button class="pri" id="rkAdd">Tambah cerita pertamamu</button></div></div>`;
+  const show = rakSemua ? L : L.slice(0, RAK_MAX);
+  const grp = [['Sedang dibaca', b => pctOf(b) > 0 && pctOf(b) < 100], ['Tamat', b => pctOf(b) >= 100], ['Belum dibuka', b => pctOf(b) <= 0]];
+  const bk = b => { const p = pctOf(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p}%">${cover(b)}${p >= 100 ? '<span class="rk-tag">Tamat</span>' : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p}%</span></button>`; };
+  const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
+  const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
+  return `<div id="rakBox">${head}
+    <div class="rk-chips" role="group" aria-label="Tema rak">${RAK_TEMA.map(t => `<button class="rk-chip${t === db.rakTema ? ' on' : ''}" data-rt="${esc(t)}" aria-pressed="${t === db.rakTema}">${t === db.rakTema ? '✓ ' : ''}${t}</button>`).join('')}</div>
+    <div class="rk-chips" role="group" aria-label="Urutan rak">${RAK_URUT.map(([k, n]) => `<button class="rk-chip${k === r.urut ? ' on' : ''}" data-ru="${k}" aria-pressed="${k === r.urut}">${n}</button>`).join('')}</div>
+    <div class="rk-wrap rk-${tm}">${shelves}</div>
+    ${L.length > RAK_MAX ? `<button class="sec rk-more" id="rkMore">${rakSemua ? 'Tampilkan lebih sedikit' : `Lihat semua (${L.length})`}</button>` : ''}${susun}</div>`;
+}
+function wireRak() {
+  const box = $('#rakBox'); if (!box) return;
+  const redo = () => { const y = $('#sheet').scrollTop; box.outerHTML = rakHtml(); wireRak(); $('#sheet').scrollTop = y; };
+  box.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { db.rakTema = b.dataset.rt; save(); redo(); });
+  box.querySelectorAll('[data-ru]').forEach(b => b.onclick = () => { const r = rakState(); if (b.dataset.ru === 'susun' && r.urut !== 'susun') r.susun = rakList().map(x => x.id); r.urut = b.dataset.ru; save(); redo(); });
+  box.querySelectorAll('[data-rn]').forEach(b => b.onclick = () => { const r = rakState(), a = rakList().map(x => x.id), i = a.indexOf(b.dataset.rn), j = i + (+b.dataset.d); if (i < 0 || j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; r.susun = a; save(); redo(); });
+  box.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { db.cur = b.dataset.rb; save(); closeSheet(); setTab('baca'); });
+  const m = $('#rkMore'); if (m) m.onclick = () => { rakSemua = !rakSemua; redo(); };
+  const ad = $('#rkAdd'); if (ad) ad.onclick = () => { closeSheet(); setTab('rak'); };
+}
 async function openProfile(username) {
   openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
   try {
@@ -473,15 +520,17 @@ async function openProfile(username) {
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP gabungan semua perangkat</div>` : ''}</div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP · ${xpRinci()}</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero ? `<div class="mut sm" style="margin-top:10px">${rdDone.length && !rdNow.length ? 'Mulai buku lain yuk, cari kata baru.' : NUDGE_TXT}</div>` : ''}
       <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Mulai buku lain yuk, ketuk Koleksi di Home.' : 'Belum ada buku yang dibuka.'}</div>`}
       ${rdDone.length ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
+      ${p.self ? rakHtml() : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
       <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span></div>`).join('')}</div>` : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
+    if (p.self) wireRak();
     const f = $('#pfFol'); if (f) f.onclick = async () => { f.disabled = true; try { await api('/ikuti/' + encodeURIComponent(p.username), { method: p.diikuti ? 'DELETE' : 'POST' }); toast(p.diikuti ? `Berhenti mengikuti ${p.nick}.` : `Kamu mengikuti ${p.nick}.`); openProfile(p.username); if ($('#frHome')) homeFriends(); } catch (e) { toast(e.message); f.disabled = false; } };
   } catch (e) { $('#pfBody').textContent = e.message; }
 }

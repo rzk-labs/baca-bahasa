@@ -221,6 +221,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .tb input{flex:1;min-width:0}
 .tb select{width:auto;flex:none}
 @media (max-width:759px){.tb{flex-wrap:wrap}.tb input[type=search]{flex:1 1 100%;min-width:0;width:100%;font-size:16px;min-height:44px}.tb select{min-height:44px;font-size:16px}.board{grid-auto-columns:minmax(84vw,1fr)}.sumt{flex:1 1 100%!important;max-width:100%}.chip{min-height:32px;display:inline-flex;align-items:center}.btn{min-height:44px}.row{flex-wrap:wrap}.main{padding-left:12px;padding-right:12px}}
+.upd{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;pointer-events:none;opacity:.9}.upd[hidden]{display:none}
 </style></head><body>
 <div class="app">
   <aside class="side">
@@ -235,6 +236,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
   </main>
 </div>
 <nav class="tabbar" id="tabbar"></nav>
+<div class="upd" id="upd" role="status" hidden>memperbarui…</div>
 <div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
 <script>
 const $=s=>document.querySelector(s), V=$('#view');
@@ -322,11 +324,11 @@ async function setujuiMassal(){
   MASSAL={jalan:true,i:0,total:daftar.length};const gagal=[];let ok=0;clearTimeout(timer);barMassal();
   for(const n of daftar){
     MASSAL.i=ok+gagal.length+1;barMassal();
-    try{await call('/tasks/'+n+'/setujui',{});ok++;PIL.delete(n)}catch(e){gagal.push({n,alasan:e.message||'Gagal'})}
+    try{await call('/tasks/'+n+'/setujui',{});ok++;PIL.delete(n);patchTugas(n,{status:'menuju'})}catch(e){gagal.push({n,alasan:e.message||'Gagal'})}
   }
   MASSAL={selesai:true,ok,gagal};
-  try{await load()}catch(e){}
-  if(cur==='papan')papan(true);else if(cur==='markas')markas(true);
+  // kartu diubah langsung dari data lokal; data asli menyusul di belakang
+  if(cur==='papan'){papan(true);segarkan('papan',papan)}else if(cur==='markas'){markas(true);segarkan('markas',markas)}
 }
 // Ketuk angka "menunggu kamu": buka Papan di kolom Siap dicek
 let FOKUSSIAP=false;
@@ -356,10 +358,18 @@ function go(k,arg){clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
   if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
-async function load(){HQ=await call('/hq');try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}return HQ}
+// Penanda kecil "memperbarui…" selama ada segar-ulang di belakang
+let SIBUK=0;function upd(d){SIBUK=Math.max(0,SIBUK+d);const u=$('#upd');if(u)u.hidden=!SIBUK}
+async function load(){upd(1);try{HQ=await call('/hq')}finally{upd(-1)}try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}return HQ}
+function simpanHQ(){try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}}
+// Ubah satu kartu di data lokal saja (tanpa muat ulang seluruh Markas)
+function patchTugas(n,d){const t=HQ&&HQ.tasks&&HQ.tasks.find(x=>x.n===n);if(t){Object.assign(t,d);simpanHQ()}}
+// Tab disembunyikan = segar-ulang berhenti; tab kembali dibuka = segarkan sekali
+document.addEventListener('visibilitychange',()=>{if(document.hidden||!tok||$('#veil').classList.contains('on'))return;
+  if(cur==='markas')segarkan('markas',markas);else if(cur==='papan')segarkan('papan',papan);else if(cur==='hasil')hasilKerja('segar')});
 // Tampil instan dari data tersimpan, lalu segarkan di belakang layar (hanya gambar ulang bila berubah)
 function segarkan(k,fn){const v=VIEW,lama=JSON.stringify(HQ);load().then(()=>{if(v===VIEW&&cur===k&&JSON.stringify(HQ)!==lama){const ae=document.activeElement;if(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))return;fn(true)}}).catch(()=>{})}
-function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
+function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;if(document.hidden){auto(fn);return}const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
@@ -462,11 +472,23 @@ function daftarKerja(){
   <div class="grid" style="margin-top:12px">${aktif.length?aktif.map(baris).join(''):'<div class="empty">Tidak ada.</div>'}</div>
   ${!BKF&&sel.length?`<details class="more"><summary>Lihat yang selesai (${sel.length})</summary><div class="grid" style="margin-top:10px">${sel.map(baris).join('')}</div></details>`:''}`;
 }
+// Laporan: data lama tampil dulu, lalu disegarkan di belakang. again=true: gambar ulang dari data (saringan); 'segar': ambil baru.
+let LASTH=null;
 async function hasilKerja(again){
-  if(!again)skel();
-  let L;try{L=await call('/hasil')}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
+  if(again===true&&LASTH)return tampilHasil(LASTH);
+  const v=VIEW;
+  if(LASTH)tampilHasil(LASTH);else skel();
+  let L;upd(1);try{L=await call('/hasil')}catch(e){if(!LASTH&&v===VIEW&&cur==='hasil')V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}finally{upd(-1)}
+  if(cur!=='hasil'||v!==VIEW)return;
+  const tanpaHQ=!HQ;if(tanpaHQ){try{await load()}catch(e){}}
+  const ubah=tanpaHQ||JSON.stringify(L)!==JSON.stringify(LASTH);LASTH=L;
+  if(!ubah&&V.firstChild&&!V.querySelector('.skel'))return jadwalHasil(v);
+  const ae=document.activeElement;if(LASTH&&again&&ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))return jadwalHasil(v);
+  const y=scrollY;tampilHasil(L);if(again)scrollTo(0,y)
+}
+function jadwalHasil(v){clearTimeout(timer);timer=setTimeout(function t(){if(v!==VIEW||cur!=='hasil')return;if(document.hidden){timer=setTimeout(t,30000);return}hasilKerja('segar')},30000)}
+function tampilHasil(L){
   if(cur!=='hasil')return;
-  if(!HQ){try{await load()}catch(e){}}
   const stK=t=>t.status==='ditolak'?'gagal':t.status;
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
@@ -513,7 +535,7 @@ async function hasilKerja(again){
   <div class="row" style="margin:16px 0 4px;flex-wrap:wrap;gap:8px">${seg('kerja','Daftar kerja')}${seg('baru','Hasil terbaru')}${seg('tester','Masukan tester '+mas.length)}</div>
   ${isi}`;
   if($('#qt'))pasangAlat(()=>hasilKerja(true));
-  clearTimeout(timer);timer=setTimeout(()=>{if(cur==='hasil'&&!(document.activeElement&&document.activeElement.id==='qt'))hasilKerja(true)},30000);
+  jadwalHasil(VIEW);
 }
 
 // Cari, saring, urutkan tugas (dipakai Papan & Hasil)
@@ -621,9 +643,24 @@ function hasil(riwayat){
 }
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
+// Detail tugas: tugas+komentar+PR datang bersamaan dari server; daftar file PR menyusul (disimpan di FILES agar buka kedua kali instan)
+const FILES={},DET={};
 async function detail(n,again){
   clearTimeout(timer);if(!again){VIEW++;scrollTo(0,0)}const mv=VIEW;
-  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW)V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}if(mv!==VIEW)return;
+  // data lama tampil dulu, segarkan di belakang
+  if(!again&&DET[n]){tampilDetail(DET[n],n,mv);upd(1)}
+  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW&&!DET[n])V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}finally{if(!again&&DET[n])upd(-1)}if(mv!==VIEW)return;
+  DET[n]=t;patchTugas(n,{status:t.status,qa:t.qa,diubah:t.diubah,terbuka:t.terbuka});
+  tampilDetail(t,n,mv);
+  if(t.pr&&!(t.pr.n in FILES)){
+    try{const f=await call('/pr/'+t.pr.n+'/files');FILES[t.pr.n]=f.files||[]}catch(e){return}
+    const ae=document.activeElement;
+    if(mv===VIEW&&!(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))&&!document.querySelector('#mock iframe')&&!document.querySelector('details[open]')){const y=scrollY;tampilDetail(t,n,mv);scrollTo(0,y)}
+  }
+}
+function tampilDetail(t,n,mv){
+  clearTimeout(timer);
+  t={...t,files:t.pr&&FILES[t.pr.n]||[]};
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
   const h=hasil(t.riwayat);
@@ -664,13 +701,26 @@ async function detail(n,again){
   </div>`;
   if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
   V.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{clearTimeout(timer);dokumen(b.dataset.doc,ref,n)});
-  const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
+  // Optimistis: kartu langsung berubah; bila gagal dikembalikan dengan pesan jelas. Sukses: perbarui kartu ini saja (bukan seluruh Markas).
+  const act=async(a,b,el)=>{
+    const prev=DET[n]||t,baru={setujui:'menuju',tolak:'ditolak',revisi:'dikerjakan'}[a];
+    el.disabled=true;$('#e').textContent='';
+    const opt={...prev,status:baru};
+    if(a==='revisi')opt.riwayat=[...prev.riwayat,{dari:'kamu',teks:'Revisi: '+((b&&b.isi)||''),waktu:new Date().toISOString()}];
+    DET[n]=opt;patchTugas(n,{status:baru});tampilDetail(opt,n,mv);
+    try{await call('/tasks/'+n+'/'+a,b||{})}
+    catch(e){
+      DET[n]=prev;patchTugas(n,{status:prev.status});tampilDetail(prev,n,mv);
+      if(a==='revisi'&&$('#rv')){$('#rvbox').style.display='block';$('#rv').value=(b&&b.isi)||''}
+      const er=$('#e');if(er)er.textContent='Gagal, tampilan dikembalikan: '+(e.message||'coba lagi');return}
+    try{const t2=await call('/tasks/'+n);DET[n]=t2;patchTugas(n,{status:t2.status,qa:t2.qa,diubah:t2.diubah,terbuka:t2.terbuka});if(mv===VIEW)tampilDetail(t2,n,mv)}catch(e){}
+  };
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
   if($('#no'))$('#no').onclick=e=>{const b=e.currentTarget;if(b.dataset.y)act('tolak',0,b);else{b.dataset.y=1;b.textContent='Yakin tolak?'}};
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';if(innerWidth>700)$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
-  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{if(mv!==VIEW)return;timer=setTimeout(async()=>{try{if(mv!==VIEW)return;const t2=await call('/tasks/'+n);if(mv!==VIEW)return;if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
+  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.pr&&t.pr.n]);const poll=()=>{if(mv!==VIEW)return;timer=setTimeout(async()=>{try{if(mv!==VIEW)return;if(document.hidden){poll();return}const t2=await call('/tasks/'+n);if(mv!==VIEW)return;if(JSON.stringify([t2.status,t2.riwayat.length,t2.pr&&t2.pr.n])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
 }
 /* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
 function kecilkan(f){return new Promise(ok=>{
