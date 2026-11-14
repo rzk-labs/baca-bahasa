@@ -73,6 +73,7 @@
 - [arti-kata-sinyal-lemah](riset-arti-kata-sinyal-lemah.md)
 - [baca-malam-offline](riset-baca-malam-offline.md)
 - [bacaan-pemula-legal](riset-bacaan-pemula-legal.md)
+- [cara-baca-default-mandarin](riset-cara-baca-default-mandarin.md)
 - [bahasa-rtl-thai-hindi](riset-bahasa-rtl-thai-hindi.md)
 - [bantuan-arti-bertahap](riset-bantuan-arti-bertahap.md)
 - [batas-impor-hp](riset-batas-impor-hp.md)
