@@ -1,5 +1,11 @@
 [
   {
+    "n": 1055,
+    "judul": "Profil rapi: 'Sedang dibaca' tak dobel, chip urutan/tema dilipat",
+    "poin": "Profil kini menampilkan \"Sedang dibaca\" sekali saja, lewat rak yang bisa diketuk.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1053,
     "judul": "Header Baca: tombol speaker 'Dengar' bertulisan, tak jadi ikon tanpa nama",
     "poin": "Tombol speaker di atas halaman baca sekarang bertulisan \"Dengar\".",
@@ -171,12 +177,6 @@
     "n": 971,
     "judul": "[peta 96] Home: penanda 'N kata siap diulang' + kabar sisa kartu",
     "poin": "Di Home sekarang ada tulisan \"N kata siap diulang\"; diketuk langsung ke latihan kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 956,
-    "judul": "Header Baca HP: Dengar kembali terlihat, tombol tak mepet tepi",
-    "poin": "Tombol Dengar muncul lagi di header baca HP, sebagai ikon.",
     "tgl": "2026-11-14"
   }
 ]
