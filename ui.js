@@ -155,6 +155,8 @@ function confetti(n = 70) {
 }
 /* asal XP singkat ('dari halaman, kata, tamat'); hanya tampilan, tak pernah mengubah db.xp */
 const xpAsal = () => { const s = db.xpSrc || {}, g = { halaman: s.page, kata: (s.save || 0) + (s.look || 0) + (s.rem || 0), tamat: s.done, ngomong: s.speak }; const t = Object.keys(g).filter(k => g[k] > 0).sort((a, b) => g[b] - g[a]).slice(0, 3); return t.length ? 'dari ' + t.join(', ') : ''; };
+/* rincian XP per sumber untuk Profil; hanya tampilan, bagian nol disembunyikan. 'Akun lain' = sisa XP yang tak tercatat di perangkat ini */
+const xpRinci = () => { const s = db.xpSrc || {}, g = [['Halaman', s.page], ['Kata', (s.save || 0) + (s.look || 0) + (s.rem || 0)], ['Tamat', s.done], ['Ngomong', s.speak]]; const known = g.reduce((t, x) => t + (x[1] || 0), 0); g.push(['Akun lain', Math.max(0, (db.xp || 0) - known)]); return g.filter(x => x[1] > 0).map(x => x[0] + ' ' + x[1]).join(' · ') || 'belum ada'; };
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 /* SATU sumber XP/level: Home, Profil, header, popup */
 const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
@@ -1097,7 +1099,7 @@ function restartBook(b) {
   const ts = tamatSeen;
   tamatSeen = ''; b.pos = 0; b.si = 0; b.pct = 1; b.frac = 0; b.fracPos = 0; RD.quiet = true; save();
   /* doneAt tidak disentuh: XP tamat tak dobel, Urungkan pun tak mengubahnya */
-  setTimeout(() => toast('Mulai dari awal', 7000, { label: 'Urungkan', fn: () => { Object.assign(b, prev); tamatSeen = ts; RD.quiet = true; save(); db.cur = b.id; setTab('baca'); viewBaca(); } }), 200);
+  toast('Mulai dari awal. XP tamat tidak dihitung lagi.', 12000, { label: 'Urungkan', fn: () => { Object.assign(b, prev); tamatSeen = ts; RD.quiet = true; save(); db.cur = b.id; setTab('baca'); viewBaca(); } });
 }
 /* saran berikutnya: buku belum selesai, bahasa sama, panjang mirip/sedikit lebih panjang (belum ada data level buku) */
 function nextBooks(b) {
@@ -1321,7 +1323,7 @@ async function viewBaca() {
     $$('#sheet .chi').forEach(x => x.onclick = () => { const i = +x.dataset.ch; closeSheet(); if (i !== b.pos) { b.pos = i; b.si = 0; RD.quiet = true; save(); viewBaca(); } });
     const cur = $('#sheet .chi.on'); if (cur) cur.scrollIntoView({ block: 'center' });
   };
-  $('#pv').onclick = () => turn(-1); $('#nx').onclick = () => { const bk = book(); if ($('#nx').dataset.ulang && bk) { restartBook(bk); viewBaca(); } else turn(1); };
+  $('#pv').onclick = () => turn(-1); $('#nx').onclick = () => { const bk = book(); if ($('#nx').dataset.ulang && bk) toast('Mulai dari halaman pertama lagi?', 8000, { label: 'Ya, mulai dari awal', fn: () => { restartBook(bk); viewBaca(); } }); else turn(1); };
   const vp = $('#vp'); let tx = null, moved = false;
   let lpT, lpT2, lpEl = null, lpDone = false;
   const lpStop = () => { clearTimeout(lpT); clearTimeout(lpT2); lpT = 0; if (lpEl) { lpEl.classList.remove('press'); lpEl = null; } };
