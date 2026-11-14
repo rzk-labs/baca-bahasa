@@ -1,5 +1,11 @@
 [
   {
+    "n": 1031,
+    "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
+    "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1029,
     "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
     "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
@@ -171,12 +177,6 @@
     "n": 913,
     "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
     "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 915,
-    "judul": "Sheet Tamat rapi: info tak dobel, buku sendiri dulu, 'Baca ulang'",
-    "poin": "Layar Tamat sekarang rapi: jumlah kata cuma muncul sekali.",
     "tgl": "2026-11-13"
   }
 ]
