@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 104,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu Minggu ini: tombol Sembunyikan + Profil konsisten (#1036)",
+      "dokumen": "docs/desain-minggu-ini-sembunyikan.md",
+      "status": "selesai (#1036)"
+    },
+    {
       "no": 9,
       "peran": "developer",
       "prioritas": "P0",

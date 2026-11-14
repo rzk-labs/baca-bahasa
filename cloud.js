@@ -515,7 +515,7 @@ async function openProfile(username) {
   try {
     const p = await api('/u/' + encodeURIComponent(username));
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
-    if (p.self) p.reading = profileData().reading; /* persen terbaru dari buku lokal */
+    if (p.self) p.reading = rakList().map(b => ({ t: b.title, lang: b.lang, pct: pctOf(b) })).filter(r => r.pct > 0); /* sumber sama dengan rak: tak pernah bertentangan */
     const zero = !(+p.kata7 > 0);
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
