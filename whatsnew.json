@@ -1,5 +1,11 @@
 [
   {
+    "n": 986,
+    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
+    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 984,
     "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
     "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
@@ -171,12 +177,6 @@
     "n": 896,
     "judul": "Intip kata bab: tiap kata selalu ada arti, tanpa teks janggal",
     "poin": "Kartu Intip kata bab kini selalu ada arti atau tulisan ajakan.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 894,
-    "judul": "XP jujur: tak naik sendiri; pesan Tamat sesuai jumlah kata disimpan",
-    "poin": "Baca ulang halaman yang sama tak lagi menambah XP maupun hitungan halaman.",
     "tgl": "2026-11-13"
   }
 ]
