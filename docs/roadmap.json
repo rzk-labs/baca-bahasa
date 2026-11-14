@@ -708,7 +708,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup visual di setiap hasil yang perlu disetujui (#957)",
       "dokumen": "docs/spesifikasi-hq-mockup-persetujuan.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#997)"
     },
     {
       "no": 94,
@@ -741,6 +741,14 @@
       "nama": "Evaluasi e2e: rapikan akhir buku (sheet Tamat, bar bawah, Profil, lencana, petunjuk ketuk kata) (#983)",
       "dokumen": "docs/desain-evaluasi-e2e-983.md",
       "status": "selesai (#998)"
+    },
+    {
+      "no": 98,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Satu istilah 'diulang' + titik pengingat kata siap diulang di header Baca (#990)",
+      "dokumen": "docs/riset-pengingat-ulas-di-baca.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [

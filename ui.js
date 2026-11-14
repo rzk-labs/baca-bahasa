@@ -1653,7 +1653,9 @@ function endCard(b, last) {
   /* tampil hanya bila ruang kosong di bawah teks cukup */
   let bottom = 0; const vr = vp.getBoundingClientRect();
   try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(x => { if (x.width > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); }); } catch (e) { }
-  if (bottom && vr.bottom - bottom < c.offsetHeight + 16) c.remove();
+  if (bottom && vr.bottom - bottom < c.offsetHeight + 16) { c.remove(); return; }
+  /* #994: kartu menempel dekat akhir teks, bukan menggantung di dasar layar */
+  if (bottom) { c.style.top = Math.round(bottom - vr.top + 12) + 'px'; c.style.bottom = 'auto'; }
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
 let pfIdle = 0;
