@@ -252,7 +252,7 @@ function terapkan(){const d=document.documentElement,P=PREF;
   P.gerak==='kurang'?d.setAttribute('data-gerak','kurang'):d.removeAttribute('data-gerak');
   try{localStorage.setItem('kd_pref',JSON.stringify(P))}catch(e){}}
 terapkan();
-let HQ=null, timer=null, cur='markas';
+let HQ=null, timer=null, cur='markas', VIEW=0;
 const IC={
   markas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
   papan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>',
@@ -353,12 +353,12 @@ function navs(){
   const sb=`<button onclick="pengaturan()" aria-label="Pengaturan baca">${IC.set}<span>Pengaturan</span></button>`;
   $('#sidenav').innerHTML+=sb;$('#tabbar').innerHTML+=sb;
 }
-function go(k,arg){clearTimeout(timer);cur=k;navs();scrollTo(0,0);
+function go(k,arg){clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
   if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 async function load(){HQ=await call('/hq');return HQ}
-function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{const lama=JSON.stringify(HQ);await load();if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
+function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
@@ -621,8 +621,8 @@ function hasil(riwayat){
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
 async function detail(n,again){
-  clearTimeout(timer);if(!again)scrollTo(0,0);
-  let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
+  clearTimeout(timer);if(!again){VIEW++;scrollTo(0,0)}const mv=VIEW;
+  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW)V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}if(mv!==VIEW)return;
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
   const h=hasil(t.riwayat);
@@ -669,7 +669,7 @@ async function detail(n,again){
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
-  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{timer=setTimeout(async()=>{try{const t2=await call('/tasks/'+n);if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
+  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{if(mv!==VIEW)return;timer=setTimeout(async()=>{try{if(mv!==VIEW)return;const t2=await call('/tasks/'+n);if(mv!==VIEW)return;if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
 }
 /* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
 function kecilkan(f){return new Promise(ok=>{
