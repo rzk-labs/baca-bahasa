@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #407 - Nada brand A</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#D7EFFF;color:#351E28;font:400 15px/1.45 Inter,system-ui,"Segoe UI",Roboto,sans-serif;width:390px;margin:0;padding:16px 14px 28px}
+h1,h2,h3{font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;font-weight:800}
+.top{font-size:12px;color:#5F5059;margin-bottom:14px}.top b{color:#351E28}
+h1{font-size:22px;margin-bottom:2px}
+.sec{margin-top:22px}.sec>h3{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#5F5059;margin-bottom:8px}
+.pair{display:flex;flex-direction:column;gap:8px}
+.tag{display:inline-block;font-size:11px;font-weight:600;border-radius:9999px;padding:2px 9px;margin-bottom:6px}
+.old .tag{background:#E7DADF;color:#351E28}.new .tag{background:#E9F056;color:#351E28}
+.box{border:1.5px dashed #B2CFE2;border-radius:20px;padding:10px}
+.new .box{border:1.5px solid #351E28}
+.card{background:#FAF7F0;border-radius:16px;padding:14px;text-align:center}
+.card h2{font-size:20px;margin-bottom:4px}.mut{color:#5F5059;font-size:14px}
+.row{display:flex;gap:8px;justify-content:center;margin-top:10px}
+button{font:600 14px Inter,system-ui,sans-serif;border:0;border-radius:9999px;padding:10px 18px;background:#351E28;color:#FAF7F0}
+button.sec2{background:transparent;color:#351E28;border:1.5px solid #351E28}
+.hero{background:#FAF7F0;border-radius:16px;padding:14px;text-align:left}
+.hero .mut{margin-bottom:10px}
+.score{background:#FAF7F0;border-radius:16px;padding:14px;text-align:center}
+.score b{font-size:34px;font-family:"Bricolage Grotesque",Inter,sans-serif}
+.toast{background:#351E28;color:#FAF7F0;border-radius:9999px;padding:10px 16px;font-size:14px;text-align:center;margin-top:6px}
+.old .toast{opacity:.75}
+.old .card,.old .hero,.old .score{opacity:.8}
+</style></head><body>
+<div class="top"><b>Keepo #407</b> &middot; Nada brand A: tenang &amp; hangat<br>Mockup statis, teks persis dari diff <code>ui.js</code>. Dashed = Sebelum, solid = Sesudah.</div>
+<h1>Teks yang berubah</h1>
+
+<div class="sec"><h3>1. Hasil latihan bicara (skor)</h3><div class="pair">
+<div class="old"><span class="tag">Sebelum</span><div class="box"><div class="score"><h2>Gas latihan!</h2><div class="mut">Santai, kita latih pelan-pelan.</div></div><div class="score" style="margin-top:8px"><h2>Dikit lagi!</h2><div class="mut">Udah deket. Perhatiin bunyinya ya.</div></div><div class="score" style="margin-top:8px"><h2>Mantap!</h2><div class="mut">Pengucapanmu udah jelas banget.</div></div></div></div>
+<div class="new"><span class="tag">Sesudah</span><div class="box"><div class="score"><h2>Latihan lagi, ya.</h2><div class="mut">Santai, kita latih pelan-pelan.</div></div><div class="score" style="margin-top:8px"><h2>Sedikit lagi.</h2><div class="mut">Sudah dekat. Perhatikan bunyinya ya.</div></div><div class="score" style="margin-top:8px"><h2>Bagus.</h2><div class="mut">Pengucapanmu sudah jelas.</div></div></div></div>
+</div></div>
+
+<div class="sec"><h3>2. Sambutan &amp; tombol beranda</h3><div class="pair">
+<div class="old"><span class="tag">Sebelum</span><div class="box"><div class="hero"><div class="mut">Halo, aku KEEPO! Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</div><div class="row" style="justify-content:flex-start;margin-top:0"><button>Gas baca &rarr;</button><button class="sec2">Buku lain</button></div></div></div></div>
+<div class="new"><span class="tag">Sesudah</span><div class="box"><div class="hero"><div class="mut">Halo, aku Keepo. Aku bantu kamu belajar bahasa asing lewat cerita yang kamu suka.</div><div class="row" style="justify-content:flex-start;margin-top:0"><button>Lanjut baca &rarr;</button><button class="sec2">Buku lain</button></div></div></div></div>
+</div></div>
+
+<div class="sec"><h3>3. Kondisi kosong</h3><div class="pair">
+<div class="old"><span class="tag">Sebelum</span><div class="box"><div class="card"><h2>Belum ada cerita</h2><div class="mut">Masukin cerita dulu yuk, terus kepoin kata-katanya.</div><div class="row"><button>Tambah cerita</button></div></div><div class="card" style="margin-top:8px"><h2>Aman, belum ada!</h2><div class="mut">Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.</div><div class="row"><button>Mulai tantangan</button></div></div></div></div>
+<div class="new"><span class="tag">Sesudah</span><div class="box"><div class="card"><h2>Belum ada cerita</h2><div class="mut">Tambahkan cerita dulu, lalu kepoin kata-katanya.</div><div class="row"><button>Tambah cerita</button></div></div><div class="card" style="margin-top:8px"><h2>Belum ada kata sulit</h2><div class="mut">Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.</div><div class="row"><button>Mulai tantangan</button></div></div></div></div>
+</div></div>
+
+<div class="sec"><h3>4. Toast &amp; perayaan</h3><div class="pair">
+<div class="old"><span class="tag">Sebelum</span><div class="box">
+<div class="toast">Target harian beres!</div><div class="toast">Cerita masuk koleksi!</div><div class="toast">Teksnya masih kosong nih.</div><div class="toast">Makasih masukannya! 💚</div><div class="card" style="margin-top:8px"><h2>Boss kalah!</h2><div class="mut">Semua kata sulit udah kamu lawan</div><div class="row"><button>Lanjut!</button></div></div></div></div>
+<div class="new"><span class="tag">Sesudah</span><div class="box">
+<div class="toast">Target harian tercapai.</div><div class="toast">Cerita masuk koleksi.</div><div class="toast">Teksnya masih kosong.</div><div class="toast">Terima kasih masukannya 💚</div><div class="card" style="margin-top:8px"><h2>Kata sulit teratasi</h2><div class="mut">Semua kata sulit sudah kamu latih</div><div class="row"><button>Lanjut</button></div></div></div></div>
+</div></div>
+</body></html>
