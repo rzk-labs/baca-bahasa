@@ -937,6 +937,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #rLis .rrtl{display:none}
 .rmore .rmob#rmLis{display:none}
 }
+.rtq{display:flex;flex-direction:column;gap:8px;margin-top:12px}.rtq button{width:100%;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 12px}.rtq small{font-size:12px;font-weight:500;opacity:.75}
 .fr-read .fr-top{display:flex;align-items:baseline;gap:6px;min-width:0}
 .fr-read .fr-top .lg{flex:none}
 .fr-read .fr-top b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
