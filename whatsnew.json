@@ -1,5 +1,11 @@
 [
   {
+    "n": 1004,
+    "judul": "[peta 98] Titik kecil \"siap diulang\" di header Baca + lembar Ulang",
+    "poin": "Saat membaca, ada titik kuning kecil kalau ada kata siap diulang.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1000,
     "judul": "[peta 98] Titik pengingat 'siap diulang' di header Baca + satu istilah",
     "poin": "Di halaman Baca ada titik kecil kuning kalau ada kata siap diulang.",
@@ -171,12 +177,6 @@
     "n": 935,
     "judul": "[peta 83] Header Baca HP: judul & tombol Bab tak nabrak, maks 3 tombol",
     "poin": "Header baca di HP kini lega: cuma tombol Kembali, Bab, dan Lainnya.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 939,
-    "judul": "Siap cek di papan , sama menunggu keputusan mu di hasil bedanya apa",
-    "poin": "\"Siap dicek\" = hasil sudah jadi, tinggal kamu setujui, revisi, atau tolak.",
     "tgl": "2026-11-13"
   }
 ]
