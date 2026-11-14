@@ -851,18 +851,23 @@ function bindWod() {
 }
 /* kartu 'Minggu ini' di Beranda: 7 hari terakhir dari data yang ada; tampil sekali per minggu, tanpa hukuman streak */
 function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+/* SATU sumber 'halaman dibaca': halaman unik 7 hari terakhir (db.pgDay), batas atas = total halaman semua buku */
+function pagesWeek() {
+  const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
+  return Math.min(n, db.books.reduce((a, b) => a + (b.total || 0), 0));
+}
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
-  const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
+  const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
-  const pages0 = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
-  const pages = Math.min(pages0, db.books.reduce((n, b) => n + Math.min(b.total || 0, (b.pos || 0) + 1), 0)); /* tak melebihi halaman unik yang benar-benar dibuka */
+  const pages = pagesWeek();
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini">&times;</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Tutup dulu</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
 function streakInfo() {
@@ -1112,7 +1117,7 @@ async function isiArtiRekap(cand) {
 let rekapAktif = null;
 function sessRecap(b) {
   const all = [...SESSW.values()].filter(e => b && e.bid === b.id && e.lang === b.lang);
-  const pgs = b ? [...SESPG].filter(k => k.startsWith(b.id + ':')).length : 0;
+  const pgs = b ? Math.min([...SESPG].filter(k => k.startsWith(b.id + ':')).length, pagesWeek()) : 0; /* tak melebihi 'Minggu ini' */
   if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
   if (b) sesiClear(b.id);

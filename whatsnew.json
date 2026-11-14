@@ -1,5 +1,11 @@
 [
   {
+    "n": 1029,
+    "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
+    "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1026,
     "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
     "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
@@ -171,12 +177,6 @@
     "n": 915,
     "judul": "Sheet Tamat rapi: info tak dobel, buku sendiri dulu, 'Baca ulang'",
     "poin": "Layar Tamat sekarang rapi: jumlah kata cuma muncul sekali.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 944,
-    "judul": "[peta 89] Sheet arti kata rapi: tombol tak patah, Simpan penuh, -eed",
-    "poin": "Sheet arti kata sekarang rapi: tombol tidak patah, Simpan satu baris penuh.",
     "tgl": "2026-11-13"
   }
 ]
