@@ -142,6 +142,7 @@
 - [hitung-ketukan-kata](spesifikasi-hitung-ketukan-kata.md)
 - [hq-brand-v9](spesifikasi-hq-brand-v9.md)
 - [hq-judul-tugas-rapi](spesifikasi-hq-judul-tugas-rapi.md)
+- [hq-mockup-persetujuan](spesifikasi-hq-mockup-persetujuan.md)
 - [hq-pengaturan-baca](spesifikasi-hq-pengaturan-baca.md)
 - [hq-status-kartu-hasil](spesifikasi-hq-status-kartu-hasil.md)
 - [hq-visual-loading](spesifikasi-hq-visual-loading.md)
