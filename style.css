@@ -887,6 +887,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap,.rmk{font-size:13px}
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
+.rdue{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--hl);box-shadow:0 0 0 1.5px var(--ink)}
+.rdue-box{margin:0 0 12px;padding:12px;border-radius:16px;background:var(--color-surface-soft)}.rdue-box>b{display:block;margin-bottom:8px}
 @media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
 /* terjemahan kalimat di tempat (#907): baris kecil tepat di bawah kalimat; ikut warna 4 tema baca */
 .cols .s.itrs{background:var(--color-hl-sentence);border-radius:4px}
@@ -969,4 +971,17 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-up button{flex:none;min-height:36px;padding:0 10px;font-size:12px}
 .rk-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px 10px;background:var(--color-surface-soft);border-radius:14px}
 .fr-read .fr-st{font-size:13px}
+/* #1006: judul buku utuh di Profil: judul satu baris penuh (maks 2 lalu terpotong), bahasa + status di baris bawah */
+.fr-read{display:block}
+.fr-read .fr-ttl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;white-space:normal;overflow-wrap:anywhere;font-size:14px;line-height:19px}
+.fr-read .fr-meta{display:flex;align-items:baseline;gap:6px;margin-top:2px;line-height:16px;white-space:nowrap}
+.fr-read .fr-meta .lg{flex:none;font-size:12px}
+.fr-read .fr-meta .lg::after{content:"·";margin-left:6px}
+.fr-read .fr-meta .fr-st{font-size:12px;margin-left:0}
+.fr-read .bar{margin-top:6px}
+/* #1003 titik pengingat kata siap diulang di tombol menu Baca: kecil, diam, tanpa angka */
+#rMore{position:relative}
+.due-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--hl,#E9F056);box-shadow:0 0 0 1.5px var(--ink,#351E28);pointer-events:none}
+.due-sheet{display:flex;flex-direction:column;gap:12px;padding:4px 2px 8px}
+.due-sheet .btn{min-height:48px}
 .rdue{position:relative}.rdue .rdot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px #351E28;pointer-events:none}
