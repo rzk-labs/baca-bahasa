@@ -1,5 +1,41 @@
 [
   {
+    "n": 994,
+    "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
+    "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 989,
+    "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
+    "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 986,
+    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
+    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 984,
+    "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
+    "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 974,
+    "judul": "[peta 92] Keepo HQ: tombol Perintah tak menutupi isi, tempat tetap",
+    "poin": "Tombol Perintah tidak melayang lagi di HP, jadi tidak menutupi isi.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 972,
+    "judul": "[peta 95] Profil: Rak buku bertema & tersusun sesuai selera (lokal)",
+    "poin": "Profil sekarang punya rak buku: sampul berdiri di papan, lengkap dengan persen.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 981,
     "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
     "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
@@ -141,42 +177,6 @@
     "n": 909,
     "judul": "Baca offline: kata tetap tersimpan, 'arti nyusul' saat sinyal balik",
     "poin": "Offline, kata tetap bisa disimpan dan tampil dengan label \"arti nyusul\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 898,
-    "judul": "Profil: buku tak dobel; Home: sapaan rapi; header Baca mudah diketuk",
-    "poin": "Profil kini menampilkan satu entri per buku, dengan kemajuan tertinggi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 896,
-    "judul": "Intip kata bab: tiap kata selalu ada arti, tanpa teks janggal",
-    "poin": "Kartu Intip kata bab kini selalu ada arti atau tulisan ajakan.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 894,
-    "judul": "XP jujur: tak naik sendiri; pesan Tamat sesuai jumlah kata disimpan",
-    "poin": "Baca ulang halaman yang sama tak lagi menambah XP maupun hitungan halaman.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 892,
-    "judul": "Baca HP: kartu 'Intip kata bab' utuh, tak terpotong; Profil tak dobel",
-    "poin": "Kartu 'Intip kata' di HP sekarang utuh, tidak tertutup header lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 890,
-    "judul": "Tamat & Home: tombol 'Buku lain' satu baris, popup Level tak menimpa",
-    "poin": "Tombol \"Buku lain\" di Home kini satu baris dan seukuran \"Baca ulang\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 888,
-    "judul": "Jumlah bab/bagian tetap sama di Home, Baca & Profil",
-    "poin": "Jumlah bab di Home sekarang dihitung ulang dan sama dengan layar Baca.",
     "tgl": "2026-11-13"
   }
 ]
