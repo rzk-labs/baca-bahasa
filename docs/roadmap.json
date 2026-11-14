@@ -741,6 +741,14 @@
       "nama": "Evaluasi e2e: rapikan akhir buku (sheet Tamat, bar bawah, Profil, lencana, petunjuk ketuk kata) (#983)",
       "dokumen": "docs/desain-evaluasi-e2e-983.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 98,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Satu istilah 'diulang' + titik pengingat kata siap diulang di header Baca (#990)",
+      "dokumen": "docs/riset-pengingat-ulas-di-baca.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
