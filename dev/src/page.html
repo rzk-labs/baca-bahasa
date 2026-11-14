@@ -187,7 +187,7 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 .hero .ttl{font-size:calc(var(--fs)*2);margin:12px 0 6px;line-height:1}
 .say{font-size:calc(var(--fs)*1.2);font-weight:700}
 .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.mock{display:flex;flex-direction:column;align-items:center;gap:10px}.hp{width:min(100%,300px);border:3px solid var(--ink);border-radius:34px;padding:10px;background:#111;box-shadow:0 6px 0 var(--ink)}.hp iframe{display:block;width:100%;height:520px;border:0;border-radius:24px;background:#fff}.hp .poni{width:70px;height:6px;border-radius:9px;background:#333;margin:0 auto 8px}
+.mock{display:flex;flex-direction:column;align-items:center;gap:10px}.hp{width:min(100%,300px);border:3px solid var(--ink);border-radius:34px;padding:10px;background:#111;box-shadow:0 6px 0 var(--ink)}.hpv{overflow:hidden;border-radius:24px;background:#fff}.hp iframe{display:block;border:0;background:#fff;transform-origin:0 0}.hp .poni{width:70px;height:6px;border-radius:9px;background:#333;margin:0 auto 8px}
 .big-b{padding:13px 20px;font-size:16px}
 .lbl{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:20px;margin-bottom:8px}
 .pts{margin:0;padding-left:22px;font-size:calc(var(--fs)*1.13);line-height:1.6}
@@ -358,7 +358,7 @@ function go(k,arg){clearTimeout(timer);cur=k;navs();scrollTo(0,0);
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 async function load(){HQ=await call('/hq');return HQ}
-function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{await load();fn(true)}catch(e){}},sibuk?12000:60000)}
+function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{const lama=JSON.stringify(HQ);await load();if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
@@ -620,8 +620,8 @@ function hasil(riwayat){
 }
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
-async function detail(n){
-  clearTimeout(timer);scrollTo(0,0);
+async function detail(n,again){
+  clearTimeout(timer);if(!again)scrollTo(0,0);
   let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
@@ -661,7 +661,7 @@ async function detail(n){
     <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
   </details>
   </div>`;
-  if($('#mockbtn'))$('#mockbtn').onclick=()=>{$('#mock').innerHTML=`<div class="hp"><div class="poni"></div><iframe src="${MOCK||t.preview}" title="Mockup #${t.n}" loading="lazy"></iframe></div><a class="mut sm" target="_blank" href="${MOCK||t.preview}">Buka layar penuh ↗</a>`};
+  if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
   V.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{clearTimeout(timer);dokumen(b.dataset.doc,ref,n)});
   const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
@@ -669,7 +669,7 @@ async function detail(n){
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
-  if(kerja)timer=setTimeout(()=>detail(n),12000);
+  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{timer=setTimeout(async()=>{try{const t2=await call('/tasks/'+n);if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
 }
 /* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
 function kecilkan(f){return new Promise(ok=>{
