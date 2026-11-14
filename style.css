@@ -391,6 +391,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .aij-rep{min-height:44px;margin-top:6px}
 .rhead{flex:none;min-height:40px;display:flex;align-items:flex-end;justify-content:center;padding:0 64px;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vp{flex:1;position:relative;overflow:hidden;overscroll-behavior:none;touch-action:pan-y;margin:16px var(--reader-mg,24px) 4px;width:calc(100% - 2 * var(--reader-mg,24px));max-width:1180px;align-self:center}
+/* #977: HP sempit, ruang kosong atas/bawah teks dikurangi */
+@media (max-width:430px){.rhead{min-height:30px}.vp{margin-top:8px;margin-bottom:0}}
 .vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--color-border);pointer-events:none}
 .cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:var(--reader-ls,.005em);word-spacing:var(--reader-ws,normal);text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
 .reader.serif .cols.page{font-family:var(--font-reader)}

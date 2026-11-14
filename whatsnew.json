@@ -1,5 +1,11 @@
 [
   {
+    "n": 977,
+    "judul": "Sheet arti kata: buang arti ganda + rapikan ruang kosong bawah teks",
+    "poin": "Arti ganda di sheet kata sudah dibuang, jadi lebih bersih.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 971,
     "judul": "[peta 96] Home: penanda 'N kata siap diulang' + kabar sisa kartu",
     "poin": "Di Home sekarang ada tulisan \"N kata siap diulang\"; diketuk langsung ke latihan kata.",
@@ -171,12 +177,6 @@
     "n": 884,
     "judul": "[peta 82] Keepo HQ: terima gambar di /feedback & perintah ke tim (HQ)",
     "poin": "Markas tim kini bisa terima gambar, dari masukan pengguna maupun perintah ke tim.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 882,
-    "judul": "[peta 82] Tombol Masukan di header Home & baca + lampiran gambar (app)",
-    "poin": "Tombol Masukan sekarang ada di atas layar Home dan saat baca.",
     "tgl": "2026-11-13"
   }
 ]
