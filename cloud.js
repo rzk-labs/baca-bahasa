@@ -103,7 +103,7 @@ function mergeSrv(d) {
   }
   // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
-  if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
+  if ((+d.xp || 0) > (db.xp || 0)) { db.xpSrc = db.xpSrc || {}; db.xpSrc.sync = (db.xpSrc.sync || 0) + (+d.xp - (db.xp || 0)); db.xp = +d.xp; }
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
   if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -324,7 +324,7 @@ async function bkRestore(file) {
       if (!isObj(db.kenal)) db.kenal = {};
       for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
     }
-    if ((+d.xp || 0) > (db.xp || 0)) db.xp = +d.xp;
+    if ((+d.xp || 0) > (db.xp || 0)) { db.xpSrc = db.xpSrc || {}; db.xpSrc.sync = (db.xpSrc.sync || 0) + (+d.xp - (db.xp || 0)); db.xp = +d.xp; }
     if (isObj(d.xpDay)) { if (!isObj(db.xpDay)) db.xpDay = {}; for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } }
     if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } }
     if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -437,7 +437,9 @@ function profileData() {
   return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
 }
 const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };
-const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b>${esc(r.t)}</b> <span class="mut">· ${typeof statusPct === 'function' ? statusPct(r.pct).txt : r.pct + '%'}</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
+/* buang bagian judul yang dobel (mis. nama pengarang tertulis dua kali) */
+const judulRapi = t => { const seen = new Set(); return String(t || '').split(/(\s[-–—|·]\s)/).reduce((o, p, i, a) => { if (i % 2) return o; const k = p.trim().toLowerCase(); if (seen.has(k)) return o; seen.add(k); return o + (o && a[i - 1] ? a[i - 1] : '') + p; }, ''); };
+const bacaBaris = r => `<div class="fr-read"><span class="lg">${esc(langName(r.lang))}</span> <b class="ttl">${esc(judulRapi(r.t))}</b><span class="mut st">${typeof statusPct === 'function' ? statusPct(r.pct).txt : r.pct + '%'}</span><div class="bar"><i style="width:${r.pct}%"></i></div></div>`;
 const frRow = u => `<button class="fr-row" data-u="${esc(u.username)}"><span class="avatar">${esc(initial(u.nick))}</span><span class="fr-in"><b>${esc(u.nick)}</b> <span class="mut sm">@${esc(u.username)}</span>${u.reading && u.reading[0] ? `<span class="sm">${u.reading[0].pct >= 100 ? 'Selesai baca' : 'Sedang baca'} <b>${esc(u.reading[0].t)}</b> · ${typeof statusPct === 'function' ? statusPct(u.reading[0].pct).txt : u.reading[0].pct + '%'}</span>` : '<span class="mut sm">Belum mulai membaca</span>'}</span></button>`;
 const wireRows = root => root.querySelectorAll('[data-u]').forEach(b => b.onclick = () => openProfile(b.dataset.u));
 async function homeFriends() {
@@ -471,13 +473,13 @@ async function openProfile(username) {
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div></div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self && typeof xpAsal === 'function' && xpAsal() ? `<div class="mut sm">${db.xp} XP total ${esc(xpAsal())}</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
-      ${zero ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
-      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Lagi nggak ada yang dibaca.' : 'Belum ada buku yang dibuka.'}</div>`}
+      ${zero ? `<div class="mut sm" style="margin-top:10px">${rdDone.length && !rdNow.length ? 'Mulai buku lain yuk, cari kata baru.' : NUDGE_TXT}</div>` : ''}
+      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Mulai buku lain yuk, ketuk Koleksi di Home.' : 'Belum ada buku yang dibuka.'}</div>`}
       ${rdDone.length ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : id === 'kepo1' && zero ? ' next' : ' off'}" title="${esc(desc)}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${id === 'kepo1' && zero && !badgeShown(id) ? 'Langkah berikutnya: ' + desc : desc}</span></div>`).join('')}</div>` : ''}
+      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span></div>`).join('')}</div>` : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
     const f = $('#pfFol'); if (f) f.onclick = async () => { f.disabled = true; try { await api('/ikuti/' + encodeURIComponent(p.username), { method: p.diikuti ? 'DELETE' : 'POST' }); toast(p.diikuti ? `Berhenti mengikuti ${p.nick}.` : `Kamu mengikuti ${p.nick}.`); openProfile(p.username); if ($('#frHome')) homeFriends(); } catch (e) { toast(e.message); f.disabled = false; } };
