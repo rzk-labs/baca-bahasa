@@ -694,3 +694,18 @@ viewBaca = async function () {
 setTab(db.tab || 'rak');
 openSharedFromUrl();
 if (db.acct) runSync({ profile: true }).catch(() => { });
+/* ---------- Hitungan anonim (1x/hari): tanpa ID, tanpa IP; hanya tanggal hari ini, tanggal pertama buka, sumber link ---------- */
+(function hitungHarian() {
+  try {
+    if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
+    const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+    const ref = new URLSearchParams(location.search).get('ref');
+    let first = localStorage.getItem('kepo.first');
+    if (!first) { first = day; localStorage.setItem('kepo.first', day); if (ref) localStorage.setItem('kepo.src', ref); }
+    if (localStorage.getItem('kepo.hitDay') === day) return;
+    const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '' });
+    const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
+    if (!ok) fetch(API_PROD + '/hitung', { method: 'POST', body: data, keepalive: true }).catch(() => { });
+    localStorage.setItem('kepo.hitDay', day);
+  } catch (e) { }
+})();
