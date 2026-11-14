@@ -326,7 +326,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .sbaca-peek{min-height:44px;font-size:14px;margin:0 0 var(--space-2)}
 .flash .fb-peek{min-height:44px;margin-top:8px;font-size:14px}
 .flash .fbase{font-size:13px;line-height:1.3;margin-top:4px;opacity:.8;overflow-wrap:anywhere;max-width:100%}.flash .fbase b{font-weight:700}
-.flash .tap{font-size:13px;font-weight:700;opacity:.7;margin-top:6px}
+.flash .tap{font-size:15px;font-weight:700;opacity:.8;margin-top:6px}
 .flash .eyebrow{color:var(--color-text-muted)}
 .flash .tap{display:inline-flex;align-items:center;gap:6px}.flash .tap svg.i{width:16px;height:16px}
 .recheck{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:var(--radius-full);background:var(--color-text);color:var(--cream);font-size:12px;letter-spacing:.04em;vertical-align:1px}
@@ -337,6 +337,9 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .deck-act .no{background:var(--color-surface);color:var(--color-text);border:2px solid var(--color-text)}
 .deck-act .yes{background:var(--ink);color:var(--cream);border:2px solid var(--ink)}
 .deck-act .icon{min-width:56px}
+.deck-act.hide{display:none}.deck-act .full{grid-column:1/-1}.deck-act.three{grid-template-columns:repeat(3,1fr)}
+.deck-act .mid{background:var(--color-surface-soft);color:var(--color-text);border:2px solid var(--color-border)}
+.flash .fsp{position:absolute;top:10px;right:10px;min-width:48px;min-height:48px;touch-action:manipulation}
 .sum .s1{background:var(--color-surface-soft);color:var(--color-text)}.sum .s2{background:var(--ink);color:var(--cream)}.sum .s3{background:var(--color-surface);color:var(--color-text);border:2px solid var(--color-border)}
 [data-theme=night] .sum .s2,[data-theme=dark] .sum .s2{background:var(--hl);color:var(--ink)}
 .badge.t-blue{color:var(--cream)}.badge .em svg.i{width:28px;height:28px;margin:5px 0}
@@ -937,6 +940,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #rLis .rrtl{display:none}
 .rmore .rmob#rmLis{display:none}
 }
+.rtq{display:flex;flex-direction:column;gap:8px;margin-top:12px}.rtq button{width:100%;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 12px}.rtq small{font-size:12px;font-weight:500;opacity:.75}
 .fr-read .fr-top{display:flex;align-items:baseline;gap:6px;min-width:0}
 .fr-read .fr-top .lg{flex:none}
 .fr-read .fr-top b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1041 — Mau pinyin?</title>
+<style>
+body{margin:0;background:#E7DADF;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.lbl{max-width:390px;margin:16px auto 6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.ph{width:390px;max-width:100%;margin:0 auto;background:#FAF7F0;border-radius:24px;overflow:hidden;position:relative;height:640px;box-shadow:0 4px 20px #351E2830}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid #351E2820}
+.ib{min-width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;border-radius:12px}
+.ib b{font-size:18px;line-height:20px}.on{background:#EFEBCB}
+.txt{padding:28px 24px;font-family:Literata,Georgia,serif;font-size:22px;line-height:2.4}
+ruby rt{font-size:11px;font-family:Inter,sans-serif;color:#351E28}
+mark{background:#E9F056}
+.shade{position:absolute;inset:0;background:#351E2866}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#FAF7F0;border-radius:24px 24px 0 0;padding:24px 20px 28px}
+h2{font-family:"Bricolage Grotesque",Inter,sans-serif;font-size:22px;margin:0 0 6px}
+p{margin:0;font-size:14px;opacity:.8}
+.q{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.q div{min-height:48px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;border:1.5px solid #351E28}
+.q small{font-size:12px;font-weight:500;opacity:.75}
+.q .p{background:#351E28;color:#FAF7F0}
+.toast{position:absolute;left:16px;right:16px;bottom:20px;background:#351E28;color:#FAF7F0;border-radius:14px;padding:12px 16px;font-size:14px}
+</style></head><body>
+<div class="lbl">1. Pertama buka buku Mandarin (belum memilih)</div>
+<div class="ph">
+<div class="bar"><div class="ib"><b>←</b>Rak</div><div><div style="display:flex"><div class="ib on"><b>拼</b>Pinyin</div><div class="ib"><b>♪</b>Dengar</div><div class="ib"><b>⋯</b>Lainnya</div></div></div></div>
+<div class="txt"><ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>读<rt>dú</rt></ruby><ruby>书<rt>shū</rt></ruby>。</div>
+<div class="shade"></div>
+<div class="sheet"><h2>Mau pinyin di atas kata?</h2><p>Bisa diganti kapan saja lewat tombol Pinyin di atas.</p>
+<div class="q"><div class="p">Nyala</div><div>Hanya kata baru<small>Untuk kata yang pernah kamu ketuk</small></div><div>Mati</div></div></div>
+</div>
+
+<div class="lbl">2. Sesudah pilih "Mati" — ketuk chip Pinyin 1 kali</div>
+<div class="ph">
+<div class="bar"><div class="ib"><b>←</b>Rak</div><div style="display:flex"><div class="ib"><b>拼</b>Pinyin</div><div class="ib"><b>♪</b>Dengar</div><div class="ib"><b>⋯</b>Lainnya</div></div></div>
+<div class="txt" style="line-height:1.9">我喜欢读书。</div>
+<div class="toast">Pinyin mati. Nyalakan lagi di tombol Pinyin.</div>
+</div>
+
+<div class="lbl">3. Mode "Hanya kata baru" — pinyin hanya di kata yang pernah diketuk</div>
+<div class="ph">
+<div class="bar"><div class="ib"><b>←</b>Rak</div><div style="display:flex"><div class="ib on"><b>拼</b>Pinyin</div><div class="ib"><b>♪</b>Dengar</div><div class="ib"><b>⋯</b>Lainnya</div></div></div>
+<div class="txt" style="line-height:2.2">我<ruby>喜欢<rt>xǐhuan</rt></ruby>读书。</div>
+<div class="toast">Pinyin hanya untuk kata yang pernah kamu ketuk</div>
+</div>
+</body></html>

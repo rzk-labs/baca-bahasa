@@ -780,7 +780,7 @@
       "prioritas": "P0",
       "nama": "Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal + 'Ulang kata baru' di tab Kata (#1016)",
       "dokumen": "docs/riset-kartu-ingat-dulu.md",
-      "status": "spesifikasi siap dikerjakan",
+      "status": "selesai (#1035)",
       "catatan": "(validasi bukti internet) 36 butir, 6 jenis sumber. Mockup: docs/mockup-1016.html."
     },
     {
@@ -789,7 +789,7 @@
       "prioritas": "P0",
       "nama": "Tanya sekali 'Mau pinyin?' (Nyala / Hanya kata baru / Mati) saat buku zh-CN dibuka + chip Pinyin 1 ketukan (#1025)",
       "dokumen": "docs/riset-cara-baca-default-mandarin.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1041)"
     },
     {
       "no": 104,
