@@ -733,6 +733,14 @@
       "nama": "Penanda 'N kata siap diulang' di Home + kabar sisa kartu + pesan jadwal rapi (#955)",
       "dokumen": "docs/riset-kartu-latihan-konteks.md",
       "status": "selesai (#971)"
+    },
+    {
+      "no": 97,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Satu istilah 'diulang' + titik pengingat kata siap diulang di header Baca (#990)",
+      "dokumen": "docs/riset-pengingat-ulas-di-baca.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
