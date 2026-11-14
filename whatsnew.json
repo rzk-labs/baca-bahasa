@@ -1,5 +1,35 @@
 [
   {
+    "n": 1041,
+    "judul": "[peta 103] Tanya sekali 'Mau pinyin?' di buku Mandarin + chip 1 ketukan",
+    "poin": "Buku Mandarin sekarang bertanya sekali: mau pinyin nyala, hanya kata baru, atau mati?",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1035,
+    "judul": "[peta 102] Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal di tab Kata",
+    "poin": "Kartu kata sekarang minta kamu ingat dulu, baru tekan \"Lihat arti\".",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1032,
+    "judul": "[peta 101] Ganti sampul buku sendiri dari foto/galeri (menu ⋯)",
+    "poin": "Tiap buku di Home sekarang punya tombol titik tiga untuk ganti sampul.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1031,
+    "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
+    "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1029,
+    "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
+    "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1026,
     "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
     "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
@@ -148,35 +178,5 @@
     "judul": "[peta 88] Tamat & Profil konsisten: Baca ulang, satu info kata, ke Kata",
     "poin": "Layar Tamat kini rapi: jumlah kata sekali, ada tombol Lihat kata.",
     "tgl": "2026-11-14"
-  },
-  {
-    "n": 948,
-    "judul": "[peta 87] Keepo HQ: setujui massal tugas Siap dicek",
-    "poin": "Kartu Siap dicek kini punya kotak centang, plus tombol Pilih semua.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 951,
-    "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
-    "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 913,
-    "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
-    "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 915,
-    "judul": "Sheet Tamat rapi: info tak dobel, buku sendiri dulu, 'Baca ulang'",
-    "poin": "Layar Tamat sekarang rapi: jumlah kata cuma muncul sekali.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 944,
-    "judul": "[peta 89] Sheet arti kata rapi: tombol tak patah, Simpan penuh, -eed",
-    "poin": "Sheet arti kata sekarang rapi: tombol tidak patah, Simpan satu baris penuh.",
-    "tgl": "2026-11-13"
   }
 ]
