@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1006 — Judul buku utuh di Profil</title>
+<style>
+body{margin:0;background:#EDE8E0;font:14px/1.4 Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px}
+.lbl{font:700 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#66584A;margin:0 0 6px}
+.phone{width:390px;max-width:100%;box-sizing:border-box;background:#FAF7F0;border-radius:20px;padding:18px 16px}
+h2{font:800 18px/24px "Bricolage Grotesque",Inter,sans-serif;margin:0 0 4px}
+.eyebrow{font:700 12px Inter,sans-serif;color:#66584A;margin:14px 0 6px}
+.fr-read{padding:8px 0;border-bottom:1px solid #DDD6C8}
+.fr-read:last-child{border-bottom:0}
+.mut{color:#66584A}
+.bar{height:6px;border-radius:9999px;background:#E4DDD0;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:#351E28}
+/* Sebelum */
+.old .top{display:flex;align-items:baseline;gap:6px}
+.old .lg{flex:none;font-size:12px;color:#66584A}
+.old b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.old .st{flex:none;font-size:13px;white-space:nowrap}
+/* Sesudah */
+.ttl{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-weight:700;font-size:14px;line-height:19px;overflow-wrap:anywhere}
+.meta{display:flex;align-items:baseline;gap:6px;margin-top:2px;font-size:12px;line-height:16px;white-space:nowrap;color:#66584A}
+.meta .lg::after{content:"·";margin-left:6px}
+</style></head><body>
+<div><p class="lbl">Sebelum — judul terpotong</p>
+<div class="phone old"><h2>Profil</h2>
+<div class="eyebrow">Selesai</div>
+<div class="fr-read"><div class="top"><span class="lg">Inggris</span><b>The Adventures of Sherlock Holmes</b><span class="st mut">Selesai · 100%</span></div><div class="bar"><i style="width:100%"></i></div></div>
+<div class="eyebrow">Sedang dibaca</div>
+<div class="fr-read"><div class="top"><span class="lg">Jepang</span><b>吾輩は猫である</b><span class="st mut">42%</span></div><div class="bar"><i style="width:42%"></i></div></div>
+</div></div>
+<div><p class="lbl">Sesudah — judul penuh, status di baris bawah</p>
+<div class="phone"><h2>Profil</h2>
+<div class="eyebrow">Selesai</div>
+<div class="fr-read"><b class="ttl">The Adventures of Sherlock Holmes</b><div class="meta"><span class="lg">Inggris</span><span>Selesai · 100%</span></div><div class="bar"><i style="width:100%"></i></div></div>
+<div class="eyebrow">Sedang dibaca</div>
+<div class="fr-read"><b class="ttl">吾輩は猫である</b><div class="meta"><span class="lg">Jepang</span><span>42%</span></div><div class="bar"><i style="width:42%"></i></div></div>
+</div></div>
+</body></html>

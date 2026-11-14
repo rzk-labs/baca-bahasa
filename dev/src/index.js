@@ -313,8 +313,13 @@ async function api0(req, env, url) {
   // Daftar file PR dimuat belakangan oleh layar detail (supaya detail tampil dulu)
   const fm = p.match(/^\/pr\/(\d+)\/files$/);
   if (fm && req.method === 'GET') {
-    const fl = await gh(env, `/repos/${REPO}/pulls/${+fm[1]}/files?per_page=50`, { soft: true });
-    return json({ files: Array.isArray(fl) ? fl.map(f => f.filename) : [] });
+    const [fl, prd] = await Promise.all([
+      gh(env, `/repos/${REPO}/pulls/${+fm[1]}/files?per_page=100`, { soft: true }),
+      gh(env, `/repos/${REPO}/pulls/${+fm[1]}`, { soft: true }),
+    ]);
+    // Gambar ![...](https://...) di isi PR ikut jadi mockup (maks 6, hanya https)
+    const gambar = [...new Set([...String((prd && prd.body) || '').matchAll(/!\[[^\]]*\]\((https:\/\/[^\s)]+)\)/g)].map(x => x[1]))].slice(0, 6);
+    return json({ files: Array.isArray(fl) ? fl.map(f => f.filename) : [], gambar });
   }
   const m = p.match(/^\/tasks\/(\d+)(?:\/(\w+))?$/);
   if (!m) return json({ error: 'not found' }, 404);
