@@ -1,5 +1,11 @@
 [
   {
+    "n": 948,
+    "judul": "[peta 87] Keepo HQ: setujui massal tugas Siap dicek",
+    "poin": "Kartu Siap dicek kini punya kotak centang, plus tombol Pilih semua.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 951,
     "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
     "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
@@ -171,12 +177,6 @@
     "n": 864,
     "judul": "Tamat rapi: sheet satu pegangan & 2 tombol; Profil buku tamat 'Selesai'",
     "poin": "Layar Tamat kini rapi: satu garis pegangan, dua tombol, kartu tidak terpotong.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 862,
-    "judul": "Baca: header judul 2 baris tak menimpa tombol Bagian",
-    "poin": "Header baca dirapikan: judul maksimal 2 baris, tombol Bagian tidak tertimpa lagi.",
     "tgl": "2026-11-13"
   }
 ]
