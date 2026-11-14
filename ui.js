@@ -189,6 +189,13 @@ const BADGES = [
   ['fire7', 'bolt', 'Seminggu Nonstop', 'Streak 7 hari', () => streak() >= 7],
   ['lv5', 'star', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
 ];
+/* progres lencana terkunci: data sama dengan syaratnya; hanya tampilan */
+const badgeProgress = id => {
+  const st = db.stat || {};
+  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, 400] }[id];
+  if (!m) return null;
+  return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
+};
 let badgeQ = Promise.resolve();
 /* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
 const lateQ = []; let lateT = null;
@@ -912,7 +919,7 @@ function viewRak() {
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Target tercapai' : `XP hari ini, target ${GOAL}`}</div></div>
-      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP level ini</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
+      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
