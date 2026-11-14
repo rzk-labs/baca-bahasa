@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #972 Rak buku di Profil</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:390px;margin:0 auto;background:#D7EFFF;color:#351E28;font:14px/1.4 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:12px 14px 24px}
+.lab{font-size:11px;color:#5F5059;text-transform:uppercase;letter-spacing:.06em;margin:18px 2px 6px;font-weight:600}
+.card{background:#FAF7F0;border-radius:20px;padding:14px}
+h2{font:800 18px "Bricolage Grotesque",Inter,sans-serif}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px}.sh span{font-size:12px;color:#5F5059}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.chip{border-radius:9999px;padding:6px 11px;font-size:12px;font-weight:600;background:#C3E1F4;border:1px solid #B2CFE2}
+.chip.on{background:#351E28;color:#FAF7F0;border-color:#351E28}
+.shelf{border-radius:14px;padding:12px 10px 0;margin-bottom:8px;overflow:hidden}
+.grp{font-size:12px;font-weight:700;margin:0 2px 8px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bk{position:relative;min-width:0}
+.cv{height:92px;border-radius:6px 12px 12px 6px;display:flex;align-items:center;justify-content:center;font:800 28px "Bricolage Grotesque",Inter,sans-serif;box-shadow:inset 4px 0 0 rgba(53,30,40,.14);border:1.5px solid rgba(53,30,40,.15)}
+.tag{position:absolute;top:5px;right:5px;font:700 9px Inter,sans-serif;background:#E9F056;color:#351E28;border-radius:9999px;padding:2px 6px}
+.bt{font-size:11px;font-weight:600;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp{font-size:11px;margin-bottom:8px}
+.board{height:12px;margin:0 -10px}
+.plum{background:#2A1D24;color:#FAF7F0}.plum .bp{color:#C9BDC3}.plum .board{background:#4A343E}
+.kayu{background:#F3E2C8;color:#3B2F25}.kayu .bp{color:#66584A}.kayu .board{background:#A9743F}
+.a{background:#D7EFFF;color:#351E28}.b{background:#C3E1F4;color:#351E28}.c{background:#AEB8A0;color:#351E28}.d{background:#351E28;color:#E9F056}
+.up{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid #B2CFE2}
+.up i{font-style:normal;width:20px;font-size:12px;color:#5F5059}.up b{flex:1;font-size:13px}
+.btn{border-radius:9999px;background:#C3E1F4;padding:8px 10px;font-size:12px;font-weight:600}.btn.off{opacity:.45}
+.empty{text-align:center;padding:18px 10px;background:#C3E1F4;border-radius:14px}.empty p{font-size:12px;color:#5F5059;margin:4px 0 10px}
+.pri{display:inline-block;background:#351E28;color:#FAF7F0;border-radius:9999px;padding:9px 18px;font-weight:600;font-size:13px}
+</style></head><body>
+
+<div class="lab">Sesudah: Profil sendiri, Rak (tema Plum Noir)</div>
+<div class="card">
+<div class="sh"><h2>Rak</h2><span>5 buku</span></div>
+<div class="chips"><span class="chip">Kayu hangat</span><span class="chip on">✓ Plum Noir</span><span class="chip">Biru Es</span><span class="chip">Polos</span></div>
+<div class="chips"><span class="chip on">Terakhir dibaca</span><span class="chip">Judul A–Z</span><span class="chip">Bahasa</span><span class="chip">Susunan sendiri</span></div>
+<div class="shelf plum"><div class="grp">Sedang dibaca</div><div class="row">
+<div class="bk"><div class="cv a">Y</div><div class="bt">Yotsuba&amp;!</div><div class="bp">48%</div></div>
+<div class="bk"><div class="cv b">H</div><div class="bt">Harry Potter 1</div><div class="bp">23%</div></div>
+<div class="bk"><div class="cv c">K</div><div class="bt">Kiki</div><div class="bp">71%</div></div>
+</div><div class="board"></div></div>
+<div class="shelf plum"><div class="grp">Tamat</div><div class="row">
+<div class="bk"><div class="cv d">M</div><span class="tag">Tamat</span><div class="bt">Momo</div><div class="bp">100%</div></div>
+</div><div class="board"></div></div>
+<div class="shelf plum"><div class="grp">Belum dibuka</div><div class="row">
+<div class="bk"><div class="cv a">L</div><div class="bt">Le Petit Prince</div><div class="bp">0%</div></div>
+</div><div class="board"></div></div>
+</div>
+
+<div class="lab">Sesudah: tema Kayu hangat</div>
+<div class="card">
+<div class="chips"><span class="chip on">✓ Kayu hangat</span><span class="chip">Plum Noir</span><span class="chip">Biru Es</span><span class="chip">Polos</span></div>
+<div class="shelf kayu"><div class="grp">Sedang dibaca</div><div class="row">
+<div class="bk"><div class="cv a">Y</div><div class="bt">Yotsuba&amp;!</div><div class="bp">48%</div></div>
+<div class="bk"><div class="cv b">H</div><div class="bt">Harry Potter 1</div><div class="bp">23%</div></div>
+</div><div class="board"></div></div>
+</div>
+
+<div class="lab">Sesudah: Susunan sendiri (Naik / Turun)</div>
+<div class="card">
+<div class="chips"><span class="chip">Terakhir dibaca</span><span class="chip">Judul A–Z</span><span class="chip">Bahasa</span><span class="chip on">Susunan sendiri</span></div>
+<div class="up"><i>1</i><b>Yotsuba&amp;!</b><span class="btn off">Naik</span><span class="btn">Turun</span></div>
+<div class="up"><i>2</i><b>Harry Potter 1</b><span class="btn">Naik</span><span class="btn">Turun</span></div>
+<div class="up"><i>3</i><b>Kiki</b><span class="btn">Naik</span><span class="btn">Turun</span></div>
+</div>
+
+<div class="lab">Kondisi: rak kosong</div>
+<div class="card"><div class="sh"><h2>Rak</h2><span>0 buku</span></div>
+<div class="empty"><b>Rak masih kosong</b><p>Buku yang kamu tambah akan berdiri di sini sebagai sampul.</p><span class="pri">Tambah cerita pertamamu</span></div></div>
+</body></html>
