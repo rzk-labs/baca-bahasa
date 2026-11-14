@@ -1,5 +1,11 @@
 [
   {
+    "n": 1051,
+    "judul": "Kartu ulang: tombol Lupa/Ragu/Hafal tampilkan kapan kata muncul lagi",
+    "poin": "Setelah kartu dibalik, tiap tombol kini menampilkan kapan kata muncul lagi.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1049,
     "judul": "Kata 'siap diulang': satu ajakan jelas per layar, tak dobel",
     "poin": "Ajakan \"Ulang sekarang\" kini cuma satu per layar, tidak dobel lagi.",
@@ -171,12 +177,6 @@
     "n": 953,
     "judul": "XP satu angka: Home=Profil=popup Level, sinkron tak memicu Level",
     "poin": "XP dan Level sekarang sama di Home, Profil, dan popup; sinkron tak memicu popup.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 907,
-    "judul": "Baca: terjemahan kalimat cepat di tempat, tanpa buka sheet",
-    "poin": "Ketuk dua kali satu kalimat: arti singkatnya muncul tepat di bawahnya.",
     "tgl": "2026-11-14"
   }
 ]
