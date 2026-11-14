@@ -1,5 +1,11 @@
 [
   {
+    "n": 1032,
+    "judul": "[peta 101] Ganti sampul buku sendiri dari foto/galeri (menu ⋯)",
+    "poin": "Tiap buku di Home sekarang punya tombol titik tiga untuk ganti sampul.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1031,
     "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
     "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
@@ -172,11 +178,5 @@
     "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
     "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
     "tgl": "2026-11-14"
-  },
-  {
-    "n": 913,
-    "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
-    "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
-    "tgl": "2026-11-13"
   }
 ]

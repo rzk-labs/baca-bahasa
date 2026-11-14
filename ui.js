@@ -82,7 +82,7 @@ function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) %
 // Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
 const COVERS = {};
-async function muatCover() { let ada = false; for (const b of db.books) { if (b.cov && !COVERS[b.id]) { try { const u = await getCover(b.id); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
+async function muatCover() { let ada = false; for (const b of db.books) { if ((b.cov || b.covU) && !COVERS[b.id]) { try { const u = (b.covU && await getCoverU(b.id)) || (b.cov && await getCover(b.id)); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
 /* pisahkan penulis dalam kurung: 'こころ（夏目漱石）' -> {main:'こころ', au:'夏目漱石'} (hanya tampilan) */
 function splitTitle(t) { t = String(t || '').trim(); const m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); return m ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
 function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34), i = c.search(/\s\S*$/); return (i > 12 ? c.slice(0, i) : c).replace(/[\s,;:\-–—]+$/, '') + '…'; }
@@ -915,7 +915,7 @@ function viewRak() {
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
-      <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
+      <div class="bk-act"><button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
@@ -963,11 +963,36 @@ function viewRak() {
   };
   }
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
-  $$('[data-del]').forEach(el => el.onclick = async e => {
-    e.stopPropagation();
-    if (!el.classList.contains('sure')) { el.classList.add('sure'); el.textContent = 'Yakin hapus?'; setTimeout(() => { if (el.isConnected) { el.classList.remove('sure'); el.innerHTML = ico('trash') + '<span>Hapus</span>'; } }, 3500); return; }
-    hapusBuku(el.dataset.del);
-  });
+  $$('[data-menu]').forEach(el => el.onclick = e => { e.stopPropagation(); menuCerita(el.dataset.menu); });
+}
+// Menu ⋯ kartu buku: Ganti sampul / Hapus sampul / Hapus cerita
+function menuCerita(id) {
+  const b = db.books.find(x => x.id === id); if (!b) return;
+  openSheet(`<div class="sh-head"><h2>Cerita ini</h2></div><div class="menu-c"><div class="mc-t">${esc(b.title)}</div>
+    <button class="mc-i" id="mcGanti">${ico('image')}<span>Ganti sampul</span></button>
+    ${b.covU ? `<button class="mc-i" id="mcHapusS">${ico('stop')}<span>Hapus sampul</span></button>` : ''}
+    <button class="mc-i mc-del" id="mcDel">${ico('trash')}<span>Hapus cerita</span></button></div>
+    <input type="file" id="mcFile" accept="image/*" hidden>`, 'Menu cerita');
+  const f = $('#mcFile');
+  $('#mcGanti').onclick = () => f.click();
+  f.onchange = async () => {
+    const file = f.files && f.files[0]; if (!file) return;
+    try {
+      const url = await kecilkanGambar(file);
+      await putCoverU(id, url); b.covU = 1; COVERS[id] = url; save(); closeSheet(); setTab(db.tab); toast('Sampul diganti');
+    } catch (e) { toast('Gambar ini nggak bisa dipakai. Coba foto lain.', 4500); }
+  };
+  if ($('#mcHapusS')) $('#mcHapusS').onclick = async () => {
+    try { await delCoverU(id); } catch (e) { }
+    delete b.covU; delete COVERS[id]; save();
+    if (b.cov) { try { const u = await getCover(id); if (u) COVERS[id] = u; } catch (e) { } }
+    closeSheet(); setTab(db.tab); toast('Sampul kembali otomatis');
+  };
+  const d = $('#mcDel');
+  d.onclick = () => {
+    if (!d.classList.contains('sure')) { d.classList.add('sure'); d.querySelector('span').textContent = 'Yakin hapus?'; return; }
+    closeSheet(); hapusBuku(id);
+  };
 }
 // Hapus buku: teks ditunda 5 dtk biar bisa Urungkan. Id disimpan di daftar 'yatim' (localStorage) kalau app ditutup/gagal; dibersihkan saat app dibuka.
 const YATIM_K = 'kepo-yatim';

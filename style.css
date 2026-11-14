@@ -990,3 +990,10 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .due-sheet{display:flex;flex-direction:column;gap:12px;padding:4px 2px 8px}
 .due-sheet .btn{min-height:48px}
 .rdue{position:relative}.rdue .rdot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px #351E28;pointer-events:none}
+/* menu ⋯ kartu buku (#1032) */
+.bk .del{min-width:44px;padding:0}
+.menu-c .mc-t{font-weight:700;font-size:14px;color:var(--color-text-muted);margin:0 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc-i{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 4px;background:none;border:0;border-bottom:1px solid #B2CFE2;font:600 15px/1.2 var(--font-body,Inter,system-ui,sans-serif);color:var(--ink);text-align:left;cursor:pointer;border-radius:0}
+.mc-i:last-child{border-bottom:0}
+.mc-i.mc-del{color:#A3262F}
+.mc-i.mc-del.sure{background:var(--color-poor);color:#fff;border-radius:12px;padding:0 12px}
