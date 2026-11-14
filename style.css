@@ -737,6 +737,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
 .hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
 .wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wk-h .icon{width:auto;min-width:44px;padding:0 12px;font-size:13px;font-weight:600}
 .wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .wk-g div{display:flex;flex-direction:column;min-width:0}
 .wk-g b{font-size:24px;line-height:28px}
