@@ -1325,6 +1325,7 @@ async function viewBaca() {
     openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Lainnya</span>${closeBtn}</div>${nDue ? `<div class="rdue-box"><b>${nDue} kata siap diulang</b><div class="set-row set-acts"><button class="sec full" id="rdNo" type="button">Nanti</button><button class="full" id="rdGo" type="button">Ulang sekarang</button></div></div>` : ''}<div class="chlist rmore">
       <button class="chi" id="rmSet">${ico('sliders')}<span>Pengaturan baca</span></button>
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="chi rmob" id="rmRt">${ico('ruby')}<span>Cara baca</span><b class="rst">${db.rt ? 'Nyala' : 'Mati'}</b></button>` : ''}${'speechSynthesis' in window ? `<button class="chi rmob" id="rmLis">${ico('vol')}<span>Dengar halaman</span><b class="rst">${LIS.on ? 'Nyala' : 'Mati'}</b></button>` : ''}
+      ${db.aiJelas === false ? '' : `<button class="chi" id="rmAi">${ico('chat')}<span>Sederhanakan halaman (AI)</span></button>`}
       <button class="chi" id="rmFb">${ico('chat')}<span>Kirim masukan</span></button>
       ${'speechSynthesis' in window ? `<button class="chi" id="rmRate">${ico('slow')}<span>Laju suara: <b id="rmRateV">${sl()}</b></span></button>` : ''}</div>`, 'Menu lainnya');
     if ($('#rdNo')) $('#rdNo').onclick = closeSheet;
@@ -1333,6 +1334,7 @@ async function viewBaca() {
     if ($('#rmLis')) $('#rmLis').onclick = () => { closeSheet(); $('#rLis').click(); };
     $('#rmSet').onclick = () => { closeSheet(); openSettings(); };
     $('#rmFb').onclick = () => { closeSheet(); openFeedback(); };
+    if ($('#rmAi')) $('#rmAi').onclick = () => openSimplify(b);
     if ($('#rmRate')) $('#rmRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); $('#rmRateV').textContent = sl(); if (LIS.on && LIS.cur) startListenPage(true); };
   };
   if ($('#rChap')) $('#rChap').onclick = () => {
@@ -1429,6 +1431,41 @@ function pauseListenPage(quiet) {
   if (LIS.cur) LIS.si = +LIS.cur.dataset.s;
   if (quiet) lisClear();
   lisUi();
+}
+/* Sederhanakan halaman (AI): hanya saat diminta; jalur & jatah harian sama dengan Jelaskan kalimat */
+function openSimplify(b) {
+  const q = (RD.ss || []).filter(x => x.pg === RD.page).map(x => x.el.textContent.trim()).filter(Boolean);
+  const full = q.join(' ').replace(/\s+/g, ' ').trim();
+  const LIM = 600;
+  let txt = full, cut = false;
+  if (full.length > LIM) {
+    cut = true; txt = full.slice(0, LIM);
+    const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
+    if (k > 40) txt = txt.slice(0, k + 1);
+  }
+  const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sederhanakan halaman</span>${closeBtn}</div>
+    <div class="mut sm">AI jelasin halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
+    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Gratis 5x sehari, jatah sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
+    <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`, 'Sederhanakan halaman');
+  const btn = $('#sgbtn'), qEl = $('#sgq'), out = $('#sgout');
+  const setQ = n => { if (qEl.isConnected) qEl.textContent = n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
+  const msg = t => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
+  btn.onclick = async () => {
+    if (!txt) return msg('Halaman ini belum ada teksnya.');
+    if (typeof api !== 'function') return msg('Fitur ini belum siap. Lanjut baca aja dulu.');
+    if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal.');
+    btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
+    try {
+      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '' } });
+      if (!out.isConnected) return;
+      setQ(r.sisa);
+      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div>${cut ? '<div class="aij-lbl">Cuma bagian awal halaman yang dijelaskan.</div>' : ''}<div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
+      out.querySelector('.aij-t').textContent = r.teks;
+      $('#sgrep').onclick = () => { const x = $('#sgrep'); x.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, teks: r.teks } }).then(() => { const y = $('#sgrep'); if (y) y.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const y = $('#sgrep'); if (y) { y.disabled = false; y.textContent = 'Gagal kirim, coba lagi'; } }); };
+    } catch (e) { if (out.isConnected) { if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else msg(e.message); } }
+    btn.disabled = false;
+  };
 }
 function startListenPage(restart) {
   const b = book(); if (!b || !RD.ss) return;
