@@ -803,7 +803,10 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fb-acts{gap:8px;margin-top:12px;flex-wrap:nowrap}.fb-acts button{flex:1 1 0;min-width:0;min-height:44px}
 #sheet:has(.fb-acts){padding-bottom:calc(env(safe-area-inset-bottom) + 28px)}
 /* #890: 'Buku lain' satu baris; Tamat: satu tombol utama + tautan kecil */
-.hero-act #hOther,.hero-act #hRead{white-space:nowrap;min-height:44px;flex:1 1 0;min-width:0;padding-left:8px;padding-right:8px}
+.hero-act #hOther,.hero-act #hRead,.hero-act #hAdd{white-space:nowrap;min-height:44px;flex:1 1 0;min-width:0;padding-left:8px;padding-right:8px}
+/* #1020: kartu buku tamat lebih lega & ringkas */
+#hero.hero-done{padding:14px}
+#hero.hero-done .hero-act{margin-top:10px}
 .fb-acts{display:block}.fb-acts .pri{width:100%}
 .fb-sec{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
 .fb-sec .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
