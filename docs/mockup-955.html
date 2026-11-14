@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #955 - Kartu latihan kata</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#fff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#351E28;padding:0;width:390px;margin:0;font-size:14px;line-height:1.45}
+.note{background:#E9F056;color:#351E28;font-weight:600;font-size:13px;padding:8px 16px;text-align:center}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6B5E66;padding:14px 16px 6px;background:#fff}
+.scr{background:#D7EFFF;padding:16px;min-height:200px}
+h1{font-family:"Bricolage Grotesque",Inter,sans-serif;font-weight:800;font-size:24px}
+.sub{color:#5F5059;margin:2px 0 14px}
+.card{background:#FAF7F0;border-radius:18px;padding:16px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px}
+.row .t{flex:1;min-width:0}
+.row b{display:block;font-size:15px}
+.row span{color:#6B5E66;font-size:13px}
+.pill{background:#351E28;color:#FAF7F0;border-radius:9999px;padding:9px 16px;font-weight:600;font-size:13px;white-space:nowrap;border:0}
+.pill.soft{background:#E7DADF;color:#351E28}
+.dot{width:10px;height:10px;border-radius:50%;background:#351E28;flex:none}
+.big{text-align:center;padding:28px 16px 20px}
+.zh{font-family:"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:44px;font-weight:600;line-height:1.2}
+.py{font-size:18px;color:#5F5059;margin-top:4px}
+.ctx{margin-top:18px;border-top:1px solid #B2CFE2;padding-top:12px;font-family:"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:16px;text-align:left}
+.ctx small{display:block;font-family:Inter,sans-serif;font-size:12px;color:#6B5E66;margin-bottom:2px}
+mark{background:#E9F056;color:#351E28;padding:0 2px;border-radius:3px}
+.bar{height:6px;background:#E7DADF;border-radius:9px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;width:40%;background:#E9F056;border-right:1px solid #351E28}
+.btns{display:flex;gap:8px}.btns .pill{flex:1;text-align:center;padding:11px 8px}
+.seg{display:flex;gap:6px;margin-bottom:12px}
+.seg span{padding:7px 12px;border-radius:9999px;font-size:13px;font-weight:600;background:#FAF7F0}
+.seg .on{background:#351E28;color:#FAF7F0}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tg{width:44px;height:26px;border-radius:9999px;background:#B2CFE2;position:relative;flex:none}
+.tg:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#FAF7F0}
+.end{text-align:center;padding:24px 16px}.end p{margin:8px 0 16px;color:#5F5059}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun.</div>
+
+<div class="lbl">1. Home - ada kata jatuh tempo (n = 5)</div>
+<div class="scr">
+<h1>Keepo</h1><p class="sub">Halo, Sinta. 3 hari membaca.</p>
+<div class="card row"><div class="dot"></div><div class="t"><b>5 kata siap diulang</b><span>Dari bacaan Mandarin kamu</span></div><button class="pill">Ulas sekarang</button></div>
+<div class="card"><span style="font-size:12px;color:#6B5E66">Lanjut baca</span><b style="display:block;font-size:16px;margin-top:2px">Hari Pertama di Beijing</b><span style="color:#6B5E66;font-size:13px">Halaman 48</span></div>
+</div>
+
+<div class="lbl">2. Home - tidak ada kata jatuh tempo (baris tidak tampil)</div>
+<div class="scr" style="min-height:0">
+<h1>Keepo</h1><p class="sub">Halo, Sinta. 3 hari membaca.</p>
+<div class="card"><span style="font-size:12px;color:#6B5E66">Lanjut baca</span><b style="display:block;font-size:16px;margin-top:2px">Hari Pertama di Beijing</b><span style="color:#6B5E66;font-size:13px">Halaman 48</span></div>
+</div>
+
+<div class="lbl">3. Tab Kata, Kartu - depan (kalimat asal + pinyin aktif)</div>
+<div class="scr">
+<div class="seg"><span class="on">Kartu</span><span>Tersimpan</span><span>Susah diucap</span></div>
+<div class="bar"><i></i></div>
+<div class="card big"><div class="zh">机场</div><div class="py">jīchǎng</div>
+<div class="ctx"><small>Dari ceritamu</small>我们明天早上去<mark>机场</mark>接朋友。</div></div>
+<div class="btns"><button class="pill">Lihat arti</button></div>
+</div>
+
+<div class="lbl">4. Kartu - belakang (setelah Lihat arti)</div>
+<div class="scr">
+<div class="bar"><i></i></div>
+<div class="card big"><div class="zh">机场</div><div class="py">jīchǎng</div>
+<p style="font-size:20px;font-weight:600;margin-top:14px">bandara</p>
+<div class="ctx"><small>Dari ceritamu</small>我们明天早上去<mark>机场</mark>接朋友。<div style="font-family:Inter,sans-serif;font-size:13px;color:#5F5059;margin-top:4px">Besok pagi kami ke bandara menjemput teman.</div></div></div>
+<div class="btns"><button class="pill soft">Muncul lagi</button><button class="pill">Hafal</button></div>
+<p style="text-align:center;color:#6B5E66;font-size:12px;margin-top:10px">Kalau hafal, muncul lagi 3 hari ke depan.</p>
+</div>
+
+<div class="lbl">5. Kartu - depan tanpa kalimat asal</div>
+<div class="scr" style="min-height:0">
+<div class="card big"><div class="zh">机场</div><div class="py">jīchǎng</div>
+<div class="ctx" style="color:#6B5E66"><small>Kalimat asal</small>Belum ada kalimat untuk kata ini.</div></div>
+<div class="btns"><button class="pill soft">Tampilkan kalimat</button><button class="pill">Lihat arti</button></div>
+</div>
+
+<div class="lbl">6. Akhir deck - masih ada sisa</div>
+<div class="scr">
+<div class="card end"><b style="font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:22px;font-weight:800">Sesi beres.</b>
+<p>Masih ada 5 kata, muncul lagi pas kamu balik.</p>
+<button class="pill">Selesai</button></div>
+</div>
+
+<div class="lbl">7. Setelan - pinyin di depan kartu (hanya Mandarin)</div>
+<div class="scr" style="min-height:0">
+<div class="card sw"><div><b style="display:block">Pinyin di depan kartu</b><span style="color:#6B5E66;font-size:13px">Bawaan mati. Cocok untuk pemula.</span></div><div class="tg"></div></div>
+</div>
+<div style="height:16px"></div>
+</body></html>
