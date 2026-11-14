@@ -864,7 +864,7 @@ function viewRak() {
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP level ini</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulas sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulas sekarang</b></button>` : ''; })()}
+    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act"><button class="del" data-del="${b.id}" aria-label="Hapus cerita ${esc(b.title)}">${ico('trash')}<span>Hapus</span></button></div></div>`).join('')}</div>`;
@@ -1809,7 +1809,7 @@ function toggleInline(sEl) {
   const o = RD.itr = { el, sEl, tok: 0 };
   const fits = () => { const vr = $('#vp').getBoundingClientRect(), r = el.getBoundingClientRect(); return r.left >= vr.left - 1 && r.right <= vr.right + 1 && r.top >= vr.top - 1 && r.bottom <= vr.bottom + 1; };
   /* tak muat di halaman ini (kalimat di dasar kolom) -> jalan pintas gagal, pakai sheet seperti biasa */
-  const fallback = () => { closeInline(); showSentence('', sent, +sEl.dataset.s, sEl); award(1, 'look'); };
+  const fallback = () => { closeInline(); showSentence('', sent, +sEl.dataset.s, sEl); award(1, 'look'); if ($('#toast').classList.contains('hide')) toast('Kalimat panjang, dibuka di lembar arti.'); };
   const run = () => {
     const my = ++o.tok;
     const cached = cachedTr(sent, b.lang, db.my);
@@ -1825,7 +1825,7 @@ function toggleInline(sEl) {
     if (cached) return show({ text: cached });
     translate(sent, b.lang, db.my).then(r => { if (RD.itr !== o || my !== o.tok) return; if (!r || !r.text) throw new Error('kosong'); show(r); }).catch(() => {
       if (RD.itr !== o || my !== o.tok) return;
-      el.innerHTML = '<span class="itr-t">Arti belum kebuka.</span> ';
+      el.innerHTML = '<span class="itr-t"></span> '; el.firstChild.textContent = navigator.onLine === false ? 'Lagi offline, arti kalimat butuh internet.' : 'Layanan terjemahan lagi sibuk.';
       const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'itr-r'; bt.textContent = 'Coba lagi'; bt.onclick = ev => { ev.stopPropagation(); run(); };
       el.append(bt);
       if (!fits()) fallback();
@@ -2447,7 +2447,7 @@ function viewKata() {
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
     <div class="sum"><div class="s1"><b id="sumSaved">${countedVocab(null).length}</b><span>Disimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Lagi dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Udah hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Susah diucap</span></div></div>
-    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<div class="mut sm" id="kdue" style="margin:-2px 2px 10px">${n} kata siap diulas</div>` : ''; })()}
+    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<div class="mut sm" id="kdue" style="margin:-2px 2px 10px">${n} kata siap diulang</div>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
     <div class="seg" id="kseg"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}">Susah diucap</button></div>
     <div id="kbody"></div>`;
