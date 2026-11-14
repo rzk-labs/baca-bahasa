@@ -1,5 +1,11 @@
 [
   {
+    "n": 1049,
+    "judul": "Kata 'siap diulang': satu ajakan jelas per layar, tak dobel",
+    "poin": "Ajakan \"Ulang sekarang\" kini cuma satu per layar, tidak dobel lagi.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1047,
     "judul": "Pesan gagal masuk akun: jelas + langkah lanjut (bukan buntu)",
     "poin": "Gagal masuk sekarang muncul pesan jelas di layar, lengkap dengan langkah berikutnya.",
@@ -171,12 +177,6 @@
     "n": 907,
     "judul": "Baca: terjemahan kalimat cepat di tempat, tanpa buka sheet",
     "poin": "Ketuk dua kali satu kalimat: arti singkatnya muncul tepat di bawahnya.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 961,
-    "judul": "Profil & kartu rapi: lencana jelas, baris Selesai utuh, toast isi arti",
-    "poin": "Lencana terkunci kini redup, bergembok, dan jelas syaratnya.",
     "tgl": "2026-11-14"
   }
 ]
