@@ -1006,3 +1006,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .mc-i:last-child{border-bottom:0}
 .mc-i.mc-del{color:#A3262F}
 .mc-i.mc-del.sure{background:var(--color-poor);color:#fff;border-radius:12px;padding:0 12px}
+.badge .bp{display:block;font-size:11px;line-height:14px;font-weight:700;margin-top:6px}
+.badge .bar{height:4px;margin-top:3px}
+.badge.off .bar i{background:var(--color-text-muted)}
+.stat3 .lbl2{white-space:nowrap;overflow-wrap:normal;font-size:11px}
