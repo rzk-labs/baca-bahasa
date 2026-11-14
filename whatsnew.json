@@ -1,5 +1,35 @@
 [
   {
+    "n": 947,
+    "judul": "[peta 88] Tamat & Profil konsisten: Baca ulang, satu info kata, ke Kata",
+    "poin": "Layar Tamat kini rapi: jumlah kata sekali, ada tombol Lihat kata.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 948,
+    "judul": "[peta 87] Keepo HQ: setujui massal tugas Siap dicek",
+    "poin": "Kartu Siap dicek kini punya kotak centang, plus tombol Pilih semua.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 951,
+    "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
+    "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 913,
+    "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
+    "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
+    "tgl": "2026-11-13"
+  },
+  {
+    "n": 915,
+    "judul": "Sheet Tamat rapi: info tak dobel, buku sendiri dulu, 'Baca ulang'",
+    "poin": "Layar Tamat sekarang rapi: jumlah kata cuma muncul sekali.",
+    "tgl": "2026-11-13"
+  },
+  {
     "n": 944,
     "judul": "[peta 89] Sheet arti kata rapi: tombol tak patah, Simpan penuh, -eed",
     "poin": "Sheet arti kata sekarang rapi: tombol tidak patah, Simpan satu baris penuh.",
@@ -147,36 +177,6 @@
     "n": 866,
     "judul": "Home jujur: halaman minggu ini tak dobel, rekor streak, toast",
     "poin": "Angka 'Minggu ini' jujur: halaman yang dibaca ulang tak dihitung dobel.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 864,
-    "judul": "Tamat rapi: sheet satu pegangan & 2 tombol; Profil buku tamat 'Selesai'",
-    "poin": "Layar Tamat kini rapi: satu garis pegangan, dua tombol, kartu tidak terpotong.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 862,
-    "judul": "Baca: header judul 2 baris tak menimpa tombol Bagian",
-    "poin": "Header baca dirapikan: judul maksimal 2 baris, tombol Bagian tidak tertimpa lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 860,
-    "judul": "Baca: bar bawah satu baris, tanpa titik '·' menggantung",
-    "poin": "Bar bawah halaman baca sekarang satu baris, tanpa titik menggantung.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 858,
-    "judul": "Home: Target harian angka sekali saja & Tamat langsung 100%",
-    "poin": "Target harian di Home kini menampilkan angka XP sekali saja.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 856,
-    "judul": "Lencana & 'Kata baru' jujur: sesuai kata tersimpan & bahasa buku",
-    "poin": "Lencana \"Keepo Pertama\" kini terkunci lagi kalau kata tersimpan masih 0.",
     "tgl": "2026-11-13"
   }
 ]

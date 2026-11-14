@@ -652,7 +652,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: Setujui massal untuk tugas Siap dicek (kotak centang, pilih semua, laporan gagal sebagian) (#925)",
       "dokumen": "docs/spesifikasi-hq-setujui-massal.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#948)"
     },
     {
       "no": 88,
@@ -676,7 +676,7 @@
       "prioritas": "P0",
       "nama": "Evaluasi UI/UX: satu istilah Bagian (bukan Bab), cincin XP harian tidak sesak, XP header vs kartu Level dijelaskan, toast 'Kata disimpan' hanya setelah Simpan (#932)",
       "dokumen": "docs/desain-evaluasi-ui-ux-932.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#951)"
     },
     {
       "no": 91,
