@@ -1,5 +1,11 @@
 [
   {
+    "n": 1006,
+    "judul": "Judul buku utuh di Profil & Home: status pindah ke baris bawah",
+    "poin": "Judul buku di Profil sekarang tampil penuh, tidak terpotong lagi.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1004,
     "judul": "[peta 98] Titik kecil \"siap diulang\" di header Baca + lembar Ulang",
     "poin": "Saat membaca, ada titik kuning kecil kalau ada kata siap diulang.",
@@ -171,12 +177,6 @@
     "n": 937,
     "judul": "[peta 86] Keepo HQ: samakan Hasil, Papan, Siap kamu cek",
     "poin": "Halaman Markas, Papan, dan Hasil di Keepo HQ sekarang tampil seragam.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 935,
-    "judul": "[peta 83] Header Baca HP: judul & tombol Bab tak nabrak, maks 3 tombol",
-    "poin": "Header baca di HP kini lega: cuma tombol Kembali, Bab, dan Lainnya.",
     "tgl": "2026-11-13"
   }
 ]
