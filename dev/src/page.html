@@ -167,7 +167,8 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 /* sheet */
 .veil{position:fixed;inset:0;background:rgba(53,30,40,.55);z-index:40;display:none;align-items:flex-end;justify-content:center}
 .veil.on{display:flex}
-.sheet{background:var(--bg);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:20px 16px max(20px,env(safe-area-inset-bottom));border:2px solid var(--ink);border-bottom:0;max-height:92vh;overflow:auto}
+.sheet{background:var(--bg);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:20px 16px max(20px,env(safe-area-inset-bottom));border:2px solid var(--ink);border-bottom:0;max-height:92vh;max-height:92dvh;overflow:auto;overflow-x:hidden}
+@media (max-width:700px){textarea,input,select{font-size:max(16px,var(--fs))}textarea{min-height:96px}.sheet textarea::placeholder{white-space:normal}.roles{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.roles span{padding:8px 2px;font-size:11px;min-width:0;overflow-wrap:anywhere}.roles span i{font-size:20px}.sheet .kirim-bar{position:sticky;bottom:0;background:var(--bg);padding:10px 0 2px;margin-top:8px}}
 @media (min-width:700px){.veil{align-items:center}.sheet{border-radius:20px;border-bottom:2px solid var(--ink)}}
 .roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
 .roles label{cursor:pointer}
@@ -623,7 +624,7 @@ async function detail(n){
     ${t.status==='live'?`<div class="acts"><a class="btn" target="_blank" href="https://rzk-labs.github.io/baca-bahasa/">Buka Keepo ↗</a></div>`:''}
     <div id="e" class="err"></div>
   </section>
-  <div id="rvbox" class="tile" style="display:${t.status==='gagal'||t.status==='live'?'block':'none'}"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut">Satu kalimat cukup. Tim lanjut dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: pertanyaannya kebanyakan, jadikan 10 saja."></textarea><div id="rvg"></div><div class="row" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>
+  <div id="rvbox" class="tile" style="display:${t.status==='gagal'||t.status==='live'?'block':'none'}"><h3>${t.status==='live'?'Ubah lagi':'Revisi'}</h3><p class="mut">Satu kalimat cukup. Tim lanjut dari hasil terakhir.</p><textarea id="rv" placeholder="Contoh: pertanyaannya kebanyakan, jadikan 10 saja."></textarea><div id="rvg"></div><div class="row kirim-bar" style="margin-top:10px"><button class="btn" id="kr">Kirim revisi</button></div></div>
   ${h&&!kerja?`
   <section class="tile">
     <div class="lbl">✨ Hasilnya</div>
@@ -643,7 +644,7 @@ async function detail(n){
   const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
   if($('#no'))$('#no').onclick=e=>{const b=e.currentTarget;if(b.dataset.y)act('tolak',0,b);else{b.dataset.y=1;b.textContent='Yakin tolak?'}};
-  if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
+  if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';if(innerWidth>700)$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
   if(kerja)timer=setTimeout(()=>detail(n),12000);
@@ -680,8 +681,8 @@ function perintah(){
   <div class="roles">${['developer','desain','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
   <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
   <div id="isig"></div>
-  <div class="row" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
-  $('#isi').focus();
+  <div class="row kirim-bar" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
+  if(innerWidth>700)$('#isi').focus();
   const gL=lampiran($('#isig'),$('#isi'));
   $('#kirim').onclick=async e=>{const b=e.currentTarget;b.disabled=true;
     try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value,gambar:gL.slice()});tutup();await load();if(t.catatan)alert('Tugas terkirim, tapi '+t.catatan+'.');detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false}};
