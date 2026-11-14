@@ -1,0 +1,44 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390"><title>Mockup #907: terjemahan kalimat di tempat</title><style>
+*{box-sizing:border-box}body{margin:0;padding:16px 0;background:#D7EFFF;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#351E28;width:390px}
+h1{font:800 20px "Bricolage Grotesque",Inter,system-ui,sans-serif;margin:0 16px 4px}.sub{margin:0 16px 16px;font-size:13px;color:#5F5059}
+section{margin-bottom:20px}.lbl{margin:0 16px 6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5F5059}
+.reader{position:relative;width:390px;height:400px;display:flex;flex-direction:column;background:var(--bg);color:var(--tx);--bg:#FAF7F0;--tx:#2B2228;--mu:#5C5258;--sf:#E7E1D3;--hl:rgba(43,34,40,.09)}
+.reader.sepia{--bg:#F3E9D7;--tx:#3B2F25;--mu:#66584A;--sf:#E8DCC3;--hl:rgba(59,47,37,.1)}
+.reader.night{--bg:#1E1A1D;--tx:#E8E2DA;--mu:#B5ADA8;--sf:#352F33;--hl:rgba(232,226,218,.14)}
+.rhead{height:40px;display:flex;align-items:flex-end;justify-content:center;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--mu)}
+.vp{flex:1;margin:16px 24px 4px;font-size:17px;line-height:1.7;font-family:Literata,Georgia,serif;overflow:hidden}
+p{margin:0 0 .9em}.s.hl{background:var(--hl);border-radius:4px}
+.itr{display:block;margin:.25em 0 .6em;padding:6px 10px;border-inline-start:3px solid var(--mu);border-radius:6px;background:var(--sf);color:var(--tx);font:.85em/1.4 Inter,system-ui,sans-serif}
+.loading{color:var(--mu)}.m{display:block;margin-top:2px;font-size:.8em;line-height:1.3;color:var(--mu)}
+.retry{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:9999px;background:var(--tx);color:var(--bg);font-weight:700;font-size:.9em}
+.rfoot{height:36px;display:flex;justify-content:space-between;padding:0 24px;font-size:12px;color:var(--mu);align-items:center}
+.toast{position:absolute;left:16px;right:16px;bottom:48px;background:#351E28;color:#FAF7F0;font-size:13px;padding:10px 14px;border-radius:16px;text-align:center}
+.night .toast{background:#FAF7F0;color:#351E28}
+</style></head><body>
+<h1>Terjemahan kalimat di tempat (#907)</h1>
+<p class="sub">Layar baca. Ketuk dua kali satu kalimat, arti muncul tepat di bawahnya. Ketuk lagi atau ganti halaman untuk menutup.</p>
+
+<section><div class="lbl">Kondisi 1: baru diketuk dua kali, arti dimuat</div>
+<div class="reader"><div class="rhead">BAB 1</div><div class="vp">
+<p>So she sat quietly under the tree and waited for the afternoon to pass.</p>
+<p><span class="s hl">Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do.</span><span class="itr"><span class="loading">Memuat…</span></span> Once or twice she had peeped into the book her sister was reading.</p>
+</div><div class="rfoot"><span>Halaman 3 dari 12</span><span>8 mnt lagi</span></div></div></section>
+
+<section><div class="lbl">Kondisi 2: arti tampil (tema Kertas)</div>
+<div class="reader"><div class="rhead">BAB 1</div><div class="vp">
+<p>So she sat quietly under the tree and waited for the afternoon to pass.</p>
+<p><span class="s hl">Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do.</span><span class="itr"><span dir="auto">Alice mulai bosan duduk di samping kakaknya di tepi sungai, tanpa ada kegiatan apa pun.</span><span class="m">Arti mesin, bisa meleset</span></span> Once or twice she had peeped into the book her sister was reading.</p>
+</div><div class="rfoot"><span>Halaman 3 dari 12</span><span>8 mnt lagi</span></div></div></section>
+
+<section><div class="lbl">Kondisi 3: gagal memuat (tema Sepia)</div>
+<div class="reader sepia"><div class="rhead">BAB 1</div><div class="vp">
+<p>So she sat quietly under the tree and waited for the afternoon to pass.</p>
+<p><span class="s hl">Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do.</span><span class="itr">Arti belum kebuka. <span class="retry">Coba lagi</span></span> Once or twice she had peeped into the book her sister was reading.</p>
+</div><div class="rfoot"><span>Halaman 3 dari 12</span><span>8 mnt lagi</span></div></div></section>
+
+<section><div class="lbl">Kondisi 4: kalimat panjang (&gt;25 kata), tema Malam, petunjuk sekali-tampil</div>
+<div class="reader night" style="height:470px"><div class="rhead">BAB 1</div><div class="vp">
+<p>The day was hot and the grass was warm.</p>
+<p><span class="s hl">She was considering in her own mind, as well as she could, for the hot day made her feel very sleepy and stupid, whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies.</span><span class="itr"><span dir="auto">Ia menimbang-nimbang dalam hati, sebisanya karena hari yang panas membuatnya mengantuk, apakah senangnya merangkai bunga aster sepadan dengan repotnya bangkit dan memetiknya.</span><span class="m">Kalimat panjang, arti mesin sering meleset. Baca bagian per bagian.</span></span></p>
+</div><div class="toast">Ketuk dua kali satu kalimat = arti singkat di bawahnya</div><div class="rfoot"><span>Halaman 3 dari 12</span><span>8 mnt lagi</span></div></div></section>
+</body></html>

@@ -65,6 +65,17 @@ async function authed(req, env) {
   return same(sig, await hmac(env, exp));
 }
 
+// Cache singkat di memori Worker (per isolate): kurangi panggilan GitHub yang berulang. Semua aksi tulis mengosongkannya.
+const MEMO = new Map();
+function memo(key, ttl, fn) {
+  const m = MEMO.get(key);
+  if (m && Date.now() - m.t < ttl) return m.p;
+  const pr = Promise.resolve().then(fn);
+  MEMO.set(key, { t: Date.now(), p: pr });
+  pr.catch(() => { if (MEMO.get(key) && MEMO.get(key).p === pr) MEMO.delete(key); });
+  return pr;
+}
+
 // Tanggal ubah terakhir + ringkasan 1 baris tiap dokumen (1 panggilan GraphQL; gagal = kosong)
 async function docInfo(env, paths) {
   if (!paths.length) return {};
@@ -183,6 +194,7 @@ async function api(req, env, url) {
   }
   if (!(await authed(req, env))) return json({ error: 'Perlu login' }, 401);
 
+  if (req.method !== 'GET') MEMO.clear();
   if (p === '/hq' && req.method === 'GET') {
     const [issues, road, docs, runs, mi] = await Promise.all([
       gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`),
@@ -192,19 +204,21 @@ async function api(req, env, url) {
       gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }),
     ]);
     const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
-    const docs_info = await docInfo(env, dl);
+    const docs_info = await memo('docinfo:' + dl.join(','), 300000, () => docInfo(env, dl));
     let masukan = [];
     const mn = Array.isArray(mi) && mi[0] ? mi[0].number : 0;
     if (mn) {
-      const iss = await gh(env, `/repos/${REPO}/issues/${mn}`, { soft: true });
-      const tot = (iss && iss.comments) || 0, pg = Math.max(1, Math.ceil(tot / 30));
-      const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
-      if (Array.isArray(cs)) masukan = cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at }));
+      masukan = await memo('masukan:' + mn, 60000, async () => {
+        const iss = await gh(env, `/repos/${REPO}/issues/${mn}`, { soft: true });
+        const tot = (iss && iss.comments) || 0, pg = Math.max(1, Math.ceil(tot / 30));
+        const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
+        return Array.isArray(cs) ? cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at })) : [];
+      });
     }
     const tasks = issues.filter(i => !i.pull_request).map(brief);
     // isi catatan QA (1 baris) diambil dari komentar, hanya untuk tugas berlabel qa-catatan
     await Promise.all(tasks.filter(t => t.qa === 'catatan').slice(0, 10).map(async t => {
-      const cs = await gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true });
+      const cs = await memo('qa:' + t.n + ':' + t.diubah, 120000, () => gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true }));
       const c = Array.isArray(cs) && cs.filter(x => x.body.includes('QA ada catatan')).pop();
       if (!c) return;
       const tx = c.body.split('QA ada catatan**')[1] || '';
@@ -226,7 +240,7 @@ async function api(req, env, url) {
     // supaya laporan "Siap dicek" tugas yang lebih lama tetap terbaca.
     const [issues, ...pages] = await Promise.all([
       gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=100&sort=created&direction=desc`),
-      ...[1, 2, 3, 4, 5, 6].map(pg => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true })),
+      ...[1, 2, 3, 4, 5, 6].map(pg => memo('kom:' + pg, 20000, () => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true }))),
     ]);
     const cs = pages.flatMap(x => (Array.isArray(x) ? x : []));
     const lap = {};
@@ -270,14 +284,16 @@ async function api(req, env, url) {
   const m = p.match(/^\/tasks\/(\d+)(?:\/(\w+))?$/);
   if (!m) return json({ error: 'not found' }, 404);
   const n = +m[1], act = m[2];
-  const issue = await gh(env, `/repos/${REPO}/issues/${n}`);
+  const rapid = !act && req.method === 'GET';
+  const [issue, cs0, pr0] = await Promise.all([
+    gh(env, `/repos/${REPO}/issues/${n}`),
+    rapid ? gh(env, `/repos/${REPO}/issues/${n}/comments?per_page=100`) : null,
+    rapid ? openPR(env, n) : null,
+  ]);
   if (!issue.labels.some(l => l.name === LABEL)) return json({ error: 'Bukan tugas Kepo Dev' }, 404);
 
   if (!act && req.method === 'GET') {
-    const [cs, pr] = await Promise.all([
-      gh(env, `/repos/${REPO}/issues/${n}/comments?per_page=100`),
-      openPR(env, n),
-    ]);
+    const cs = cs0, pr = pr0;
     const files = pr ? (await gh(env, `/repos/${REPO}/pulls/${pr.number}/files?per_page=50`, { soft: true }) || []).map(f => f.filename) : [];
     return json({
       files, branch: BR(n),
