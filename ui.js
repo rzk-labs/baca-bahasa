@@ -264,7 +264,7 @@ function globalErr(ev) {
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => location.reload() });
+  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => muatUlangPaksa() });
 }
 window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
@@ -598,6 +598,11 @@ function openSettings() {
     </ul>
     ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
+    <div class="set-grp" id="apl"><div class="set-gt">Aplikasi</div>
+    <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div><div class="mut sm" id="muMsg">Buku, kata, dan XP-mu tetap aman.</div></div>
+    <button class="sec full" id="muBtn" type="button" style="min-height:44px">Muat ulang versi terbaru</button>
+    <div class="seg" id="muAsk" hidden style="margin-top:8px"><button type="button" id="muOk" style="min-height:44px">Muat ulang</button><button type="button" id="muNo" style="min-height:44px">Batal</button></div>
+    </div>
     ${dataWarn()}
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
@@ -606,6 +611,12 @@ function openSettings() {
   if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
   if ($('#wnSet')) $('#wnSet').onclick = () => openWhatsNew();
   if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
+  $('#muBtn').onclick = () => {
+    if (!navigator.onLine) { $('#muMsg').textContent = 'Butuh internet untuk ambil versi baru.'; return; }
+    $('#muMsg').textContent = 'Muat ulang versi terbaru? Buku & katamu tetap aman.'; $('#muBtn').hidden = true; $('#muAsk').hidden = false;
+  };
+  $('#muNo').onclick = () => { $('#muMsg').textContent = 'Buku, kata, dan XP-mu tetap aman.'; $('#muAsk').hidden = true; $('#muBtn').hidden = false; };
+  $('#muOk').onclick = () => muatUlangPaksa();
   if ($('#prepBox')) pagesOf(b).then(sc => { if ($('#prepBox')) bindPrep(b, sc[Math.min(b.pos || 0, sc.length - 1)]); });
   if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; syncKenalAll(); $('#kenalAll').onclick = kenalAllPage; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; spcSet(v, db.spacing); };
@@ -636,8 +647,19 @@ function openSettings() {
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
 
+/* muat ulang paksa: hanya cache app (service worker + cache kepo-*); data pengguna tidak disentuh */
+async function muatUlangPaksa() {
+  if (!navigator.onLine) { toast('Butuh internet untuk ambil versi baru.'); return; }
+  try { const r = await fetch('./sw.js', { cache: 'no-store' }); if (!r.ok) throw 0; }
+  catch (e) { toast('Butuh internet untuk ambil versi baru.'); return; }
+  try {
+    if ('serviceWorker' in navigator) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); }
+    if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.filter(k => k.startsWith('kepo-')).map(k => caches.delete(k))); }
+  } catch (e) {}
+  location.reload();
+}
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
-const APP_VER = 'v46';
+const APP_VER = 'v350';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
