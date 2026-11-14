@@ -790,6 +790,15 @@
       "nama": "Tanya sekali 'Mau pinyin?' (Nyala / Hanya kata baru / Mati) saat buku zh-CN dibuka + chip Pinyin 1 ketukan (#1025)",
       "dokumen": "docs/riset-cara-baca-default-mandarin.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 104,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Pesan gagal masuk/daftar/sinkron: apa yang terjadi + satu tombol langkah (Coba lagi / Daftar / Lanjut tanpa akun), tampil di form, tanpa istilah teknis (#1034)",
+      "dokumen": "docs/riset-pesan-gagal-masuk.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
     }
   ],
   "prioritas": [
