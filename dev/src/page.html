@@ -37,7 +37,7 @@ a{color:inherit}
 /* sidebar */
 .side{display:none}
 .main{padding:16px 16px 110px;max-width:1180px;width:100%;margin:0 auto;min-width:0}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:8px 0;position:sticky;top:0;z-index:15;background:var(--bg)}
 .brand{display:flex;align-items:center;gap:10px}
 .brand b{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:24px;line-height:1.1;background:linear-gradient(transparent 62%,var(--wasabi) 62% 92%,transparent 92%);padding:0 4px}
 .brand small{display:block;color:var(--mut);font-size:12px;font-weight:600}
@@ -53,7 +53,7 @@ a{color:inherit}
   .side nav button.on{background:var(--ink);color:var(--bg)}
   .side nav svg{width:19px;height:19px}
   .side .foot{margin-top:auto;font-size:12px;color:var(--mut)}
-  .tabbar,.top .brand{display:none}
+  .tabbar,.top{display:none}
   .main{padding:28px 32px 48px}
 }
 .tabbar{max-width:calc(100vw - 16px)}
@@ -179,8 +179,6 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 .empty{padding:22px;text-align:center;color:var(--mut);border:2px dashed var(--line);border-radius:18px}
 .skel{height:120px;border-radius:24px;background:linear-gradient(90deg,var(--soft),var(--line),var(--soft));background-size:200% 100%;animation:sk 1.2s infinite}
 @keyframes sk{to{background-position:-200% 0}}
-.fab{position:fixed;right:16px;bottom:88px;z-index:21}
-@media (min-width:1000px){.fab{display:none}}
 
 /* ADHD-friendly detail & dokumen */
 .dt{display:grid;gap:14px;max-width:760px}
@@ -235,7 +233,7 @@ details.more>summary{color:var(--mut);margin-top:8px}
     <div class="foot">Live: <a href="https://rzk-labs.github.io/baca-bahasa/" target="_blank">rzk-labs.github.io/baca-bahasa</a></div>
   </aside>
   <main class="main">
-    <div class="top"><div class="brand"><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div></div>
+    <div class="top"><div class="brand"><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div><button class="btn lime" id="topcmd" onclick="perintah()" style="display:none"><svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Perintah</button></div>
     <div id="view"></div>
   </main>
 </div>
@@ -355,7 +353,7 @@ function navs(){
   const b=(k,l)=>`<button class="${cur===k?'on':''}" onclick="go('${k}')">${IC[k]}<span>${l}</span></button>`;
   $('#sidenav').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
   $('#tabbar').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
-  $('#fab').style.display=tok?'':'none';
+  $('#topcmd').style.display=tok?'':'none';
   const sb=`<button onclick="pengaturan()" aria-label="Pengaturan baca">${IC.set}<span>Pengaturan</span></button>`;
   $('#sidenav').innerHTML+=sb;$('#tabbar').innerHTML+=sb;
 }
@@ -380,7 +378,7 @@ function skelDetail(){V.innerHTML='<div class="skel" style="height:36px;width:40
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
-  clearTimeout(timer);$('#fab').style.display='none';
+  clearTimeout(timer);$('#topcmd').style.display='none';
   V.innerHTML=`<div class="tile t-lav c" style="max-width:440px;margin:8vh auto 0"><div class="eyebrow">Khusus founder</div><h1 style="margin:6px 0 14px">Masuk markas</h1>
   <input id="pw" type="password" placeholder="Password" autocomplete="current-password"><div class="row" style="margin-top:12px"><button class="btn" id="go">Masuk</button><span id="e" class="err"></span></div></div>`;
   const f=async()=>{try{const d=await call('/login',{pw:$('#pw').value});tok=d.token;try{localStorage.setItem('kd_tok',tok)}catch(e){};go('markas')}catch(e){$('#e').textContent=e.message}};

@@ -692,7 +692,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: tombol Perintah tidak menutupi isi, pindah ke tempat tetap (#921)",
       "dokumen": "docs/spesifikasi-hq-tombol-perintah.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#974)"
     },
     {
       "no": 90,
@@ -724,7 +724,7 @@
       "prioritas": "P0",
       "nama": "Profil: Rak buku dengan tema & susunan sesuai selera pengguna, tahap 1 lokal (#967)",
       "dokumen": "docs/spesifikasi-profil-rak-tema.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#972)"
     },
     {
       "no": 96,
@@ -733,6 +733,14 @@
       "nama": "Penanda 'N kata siap diulang' di Home + kabar sisa kartu + pesan jadwal rapi (#955)",
       "dokumen": "docs/riset-kartu-latihan-konteks.md",
       "status": "selesai (#971)"
+    },
+    {
+      "no": 97,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Evaluasi e2e: rapikan akhir buku (sheet Tamat, bar bawah, Profil, lencana, petunjuk ketuk kata) (#983)",
+      "dokumen": "docs/desain-evaluasi-e2e-983.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
