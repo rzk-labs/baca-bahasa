@@ -1,5 +1,11 @@
 [
   {
+    "n": 961,
+    "judul": "Profil & kartu rapi: lencana jelas, baris Selesai utuh, toast isi arti",
+    "poin": "Lencana terkunci kini redup, bergembok, dan jelas syaratnya.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 969,
     "judul": "Baca ulang aman: bisa Urungkan + ajakan di halaman terakhir",
     "poin": "Mockup sudah dibuat: halaman terakhir dan layar sesudah Baca ulang.",
@@ -171,12 +177,6 @@
     "n": 872,
     "judul": "Sheet arti kata: tak pernah kosong, ada 'Memuat…' & tombol Coba lagi",
     "poin": "Sheet arti kata sudah selalu tampil, dengan tulisan \"Lagi nyari arti…\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 870,
-    "judul": "Angka 'kata disimpan' sama di Home, Profil, Minggu ini & Tamat",
-    "poin": "Angka kata disimpan sekarang sama di Home, Profil, Minggu ini, dan Tamat.",
     "tgl": "2026-11-13"
   }
 ]
