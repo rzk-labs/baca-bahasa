@@ -145,6 +145,7 @@
 - [hq-mockup-persetujuan](spesifikasi-hq-mockup-persetujuan.md)
 - [hq-pengaturan-baca](spesifikasi-hq-pengaturan-baca.md)
 - [hq-status-kartu-hasil](spesifikasi-hq-status-kartu-hasil.md)
+- [hq-visual-loading](spesifikasi-hq-visual-loading.md)
 - [kata-sering-diketuk](spesifikasi-kata-sering-diketuk.md)
 - [kembali-ke-home](spesifikasi-kembali-ke-home.md)
 - [lanjut-halaman-terakhir](spesifikasi-lanjut-halaman-terakhir.md)
