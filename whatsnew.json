@@ -1,5 +1,17 @@
 [
   {
+    "n": 1000,
+    "judul": "[peta 98] Titik pengingat 'siap diulang' di header Baca + satu istilah",
+    "poin": "Di halaman Baca ada titik kecil kuning kalau ada kata siap diulang.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 998,
+    "judul": "[peta 97] Akhir buku rapi: sheet Tamat, nama 'Buku lain', bar bawah",
+    "poin": "Akhir buku sekarang jelas: satu pesan kata baru, satu istilah \"bagian\".",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 994,
     "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
     "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
@@ -165,18 +177,6 @@
     "n": 939,
     "judul": "Siap cek di papan , sama menunggu keputusan mu di hasil bedanya apa",
     "poin": "\"Siap dicek\" = hasil sudah jadi, tinggal kamu setujui, revisi, atau tolak.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 917,
-    "judul": "Header Baca HP lega: tombol Bab utuh, tombol dirampingkan jadi 3",
-    "poin": "Header Baca lebih lega: tombol kanan tinggal tiga, tidak berdempetan.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 909,
-    "judul": "Baca offline: kata tetap tersimpan, 'arti nyusul' saat sinyal balik",
-    "poin": "Offline, kata tetap bisa disimpan dan tampil dengan label \"arti nyusul\".",
     "tgl": "2026-11-13"
   }
 ]
