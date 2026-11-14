@@ -52,3 +52,10 @@
 - Tinggi header 56px → 64px; tombol berlabel tetap ada (label tersembunyi di <360px).
 - Diperiksa lewat baca kode (belum di perangkat): 320, 360, 390, laptop; judul Latin panjang dan Jepang/Korea pendek.
 - Warna ikut 4 tema baca; versi cache naik ke kepo-v279.
+
+## Pembaruan 14-11 (#956)
+- Dengar tampil lagi di header HP sebagai ikon saja (44px); label disembunyikan, aria-label tetap.
+- Cara baca tetap di menu Lainnya; Dengar dobel di menu disembunyikan di HP.
+- Header HP: padding kiri/kanan min 12px + safe-area, tombol tak mepet tepi.
+- Profil: judul buku ellipsis satu baris, 'Selesai · 100%' tetap satu baris di kanan.
+- Diperiksa lewat baca kode (belum di perangkat): 320, 375, 430, layar lebar. Cache naik ke kepo-v329.
