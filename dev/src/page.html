@@ -371,6 +371,24 @@ function login(){
 function nextPM(){const d=new Date();d.setUTCHours(1,0,0,0);if(d<=new Date())d.setUTCDate(d.getUTCDate()+1);return d}
 function progres(r){if(!r)return 0;return Math.round(r.tahap.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/r.tahap.length*100)}
 
+// Performa tim & kuota harian (hari = WIB). Kuota = target tugas selesai per hari; ubah KUOTA bila perlu.
+const KUOTA=8;
+function hariIni(t){const f=x=>new Date(x).toLocaleDateString('sv-SE',{timeZone:'Asia/Jakarta'});return f(t)===f(Date.now())}
+function kuotaPerforma(T){
+  const selesai=t=>['siap','menuju','live'].includes(t.status), gagal=t=>t.status==='gagal'||t.status==='ditolak';
+  const hari=T.filter(t=>selesai(t)&&hariIni(t.diubah)), mulai=T.filter(t=>hariIni(t.dibuat));
+  const n=hari.length, pct=Math.min(100,Math.round(n/KUOTA*100)), sisa=Math.max(0,KUOTA-n);
+  const baris=['developer','riset','desain','pm','marketing'].map(k=>{
+    const a=T.filter(t=>t.peran===k), ok=a.filter(selesai).length, gg=a.filter(gagal).length, kerja=a.filter(t=>t.status==='dikerjakan'||t.status==='antre').length;
+    const qa=a.filter(t=>t.qa), lolos=qa.filter(t=>t.qa==='lolos').length, hs=hari.filter(t=>t.peran===k).length;
+    const rate=ok+gg?Math.round(ok/(ok+gg)*100):0;
+    return `<div class="ev"><div class="ic ${TIM[k].c}">${TIM[k].e}</div><div style="min-width:0;flex:1"><div><b>${TIM[k].n}</b> · ${hs} hari ini</div><div class="mut sm">${ok} selesai · ${kerja} jalan · ${gg} gagal · ${rate}% berhasil${qa.length?` · QA lolos ${lolos}/${qa.length}`:''}</div></div></div>`}).join('');
+  return `<div class="sec"><h2>Kuota & performa</h2><span class="mut sm">Hari ini (WIB) · target ${KUOTA} tugas selesai</span></div>
+  <div class="bento"><div class="tile c ${pct>=100?'t-mint':'t-sun'} span2"><div class="eyebrow">Kuota harian</div><div class="big">${n}/${KUOTA}</div><div class="evbar"><i class="k-selesai" style="width:${pct}%"></i></div><div class="sm" style="margin-top:6px">${pct>=100?'Kuota hari ini tercapai ✅':'Sisa '+sisa+' tugas lagi'}</div></div>
+  <div class="tile c t-lav"><div class="eyebrow">Dimulai hari ini</div><div class="big">${mulai.length}</div><div class="sm">tugas baru</div></div>
+  <div class="tile c t-pink"><div class="eyebrow">Gagal total</div><div class="big">${T.filter(gagal).length}</div><div class="sm">perlu dicek</div></div></div>
+  <div class="tile" style="margin-top:12px"><div class="feed">${baris}</div></div>`;
+}
 async function markas(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='markas')return;
@@ -407,6 +425,7 @@ async function markas(again){
     <div class="tile c t-pink"><div class="eyebrow">Sudah live</div><div class="big">${live}</div><div class="sm">${jalan.length} sedang dikerjakan</div></div>
   </div>
   ${siap.length?`<div class="sec"><h2>Siap dicek</h2><span class="mut sm">menunggu kamu</span></div>${(setVis(urutT(siap).slice(0,3)),barHtml())}<div class="grid">${VISIAP.map(t=>kartuTugas(t,{pilih:true})).join('')}</div><button class="btn lime" style="width:100%;margin-top:10px" onclick="keSiap()">Lihat semua${siap.length>3?' ('+siap.length+')':''} →</button>`:''}
+  ${kuotaPerforma(T)}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Kerja terus · peran kosong langsung diberi tugas (cek tiap 30 mnt)</span></div>
   <div class="agents">${['pm','riset','desain','developer','marketing','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 2 jam &amp; tiap ada update live${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span></div>
