@@ -183,7 +183,24 @@ async function simpanGambar(env, daftar, awalan) {
 }
 const mdGambar = urls => urls.length ? '\n\n' + urls.map((u, i) => `![gambar ${i + 1}](${u})`).join('\n') : '';
 
+// Cache jawaban GET: /hq & /hasil 15 dtk, /doc 60 dtk, detail tugas 10 dtk, file PR 30 dtk.
+// Login dicek dulu supaya cache tak pernah dibaca tanpa izin. Aksi tulis mengosongkannya (sebelum & sesudah).
+const ttlGet = p => (p === '/hq' || p === '/hasil') ? 15000 : p === '/doc' ? 60000 : /^\/tasks\/\d+$/.test(p) ? 10000 : /^\/pr\/\d+\/files$/.test(p) ? 30000 : 0;
 async function api(req, env, url) {
+  const p = url.pathname.replace(/^\/api/, '');
+  const ttl = req.method === 'GET' ? ttlGet(p) : 0;
+  if (ttl) {
+    if (!(await authed(req, env))) return json({ error: 'Perlu login' }, 401);
+    const key = 'r:' + p + url.search;
+    const r = await memo(key, ttl, async () => { const x = await api0(req, env, url); return { s: x.status, t: await x.text() }; });
+    if (r.s !== 200) MEMO.delete(key);
+    return new Response(r.t, { status: r.s, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+  }
+  const res = await api0(req, env, url);
+  if (req.method !== 'GET') MEMO.clear();
+  return res;
+}
+async function api0(req, env, url) {
   const p = url.pathname.replace(/^\/api/, '');
   const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
 
@@ -196,35 +213,46 @@ async function api(req, env, url) {
 
   if (req.method !== 'GET') MEMO.clear();
   if (p === '/hq' && req.method === 'GET') {
-    const [issues, road, docs, runs, mi] = await Promise.all([
-      gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`),
-      gh(env, `/repos/${REPO}/contents/docs/roadmap.json`, { raw: true }).then(r => (r.ok ? r.json() : null)),
-      gh(env, `/repos/${REPO}/contents/docs`, { soft: true }),
-      gh(env, `/repos/${REPO}/actions/runs?per_page=15`, { soft: true }),
-      gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }),
-    ]);
-    const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
-    const docs_info = await memo('docinfo:' + dl.join(','), 300000, () => docInfo(env, dl));
-    let masukan = [];
-    const mn = Array.isArray(mi) && mi[0] ? mi[0].number : 0;
-    if (mn) {
-      masukan = await memo('masukan:' + mn, 60000, async () => {
+    // Semua panggilan jalan bersamaan: dokumen, masukan, dan catatan QA menempel pada panggilan awalnya.
+    const issuesP = gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`);
+    const docsP = gh(env, `/repos/${REPO}/contents/docs`, { soft: true });
+    const infoP = docsP.then(docs => {
+      const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
+      return memo('docinfo:' + dl.join(','), 300000, () => docInfo(env, dl));
+    });
+    const masP = gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }).then(async mi => {
+      const mn = Array.isArray(mi) && mi[0] ? mi[0].number : 0;
+      if (!mn) return { mn, masukan: [] };
+      const masukan = await memo('masukan:' + mn, 60000, async () => {
         const iss = await gh(env, `/repos/${REPO}/issues/${mn}`, { soft: true });
         const tot = (iss && iss.comments) || 0, pg = Math.max(1, Math.ceil(tot / 30));
         const cs = await gh(env, `/repos/${REPO}/issues/${mn}/comments?per_page=30&page=${pg}`, { soft: true });
         return Array.isArray(cs) ? cs.slice(-12).map(c => ({ teks: c.body, waktu: c.created_at })) : [];
       });
-    }
-    const tasks = issues.filter(i => !i.pull_request).map(brief);
-    // isi catatan QA (1 baris) diambil dari komentar, hanya untuk tugas berlabel qa-catatan
-    await Promise.all(tasks.filter(t => t.qa === 'catatan').slice(0, 10).map(async t => {
-      const cs = await memo('qa:' + t.n + ':' + t.diubah, 120000, () => gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true }));
-      const c = Array.isArray(cs) && cs.filter(x => x.body.includes('QA ada catatan')).pop();
-      if (!c) return;
-      const tx = c.body.split('QA ada catatan**')[1] || '';
-      const ln = tx.split('\n').map(x => x.replace(/^[\s>*#\-•]+/, '').replace(/[*_`]/g, '').trim()).find(x => x.length > 2 && !/^QA agent tidak menulis/.test(x));
-      if (ln) t.qaTeks = ln.slice(0, 200);
-    }));
+      return { mn, masukan };
+    });
+    // isi catatan QA (1 baris) dari komentar, hanya tugas berlabel qa-catatan (maks 5)
+    const tasksP = issuesP.then(async issues => {
+      const tasks = issues.filter(i => !i.pull_request).map(brief);
+      await Promise.all(tasks.filter(t => t.qa === 'catatan').slice(0, 5).map(async t => {
+        const cs = await memo('qa:' + t.n + ':' + t.diubah, 120000, () => gh(env, `/repos/${REPO}/issues/${t.n}/comments?per_page=100`, { soft: true }));
+        const c = Array.isArray(cs) && cs.filter(x => x.body.includes('QA ada catatan')).pop();
+        if (!c) return;
+        const tx = c.body.split('QA ada catatan**')[1] || '';
+        const ln = tx.split('\n').map(x => x.replace(/^[\s>*#\-•]+/, '').replace(/[*_`]/g, '').trim()).find(x => x.length > 2 && !/^QA agent tidak menulis/.test(x));
+        if (ln) t.qaTeks = ln.slice(0, 200);
+      }));
+      return tasks;
+    });
+    const [tasks, road, docs, runs, docs_info, mas] = await Promise.all([
+      tasksP,
+      gh(env, `/repos/${REPO}/contents/docs/roadmap.json`, { raw: true }).then(r => (r.ok ? r.json() : null)),
+      docsP,
+      gh(env, `/repos/${REPO}/actions/runs?per_page=15`, { soft: true }),
+      infoP,
+      masP,
+    ]);
+    const masukan = mas.masukan, mn = mas.mn;
     return json({
       tasks,
       roadmap: road,
@@ -236,18 +264,19 @@ async function api(req, env, url) {
     });
   }
   if (p === '/hasil' && req.method === 'GET') {
-    // Komentar repo sangat ramai (QA, antrean, tester), jadi ambil 6 halaman (600 komentar terbaru)
-    // supaya laporan "Siap dicek" tugas yang lebih lama tetap terbaca.
-    const [issues, ...pages] = await Promise.all([
+    // Komentar repo sangat ramai. Awalnya 1 halaman; halaman 2-6 (600 komentar) hanya bila laporan tugas "Siap dicek" belum ketemu.
+    const pgK = pg => memo('kom:' + pg, 20000, () => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true }));
+    const [issues, p1] = await Promise.all([
       gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=100&sort=created&direction=desc`),
-      ...[1, 2, 3, 4, 5, 6].map(pg => memo('kom:' + pg, 20000, () => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true }))),
+      pgK(1),
     ]);
-    const cs = pages.flatMap(x => (Array.isArray(x) ? x : []));
     const lap = {};
-    cs.forEach(c => {
+    const pindai = cs => (Array.isArray(cs) ? cs : []).forEach(c => {
       const n = +String(c.issue_url).split('/').pop();
       if (!lap[n] && /Siap dicek|tidak mengubah/i.test(c.body || '')) lap[n] = { teks: c.body, waktu: c.created_at };
     });
+    pindai(p1);
+    if (issues.some(i => !i.pull_request && status(i) === 'siap' && !lap[i.number])) (await Promise.all([2, 3, 4, 5, 6].map(pgK))).forEach(pindai);
     return json(issues.filter(i => !i.pull_request).map(i => ({ ...brief(i), laporan: lap[i.number] || null })));
   }
   if (p === '/doc' && req.method === 'GET') {
@@ -281,6 +310,12 @@ async function api(req, env, url) {
     return json({ ...brief(i), catatan: g.catatan });
   }
 
+  // Daftar file PR dimuat belakangan oleh layar detail (supaya detail tampil dulu)
+  const fm = p.match(/^\/pr\/(\d+)\/files$/);
+  if (fm && req.method === 'GET') {
+    const fl = await gh(env, `/repos/${REPO}/pulls/${+fm[1]}/files?per_page=50`, { soft: true });
+    return json({ files: Array.isArray(fl) ? fl.map(f => f.filename) : [] });
+  }
   const m = p.match(/^\/tasks\/(\d+)(?:\/(\w+))?$/);
   if (!m) return json({ error: 'not found' }, 404);
   const n = +m[1], act = m[2];
@@ -294,9 +329,8 @@ async function api(req, env, url) {
 
   if (!act && req.method === 'GET') {
     const cs = cs0, pr = pr0;
-    const files = pr ? (await gh(env, `/repos/${REPO}/pulls/${pr.number}/files?per_page=50`, { soft: true }) || []).map(f => f.filename) : [];
     return json({
-      files, branch: BR(n),
+      branch: BR(n),
       ...brief(issue), isi: issue.body || '', url: issue.html_url,
       riwayat: cs.map(c => ({ dari: c.body.startsWith('Revisi:') ? 'kamu' : 'agent', teks: c.body, waktu: c.created_at })),
       pr: pr && { n: pr.number, url: pr.html_url, state: pr.state, merged: !!pr.merged_at },
