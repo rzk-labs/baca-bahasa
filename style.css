@@ -801,6 +801,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fb-next{padding:10px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
 .fb-next .fbn-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;overflow-wrap:break-word;word-break:normal;line-height:1.3;text-align:start}
 .fb-next .fbn-m{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.endcard{position:absolute;left:0;right:0;bottom:8px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;border:1.5px solid var(--color-border);border-radius:16px;background:var(--color-surface);z-index:2}
+.endcard .sec{flex:1 1 130px;min-height:44px;padding:0 12px;font-size:14px}
 /* #829 header baca: judul utuh (maks 2 baris), Bab + penanda + Offline di baris bawah */
 .rbar{height:calc(64px + env(safe-area-inset-top))}
 .rtitle{flex-wrap:wrap;align-content:center;justify-content:center;column-gap:4px;row-gap:0;text-align:center}
@@ -877,6 +879,13 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap,.rmk{font-size:13px}
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
+@media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
+/* terjemahan kalimat di tempat (#907): baris kecil tepat di bawah kalimat; ikut warna 4 tema baca */
+.cols .s.itrs{background:var(--color-hl-sentence);border-radius:4px}
+.cols .itr{display:block;margin:.25em 0 .6em;padding:6px 10px;border-inline-start:3px solid var(--color-text-muted);border-radius:6px;background:var(--color-surface-soft);color:var(--color-text);font-size:.85em;line-height:1.4;text-align:start;letter-spacing:0;word-spacing:normal;-webkit-hyphens:manual;hyphens:manual;overflow-wrap:anywhere;break-inside:avoid;cursor:pointer;-webkit-user-select:none;user-select:none}
+.cols .itr .loading{color:var(--color-text-muted)}
+.cols .itr-m{display:block;margin-top:2px;font-size:.8em;line-height:1.3;color:var(--color-text-muted)}
+.cols .itr-r{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:var(--radius-full);background:var(--color-text);color:var(--color-bg);font-weight:700;font-size:.9em}
 /* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
 .rbar{gap:8px;padding-left:8px;padding-right:8px}
 .rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
@@ -919,3 +928,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fr-read .fr-top .lg{flex:none}
 .fr-read .fr-top b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fr-read .fr-st{flex:none;white-space:nowrap;margin-left:auto}
+/* #961: lencana terkunci jelas */
+.badge.off .d{display:flex;gap:4px;align-items:flex-start}
+.badge .lk{flex:none;width:12px;height:12px;margin-top:2px}
+.fr-read .fr-st{font-size:13px}
