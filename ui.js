@@ -266,6 +266,15 @@ function globalErr(ev) {
   console.error(r || msg);
   toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => muatUlangPaksa() });
 }
+/* muat ulang paksa: hanya cache app & service worker; data buku/kata/login tidak disentuh */
+async function muatUlangVersi() {
+  if (navigator.onLine === false) { toast('Butuh internet untuk ambil versi baru'); return; }
+  try {
+    if ('serviceWorker' in navigator) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); }
+    if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.filter(k => k.startsWith('kepo-')).map(k => caches.delete(k))); }
+  } catch (e) { console.error(e); }
+  location.reload();
+}
 window.addEventListener('error', globalErr);
 window.addEventListener('unhandledrejection', globalErr);
 /* Catatan kecil suara bawaan HP, hanya ja/zh/ko, tampil sekali per sesi */
@@ -606,7 +615,18 @@ function openSettings() {
     ${dataWarn()}
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
+    <div class="set-grp" id="aplikasi"><div class="set-gt">Aplikasi</div>
+    <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div></div>
+    <button class="sec full" id="muatUlang" style="min-height:44px">Muat ulang versi terbaru</button>
+    <div class="mut sm" id="muatMsg" role="status" style="margin-top:8px"></div>
+    </div>
     </div>`, 'Pengaturan baca');
+  $('#muatUlang').onclick = () => {
+    if (navigator.onLine === false) { $('#muatMsg').textContent = 'Butuh internet untuk ambil versi baru'; return; }
+    openSheet(`<div class="sh-head"><h2>Muat ulang versi terbaru?</h2></div><p>Buku &amp; katamu tetap aman.</p><button class="full" id="muatOk" style="min-height:44px">Muat ulang</button><button class="ghost full" id="muatNo" style="min-height:44px">Batal</button>`, 'Muat ulang versi terbaru');
+    $('#muatOk').onclick = () => muatUlangVersi();
+    $('#muatNo').onclick = closeSheet;
+  };
   if ($('#vsel')) $('#vsel').onchange = e => { db.voices = db.voices || {}; if (e.target.value) db.voices[b.lang] = e.target.value; else delete db.voices[b.lang]; save(); speak(b.lang === 'ja' ? 'こんにちは' : 'Hello', b.lang); };
   if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
   if ($('#wnSet')) $('#wnSet').onclick = () => openWhatsNew();
