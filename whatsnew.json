@@ -1,5 +1,23 @@
 [
   {
+    "n": 1031,
+    "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
+    "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1029,
+    "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
+    "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1026,
+    "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
+    "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1020,
     "judul": "Home: kartu buku tamat lega, tombol satu baris & tak terpotong",
     "poin": "Kartu buku tamat di Home kini lebih ringkas dan lega.",
@@ -159,24 +177,6 @@
     "n": 913,
     "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
     "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 915,
-    "judul": "Sheet Tamat rapi: info tak dobel, buku sendiri dulu, 'Baca ulang'",
-    "poin": "Layar Tamat sekarang rapi: jumlah kata cuma muncul sekali.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 944,
-    "judul": "[peta 89] Sheet arti kata rapi: tombol tak patah, Simpan penuh, -eed",
-    "poin": "Sheet arti kata sekarang rapi: tombol tidak patah, Simpan satu baris penuh.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 926,
-    "judul": "[peta 85] Tuntaskan arti nyusul: tanda tak hilang, penanda di daftar Kata",
-    "poin": "Arti kata offline kini tak hilang tandanya dan terisi sendiri saat sinyal balik.",
     "tgl": "2026-11-13"
   }
 ]
