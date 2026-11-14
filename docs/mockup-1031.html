@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1031 — Header Baca: tombol Ulang</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font:14px/1.4 Inter,system-ui,sans-serif;color:#351E28}
+.lbl{font:700 12px/1 Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px}
+.ph{width:390px;max-width:100%;background:#FBF7F0;border-radius:16px;overflow:hidden;box-shadow:0 1px 6px rgba(53,30,40,.2)}
+.bar{display:flex;align-items:center;gap:0;padding:6px 12px;border-bottom:1px solid #E5DDD0}
+.t{flex:1;min-width:0;font:800 15px/1.2 "Bricolage Grotesque",Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px}
+.b{position:relative;min-width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.b svg{width:20px;height:20px;stroke:#351E28;fill:none;stroke-width:2}
+.b span{font:700 10px/1 Inter,sans-serif}
+.dn{position:absolute;top:2px;right:0;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28;font:800 10px/16px Inter,sans-serif;text-align:center}
+.dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px #351E28}
+.body{padding:16px;font:17px/1.7 Literata,Georgia,serif}
+small{display:block;margin-top:6px;font-size:12px}
+</style></head><body>
+<h1 style="font:800 18px Bricolage Grotesque,sans-serif;margin:0 0 4px">Header Baca: tombol Ulang</h1>
+
+<div class="lbl">Sebelum</div>
+<div class="ph"><div class="bar"><div class="t">Harry Potter dan Batu Bertuah</div>
+<div class="b"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 8h6"/></svg><span>Dengar</span></div>
+<div class="b"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/></svg><i class="dot"></i></div>
+<div class="b"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>Lainnya</span><i class="dot"></i></div></div>
+<div class="body">Kartu tanpa tulisan, titik dobel.</div></div>
+
+<div class="lbl">Sesudah (390px)</div>
+<div class="ph"><div class="bar"><div class="t">Harry Potter dan Batu Bertuah</div>
+<div class="b"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 8h6"/></svg><span>Dengar</span></div>
+<div class="b"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/></svg><span>Ulang</span><i class="dn">9+</i></div>
+<div class="b"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>Lainnya</span></div></div>
+<div class="body">Ada tulisan "Ulang" + angka. Lainnya bersih tanpa titik.<small>Layar &lt;360px: tulisan disembunyikan, angka tetap tampil.</small></div></div>
+</body></html>
