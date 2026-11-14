@@ -1,5 +1,11 @@
 [
   {
+    "n": 907,
+    "judul": "Baca: terjemahan kalimat cepat di tempat, tanpa buka sheet",
+    "poin": "Ketuk dua kali satu kalimat: arti singkatnya muncul tepat di bawahnya.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 961,
     "judul": "Profil & kartu rapi: lencana jelas, baris Selesai utuh, toast isi arti",
     "poin": "Lencana terkunci kini redup, bergembok, dan jelas syaratnya.",
@@ -171,12 +177,6 @@
     "n": 874,
     "judul": "Tambah Thai & Hindi + aman untuk skrip Arab/Hindi/Thai",
     "poin": "Thai dan Hindi sekarang ada di pilihan bahasa, dan terdeteksi otomatis.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 872,
-    "judul": "Sheet arti kata: tak pernah kosong, ada 'Memuat…' & tombol Coba lagi",
-    "poin": "Sheet arti kata sudah selalu tampil, dengan tulisan \"Lagi nyari arti…\".",
     "tgl": "2026-11-13"
   }
 ]

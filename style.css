@@ -879,6 +879,13 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rtitle .rchap,.rmk{font-size:13px}
 .rtitle .rchap{min-height:44px;min-width:44px;margin:-8px 0}
 .rrt,.rlis{min-width:44px;min-height:44px}
+@media (max-width:359px){.rrt,.rlis{min-width:44px;padding:0 2px}.rrtl{display:none}}
+/* terjemahan kalimat di tempat (#907): baris kecil tepat di bawah kalimat; ikut warna 4 tema baca */
+.cols .s.itrs{background:var(--color-hl-sentence);border-radius:4px}
+.cols .itr{display:block;margin:.25em 0 .6em;padding:6px 10px;border-inline-start:3px solid var(--color-text-muted);border-radius:6px;background:var(--color-surface-soft);color:var(--color-text);font-size:.85em;line-height:1.4;text-align:start;letter-spacing:0;word-spacing:normal;-webkit-hyphens:manual;hyphens:manual;overflow-wrap:anywhere;break-inside:avoid;cursor:pointer;-webkit-user-select:none;user-select:none}
+.cols .itr .loading{color:var(--color-text-muted)}
+.cols .itr-m{display:block;margin-top:2px;font-size:.8em;line-height:1.3;color:var(--color-text-muted)}
+.cols .itr-r{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:var(--radius-full);background:var(--color-text);color:var(--color-bg);font-weight:700;font-size:.9em}
 /* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
 .rbar{gap:8px;padding-left:8px;padding-right:8px}
 .rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
