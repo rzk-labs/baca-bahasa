@@ -1,4 +1,4 @@
-const C='kepo-v349';
+const C='kepo-v356';
 const FILES=['./','index.html','app.js','ui.js','kamus-ja.txt','cloud.js','style.css','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','icon-maskable-512.png','favicon.svg'];
 // pustaka impor EPUB/PDF + font Google (Bricolage Grotesque, Literata, Inter): di-cache saat pertama dipakai online
 const CDN=['https://cdnjs.cloudflare.com/ajax/libs/','https://fonts.googleapis.com/','https://fonts.gstatic.com/'];
