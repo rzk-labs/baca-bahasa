@@ -757,6 +757,14 @@
       "nama": "Tombol 'Muat ulang versi terbaru' + baris versi app di Pengaturan (#999)",
       "dokumen": "docs/spesifikasi-muat-ulang-paksa-999.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 99,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Ganti sampul buku sendiri dari foto/galeri: menu ⋯ di kartu buku, Ganti/Hapus sampul (#1009)",
+      "dokumen": "docs/spesifikasi-ganti-sampul-1009.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
