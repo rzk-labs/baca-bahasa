@@ -749,6 +749,14 @@
       "nama": "Satu istilah 'diulang' + titik pengingat kata siap diulang di header Baca (#990)",
       "dokumen": "docs/riset-pengingat-ulas-di-baca.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 99,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Ganti sampul buku sendiri dari foto/galeri: menu ⋯ di kartu buku, Ganti/Hapus sampul (#1009)",
+      "dokumen": "docs/spesifikasi-ganti-sampul-1009.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
