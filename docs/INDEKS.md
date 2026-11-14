@@ -113,6 +113,7 @@
 - [pengingat-baca-pwa](riset-pengingat-baca-pwa.md)
 - [penanda-sinkron](riset-penanda-sinkron.md)
 - [petunjuk-onboarding-baca](riset-petunjuk-onboarding-baca.md)
+- [pengingat-ulas-di-baca](riset-pengingat-ulas-di-baca.md)
 - [pratinjau-kata-bab](riset-pratinjau-kata-bab.md)
 - [rekap-sesi-baca](riset-rekap-sesi-baca.md)
 - [setelah-tamat-buku](riset-setelah-tamat-buku.md)

@@ -1,5 +1,11 @@
 [
   {
+    "n": 994,
+    "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
+    "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 989,
     "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
     "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
@@ -171,12 +177,6 @@
     "n": 909,
     "judul": "Baca offline: kata tetap tersimpan, 'arti nyusul' saat sinyal balik",
     "poin": "Offline, kata tetap bisa disimpan dan tampil dengan label \"arti nyusul\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 898,
-    "judul": "Profil: buku tak dobel; Home: sapaan rapi; header Baca mudah diketuk",
-    "poin": "Profil kini menampilkan satu entri per buku, dengan kemajuan tertinggi.",
     "tgl": "2026-11-13"
   }
 ]
