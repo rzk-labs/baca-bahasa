@@ -197,17 +197,19 @@ function showLevelUp() {
   const lv = level(); if (lv <= db.lvlSeen) return; // sudah dirayakan: jangan muncul lagi
   db.lvlSeen = lv; save(); celebrate(`Level ${lv}!`, 'Naik level! Kamu makin jago', 'lvl');
 }
-function award(n, stat, pk0) {
+function award(n, stat, pk0, si) {
   if (stat === 'page') {
-    /* halaman yang sama (baca ulang / bolak-balik) tak memberi XP maupun hitungan lagi */
-    db.pgSeen = db.pgSeen || {}; const sd = today(), sk0 = pk0 || '?';
-    if ((db.pgSeen[sd] || []).includes(sk0)) return;
+    /* hitung hanya bila maju sungguhan: kalimat awal halaman > kalimat terjauh yang sudah dihitung hari ini (tahan ganti huruf/layout) */
+    const sd = today(), sk0 = pk0 || '?', idx = Number.isFinite(si) ? si : 0;
+    if (!db.pgSeen || Array.isArray(db.pgSeen)) db.pgSeen = {};
+    let day = db.pgSeen[sd]; if (!day || typeof day !== 'object' || Array.isArray(day)) day = db.pgSeen[sd] = {}; /* format lama (array) diabaikan */
+    if (sk0 in day && idx <= day[sk0]) return;
+    day[sk0] = idx;
   }
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   if (n && stat) { db.xpSrc = db.xpSrc || {}; db.xpSrc[stat] = (db.xpSrc[stat] || 0) + n; } /* asal XP, hanya untuk tampilan */
   if (stat === 'page') {
-    db.pgDay = db.pgDay || {}; db.pgSeen = db.pgSeen || {}; const pd = today(), sk = pk0 || '?', seen = db.pgSeen[pd] = db.pgSeen[pd] || [];
-    if (!seen.includes(sk)) { seen.push(sk); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; } /* halaman unik per hari per buku */
+    db.pgDay = db.pgDay || {}; const pd = today(); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1;
     const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]];
     const sg = Object.keys(db.pgSeen).sort(); while (sg.length > 8) delete db.pgSeen[sg.shift()];
   }
@@ -1717,12 +1719,14 @@ function nudgeTap(b) {
 }
 function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
 function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
+/* indeks kalimat pertama yang mulai di halaman p (dari RD.ss) */
+function firstSent(p) { const ss = RD.ss || [], i = ss.findIndex(x => x.pg >= p); return i < 0 ? ss.length : i; }
 function turn(d) {
   const b = book(); closeSheet(); const was = LIS.on && !!db.lisAuto; stopListenPage();
   const np = RD.page + d;
   const resume = () => { if (!was) return; const id = ++LIS.id; LIS.on = true; setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400); };
-  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page', b.id + ':' + b.pos + ':' + np); resume(); return; }
-  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos + ':0'); viewBaca(); }
+  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
+  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { if (b.doneAt) { restartBook(b); viewBaca(); } else finishBook(b); }
   else toast('Ini halaman pertama.');
