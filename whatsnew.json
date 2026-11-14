@@ -1,5 +1,11 @@
 [
   {
+    "n": 979,
+    "judul": "[peta 90] Keepo HQ: klik cepat (cache, panggilan bersamaan, optimistis)",
+    "poin": "Keepo HQ lebih cepat: data lama langsung tampil, lalu diperbarui diam-diam.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 977,
     "judul": "Sheet arti kata: buang arti ganda + rapikan ruang kosong bawah teks",
     "poin": "Arti ganda di sheet kata sudah dibuang, jadi lebih bersih.",
@@ -171,12 +177,6 @@
     "n": 885,
     "judul": "[peta 82] Keepo HQ: gambar di masukan (/feedback) & perintah ke tim",
     "poin": "Perintah ke tim di Keepo HQ sekarang bisa disertai sampai 3 gambar.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 884,
-    "judul": "[peta 82] Keepo HQ: terima gambar di /feedback & perintah ke tim (HQ)",
-    "poin": "Markas tim kini bisa terima gambar, dari masukan pengguna maupun perintah ke tim.",
     "tgl": "2026-11-13"
   }
 ]
