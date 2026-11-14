@@ -1,5 +1,11 @@
 [
   {
+    "n": 1035,
+    "judul": "[peta 102] Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal di tab Kata",
+    "poin": "Kartu kata sekarang minta kamu ingat dulu, baru tekan \"Lihat arti\".",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1032,
     "judul": "[peta 101] Ganti sampul buku sendiri dari foto/galeri (menu ⋯)",
     "poin": "Tiap buku di Home sekarang punya tombol titik tiga untuk ganti sampul.",
@@ -171,12 +177,6 @@
     "n": 948,
     "judul": "[peta 87] Keepo HQ: setujui massal tugas Siap dicek",
     "poin": "Kartu Siap dicek kini punya kotak centang, plus tombol Pilih semua.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 951,
-    "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
-    "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
     "tgl": "2026-11-14"
   }
 ]
