@@ -757,6 +757,15 @@
       "nama": "Tombol 'Muat ulang versi terbaru' + baris versi app di Pengaturan (#999)",
       "dokumen": "docs/spesifikasi-muat-ulang-paksa-999.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 100,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal + 'Ulang kata baru' di tab Kata (#1016)",
+      "dokumen": "docs/riset-kartu-ingat-dulu.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) 36 butir, 6 jenis sumber. Mockup: docs/mockup-1016.html."
     }
   ],
   "prioritas": [
