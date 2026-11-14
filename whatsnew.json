@@ -1,5 +1,41 @@
 [
   {
+    "n": 972,
+    "judul": "[peta 95] Profil: Rak buku bertema & tersusun sesuai selera (lokal)",
+    "poin": "Profil sekarang punya rak buku: sampul berdiri di papan, lengkap dengan persen.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 981,
+    "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
+    "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 979,
+    "judul": "[peta 90] Keepo HQ: klik cepat (cache, panggilan bersamaan, optimistis)",
+    "poin": "Keepo HQ lebih cepat: data lama langsung tampil, lalu diperbarui diam-diam.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 977,
+    "judul": "Sheet arti kata: buang arti ganda + rapikan ruang kosong bawah teks",
+    "poin": "Arti ganda di sheet kata sudah dibuang, jadi lebih bersih.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 971,
+    "judul": "[peta 96] Home: penanda 'N kata siap diulang' + kabar sisa kartu",
+    "poin": "Di Home sekarang ada tulisan \"N kata siap diulang\"; diketuk langsung ke latihan kata.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 956,
+    "judul": "Header Baca HP: Dengar kembali terlihat, tombol tak mepet tepi",
+    "poin": "Tombol Dengar muncul lagi di header baca HP, sebagai ikon.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 953,
     "judul": "XP satu angka: Home=Profil=popup Level, sinkron tak memicu Level",
     "poin": "XP dan Level sekarang sama di Home, Profil, dan popup; sinkron tak memicu popup.",
@@ -141,42 +177,6 @@
     "n": 890,
     "judul": "Tamat & Home: tombol 'Buku lain' satu baris, popup Level tak menimpa",
     "poin": "Tombol \"Buku lain\" di Home kini satu baris dan seukuran \"Baca ulang\".",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 888,
-    "judul": "Jumlah bab/bagian tetap sama di Home, Baca & Profil",
-    "poin": "Jumlah bab di Home sekarang dihitung ulang dan sama dengan layar Baca.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 885,
-    "judul": "[peta 82] Keepo HQ: gambar di masukan (/feedback) & perintah ke tim",
-    "poin": "Perintah ke tim di Keepo HQ sekarang bisa disertai sampai 3 gambar.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 884,
-    "judul": "[peta 82] Keepo HQ: terima gambar di /feedback & perintah ke tim (HQ)",
-    "poin": "Markas tim kini bisa terima gambar, dari masukan pengguna maupun perintah ke tim.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 882,
-    "judul": "[peta 82] Tombol Masukan di header Home & baca + lampiran gambar (app)",
-    "poin": "Tombol Masukan sekarang ada di atas layar Home dan saat baca.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 879,
-    "judul": "Home: toast tak menutupi kartu, Level pakai bar, status tamat seragam",
-    "poin": "Pesan pop-up kini lebih kecil dan naik, tidak menutup kartu Home lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 876,
-    "judul": "Lanjut baca: 'Kata baru' tak lagi tampil kata Korea/partikel (が, 落ち)",
-    "poin": "Status \"Lanjut\" kini hanya menyebut kata sesuai bahasa buku.",
     "tgl": "2026-11-13"
   }
 ]

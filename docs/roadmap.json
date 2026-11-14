@@ -700,7 +700,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: klik cepat (cache server, panggilan GitHub bersamaan, layar langsung berubah, segar-ulang di belakang) (#943)",
       "dokumen": "docs/spesifikasi-hq-klik-cepat.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#979)"
     },
     {
       "no": 93,
@@ -732,7 +732,7 @@
       "prioritas": "P0",
       "nama": "Penanda 'N kata siap diulang' di Home + kabar sisa kartu + pesan jadwal rapi (#955)",
       "dokumen": "docs/riset-kartu-latihan-konteks.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#971)"
     }
   ],
   "prioritas": [

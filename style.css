@@ -164,6 +164,8 @@ body.reading::after{display:none}
 .fw-nudge{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:12px 0 -8px;padding:12px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);font:700 14px/18px var(--font-body,inherit);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .fw-nudge svg.i{flex:none;width:20px;height:20px}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
+.due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
@@ -389,6 +391,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .aij-rep{min-height:44px;margin-top:6px}
 .rhead{flex:none;min-height:40px;display:flex;align-items:flex-end;justify-content:center;padding:0 64px;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vp{flex:1;position:relative;overflow:hidden;overscroll-behavior:none;touch-action:pan-y;margin:16px var(--reader-mg,24px) 4px;width:calc(100% - 2 * var(--reader-mg,24px));max-width:1180px;align-self:center}
+/* #977: HP sempit, ruang kosong atas/bawah teks dikurangi */
+@media (max-width:430px){.rhead{min-height:30px}.vp{margin-top:8px;margin-bottom:0}}
 .vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--color-border);pointer-events:none}
 .cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:var(--reader-ls,.005em);word-spacing:var(--reader-ws,normal);text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
@@ -893,7 +897,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rrt,.rlis{flex:none}
 /* #935 HP <=430px: bar atas hanya Kembali, Bab utuh, Lainnya; Cara baca & Dengar pindah ke menu Lainnya; judul min ±8 huruf CJK */
 .rtitle b{min-width:8em}.rmore .rmob{display:none}
-@media (max-width:430px){.rbar{gap:4px;padding-left:4px;padding-right:4px}#rRt,#rLis{display:none}.rmore .rmob{display:flex}.rmore .chi b.rst{background:var(--ink);color:var(--cream);padding:3px 10px;font-size:12px}}
+@media (max-width:430px){.rbar{gap:4px;padding-left:4px;padding-right:4px}#rRt{display:none}.rmore .rmob{display:flex}.rmore .chi b.rst{background:var(--ink);color:var(--cream);padding:3px 10px;font-size:12px}}
 .rmore .chi .i{width:20px;height:20px;flex:none}.rmore .chi b{background:none;color:inherit;padding:0;font-size:inherit;font-weight:800}
 /* #932 logo Keepo utuh di HP: logo tidak menyusut; pil XP disembunyikan (XP ada di Home & Profil) */
 @media (max-width:430px){#top h1{flex:0 0 auto;min-width:max-content;overflow:visible}#hdx{margin-left:auto}#pXp{display:none}}
@@ -917,7 +921,18 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .goal-row .ring .score .gn{font:800 20px/20px var(--font-display);letter-spacing:-.02em}
 .goal-row .ring .score small{display:block;font:700 9px/9px var(--font-ui);letter-spacing:.04em;color:var(--color-text-muted)}
 @media (max-width:359px){.goal-row .ring .score .gn{font-size:17px;line-height:17px}.goal-row .ring .score small{font-size:8px;line-height:8px}}
-/* #961: lencana terkunci jelas, baris buku Profil rapi */
+/* #956 header Baca HP: Dengar tampil sebagai ikon (44px), padding >=12px + safe-area; Profil: baris buku satu baris */
+@media (max-width:430px){
+.rbar{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+#rLis{display:inline-flex;align-items:center;justify-content:center;width:44px;min-width:44px;min-height:44px;padding:0}
+#rLis .rrtl{display:none}
+.rmore .rmob#rmLis{display:none}
+}
+.fr-read .fr-top{display:flex;align-items:baseline;gap:6px;min-width:0}
+.fr-read .fr-top .lg{flex:none}
+.fr-read .fr-top b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr-read .fr-st{flex:none;white-space:nowrap;margin-left:auto}
+/* #961: lencana terkunci jelas */
 .badge.off .d{display:flex;gap:4px;align-items:flex-start}
 .badge .lk{flex:none;width:12px;height:12px;margin-top:2px}
 .fr-read{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
@@ -949,3 +964,4 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-ut{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rk-up button{flex:none;min-height:36px;padding:0 10px;font-size:12px}
 .rk-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px 10px;background:var(--color-surface-soft);border-radius:14px}
+.fr-read .fr-st{font-size:13px}
