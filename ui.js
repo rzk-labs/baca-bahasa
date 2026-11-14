@@ -856,7 +856,7 @@ function viewRak() {
     ${weekCard()}
     <div class="bento">
       <div class="tile t-pink wide" id="hero"><div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
-        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button>${other ? `<button class="sec" id="hOther">Buku lain</button>` : ''}</div></div>
+        <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang →' : 'Gas baca →'}</button>${other ? `<button class="sec" id="hOther">Buku lain</button>` : pctOf(cur) >= 100 ? `<button class="sec" id="hAdd">Tambah buku baru</button>` : ''}</div></div>
     </div>
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
@@ -872,6 +872,7 @@ function viewRak() {
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
+    const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
@@ -1629,10 +1630,10 @@ function showPage(p, anim = true) {
   syncMarks();
   const pv = $('#pv'); if (pv) pv.disabled = RD.page === 0 && b.pos === 0;
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
-  if (nx) nx.disabled = false;
+  if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
   else if (last && b.doneAt) { nx.textContent = 'Baca ulang'; nx.dataset.ulang = '1'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Baca ulang dari awal'); }
-  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
   pfArm();
@@ -1808,7 +1809,7 @@ function toggleInline(sEl) {
   const o = RD.itr = { el, sEl, tok: 0 };
   const fits = () => { const vr = $('#vp').getBoundingClientRect(), r = el.getBoundingClientRect(); return r.left >= vr.left - 1 && r.right <= vr.right + 1 && r.top >= vr.top - 1 && r.bottom <= vr.bottom + 1; };
   /* tak muat di halaman ini (kalimat di dasar kolom) -> jalan pintas gagal, pakai sheet seperti biasa */
-  const fallback = () => { closeInline(); showSentence('', sent, +sEl.dataset.s, sEl); award(1, 'look'); };
+  const fallback = () => { closeInline(); showSentence('', sent, +sEl.dataset.s, sEl); award(1, 'look'); if ($('#toast').classList.contains('hide')) toast('Kalimat panjang, dibuka di lembar arti.'); };
   const run = () => {
     const my = ++o.tok;
     const cached = cachedTr(sent, b.lang, db.my);
@@ -1824,7 +1825,7 @@ function toggleInline(sEl) {
     if (cached) return show({ text: cached });
     translate(sent, b.lang, db.my).then(r => { if (RD.itr !== o || my !== o.tok) return; if (!r || !r.text) throw new Error('kosong'); show(r); }).catch(() => {
       if (RD.itr !== o || my !== o.tok) return;
-      el.innerHTML = '<span class="itr-t">Arti belum kebuka.</span> ';
+      el.innerHTML = '<span class="itr-t"></span> '; el.firstChild.textContent = navigator.onLine === false ? 'Lagi offline, arti kalimat butuh internet.' : 'Layanan terjemahan lagi sibuk.';
       const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'itr-r'; bt.textContent = 'Coba lagi'; bt.onclick = ev => { ev.stopPropagation(); run(); };
       el.append(bt);
       if (!fits()) fallback();

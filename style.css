@@ -458,6 +458,10 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .sheet-aux{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
 .sheet-aux .ghost{padding-left:0;min-height:44px;min-width:44px;font-size:inherit}
 .pg{color:var(--color-text-muted);width:48px;min-width:48px;min-height:48px;padding:0}
+/* Tombol 'Selesai' di halaman terakhir: Plum Noir di tema terang, Wasabi di tema gelap */
+.pg.fin{background:#351E28;color:#FAF7F0;border-radius:var(--radius-full);max-width:100%}
+[data-theme=night] .pg.fin,[data-theme=dark] .pg.fin{background:#E9F056;color:#351E28}
+@media (prefers-color-scheme:dark){[data-theme=auto] .pg.fin{background:#E9F056;color:#351E28}}
 .rbar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;gap:8px;height:calc(56px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 8px 0;background:var(--color-surface);border-bottom:1px solid var(--color-border);transform:translateY(-105%);transition:transform var(--dur-color) ease-out}
 .reader.chrome .rbar{transform:none}
 .rtitle{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:2px;line-height:1.3}.rtitle b{flex:0 1 auto;min-width:0}.rtitle .rchap,.rtitle .rmk,.rtitle .roff{flex:none}.rmk{display:inline-flex;align-items:center;gap:2px;font:700 12px var(--font-ui);color:var(--color-text-muted)}.rmk[hidden]{display:none}.rmk .i{width:14px;height:14px}.rtitle .roff{margin-left:2px}.rtitle .rchap{padding:0 6px}.rmk .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -935,4 +939,33 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #961: lencana terkunci jelas */
 .badge.off .d{display:flex;gap:4px;align-items:flex-start}
 .badge .lk{flex:none;width:12px;height:12px;margin-top:2px}
+.fr-read{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
+.fr-read .lg{flex:none}
+.fr-read .ttl{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-read .st{flex:none;font-size:13px}
+.fr-read .bar{flex:0 0 100%}
+/* Rak buku di Profil (#972) */
+.rk-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;justify-content:flex-start}
+.rk-chip{min-height:32px;padding:4px 11px;border-radius:9999px;border:1px solid var(--color-border);background:var(--color-surface-soft);color:var(--color-text);font:600 12px Inter,system-ui,sans-serif}
+.rk-chip.on{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary)}
+.rk-wrap{--rk-bg:#2A1D24;--rk-tx:#FAF7F0;--rk-mu:#C9BDC3;--rk-bd:#4A343E}
+.rk-wrap.rk-kayu{--rk-bg:#F3E2C8;--rk-tx:#3B2F25;--rk-mu:#66584A;--rk-bd:#A9743F}
+.rk-wrap.rk-es{--rk-bg:#C3E1F4;--rk-tx:#351E28;--rk-mu:#3F4C55;--rk-bd:#8FB8D3}
+.rk-wrap.rk-polos{--rk-bg:#F1ECE1;--rk-tx:#2B2228;--rk-mu:#5C5258;--rk-bd:#DDD6C8}
+.rk-shelf{background:var(--rk-bg);color:var(--rk-tx);border-radius:14px;padding:12px 10px 0;margin-bottom:8px;overflow:hidden}
+.rk-g{font-size:12px;font-weight:700;margin:0 2px 8px}
+.rk-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rk-bk{position:relative;min-width:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;display:block;cursor:pointer}
+.rk-bk .cover{width:100%;height:92px;padding:6px}
+.rk-bk .cover .em{font-size:28px}
+.rk-tag{position:absolute;top:5px;right:5px;font:700 9px Inter,sans-serif;background:#E9F056;color:#351E28;border-radius:9999px;padding:2px 6px}
+.rk-t{display:block;font-size:11px;font-weight:600;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-p{display:block;font-size:11px;color:var(--rk-mu);margin-bottom:8px}
+.rk-board{height:12px;margin:0 -10px;background:var(--rk-bd)}
+.rk-more{display:block;margin:8px auto 0}
+.rk-up{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid var(--color-border)}
+.rk-n{flex:none;width:20px;font-size:12px;color:var(--color-text-muted)}
+.rk-ut{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-up button{flex:none;min-height:36px;padding:0 10px;font-size:12px}
+.rk-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px 10px;background:var(--color-surface-soft);border-radius:14px}
 .fr-read .fr-st{font-size:13px}
