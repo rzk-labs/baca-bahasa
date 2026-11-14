@@ -37,7 +37,7 @@ a{color:inherit}
 /* sidebar */
 .side{display:none}
 .main{padding:16px 16px 110px;max-width:1180px;width:100%;margin:0 auto;min-width:0}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:8px 0;position:sticky;top:0;z-index:15;background:var(--bg)}
 .brand{display:flex;align-items:center;gap:10px}
 .brand b{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:24px;line-height:1.1;background:linear-gradient(transparent 62%,var(--wasabi) 62% 92%,transparent 92%);padding:0 4px}
 .brand small{display:block;color:var(--mut);font-size:12px;font-weight:600}
@@ -53,7 +53,7 @@ a{color:inherit}
   .side nav button.on{background:var(--ink);color:var(--bg)}
   .side nav svg{width:19px;height:19px}
   .side .foot{margin-top:auto;font-size:12px;color:var(--mut)}
-  .tabbar,.top .brand{display:none}
+  .tabbar,.top{display:none}
   .main{padding:28px 32px 48px}
 }
 .tabbar{max-width:calc(100vw - 16px)}
@@ -179,8 +179,6 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 .empty{padding:22px;text-align:center;color:var(--mut);border:2px dashed var(--line);border-radius:18px}
 .skel{height:120px;border-radius:24px;background:linear-gradient(90deg,var(--soft),var(--line),var(--soft));background-size:200% 100%;animation:sk 1.2s infinite}
 @keyframes sk{to{background-position:-200% 0}}
-.fab{position:fixed;right:16px;bottom:88px;z-index:21}
-@media (min-width:1000px){.fab{display:none}}
 
 /* ADHD-friendly detail & dokumen */
 .dt{display:grid;gap:14px;max-width:760px}
@@ -223,7 +221,9 @@ details.more>summary{color:var(--mut);margin-top:8px}
 .tb input{flex:1;min-width:0}
 .tb select{width:auto;flex:none}
 @media (max-width:759px){.tb{flex-wrap:wrap}.tb input[type=search]{flex:1 1 100%;min-width:0;width:100%;font-size:16px;min-height:44px}.tb select{min-height:44px;font-size:16px}.board{grid-auto-columns:minmax(84vw,1fr)}.sumt{flex:1 1 100%!important;max-width:100%}.chip{min-height:32px;display:inline-flex;align-items:center}.btn{min-height:44px}.row{flex-wrap:wrap}.main{padding-left:12px;padding-right:12px}}
-.upd{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;pointer-events:none;opacity:.9}.upd[hidden]{display:none}
+.upd{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;overflow:hidden;pointer-events:none}.upd[hidden]{display:none}.upd i{display:block;height:100%;width:40%;background:var(--wasabi);border-bottom:1px solid var(--ink);animation:bilah 1.1s ease-in-out infinite}@keyframes bilah{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+@media (prefers-reduced-motion:reduce){.upd i{width:100%;opacity:.7}}:root[data-gerak="kurang"] .upd i{width:100%;opacity:.7}
+.gagal-b{display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-height:120px}.btn .dot{margin-right:6px;display:inline-block;vertical-align:middle}
 </style></head><body>
 <div class="app">
   <aside class="side">
@@ -233,13 +233,13 @@ details.more>summary{color:var(--mut);margin-top:8px}
     <div class="foot">Live: <a href="https://rzk-labs.github.io/baca-bahasa/" target="_blank">rzk-labs.github.io/baca-bahasa</a></div>
   </aside>
   <main class="main">
-    <div class="top"><div class="brand"><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div></div>
+    <div class="top"><div class="brand"><div><b>Keepo HQ</b><small>Markas tim agent</small></div></div><button class="btn lime" id="topcmd" onclick="perintah()" style="display:none"><svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Perintah</button></div>
     <div id="view"></div>
   </main>
 </div>
 <nav class="tabbar" id="tabbar"></nav>
 <button class="btn lime fab" id="fab" onclick="perintah()" style="display:none"><svg class="ic-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Perintah</button>
-<div class="upd" id="upd" role="status" hidden>memperbarui…</div>
+<div class="upd" id="upd" role="progressbar" aria-label="Memuat" hidden><i></i></div>
 <div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
 <script>
 const $=s=>document.querySelector(s), V=$('#view');
@@ -353,7 +353,7 @@ function navs(){
   const b=(k,l)=>`<button class="${cur===k?'on':''}" onclick="go('${k}')">${IC[k]}<span>${l}</span></button>`;
   $('#sidenav').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
   $('#tabbar').innerHTML=NAV.map(([k,l])=>b(k,l)).join('');
-  $('#fab').style.display=tok?'':'none';
+  $('#topcmd').style.display=tok?'':'none';
   const sb=`<button onclick="pengaturan()" aria-label="Pengaturan baca">${IC.set}<span>Pengaturan</span></button>`;
   $('#sidenav').innerHTML+=sb;$('#tabbar').innerHTML+=sb;
 }
@@ -362,7 +362,7 @@ function go(k,arg){clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 // Penanda kecil "memperbarui…" selama ada segar-ulang di belakang
-let SIBUK=0;function upd(d){SIBUK=Math.max(0,SIBUK+d);const u=$('#upd');if(u)u.hidden=!SIBUK}
+let SIBUK=0,UPDT=0;function upd(d){SIBUK=Math.max(0,SIBUK+d);const u=$('#upd');if(!u)return;clearTimeout(UPDT);if(!SIBUK){u.hidden=true;return}if(u.hidden)UPDT=setTimeout(()=>{if(SIBUK)u.hidden=false},300)}
 async function load(){upd(1);try{HQ=await call('/hq')}finally{upd(-1)}try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}return HQ}
 function simpanHQ(){try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}}
 // Ubah satu kartu di data lokal saja (tanpa muat ulang seluruh Markas)
@@ -373,10 +373,12 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden||!tok||$('#
 // Tampil instan dari data tersimpan, lalu segarkan di belakang layar (hanya gambar ulang bila berubah)
 function segarkan(k,fn){const v=VIEW,lama=JSON.stringify(HQ);load().then(()=>{if(v===VIEW&&cur===k&&JSON.stringify(HQ)!==lama){const ae=document.activeElement;if(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))return;fn(true)}}).catch(()=>{})}
 function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;if(document.hidden){auto(fn);return}const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
+function gagal(m,fn){V.innerHTML='<div class="gagal-b"><p class="err" role="alert">'+esc(m)+'</p><button class="btn" id="ulang">Coba lagi</button></div>';$('#ulang').onclick=fn}
+function skelDetail(){V.innerHTML='<div class="skel" style="height:36px;width:40%;border-radius:999px"></div><div class="skel" style="margin-top:14px;height:160px"></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
-  clearTimeout(timer);$('#fab').style.display='none';
+  clearTimeout(timer);$('#topcmd').style.display='none';
   V.innerHTML=`<div class="tile t-lav c" style="max-width:440px;margin:8vh auto 0"><div class="eyebrow">Khusus founder</div><h1 style="margin:6px 0 14px">Masuk markas</h1>
   <input id="pw" type="password" placeholder="Password" autocomplete="current-password"><div class="row" style="margin-top:12px"><button class="btn" id="go">Masuk</button><span id="e" class="err"></span></div></div>`;
   const f=async()=>{try{const d=await call('/login',{pw:$('#pw').value});tok=d.token;try{localStorage.setItem('kd_tok',tok)}catch(e){};go('markas')}catch(e){$('#e').textContent=e.message}};
@@ -405,7 +407,7 @@ function kuotaPerforma(T){
   <div class="tile" style="margin-top:12px"><div class="feed">${baris}</div></div>`;
 }
 async function markas(again){
-  if(!again){if(HQ)segarkan('markas',markas);else{skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}}
+  if(!again){if(HQ)segarkan('markas',markas);else{skel();try{await load()}catch(e){gagal(e.message,()=>go('markas'));return}}}
   if(cur!=='markas')return;
   const T=HQ.tasks, R=HQ.roadmap, runs=HQ.runs;
   const siap=T.filter(t=>t.status==='siap'), jalan=T.filter(t=>t.status==='dikerjakan'||t.status==='antre');
@@ -447,7 +449,7 @@ async function markas(again){
   <div class="agents">${UJI.map(uji).join('')}</div>
   <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
   <div class="tile">${evs.length?`<div class="feed">${evs.map(e=>`<div class="ev"><div class="ic ${e.c}">${e.ic}</div><div style="min-width:0;flex:1"><div>${e.txt}</div><div class="mut sm">${lalu(e.t)}${e.url?` · <a href="${e.url}" target="_blank">log</a>`:''}</div></div></div>`).join('')}</div>`:'<div class="empty">Belum ada aktivitas.</div>'}</div>`;
-  $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;try{await call('/pm',{paksa:true});b.innerHTML='<i class="dot"></i> PM sedang bekerja…';setTimeout(async()=>{await load();markas(true)},8000)}catch(x){b.disabled=false;b.textContent=x.message}};
+  $('#pmnow').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.innerHTML='<i class="dot"></i> Menyalakan PM…';try{await call('/pm',{paksa:true});b.innerHTML='<i class="dot"></i> PM sedang bekerja…';setTimeout(async()=>{await load();markas(true)},8000)}catch(x){b.disabled=false;b.textContent=x.message}};
   auto(markas);
 }
 
@@ -481,7 +483,7 @@ async function hasilKerja(again){
   if(again===true&&LASTH)return tampilHasil(LASTH);
   const v=VIEW;
   if(LASTH)tampilHasil(LASTH);else skel();
-  let L;upd(1);try{L=await call('/hasil')}catch(e){if(!LASTH&&v===VIEW&&cur==='hasil')V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}finally{upd(-1)}
+  let L;upd(1);try{L=await call('/hasil')}catch(e){if(!LASTH&&v===VIEW&&cur==='hasil')gagal(e.message,()=>go('hasil'));return}finally{upd(-1)}
   if(cur!=='hasil'||v!==VIEW)return;
   const tanpaHQ=!HQ;if(tanpaHQ){try{await load()}catch(e){}}
   const ubah=tanpaHQ||JSON.stringify(L)!==JSON.stringify(LASTH);LASTH=L;
@@ -564,7 +566,7 @@ function pasangAlat(ulang){
 
 let LIVEALL=false;
 async function papan(again){
-  if(!again){if(HQ)segarkan('papan',papan);else{skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}}
+  if(!again){if(HQ)segarkan('papan',papan);else{skel();try{await load()}catch(e){gagal(e.message,()=>go('papan'));return}}}
   if(cur!=='papan')return;
   if(document.activeElement&&document.activeElement.id==='qt'&&again==='auto'){auto(()=>papan('auto'));return} // jangan ganggu saat mengetik
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
@@ -594,7 +596,7 @@ const namaDok=p=>p.slice(5,-3).replace(/[-_]/g,' ');
 const linkDok=s=>esc(s).replace(/docs\/[\w.-]+?\.md/g,p=>namaDok(p));
 const sumberDok=s=>[...new Set(String(s||'').match(/docs\/[\w.-]+?\.md/g)||[])];
 async function peta(){
-  if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(!HQ){skel();try{await load()}catch(e){gagal(e.message,()=>go('peta'));return}}
   const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
   const fases=[...new Set(R.tahap.map(t=>t.fase))];
   V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
@@ -607,9 +609,9 @@ async function peta(){
 }
 
 async function dokumen(path,ref,back){
-  if(!HQ){skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(!HQ){skel();try{await load()}catch(e){gagal(e.message,()=>dokumen(path,ref,back));return}}
   if(path){
-    V.innerHTML='<div class="skel"></div>';
+    const dv=VIEW;skelDetail();
     try{const d=await call('/doc?path='+encodeURIComponent(path)+(ref?'&ref='+encodeURIComponent(ref):''));
       const html=window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(d.isi)):'<pre>'+esc(d.isi)+'</pre>';
       V.innerHTML=`<button class="back" id="bk">← ${back?'Kembali ke tugas':'Semua dokumen'}</button>${ref?'<div class="note">📝 Draf — belum disetujui</div>':''}<article class="tile read">${html}</article>`;
@@ -618,7 +620,7 @@ async function dokumen(path,ref,back){
       // ADHD: tiap bagian h2 bisa dilipat, bagian pertama terbuka
       const art=V.querySelector('article');const hs=[...art.querySelectorAll('h2')];
       if(hs.length>2)hs.forEach((h,i)=>{const det=document.createElement('details');if(i===0)det.open=true;const sum=document.createElement('summary');sum.innerHTML=h.innerHTML;det.appendChild(sum);let x=h.nextSibling;while(x&&!(x.nodeType===1&&x.tagName==='H2')){const nx=x.nextSibling;det.appendChild(x);x=nx}h.replaceWith(det)});
-    }catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>'}
+    }catch(e){if(dv===VIEW)gagal(e.message,()=>dokumen(path,ref,back))}
     return;
   }
   const col=n=>n.includes('riset')?'t-blue':n.includes('desain')?'t-pink':n.includes('TIM')?'t-lav':'t-sun';
@@ -652,7 +654,8 @@ async function detail(n,again){
   clearTimeout(timer);if(!again){VIEW++;scrollTo(0,0)}const mv=VIEW;
   // data lama tampil dulu, segarkan di belakang
   if(!again&&DET[n]){tampilDetail(DET[n],n,mv);upd(1)}
-  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW&&!DET[n])V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}finally{if(!again&&DET[n])upd(-1)}if(mv!==VIEW)return;
+  if(!again&&!DET[n])skelDetail();
+  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW&&!DET[n])gagal(e.message,()=>detail(n));return}finally{if(!again&&DET[n])upd(-1)}if(mv!==VIEW)return;
   DET[n]=t;patchTugas(n,{status:t.status,qa:t.qa,diubah:t.diubah,terbuka:t.terbuka});
   tampilDetail(t,n,mv);
   if(t.pr&&!(t.pr.n in FILES)){
@@ -760,8 +763,8 @@ function perintah(){
   <div class="row kirim-bar" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
   if(innerWidth>700)$('#isi').focus();
   const gL=lampiran($('#isig'),$('#isi'));
-  $('#kirim').onclick=async e=>{const b=e.currentTarget;b.disabled=true;
-    try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value,gambar:gL.slice()});tutup();await load();if(t.catatan)alert('Tugas terkirim, tapi '+t.catatan+'.');detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false}};
+  $('#kirim').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.innerHTML='<i class="dot"></i> Mengirim…';
+    try{const t=await call('/tasks',{isi:$('#isi').value,peran:document.querySelector('input[name=peran]:checked').value,gambar:gL.slice()});tutup();await load();if(t.catatan)alert('Tugas terkirim, tapi '+t.catatan+'.');detail(t.n)}catch(x){$('#e2').textContent=x.message;b.disabled=false;b.textContent='Kirim ke tim'}};
 }
 function pengaturan(){
   $('#veil').classList.add('on');
