@@ -187,6 +187,7 @@ textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0
 .hero .ttl{font-size:calc(var(--fs)*2);margin:12px 0 6px;line-height:1}
 .say{font-size:calc(var(--fs)*1.2);font-weight:700}
 .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.mock{display:flex;flex-direction:column;align-items:center;gap:10px}.hp{width:min(100%,300px);border:3px solid var(--ink);border-radius:34px;padding:10px;background:#111;box-shadow:0 6px 0 var(--ink)}.hpv{overflow:hidden;border-radius:24px;background:#fff}.hp iframe{display:block;border:0;background:#fff;transform-origin:0 0}.hp .poni{width:70px;height:6px;border-radius:9px;background:#333;margin:0 auto 8px}
 .big-b{padding:13px 20px;font-size:16px}
 .lbl{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:800;font-size:20px;margin-bottom:8px}
 .pts{margin:0;padding-left:22px;font-size:calc(var(--fs)*1.13);line-height:1.6}
@@ -251,7 +252,7 @@ function terapkan(){const d=document.documentElement,P=PREF;
   P.gerak==='kurang'?d.setAttribute('data-gerak','kurang'):d.removeAttribute('data-gerak');
   try{localStorage.setItem('kd_pref',JSON.stringify(P))}catch(e){}}
 terapkan();
-let HQ=null, timer=null, cur='markas';
+let HQ=null, timer=null, cur='markas', VIEW=0;
 const IC={
   markas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
   papan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>',
@@ -352,12 +353,12 @@ function navs(){
   const sb=`<button onclick="pengaturan()" aria-label="Pengaturan baca">${IC.set}<span>Pengaturan</span></button>`;
   $('#sidenav').innerHTML+=sb;$('#tabbar').innerHTML+=sb;
 }
-function go(k,arg){clearTimeout(timer);cur=k;navs();scrollTo(0,0);
+function go(k,arg){clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
   if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 async function load(){HQ=await call('/hq');return HQ}
-function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{await load();fn(true)}catch(e){}},sibuk?12000:60000)}
+function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
@@ -371,6 +372,24 @@ function login(){
 function nextPM(){const d=new Date();d.setUTCHours(1,0,0,0);if(d<=new Date())d.setUTCDate(d.getUTCDate()+1);return d}
 function progres(r){if(!r)return 0;return Math.round(r.tahap.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/r.tahap.length*100)}
 
+// Kuota harian per peran: samakan dengan .github/workflows/kepo-jaga.yml (developer 100, desain 8, riset 6, pm 6, marketing 4).
+const KUOTAP={developer:100,desain:8,riset:6,pm:6,marketing:4},KUOTA=Object.values(KUOTAP).reduce((a,b)=>a+b,0);
+function hariIni(t){const f=x=>new Date(x).toLocaleDateString('sv-SE',{timeZone:'Asia/Jakarta'});return f(t)===f(Date.now())}
+function kuotaPerforma(T){
+  const selesai=t=>['siap','menuju','live'].includes(t.status), gagal=t=>t.status==='gagal'||t.status==='ditolak';
+  const hari=T.filter(t=>selesai(t)&&hariIni(t.diubah)), mulai=T.filter(t=>hariIni(t.dibuat));
+  const n=hari.length, pct=Math.min(100,Math.round(n/KUOTA*100)), sisa=Math.max(0,KUOTA-n);
+  const baris=['developer','riset','desain','pm','marketing'].map(k=>{
+    const a=T.filter(t=>t.peran===k), ok=a.filter(selesai).length, gg=a.filter(gagal).length, kerja=a.filter(t=>t.status==='dikerjakan'||t.status==='antre').length;
+    const qa=a.filter(t=>t.qa), lolos=qa.filter(t=>t.qa==='lolos').length, hs=hari.filter(t=>t.peran===k).length;
+    const rate=ok+gg?Math.round(ok/(ok+gg)*100):0;
+    return `<div class="ev"><div class="ic ${TIM[k].c}">${TIM[k].e}</div><div style="min-width:0;flex:1"><div><b>${TIM[k].n}</b> · ${hs}/${KUOTAP[k]} hari ini</div><div class="mut sm">${ok} selesai · ${kerja} jalan · ${gg} gagal · ${rate}% berhasil${qa.length?` · QA lolos ${lolos}/${qa.length}`:''}</div></div></div>`}).join('');
+  return `<div class="sec"><h2>Kuota & performa</h2><span class="mut sm">Hari ini (WIB) · target ${KUOTA} tugas/hari (developer ${KUOTAP.developer})</span></div>
+  <div class="bento"><div class="tile c ${pct>=100?'t-mint':'t-sun'} span2"><div class="eyebrow">Kuota harian</div><div class="big">${n}/${KUOTA}</div><div class="evbar"><i class="k-selesai" style="width:${pct}%"></i></div><div class="sm" style="margin-top:6px">${pct>=100?'Kuota hari ini tercapai ✅':'Sisa '+sisa+' tugas lagi'}</div></div>
+  <div class="tile c t-lav"><div class="eyebrow">Dimulai hari ini</div><div class="big">${mulai.length}</div><div class="sm">tugas baru</div></div>
+  <div class="tile c t-pink"><div class="eyebrow">Gagal total</div><div class="big">${T.filter(gagal).length}</div><div class="sm">perlu dicek</div></div></div>
+  <div class="tile" style="margin-top:12px"><div class="feed">${baris}</div></div>`;
+}
 async function markas(again){
   if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
   if(cur!=='markas')return;
@@ -407,6 +426,7 @@ async function markas(again){
     <div class="tile c t-pink"><div class="eyebrow">Sudah live</div><div class="big">${live}</div><div class="sm">${jalan.length} sedang dikerjakan</div></div>
   </div>
   ${siap.length?`<div class="sec"><h2>Siap dicek</h2><span class="mut sm">menunggu kamu</span></div>${(setVis(urutT(siap).slice(0,3)),barHtml())}<div class="grid">${VISIAP.map(t=>kartuTugas(t,{pilih:true})).join('')}</div><button class="btn lime" style="width:100%;margin-top:10px" onclick="keSiap()">Lihat semua${siap.length>3?' ('+siap.length+')':''} →</button>`:''}
+  ${kuotaPerforma(T)}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Kerja terus · peran kosong langsung diberi tugas (cek tiap 30 mnt)</span></div>
   <div class="agents">${['pm','riset','desain','developer','marketing','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 2 jam &amp; tiap ada update live${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span></div>
@@ -600,15 +620,16 @@ function hasil(riwayat){
 }
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
-async function detail(n){
-  clearTimeout(timer);scrollTo(0,0);
-  let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
+async function detail(n,again){
+  clearTimeout(timer);if(!again){VIEW++;scrollTo(0,0)}const mv=VIEW;
+  let t;try{t=await call('/tasks/'+n)}catch(e){if(mv===VIEW)V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}if(mv!==VIEW)return;
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
   const h=hasil(t.riwayat);
   const ref=t.pr&&!t.pr.merged?t.branch:'';
   const docs=(t.files||[]).filter(f=>/^docs\/[\w.-]+\.md$/.test(f));
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
+  const MOCK=(t.files||[]).includes('docs/mockup-'+n+'.html')&&t.preview&&!t.pr?.merged?t.preview+'docs/mockup-'+n+'.html':'';
   const LIM=4;
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
   const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
@@ -631,6 +652,7 @@ async function detail(n){
     ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
+  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><button class="btn lime" id="mockbtn">Tampilkan mockup</button></div></section>`:''}
   ${h.tugas.length?`<section class="tile c t-sun"><div class="lbl">👉 Tugas kamu</div><ul class="pts">${h.tugas.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></section>`:''}
   ${h.qaAda?`<details class="tile qa"><summary><span class="chip ${h.qaOk?'s-live':'o'}">${h.qaOk?I.cek+' QA lolos':'QA ada catatan'}</span><span class="mut sm">lihat catatan</span></summary><ul class="pts sm2">${h.qa.map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}`:''}
   <details class="tile more"><summary>Detail lengkap (perintah &amp; riwayat)</summary>
@@ -639,6 +661,7 @@ async function detail(n){
     <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
   </details>
   </div>`;
+  if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
   V.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>{clearTimeout(timer);dokumen(b.dataset.doc,ref,n)});
   const act=async(a,b,el)=>{el.disabled=true;$('#e').textContent='';try{await call('/tasks/'+n+'/'+a,b||{});HQ=null;await load();detail(n)}catch(e){$('#e').textContent=e.message;el.disabled=false}};
   if($('#ok'))$('#ok').onclick=e=>act('setujui',0,e.currentTarget);
@@ -646,7 +669,7 @@ async function detail(n){
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
-  if(kerja)timer=setTimeout(()=>detail(n),12000);
+  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{if(mv!==VIEW)return;timer=setTimeout(async()=>{try{if(mv!==VIEW)return;const t2=await call('/tasks/'+n);if(mv!==VIEW)return;if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
 }
 /* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
 function kecilkan(f){return new Promise(ok=>{
