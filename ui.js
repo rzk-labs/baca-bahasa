@@ -264,7 +264,7 @@ function globalErr(ev) {
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => muatUlangVersi() });
+  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => muatUlangPaksa() });
 }
 /* muat ulang paksa: hanya cache app & service worker; data buku/kata/login tidak disentuh */
 async function muatUlangVersi() {
@@ -607,6 +607,11 @@ function openSettings() {
     </ul>
     ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
+    <div class="set-grp" id="apl"><div class="set-gt">Aplikasi</div>
+    <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div><div class="mut sm" id="muMsg">Buku, kata, dan XP-mu tetap aman.</div></div>
+    <button class="sec full" id="muBtn" type="button" style="min-height:44px">Muat ulang versi terbaru</button>
+    <div class="seg" id="muAsk" hidden style="margin-top:8px"><button type="button" id="muOk" style="min-height:44px">Muat ulang</button><button type="button" id="muNo" style="min-height:44px">Batal</button></div>
+    </div>
     ${dataWarn()}
     ${typeof bkCard === 'function' ? `<div class="set-row"><div class="eyebrow">Akun &amp; cadangan</div><div class="mut sm">${NOTE_AKUN}</div></div>${bkCard()}` : ''}
     <button class="ghost full" id="rst">Balikin setelan awal</button>
@@ -626,6 +631,12 @@ function openSettings() {
   if ($('#fbSet')) $('#fbSet').onclick = () => openFeedback();
   if ($('#wnSet')) $('#wnSet').onclick = () => openWhatsNew();
   if ($('#fbTake')) $('#fbTake').onclick = () => openFeedback({ kind: 'takedown' });
+  $('#muBtn').onclick = () => {
+    if (!navigator.onLine) { $('#muMsg').textContent = 'Butuh internet untuk ambil versi baru.'; return; }
+    $('#muMsg').textContent = 'Muat ulang versi terbaru? Buku & katamu tetap aman.'; $('#muBtn').hidden = true; $('#muAsk').hidden = false;
+  };
+  $('#muNo').onclick = () => { $('#muMsg').textContent = 'Buku, kata, dan XP-mu tetap aman.'; $('#muAsk').hidden = true; $('#muBtn').hidden = false; };
+  $('#muOk').onclick = () => muatUlangPaksa();
   if ($('#prepBox')) pagesOf(b).then(sc => { if ($('#prepBox')) bindPrep(b, sc[Math.min(b.pos || 0, sc.length - 1)]); });
   if ($('#bmTog')) { syncMarks(); $('#bmTog').onclick = toggleMark; $('#bmList').onclick = openMarks; syncKenalAll(); $('#kenalAll').onclick = kenalAllPage; $('#bkFind').onclick = openFind; $('#goSpeak').onclick = () => { closeSheet(); setTab('bicara'); }; }
   $('#sheetBody').onclick = () => { const v = $('#spv'); if (!v) return; v.classList.toggle('serif', db.font === 'serif'); v.style.setProperty('--reader-lh', readLh(pl)); v.style.fontSize = readFs(b && b.lang) + 'px'; v.style.textAlign = effAlign() === 'j' ? 'justify' : 'left'; spcSet(v, db.spacing); };
@@ -656,8 +667,19 @@ function openSettings() {
   $('#mylang').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
 }
 
+/* muat ulang paksa: hanya cache app (service worker + cache kepo-*); data pengguna tidak disentuh */
+async function muatUlangPaksa() {
+  if (!navigator.onLine) { toast('Butuh internet untuk ambil versi baru.'); return; }
+  try { const r = await fetch('./sw.js', { cache: 'no-store' }); if (!r.ok) throw 0; }
+  catch (e) { toast('Butuh internet untuk ambil versi baru.'); return; }
+  try {
+    if ('serviceWorker' in navigator) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); }
+    if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.filter(k => k.startsWith('kepo-')).map(k => caches.delete(k))); }
+  } catch (e) {}
+  location.reload();
+}
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
-const APP_VER = 'v46';
+const APP_VER = 'v350';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1345,6 +1367,7 @@ async function viewBaca() {
     openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Lainnya</span>${closeBtn}</div>${nDue ? `<div class="rdue-box"><b>${nDue} kata siap diulang</b><div class="set-row set-acts"><button class="sec full" id="rdNo" type="button">Nanti</button><button class="full" id="rdGo" type="button">Ulang sekarang</button></div></div>` : ''}<div class="chlist rmore">
       <button class="chi" id="rmSet">${ico('sliders')}<span>Pengaturan baca</span></button>
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="chi rmob" id="rmRt">${ico('ruby')}<span>Cara baca</span><b class="rst">${db.rt ? 'Nyala' : 'Mati'}</b></button>` : ''}${'speechSynthesis' in window ? `<button class="chi rmob" id="rmLis">${ico('vol')}<span>Dengar halaman</span><b class="rst">${LIS.on ? 'Nyala' : 'Mati'}</b></button>` : ''}
+      ${db.aiJelas === false ? '' : `<button class="chi" id="rmAi">${ico('chat')}<span>Sederhanakan halaman (AI)</span></button>`}
       <button class="chi" id="rmFb">${ico('chat')}<span>Kirim masukan</span></button>
       ${'speechSynthesis' in window ? `<button class="chi" id="rmRate">${ico('slow')}<span>Laju suara: <b id="rmRateV">${sl()}</b></span></button>` : ''}</div>`, 'Menu lainnya');
     if ($('#rdNo')) $('#rdNo').onclick = closeSheet;
@@ -1353,6 +1376,7 @@ async function viewBaca() {
     if ($('#rmLis')) $('#rmLis').onclick = () => { closeSheet(); $('#rLis').click(); };
     $('#rmSet').onclick = () => { closeSheet(); openSettings(); };
     $('#rmFb').onclick = () => { closeSheet(); openFeedback(); };
+    if ($('#rmAi')) $('#rmAi').onclick = () => openSimplify(b);
     if ($('#rmRate')) $('#rmRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); $('#rmRateV').textContent = sl(); if (LIS.on && LIS.cur) startListenPage(true); };
   };
   if ($('#rChap')) $('#rChap').onclick = () => {
@@ -1449,6 +1473,41 @@ function pauseListenPage(quiet) {
   if (LIS.cur) LIS.si = +LIS.cur.dataset.s;
   if (quiet) lisClear();
   lisUi();
+}
+/* Sederhanakan halaman (AI): hanya saat diminta; jalur & jatah harian sama dengan Jelaskan kalimat */
+function openSimplify(b) {
+  const q = (RD.ss || []).filter(x => x.pg === RD.page).map(x => x.el.textContent.trim()).filter(Boolean);
+  const full = q.join(' ').replace(/\s+/g, ' ').trim();
+  const LIM = 600;
+  let txt = full, cut = false;
+  if (full.length > LIM) {
+    cut = true; txt = full.slice(0, LIM);
+    const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
+    if (k > 40) txt = txt.slice(0, k + 1);
+  }
+  const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sederhanakan halaman</span>${closeBtn}</div>
+    <div class="mut sm">AI jelasin halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
+    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Gratis 5x sehari, jatah sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
+    <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`, 'Sederhanakan halaman');
+  const btn = $('#sgbtn'), qEl = $('#sgq'), out = $('#sgout');
+  const setQ = n => { if (qEl.isConnected) qEl.textContent = n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
+  const msg = t => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
+  btn.onclick = async () => {
+    if (!txt) return msg('Halaman ini belum ada teksnya.');
+    if (typeof api !== 'function') return msg('Fitur ini belum siap. Lanjut baca aja dulu.');
+    if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal.');
+    btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
+    try {
+      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '' } });
+      if (!out.isConnected) return;
+      setQ(r.sisa);
+      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div>${cut ? '<div class="aij-lbl">Cuma bagian awal halaman yang dijelaskan.</div>' : ''}<div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
+      out.querySelector('.aij-t').textContent = r.teks;
+      $('#sgrep').onclick = () => { const x = $('#sgrep'); x.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, teks: r.teks } }).then(() => { const y = $('#sgrep'); if (y) y.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const y = $('#sgrep'); if (y) { y.disabled = false; y.textContent = 'Gagal kirim, coba lagi'; } }); };
+    } catch (e) { if (out.isConnected) { if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else msg(e.message); } }
+    btn.disabled = false;
+  };
 }
 function startListenPage(restart) {
   const b = book(); if (!b || !RD.ss) return;
