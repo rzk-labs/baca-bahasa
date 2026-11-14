@@ -566,12 +566,20 @@ const fypRow = p => `<div class="fyp-p" data-pid="${p.id}">
   <button class="fyp-who" data-u="${esc(p.username)}"><span class="avatar">${esc(initial(p.nick))}</span><span class="fr-in"><b>${esc(p.nick)}</b><span class="mut sm">@${esc(p.username)} · ${lalu(p.at)}${p.diikuti ? ' · teman' : ''}</span></span></button>
   <div class="fyp-t">${esc(p.text)}</div>
   ${p.book ? `<div class="fyp-b">${ico('book')}<span>${esc(p.book)}${p.lang ? ' · ' + esc(langName(p.lang)) : ''}</span>${p.share ? `<button class="sec" data-share="${esc(p.share)}">Baca juga</button>` : ''}</div>` : ''}
-  <div class="fyp-a"><button class="ghost fyp-like${p.akuSuka ? ' on' : ''}" data-like="${p.id}" aria-pressed="${p.akuSuka}">${p.akuSuka ? '♥' : '♡'} ${p.suka || ''}</button>${p.milikku ? `<button class="ghost" data-del="${p.id}">Hapus</button>` : ''}</div></div>`;
+  <div class="fyp-a"><button class="ghost fyp-like${p.akuSuka ? ' on' : ''}" data-like="${p.id}" aria-pressed="${p.akuSuka}">${p.akuSuka ? '♥' : '♡'} ${p.suka || ''}</button>${p.milikku ? `<button class="ghost" data-del="${p.id}">Hapus</button>` : `<button class="ghost" data-lapor="${p.id}">Laporkan</button><button class="ghost" data-blok="${esc(p.username)}">Blokir</button>`}</div></div>`;
 function wireFyp(root) {
   wireRows(root);
   root.querySelectorAll('[data-share]').forEach(b => b.onclick = () => { history.replaceState(null, '', location.pathname + '?share=' + encodeURIComponent(b.dataset.share)); openSharedFromUrl(); });
   root.querySelectorAll('[data-like]').forEach(b => b.onclick = async () => {
     try { const r = await api(`/posts/${b.dataset.like}/suka`, { method: 'POST' }); const n = (parseInt(b.textContent.replace(/\D/g, '')) || 0) + (r.suka ? 1 : -1); b.classList.toggle('on', r.suka); b.setAttribute('aria-pressed', r.suka); b.textContent = (r.suka ? '♥ ' : '♡ ') + (n > 0 ? n : ''); } catch (e) { toast(e.message); }
+  });
+  root.querySelectorAll('[data-lapor]').forEach(b => b.onclick = async () => {
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Laporkan status ini?'; return; }
+    try { await api('/posts/' + b.dataset.lapor + '/lapor', { method: 'POST', body: { alasan: 'tidak pantas' } }); b.closest('.fyp-p').remove(); toast('Makasih. Status ini disembunyikan dan akan kami tinjau.'); } catch (e) { toast(e.message); }
+  });
+  root.querySelectorAll('[data-blok]').forEach(b => b.onclick = async () => {
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Blokir @' + b.dataset.blok + '?'; return; }
+    try { await api('/blokir/' + encodeURIComponent(b.dataset.blok), { method: 'POST' }); root.querySelectorAll('.fyp-p').forEach(x => { if (x.querySelector('[data-blok="' + b.dataset.blok + '"]')) x.remove(); }); toast('Diblokir. Statusnya tidak muncul lagi.'); } catch (e) { toast(e.message); }
   });
   root.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
     if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Yakin hapus?'; return; }
