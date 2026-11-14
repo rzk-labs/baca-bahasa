@@ -1068,7 +1068,13 @@ function sessRecap(b) {
 function leaveBaca() { stopListenPage(); const b = book(); if (b && RD && RD.n && RD.page != null && b.total) { b.pct = readPct(b); save(); } setTab('rak'); if (b) sessRecap(b); }
 /* Baca ulang: balik ke awal; tanda tamat (doneAt) dibiarkan supaya XP tamat tak dobel */
 let tamatSeen = ''; /* sheet Tamat sekali per sesi baca buku */
-function restartBook(b) { tamatSeen = ''; b.pos = 0; b.si = 0; b.pct = 1; b.frac = 0; b.fracPos = 0; RD.quiet = true; save(); }
+function restartBook(b) {
+  const prev = { pos: b.pos, si: b.si, pct: b.pct, frac: b.frac, fracPos: b.fracPos, pg: b.pg, pgN: b.pgN, pgPos: b.pgPos };
+  const ts = tamatSeen;
+  tamatSeen = ''; b.pos = 0; b.si = 0; b.pct = 1; b.frac = 0; b.fracPos = 0; RD.quiet = true; save();
+  /* doneAt tidak disentuh: XP tamat tak dobel, Urungkan pun tak mengubahnya */
+  setTimeout(() => toast('Mulai dari awal', 7000, { label: 'Urungkan', fn: () => { Object.assign(b, prev); tamatSeen = ts; RD.quiet = true; save(); db.cur = b.id; setTab('baca'); viewBaca(); } }), 200);
+}
 /* saran berikutnya: buku belum selesai, bahasa sama, panjang mirip/sedikit lebih panjang (belum ada data level buku) */
 function nextBooks(b) {
   const t = b.total || 1;
@@ -1084,7 +1090,7 @@ function finishBook(b) {
   b.pct = 100; /* Tamat = 100% di Home, profil, catatan sesi */
   save();
   const tk = b.id + ':' + SESS.t;
-  if (tamatSeen === tk) return toast('Ini halaman terakhir. Ketuk Baca ulang untuk mulai lagi.');
+  if (tamatSeen === tk) return toast('Ini halaman terakhir.', 6000, { label: 'Baca ulang', fn: () => { restartBook(b); viewBaca(); } });
   tamatSeen = tk;
   setTimeout(() => flushLate(true), 2500);
   const all = countedVocab(b.lang, 0, b.title);
@@ -1584,7 +1590,25 @@ function showPage(p, anim = true) {
   else if (last && b.doneAt) { nx.textContent = 'Baca ulang'; nx.dataset.ulang = '1'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Baca ulang dari awal'); }
   else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
+  endCard(b, last);
   pfArm();
+}
+/* kartu ajakan di halaman terakhir: isi ruang kosong di bawah teks supaya tak buntu */
+function endCard(b, last) {
+  const vp = $('#vp'); if (!vp) return;
+  const old = $('#endcard'); if (old) old.remove();
+  const cols = $('#cols'); if (!last || !cols) return;
+  const nx = nextBooks(b)[0];
+  const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
+  c.innerHTML = `<button class="sec" id="ecr">Baca ulang</button><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Impor buku baru'}</button>`;
+  c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
+  vp.append(c);
+  $('#ecr').onclick = () => { restartBook(b); viewBaca(); };
+  $('#ecn').onclick = () => { if (nx) { db.cur = nx.id; save(); setTab('baca'); } else { setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); } };
+  /* tampil hanya bila ruang kosong di bawah teks cukup */
+  let bottom = 0; const vr = vp.getBoundingClientRect();
+  try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(x => { if (x.width > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); }); } catch (e) { }
+  if (bottom && vr.bottom - bottom < c.offsetHeight + 16) c.remove();
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
 let pfIdle = 0;
