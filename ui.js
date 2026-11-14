@@ -1217,7 +1217,7 @@ function finishBook(b) {
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Kata lamamu bisa diulang di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Lain kali, simpan kata yang bikin penasaran biar bisa dilatih ya.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Kata lamamu bisa diulang di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${total > 0 ? `<button class="pri full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Ke Home</button>` : '<button class="pri full" id="fbh">Ke Home</button>'}</div>${nxHtml}
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button>${nx.length ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
   $('#fbr').onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
@@ -1789,12 +1789,14 @@ function endCard(b, last) {
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };
   $('#ecn').onclick = () => { if (nx) { db.cur = nx.id; save(); setTab('baca'); } else { setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); } };
-  /* tampil hanya bila ruang kosong di bawah teks cukup */
+  /* tampil hanya bila ruang kosong di bawah SEMUA teks halaman aktif cukup; jangan pernah menimpa teks */
   let bottom = 0; const vr = vp.getBoundingClientRect();
-  try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(x => { if (x.width > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); }); } catch (e) { }
-  if (bottom && vr.bottom - bottom < c.offsetHeight + 16) { c.remove(); return; }
-  /* #994: kartu menempel dekat akhir teks, bukan menggantung di dasar layar */
-  if (bottom) { c.style.top = Math.round(bottom - vr.top + 12) + 'px'; c.style.bottom = 'auto'; }
+  const add = x => { if (x.width > 0 && x.height > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); };
+  try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(add); } catch (e) { }
+  try { (RD.ss || []).forEach(x => { if (x.pg === RD.page && x.el && x.el.isConnected) [...x.el.getClientRects()].forEach(add); }); } catch (e) { }
+  if (!bottom || vr.bottom - bottom < c.offsetHeight + 32) { c.remove(); return; }
+  /* #994: kartu menempel dekat akhir teks, jarak min 16px */
+  c.style.top = Math.round(bottom - vr.top + 16) + 'px'; c.style.bottom = 'auto';
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
 let pfIdle = 0;
