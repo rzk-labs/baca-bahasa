@@ -1,5 +1,11 @@
 [
   {
+    "n": 947,
+    "judul": "[peta 88] Tamat & Profil konsisten: Baca ulang, satu info kata, ke Kata",
+    "poin": "Layar Tamat kini rapi: jumlah kata sekali, ada tombol Lihat kata.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 948,
     "judul": "[peta 87] Keepo HQ: setujui massal tugas Siap dicek",
     "poin": "Kartu Siap dicek kini punya kotak centang, plus tombol Pilih semua.",
@@ -171,12 +177,6 @@
     "n": 866,
     "judul": "Home jujur: halaman minggu ini tak dobel, rekor streak, toast",
     "poin": "Angka 'Minggu ini' jujur: halaman yang dibaca ulang tak dihitung dobel.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 864,
-    "judul": "Tamat rapi: sheet satu pegangan & 2 tombol; Profil buku tamat 'Selesai'",
-    "poin": "Layar Tamat kini rapi: satu garis pegangan, dua tombol, kartu tidak terpotong.",
     "tgl": "2026-11-13"
   }
 ]
