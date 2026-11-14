@@ -154,13 +154,16 @@ function confetti(n = 70) {
   document.body.appendChild(box); setTimeout(() => box.remove(), 2000);
 }
 /* asal XP singkat ('dari halaman, kata, tamat'); hanya tampilan, tak pernah mengubah db.xp */
-const xpAsal = () => { const s = db.xpSrc || {}, g = { halaman: s.page, kata: (s.save || 0) + (s.look || 0) + (s.rem || 0), tamat: s.done, ngomong: s.speak, 'perangkat lain': s.sync }; const t = Object.keys(g).filter(k => g[k] > 0).sort((a, b) => g[b] - g[a]).slice(0, 3); return t.length ? 'dari ' + t.join(', ') : ''; };
+const xpAsal = () => { const s = db.xpSrc || {}, g = { halaman: s.page, kata: (s.save || 0) + (s.look || 0) + (s.rem || 0), tamat: s.done, ngomong: s.speak }; const t = Object.keys(g).filter(k => g[k] > 0).sort((a, b) => g[b] - g[a]).slice(0, 3); return t.length ? 'dari ' + t.join(', ') : ''; };
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
+/* SATU sumber XP/level: Home, Profil, header, popup */
+const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
 /* tampilan lencana jujur: lencana berbasis kata tersimpan hanya tampil terbuka bila syaratnya masih terpenuhi (db.badges tak diubah) */
 const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10 };
-const badgeShown = id => db.badges.includes(id) && !(id in BADGE_VOCAB_MIN && countedVocab(null).length < BADGE_VOCAB_MIN[id]);
+const BADGE_REAL = ['kepo1', 'kolektor', 'kutubuku', 'berani', 'perfect', 'boss', 'otak']; /* syarat dihitung dari data nyata di perangkat ini, bukan XP/lencana gabungan */
+const badgeShown = id => db.badges.includes(id) && !(BADGE_REAL.includes(id) && !BADGES.find(b => b[0] === id)[4]());
 const BADGES = [
   ['kepo1', 'eye', 'Keepo Pertama', 'Simpan 1 kata', () => countedVocab(null).length >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => countedVocab(null).length >= 10],
@@ -800,7 +803,7 @@ function weekCard() {
   const since = Date.now() - 7 * 864e5, from = new Date(since).toISOString().slice(0, 10);
   const days = db.days.filter(d => d >= from).length;
   const pages0 = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((n, d) => n + (db.pgDay[d] || 0), 0);
-  const pages = Math.min(pages0, db.books.reduce((n, b) => n + (b.total || 0), 0)); /* tak melebihi jumlah halaman buku */
+  const pages = Math.min(pages0, db.books.reduce((n, b) => n + Math.min(b.total || 0, (b.pos || 0) + 1), 0)); /* tak melebihi halaman unik yang benar-benar dibuka */
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
@@ -822,7 +825,7 @@ function firstWordNudge() { return !countedVocab(null).length; }
 function viewRak() {
   const list = db.books.slice().sort((a, b) => (b.opened || 0) - (a.opened || 0));
   const cur = book() || list[0];
-  const xt = xpToday(), lv = level(), inLv = db.xp % 100;
+  const xt = xpToday(), { lv, inLv } = xpInfo();
   const other = cur && pctOf(cur) >= 100 ? list.find(b => b.id !== cur.id && pctOf(b) < 100) : null; /* buku belum tamat yang terakhir dibaca */
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
   const addCard = () => `<div class="card">
@@ -1496,7 +1499,7 @@ const nw = t => `<span class="nw">${esc(t)}</span>`;
 /* #770: 'Bab' bila bagian itu diawali judul bab terdeteksi (六、 II. Chapter IV), selain itu 'Bagian'; satu istilah di header, bar, daftar isi */
 const secIsBab = sec => !!(sec && sec[0] && gbHead(String(sec[0]).replace(/^[\u0001\u0002]+/, '')));
 const secWord = (b, i) => 'Bagian'; /* #951: satu istilah 'Bagian' di Home, Baca, Tamat, Profil; jumlah = b.total (dihitung dari teks) */
-const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${pos} dari ${total}`; /* 'x dari y' dgn jumlah sebenarnya */
+const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${total > 0 ? Math.min(pos, total) : pos} dari ${total}`; /* 'x dari y' dgn jumlah sebenarnya */
 function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return statusPct(100).txt;

@@ -103,7 +103,7 @@ function mergeSrv(d) {
   }
   // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
-  if ((+d.xp || 0) > (db.xp || 0)) { db.xpSrc = db.xpSrc || {}; db.xpSrc.sync = (db.xpSrc.sync || 0) + (+d.xp - (db.xp || 0)); db.xp = +d.xp; }
+  if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, Math.floor(db.xp / 100) + 1); } /* hasil sinkron: tanpa popup Level */
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
   if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -324,7 +324,7 @@ async function bkRestore(file) {
       if (!isObj(db.kenal)) db.kenal = {};
       for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
     }
-    if ((+d.xp || 0) > (db.xp || 0)) { db.xpSrc = db.xpSrc || {}; db.xpSrc.sync = (db.xpSrc.sync || 0) + (+d.xp - (db.xp || 0)); db.xp = +d.xp; }
+    if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, Math.floor(db.xp / 100) + 1); }
     if (isObj(d.xpDay)) { if (!isObj(db.xpDay)) db.xpDay = {}; for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } }
     if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } }
     if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -473,7 +473,7 @@ async function openProfile(username) {
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self && typeof xpAsal === 'function' && xpAsal() ? `<div class="mut sm">${db.xp} XP total ${esc(xpAsal())}</div>` : ''}</div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP gabungan semua perangkat</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero ? `<div class="mut sm" style="margin-top:10px">${rdDone.length && !rdNow.length ? 'Mulai buku lain yuk, cari kata baru.' : NUDGE_TXT}</div>` : ''}
       <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Mulai buku lain yuk, ketuk Koleksi di Home.' : 'Belum ada buku yang dibuka.'}</div>`}

@@ -1,5 +1,11 @@
 [
   {
+    "n": 953,
+    "judul": "XP satu angka: Home=Profil=popup Level, sinkron tak memicu Level",
+    "poin": "XP dan Level sekarang sama di Home, Profil, dan popup; sinkron tak memicu popup.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 907,
     "judul": "Baca: terjemahan kalimat cepat di tempat, tanpa buka sheet",
     "poin": "Ketuk dua kali satu kalimat: arti singkatnya muncul tepat di bawahnya.",
@@ -171,12 +177,6 @@
     "n": 876,
     "judul": "Lanjut baca: 'Kata baru' tak lagi tampil kata Korea/partikel (が, 落ち)",
     "poin": "Status \"Lanjut\" kini hanya menyebut kata sesuai bahasa buku.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 874,
-    "judul": "Tambah Thai & Hindi + aman untuk skrip Arab/Hindi/Thai",
-    "poin": "Thai dan Hindi sekarang ada di pilihan bahasa, dan terdeteksi otomatis.",
     "tgl": "2026-11-13"
   }
 ]
