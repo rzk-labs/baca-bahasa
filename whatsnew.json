@@ -1,5 +1,11 @@
 [
   {
+    "n": 981,
+    "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
+    "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 979,
     "judul": "[peta 90] Keepo HQ: klik cepat (cache, panggilan bersamaan, optimistis)",
     "poin": "Keepo HQ lebih cepat: data lama langsung tampil, lalu diperbarui diam-diam.",
@@ -171,12 +177,6 @@
     "n": 888,
     "judul": "Jumlah bab/bagian tetap sama di Home, Baca & Profil",
     "poin": "Jumlah bab di Home sekarang dihitung ulang dan sama dengan layar Baca.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 885,
-    "judul": "[peta 82] Keepo HQ: gambar di masukan (/feedback) & perintah ke tim",
-    "poin": "Perintah ke tim di Keepo HQ sekarang bisa disertai sampai 3 gambar.",
     "tgl": "2026-11-13"
   }
 ]
