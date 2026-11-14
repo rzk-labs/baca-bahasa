@@ -367,7 +367,8 @@ function openAccount(mode) {
         <label class="row" style="gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="aHideT" style="width:auto" ${db.acct.hideTitles ? 'checked' : ''}> <span class="sm">Sembunyikan judul buku</span></label>
         <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
-      <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
+      <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>
+      <div class="set-row"><div class="eyebrow">Hapus akun</div><div class="mut sm">Akun, XP, kata, dan buku yang dibagikan dihapus dari server. Data di HP ini tetap ada.</div><div class="row"><button class="sec" id="aDel" type="button">Hapus akun permanen</button></div></div>`);
     bkWire();
     const setSocial = async () => { try { await api('/social', { method: 'PUT', body: { publik: !!db.acct.publik, hideTitles: !!db.acct.hideTitles } }); save(); } catch (e) { toast(e.message); } };
     $$('#aPub button').forEach(b => b.onclick = () => { db.acct.publik = b.dataset.v === '1'; $$('#aPub button').forEach(x => x.classList.toggle('on', x === b)); setSocial().then(() => toast(db.acct.publik ? 'Profilmu sekarang publik.' : 'Profilmu sekarang privat.')); });
@@ -376,6 +377,14 @@ function openAccount(mode) {
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
     $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { toast(e.message); } };
+    let delArm = 0;
+    $('#aDel').onclick = async () => {
+      const x = $('#aDel');
+      if (Date.now() - delArm > 6000) { delArm = Date.now(); x.textContent = 'Yakin? Ketuk lagi untuk hapus'; setTimeout(() => { if (x.isConnected && Date.now() - delArm >= 6000) x.textContent = 'Hapus akun permanen'; }, 6100); return; }
+      x.disabled = true; x.textContent = 'Menghapus…';
+      try { await api('/me', { method: 'DELETE' }); db.acct = null; save(); closeSheet(); toast('Akunmu sudah dihapus. Progres di HP ini tetap ada.'); setTab(db.tab || 'rak'); }
+      catch (e) { x.disabled = false; x.textContent = 'Hapus akun permanen'; toast(e.message || 'Gagal hapus, coba lagi'); }
+    };
     $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
     return;
   }

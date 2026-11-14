@@ -98,6 +98,22 @@ export default {
         await env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(u.id).run();
         return json(req, { token: await newSession(env, u.id), user: pub(u), data: u.data ? JSON.parse(u.data) : null });
       }
+      // Hapus akun permanen (wajib App Store 5.1.1v): semua data milik akun di server
+      if (p === '/me' && req.method === 'DELETE') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const id = u.id, q = sql => env.DB.prepare(sql).bind(id);
+        await env.DB.batch([
+          env.DB.prepare('DELETE FROM post_likes WHERE user_id = ? OR post_id IN (SELECT id FROM posts WHERE user_id = ?)').bind(id, id),
+          q('DELETE FROM posts WHERE user_id = ?'),
+          env.DB.prepare('DELETE FROM follows WHERE follower_id = ? OR followee_id = ?').bind(id, id),
+          q('DELETE FROM shares WHERE user_id = ?'),
+          q('DELETE FROM book_chunk WHERE user_id = ?'),
+          q('DELETE FROM book_meta WHERE user_id = ?'),
+          q('DELETE FROM sessions WHERE user_id = ?'),
+          q('DELETE FROM users WHERE id = ?'),
+        ]);
+        return json(req, { ok: true });
+      }
       if (p === '/login' && req.method === 'POST') {
         const { username = '', password = '' } = await body(req);
         const u = await env.DB.prepare('SELECT * FROM users WHERE username = ?').bind(String(username).trim().toLowerCase()).first();
