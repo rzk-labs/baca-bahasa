@@ -937,8 +937,9 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #956 header Baca HP: Dengar tampil sebagai ikon (44px), padding >=12px + safe-area; Profil: baris buku satu baris */
 @media (max-width:430px){
 .rbar{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
-#rLis{display:inline-flex;align-items:center;justify-content:center;width:44px;min-width:44px;min-height:44px;padding:0}
-#rLis .rrtl{display:none}
+#rLis{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:auto;min-width:44px;min-height:44px;padding:0 4px}
+#rLis .rrtl{display:block}
+@media (max-width:359px){#rLis{padding:0 2px}#rLis .rrtl{display:block;font-size:11px}}
 .rmore .rmob#rmLis{display:none}
 }
 .rtq{display:flex;flex-direction:column;gap:8px;margin-top:12px}.rtq button{width:100%;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 12px}.rtq small{font-size:12px;font-weight:500;opacity:.75}
