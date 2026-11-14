@@ -56,6 +56,19 @@ export default {
     try {
       if (p === '/' || p === '/health') return json(req, { ok: true, app: 'kepo-api', week: isoWeek() });
 
+      // Hitungan anonim: 1 kali/hari per HP, tanpa ID/IP. Isi: hari ini, hari pertama buka, sumber link pertama.
+      if (p === '/hitung' && req.method === 'POST') {
+        const b = await body(req), D = /^\d{4}-\d{2}-\d{2}$/;
+        const day = String(b.day || ''), first = String(b.first || ''), src = String(b.src || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 20) || 'langsung';
+        if (!D.test(day) || !D.test(first) || first > day) return json(req, { ok: false }, 400);
+        await env.DB.prepare('INSERT INTO hitung (day, first, src, n) VALUES (?,?,?,1) ON CONFLICT(day, first, src) DO UPDATE SET n = n + 1').bind(day, first, src).run();
+        return json(req, { ok: true });
+      }
+      if (p === '/hitung' && req.method === 'GET') {
+        const r = await env.DB.prepare("SELECT day, SUM(n) total, SUM(CASE WHEN first = day THEN n ELSE 0 END) baru, SUM(CASE WHEN julianday(day) - julianday(first) = 1 THEN n ELSE 0 END) balik_h2 FROM hitung WHERE day >= date('now','-30 day') GROUP BY day ORDER BY day DESC").all();
+        const s = await env.DB.prepare("SELECT src, SUM(n) baru FROM hitung WHERE first = day GROUP BY src ORDER BY baru DESC").all();
+        return json(req, { hari: r.results, sumber_pengguna_baru: s.results });
+      }
       if (p === '/signup' && req.method === 'POST') {
         const { username = '', password = '', nick = '' } = await body(req);
         const un = String(username).trim().toLowerCase();

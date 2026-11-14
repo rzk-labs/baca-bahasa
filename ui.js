@@ -604,6 +604,7 @@ function openSettings() {
       <li>Kamus Jepang kecil (cara baca &amp; bentuk dasar) disusun dengan rujukan JMdict © EDRDG, lisensi CC BY-SA 4.0.</li>
       <li>Buku dan progresmu tersimpan di HP ini, bukan di server.</li>
       <li>Kalau login, hanya XP, kata, dan buku yang kamu bagikan ikut tersimpan.</li>
+      <li>Kami hanya menghitung jumlah HP yang membuka app per hari (tanpa nama, ID, atau IP).</li>
       <li>Bagikan = link pribadi. Hanya yang kamu kirimi link yang bisa buka.</li>
       <li>Terjemahan otomatis bisa keliru. Anggap sebagai bantuan, bukan kebenaran.</li>
       <li>Minta hapus konten atau laporkan buku: lewat tombol di bawah.</li>
@@ -682,7 +683,7 @@ async function muatUlangPaksa() {
   location.reload();
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
-const APP_VER = 'v350';
+const APP_VER = 'v351';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
