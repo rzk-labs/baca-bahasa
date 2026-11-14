@@ -708,7 +708,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup visual di setiap hasil yang perlu disetujui (#957)",
       "dokumen": "docs/spesifikasi-hq-mockup-persetujuan.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#997)"
     },
     {
       "no": 94,
@@ -740,7 +740,7 @@
       "prioritas": "P0",
       "nama": "Evaluasi e2e: rapikan akhir buku (sheet Tamat, bar bawah, Profil, lencana, petunjuk ketuk kata) (#983)",
       "dokumen": "docs/desain-evaluasi-e2e-983.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#998)"
     },
     {
       "no": 98,
@@ -748,6 +748,22 @@
       "prioritas": "P1",
       "nama": "Satu istilah 'diulang' + titik pengingat kata siap diulang di header Baca (#990)",
       "dokumen": "docs/riset-pengingat-ulas-di-baca.md",
+      "status": "selesai (#1004, #1003, #1000)"
+    },
+    {
+      "no": 99,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tombol 'Muat ulang versi terbaru' + baris versi app di Pengaturan (#999)",
+      "dokumen": "docs/spesifikasi-muat-ulang-paksa-999.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 99,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Ganti sampul buku sendiri dari foto/galeri: menu ⋯ di kartu buku, Ganti/Hapus sampul (#1009)",
+      "dokumen": "docs/spesifikasi-ganti-sampul-1009.md",
       "status": "siap dikerjakan"
     }
   ],
