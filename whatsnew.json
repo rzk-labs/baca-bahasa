@@ -1,5 +1,11 @@
 [
   {
+    "n": 1045,
+    "judul": "Halaman terakhir: kartu akhir tak menimpa teks + Tamat tak menutup teks",
+    "poin": "Kartu \"Baca ulang / Buku lain\" tak lagi menimpa kalimat terakhir.",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1043,
     "judul": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong",
     "poin": "Judul buku di layar baca sekarang pendek, tanpa nama penulis.",
@@ -171,12 +177,6 @@
     "n": 969,
     "judul": "Baca ulang aman: bisa Urungkan + ajakan di halaman terakhir",
     "poin": "Mockup sudah dibuat: halaman terakhir dan layar sesudah Baca ulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 911,
-    "judul": "Halaman dibaca jujur: ganti huruf/layout tak menghitung dobel",
-    "poin": "Hitungan halaman dibaca kini jujur: ganti huruf atau layar tidak menambah angka.",
     "tgl": "2026-11-14"
   }
 ]
