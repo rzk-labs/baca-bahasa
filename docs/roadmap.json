@@ -790,6 +790,14 @@
       "nama": "Tanya sekali 'Mau pinyin?' (Nyala / Hanya kata baru / Mati) saat buku zh-CN dibuka + chip Pinyin 1 ketukan (#1025)",
       "dokumen": "docs/riset-cara-baca-default-mandarin.md",
       "status": "selesai (#1041)"
+    },
+    {
+      "no": 104,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong (#1043)",
+      "dokumen": "docs/desain-header-baca-judul-pendek.md",
+      "status": "selesai (#1043)"
     }
   ],
   "prioritas": [
