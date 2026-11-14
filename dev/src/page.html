@@ -358,7 +358,7 @@ function go(k,arg){clearTimeout(timer);cur=k;navs();scrollTo(0,0);
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 async function load(){HQ=await call('/hq');return HQ}
-function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{await load();fn(true)}catch(e){}},sibuk?12000:60000)}
+function auto(fn){clearTimeout(timer);const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{const lama=JSON.stringify(HQ);await load();if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
 function login(){
@@ -620,8 +620,8 @@ function hasil(riwayat){
 }
 const inl=s=>window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parseInline(String(s))):esc(s);
 
-async function detail(n){
-  clearTimeout(timer);scrollTo(0,0);
+async function detail(n,again){
+  clearTimeout(timer);if(!again)scrollTo(0,0);
   let t;try{t=await call('/tasks/'+n)}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}
   const hq=(HQ?.tasks||[]).find(x=>x.n===n)||{};
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
@@ -669,7 +669,7 @@ async function detail(n){
   if($('#rvb'))$('#rvb').onclick=()=>{$('#rvbox').style.display='block';$('#rv').focus()};
   const rvL=$('#rvg')?lampiran($('#rvg'),$('#rv')):[];
   if($('#kr'))$('#kr').onclick=e=>act('revisi',{isi:$('#rv').value,gambar:rvL.slice()},e.currentTarget);
-  if(kerja)timer=setTimeout(()=>detail(n),12000);
+  if(kerja){const sig=JSON.stringify([t.status,t.riwayat.length,t.files]);const poll=()=>{timer=setTimeout(async()=>{try{const t2=await call('/tasks/'+n);if(JSON.stringify([t2.status,t2.riwayat.length,t2.files])===sig||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){poll();return}const y=scrollY;await detail(n,true);scrollTo(0,y)}catch(e){poll()}},12000)};poll()}
 }
 /* Lampiran gambar (maks 3): tombol + tempel; dikecilkan di browser (sisi ≤1280px, JPEG 0,8) */
 function kecilkan(f){return new Promise(ok=>{
