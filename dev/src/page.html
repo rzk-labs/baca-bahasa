@@ -253,6 +253,7 @@ function terapkan(){const d=document.documentElement,P=PREF;
   try{localStorage.setItem('kd_pref',JSON.stringify(P))}catch(e){}}
 terapkan();
 let HQ=null, timer=null, cur='markas', VIEW=0;
+try{HQ=JSON.parse(localStorage.getItem('kepo-hq')||'null')}catch(e){HQ=null}
 const IC={
   markas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
   papan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>',
@@ -262,7 +263,7 @@ const IC={
   set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
   play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>'
 };
-const NAV=[['markas','Markas'],['hasil','Hasil'],['papan','Papan'],['peta','Peta'],['dokumen','Dokumen']];
+const NAV=[['markas','Markas'],['hasil','Laporan'],['papan','Tugas'],['peta','Peta'],['dokumen','Dokumen']];
 const TIM={
   pm:{n:'PM',e:'🧭',c:'t-lav',d:'Memilih tugas harian dari roadmap'},
   riset:{n:'Riset',e:'🔎',c:'t-blue',d:'Pasar, kompetitor, persona'},
@@ -357,7 +358,9 @@ function go(k,arg){clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
   if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
-async function load(){HQ=await call('/hq');return HQ}
+async function load(){HQ=await call('/hq');try{localStorage.setItem('kepo-hq',JSON.stringify(HQ))}catch(e){}return HQ}
+// Tampil instan dari data tersimpan, lalu segarkan di belakang layar (hanya gambar ulang bila berubah)
+function segarkan(k,fn){const v=VIEW,lama=JSON.stringify(HQ);load().then(()=>{if(v===VIEW&&cur===k&&JSON.stringify(HQ)!==lama){const ae=document.activeElement;if(ae&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))return;fn(true)}}).catch(()=>{})}
 function auto(fn){clearTimeout(timer);const av=VIEW;const sibuk=HQ&&(HQ.tasks.some(t=>t.status==='antre'||t.status==='dikerjakan')||(HQ.runs||[]).some(r=>r.status!=='completed'));timer=setTimeout(async()=>{try{if(av!==VIEW)return;const lama=JSON.stringify(HQ);await load();if(av!==VIEW)return;if(JSON.stringify(HQ)===lama||(document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName))||document.querySelector('#mock iframe')||document.querySelector('details[open]')){auto(fn);return}const y=scrollY;fn(true);requestAnimationFrame(()=>scrollTo(0,y))}catch(e){}},sibuk?12000:60000)}
 function skel(){V.innerHTML='<div class="bento"><div class="skel span2"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="margin-top:14px;height:220px"></div>'}
 
@@ -391,7 +394,7 @@ function kuotaPerforma(T){
   <div class="tile" style="margin-top:12px"><div class="feed">${baris}</div></div>`;
 }
 async function markas(again){
-  if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(!again){if(HQ)segarkan('markas',markas);else{skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}}
   if(cur!=='markas')return;
   const T=HQ.tasks, R=HQ.roadmap, runs=HQ.runs;
   const siap=T.filter(t=>t.status==='siap'), jalan=T.filter(t=>t.status==='dikerjakan'||t.status==='antre');
@@ -496,7 +499,7 @@ async function hasilKerja(again){
   <div style="margin-top:14px">${alatTugas(()=>hasilKerja(true),false)}</div>
   ${grp.length?grp.map(g=>`<div class="sec"><h2 style="font-size:20px">${esc(g.h)}</h2></div><div class="grid">${g.xs.map(x=>kartuTugas(x,{laporan:true})).join('')}</div>`).join(''):'<div class="empty">Belum ada hasil 7 hari terakhir.</div>'}${nLama?`<div style="margin:14px 0"><button class="btn ghost more-btn" style="width:100%" onclick="LAMA=!LAMA;hasilKerja(true)">${LAMA?'Lipat yang lama':'Tampilkan lebih lama ('+nLama+')'}</button></div>`:''}`;
   V.innerHTML=`
-  <div style="margin-bottom:14px"><div class="eyebrow mut">Arsip & laporan tim</div><h1>Hasil kerja</h1></div>
+  <div style="margin-bottom:14px"><div class="eyebrow mut">Apa yang sudah jadi · lihat & baca saja</div><h1>Laporan</h1></div>
   <div class="tile evl">
     <div class="evs">
       <div><div class="eyebrow">Live</div><div class="big">${lv}</div></div>
@@ -538,7 +541,7 @@ function pasangAlat(ulang){
 
 let LIVEALL=false;
 async function papan(again){
-  if(!again){if(!HQ)skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}
+  if(!again){if(HQ)segarkan('papan',papan);else{skel();try{await load()}catch(e){V.innerHTML='<p class="err">'+esc(e.message)+'</p>';return}}}
   if(cur!=='papan')return;
   if(document.activeElement&&document.activeElement.id==='qt'&&again==='auto'){auto(()=>papan('auto'));return} // jangan ganggu saat mengetik
   const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
@@ -549,7 +552,7 @@ async function papan(again){
   const saring=Q||PF!=='semua'||SF;
   const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const kartuP=t=>kartuTugas(t,{revisi:true,pilih:true});setVis(by('siap'));
-  V.innerHTML=`<div class="row" style="margin-bottom:12px"><h1>Papan tugas</h1><span class="sp"></span><button class="btn lime" onclick="perintah()">${I.tambah} Perintah</button></div>
+  V.innerHTML=`<div class="row" style="margin-bottom:12px"><div><div class="eyebrow mut">Semua tugas per status · setujui di kolom Siap dicek</div><h1>Tugas</h1></div><span class="sp"></span><button class="btn lime" onclick="perintah()">${I.tambah} Perintah</button></div>
   ${alatTugas(()=>papan(true),true)}
   ${saring?`<div class="mut sm" style="margin:-4px 0 12px">${nCocok} tugas cocok · <a href="#" id="resetQ">hapus saringan</a></div>`:''}
   ${(()=>{const menunggu=HQ.tasks.filter(t=>t.status==='menuju'&&t.terbuka);const macet=HQ.tasks.filter(t=>(t.status==='dikerjakan'||t.status==='antre')&&t.terbuka&&Date.now()-new Date(t.diubah)>12*36e5);const gagalN=HQ.tasks.filter(t=>t.status==='gagal').length;const ada=L=>L.length?L.map(t=>'#'+t.n).join(' · '):'tidak ada';const tl=HQ.tasks.filter(t=>t.status==='live').map(t=>new Date(t.diubah)).sort((a,b)=>b-a)[0];const runAt=j=>{const r=(HQ.runs||[]).find(x=>x.jenis===j);return r?lalu(r.mulai):'belum ada'};return `<div class="sm mut" style="margin-bottom:10px">⏱ Tugas live terakhir: ${tl?esc(lalu(tl)):'belum ada'} · PM: ${esc(runAt('pm'))} · Agen kerja: ${esc(runAt('kerja'))}</div><div class="row" style="gap:10px;flex-wrap:wrap;margin-bottom:12px">
