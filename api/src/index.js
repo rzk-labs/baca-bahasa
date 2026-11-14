@@ -104,8 +104,10 @@ export default {
         const id = u.id, q = sql => env.DB.prepare(sql).bind(id);
         await env.DB.batch([
           env.DB.prepare('DELETE FROM post_likes WHERE user_id = ? OR post_id IN (SELECT id FROM posts WHERE user_id = ?)').bind(id, id),
-          q('DELETE FROM posts WHERE user_id = ?'),
           env.DB.prepare('DELETE FROM follows WHERE follower_id = ? OR followee_id = ?').bind(id, id),
+          env.DB.prepare('DELETE FROM blokir WHERE user_id = ? OR target_id = ?').bind(id, id),
+          env.DB.prepare('DELETE FROM laporan_post WHERE user_id = ? OR post_id IN (SELECT id FROM posts WHERE user_id = ?)').bind(id, id),
+          q('DELETE FROM posts WHERE user_id = ?'),
           q('DELETE FROM shares WHERE user_id = ?'),
           q('DELETE FROM book_chunk WHERE user_id = ?'),
           q('DELETE FROM book_meta WHERE user_id = ?'),
@@ -221,7 +223,10 @@ export default {
             (SELECT 1 FROM post_likes l WHERE l.post_id=p.id AND l.user_id=?) aku_suka,
             (SELECT 1 FROM follows f WHERE f.follower_id=? AND f.followee_id=p.user_id) diikuti
           FROM posts p JOIN users x ON x.id=p.user_id
-          WHERE p.created_at < ? AND (x.social=1 OR x.id=?) ORDER BY p.created_at DESC LIMIT 120`).bind(u.id, u.id, before, u.id).all();
+          WHERE p.created_at < ? AND (x.social=1 OR x.id=?)
+            AND p.user_id NOT IN (SELECT target_id FROM blokir WHERE user_id=?) AND p.user_id NOT IN (SELECT user_id FROM blokir WHERE target_id=?)
+            AND p.id NOT IN (SELECT post_id FROM laporan_post WHERE user_id=?) AND (SELECT COUNT(*) FROM laporan_post r WHERE r.post_id=p.id) < 3
+          ORDER BY p.created_at DESC LIMIT 120`).bind(u.id, u.id, before, u.id, u.id, u.id, u.id).all();
         const now = Date.now(), rows = r.results || [];
         // skor sederhana: makin baru makin tinggi; teman diikuti & disukai naik; status sendiri tetap muncul
         const skor = x => -((now - x.created_at) / 36e5) + (x.diikuti ? 12 : 0) + Math.min(+x.suka || 0, 20) * 1.5 + (x.username === u.username ? 6 : 0);
@@ -230,6 +235,26 @@ export default {
           posts: top.map(x => ({ id: x.id, text: x.text, book: x.hide_titles && x.username !== u.username ? (x.book ? 'Sebuah buku' : null) : x.book, lang: x.lang, share: x.share_id, at: x.created_at, username: x.username, nick: x.nick, ai: x.username.startsWith('uji_'), suka: +x.suka || 0, akuSuka: !!x.aku_suka, diikuti: !!x.diikuti, milikku: x.username === u.username })),
           lagi: rows.length === 120 ? Math.min(...rows.map(x => x.created_at)) : null,
         });
+      }
+      // Moderasi (App Store 1.2): lapor status (tersembunyi untuk pelapor; >=3 laporan = tersembunyi untuk semua) & blokir pengguna
+      const lm = p.match(/^\/posts\/(\d+)\/lapor$/);
+      if (lm && req.method === 'POST') {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const b = await body(req);
+        await env.DB.prepare('INSERT OR IGNORE INTO laporan_post (post_id, user_id, alasan, created_at) VALUES (?,?,?,?)').bind(+lm[1], u.id, String(b.alasan || '').slice(0, 200), Date.now()).run();
+        return json(req, { ok: true });
+      }
+      const blm = p.match(/^\/blokir\/([a-z0-9_.-]{1,40})$/);
+      if (blm && (req.method === 'POST' || req.method === 'DELETE')) {
+        const u = await authUser(req, env); if (!u) return err(req, 'Sesi habis, masuk lagi ya.', 401);
+        const x = await env.DB.prepare('SELECT id FROM users WHERE username=?').bind(blm[1]).first();
+        if (!x || x.id === u.id) return err(req, 'Pengguna tidak ditemukan.', 404);
+        if (req.method === 'DELETE') { await env.DB.prepare('DELETE FROM blokir WHERE user_id=? AND target_id=?').bind(u.id, x.id).run(); return json(req, { ok: true }); }
+        await env.DB.batch([
+          env.DB.prepare('INSERT OR IGNORE INTO blokir (user_id, target_id, created_at) VALUES (?,?,?)').bind(u.id, x.id, Date.now()),
+          env.DB.prepare('DELETE FROM follows WHERE (follower_id=? AND followee_id=?) OR (follower_id=? AND followee_id=?)').bind(u.id, x.id, x.id, u.id),
+        ]);
+        return json(req, { ok: true });
       }
       const pm = p.match(/^\/posts\/(\d+)(\/suka)?$/);
       if (pm) {
