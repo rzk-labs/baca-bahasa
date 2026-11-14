@@ -1281,13 +1281,14 @@ async function viewBaca() {
     const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
   }).join('');
+  const dueN = db.vocab.filter(isDue).length; /* titik pengingat di tombol menu; isDue sama dengan Home */
   const hr = new Date().getHours();
   const nightChip = db.theme === 'paper' && !db.themeSet && !!db.seenTip && (hr >= 19 || hr < 5 || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)); /* panduan dulu; saran tema malam baru setelah panduan ditutup, tak pernah bersamaan */
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b>${esc(b.title)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button class="icon rdue" id="rDue" type="button" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<i class="rdot" aria-hidden="true"></i></button>` : ''; })()}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${db.rt ? ' on' : ''}" id="rRt" type="button" title="Cara baca" aria-pressed="${db.rt ? 'true' : 'false'}" aria-label="Cara baca: ${db.rt ? 'nyala' : 'mati'}">${ico('ruby')}<span class="rrtl">Cara baca</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rdue" id="rDue" type="button" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<i class="rdot" aria-hidden="true"></i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="${dueN ? dueN + ' kata siap diulang. ' : ''}Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span>${dueN ? '<i class="due-dot" aria-hidden="true"></i>' : ''}</button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead">${esc(b.title)}</div>
@@ -1309,7 +1310,16 @@ async function viewBaca() {
     const any = db.vocab.some(v => v.lang === b.lang && bacaOf(v.w, v.baca) && (+v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1));
     toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
   };
-  $('#rMore').onclick = () => {
+  const openDue = () => {
+    openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">${dueN} kata siap diulang</span>${closeBtn}</div><div class="due-sheet"><p class="mut sm">Sekitar 1 menit. Boleh nanti, bacaanmu tetap di sini.</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" id="dsGo">Ulang sekarang</button><button class="btn ghost" id="dsLater">Nanti</button></div>
+      <button class="chi" id="dsMenu">${ico('more')}<span>Menu lainnya</span></button></div>`, dueN + ' kata siap diulang');
+    $('#dsGo').onclick = () => { closeSheet(); stopListenPage(); kataSeg = 'kartu'; setTab('kata'); };
+    $('#dsLater').onclick = () => closeSheet();
+    $('#dsMenu').onclick = () => { closeSheet(); openMore(); };
+  };
+  $('#rMore').onclick = () => dueN ? openDue() : openMore();
+  const openMore = () => {
     const sl = () => db.ttsRate === 'slow' ? 'Lambat' : 'Normal';
     openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Lainnya</span>${closeBtn}</div><div class="chlist rmore">
       <button class="chi" id="rmSet">${ico('sliders')}<span>Pengaturan baca</span></button>

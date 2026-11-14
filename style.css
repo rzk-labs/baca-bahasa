@@ -969,4 +969,9 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-up button{flex:none;min-height:36px;padding:0 10px;font-size:12px}
 .rk-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px 10px;background:var(--color-surface-soft);border-radius:14px}
 .fr-read .fr-st{font-size:13px}
+/* #1003 titik pengingat kata siap diulang di tombol menu Baca: kecil, diam, tanpa angka */
+#rMore{position:relative}
+.due-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--hl,#E9F056);box-shadow:0 0 0 1.5px var(--ink,#351E28);pointer-events:none}
+.due-sheet{display:flex;flex-direction:column;gap:12px;padding:4px 2px 8px}
+.due-sheet .btn{min-height:48px}
 .rdue{position:relative}.rdue .rdot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px #351E28;pointer-events:none}
