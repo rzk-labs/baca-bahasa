@@ -1,5 +1,23 @@
 [
   {
+    "n": 1020,
+    "judul": "Home: kartu buku tamat lega, tombol satu baris & tak terpotong",
+    "poin": "Kartu buku tamat di Home kini lebih ringkas dan lega.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1018,
+    "judul": "[peta 99] Tombol Muat ulang versi terbaru + versi app di Pengaturan",
+    "poin": "Pengaturan sekarang punya tombol \"Muat ulang versi terbaru\" untuk dapat versi baru di HP.",
+    "tgl": "2026-11-14"
+  },
+  {
+    "n": 1012,
+    "judul": "Jelaskan halaman ini dengan bahasa lebih sederhana (AI, sekali ketuk)",
+    "poin": "Menu Lainnya di halaman baca punya tombol baru: Sederhanakan halaman (AI).",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 1006,
     "judul": "Judul buku utuh di Profil & Home: status pindah ke baris bawah",
     "poin": "Judul buku di Profil sekarang tampil penuh, tidak terpotong lagi.",
@@ -159,24 +177,6 @@
     "n": 926,
     "judul": "[peta 85] Tuntaskan arti nyusul: tanda tak hilang, penanda di daftar Kata",
     "poin": "Arti kata offline kini tak hilang tandanya dan terisi sendiri saat sinyal balik.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 932,
-    "judul": "EVALUASI UI UIX NYA",
-    "poin": "Tulisan \"Keepo\" di atas layar HP sekarang tidak terpotong lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 928,
-    "judul": "[peta 84] Satu sumber angka: persen buku, Bab/Bagian, XP tak naik sendiri",
-    "poin": "Persen buku dan istilah \"Bab\" kini sama di Home, Baca, dan Daftar bab.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 937,
-    "judul": "[peta 86] Keepo HQ: samakan Hasil, Papan, Siap kamu cek",
-    "poin": "Halaman Markas, Papan, dan Hasil di Keepo HQ sekarang tampil seragam.",
     "tgl": "2026-11-13"
   }
 ]
