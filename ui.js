@@ -85,6 +85,14 @@ async function muatCover() { let ada = false; for (const b of db.books) { if (b.
 /* pisahkan penulis dalam kurung: 'こころ（夏目漱石）' -> {main:'こころ', au:'夏目漱石'} (hanya tampilan) */
 function splitTitle(t) { t = String(t || '').trim(); const m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); return m ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
 function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34), i = c.search(/\s\S*$/); return (i > 12 ? c.slice(0, i) : c).replace(/[\s,;:\-–—]+$/, '') + '…'; }
+/* arti alternatif tanpa pengulangan arti utama (abaikan huruf besar/kecil, spasi, tanda baca); kosong = sembunyikan 'Bisa juga' */
+const altArti = (dict, main) => {
+  const nz = t => String(t || '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
+  const seen = new Set(String(main || '').split(/[;,，、；\/]/).map(nz).filter(Boolean)); seen.add(nz(main));
+  const out = [];
+  for (const t of (dict || []).flatMap(x => x.terms.slice(0, 4))) { const k = nz(t); if (!k || seen.has(k)) continue; seen.add(k); out.push(t); }
+  return out.slice(0, 4);
+};
 function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = splitTitle(b.title).main, ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}" role="img" aria-label="${esc(t)}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
@@ -1999,7 +2007,7 @@ async function onWord(el, lastEl) {
     setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
-    const alt = d.flatMap(x => x.terms.slice(0, 4)).filter(t => t.toLowerCase() !== r.text.toLowerCase()).slice(0, 4);
+    const alt = altArti(d, r.text);
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? `<div>${d.slice(1, 3).map(x => `<b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}`).join(' · ')}</div>` : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
