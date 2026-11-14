@@ -1,5 +1,11 @@
 [
   {
+    "n": 951,
+    "judul": "[peta 90] Satu istilah Bagian, cincin XP lega, toast Simpan jujur",
+    "poin": "Istilah \"Bagian\" kini dipakai di mana-mana, dan tampil \"Bagian 3 dari 10\".",
+    "tgl": "2026-11-14"
+  },
+  {
     "n": 913,
     "judul": "Header Home HP: logo Keepo utuh + bug tanda 'arti nyusul' hilang",
     "poin": "Logo Keepo di Home HP sekarang utuh, tidak terpotong lagi.",
@@ -171,12 +177,6 @@
     "n": 862,
     "judul": "Baca: header judul 2 baris tak menimpa tombol Bagian",
     "poin": "Header baca dirapikan: judul maksimal 2 baris, tombol Bagian tidak tertimpa lagi.",
-    "tgl": "2026-11-13"
-  },
-  {
-    "n": 860,
-    "judul": "Baca: bar bawah satu baris, tanpa titik '·' menggantung",
-    "poin": "Bar bawah halaman baca sekarang satu baris, tanpa titik menggantung.",
     "tgl": "2026-11-13"
   }
 ]
