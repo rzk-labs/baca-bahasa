@@ -110,6 +110,7 @@ jobs:
             echo "- Ubah file seperlunya. Jangan git commit/push, jangan buat PR: workflow yang mengurusnya."
             echo "- Cek sintaks JS yang kamu ubah dengan node --check. Kalau mengubah file app yang di-cache, naikkan versi C di sw.js."
             echo "- Terakhir, tulis .kepo-ringkasan.md untuk founder (non-teknis, ADHD). Format WAJIB: maksimal 3 baris poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari, tanpa nama file/istilah teknis. Jika founder perlu melakukan sesuatu, tambah SATU poin terakhir diawali 'Langkah kamu:' (maks 20 kata). Tanpa judul, tanpa paragraf. Kalau tugas tidak bisa dikerjakan, jangan ubah apa pun dan tulis 1 poin alasannya."
+            if [ "$PERAN" = "developer" ] || [ "$PERAN" = "desain" ]; then echo "- WAJIB bila hasilmu mengubah tampilan app: tulis docs/mockup-${N}.html = mockup statis layar HP (lebar 390px) yang menunjukkan layar yang BERUBAH persis seperti hasilnya setelah disetujui (bukan halaman Home, kecuali Home yang diubah). Satu file HTML mandiri, CSS inline mengikuti BRAND.md dan style.css, tanpa script, tanpa gambar eksternal, isi teks nyata. Tambahkan label kecil kalau ada beberapa kondisi (mis. Sebelum / Sesudah). Jangan lewatkan."; fi
             echo "- Dokumen di docs/ untuk founder juga harus mudah dipindai (ADHD): mulai dengan bagian '## Intinya' berisi 3 poin, lalu bagian bernomor dengan judul ##, poin pendek, tanpa paragraf panjang."
           } > "$T/prompt.md"
           echo "PROMPT_FILE=$T/prompt.md" >> "$GITHUB_ENV"
