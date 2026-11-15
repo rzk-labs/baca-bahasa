@@ -310,6 +310,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .dots{display:flex;gap:6px;justify-content:center;margin-bottom:var(--space-3)}
 .dots i{width:10px;height:10px;border-radius:var(--radius-full);background:var(--color-border)}.dots i.on{width:26px;background:var(--color-text)}.dots i.done{background:var(--color-success)}
 .rem-word{font:800 52px/1.05 var(--font-display);text-align:center;margin:var(--space-2) 0 0}
+.rem-baca{text-align:center;font:700 18px/1.3 var(--font-body,inherit);color:var(--color-text-muted);margin:4px 0 0;overflow-wrap:anywhere}.rem-baca small{display:block;font:500 12px/1.4 var(--font-body,inherit)}
 .rem-score{text-align:center;margin:var(--space-3) 0}.rem-score b{display:block;font:800 34px/38px var(--font-display);}
 .boss{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:var(--radius-full);background:var(--coral);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.04em}
 .pager{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-4)}.pager span{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--color-text-muted)}

@@ -977,7 +977,7 @@
       "prioritas": "P0",
       "nama": "Cara baca ejaan Indonesia untuk kata berhuruf Latin (vendors → vèn-dors) di kartu Ngomong, sheet arti & tab Kata, pakai saklar cara baca yang ada (#1119)",
       "dokumen": "docs/spesifikasi-cara-baca-bahasa-ibu-1119.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1161)",
       "catatan": "Mockup: docs/mockup-1119.html. Label 'perkiraan' + tombol Dengar; jangan ubah skor ucapan; naikkan C di sw.js."
     },
     {
