@@ -520,6 +520,53 @@ function vocabCSV(list) {
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
+/* cara baca ejaan Indonesia untuk kata Latin (perkiraan; dihitung saat tampil, tidak disimpan, tidak dipakai skor) */
+const IDB_EX = { en: { though: 'dou', people: 'pi-pel', water: 'wo-ter', the: 'de', one: 'wan', two: 'tu', you: 'yu', your: 'yor', would: 'wud', could: 'kud', should: 'syud', are: 'ar', was: 'woz', were: 'wer', have: 'hèv', said: 'sèd', what: 'wot', who: 'hu', where: 'wer', there: 'der', their: 'der', they: 'dei', this: 'dis', that: 'dèt', with: 'wid', of: 'ov', to: 'tu', do: 'du', does: 'daz', done: 'dan', gone: 'gon', love: 'lav', some: 'sam', come: 'kam', other: 'a-der', mother: 'ma-der', brother: 'bra-der', thought: 'tot', through: 'tru', enough: 'i-naf', know: 'nou', knew: 'nyu', right: 'rait', night: 'nait', light: 'lait', eight: 'eit', great: 'greit', friend: 'frènd', beautiful: 'byu-ti-ful', because: 'bi-koz', many: 'mè-ni', very: 'vè-ri', every: 'èv-ri', business: 'biz-nis', island: 'ai-lend', language: 'lèng-gwij', vendors: 'vèn-dors', world: 'werld', work: 'werk', word: 'werd', heart: 'hart', head: 'hèd', read: 'rid', bread: 'brèd', book: 'buk', good: 'gud', food: 'fud', door: 'dor', floor: 'flor', young: 'yang', country: 'kan-tri' }, fr: { bonjour: 'bon-jur', merci: 'mèr-si', oui: 'wi', beaucoup: 'bo-ku', monsieur: 'me-syö', madame: 'ma-dam', eau: 'o', jamais: 'ja-mè', femme: 'fam', homme: 'om' } };
+const IDB_R = {
+  en: [[/tion|sion/y, 'syen'], [/igh/y, 'ai'], [/ough/y, 'o'], [/augh/y, 'of'], [/ph/y, 'f'], [/th/y, 't'], [/sh/y, 'sy'], [/ch/y, 'ch'], [/ck/y, 'k'], [/wh/y, 'w'], [/kn/y, 'n', 1], [/wr/y, 'r', 1], [/qu/y, 'kw'], [/x/y, 'ks'], [/c(?=[eiy])/y, 's'], [/c/y, 'k'], [/ee|ea/y, 'i'], [/oo/y, 'u'], [/ai|ay/y, 'ei'], [/oa/y, 'ou'], [/ou/y, 'au'], [/ow/y, 'ou'], [/oi|oy/y, 'oi'], [/e(?![\s\S])/y, '', 0, 1], [/a/y, 'è'], [/e/y, 'è'], [/u/y, 'a'], [/y(?![\s\S])/y, 'i'], [/y/y, 'y', 1], [/y/y, 'i']],
+  es: [[/ll/y, 'y'], [/ñ/y, 'ny'], [/ch/y, 'ch'], [/qu/y, 'k'], [/gu(?=[ei])/y, 'g'], [/g(?=[ei])/y, 'h'], [/c(?=[ei])/y, 's'], [/c/y, 'k'], [/z/y, 's'], [/j/y, 'h'], [/h/y, ''], [/v/y, 'b'], [/rr/y, 'r'], [/ü/y, 'u'], [/á/y, 'a'], [/é/y, 'e'], [/í/y, 'i'], [/ó/y, 'o'], [/ú/y, 'u']],
+  de: [[/tsch/y, 'ch'], [/sch/y, 'sy'], [/ch/y, 'h'], [/sp/y, 'syp', 1], [/st/y, 'syt', 1], [/ei|ey|ai/y, 'ai'], [/ie/y, 'i'], [/eu|äu/y, 'oi'], [/ä/y, 'è'], [/ß/y, 's'], [/z/y, 'ts'], [/v/y, 'f'], [/w/y, 'v'], [/s(?=[aeiouäöü])/y, 'z'], [/j/y, 'y'], [/qu/y, 'kv'], [/ph/y, 'f'], [/th/y, 't'], [/ck/y, 'k'], [/tz/y, 'ts']],
+  fr: [[/eau/y, 'o'], [/au/y, 'o'], [/ou/y, 'u'], [/oi/y, 'wa'], [/ai|ei/y, 'è'], [/ch/y, 'sy'], [/qu/y, 'k'], [/gn/y, 'ny'], [/ç/y, 's'], [/c(?=[eiyéè])/y, 's'], [/g(?=[eiyéè])/y, 'j'], [/h/y, ''], [/u/y, 'ü'], [/(?:an|am|en|em)(?![aeiouéèàâêîôûy])/y, 'an'], [/(?:on|om)(?![aeiouéèàâêîôûy])/y, 'on'], [/(?:in|im)(?![aeiouéèàâêîôûy])/y, 'èn'], [/[sxzdtp](?![\s\S])/y, ''], [/e(?![\s\S])/y, '', 0, 1], [/è|ê/y, 'è'], [/à|â/y, 'a'], [/î/y, 'i'], [/ô/y, 'o'], [/û/y, 'ü'], [/ë/y, 'è'], [/ï/y, 'i']]
+};
+function idSyl(p) {
+  const V = 'aeiouèéöü'; let out = '', i = 0; const n = p.length;
+  while (i < n) {
+    out += p[i];
+    if (V.includes(p[i]) && i + 1 < n && !V.includes(p[i + 1])) {
+      let j = i + 1; while (j < n && !V.includes(p[j])) j++;
+      if (j < n) { const cut = j - i - 1 === 1 ? i + 1 : i + 2; out += p.slice(i + 1, cut) + '-'; i = cut; continue; }
+    }
+    i++;
+  }
+  return out;
+}
+function idBaca1(w, lang) {
+  const L = String(lang || '').slice(0, 2).toLowerCase(), rules = IDB_R[L]; if (!rules) return '';
+  w = w.normalize('NFC').toLowerCase().replace(/[’']/g, '');
+  if (!/^[a-zà-ÿß]+$/.test(w) || w.length < 2) return '';
+  const ex = IDB_EX[L] && IDB_EX[L][w]; if (ex) return ex;
+  let o = '', i = 0;
+  while (i < w.length) {
+    let hit = false;
+    for (const [re, rep, init, nz] of rules) {
+      if (init && i) continue; if (nz && w.length < 4) continue;
+      re.lastIndex = i; const m = re.exec(w);
+      if (m) { o += rep; i += m[0].length; hit = true; break; }
+    }
+    if (!hit) { o += w[i]; i++; }
+  }
+  o = o.replace(/([^aeiou])\1+/g, '$1');
+  return o ? '~' + idSyl(o) : '';
+}
+function bacaDisp(w, t) { return t && !NONLATIN.test(w || '') ? t + ' (perkiraan)' : t; }
+/* cara baca untuk tampilan: non-Latin → data romanisasi; Latin → ejaan Indonesia (perkiraan) */
+function bacaShow(w, baca, lang) {
+  const b = bacaOf(w, baca); if (b) return b;
+  if (NONLATIN.test(w || '') || !lang || !db.showBaca) return '';
+  const ws = String(w).trim().split(/\s+/); if (ws.length > 3) return '';
+  const r = ws.map(x => idBaca1(x, lang)); if (r.some(x => !x)) return '';
+  return r.join(' ');
+}
 /* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
 function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
 /* bentuk dasar kata Eropa (#806): pelepas akhiran kecil + kata tak beraturan; HANYA tebakan bila kamus Google tak memberi bentuk dasar */

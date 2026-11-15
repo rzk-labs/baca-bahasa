@@ -2161,7 +2161,7 @@ async function onWord(el, lastEl) {
   const pickChip = () => { const t = $('#wtr'); if (t && !t.querySelector('.pickchip')) t.insertAdjacentHTML('beforeend', ' <span class="stepchip pickchip">pilihanmu</span>'); };
   const showSaved = v => {
     setTx('#wtr', v.t); if (v.pick) pickChip();
-    setWBaca(bacaOf(word, v.baca));
+    setWBaca(bacaDisp(word, bacaShow(word, v.baca, b.lang)));
     setTx('#wbase', baseLabel(word, b.lang, v.base));
     setTx('#wpos', v.pos ? (POS[v.pos] || v.pos) : '');
     { const dc = $('#wdict'); if (dc) dc.innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>'; }
@@ -2210,7 +2210,7 @@ async function onWord(el, lastEl) {
     clearTimeout(slowT);
     tr = r; setTx('#wpart', partNote());
     { const pk = savedOf(); if (pk && pk.pick) showSaved(pk); else if (pickT) { setTx('#wtr', pickT); pickChip(); } else setTx('#wtr', r.text); }
-    setWBaca(bacaOf(word, r.baca));
+    setWBaca(bacaDisp(word, bacaShow(word, r.baca, b.lang)));
     setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
@@ -2666,7 +2666,7 @@ function remedial(list, lang, box, done) {
       <div class="dots">${list.map((_, k) => `<i class="${k === i ? 'on' : passed[k] ? 'done' : ''}"></i>`).join('')}</div>
       <div class="center"><span class="boss">${ico('sword')}BOSS ${i + 1}/${list.length}</span></div>
       <div class="eyebrow center lbl" style="margin-top:8px">Kata ${i + 1} dari ${list.length} · Target ${PASS}%</div>
-      <div class="rem-word" lang="${esc(lang)}">${esc(x.w)}</div>
+      <div class="rem-word" lang="${esc(lang)}">${esc(x.w)}</div>${(() => { const t = bacaShow(x.w, '', lang); return t ? `<div class="rem-baca" lang="${esc(lang)}">${esc(t)}<small>Cara baca (perkiraan)</small></div>` : ''; })()}
       <div class="tr sent center" id="rtr" style="margin:4px 0"></div>
       <div class="rtm" id="rtm" hidden><span class="itr-m">Arti mesin, bisa meleset</span><div id="ralt"></div></div>
       <div class="aux"><button id="rl">${ico('vol')} Contoh</button><button id="rs">${ico('slow')} Pelan</button></div>
@@ -2744,7 +2744,7 @@ function viewKataIn() {
       const inF = v => !!v && (csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2)));
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => v.w && inF(v) && (!q || (v.w + ' ' + (v.t || '')).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaOf(v.w, v.baca), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); return m ? `<div class="vmeta">${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : (q || csvF !== 'all') && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
