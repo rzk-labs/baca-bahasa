@@ -667,7 +667,7 @@ async function altFetch(q, sl, tl, signal) {
   try {
     if (Array.isArray(j[1])) j[1].forEach(d => {
       if (!Array.isArray(d) || !Array.isArray(d[1])) return;
-      const terms = d[1].filter(t => typeof t === 'string' && t).slice(0, 6);
+      const terms = d[1].filter(t => typeof t === 'string' && t).slice(0, 15);
       if (terms.length) out.push({ pos: typeof d[0] === 'string' ? d[0] : '', terms });
     });
   } catch (e) { }
@@ -675,7 +675,7 @@ async function altFetch(q, sl, tl, signal) {
     if (Array.isArray(j[5])) {
       const terms = [];
       j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && typeof x[0] === 'string' && x[0] && terms.push(x[0])));
-      if (terms.length) out.push({ pos: '', terms: terms.slice(0, 6) });
+      if (terms.length) out.push({ pos: '', terms: terms.slice(0, 15) });
     }
   } catch (e) { }
   return out;
