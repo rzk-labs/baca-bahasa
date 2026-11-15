@@ -447,6 +447,15 @@ addEventListener('popstate', () => {
   if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
   rdHist = false; leaveBaca();
 });
+/* Tab Sosial: kalau cloud.js belum siap / error, tampilkan layar ramah (bukan Home) */
+function viewSosialAman() {
+  try {
+    if (typeof viewSosial === 'function') { viewSosial(); return; }
+  } catch (e) { console.warn('viewSosial gagal', e); }
+  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#sosRetry').onclick = () => setTab('sosial');
+  $('#sosHome').onclick = () => setTab('rak');
+}
 function setTab(t) {
   if (t !== 'baca') { rdLeave(); pfDisarm(); }
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
@@ -456,7 +465,7 @@ function setTab(t) {
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
-  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: () => typeof viewSosial === 'function' ? viewSosial() : viewRak() })[t]();
+  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: viewSosialAman })[t]();
   if (t === 'rak') setTimeout(cadNote, 2500);
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
@@ -900,18 +909,20 @@ function viewRak() {
   const xt = xpToday(), { lv, inLv } = xpInfo();
   const other = cur && pctOf(cur) >= 100 ? list.find(b => b.id !== cur.id && pctOf(b) < 100) : null; /* buku belum tamat yang terakhir dibaca */
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
-  const addCard = () => `<div class="card">
+  const addCard = (noUp) => `<div class="card">
       <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
       ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
-      <div class="add-grid"><button class="main" id="up"><span class="em">${ico('upload')}</span>Upload file</button><button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
+      <div class="add-grid${noUp ? ' two' : ''}">${noUp ? '' : `<button class="main" id="up"><span class="em">${ico('upload')}</span>Upload file</button>`}<button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur) {
     $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1>
-      <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
       <p class="hero-sub">Baca buku atau cerita sendiri. Ketuk kata yang bikin kepo, artinya langsung muncul.</p>
-      <div class="steps3"><div class="t-pink"><b>1</b>Masukin cerita favoritmu</div><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
-      <div class="sec-h"><h2>Mulai dari sini</h2></div>${addCard()}`;
+      <button class="main hero-up" id="up"><span class="em">${ico('upload')}</span>Upload file</button>
+      <div class="mut sm hero-fmt">TXT · EPUB · PDF (yang ada teksnya)</div>
+      <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
+      <ol class="steps3"><li><b>1</b>Masukin cerita favoritmu</li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ngomongin kalimatnya, dapet skor & XP</li></ol>
+      <div class="sec-h"><h2>Atau mulai dengan</h2></div>${addCard(true)}`;
   } else {
     $('#view').innerHTML = `
     <h1 class="big">${hi},<br><span class="circle-txt">kepoin</span> apa?</h1>
