@@ -618,7 +618,7 @@ async function gtxFetch(q, sl, tl, signal) {
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
-  const seg = j[0].filter(x => Array.isArray(x));
+  const seg = j[0].filter(x => Array.isArray(x) && x.length);
   const out = { text: seg.map(x => typeof x[0] === 'string' ? x[0] : '').join(''), baca: seg.map(x => typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: [], all: [], ex: [] };
   try {
     const bd = Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)) : [];
@@ -663,8 +663,21 @@ async function altFetch(q, sl, tl, signal) {
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null), out = [];
   if (!Array.isArray(j)) return out;
-  try { if (Array.isArray(j[1])) j[1].forEach(d => Array.isArray(d) && Array.isArray(d[1]) && d[1].slice(0, 4).forEach(t => t != null && out.push(String(t)))); } catch (e) { }
-  try { if (Array.isArray(j[5])) j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && x[0] && out.push(String(x[0])))); } catch (e) { }
+  /* hasil: [{pos, terms}] (maks 6 arti per jenis kata); item kosong/aneh dilewati, bukan galat */
+  try {
+    if (Array.isArray(j[1])) j[1].forEach(d => {
+      if (!Array.isArray(d) || !Array.isArray(d[1])) return;
+      const terms = d[1].filter(t => typeof t === 'string' && t).slice(0, 6);
+      if (terms.length) out.push({ pos: typeof d[0] === 'string' ? d[0] : '', terms });
+    });
+  } catch (e) { }
+  try {
+    if (Array.isArray(j[5])) {
+      const terms = [];
+      j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && typeof x[0] === 'string' && x[0] && terms.push(x[0])));
+      if (terms.length) out.push({ pos: '', terms: terms.slice(0, 6) });
+    }
+  } catch (e) { }
   return out;
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */

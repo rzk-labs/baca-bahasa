@@ -1012,7 +1012,7 @@
       "prioritas": "P0",
       "nama": "Arti lain lengkap: kelompok jenis kata, banyak arti, cara baca (#1170)",
       "dokumen": "docs/spesifikasi-arti-lain-lengkap-1170.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1181)",
       "catatan": "Mockup: docs/mockup-1170.html. Ubah altArti (ui.js) & altFetch (app.js) agar menyimpan pos; maks 6 arti; naikkan versi C di sw.js."
     }
   ],
