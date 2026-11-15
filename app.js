@@ -640,7 +640,7 @@ const FUNC_WORDS = {
   es: 'el la los las un una de del y o a en que se no por con para es lo su al más pero como le me te mi tu',
   fr: 'le la les un une des de du et ou à en que qui ne pas pour avec est sur dans au aux ce se sa son je tu il elle nous vous',
   de: 'der die das den dem des ein eine und oder zu in von mit ist nicht auf für er sie es ich du wir ihr auch',
-  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by'
+  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by these those there from have had has his her its their'
 };
 const FUNC_SET = {};
 for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
