@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   week TEXT,                 -- minggu ISO, mis. 2026-W46
   week_xp INTEGER NOT NULL DEFAULT 0,
   hidden INTEGER NOT NULL DEFAULT 0,
+  premium INTEGER NOT NULL DEFAULT 0, -- akun premium (peta 112)
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
