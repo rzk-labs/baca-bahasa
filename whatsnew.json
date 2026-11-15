@@ -1,5 +1,23 @@
 [
   {
+    "n": 1166,
+    "judul": "[peta 115] Layar Boss: label 'arti mesin' + tautan 'Arti ini salah?'",
+    "poin": "Layar Boss sekarang memberi label \"Arti mesin, bisa meleset\" di bawah arti kata.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1164,
+    "judul": "[peta 122] Header e-reader tidak kepotong: judul bab satu baris, '…'",
+    "poin": "Judul bab di atas halaman baca tidak terpotong lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1167,
+    "judul": "[peta 123] Sederhanakan halaman: jelaskan per paragraf, bukan awal saja",
+    "poin": "Sheet Sederhanakan halaman kini berisi daftar paragraf, masing-masing punya tombol Jelaskan.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1142,
     "judul": "Home pemula: satu tombol Upload, gambar ke bawah, ruang bawah lega",
     "poin": "Home pemula kini punya satu tombol Upload saja, langkah 1 jadi teks biasa.",
@@ -160,23 +178,5 @@
     "judul": "Lencana terkunci tampilkan progres (mis. 4/10 kata) + kartu Level 1 baris",
     "poin": "Lencana yang masih terkunci sekarang menampilkan progres, mis. 4/10 dan bar tipis.",
     "tgl": "2026-11-15"
-  },
-  {
-    "n": 1055,
-    "judul": "Profil rapi: 'Sedang dibaca' tak dobel, chip urutan/tema dilipat",
-    "poin": "Profil kini menampilkan \"Sedang dibaca\" sekali saja, lewat rak yang bisa diketuk.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1053,
-    "judul": "Header Baca: tombol speaker 'Dengar' bertulisan, tak jadi ikon tanpa nama",
-    "poin": "Tombol speaker di atas halaman baca sekarang bertulisan \"Dengar\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1051,
-    "judul": "Kartu ulang: tombol Lupa/Ragu/Hafal tampilkan kapan kata muncul lagi",
-    "poin": "Setelah kartu dibalik, tiap tombol kini menampilkan kapan kata muncul lagi.",
-    "tgl": "2026-11-14"
   }
 ]
