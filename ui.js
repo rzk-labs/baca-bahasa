@@ -127,11 +127,12 @@ function pctCalc(b, f) {
 const pctOf = b => {
   if (!b) return 0;
   if (b.pct >= 100) return 100; /* Tamat */
+  if (/\(contoh\)/i.test(b.title || '') && !b.last && !b.pos && !fracOf(b) && !(b.pct > 1)) return 0; /* buku contoh belum dibuka = 0 */
   if (!b.total) return b.pct != null ? b.pct : 0;
   return pctCalc(b, fracOf(b));
 };
 /* SATU fungsi status buku (Home, bar baca, Profil): tamat = 100% + label 'Selesai' */
-const statusPct = p => { p = Math.max(0, Math.min(100, +p || 0)); return p >= 100 ? { done: true, pct: 100, label: 'Selesai', txt: 'Selesai · 100%' } : { done: false, pct: p, label: 'Lagi dibaca', txt: p + '%' }; };
+const statusPct = p => { p = Math.max(0, Math.min(100, +p || 0)); return p >= 100 ? { done: true, pct: 100, label: 'Selesai', txt: 'Selesai · 100%' } : { done: false, pct: p, label: p > 0 ? 'Lagi dibaca' : 'Belum mulai', txt: p + '%' }; };
 const bookStatus = b => statusPct(pctOf(b));
 const bookPct = pctOf; /* SATU pintu persen buku untuk semua layar (jangan baca b.pct langsung) */
 const progress = p => { $('#prog').innerHTML = p == null ? '' : `<i style="width:${p}%"></i>`; };
@@ -1215,9 +1216,11 @@ function finishBook(b) {
   const all = countedVocab(b.lang, 0, b.title);
   const ws = all.filter(v => (v.at || 0) >= SESS.t);
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
+  const pend = [...SESSW.values()].filter(e => e.bid === b.id && e.lang === b.lang && !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true })).length; /* kata diketuk sesi ini, belum disimpan (sumber sama dgn sessRecap) */
+  const xt = xpToday(); /* sama dgn kartu Target di Home */
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
-  const ring = [b.total > 1 ? `${b.total} bagian` : '', ws.length ? `${ws.length} kata baru` : '', `+${xpToday()} XP hari ini`, mnt >= 1 && mnt < 600 ? `±${mnt} mnt` : ''].filter(Boolean).join(' · ');
+  const ring = [b.total > 1 ? `${b.total} bagian` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), xt >= GOAL ? `Target harian ${GOAL} XP tercapai` : `+${xt} XP hari ini`, mnt >= 1 && mnt < 600 ? `±${mnt} mnt` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
   const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
     : '';
@@ -1225,9 +1228,10 @@ function finishBook(b) {
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Kata lamamu bisa diulang di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Kata lamamu bisa diulang di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${total > 0 ? `<button class="pri full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Ke Home</button>` : '<button class="pri full" id="fbh">Ke Home</button>'}</div>${nxHtml}
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button>${nx.length ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
+  const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   $('#fbr').onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
