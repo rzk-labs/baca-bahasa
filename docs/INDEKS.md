@@ -131,6 +131,7 @@
 - [validasi-solusi-ketuk-kata](riset-validasi-solusi-ketuk-kata.md)
 - [voucher-insentif](riset-voucher-insentif.md)
 - [xp-streak-lencana](riset-xp-streak-lencana.md)
+- [xp-baca-ulang](riset-xp-baca-ulang.md)
 
 ## 6. Spesifikasi
 - [arti-frasa](spesifikasi-arti-frasa.md)
