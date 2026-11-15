@@ -693,7 +693,8 @@ async function muatUlangPaksa() {
   location.reload();
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
-const APP_VER = 'v351';
+/* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
+const APP_VER = 'v387';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -2771,7 +2772,22 @@ function deck(kb) {
 /* ---------- mulai ---------- */
 applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
-if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
+if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) {
+  /* update otomatis: cek SW baru saat dibuka & kembali aktif (maks 1x/10 menit); muat ulang saat SW baru aktif */
+  let swReg = null, lastUp = Date.now(), reloaded = false, ctl = !!navigator.serviceWorker.controller;
+  const busyNow = () => document.body.classList.contains('reading') || sheetOpen() || (typeof recog !== 'undefined' && !!recog);
+  const doReload = () => { if (reloaded) return; reloaded = true; try { save(); } catch (e) { } location.reload(); };
+  const checkUp = () => { if (!swReg || Date.now() - lastUp < 600000) return; lastUp = Date.now(); swReg.update().catch(() => { }); };
+  navigator.serviceWorker.register('sw.js').then(r => { swReg = r; r.update().catch(() => { }); }).catch(() => { });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUp(); });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!ctl) { ctl = true; return; } /* install pertama: abaikan */
+    if (reloaded) return;
+    if (!busyNow()) { doReload(); return; }
+    try { save(); } catch (e) { }
+    toast('Versi baru siap', Infinity, { label: 'Muat ulang', fn: doReload });
+  });
+}
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);

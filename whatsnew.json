@@ -1,5 +1,11 @@
 [
   {
+    "n": 1087,
+    "judul": "Update app otomatis sampai ke HP + versi di Pengaturan cocok",
+    "poin": "Keepo kini cek versi baru sendiri dan muat ulang otomatis di HP.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1082,
     "judul": "Tab Kata tak boleh error: tahan data aneh + pesan ramah + ajakan simpan",
     "poin": "Tab Kata tak lagi error walau datanya aneh atau lama.",
@@ -171,12 +177,6 @@
     "n": 998,
     "judul": "[peta 97] Akhir buku rapi: sheet Tamat, nama 'Buku lain', bar bawah",
     "poin": "Akhir buku sekarang jelas: satu pesan kata baru, satu istilah \"bagian\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 994,
-    "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
-    "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
     "tgl": "2026-11-14"
   }
 ]
