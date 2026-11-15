@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Papan Tugas HP: kolom kosong jangan melar tinggi (#1132)",
+      "dokumen": "docs/spesifikasi-papan-kosong-1132.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 115,
       "peran": "developer",
       "prioritas": "P0",
