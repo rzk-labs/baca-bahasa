@@ -910,7 +910,8 @@ function viewRak() {
     $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1>
       <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
       <p class="hero-sub">Baca buku atau cerita sendiri. Ketuk kata yang bikin kepo, artinya langsung muncul.</p>
-      <div class="steps3"><div class="t-pink"><b>1</b>Masukin cerita favoritmu</div><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
+      <button class="cta-main" id="cta" type="button">Masukin cerita →</button>
+      <div class="steps3"><button type="button" class="st1 t-pink" id="step1" aria-label="Langkah 1: Masukin cerita favoritmu. Ketuk untuk pilih file"><b>1</b><span>Masukin cerita favoritmu</span><i class="go" aria-hidden="true">→</i></button><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
       <div class="sec-h"><h2>Mulai dari sini</h2></div>${addCard()}`;
   } else {
     $('#view').innerHTML = `
@@ -950,6 +951,7 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
+  ['#cta', '#step1'].forEach(q => { const b = $(q); if (b) b.onclick = () => $('#file').click(); });
   const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
