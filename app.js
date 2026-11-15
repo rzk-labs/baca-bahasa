@@ -570,8 +570,18 @@ async function gtxFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json();
+  if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
   const out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
   const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+  return out;
+}
+/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal */
+async function altFetch(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json(), out = [];
+  if (Array.isArray(j[1])) j[1].forEach(d => (d[1] || []).slice(0, 4).forEach(t => out.push(String(t))));
+  try { (j[5] || []).forEach(s => (s[2] || []).forEach(x => x && x[0] && out.push(String(x[0])))); } catch (e) { }
   return out;
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
@@ -640,7 +650,7 @@ const FUNC_WORDS = {
   es: 'el la los las un una de del y o a en que se no por con para es lo su al más pero como le me te mi tu',
   fr: 'le la les un une des de du et ou à en que qui ne pas pour avec est sur dans au aux ce se sa son je tu il elle nous vous',
   de: 'der die das den dem des ein eine und oder zu in von mit ist nicht auf für er sie es ich du wir ihr auch',
-  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by'
+  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by these those there from have had has his her its their'
 };
 const FUNC_SET = {};
 for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
@@ -777,7 +787,7 @@ async function translate(q, sl, tl, signal) {
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
-  let out;
+  let out, fb = false;
   try {
     out = await gtxFetch(q, sl, tl, signal);
   } catch (e) {
@@ -787,10 +797,12 @@ async function translate(q, sl, tl, signal) {
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
-      out = { text: t, dict: [], baca: '' };
+      out = { text: t, dict: [], baca: '' }; fb = true;
     } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
+  /* hasil cadangan (MyMemory) hanya untuk tampilan saat itu: tak disimpan, arti lama tak tertimpa */
+  if (fb) return mix(stale && stale.text ? stale : out);
   trCache.delete(k); trCache.set(k, out); trPersist();
   return mix(out);
 }

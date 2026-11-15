@@ -7,6 +7,7 @@ const BK_CHUNK = 600 * 1024;      // satu potongan teks buku (gzip+base64) per b
 const BK_MAX = 12 * 1024 * 1024;  // maks satu buku di akun (terkompresi)
 const BK_USER_MAX = 80 * 1024 * 1024; // maks semua buku satu akun (terkompresi)
 
+const OWNER_USERS = ['chikoisme']; // akun pemilik: Super Premium, AI tanpa batas
 const AI_JATAH = 5;               // jatah "Jelaskan kalimat (AI)" gratis per hari per akun/perangkat
 
 const enc = new TextEncoder();
@@ -39,12 +40,12 @@ async function authUser(req, env) {
   if (!t) return null;
   return env.DB.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?').bind(t).first();
 }
-const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden, publik: !!u.social, hideTitles: !!u.hide_titles });
+const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden, publik: !!u.social, hideTitles: !!u.hide_titles, premium: !!u.premium || u.username === 'chiko' });
 // kartu profil publik: judul buku diganti "Sebuah buku" bila pemilik menyembunyikan judul
 function cardOf(x) {
   let pf = {}; try { pf = JSON.parse(x.profile || '{}') || {}; } catch (e) { }
   const reading = (Array.isArray(pf.reading) ? pf.reading : []).slice(0, 3).map(r => ({ t: x.hide_titles ? 'Sebuah buku' : String(r.t || '').slice(0, 80), lang: String(r.lang || '').slice(0, 5), pct: Math.max(0, Math.min(100, +r.pct || 0)), at: +r.at || 0 }));
-  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0, ai: String(x.username).startsWith('uji_') };
+  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0, ai: String(x.username).startsWith('uji_'), premium: !!x.premium };
 }
 async function body(req) { try { return await req.json(); } catch (e) { return {}; } }
 async function newSession(env, uid) { const t = tokenStr(); await env.DB.prepare('INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)').bind(t, uid, Date.now()).run(); return t; }
@@ -74,14 +75,18 @@ export default {
         const un = String(username).trim().toLowerCase();
         if (!/^[a-z0-9_]{3,20}$/.test(un)) return err(req, 'Username 3–20 huruf kecil, angka, atau _.');
         if (un.startsWith('uji_')) return err(req, 'Username ini khusus akun uji. Pilih yang lain.');
+        if (un === 'chiko') return err(req, 'Username ini sudah dicadangkan.');
         if (String(password).length < 6) return err(req, 'Password minimal 6 karakter.');
+        // 'chiko' dicadangkan untuk owner: hanya bisa didaftarkan dengan kunci rahasia BOT_KEY (langkah manual founder)
+        const dipesan = un === 'chiko', izinOwner = dipesan && env.BOT_KEY && req.headers.get('X-Bot-Key') === env.BOT_KEY;
+        if (dipesan && !izinOwner) return err(req, 'Username ini sudah dicadangkan.');
         const nk = String(nick || un).trim().slice(0, 24) || un;
         if (await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(un).first()) return err(req, 'Username sudah dipakai.', 409);
         const salt = b64(rand(16)), h = await hashPass(String(password), salt), now = Date.now();
         // profil sosial publik secara bawaan (keputusan founder); pengguna bisa ubah ke privat di Akun
-        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, social) VALUES (?,?,?,?,?,?,?,1)').bind(un, nk, h, salt, now, now, isoWeek()).run();
+        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, social, premium) VALUES (?,?,?,?,?,?,?,1,?)').bind(un, nk, h, salt, now, now, isoWeek(), dipesan ? 1 : 0).run();
         const uid = r.meta.last_row_id;
-        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false, publik: true, hideTitles: false }, data: null });
+        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false, publik: true, hideTitles: false, premium: dipesan }, data: null });
       }
       // Akun uji AI (Tari, Bima, Nadia, Raka, Dina): dibuat/masuk hanya dengan kunci rahasia BOT_KEY (wrangler secret).
       // Tanpa password (tidak bisa login biasa), publik, label "Uji AI", tidak ikut leaderboard.
@@ -305,7 +310,7 @@ export default {
           env.DB.prepare('SELECT COUNT(*) c FROM follows WHERE follower_id=?').bind(x.id).first(),
           env.DB.prepare('SELECT 1 k FROM follows WHERE follower_id=? AND followee_id=?').bind(u.id, x.id).first(),
         ]);
-        return json(req, { ...cardOf(self ? { ...x, hide_titles: 0 } : x), xp: x.xp, publik: !!x.social, self, diikuti: !!me, pengikut: +fo.c, mengikuti: +fi.c, sejak: x.created_at });
+        return json(req, { ...cardOf(self ? { ...x, hide_titles: 0 } : x), xp: x.xp, publik: !!x.social, self, diikuti: !!me, pengikut: +fo.c, mengikuti: +fi.c, sejak: x.created_at, premium: !!x.premium || x.username === 'chiko' });
       }
       const fm = p.match(/^\/ikuti\/([a-z0-9_]{3,20})$/);
       if (fm && (req.method === 'POST' || req.method === 'DELETE')) {
@@ -359,10 +364,11 @@ export default {
         await env.DB.prepare('CREATE TABLE IF NOT EXISTS ai_kuota (who TEXT NOT NULL, day TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (who, day))').run();
         const row = await env.DB.prepare('SELECT n FROM ai_kuota WHERE who=? AND day=?').bind(who, day).first();
         const used = row ? row.n : 0;
-        if (b.cek) return json(req, { sisa: Math.max(0, AI_JATAH - used), jatah: AI_JATAH });
+        const vip = !!(u && OWNER_USERS.includes(String(u.username || '').toLowerCase()));
+        if (b.cek) return json(req, vip ? { sisa: 9999, jatah: 9999, premium: true } : { sisa: Math.max(0, AI_JATAH - used), jatah: AI_JATAH });
         const sent = String(b.sent || '').trim().slice(0, 600);
         if (!sent) return err(req, 'Kalimatnya kosong.');
-        if (used >= AI_JATAH) return json(req, { error: 'Jatah AI hari ini habis. Balik lagi besok ya.', habis: true, sisa: 0, jatah: AI_JATAH }, 429);
+        if (!vip && used >= AI_JATAH) return json(req, { error: 'Jatah AI hari ini habis. Balik lagi besok ya.', habis: true, sisa: 0, jatah: AI_JATAH }, 429);
         if (!env.AI) return err(req, 'Fitur AI belum aktif di server.', 503);
         const lang = String(b.lang || '').slice(0, 10), arti = String(b.arti || '').slice(0, 600);
         // jatah dipotong dulu supaya tidak bisa ditembus permintaan paralel
@@ -378,7 +384,7 @@ export default {
           await env.DB.prepare('UPDATE ai_kuota SET n = MAX(0, n - 1) WHERE who=? AND day=?').bind(who, day).run();
           return err(req, 'AI lagi sibuk. Coba lagi sebentar ya.', 502);
         }
-        return json(req, { teks: out, sisa: Math.max(0, AI_JATAH - used - 1), jatah: AI_JATAH });
+        return json(req, { teks: out, sisa: vip ? 9999 : Math.max(0, AI_JATAH - used - 1), jatah: vip ? 9999 : AI_JATAH, premium: vip });
       }
       if (p === '/jelaskan/lapor' && req.method === 'POST') {
         const b = await body(req), u = await authUser(req, env);

@@ -1,5 +1,71 @@
 [
   {
+    "n": 1142,
+    "judul": "Home pemula: satu tombol Upload, gambar ke bawah, ruang bawah lega",
+    "poin": "Home pemula kini punya satu tombol Upload saja, langkah 1 jadi teks biasa.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1155,
+    "judul": "[peta 125] Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar",
+    "poin": "Sederhanakan halaman sekarang menjelaskan tiap paragraf, satu kartu per paragraf.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1151,
+    "judul": "[peta 117] Layar Ngomong ringkas: buang tile Tantangan, mic tanpa scroll",
+    "poin": "Layar Ngomong sekarang lebih ringkas: kotak \"Tantangan hari ini\" dibuang.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1152,
+    "judul": "[peta 119] Setelah tamat: satu tombol Baca ulang + Home ringkas",
+    "poin": "Buku yang sudah tamat sekarang punya satu tombol saja: Baca ulang.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1147,
+    "judul": "[peta 118] Tanda berhasil ketuk kata + petunjuk tab Kata kosong",
+    "poin": "Setelah kata disimpan, muncul tulisan \"Tersimpan di tab Kata\".",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1148,
+    "judul": "[peta 116] Papan Tugas HP: kolom kosong jangan melar tinggi",
+    "poin": "Di HP, kolom papan tugas yang kosong sekarang jadi pil pendek.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1145,
+    "judul": "[peta 114] Kartu kata: 'Bisa juga' & arti lain tak terpotong titik-titik",
+    "poin": "Arti lain di kartu kata sekarang tampil utuh, tanpa titik-titik.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1140,
+    "judul": "[peta 115] Kata umum (the, that, this) tanpa garis putus-putus",
+    "poin": "Kata umum seperti \"the\", \"that\", \"this\" tidak lagi bergaris putus-putus.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1137,
+    "judul": "Arti cadangan tak disimpan permanen + tahan balasan Google aneh",
+    "poin": "Arti cadangan tidak lagi disimpan permanen, jadi cara baca Jepang/Mandarin tak terkunci hilang.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1131,
+    "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
+    "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1103,
+    "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
+    "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1101,
     "judul": "[peta 111] Baca ulang buku tamat: tanpa XP halaman, kata baru tetap XP",
     "poin": "Baca ulang buku yang sudah tamat tidak kasih XP halaman lagi.",
@@ -111,72 +177,6 @@
     "n": 1051,
     "judul": "Kartu ulang: tombol Lupa/Ragu/Hafal tampilkan kapan kata muncul lagi",
     "poin": "Setelah kartu dibalik, tiap tombol kini menampilkan kapan kata muncul lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1049,
-    "judul": "Kata 'siap diulang': satu ajakan jelas per layar, tak dobel",
-    "poin": "Ajakan \"Ulang sekarang\" kini cuma satu per layar, tidak dobel lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1047,
-    "judul": "Pesan gagal masuk akun: jelas + langkah lanjut (bukan buntu)",
-    "poin": "Gagal masuk sekarang muncul pesan jelas di layar, lengkap dengan langkah berikutnya.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1045,
-    "judul": "Halaman terakhir: kartu akhir tak menimpa teks + Tamat tak menutup teks",
-    "poin": "Kartu \"Baca ulang / Buku lain\" tak lagi menimpa kalimat terakhir.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1043,
-    "judul": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong",
-    "poin": "Judul buku di layar baca sekarang pendek, tanpa nama penulis.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1041,
-    "judul": "[peta 103] Tanya sekali 'Mau pinyin?' di buku Mandarin + chip 1 ketukan",
-    "poin": "Buku Mandarin sekarang bertanya sekali: mau pinyin nyala, hanya kata baru, atau mati?",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1035,
-    "judul": "[peta 102] Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal di tab Kata",
-    "poin": "Kartu kata sekarang minta kamu ingat dulu, baru tekan \"Lihat arti\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1032,
-    "judul": "[peta 101] Ganti sampul buku sendiri dari foto/galeri (menu ⋯)",
-    "poin": "Tiap buku di Home sekarang punya tombol titik tiga untuk ganti sampul.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1031,
-    "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
-    "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1029,
-    "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
-    "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1026,
-    "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
-    "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1020,
-    "judul": "Home: kartu buku tamat lega, tombol satu baris & tak terpotong",
-    "poin": "Kartu buku tamat di Home kini lebih ringkas dan lega.",
     "tgl": "2026-11-14"
   }
 ]
