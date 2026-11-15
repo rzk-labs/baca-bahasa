@@ -461,7 +461,7 @@ function setTab(t) {
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
-  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Atur</span></button>`;
+  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Pengaturan</span></button>`;
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
@@ -702,7 +702,8 @@ async function muatUlangPaksa() {
   location.reload();
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
-const APP_VER = 'v351';
+/* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
+const APP_VER = 'v389';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -889,7 +890,7 @@ function weekCard() {
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${[pages ? it(pages, 'halaman dibaca') : '', words ? it(words, 'kata disimpan') : ''].join('') || it(days, 'hari ada bacaan')}</div></div>`; /* #1095: 'hari aktif' tak diulang; streak cukup di pil atas */
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
 function streakInfo() {
@@ -897,7 +898,7 @@ function streakInfo() {
   let best = 0, run = 0, prev = null, before = 0; /* before = rekor sebelum rangkaian terakhir */
   for (const d of ds) { const nx = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1; if (!nx && run > before) before = run; run = nx ? run + 1 : 1; if (run > best) best = run; prev = d; }
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
-  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? 'Rekor barumu!' : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? `${cur} hari berturut` : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
+  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? 'Rekor barumu!' : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? 'Terus lanjut, mantap' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
 const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
@@ -930,7 +931,7 @@ function viewRak() {
         <div class="hero-act"><button class="pri" id="hRead">${pctOf(cur) >= 100 ? 'Baca ulang' : 'Gas baca →'}</button>${pctOf(cur) >= 100 ? `<button class="sec" id="hAdd">Buku baru</button>` : (other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : '')}</div></div>
     </div>
     <div class="stat3">
-      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Tujuh hari terakhir">${ico('flame', 'numi')}${[6, 5, 4, 3, 2, 1, 0].map(k => `<i class="${db.days.includes(new Date(Date.now() - k * 864e5).toISOString().slice(0, 10)) ? 'on' : ''}"></i>`).join('')}</div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Target tercapai' : `XP hari ini, target ${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
@@ -2780,7 +2781,22 @@ function deck(kb) {
 /* ---------- mulai ---------- */
 applyTheme(); save();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
-if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
+if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http')) {
+  /* update otomatis: cek SW baru saat dibuka & kembali aktif (maks 1x/10 menit); muat ulang saat SW baru aktif */
+  let swReg = null, lastUp = Date.now(), reloaded = false, ctl = !!navigator.serviceWorker.controller;
+  const busyNow = () => document.body.classList.contains('reading') || sheetOpen() || (typeof recog !== 'undefined' && !!recog);
+  const doReload = () => { if (reloaded) return; reloaded = true; try { save(); } catch (e) { } location.reload(); };
+  const checkUp = () => { if (!swReg || Date.now() - lastUp < 600000) return; lastUp = Date.now(); swReg.update().catch(() => { }); };
+  navigator.serviceWorker.register('sw.js').then(r => { swReg = r; r.update().catch(() => { }); }).catch(() => { });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUp(); });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!ctl) { ctl = true; return; } /* install pertama: abaikan */
+    if (reloaded) return;
+    if (!busyNow()) { doReload(); return; }
+    try { save(); } catch (e) { }
+    toast('Versi baru siap', Infinity, { label: 'Muat ulang', fn: doReload });
+  });
+}
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
