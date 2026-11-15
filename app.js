@@ -571,7 +571,7 @@ async function gtxFetch(q, sl, tl, signal) {
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json();
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
-  const out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
+  const out = { text: j[0].map(x => Array.isArray(x) && x[0] != null ? String(x[0]) : '').join(''), baca: j[0].map(x => Array.isArray(x) && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)).map(d => ({ pos: d[0], terms: (Array.isArray(d[1]) ? d[1] : []).slice(0, 6) })) : [] };
   const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   return out;
 }
@@ -579,9 +579,13 @@ async function gtxFetch(q, sl, tl, signal) {
 async function altFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  const j = await r.json(), out = [];
-  if (Array.isArray(j[1])) j[1].forEach(d => (d[1] || []).slice(0, 4).forEach(t => out.push(String(t))));
-  try { (j[5] || []).forEach(s => (s[2] || []).forEach(x => x && x[0] && out.push(String(x[0])))); } catch (e) { }
+  let j; try { j = await r.json(); } catch (e) { return []; }
+  const out = [];
+  if (!Array.isArray(j)) return out;
+  try {
+    if (Array.isArray(j[1])) j[1].forEach(d => d && Array.isArray(d[1]) && d[1].slice(0, 4).forEach(t => t != null && out.push(String(t))));
+    if (Array.isArray(j[5])) j[5].forEach(s => s && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && x[0] && out.push(String(x[0]))));
+  } catch (e) { }
   return out;
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
