@@ -344,7 +344,7 @@ const initial = n => (n || '?').trim().charAt(0).toUpperCase();
 function renderAcct() {
   const slot = $('#acctSlot'); if (!slot) return;
   if (!API) { slot.innerHTML = ''; return; }
-  slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Akun ${esc(db.acct.nick)}">${esc(initial(db.acct.nick))}</button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
+  slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Profil dan akun ${esc(db.acct.nick)}" title="Profil"><span class="av-i">${esc(initial(db.acct.nick))}</span><span class="av-p">${ico('user')}<span class="hbl">Profil</span></span></button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
   $('#acctBtn').onclick = openAccount;
 }
 /* pesan gagal masuk/daftar: ramah + satu langkah lanjut */
