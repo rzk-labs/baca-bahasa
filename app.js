@@ -575,6 +575,15 @@ async function gtxFetch(q, sl, tl, signal) {
   const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   return out;
 }
+/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal */
+async function altFetch(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json(), out = [];
+  if (Array.isArray(j[1])) j[1].forEach(d => (d[1] || []).slice(0, 4).forEach(t => out.push(String(t))));
+  try { (j[5] || []).forEach(s => (s[2] || []).forEach(x => x && x[0] && out.push(String(x[0])))); } catch (e) { }
+  return out;
+}
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
 function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }

@@ -39,7 +39,7 @@ async function authUser(req, env) {
   if (!t) return null;
   return env.DB.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?').bind(t).first();
 }
-const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden, publik: !!u.social, hideTitles: !!u.hide_titles, premium: !!u.premium });
+const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hidden, publik: !!u.social, hideTitles: !!u.hide_titles, premium: !!u.premium || u.username === 'chiko' });
 // kartu profil publik: judul buku diganti "Sebuah buku" bila pemilik menyembunyikan judul
 function cardOf(x) {
   let pf = {}; try { pf = JSON.parse(x.profile || '{}') || {}; } catch (e) { }
@@ -74,6 +74,7 @@ export default {
         const un = String(username).trim().toLowerCase();
         if (!/^[a-z0-9_]{3,20}$/.test(un)) return err(req, 'Username 3–20 huruf kecil, angka, atau _.');
         if (un.startsWith('uji_')) return err(req, 'Username ini khusus akun uji. Pilih yang lain.');
+        if (un === 'chiko') return err(req, 'Username ini sudah dicadangkan.');
         if (String(password).length < 6) return err(req, 'Password minimal 6 karakter.');
         // 'chiko' dicadangkan untuk owner: hanya bisa didaftarkan dengan kunci rahasia BOT_KEY (langkah manual founder)
         const dipesan = un === 'chiko', izinOwner = dipesan && env.BOT_KEY && req.headers.get('X-Bot-Key') === env.BOT_KEY;
@@ -308,7 +309,7 @@ export default {
           env.DB.prepare('SELECT COUNT(*) c FROM follows WHERE follower_id=?').bind(x.id).first(),
           env.DB.prepare('SELECT 1 k FROM follows WHERE follower_id=? AND followee_id=?').bind(u.id, x.id).first(),
         ]);
-        return json(req, { ...cardOf(self ? { ...x, hide_titles: 0 } : x), xp: x.xp, publik: !!x.social, self, diikuti: !!me, pengikut: +fo.c, mengikuti: +fi.c, sejak: x.created_at });
+        return json(req, { ...cardOf(self ? { ...x, hide_titles: 0 } : x), xp: x.xp, publik: !!x.social, self, diikuti: !!me, pengikut: +fo.c, mengikuti: +fi.c, sejak: x.created_at, premium: !!x.premium || x.username === 'chiko' });
       }
       const fm = p.match(/^\/ikuti\/([a-z0-9_]{3,20})$/);
       if (fm && (req.method === 'POST' || req.method === 'DELETE')) {

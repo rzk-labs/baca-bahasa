@@ -391,6 +391,14 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .roff{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}.roff[hidden]{display:none}
 .offchip{display:inline-block;padding:3px 10px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}
 .wretry{min-height:44px;min-width:44px}
+/* arti ini salah? (#1131) */
+.walt{margin:4px 0 0}
+.walink{min-height:44px;font-size:14px;font-weight:700;padding-left:0}
+.altbox{background:var(--color-border);border-radius:14px;padding:10px 12px;margin-top:4px}
+.altch{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.altopt{min-height:44px;border:1.5px solid var(--color-text);border-radius:14px;background:transparent;color:var(--color-text);padding:8px 12px;text-align:left;font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.altrow{display:flex;gap:8px;flex-wrap:wrap}
+.pickchip{height:24px;font-size:11px;vertical-align:middle;margin-left:4px}
 .aij{margin:8px 0}.aij-q{margin:4px 2px}
 .aij-box{border:1px solid var(--color-border,rgba(0,0,0,.15));border-radius:12px;padding:10px 12px;margin-top:6px}
 .aij-lbl{font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px}
@@ -1049,7 +1057,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
 .badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
 .badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
-.prem-badge{display:inline-block;vertical-align:middle;background:#351E28;color:#E9F056;font:700 12px/1 var(--font-ui);padding:4px 10px;border-radius:9999px}
+.prem-badge{display:inline-block;vertical-align:middle;background:var(--ink);color:var(--hl);font:700 12px/1 var(--font-ui,Inter,sans-serif);padding:4px 10px;border-radius:999px;white-space:nowrap}
 .hl-prem{background:#E9F056;color:#351E28;padding:0 6px;border-radius:4px;font-weight:700}
 /* Home pemula (#1107): hero kecil, tombol utama terlihat tanpa scroll, langkah 1 = tombol */
 .hero-pic{max-height:28vh;width:auto;max-width:100%;object-fit:contain;margin-left:auto;margin-right:auto}
