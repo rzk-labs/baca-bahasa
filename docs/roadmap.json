@@ -911,6 +911,15 @@
       "nama": "Layar Boss: arti diberi label \"arti mesin\" + tautan \"Arti ini salah?\" (onetime = mantan) (#1122)",
       "dokumen": "docs/spesifikasi-arti-boss-keliru-1122.md",
       "status": "siap dikerjakan"
+    },
+    {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tombol 'Arti ini salah?' di kartu arti: arti alternatif + terjemah ulang (#1113)",
+      "dokumen": "docs/spesifikasi-lapor-terjemahan-salah.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1113.html. Dari masukan Ilham, Sinta, Nadia."
     }
   ],
   "prioritas": [
