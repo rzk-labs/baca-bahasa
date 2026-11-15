@@ -1,5 +1,11 @@
 [
   {
+    "n": 1101,
+    "judul": "[peta 111] Baca ulang buku tamat: tanpa XP halaman, kata baru tetap XP",
+    "poin": "Baca ulang buku yang sudah tamat tidak kasih XP halaman lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1083,
     "judul": "Setelah tamat: satu 'Baca ulang' saja + Home rapi, tak ada layar kosong",
     "poin": "Halaman terakhir cuma punya satu \"Baca ulang\", tidak tiga lagi.",
@@ -171,12 +177,6 @@
     "n": 1020,
     "judul": "Home: kartu buku tamat lega, tombol satu baris & tak terpotong",
     "poin": "Kartu buku tamat di Home kini lebih ringkas dan lega.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1018,
-    "judul": "[peta 99] Tombol Muat ulang versi terbaru + versi app di Pengaturan",
-    "poin": "Pengaturan sekarang punya tombol \"Muat ulang versi terbaru\" untuk dapat versi baru di HP.",
     "tgl": "2026-11-14"
   }
 ]
