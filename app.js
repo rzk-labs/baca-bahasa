@@ -145,10 +145,28 @@ const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim =
 const markFeedbackSent = id => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'), st = tx.objectStore('fb'), q = st.get(id); q.onsuccess = () => { if (q.result) st.put({ ...q.result, terkirim: true }); }; tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
-const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); return s.delete(id); });
+const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); return s.delete(id); });
 // Cover EPUB: gambar kecil (data URL) di IndexedDB kunci 'c_<id>', terpisah dari teks & localStorage
 const putCover = (id, url) => idbOp('readwrite', s => s.put(url, 'c_' + id));
 const getCover = id => idbOp('readonly', s => s.get('c_' + id));
+// Sampul buatan pengguna: kunci 'cu_<id>' (penanda b.covU=1). Sampul EPUB 'c_<id>' tidak disentuh.
+const putCoverU = (id, url) => idbOp('readwrite', s => s.put(url, 'cu_' + id));
+const getCoverU = id => idbOp('readonly', s => s.get('cu_' + id));
+const delCoverU = id => idbOp('readwrite', s => s.delete('cu_' + id));
+// Kecilkan foto: sisi terpanjang maks 480px, WebP (cadangan JPEG), ±80KB. Gagal = lempar error.
+async function kecilkanGambar(file) {
+  const u = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('gambar')); i.src = u; });
+    const w0 = img.naturalWidth, h0 = img.naturalHeight; if (!w0 || !h0) throw new Error('gambar');
+    const k = Math.min(1, 480 / Math.max(w0, h0)), w = Math.max(1, Math.round(w0 * k)), h = Math.max(1, Math.round(h0 * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+    const enc = q => { let d = c.toDataURL('image/webp', q); if (!d.startsWith('data:image/webp')) d = c.toDataURL('image/jpeg', q); return d; };
+    let d = enc(0.8); if (d.length > 110000) d = enc(0.65);
+    if (!d.startsWith('data:image/')) throw new Error('gambar');
+    return d;
+  } finally { URL.revokeObjectURL(u); }
+}
 
 /* ---------- teks: kalimat & kata ---------- */
 const segCache = {};

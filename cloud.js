@@ -347,6 +347,15 @@ function renderAcct() {
   slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Akun ${esc(db.acct.nick)}">${esc(initial(db.acct.nick))}</button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
   $('#acctBtn').onclick = openAccount;
 }
+/* pesan gagal masuk/daftar: ramah + satu langkah lanjut */
+function friendlyAuthError(err) {
+  const t = String((err && err.message) || '');
+  if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return 'Lagi tak bisa nyambung. Cek internet, lalu coba lagi. Bacaanmu tetap aman di HP.';
+  if (/username atau password salah|tidak dikenal/i.test(t)) return 'Username atau password belum pas. Cek ejaannya dan coba lagi, atau ketuk Daftar untuk bikin akun baru.';
+  if (/sudah dipakai/i.test(t)) return 'Username itu sudah dipakai. Coba username lain, atau ketuk Masuk kalau itu akunmu.';
+  if (/username 3|username ini khusus|password minimal/i.test(t)) return t;
+  return 'Belum berhasil. Coba lagi sebentar lagi.';
+}
 function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
@@ -358,7 +367,8 @@ function openAccount(mode) {
         <label class="row" style="gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="aHideT" style="width:auto" ${db.acct.hideTitles ? 'checked' : ''}> <span class="sm">Sembunyikan judul buku</span></label>
         <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
-      <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>`);
+      <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>
+      <div class="set-row"><div class="eyebrow">Hapus akun</div><div class="mut sm">Akun, XP, kata, dan buku yang dibagikan dihapus dari server. Data di HP ini tetap ada.</div><div class="row"><button class="sec" id="aDel" type="button">Hapus akun permanen</button></div></div>`);
     bkWire();
     const setSocial = async () => { try { await api('/social', { method: 'PUT', body: { publik: !!db.acct.publik, hideTitles: !!db.acct.hideTitles } }); save(); } catch (e) { toast(e.message); } };
     $$('#aPub button').forEach(b => b.onclick = () => { db.acct.publik = b.dataset.v === '1'; $$('#aPub button').forEach(x => x.classList.toggle('on', x === b)); setSocial().then(() => toast(db.acct.publik ? 'Profilmu sekarang publik.' : 'Profilmu sekarang privat.')); });
@@ -367,6 +377,14 @@ function openAccount(mode) {
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
     $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { toast(e.message); } };
+    let delArm = 0;
+    $('#aDel').onclick = async () => {
+      const x = $('#aDel');
+      if (Date.now() - delArm > 6000) { delArm = Date.now(); x.textContent = 'Yakin? Ketuk lagi untuk hapus'; setTimeout(() => { if (x.isConnected && Date.now() - delArm >= 6000) x.textContent = 'Hapus akun permanen'; }, 6100); return; }
+      x.disabled = true; x.textContent = 'Menghapus…';
+      try { await api('/me', { method: 'DELETE' }); db.acct = null; save(); closeSheet(); toast('Akunmu sudah dihapus. Progres di HP ini tetap ada.'); setTab(db.tab || 'rak'); }
+      catch (e) { x.disabled = false; x.textContent = 'Hapus akun permanen'; toast(e.message || 'Gagal hapus, coba lagi'); }
+    };
     $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
     return;
   }
@@ -379,17 +397,20 @@ function openAccount(mode) {
         <label class="eyebrow" style="display:block;margin-top:14px">Username<input id="aU" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, angka, _" required></label>
         ${m === 'daftar' ? `<label class="eyebrow" style="display:block;margin-top:12px">Nama panggilan<input id="aN" maxlength="24" placeholder="Tampil di leaderboard"></label>` : ''}
         <label class="eyebrow" style="display:block;margin-top:12px">Password<input id="aP" type="password" name="password" autocomplete="${m === 'masuk' ? 'current-password' : 'new-password'}" placeholder="min. 6 karakter" required></label>
+        <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden></div>
         <div class="row"><button class="pri" type="submit" id="aGo">${m === 'masuk' ? 'Masuk' : 'Daftar & masuk'}</button></div>
       </form>`);
     $$('#aMode button').forEach(b => b.onclick = () => { m = b.dataset.v; draw(); });
+    const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; el.textContent = ''; } };
+    $$('#aForm input').forEach(i => i.addEventListener('input', clearErr));
     $('#aForm').onsubmit = async e => {
-      e.preventDefault(); const bt = $('#aGo'); bt.disabled = true;
+      e.preventDefault(); const bt = $('#aGo'); bt.disabled = true; clearErr();
       try {
         const body = { username: $('#aU').value.trim(), password: $('#aP').value };
         if (m === 'daftar') body.nick = ($('#aN').value || '').trim();
         await afterLogin(await api(m === 'masuk' ? '/login' : '/signup', { method: 'POST', body }));
         if (m === 'daftar') { sfx('win'); confetti(50); }
-      } catch (err) { toast(err.message, 5000); bt.disabled = false; }
+      } catch (err) { const el = $('#aErr'); if (el) { el.textContent = friendlyAuthError(err); el.hidden = false; } else toast(friendlyAuthError(err), 5000); bt.disabled = false; }
     };
   };
   draw();
@@ -468,7 +489,7 @@ async function openFriends() {
 const RAK_TEMA = ['Kayu hangat', 'Plum Noir', 'Biru Es', 'Polos'];
 const RAK_URUT = [['terakhir', 'Terakhir dibaca'], ['az', 'Judul A–Z'], ['bahasa', 'Bahasa'], ['susun', 'Susunan sendiri']];
 const RAK_MAX = 12;
-let rakSemua = false;
+let rakSemua = false, rakAtur = false; /* panel 'Atur rak' default tertutup */
 function rakState() { /* migrasi aman: nilai rusak/lama jadi bawaan */
   if (!RAK_TEMA.includes(db.rakTema)) db.rakTema = 'Plum Noir';
   if (!db.rak || typeof db.rak !== 'object' || Array.isArray(db.rak)) db.rak = {};
@@ -495,14 +516,18 @@ function rakHtml() {
   const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
   const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
   return `<div id="rakBox">${head}
-    <div class="rk-chips" role="group" aria-label="Tema rak">${RAK_TEMA.map(t => `<button class="rk-chip${t === db.rakTema ? ' on' : ''}" data-rt="${esc(t)}" aria-pressed="${t === db.rakTema}">${t === db.rakTema ? '✓ ' : ''}${t}</button>`).join('')}</div>
-    <div class="rk-chips" role="group" aria-label="Urutan rak">${RAK_URUT.map(([k, n]) => `<button class="rk-chip${k === r.urut ? ' on' : ''}" data-ru="${k}" aria-pressed="${k === r.urut}">${n}</button>`).join('')}</div>
+    <button class="rk-atur" id="rkAtur" aria-expanded="${rakAtur}" aria-controls="rkOpts">${ico('sliders')}<span>Atur rak</span></button>
+    <div id="rkOpts" class="rk-opts${rakAtur ? '' : ' hide'}">
+      <div class="rk-chips" role="group" aria-label="Tema rak">${RAK_TEMA.map(t => `<button class="rk-chip${t === db.rakTema ? ' on' : ''}" data-rt="${esc(t)}" aria-pressed="${t === db.rakTema}">${t === db.rakTema ? '✓ ' : ''}${t}</button>`).join('')}</div>
+      <div class="rk-chips" role="group" aria-label="Urutan rak">${RAK_URUT.map(([k, n]) => `<button class="rk-chip${k === r.urut ? ' on' : ''}" data-ru="${k}" aria-pressed="${k === r.urut}">${n}</button>`).join('')}</div>
+    </div>
     <div class="rk-wrap rk-${tm}">${shelves}</div>
     ${L.length > RAK_MAX ? `<button class="sec rk-more" id="rkMore">${rakSemua ? 'Tampilkan lebih sedikit' : `Lihat semua (${L.length})`}</button>` : ''}${susun}</div>`;
 }
 function wireRak() {
   const box = $('#rakBox'); if (!box) return;
   const redo = () => { const y = $('#sheet').scrollTop; box.outerHTML = rakHtml(); wireRak(); $('#sheet').scrollTop = y; };
+  const at = $('#rkAtur'); if (at) at.onclick = () => { rakAtur = !rakAtur; at.setAttribute('aria-expanded', rakAtur); $('#rkOpts').classList.toggle('hide', !rakAtur); };
   box.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { db.rakTema = b.dataset.rt; save(); redo(); });
   box.querySelectorAll('[data-ru]').forEach(b => b.onclick = () => { const r = rakState(); if (b.dataset.ru === 'susun' && r.urut !== 'susun') r.susun = rakList().map(x => x.id); r.urut = b.dataset.ru; save(); redo(); });
   box.querySelectorAll('[data-rn]').forEach(b => b.onclick = () => { const r = rakState(), a = rakList().map(x => x.id), i = a.indexOf(b.dataset.rn), j = i + (+b.dataset.d); if (i < 0 || j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; r.susun = a; save(); redo(); });
@@ -523,11 +548,11 @@ async function openProfile(username) {
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP total</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
-      <div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Mulai buku lain yuk, cari kata baru. Ketuk Buku lain di Home.' : 'Belum ada buku yang dibuka.'}</div>`}
+      ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? rakHtml() : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span></div>`).join('')}</div>` : ''}
+      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span>${badgeShown(id) ? '' : (pr => pr ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : '')(badgeProgress(id))}</div>`).join('')}</div>` : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
     if (p.self) wireRak();
@@ -541,12 +566,20 @@ const fypRow = p => `<div class="fyp-p" data-pid="${p.id}">
   <button class="fyp-who" data-u="${esc(p.username)}"><span class="avatar">${esc(initial(p.nick))}</span><span class="fr-in"><b>${esc(p.nick)}</b><span class="mut sm">@${esc(p.username)} · ${lalu(p.at)}${p.diikuti ? ' · teman' : ''}</span></span></button>
   <div class="fyp-t">${esc(p.text)}</div>
   ${p.book ? `<div class="fyp-b">${ico('book')}<span>${esc(p.book)}${p.lang ? ' · ' + esc(langName(p.lang)) : ''}</span>${p.share ? `<button class="sec" data-share="${esc(p.share)}">Baca juga</button>` : ''}</div>` : ''}
-  <div class="fyp-a"><button class="ghost fyp-like${p.akuSuka ? ' on' : ''}" data-like="${p.id}" aria-pressed="${p.akuSuka}">${p.akuSuka ? '♥' : '♡'} ${p.suka || ''}</button>${p.milikku ? `<button class="ghost" data-del="${p.id}">Hapus</button>` : ''}</div></div>`;
+  <div class="fyp-a"><button class="ghost fyp-like${p.akuSuka ? ' on' : ''}" data-like="${p.id}" aria-pressed="${p.akuSuka}">${p.akuSuka ? '♥' : '♡'} ${p.suka || ''}</button>${p.milikku ? `<button class="ghost" data-del="${p.id}">Hapus</button>` : `<button class="ghost" data-lapor="${p.id}">Laporkan</button><button class="ghost" data-blok="${esc(p.username)}">Blokir</button>`}</div></div>`;
 function wireFyp(root) {
   wireRows(root);
   root.querySelectorAll('[data-share]').forEach(b => b.onclick = () => { history.replaceState(null, '', location.pathname + '?share=' + encodeURIComponent(b.dataset.share)); openSharedFromUrl(); });
   root.querySelectorAll('[data-like]').forEach(b => b.onclick = async () => {
     try { const r = await api(`/posts/${b.dataset.like}/suka`, { method: 'POST' }); const n = (parseInt(b.textContent.replace(/\D/g, '')) || 0) + (r.suka ? 1 : -1); b.classList.toggle('on', r.suka); b.setAttribute('aria-pressed', r.suka); b.textContent = (r.suka ? '♥ ' : '♡ ') + (n > 0 ? n : ''); } catch (e) { toast(e.message); }
+  });
+  root.querySelectorAll('[data-lapor]').forEach(b => b.onclick = async () => {
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Laporkan status ini?'; return; }
+    try { await api('/posts/' + b.dataset.lapor + '/lapor', { method: 'POST', body: { alasan: 'tidak pantas' } }); b.closest('.fyp-p').remove(); toast('Makasih. Status ini disembunyikan dan akan kami tinjau.'); } catch (e) { toast(e.message); }
+  });
+  root.querySelectorAll('[data-blok]').forEach(b => b.onclick = async () => {
+    if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Blokir @' + b.dataset.blok + '?'; return; }
+    try { await api('/blokir/' + encodeURIComponent(b.dataset.blok), { method: 'POST' }); root.querySelectorAll('.fyp-p').forEach(x => { if (x.querySelector('[data-blok="' + b.dataset.blok + '"]')) x.remove(); }); toast('Diblokir. Statusnya tidak muncul lagi.'); } catch (e) { toast(e.message); }
   });
   root.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
     if (!b.classList.contains('sure')) { b.classList.add('sure'); b.textContent = 'Yakin hapus?'; return; }
@@ -694,3 +727,18 @@ viewBaca = async function () {
 setTab(db.tab || 'rak');
 openSharedFromUrl();
 if (db.acct) runSync({ profile: true }).catch(() => { });
+/* ---------- Hitungan anonim (1x/hari): tanpa ID, tanpa IP; hanya tanggal hari ini, tanggal pertama buka, sumber link ---------- */
+(function hitungHarian() {
+  try {
+    if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
+    const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+    const ref = new URLSearchParams(location.search).get('ref');
+    let first = localStorage.getItem('kepo.first');
+    if (!first) { first = day; localStorage.setItem('kepo.first', day); if (ref) localStorage.setItem('kepo.src', ref); }
+    if (localStorage.getItem('kepo.hitDay') === day) return;
+    const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '' });
+    const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
+    if (!ok) fetch(API_PROD + '/hitung', { method: 'POST', body: data, keepalive: true }).catch(() => { });
+    localStorage.setItem('kepo.hitDay', day);
+  } catch (e) { }
+})();
