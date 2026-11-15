@@ -1,5 +1,11 @@
 [
   {
+    "n": 1147,
+    "judul": "[peta 118] Tanda berhasil ketuk kata + petunjuk tab Kata kosong",
+    "poin": "Setelah kata disimpan, muncul tulisan \"Tersimpan di tab Kata\".",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1148,
     "judul": "[peta 116] Papan Tugas HP: kolom kosong jangan melar tinggi",
     "poin": "Di HP, kolom papan tugas yang kosong sekarang jadi pil pendek.",
@@ -171,12 +177,6 @@
     "n": 1043,
     "judul": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong",
     "poin": "Judul buku di layar baca sekarang pendek, tanpa nama penulis.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1041,
-    "judul": "[peta 103] Tanya sekali 'Mau pinyin?' di buku Mandarin + chip 1 ketukan",
-    "poin": "Buku Mandarin sekarang bertanya sekali: mau pinyin nyala, hanya kata baru, atau mati?",
     "tgl": "2026-11-14"
   }
 ]
