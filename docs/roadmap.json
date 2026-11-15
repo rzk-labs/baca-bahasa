@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 125,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar (#1138)",
+      "dokumen": "docs/spesifikasi-sederhanakan-halaman-1138.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 116,
       "peran": "developer",
       "prioritas": "P0",
@@ -171,7 +179,7 @@
       "prioritas": "P0",
       "nama": "Kata umum (the, that, this) tanpa garis putus-putus di halaman baca (#1126)",
       "dokumen": "docs/spesifikasi-garis-bawah-kata-umum-1126.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1140)"
     },
     {
       "no": 104,
