@@ -158,6 +158,22 @@
       "status": "siap dikerjakan"
     },
     {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Papan Tugas HP: kolom kosong jangan melar tinggi (#1132)",
+      "dokumen": "docs/spesifikasi-papan-kosong-1132.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu kata: 'Bisa juga' & arti lain jangan terpotong titik-titik (#1115)",
+      "dokumen": "docs/desain-arti-lain-terpotong.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 115,
       "peran": "developer",
       "prioritas": "P0",
@@ -900,7 +916,7 @@
       "prioritas": "P0",
       "nama": "Kartu kata: tautan 'Arti ini salah?' → daftar maks 3 arti lain, pilihan disimpan ke kartu Kata, pesan batas layanan + Coba lagi (#1106)",
       "dokumen": "docs/riset-arti-ini-salah.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1131)",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
     },
     {
@@ -972,6 +988,14 @@
       "dokumen": "docs/spesifikasi-semua-arti-frasa.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1121.html. Simpan daftar arti di kartu Kata (data lama tetap aman), tambah dt=ex di gtxFetch, jangan timpa arti pilihan #1106. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 122,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sederhanakan halaman: jelaskan per paragraf, bukan hanya bagian awal (#1129)",
+      "dokumen": "docs/spesifikasi-jelaskan-per-paragraf-1129.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
