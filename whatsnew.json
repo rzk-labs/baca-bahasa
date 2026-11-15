@@ -1,5 +1,11 @@
 [
   {
+    "n": 1063,
+    "judul": "Header Baca HP: 'Bagian 10 dari 10' jadi '10/10', tak tabrak Dengar",
+    "poin": "Posisi bagian di layar baca HP sekarang ringkas, contoh 10/10.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1061,
     "judul": "Header app: pil Streak & XP bertulisan + Pengaturan jelas, tanpa tebak ikon",
     "poin": "Header sekarang bertulisan: \"3 hari\", \"120 XP\", dan tombol \"Atur\".",
@@ -171,12 +177,6 @@
     "n": 972,
     "judul": "[peta 95] Profil: Rak buku bertema & tersusun sesuai selera (lokal)",
     "poin": "Profil sekarang punya rak buku: sampul berdiri di papan, lengkap dengan persen.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 981,
-    "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
-    "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
     "tgl": "2026-11-14"
   }
 ]
