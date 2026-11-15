@@ -807,6 +807,15 @@
       "dokumen": "docs/riset-pesan-gagal-masuk.md",
       "status": "spesifikasi siap dikerjakan",
       "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
+    },
+    {
+      "no": 106,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Level & streak sama di Home, Profil, pil header; XP 1 baris '14/100 XP' (#1071)",
+      "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
     }
   ],
   "prioritas": [
