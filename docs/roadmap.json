@@ -798,6 +798,15 @@
       "nama": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong (#1043)",
       "dokumen": "docs/desain-header-baca-judul-pendek.md",
       "status": "selesai (#1043)"
+    },
+    {
+      "no": 105,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Pesan gagal masuk/daftar/sinkron: apa yang terjadi + satu tombol langkah (Coba lagi / Daftar / Lanjut tanpa akun), tampil di form, tanpa istilah teknis (#1034)",
+      "dokumen": "docs/riset-pesan-gagal-masuk.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
     }
   ],
   "prioritas": [
