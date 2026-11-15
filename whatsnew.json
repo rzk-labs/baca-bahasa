@@ -1,5 +1,11 @@
 [
   {
+    "n": 1036,
+    "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
+    "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1075,
     "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
     "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
@@ -171,12 +177,6 @@
     "n": 986,
     "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
     "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 984,
-    "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
-    "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
     "tgl": "2026-11-14"
   }
 ]
