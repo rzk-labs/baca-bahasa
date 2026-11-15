@@ -614,21 +614,57 @@ async function fetchTimeout(url, ms = 8000, ext) {
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
 async function gtxFetch(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  const j = await r.json();
+  const j = await r.json().catch(() => null);
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
-  const out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
-  const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+  const seg = j[0].filter(x => Array.isArray(x));
+  const out = { text: seg.map(x => typeof x[0] === 'string' ? x[0] : '').join(''), baca: seg.map(x => typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: [], all: [], ex: [] };
+  try {
+    const bd = Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)) : [];
+    const terms = (d, n) => (Array.isArray(d[1]) ? d[1] : []).filter(t => typeof t === 'string' && t).slice(0, n);
+    out.dict = bd.map(d => ({ pos: String(d[0] || ''), terms: terms(d, 6) }));
+    /* semua arti per jenis kata (maks 5 jenis x 8 arti) untuk tombol 'Semua arti' */
+    out.all = bd.slice(0, 5).map(d => ({ pos: String(d[0] || ''), terms: terms(d, 8) })).filter(d => d.terms.length);
+    const bs = bd.map(d => baseOf(q, d[3])).find(Boolean); if (bs) out.base = bs;
+  } catch (e) { }
+  out.ex = exOf(j);
   return out;
 }
-/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal */
+/* contoh kalimat (dt=ex): maks 3, teks polos, kata kunci diapit ‹…›; balasan aneh = daftar kosong */
+function exOf(j) {
+  const out = [];
+  try {
+    const l = Array.isArray(j) && Array.isArray(j[13]) && Array.isArray(j[13][0]) ? j[13][0] : [];
+    for (const e of l) {
+      const t = Array.isArray(e) && typeof e[0] === 'string' ? e[0].replace(/<b>(.*?)<\/b>/gi, '‹$1›').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : '';
+      if (t && t.length <= 160) out.push(t);
+      if (out.length >= 3) break;
+    }
+  } catch (e) { }
+  return out;
+}
+/* tombol 'Semua arti' di kartu Kata: semua arti per jenis kata + contoh; kamus Jepang offline dipakai bila ada */
+async function fetchSemua(w, sl, tl) {
+  const o = await jaLookup(w, sl);
+  if (o && tl === 'id') { const ts = o.e.tr.split(';').map(x => x.trim()).filter(Boolean).slice(0, 8); return { all: ts.length ? [{ pos: JA_POS[o.e.pos] || '', terms: ts }] : [], ex: [] }; }
+  const r = await gtxFetch(w, sl, tl);
+  return { all: r.all || [], ex: r.ex || [] };
+}
+/* simpan ke kartu Kata (maks 40 istilah); v.t / v.pick (arti pilihan #1106) tidak disentuh */
+function simpanSemua(v, d) {
+  let n = 0;
+  v.all = (d.all || []).map(g => ({ pos: g.pos, terms: g.terms.filter(() => n++ < 40) })).filter(g => g.terms.length);
+  v.ex = (d.ex || []).slice(0, 3); v.allAt = Date.now();
+}
+/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal, balasan aneh = daftar kosong */
 async function altFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  const j = await r.json(), out = [];
-  if (Array.isArray(j[1])) j[1].forEach(d => (d[1] || []).slice(0, 4).forEach(t => out.push(String(t))));
-  try { (j[5] || []).forEach(s => (s[2] || []).forEach(x => x && x[0] && out.push(String(x[0])))); } catch (e) { }
+  const j = await r.json().catch(() => null), out = [];
+  if (!Array.isArray(j)) return out;
+  try { if (Array.isArray(j[1])) j[1].forEach(d => Array.isArray(d) && Array.isArray(d[1]) && d[1].slice(0, 4).forEach(t => t != null && out.push(String(t)))); } catch (e) { }
+  try { if (Array.isArray(j[5])) j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && x[0] && out.push(String(x[0])))); } catch (e) { }
   return out;
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */

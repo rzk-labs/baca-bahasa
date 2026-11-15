@@ -331,6 +331,10 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .flash .fb-peek{min-height:44px;margin-top:8px;font-size:14px}
 .flash .fbase{font-size:13px;line-height:1.3;margin-top:4px;opacity:.8;overflow-wrap:anywhere;max-width:100%}.flash .fbase b{font-weight:700}
 .flash .tap{font-size:15px;font-weight:700;opacity:.8;margin-top:6px}
+.flash .semua-btn{min-height:44px;min-width:44px;margin-top:6px;font-size:14px}
+.semua-grp{margin:12px 0}.semua-grp ol{margin:6px 0 0;padding-inline-start:22px}.semua-grp li{margin:3px 0;overflow-wrap:anywhere}.semua-grp li.m{font-weight:800}
+.semua-h{font:800 18px/1.2 var(--font-display,inherit);margin:16px 0 4px}
+.semua-ex{border-inline-start:3px solid var(--ink);padding:2px 10px;margin:8px 0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}.semua-ex small{display:block;opacity:.7;font-size:12px}.semua-ex mark{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 .flash .eyebrow{color:var(--color-text-muted)}
 .flash .tap{display:inline-flex;align-items:center;gap:6px}.flash .tap svg.i{width:16px;height:16px}
 .recheck{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:var(--radius-full);background:var(--color-text);color:var(--cream);font-size:12px;letter-spacing:.04em;vertical-align:1px}
@@ -405,10 +409,10 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .aij-lbl{font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px}
 .aij-t{white-space:pre-line;font-size:14px;line-height:21px;overflow-wrap:anywhere}
 .aij-rep{min-height:44px;margin-top:6px}
-.rhead{flex:none;min-height:40px;display:flex;align-items:flex-end;justify-content:center;padding:0 64px;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rhead{flex:none;min-height:40px;display:block;text-align:center;box-sizing:border-box;padding:22px 64px 0;line-height:18px;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vp{flex:1;position:relative;overflow:hidden;overscroll-behavior:none;touch-action:pan-y;margin:16px var(--reader-mg,24px) 4px;width:calc(100% - 2 * var(--reader-mg,24px));max-width:1180px;align-self:center}
 /* #977: HP sempit, ruang kosong atas/bawah teks dikurangi */
-@media (max-width:430px){.rhead{min-height:30px}.vp{margin-top:8px;margin-bottom:0}}
+@media (max-width:430px){.rhead{min-height:30px;padding-top:12px}.vp{margin-top:8px;margin-bottom:0}}
 .vp.two::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--color-border);pointer-events:none}
 .cols.page{column-fill:auto;line-height:var(--reader-lh,1.7);letter-spacing:var(--reader-ls,.005em);word-spacing:var(--reader-ws,normal);text-align:justify;-webkit-hyphens:auto;hyphens:auto;transition:transform var(--dur-page) ease-out;will-change:transform;font-family:var(--font-ui)}
 .reader.serif .cols.page{font-family:var(--font-reader)}
@@ -1090,6 +1094,9 @@ ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;
 ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--ink);color:var(--cream);width:30px;height:30px;font:800 15px var(--font-display)}
 .bk .bk-re{min-height:44px;padding:0 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:1;min-width:0}
 .bk .bk-act:has(.bk-re){justify-content:space-between}
+
+/* Layar Boss: label arti mesin + tautan Arti ini salah? */
+.rtm{text-align:center;margin-bottom:var(--space-2)}.rtm .altbox{text-align:left}.rtm .walink{padding-left:12px;padding-right:12px}
 
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
 @media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
