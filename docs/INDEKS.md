@@ -162,3 +162,4 @@
 - [furigana-ruby-epub](riset-furigana-ruby-epub.md)
 - [jepang-tulisan-tegak](riset-jepang-tulisan-tegak.md)
 - [arti-boss-keliru-1122](spesifikasi-arti-boss-keliru-1122.md)
+- [garis-bawah-kata-umum-1126](spesifikasi-garis-bawah-kata-umum-1126.md)

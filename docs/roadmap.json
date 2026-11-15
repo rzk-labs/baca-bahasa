@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 115,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kata umum (the, that, this) tanpa garis putus-putus di halaman baca (#1126)",
+      "dokumen": "docs/spesifikasi-garis-bawah-kata-umum-1126.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 104,
       "peran": "developer",
       "prioritas": "P0",
