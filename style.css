@@ -245,7 +245,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .tr.sent{font:600 18px/26px var(--font-ui)}
 .loading{color:var(--color-text-muted);font:600 15px var(--font-ui)}
 .dict{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:19px;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);padding:8px 12px}
-.dict>div{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden}
+.dict>div{overflow-wrap:anywhere;word-break:normal}
 #sheet .row{margin-top:var(--space-2)}
 .dict:empty{display:none}
 .dict b{color:var(--color-text)}
@@ -278,7 +278,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .stepper{display:flex;align-items:center;gap:8px}.stepper b{flex:1;text-align:center;font:800 20px var(--font-display)}
 .stepper button{background:var(--color-surface);width:60px}
 /* ---------- ngomong ---------- */
-.target{font:500 25px/2.4 var(--font-reader);text-align:center;margin:var(--space-2) 0}
+.target{font:500 25px/1.6 var(--font-reader);text-align:center;margin:var(--space-2) 0}
 .target .t{display:inline-block;position:relative;padding:0 3px;margin:0 -1px;border-radius:8px;line-height:1.45;transition:background var(--dur-color),color var(--dur-color)}
 .target .t[data-p]::after{content:attr(data-p) "%";position:absolute;left:0;right:0;top:100%;text-align:center;font:700 12px/1.4 var(--font-ui);color:var(--color-text-muted)}
 .t.g{color:var(--ink);background:var(--mint)}
@@ -391,6 +391,14 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .roff{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}.roff[hidden]{display:none}
 .offchip{display:inline-block;padding:3px 10px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}
 .wretry{min-height:44px;min-width:44px}
+/* arti ini salah? (#1131) */
+.walt{margin:4px 0 0}
+.walink{min-height:44px;font-size:14px;font-weight:700;padding-left:0}
+.altbox{background:var(--color-border);border-radius:14px;padding:10px 12px;margin-top:4px}
+.altch{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.altopt{min-height:44px;border:1.5px solid var(--color-text);border-radius:14px;background:transparent;color:var(--color-text);padding:8px 12px;text-align:left;font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.altrow{display:flex;gap:8px;flex-wrap:wrap}
+.pickchip{height:24px;font-size:11px;vertical-align:middle;margin-left:4px}
 .aij{margin:8px 0}.aij-q{margin:4px 2px}
 .aij-box{border:1px solid var(--color-border,rgba(0,0,0,.15));border-radius:12px;padding:10px 12px;margin-top:6px}
 .aij-lbl{font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px}
@@ -495,6 +503,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 @media (max-width:359px){.mkgo{padding:8px 10px}}
 .chi b{font-size:12px;font-weight:800;background:var(--ink);color:var(--cream);border-radius:var(--radius-full);padding:3px 10px}
 .rtitle b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle span{font-size:12px;color:var(--color-text-muted)}
+.rtip.ktip{margin:0 0 8px;width:100%;max-width:none}
 .rtip{flex:none;display:flex;gap:8px;align-items:center;width:calc(100% - 16px);max-width:704px;align-self:center;margin:0 8px 4px;background:var(--ink);color:var(--cream);border-radius:var(--radius-lg);padding:4px 4px 4px 12px;font-size:13px;line-height:18px}
 .rtip>span{display:flex;gap:8px;align-items:center;min-width:0;flex:1}
 .rtip svg.i{flex:none;width:18px;height:18px;stroke:var(--lime)}
@@ -1078,3 +1087,8 @@ body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-b
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
 ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--ink);color:var(--cream);width:30px;height:30px;font:800 15px var(--font-display)}
+.bk .bk-re{min-height:44px;padding:0 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:1;min-width:0}
+.bk .bk-act:has(.bk-re){justify-content:space-between}
+
+/* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
+@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}

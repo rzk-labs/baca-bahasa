@@ -150,12 +150,28 @@
   ],
   "backlog": [
     {
+      "no": 125,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar (#1138)",
+      "dokumen": "docs/spesifikasi-sederhanakan-halaman-1138.md",
+      "status": "selesai (#1155)"
+    },
+    {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Papan Tugas HP: kolom kosong jangan melar tinggi (#1132)",
+      "dokumen": "docs/spesifikasi-papan-kosong-1132.md",
+      "status": "selesai (#1148)"
+    },
+    {
       "no": 114,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Kartu kata: 'Bisa juga' & arti lain jangan terpotong titik-titik (#1115)",
       "dokumen": "docs/desain-arti-lain-terpotong.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1145)"
     },
     {
       "no": 115,
@@ -163,7 +179,7 @@
       "prioritas": "P0",
       "nama": "Kata umum (the, that, this) tanpa garis putus-putus di halaman baca (#1126)",
       "dokumen": "docs/spesifikasi-garis-bawah-kata-umum-1126.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1140)"
     },
     {
       "no": 104,
@@ -900,7 +916,7 @@
       "prioritas": "P0",
       "nama": "Kartu kata: tautan 'Arti ini salah?' → daftar maks 3 arti lain, pilihan disimpan ke kartu Kata, pesan batas layanan + Coba lagi (#1106)",
       "dokumen": "docs/riset-arti-ini-salah.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1131)",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
     },
     {
@@ -935,7 +951,7 @@
       "prioritas": "P0",
       "nama": "Layar Ngomong ringkas: buang tile Tantangan hari ini, jarak baris kalimat 1.6, mic tanpa scroll (#1117)",
       "dokumen": "docs/desain-ngomong-ringkas.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1151)",
       "catatan": "Mockup: docs/mockup-1117.html. Ubah viewBicara di ui.js dan .target di style.css; naikkan versi C di sw.js."
     },
     {
@@ -944,7 +960,7 @@
       "prioritas": "P0",
       "nama": "Tanda berhasil ketuk kata (sorot kata, tombol Simpan berubah, toast 'Tersimpan') + petunjuk tab Kata kosong & halaman baca pertama (#1081)",
       "dokumen": "docs/riset-umpan-balik-ketuk-kata.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1147)",
       "catatan": "Mockup: docs/mockup-1081.html. Petunjuk sekali tampil, tutup dengan 'Paham', jangan bareng spanduk lain."
     },
     {
@@ -953,7 +969,7 @@
       "prioritas": "P0",
       "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
       "dokumen": "docs/desain-setelah-tamat.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1152)"
     },
     {
       "no": 120,
