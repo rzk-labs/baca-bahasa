@@ -892,7 +892,7 @@
       "prioritas": "P0",
       "nama": "Kartu kata: tautan 'Arti ini salah?' → daftar maks 3 arti lain, pilihan disimpan ke kartu Kata, pesan batas layanan + Coba lagi (#1106)",
       "dokumen": "docs/riset-arti-ini-salah.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1131)",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
     },
     {
