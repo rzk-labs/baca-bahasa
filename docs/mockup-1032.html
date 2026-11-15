@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1032 — Ganti sampul (menu ⋯)</title>
+<style>
+:root{--ink:#351E28;--cream:#FAF7F0;--ice:#D7EFFF;--muted:#5F5059;--border:#B2CFE2}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#e9edf0;font:14px/1.4 Inter,system-ui,sans-serif;color:var(--ink);display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.wrap{width:390px}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.phone{width:390px;height:640px;background:var(--ice);border-radius:28px;border:1.5px solid var(--border);position:relative;overflow:hidden;padding:20px 16px}
+h1{font:800 22px/1.1 "Bricolage Grotesque",Inter,sans-serif;margin:8px 0 14px}
+h2{font:800 18px "Bricolage Grotesque",Inter,sans-serif;margin:0 0 8px}
+.hs{display:flex;gap:14px;overflow:hidden}
+.bk{flex:none;width:132px}
+.cover{width:132px;height:188px;border-radius:6px 12px 12px 6px;position:relative;overflow:hidden;border:1.5px solid rgba(53,30,40,.15);box-shadow:inset 4px 0 0 rgba(53,30,40,.14);padding:12px;display:flex}
+.cover .em{font:800 44px/1 "Bricolage Grotesque",Inter,sans-serif}
+.cover.img{padding:0;background:linear-gradient(160deg,#F4B183 0%,#7A4A6B 55%,#2B2A4C 100%)}
+.cover.img i{position:absolute;left:50%;bottom:0;width:150px;height:90px;margin-left:-75px;background:#1d1a33;border-radius:75px 75px 0 0}
+.cover.img b{position:absolute;right:22px;top:26px;width:30px;height:30px;border-radius:50%;background:#FFE9B0}
+.t{font-weight:700;font-size:14px;line-height:19px;margin-top:8px}
+.m{font-size:12px;color:var(--muted);font-weight:600}
+.act{display:flex;justify-content:flex-end;margin-top:14px}
+.btn{min-width:44px;height:44px;border-radius:12px;background:rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.scrim{position:absolute;inset:0;background:rgba(53,30,40,.5)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--cream);border-radius:26px 26px 0 0;padding:10px 16px 20px;box-shadow:0 -12px 40px rgba(53,30,40,.18)}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 12px}
+.mt{font-weight:700;font-size:14px;color:var(--muted);margin-bottom:4px}
+.chi{display:flex;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px}
+.chi:last-child{border:0;color:#A3262F}
+.toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:600}
+</style></head><body>
+
+<div class="wrap"><p class="lbl">1 · Kartu buku ada tombol ⋯</p>
+<div class="phone"><h1>Lanjut baca</h1>
+<div class="hs">
+<div class="bk"><div class="cover" style="background:#E9F056;color:#351E28"><span class="em">L</span></div><div class="t">Little Prince</div><div class="m">Inggris · 12%</div><div class="act"><div class="btn" aria-label="Menu cerita">⋯</div></div></div>
+<div class="bk"><div class="cover" style="background:#351E28;color:#FAF7F0"><span class="em" style="color:#E9F056">鬼</span></div><div class="t">鬼灭之刃</div><div class="m">Mandarin · 3%</div><div class="act"><div class="btn">⋯</div></div></div>
+</div></div></div>
+
+<div class="wrap"><p class="lbl">2 · Menu "Cerita ini" (sudah ada sampul sendiri)</p>
+<div class="phone"><h1>Lanjut baca</h1>
+<div class="hs"><div class="bk"><div class="cover" style="background:#E9F056"><span class="em">L</span></div></div></div>
+<div class="scrim"></div>
+<div class="sheet"><div class="grab"></div><h2>Cerita ini</h2><div class="mt">Little Prince</div>
+<div class="chi">🖼 Ganti sampul</div><div class="chi">✕ Hapus sampul</div><div class="chi">🗑 Hapus cerita</div></div></div></div>
+
+<div class="wrap"><p class="lbl">3 · Sesudah ganti: sampul foto + toast</p>
+<div class="phone"><h1>Lanjut baca</h1>
+<div class="hs">
+<div class="bk"><div class="cover img"><b></b><i></i></div><div class="t">Little Prince</div><div class="m">Inggris · 12%</div><div class="act"><div class="btn">⋯</div></div></div>
+<div class="bk"><div class="cover" style="background:#351E28;color:#FAF7F0"><span class="em" style="color:#E9F056">鬼</span></div><div class="t">鬼灭之刃</div><div class="m">Mandarin · 3%</div><div class="act"><div class="btn">⋯</div></div></div>
+</div><div class="toast">Sampul diganti</div></div></div>
+</body></html>
