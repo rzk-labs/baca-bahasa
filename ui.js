@@ -2626,6 +2626,37 @@ function recordWeak(w, lang, p) {
   const o = db.weak[k] || { w, lang, n: 0, last: 0, best: 0 };
   o.n++; o.last = p; o.best = Math.max(o.best, p); o.at = Date.now(); db.weak[k] = o; save();
 }
+/* arti di layar Boss: label 'arti mesin' + 'Arti ini salah?' (pilihan disimpan ke kartu Kata, sama seperti sheet kata) */
+function bossArti(w, lang) {
+  const tr = $('#rtr'), tm = $('#rtm'), al = $('#ralt'); if (!tr || !tm || !al) return;
+  const alive = () => $('#rtr') === tr, sv = () => db.vocab.find(v => v.t && sameVocab(v, lang, w));
+  let r = null, pickT = '';
+  const cur = () => (sv() && sv().t) || pickT || (r && r.text) || '';
+  const lbl = () => { const m = tm.querySelector('.itr-m'); if (m) m.textContent = (sv() && sv().pick) || pickT ? 'Arti pilihanmu' : 'Arti mesin, bisa meleset'; };
+  const link = () => { delete al.dataset.open; al.innerHTML = '<button class="ghost walink" id="ralink" type="button">Arti ini salah?</button>'; $('#ralink').onclick = open; };
+  const pick = t => {
+    const v = sv(); if (v) { v.t = t; v.pick = 1; delete v.noTr; delete v.nyusul; save(); } else pickT = t;
+    vib(8); tr.textContent = t; lbl(); delete al.dataset.open;
+    al.innerHTML = '<div class="mut sm" role="status">Oke, arti ini yang dipakai.</div>'; setTimeout(() => { if (alive() && !al.dataset.open) link(); }, 2200);
+  };
+  const open = async () => {
+    al.dataset.open = '1';
+    const fail = msg => { if (!alive()) return; al.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="raretry" type="button">Coba lagi</button><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`; $('#raretry').onclick = open; $('#raclose').onclick = link; };
+    al.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
+    let list = [];
+    try {
+      const c = cur(); list = altArti((r && r.dict) || [], c);
+      if (list.length < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); list = altArti([{ terms: [...list, ...more] }], c); }
+    } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    if (!alive()) return; list = list.slice(0, 3);
+    if (!list.length) { al.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain untuk kata ini.</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>'; $('#raclose').onclick = link; return; }
+    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
+    $$('#ralt .altopt').forEach(e => e.onclick = () => pick(list[+e.dataset.i]));
+    $('#raclose').onclick = link;
+  };
+  const s0 = sv(); if (s0) { tr.textContent = s0.t; tm.hidden = false; lbl(); link(); }
+  translate(w, lang, db.my).then(x => { if (!alive()) return; r = x; if (!sv() && !pickT) tr.textContent = x.text; tm.hidden = false; lbl(); if (!al.firstChild) link(); }).catch(() => { });
+}
 function remedial(list, lang, box, done) {
   let i = 0, tries = 0; const passed = [];
   const step = () => {
@@ -2637,12 +2668,13 @@ function remedial(list, lang, box, done) {
       <div class="eyebrow center lbl" style="margin-top:8px">Kata ${i + 1} dari ${list.length} · Target ${PASS}%</div>
       <div class="rem-word" lang="${esc(lang)}">${esc(x.w)}</div>
       <div class="tr sent center" id="rtr" style="margin:4px 0"></div>
+      <div class="rtm" id="rtm" hidden><span class="itr-m">Arti mesin, bisa meleset</span><div id="ralt"></div></div>
       <div class="aux"><button id="rl">${ico('vol')} Contoh</button><button id="rs">${ico('slow')} Pelan</button></div>
       <div class="rem-score" id="rsc"><span class="eyebrow">Skor sebelumnya</span><b>${x.p}%</b><span class="sm">${x.p < 60 ? 'Pelan-pelan aja.' : 'Dikit lagi!'}</span></div>
       <div class="micwrap"><button class="mic" id="rr" aria-label="Ucapin kata ini">${ico('mic')}</button><div class="mic-lbl" id="rrl" aria-live="polite">Ucapin kata ini</div></div>
       <div class="hint" id="rh">Nggak usah buru-buru. Dengerin contohnya sesering yang kamu mau.</div>
       <div class="row"><button class="ghost" id="rk">Skip dulu ${ico('right')}</button></div></div>`;
-    translate(x.w, lang, db.my).then(r => { if ($('#rtr')) $('#rtr').textContent = r.text; }).catch(() => { });
+    bossArti(x.w, lang);
     $('#rl').onclick = () => speak(x.w, lang, 0.8);
     $('#rs').onclick = () => speak(x.w, lang, 0.45);
     $('#rk').onclick = () => { i++; tries = 0; step(); };
