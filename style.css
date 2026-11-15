@@ -1090,5 +1090,8 @@ ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;bor
 .bk .bk-re{min-height:44px;padding:0 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:1;min-width:0}
 .bk .bk-act:has(.bk-re){justify-content:space-between}
 
+/* Layar Boss: label arti mesin + tautan Arti ini salah? */
+.rtm{text-align:center;margin-bottom:var(--space-2)}.rtm .altbox{text-align:left}.rtm .walink{padding-left:12px;padding-right:12px}
+
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
 @media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
