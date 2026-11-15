@@ -960,7 +960,7 @@
       "prioritas": "P0",
       "nama": "Tanda berhasil ketuk kata (sorot kata, tombol Simpan berubah, toast 'Tersimpan') + petunjuk tab Kata kosong & halaman baca pertama (#1081)",
       "dokumen": "docs/riset-umpan-balik-ketuk-kata.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1147)",
       "catatan": "Mockup: docs/mockup-1081.html. Petunjuk sekali tampil, tutup dengan 'Paham', jangan bareng spanduk lain."
     },
     {
@@ -969,7 +969,7 @@
       "prioritas": "P0",
       "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
       "dokumen": "docs/desain-setelah-tamat.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1152)"
     },
     {
       "no": 120,

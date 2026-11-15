@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1147 — Tanda ketuk kata & tab Kata kosong</title>
+<style>
+body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.ph{width:390px;margin:16px auto;background:#FAF7F0;border-radius:24px;padding:16px;box-sizing:border-box}
+.lbl{display:inline-block;background:#E9F056;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin:0 6px 8px 0}
+h2{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:22px;margin:4px 0 12px}
+.txt{font-family:Georgia,serif;font-size:18px;line-height:30px}
+.sel{background:#E9F056;border-radius:4px;padding:0 2px}
+.tip{display:flex;gap:8px;align-items:center;background:#351E28;color:#FAF7F0;border-radius:14px;padding:4px 4px 4px 12px;font-size:13px;line-height:18px;margin-bottom:8px}
+.tip span{flex:1}
+.tip b.p{flex:none;background:#E9F056;color:#351E28;border-radius:99px;padding:0 12px;font-size:13px;min-height:44px;line-height:44px}
+.sheet{margin-top:14px;border:1.5px solid #351E28;border-radius:16px;padding:14px;background:#fff}
+.w{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:700;font-size:20px}
+.mut{font-size:13px;line-height:18px;color:#6b5a62;margin:4px 0 10px}
+.btn{display:block;min-height:44px;border-radius:12px;font:600 15px Inter,sans-serif;border:1.5px solid #351E28;text-align:center;line-height:44px}
+.pri{background:#351E28;color:#FAF7F0}
+.toast{margin-top:10px;background:#351E28;color:#FAF7F0;border-radius:12px;padding:10px 14px;font-size:14px;text-align:center}
+.empty{text-align:center;padding:24px 12px 20px}
+.empty .big{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:700;font-size:20px;margin-bottom:8px}
+.empty p{font-size:15px;line-height:21px;color:#6b5a62;margin:0 0 18px}
+.tabs{display:flex;justify-content:space-around;border-top:1px solid #d9cfd3;margin-top:16px;padding-top:10px;font-size:12px;font-weight:600;color:#6b5a62}
+.tabs .on{color:#351E28;border-bottom:3px solid #E9F056}
+</style></head><body>
+<div class="ph"><span class="lbl">Kondisi 1: Halaman baca pertama</span>
+<div class="tip"><span><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>Ketuk tengah</b> = menu.</span><b class="p">Paham</b></div>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari melewati mereka.</div></div>
+
+<div class="ph"><span class="lbl">Kondisi 2: Kata diketuk</span>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari <span class="sel">melewati</span> mereka.</div>
+<div class="sheet"><div class="w">melewati</div><div class="mut">to pass by</div><div class="btn pri">Simpan</div></div></div>
+
+<div class="ph"><span class="lbl">Kondisi 3: Setelah Simpan</span>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari <span class="sel">melewati</span> mereka.</div>
+<div class="sheet"><div class="w">melewati</div><div class="mut">to pass by</div><div class="btn pri">✓ Tersimpan</div></div>
+<div class="toast">Tersimpan di tab Kata</div></div>
+
+<div class="ph"><span class="lbl">Kondisi 4: Tab Kata kosong</span>
+<h2>Kata kamu</h2>
+<div class="tip"><span>Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span><b class="p">Paham</b></div>
+<div class="empty"><div class="big">Belum ada kata</div><p>Ketuk kata di halaman baca, lalu Simpan.</p><div class="btn pri">Mulai baca</div></div>
+<div class="tabs"><span>Home</span><span>Baca</span><span>Ngomong</span><span class="on">Kata</span></div></div>
+</body></html>
