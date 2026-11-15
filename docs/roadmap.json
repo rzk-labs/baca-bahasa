@@ -877,6 +877,15 @@
       "dokumen": "docs/spesifikasi-akun-premium-chiko.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1093.html. Server api/ boleh diubah untuk tugas ini; deploy & migrasi manual oleh founder."
+    },
+    {
+      "no": 113,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tombol 'Arti ini salah?' di kartu arti: arti alternatif + terjemah ulang (#1113)",
+      "dokumen": "docs/spesifikasi-lapor-terjemahan-salah.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1113.html. Dari masukan Ilham, Sinta, Nadia."
     }
   ],
   "prioritas": [
