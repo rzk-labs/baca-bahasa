@@ -245,7 +245,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .tr.sent{font:600 18px/26px var(--font-ui)}
 .loading{color:var(--color-text-muted);font:600 15px var(--font-ui)}
 .dict{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:19px;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);padding:8px 12px}
-.dict>div{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden}
+.dict>div{overflow-wrap:anywhere;word-break:normal}
 #sheet .row{margin-top:var(--space-2)}
 .dict:empty{display:none}
 .dict b{color:var(--color-text)}
