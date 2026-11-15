@@ -447,6 +447,15 @@ addEventListener('popstate', () => {
   if (!$('#sheet').classList.contains('hide')) { closeSheet(); history.pushState({ kepo: 'baca' }, ''); return; }
   rdHist = false; leaveBaca();
 });
+/* Tab Sosial: kalau cloud.js belum siap / error, tampilkan layar ramah (bukan Home) */
+function viewSosialAman() {
+  try {
+    if (typeof viewSosial === 'function') { viewSosial(); return; }
+  } catch (e) { console.warn('viewSosial gagal', e); }
+  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#sosRetry').onclick = () => setTab('sosial');
+  $('#sosHome').onclick = () => setTab('rak');
+}
 function setTab(t) {
   if (t !== 'baca') { rdLeave(); pfDisarm(); }
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
@@ -456,7 +465,7 @@ function setTab(t) {
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
-  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: () => typeof viewSosial === 'function' ? viewSosial() : viewRak() })[t]();
+  ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: viewSosialAman })[t]();
   if (t === 'rak') setTimeout(cadNote, 2500);
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });

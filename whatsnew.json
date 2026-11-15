@@ -1,5 +1,11 @@
 [
   {
+    "n": 1099,
+    "judul": "Tab Sosial tak boleh balik ke Home diam-diam: pesan jelas + coba lagi",
+    "poin": "Tab Sosial tak lagi diam-diam balik ke Home.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1095,
     "judul": "Profil & Home: header jelas, lencana naik, '4 hari' tak berulang",
     "poin": "Tombol Pengaturan kini jelas, beda dari bulatan akun, dan muat di layar kecil.",
@@ -171,12 +177,6 @@
     "n": 1004,
     "judul": "[peta 98] Titik kecil \"siap diulang\" di header Baca + lembar Ulang",
     "poin": "Saat membaca, ada titik kuning kecil kalau ada kata siap diulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1000,
-    "judul": "[peta 98] Titik pengingat 'siap diulang' di header Baca + satu istilah",
-    "poin": "Di halaman Baca ada titik kecil kuning kalau ada kata siap diulang.",
     "tgl": "2026-11-14"
   }
 ]
