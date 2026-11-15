@@ -938,6 +938,14 @@
       "dokumen": "docs/riset-umpan-balik-ketuk-kata.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1081.html. Petunjuk sekali tampil, tutup dengan 'Paham', jangan bareng spanduk lain."
+    },
+    {
+      "no": 119,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
+      "dokumen": "docs/desain-setelah-tamat.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
