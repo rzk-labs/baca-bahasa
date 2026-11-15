@@ -330,6 +330,10 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .flash .fb-peek{min-height:44px;margin-top:8px;font-size:14px}
 .flash .fbase{font-size:13px;line-height:1.3;margin-top:4px;opacity:.8;overflow-wrap:anywhere;max-width:100%}.flash .fbase b{font-weight:700}
 .flash .tap{font-size:15px;font-weight:700;opacity:.8;margin-top:6px}
+.flash .semua-btn{min-height:44px;min-width:44px;margin-top:6px;font-size:14px}
+.semua-grp{margin:12px 0}.semua-grp ol{margin:6px 0 0;padding-inline-start:22px}.semua-grp li{margin:3px 0;overflow-wrap:anywhere}.semua-grp li.m{font-weight:800}
+.semua-h{font:800 18px/1.2 var(--font-display,inherit);margin:16px 0 4px}
+.semua-ex{border-inline-start:3px solid var(--ink);padding:2px 10px;margin:8px 0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}.semua-ex small{display:block;opacity:.7;font-size:12px}.semua-ex mark{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 .flash .eyebrow{color:var(--color-text-muted)}
 .flash .tap{display:inline-flex;align-items:center;gap:6px}.flash .tap svg.i{width:16px;height:16px}
 .recheck{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:var(--radius-full);background:var(--color-text);color:var(--cream);font-size:12px;letter-spacing:.04em;vertical-align:1px}
