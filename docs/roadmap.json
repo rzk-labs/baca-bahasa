@@ -842,6 +842,15 @@
       "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
+    },
+    {
+      "no": 110,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Gagal masuk/daftar/sinkron: SATU tombol langkah di bawah pesan (Coba lagi / Daftar / Lanjut tanpa akun) [peta 106] (#1089)",
+      "dokumen": "docs/rencana-tombol-langkah-gagal-masuk.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1089.html. Hanya cloud.js (+ui.js bila perlu), naikkan C di sw.js, uji 320/390px. Jangan ubah api/, sheet Tamat, tab Kata, header Baca. Setelah live, ubah status backlog 106 jadi selesai."
     }
   ],
   "prioritas": [
