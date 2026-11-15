@@ -117,7 +117,7 @@
       "nama": "UX/UI Design",
       "fase": "Design & Build",
       "status": "selesai",
-      "catatan": "(validasi bukti internet) 37 bukti dari 8 sumber (forum LingQ & Readlang, review, Smashing, Kindle). 6 hipotesis: 4 terbukti (ketuk-kata 1 langkah, popup tak tutup kalimat, tab bawah 4 menu, layar ramai bikin lari), 1 belum jelas (onboarding 3 ketukan), 1 gugur (arti selalu andal). 5 celah UX berurut, P0: Coba 1 cerita & simpan kata. Reddit/Play Store diblokir. (validasi bukti internet) #426 kata multi-makna & kamus: lihat docs/riset-kata-multi-makna-kamus.md. 47 bukti dari 5 jenis sumber. Vonis: kamus bolak-balik memutus alur terbukti sebagian; tema gelap/sepia terbukti sebagian (pilihan wajib); arti satu kata sering menyesatkan terbukti (frasa & idiom terburuk). Usul popup: arti kedua, contoh, tanda frasa. Detail: docs/pm-ux-validasi.md. Onboarding sebelumnya: docs/riset-sesi-pertama.md. Beranda, reader e-book, tab Kata/Ngomong sudah ada di app; onboarding jalur tercepat 3 ketukan, jalur file sendiri 5-7. (validasi bukti internet) #459 baca bahasa RTL/Thai/Hindi: lihat docs/riset-bahasa-rtl-thai-hindi.md. 40 kutipan dari 4 jenis sumber. Vonis: RTL sering rusak terbukti; Thai butuh pemotong kata terbukti; harakat/matra rusak saat jarak huruf berubah terbukti sebagian; harakat bisa dimatikan terbukti sebagian; gtx/MyMemory cukup belum jelas. Usul: arah RTL & pengecualian jarak huruf dulu (P0), lalu tambah Thai/Hindi. (#465) Arab RTL selesai di app. (validasi bukti internet) #464 mutu terjemahan mesin: lihat docs/riset-mutu-terjemahan-mesin.md. 33 kutipan dari 3 jenis sumber. Vonis: kata tunggal cukup terbukti sebagian; kalimat & idiom sering salah terbukti; tanda 'arti mesin, bisa meleset' di sheet terbukti perlu (usul P0); Jepang/Korea lewat Inggris & MyMemory lemah belum jelas.: arah kanan-ke-kiri, jarak huruf normal, baris lebih longgar, kata di kartu dir=auto. (validasi bukti internet) #482 dengar sambil baca & keterbacaan teks: lihat docs/riset-dengar-sambil-baca.md. 43 butir dari 5 jenis sumber. Vonis: dengar sambil baca terbukti sebagian; suara iOS cukup untuk bahasa Asia gugur; kanji salah baca terbukti; laju lambat & kontrol ukuran/jarak teks terbukti sebagian; putar otomatis belum jelas. Usul P0: cek suara bahasa sebelum bunyi, tanda 'suara bisa meleset'. RTL meluas ke Ibrani/Persia/Urdu & penanda RTL rapi selesai di app. (validasi bukti internet) #515 arti kata saat sinyal lemah: lihat docs/riset-arti-kata-sinyal-lemah.md. 40 bukti dari 3 jenis sumber. Vonis: arti kata tanpa sinyal terbukti; cache ketukan cukup terbukti sebagian; unduh per bab belum jelas; pesan 'coba lagi' terbukti; peka kuota belum jelas. Usul P0: tombol unduh arti bab, pesan 'nanti dicoba lagi', hitungan kata siap offline. (#530) Prafetch arti kalimat jalan: halaman diam 1,5 detik, maks 12 kalimat diterjemahkan diam-diam, ketukan didahulukan. Terbaru: Arab/RTL (Ibrani, Persia, Urdu) rapi di app; tanda 'arti mesin bisa meleset'. (validasi bukti internet) gulir vs halaman: lihat docs/riset-gulir-halaman-satu-tangan.md. 52 butir dari 7 sumber. Vonis: zona ketuk tepi bentrok dengan ketuk kata terbukti; satu tangan butuh kontrol bawah terbukti sebagian; gulir lebih cocok, posisi hilang saat ganti huruf, dan indikator progres menambah motivasi belum jelas. (validasi bukti internet) terjemahan sejajar: lihat docs/riset-terjemahan-sejajar.md. 43 bukti dari 4 jenis sumber (forum LingQ, Readlang, Language Reactor, makalah/studi, blog). Vonis: mode 'tutup, ketuk untuk buka' dicari terbukti; kalimat panjang sering meleset terbukti; selalu tampil bikin berhenti menebak, sejajar bantu paham, dan biaya kalimat utuh terbukti sebagian; pemula A2-B1 cocok sejajar permanen belum jelas; sejajar bikin malas (mutlak) gugur. Reddit & ulasan toko tak terbaca. Usul P0: buka terjemahan di tempat, tanda kalimat panjang, hitung kalimat dibuka. (validasi bukti internet) aksesibilitas baca: lihat docs/riset-aksesibilitas-baca.md. #568: usul P0 #515 (unduh arti bab untuk offline) selesai: tombol Siapkan arti bab ini di Daftar bab dan Pengaturan baca. #605: usul P0 'tanda arti mesin' selesai: sheet arti kalimat menampilkan 'Arti mesin, bisa meleset' setelah terjemahan sukses, dan peringatan khusus untuk kalimat panjang (>25 kata, >80 karakter ja/ko/zh). (validasi bukti internet) #637 akurasi ketuk kata & pilih frasa di HP: lihat docs/riset-akurasi-ketuk-kata.md. 47 butir dari 5 jenis sumber (forum LingQ/Readlang/Pleco/Language Reactor, pelacak bug WebKit, panduan W3C/Material/NN-g, studi sentuh, blog). Vonis: tahan-seret bentrok dengan menu salin iOS terbukti; cara alternatif (tombol tambah kata) terbukti; kata kecil/tanda baca meleset & Jepang/Mandarin meleset terbukti sebagian; sorotan kata terpilih belum jelas. Ulasan toko, Reddit, Apple HIG tak terbaca. (validasi bukti internet) bentuk dasar kata: lihat docs/riset-bentuk-dasar-kata.md, vonis: arti bentuk konjugasi menyesatkan terbukti sebagian; tampil bentuk dasar di sheet arti terbukti; simpan per bentuk dasar hindari daftar ganda terbukti sebagian; aturan akhiran sederhana belum jelas (54 bukti, 5 jenis sumber). (validasi bukti internet) cara baca default Mandarin: lihat docs/riset-cara-baca-default-mandarin.md, vonis ringkas: nyala untuk pemula terbukti sebagian (asal mudah dimatikan); pinyin jadi tongkat belum jelas; pengaturan sulit ditemukan terbukti sebagian; opsi 'hanya kata baru' terbukti sebagian; 'default mati' riset lama gugur untuk pemula Mandarin. (validasi bukti internet) lencana terkunci: lihat docs/riset-lencana-terkunci.md, vonis ringkas: petunjuk cara + progres di lencana terkunci terbukti sebagian; daftar terpotong perlu grid/Lihat semua terbukti sebagian; syarat sekali pakai petunjuk (bukan 0/1) belum jelas; progres XP sama dengan buka level terbukti sebagian; lencana naikkan prestasi gugur (41 kutipan, 5 jenis sumber). (validasi bukti internet) munculkan header saat baca: lihat docs/riset-munculkan-header-baca.md, vonis ringkas: ketuk kata saat cari menu membingungkan terbukti sebagian; tombol kecil tetap lebih jelas daripada ketuk area kosong terbukti sebagian; gulir/geser dari atas cocok satu tangan belum jelas (reader Keepo berhalaman); header selalu tampak ringkas belum jelas (condong benar). 43 butir dari 5 jenis sumber; Reddit & ulasan toko tak terbaca."
+      "catatan": "(validasi bukti internet) 37 bukti dari 8 sumber (forum LingQ & Readlang, review, Smashing, Kindle). 6 hipotesis: 4 terbukti (ketuk-kata 1 langkah, popup tak tutup kalimat, tab bawah 4 menu, layar ramai bikin lari), 1 belum jelas (onboarding 3 ketukan), 1 gugur (arti selalu andal). 5 celah UX berurut, P0: Coba 1 cerita & simpan kata. Reddit/Play Store diblokir. (validasi bukti internet) #426 kata multi-makna & kamus: lihat docs/riset-kata-multi-makna-kamus.md. 47 bukti dari 5 jenis sumber. Vonis: kamus bolak-balik memutus alur terbukti sebagian; tema gelap/sepia terbukti sebagian (pilihan wajib); arti satu kata sering menyesatkan terbukti (frasa & idiom terburuk). Usul popup: arti kedua, contoh, tanda frasa. Detail: docs/pm-ux-validasi.md. Onboarding sebelumnya: docs/riset-sesi-pertama.md. Beranda, reader e-book, tab Kata/Ngomong sudah ada di app; onboarding jalur tercepat 3 ketukan, jalur file sendiri 5-7. (validasi bukti internet) #459 baca bahasa RTL/Thai/Hindi: lihat docs/riset-bahasa-rtl-thai-hindi.md. 40 kutipan dari 4 jenis sumber. Vonis: RTL sering rusak terbukti; Thai butuh pemotong kata terbukti; harakat/matra rusak saat jarak huruf berubah terbukti sebagian; harakat bisa dimatikan terbukti sebagian; gtx/MyMemory cukup belum jelas. Usul: arah RTL & pengecualian jarak huruf dulu (P0), lalu tambah Thai/Hindi. (#465) Arab RTL selesai di app. (validasi bukti internet) #464 mutu terjemahan mesin: lihat docs/riset-mutu-terjemahan-mesin.md. 33 kutipan dari 3 jenis sumber. Vonis: kata tunggal cukup terbukti sebagian; kalimat & idiom sering salah terbukti; tanda 'arti mesin, bisa meleset' di sheet terbukti perlu (usul P0); Jepang/Korea lewat Inggris & MyMemory lemah belum jelas.: arah kanan-ke-kiri, jarak huruf normal, baris lebih longgar, kata di kartu dir=auto. (validasi bukti internet) #482 dengar sambil baca & keterbacaan teks: lihat docs/riset-dengar-sambil-baca.md. 43 butir dari 5 jenis sumber. Vonis: dengar sambil baca terbukti sebagian; suara iOS cukup untuk bahasa Asia gugur; kanji salah baca terbukti; laju lambat & kontrol ukuran/jarak teks terbukti sebagian; putar otomatis belum jelas. Usul P0: cek suara bahasa sebelum bunyi, tanda 'suara bisa meleset'. RTL meluas ke Ibrani/Persia/Urdu & penanda RTL rapi selesai di app. (validasi bukti internet) #515 arti kata saat sinyal lemah: lihat docs/riset-arti-kata-sinyal-lemah.md. 40 bukti dari 3 jenis sumber. Vonis: arti kata tanpa sinyal terbukti; cache ketukan cukup terbukti sebagian; unduh per bab belum jelas; pesan 'coba lagi' terbukti; peka kuota belum jelas. Usul P0: tombol unduh arti bab, pesan 'nanti dicoba lagi', hitungan kata siap offline. (#530) Prafetch arti kalimat jalan: halaman diam 1,5 detik, maks 12 kalimat diterjemahkan diam-diam, ketukan didahulukan. Terbaru: Arab/RTL (Ibrani, Persia, Urdu) rapi di app; tanda 'arti mesin bisa meleset'. (validasi bukti internet) gulir vs halaman: lihat docs/riset-gulir-halaman-satu-tangan.md. 52 butir dari 7 sumber. Vonis: zona ketuk tepi bentrok dengan ketuk kata terbukti; satu tangan butuh kontrol bawah terbukti sebagian; gulir lebih cocok, posisi hilang saat ganti huruf, dan indikator progres menambah motivasi belum jelas. (validasi bukti internet) terjemahan sejajar: lihat docs/riset-terjemahan-sejajar.md. 43 bukti dari 4 jenis sumber (forum LingQ, Readlang, Language Reactor, makalah/studi, blog). Vonis: mode 'tutup, ketuk untuk buka' dicari terbukti; kalimat panjang sering meleset terbukti; selalu tampil bikin berhenti menebak, sejajar bantu paham, dan biaya kalimat utuh terbukti sebagian; pemula A2-B1 cocok sejajar permanen belum jelas; sejajar bikin malas (mutlak) gugur. Reddit & ulasan toko tak terbaca. Usul P0: buka terjemahan di tempat, tanda kalimat panjang, hitung kalimat dibuka. (validasi bukti internet) aksesibilitas baca: lihat docs/riset-aksesibilitas-baca.md. #568: usul P0 #515 (unduh arti bab untuk offline) selesai: tombol Siapkan arti bab ini di Daftar bab dan Pengaturan baca. #605: usul P0 'tanda arti mesin' selesai: sheet arti kalimat menampilkan 'Arti mesin, bisa meleset' setelah terjemahan sukses, dan peringatan khusus untuk kalimat panjang (>25 kata, >80 karakter ja/ko/zh). (validasi bukti internet) #637 akurasi ketuk kata & pilih frasa di HP: lihat docs/riset-akurasi-ketuk-kata.md. 47 butir dari 5 jenis sumber (forum LingQ/Readlang/Pleco/Language Reactor, pelacak bug WebKit, panduan W3C/Material/NN-g, studi sentuh, blog). Vonis: tahan-seret bentrok dengan menu salin iOS terbukti; cara alternatif (tombol tambah kata) terbukti; kata kecil/tanda baca meleset & Jepang/Mandarin meleset terbukti sebagian; sorotan kata terpilih belum jelas. Ulasan toko, Reddit, Apple HIG tak terbaca. (validasi bukti internet) bentuk dasar kata: lihat docs/riset-bentuk-dasar-kata.md, vonis: arti bentuk konjugasi menyesatkan terbukti sebagian; tampil bentuk dasar di sheet arti terbukti; simpan per bentuk dasar hindari daftar ganda terbukti sebagian; aturan akhiran sederhana belum jelas (54 bukti, 5 jenis sumber). (validasi bukti internet) cara baca default Mandarin: lihat docs/riset-cara-baca-default-mandarin.md, vonis ringkas: nyala untuk pemula terbukti sebagian (asal mudah dimatikan); pinyin jadi tongkat belum jelas; pengaturan sulit ditemukan terbukti sebagian; opsi 'hanya kata baru' terbukti sebagian; 'default mati' riset lama gugur untuk pemula Mandarin. (validasi bukti internet) lencana terkunci: lihat docs/riset-lencana-terkunci.md, vonis ringkas: petunjuk cara + progres di lencana terkunci terbukti sebagian; daftar terpotong perlu grid/Lihat semua terbukti sebagian; syarat sekali pakai petunjuk (bukan 0/1) belum jelas; progres XP sama dengan buka level terbukti sebagian; lencana naikkan prestasi gugur (41 kutipan, 5 jenis sumber). (validasi bukti internet) munculkan header saat baca: lihat docs/riset-munculkan-header-baca.md, vonis ringkas: ketuk kata saat cari menu membingungkan terbukti sebagian; tombol kecil tetap lebih jelas daripada ketuk area kosong terbukti sebagian; gulir/geser dari atas cocok satu tangan belum jelas (reader Keepo berhalaman); header selalu tampak ringkas belum jelas (condong benar). 43 butir dari 5 jenis sumber; Reddit & ulasan toko tak terbaca. (validasi bukti internet) umpan balik ketuk kata: lihat docs/riset-umpan-balik-ketuk-kata.md, vonis ringkas: tanda jelas setelah ketuk/simpan terbukti; petunjuk di tab Kata kosong terbukti; petunjuk di halaman baca pertama terbukti sebagian (sekali, bisa ditutup); sorotan kata terpilih saja belum jelas (34 kutipan, 3 sumber)."
     },
     {
       "no": 17,
@@ -155,6 +155,14 @@
       "prioritas": "P0",
       "nama": "Kartu kata: 'Bisa juga' & arti lain jangan terpotong titik-titik (#1115)",
       "dokumen": "docs/desain-arti-lain-terpotong.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 115,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kata umum (the, that, this) tanpa garis putus-putus di halaman baca (#1126)",
+      "dokumen": "docs/spesifikasi-garis-bawah-kata-umum-1126.md",
       "status": "siap dikerjakan"
     },
     {
@@ -874,7 +882,7 @@
       "prioritas": "P1",
       "nama": "XP baca ulang buku tamat: tanpa XP halaman, kata baru tetap (#1088)",
       "dokumen": "docs/riset-xp-baca-ulang.md",
-      "status": "spesifikasi siap dikerjakan",
+      "status": "selesai (#1101)",
       "catatan": "(validasi bukti internet) Mockup: docs/mockup-1088.html. Jangan sentuh sheet Tamat (#1068)."
     },
     {
@@ -883,7 +891,7 @@
       "prioritas": "P0",
       "nama": "Akun premium khusus 'chiko' (owner): penanda premium di server, nama dicadangkan, lencana Profil (#1093)",
       "dokumen": "docs/spesifikasi-akun-premium-chiko.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1103, #1105)",
       "catatan": "Mockup: docs/mockup-1093.html. Server api/ boleh diubah untuk tugas ini; deploy & migrasi manual oleh founder."
     },
     {
@@ -894,6 +902,76 @@
       "dokumen": "docs/riset-arti-ini-salah.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
+    },
+    {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: mockup tampil langsung di depan, tanpa tombol 'Tampilkan mockup' (#1125)",
+      "dokumen": "docs/rencana-hq-mockup-langsung-1125.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1125.html. Hanya dev/src/page.html (tile mockup + #mockbtn). Jangan ubah app utama & api/."
+    },
+    {
+      "no": 115,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Layar Boss: arti diberi label \"arti mesin\" + tautan \"Arti ini salah?\" (onetime = mantan) (#1122)",
+      "dokumen": "docs/spesifikasi-arti-boss-keliru-1122.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tombol 'Arti ini salah?' di kartu arti: arti alternatif + terjemah ulang (#1113)",
+      "dokumen": "docs/spesifikasi-lapor-terjemahan-salah.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1113.html. Dari masukan Ilham, Sinta, Nadia."
+    },
+    {
+      "no": 117,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Layar Ngomong ringkas: buang tile Tantangan hari ini, jarak baris kalimat 1.6, mic tanpa scroll (#1117)",
+      "dokumen": "docs/desain-ngomong-ringkas.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1117.html. Ubah viewBicara di ui.js dan .target di style.css; naikkan versi C di sw.js."
+    },
+    {
+      "no": 118,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tanda berhasil ketuk kata (sorot kata, tombol Simpan berubah, toast 'Tersimpan') + petunjuk tab Kata kosong & halaman baca pertama (#1081)",
+      "dokumen": "docs/riset-umpan-balik-ketuk-kata.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1081.html. Petunjuk sekali tampil, tutup dengan 'Paham', jangan bareng spanduk lain."
+    },
+    {
+      "no": 119,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
+      "dokumen": "docs/desain-setelah-tamat.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 120,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Cara baca ejaan Indonesia untuk kata berhuruf Latin (vendors → vèn-dors) di kartu Ngomong, sheet arti & tab Kata, pakai saklar cara baca yang ada (#1119)",
+      "dokumen": "docs/spesifikasi-cara-baca-bahasa-ibu-1119.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1119.html. Label 'perkiraan' + tombol Dengar; jangan ubah skor ucapan; naikkan C di sw.js."
+    },
+    {
+      "no": 121,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu Kata: tombol 'Semua arti' (arti per jenis kata) + frasa & contoh (#1121)",
+      "dokumen": "docs/spesifikasi-semua-arti-frasa.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1121.html. Simpan daftar arti di kartu Kata (data lama tetap aman), tambah dt=ex di gtxFetch, jangan timpa arti pilihan #1106. Naikkan versi C di sw.js."
     }
   ],
   "prioritas": [
