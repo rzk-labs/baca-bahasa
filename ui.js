@@ -703,7 +703,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v389';
+const APP_VER = 'v391';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -921,7 +921,7 @@ function viewRak() {
       <button class="main hero-up" id="up"><span class="em">${ico('upload')}</span>Upload file</button>
       <div class="mut sm hero-fmt">TXT · EPUB · PDF (yang ada teksnya)</div>
       <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
-      <ol class="steps3"><li><b>1</b>Masukin cerita favoritmu</li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ngomongin kalimatnya, dapet skor & XP</li></ol>
+      <ol class="steps3"><li><button type="button" class="st1" id="step1" aria-label="Langkah 1: Masukin cerita favoritmu. Ketuk untuk pilih file"><b>1</b><span>Masukin cerita favoritmu</span><i class="go" aria-hidden="true">→</i></button></li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ngomongin kalimatnya, dapet skor & XP</li></ol>
       <div class="sec-h"><h2>Atau mulai dengan</h2></div>${addCard(true)}`;
   } else {
     $('#view').innerHTML = `
@@ -961,6 +961,7 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
+  ['#cta', '#step1'].forEach(q => { const b = $(q); if (b) b.onclick = () => $('#file').click(); });
   const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
