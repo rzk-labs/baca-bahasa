@@ -570,6 +570,7 @@ async function gtxFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json();
+  if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
   const out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
   const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
   return out;
@@ -786,7 +787,7 @@ async function translate(q, sl, tl, signal) {
   if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
-  let out;
+  let out, fb = false;
   try {
     out = await gtxFetch(q, sl, tl, signal);
   } catch (e) {
@@ -796,10 +797,12 @@ async function translate(q, sl, tl, signal) {
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
-      out = { text: t, dict: [], baca: '' };
+      out = { text: t, dict: [], baca: '' }; fb = true;
     } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
+  /* hasil cadangan (MyMemory) hanya untuk tampilan saat itu: tak disimpan, arti lama tak tertimpa */
+  if (fb) return mix(stale && stale.text ? stale : out);
   trCache.delete(k); trCache.set(k, out); trPersist();
   return mix(out);
 }

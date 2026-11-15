@@ -1,5 +1,11 @@
 [
   {
+    "n": 1137,
+    "judul": "Arti cadangan tak disimpan permanen + tahan balasan Google aneh",
+    "poin": "Arti cadangan tidak lagi disimpan permanen, jadi cara baca Jepang/Mandarin tak terkunci hilang.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1131,
     "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
     "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
@@ -171,12 +177,6 @@
     "n": 1031,
     "judul": "Header Baca: tombol 'Ulang' bertulisan + angka, buang titik ganda",
     "poin": "Tombol kartu di atas halaman Baca sekarang bertulisan \"Ulang\" plus angka kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1029,
-    "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
-    "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
     "tgl": "2026-11-14"
   }
 ]
