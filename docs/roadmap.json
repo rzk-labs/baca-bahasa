@@ -933,7 +933,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup tampil langsung di depan, tanpa tombol 'Tampilkan mockup' (#1125)",
       "dokumen": "docs/rencana-hq-mockup-langsung-1125.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1195)",
       "catatan": "Mockup: docs/mockup-1125.html. Hanya dev/src/page.html (tile mockup + #mockbtn). Jangan ubah app utama & api/."
     },
     {
