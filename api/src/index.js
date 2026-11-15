@@ -44,7 +44,7 @@ const pub = u => ({ username: u.username, nick: u.nick, xp: u.xp, hidden: !!u.hi
 function cardOf(x) {
   let pf = {}; try { pf = JSON.parse(x.profile || '{}') || {}; } catch (e) { }
   const reading = (Array.isArray(pf.reading) ? pf.reading : []).slice(0, 3).map(r => ({ t: x.hide_titles ? 'Sebuah buku' : String(r.t || '').slice(0, 80), lang: String(r.lang || '').slice(0, 5), pct: Math.max(0, Math.min(100, +r.pct || 0)), at: +r.at || 0 }));
-  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0, ai: String(x.username).startsWith('uji_') };
+  return { username: x.username, nick: x.nick, reading, langs: (Array.isArray(pf.langs) ? pf.langs : []).slice(0, 6), kata7: +pf.kata7 || 0, streak: +pf.streak || 0, level: +pf.level || 1, aktif: +pf.at || 0, ai: String(x.username).startsWith('uji_'), premium: !!x.premium };
 }
 async function body(req) { try { return await req.json(); } catch (e) { return {}; } }
 async function newSession(env, uid) { const t = tokenStr(); await env.DB.prepare('INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)').bind(t, uid, Date.now()).run(); return t; }
@@ -76,13 +76,16 @@ export default {
         if (un.startsWith('uji_')) return err(req, 'Username ini khusus akun uji. Pilih yang lain.');
         if (un === 'chiko') return err(req, 'Username ini sudah dicadangkan.');
         if (String(password).length < 6) return err(req, 'Password minimal 6 karakter.');
+        // 'chiko' dicadangkan untuk owner: hanya bisa didaftarkan dengan kunci rahasia BOT_KEY (langkah manual founder)
+        const dipesan = un === 'chiko', izinOwner = dipesan && env.BOT_KEY && req.headers.get('X-Bot-Key') === env.BOT_KEY;
+        if (dipesan && !izinOwner) return err(req, 'Username ini sudah dicadangkan.');
         const nk = String(nick || un).trim().slice(0, 24) || un;
         if (await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind(un).first()) return err(req, 'Username sudah dipakai.', 409);
         const salt = b64(rand(16)), h = await hashPass(String(password), salt), now = Date.now();
         // profil sosial publik secara bawaan (keputusan founder); pengguna bisa ubah ke privat di Akun
-        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, social) VALUES (?,?,?,?,?,?,?,1)').bind(un, nk, h, salt, now, now, isoWeek()).run();
+        const r = await env.DB.prepare('INSERT INTO users (username, nick, pass_hash, salt, created_at, updated_at, week, social, premium) VALUES (?,?,?,?,?,?,?,1,?)').bind(un, nk, h, salt, now, now, isoWeek(), dipesan ? 1 : 0).run();
         const uid = r.meta.last_row_id;
-        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false, publik: true, hideTitles: false, premium: false }, data: null });
+        return json(req, { token: await newSession(env, uid), user: { username: un, nick: nk, xp: 0, hidden: false, publik: true, hideTitles: false, premium: dipesan }, data: null });
       }
       // Akun uji AI (Tari, Bima, Nadia, Raka, Dina): dibuat/masuk hanya dengan kunci rahasia BOT_KEY (wrangler secret).
       // Tanpa password (tidak bisa login biasa), publik, label "Uji AI", tidak ikut leaderboard.

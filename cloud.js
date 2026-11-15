@@ -360,7 +360,7 @@ function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
-      ${db.acct.premium ? '<div class="set-row"><div class="eyebrow">Paket</div><div><span class="hl-txt"><b>Premium (khusus owner)</b></span></div></div>' : ''}
+      ${db.acct.premium ? '<div class="set-row"><div class="eyebrow">Paket</div><div class="sm">Paket: <span class="hl-prem">Premium (khusus owner)</span></div></div>' : ''}
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
       <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">${ico('trophy')}Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">${ico('eyeoff')}Sembunyikan</button></div></div>
       <div class="set-row"><div class="eyebrow">Profil sosial</div><div class="seg" id="aPub"><button data-v="0" class="${db.acct.publik ? '' : 'on'}">Privat</button><button data-v="1" class="${db.acct.publik ? 'on' : ''}">Publik</button></div>
