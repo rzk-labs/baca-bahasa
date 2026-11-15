@@ -1,5 +1,11 @@
 [
   {
+    "n": 1142,
+    "judul": "Home pemula: satu tombol Upload, gambar ke bawah, ruang bawah lega",
+    "poin": "Home pemula kini punya satu tombol Upload saja, langkah 1 jadi teks biasa.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1155,
     "judul": "[peta 125] Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar",
     "poin": "Sederhanakan halaman sekarang menjelaskan tiap paragraf, satu kartu per paragraf.",
@@ -171,12 +177,6 @@
     "n": 1051,
     "judul": "Kartu ulang: tombol Lupa/Ragu/Hafal tampilkan kapan kata muncul lagi",
     "poin": "Setelah kartu dibalik, tiap tombol kini menampilkan kapan kata muncul lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1049,
-    "judul": "Kata 'siap diulang': satu ajakan jelas per layar, tak dobel",
-    "poin": "Ajakan \"Ulang sekarang\" kini cuma satu per layar, tidak dobel lagi.",
     "tgl": "2026-11-14"
   }
 ]
