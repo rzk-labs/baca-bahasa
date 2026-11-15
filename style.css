@@ -1080,3 +1080,6 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
 ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--ink);color:var(--cream);width:30px;height:30px;font:800 15px var(--font-display)}
+
+/* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
+@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
