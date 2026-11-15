@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1064 Header Baca HP</title>
+<style>
+:root{--ink:#351E28;--cream:#FAF7F0;--hl:#E9F056;--ice:#D7EFFF;--muted:#6b5a62;--line:#e5ddd0}
+*{box-sizing:border-box}body{margin:0;padding:16px;background:#eee;font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+.note{max-width:390px;margin:0 auto 12px;background:var(--hl);border-radius:12px;padding:8px 12px;font:700 12px Inter,sans-serif}
+.lbl{max-width:390px;margin:16px auto 6px;font:800 12px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.ph{width:390px;margin:0 auto;background:var(--cream);border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:4px;padding:6px 4px;height:64px;background:#fff;border-bottom:1px solid var(--line)}
+.btn{flex:0 0 auto;min-width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;gap:2px;border-radius:12px}
+.btn i{font-style:normal;font-size:18px;line-height:1}
+.t{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t b{font:700 15px "Bricolage Grotesque",Inter,sans-serif;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chap{font-size:13px;font-weight:700;color:var(--muted);min-height:28px;display:flex;align-items:center}
+.bad .t{overflow:visible}.bad .t b{white-space:normal}
+.bad .chap{position:relative;left:44px;white-space:nowrap}
+.bad .t b{max-width:70px;overflow:hidden}
+.page{padding:20px;font:17px/1.7 Georgia,serif;height:150px}
+.page mark{background:var(--hl);border-radius:6px;padding:0 4px}
+.foot{padding:10px 16px 14px;display:flex;align-items:center;gap:10px;font-size:12px}
+.prog{flex:1;height:8px;border-radius:99px;background:var(--ink);overflow:hidden}.prog i{display:block;height:100%;width:17%;background:var(--hl)}
+</style></head><body>
+<div class="note">Header Baca HP 390px. Sebelum vs Sesudah. Gambaran rencana, belum dibangun.</div>
+
+<div class="lbl">Sebelum (bermasalah)</div>
+<div class="ph bad">
+ <div class="bar">
+  <div class="btn"><i>‹</i></div>
+  <div class="t"><b>Alice's Adventur</b><span class="chap">Bagian 2 dari 12 ▾</span></div>
+  <div class="btn"><i>🔊</i>Dengar</div>
+  <div class="btn"><i>⋯</i>Lainnya</div>
+ </div>
+ <div class="page">Alice was beginning to get very tired of sitting by her sister on the bank…</div>
+ <div class="foot">‹ <div class="prog"><i></i></div> ›</div>
+</div>
+
+<div class="lbl">Sesudah (390px)</div>
+<div class="ph">
+ <div class="bar">
+  <div class="btn"><i>‹</i></div>
+  <div class="t"><b>Alice's Adventures in Wonderland</b><span class="chap">2/12 ▾</span></div>
+  <div class="btn"><i>🔊</i>Dengar</div>
+  <div class="btn"><i>⋯</i>Lainnya</div>
+ </div>
+ <div class="page">Alice was beginning to get very <mark>tired</mark> of sitting by her sister on the bank…</div>
+ <div class="foot">‹ <div class="prog"><i></i></div> ›</div>
+</div>
+
+<div class="lbl">Sesudah (360px, ada kata siap diulang → 'Ulang' dilipat ke Lainnya)</div>
+<div class="ph" style="width:360px">
+ <div class="bar">
+  <div class="btn"><i>‹</i></div>
+  <div class="t"><b>Alice's Adventures in Wonderland</b><span class="chap">2/12 ▾</span></div>
+  <div class="btn"><i>🔊</i>Dengar</div>
+  <div class="btn"><i>⋯</i>Lainnya<span style="display:none"></span></div>
+ </div>
+ <div class="page">Alice was beginning to get very <mark>tired</mark> of sitting by her sister…</div>
+ <div class="foot">‹ <div class="prog"><i></i></div> ›</div>
+</div>
+</body></html>

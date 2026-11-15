@@ -798,6 +798,15 @@
       "nama": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong (#1043)",
       "dokumen": "docs/desain-header-baca-judul-pendek.md",
       "status": "selesai (#1043)"
+    },
+    {
+      "no": 105,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header Baca HP: progres bagian singkat '2/12', tombol ruang tetap, judul ellipsis, lipat tombol jarang ke 'Lainnya' (#1064)",
+      "dokumen": "docs/desain-header-baca-progres-singkat.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1064.html. Uji 320/360/390px."
     }
   ],
   "prioritas": [
