@@ -161,3 +161,4 @@
 - [bentuk-dasar-kata](riset-bentuk-dasar-kata.md)
 - [furigana-ruby-epub](riset-furigana-ruby-epub.md)
 - [jepang-tulisan-tegak](riset-jepang-tulisan-tegak.md)
+- [arti-boss-keliru-1122](spesifikasi-arti-boss-keliru-1122.md)

@@ -886,6 +886,14 @@
       "dokumen": "docs/riset-arti-ini-salah.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
+    },
+    {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Layar Boss: arti diberi label \"arti mesin\" + tautan \"Arti ini salah?\" (onetime = mantan) (#1122)",
+      "dokumen": "docs/spesifikasi-arti-boss-keliru-1122.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
