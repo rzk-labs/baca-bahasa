@@ -814,7 +814,7 @@
       "nama": "Pesan gagal masuk/daftar/sinkron: apa yang terjadi + satu tombol langkah (Coba lagi / Daftar / Lanjut tanpa akun), tampil di form, tanpa istilah teknis (#1034)",
       "dokumen": "docs/riset-pesan-gagal-masuk.md",
       "status": "spesifikasi siap dikerjakan",
-      "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
+      "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html. Cek #1078: sebagian live (#1047) - pesan ramah di form (friendlyAuthError, cloud.js) sudah ada. CELAH: belum ada tombol langkah sendiri (Coba lagi/Daftar/Lanjut tanpa akun) di bawah pesan; pesan sinkron belum diperiksa. Ambil sebagai [peta 106]."
     },
     {
       "no": 107,
@@ -831,7 +831,7 @@
       "prioritas": "P0",
       "nama": "Header Baca HP: progres bagian singkat '2/12', tombol ruang tetap, judul ellipsis, lipat tombol jarang ke 'Lainnya' (#1064)",
       "dokumen": "docs/desain-header-baca-progres-singkat.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1064, #1067)",
       "catatan": "Mockup: docs/mockup-1064.html. Uji 320/360/390px."
     },
     {
