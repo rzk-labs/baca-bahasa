@@ -1,0 +1,68 @@
+name: Keepo Audit UI/UX harian
+run-name: "Audit UI/UX · ${{ github.event_name }}"
+
+# Tiap hari 08.30 WIB (01:30 UTC): ambil screenshot HP (390px) app live,
+# agent menilai tampilan, lalu menulis laporan singkat sebagai issue berlabel audit-ui.
+# Tidak mengubah kode dan tidak memicu agent kerja; founder yang memutuskan.
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Screenshot app live (HP 390px)
+        run: |
+          mkdir -p .kepo-tmp/shots
+          cd .kepo-tmp
+          echo "{\"name\":\"kepo-audit\",\"private\":true,\"type\":\"module\"}" > package.json
+          npm i playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          cat > shot.mjs <<'JS'
+          import { chromium } from 'playwright';
+          const b = await chromium.launch();
+          const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true });
+          const p = await ctx.newPage();
+          await p.goto('https://rzk-labs.github.io/baca-bahasa/?test', { waitUntil: 'networkidle' });
+          await p.evaluate(() => { localStorage.clear(); });
+          await p.reload({ waitUntil: 'networkidle' });
+          await p.waitForTimeout(2500);
+          await p.screenshot({ path: 'shots/1-home.png' });
+          for (const t of ['baca', 'bicara', 'kata', 'sosial']) {
+            await p.evaluate((x) => window.setTab && window.setTab(x), t);
+            await p.waitForTimeout(1000);
+            await p.screenshot({ path: `shots/2-${t}.png` });
+          }
+          await b.close();
+          JS
+          node shot.mjs
+          ls shots
+
+      - name: Agent menilai
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Kamu auditor UI/UX Keepo. Baca CLAUDE.md dan BRAND.md. Lihat semua gambar di .kepo-tmp/shots/ (HP 390px, app live).
+            Nilai: teks terpotong/meluber, kontras, tombol terlalu kecil, layar kosong membingungkan, istilah tidak konsisten, penyimpangan dari BRAND.md v9.
+            Cek dulu `gh issue list --label kepo-dev --state all --limit 60` agar tidak mengulang temuan yang sudah jadi tugas.
+            Buat SATU issue lewat `gh issue create --label audit-ui --title "Audit UI/UX <tanggal>" --body-file .kepo-tmp/laporan.md`.
+            Isi laporan (gaya founder ADHD: inti dulu, poin maks 15 kata, maks 3 poin per bagian, tanpa istilah teknis):
+            - Inti: 1 kalimat kondisi hari ini.
+            - Temuan: maks 5, urut paling parah, tiap satu: layar, masalah, saran perbaikan.
+            - Butuh aset gambar? Tulis layar mana + deskripsi singkat (brief untuk ChatGPT), atau "tidak ada".
+            Jangan mengubah kode. Jangan membuat issue berlabel kepo-dev.
+          claude_args: '--allowedTools "Read,Write,Bash(gh issue:*),Bash(ls:*)"'

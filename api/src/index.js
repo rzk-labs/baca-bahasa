@@ -7,6 +7,7 @@ const BK_CHUNK = 600 * 1024;      // satu potongan teks buku (gzip+base64) per b
 const BK_MAX = 12 * 1024 * 1024;  // maks satu buku di akun (terkompresi)
 const BK_USER_MAX = 80 * 1024 * 1024; // maks semua buku satu akun (terkompresi)
 
+const OWNER_USERS = ['chikoisme']; // akun pemilik: Super Premium, AI tanpa batas
 const AI_JATAH = 5;               // jatah "Jelaskan kalimat (AI)" gratis per hari per akun/perangkat
 
 const enc = new TextEncoder();
@@ -363,10 +364,11 @@ export default {
         await env.DB.prepare('CREATE TABLE IF NOT EXISTS ai_kuota (who TEXT NOT NULL, day TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (who, day))').run();
         const row = await env.DB.prepare('SELECT n FROM ai_kuota WHERE who=? AND day=?').bind(who, day).first();
         const used = row ? row.n : 0;
-        if (b.cek) return json(req, { sisa: Math.max(0, AI_JATAH - used), jatah: AI_JATAH });
+        const vip = !!(u && OWNER_USERS.includes(String(u.username || '').toLowerCase()));
+        if (b.cek) return json(req, vip ? { sisa: 9999, jatah: 9999, premium: true } : { sisa: Math.max(0, AI_JATAH - used), jatah: AI_JATAH });
         const sent = String(b.sent || '').trim().slice(0, 600);
         if (!sent) return err(req, 'Kalimatnya kosong.');
-        if (used >= AI_JATAH) return json(req, { error: 'Jatah AI hari ini habis. Balik lagi besok ya.', habis: true, sisa: 0, jatah: AI_JATAH }, 429);
+        if (!vip && used >= AI_JATAH) return json(req, { error: 'Jatah AI hari ini habis. Balik lagi besok ya.', habis: true, sisa: 0, jatah: AI_JATAH }, 429);
         if (!env.AI) return err(req, 'Fitur AI belum aktif di server.', 503);
         const lang = String(b.lang || '').slice(0, 10), arti = String(b.arti || '').slice(0, 600);
         // jatah dipotong dulu supaya tidak bisa ditembus permintaan paralel
@@ -382,7 +384,7 @@ export default {
           await env.DB.prepare('UPDATE ai_kuota SET n = MAX(0, n - 1) WHERE who=? AND day=?').bind(who, day).run();
           return err(req, 'AI lagi sibuk. Coba lagi sebentar ya.', 502);
         }
-        return json(req, { teks: out, sisa: Math.max(0, AI_JATAH - used - 1), jatah: AI_JATAH });
+        return json(req, { teks: out, sisa: vip ? 9999 : Math.max(0, AI_JATAH - used - 1), jatah: vip ? 9999 : AI_JATAH, premium: vip });
       }
       if (p === '/jelaskan/lapor' && req.method === 'POST') {
         const b = await body(req), u = await authUser(req, env);
