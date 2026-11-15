@@ -824,6 +824,15 @@
       "dokumen": "docs/riset-lencana-terkunci.md",
       "status": "spesifikasi siap dikerjakan",
       "catatan": "(validasi bukti internet) 41 kutipan, 5 jenis sumber. Mockup: docs/mockup-1074.html."
+    },
+    {
+      "no": 108,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header Baca HP: progres bagian singkat '2/12', tombol ruang tetap, judul ellipsis, lipat tombol jarang ke 'Lainnya' (#1064)",
+      "dokumen": "docs/desain-header-baca-progres-singkat.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1064.html. Uji 320/360/390px."
     }
   ],
   "prioritas": [
