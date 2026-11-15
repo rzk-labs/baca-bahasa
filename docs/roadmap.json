@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 115,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kata umum (the, that, this) tanpa garis putus-putus di halaman baca (#1126)",
+      "dokumen": "docs/spesifikasi-garis-bawah-kata-umum-1126.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 104,
       "peran": "developer",
       "prioritas": "P0",
@@ -889,6 +897,32 @@
     },
     {
       "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: mockup tampil langsung di depan, tanpa tombol 'Tampilkan mockup' (#1125)",
+      "dokumen": "docs/rencana-hq-mockup-langsung-1125.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1125.html. Hanya dev/src/page.html (tile mockup + #mockbtn). Jangan ubah app utama & api/."
+    },
+    {
+      "no": 115,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Layar Boss: arti diberi label \"arti mesin\" + tautan \"Arti ini salah?\" (onetime = mantan) (#1122)",
+      "dokumen": "docs/spesifikasi-arti-boss-keliru-1122.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 116,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tombol 'Arti ini salah?' di kartu arti: arti alternatif + terjemah ulang (#1113)",
+      "dokumen": "docs/spesifikasi-lapor-terjemahan-salah.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1113.html. Dari masukan Ilham, Sinta, Nadia."
+    },
+    {
+      "no": 117,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Layar Ngomong ringkas: buang tile Tantangan hari ini, jarak baris kalimat 1.6, mic tanpa scroll (#1117)",
