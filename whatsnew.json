@@ -1,5 +1,11 @@
 [
   {
+    "n": 1145,
+    "judul": "[peta 114] Kartu kata: 'Bisa juga' & arti lain tak terpotong titik-titik",
+    "poin": "Arti lain di kartu kata sekarang tampil utuh, tanpa titik-titik.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1140,
     "judul": "[peta 115] Kata umum (the, that, this) tanpa garis putus-putus",
     "poin": "Kata umum seperti \"the\", \"that\", \"this\" tidak lagi bergaris putus-putus.",
@@ -171,12 +177,6 @@
     "n": 1035,
     "judul": "[peta 102] Kartu 'ingat dulu': Lihat arti → Lupa/Ragu/Hafal di tab Kata",
     "poin": "Kartu kata sekarang minta kamu ingat dulu, baru tekan \"Lihat arti\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1032,
-    "judul": "[peta 101] Ganti sampul buku sendiri dari foto/galeri (menu ⋯)",
-    "poin": "Tiap buku di Home sekarang punya tombol titik tiga untuk ganti sampul.",
     "tgl": "2026-11-14"
   }
 ]
