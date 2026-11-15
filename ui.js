@@ -2520,12 +2520,10 @@ async function viewBicara() {
   progress(sents.length ? (b.si + 1) / sents.length * 100 : 0);
   $('#view').innerHTML = `
     ${SR || TEST ? '' : `<div class="note">${ico('alert')}<div>${micError('nosupport')}</div></div>`}
-    <div class="tile t-cream wide chal" style="margin-bottom:12px">${spot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div></div>
-    <h1 style="margin:6px 2px 12px">Tantangan <span class="hl-txt">ngomong</span></h1>
+    <h1 style="margin:6px 2px 10px">Ngomong <span class="hl-txt">kalimat ini</span></h1>
     <div class="card">
       <div class="eyebrow center">Kalimat ${b.si + 1} dari ${sents.length}</div>
       <div class="target" id="target" lang="${esc(b.lang)}">${tHtml}</div>
-      <div class="hint">Dengerin dulu, terus baca kalimatnya keras-keras!</div>
       <div class="aux"><button id="ex">${ico('vol')} Contoh</button><button id="exs">${ico('slow')} Pelan</button></div>
       <div class="micwrap"><button class="mic" id="rec" aria-label="Mulai ngomong">${ico('mic')}</button><div class="mic-lbl" id="recl" aria-live="polite">Tap & ngomong</div></div>
       <div class="hint" id="rech">Santai aja, nggak ada yang denger kok</div>

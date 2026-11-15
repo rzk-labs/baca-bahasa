@@ -278,7 +278,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .stepper{display:flex;align-items:center;gap:8px}.stepper b{flex:1;text-align:center;font:800 20px var(--font-display)}
 .stepper button{background:var(--color-surface);width:60px}
 /* ---------- ngomong ---------- */
-.target{font:500 25px/2.4 var(--font-reader);text-align:center;margin:var(--space-2) 0}
+.target{font:500 25px/1.6 var(--font-reader);text-align:center;margin:var(--space-2) 0}
 .target .t{display:inline-block;position:relative;padding:0 3px;margin:0 -1px;border-radius:8px;line-height:1.45;transition:background var(--dur-color),color var(--dur-color)}
 .target .t[data-p]::after{content:attr(data-p) "%";position:absolute;left:0;right:0;top:100%;text-align:center;font:700 12px/1.4 var(--font-ui);color:var(--color-text-muted)}
 .t.g{color:var(--ink);background:var(--mint)}
