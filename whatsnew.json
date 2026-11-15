@@ -1,5 +1,11 @@
 [
   {
+    "n": 1082,
+    "judul": "Tab Kata tak boleh error: tahan data aneh + pesan ramah + ajakan simpan",
+    "poin": "Tab Kata tak lagi error walau datanya aneh atau lama.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1068,
     "judul": "Sheet Tamat: kata baru & XP hari ini cocok; buku contoh tak dihitung",
     "poin": "Layar Tamat sekarang jujur soal kata baru, dengan tombol simpan.",
@@ -171,12 +177,6 @@
     "n": 994,
     "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
     "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 989,
-    "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
-    "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
     "tgl": "2026-11-14"
   }
 ]
