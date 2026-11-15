@@ -503,6 +503,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 @media (max-width:359px){.mkgo{padding:8px 10px}}
 .chi b{font-size:12px;font-weight:800;background:var(--ink);color:var(--cream);border-radius:var(--radius-full);padding:3px 10px}
 .rtitle b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle span{font-size:12px;color:var(--color-text-muted)}
+.rtip.ktip{margin:0 0 8px;width:100%;max-width:none}
 .rtip{flex:none;display:flex;gap:8px;align-items:center;width:calc(100% - 16px);max-width:704px;align-self:center;margin:0 8px 4px;background:var(--ink);color:var(--cream);border-radius:var(--radius-lg);padding:4px 4px 4px 12px;font-size:13px;line-height:18px}
 .rtip>span{display:flex;gap:8px;align-items:center;min-width:0;flex:1}
 .rtip svg.i{flex:none;width:18px;height:18px;stroke:var(--lime)}
