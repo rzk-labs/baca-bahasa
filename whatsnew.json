@@ -1,5 +1,11 @@
 [
   {
+    "n": 1068,
+    "judul": "Sheet Tamat: kata baru & XP hari ini cocok; buku contoh tak dihitung",
+    "poin": "Layar Tamat sekarang jujur soal kata baru, dengan tombol simpan.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1036,
     "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
     "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
@@ -171,12 +177,6 @@
     "n": 989,
     "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
     "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 986,
-    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
-    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
     "tgl": "2026-11-14"
   }
 ]
