@@ -1401,15 +1401,19 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat${db.aiJelas === false ? '' : ' (+ Jelaskan AI, gratis 5x/hari)'}. <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
+      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>Tombol Menu</b> di bawah = bilah atas.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
+        <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
   tipN = 0; nudgePg = new Set();
   if (!db.seenTip) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
+  $('#rMenuBtn').onclick = () => toggleMenu(true);
+  $('#reader').addEventListener('click', e => { if (e.target.id === 'reader' || e.target.closest('.rhead')) toggleMenu(true); });
+  $('#reader').addEventListener('pointerdown', () => { if (menuT) menuHold(); }, true);
   if ($('#rDue')) $('#rDue').onclick = () => { stopListenPage(); const bk = book(); if (bk && RD && RD.n && RD.page != null && bk.total) { bk.pct = readPct(bk); save(); } kataSeg = 'kartu'; setTab('kata'); };
   if ($('#rLis')) $('#rLis').onclick = () => { if (LIS.on) pauseListenPage(); else startListenPage(); };
   $$('#nchip button').forEach(x => x.onclick = () => { if (x.dataset.t) { db.theme = x.dataset.t; applyTheme(); } db.themeSet = true; save(); $('#nchip').remove(); layout(); });
@@ -1501,7 +1505,7 @@ async function viewBaca() {
     if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
-    if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else $('#reader').classList.toggle('chrome');
+    if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else toggleMenu(false);
   };
   RD.quiet = false;
   if (intipC.length) intipBind(b, intipC);
@@ -1639,7 +1643,7 @@ function lisAdvance() {
   LIS.si = null; LIS.cur = null; LIS.paused = false;
   if (!db.lisAuto) return stopListenPage();
   if (RD.page < RD.n - 1) {
-    const id = ++LIS.id; stopSpeak(); showPage(RD.page + 1); $('#reader').classList.remove('chrome');
+    const id = ++LIS.id; stopSpeak(); showPage(RD.page + 1); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold();
     /* tunggu halaman benar-benar berpindah dulu, baru ucapan mulai */
     setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400);
     return;
@@ -2038,6 +2042,15 @@ function toggleInline(sEl) {
   bumpSentLook(b.id, 'kalimat');
   run();
 }
+/* Menu (#1184): dimunculkan lewat tombol/margin = bertahan saat ganti halaman, hilang ±4 dtk tanpa sentuhan */
+let menuT = 0;
+function menuHold() { clearTimeout(menuT); menuT = setTimeout(() => { menuT = 0; const r = $('#reader'); if (r && !$('#sheet.open')) r.classList.remove('chrome'); }, 4000); }
+function toggleMenu(keep) {
+  const r = $('#reader'); if (!r) return;
+  clearTimeout(menuT); menuT = 0;
+  const on = r.classList.toggle('chrome');
+  if (on && keep) menuHold();
+}
 function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
 function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
 /* indeks kalimat pertama yang mulai di halaman p (dari RD.ss) */
@@ -2046,7 +2059,7 @@ function turn(d) {
   const b = book(); closeSheet(); const was = LIS.on && !!db.lisAuto; stopListenPage();
   const np = RD.page + d;
   const resume = () => { if (!was) return; const id = ++LIS.id; LIS.on = true; setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400); };
-  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); $('#reader').classList.remove('chrome'); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
+  if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold(); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
   if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { if (b.doneAt) setTab('rak'); else finishBook(b); }
