@@ -1098,5 +1098,14 @@ ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;bor
 /* Layar Boss: label arti mesin + tautan Arti ini salah? */
 .rtm{text-align:center;margin-bottom:var(--space-2)}.rtm .altbox{text-align:left}.rtm .walink{padding-left:12px;padding-right:12px}
 
+/* #1178: status lencana tidak hanya warna: centang (terbuka) / teks 'Belum' (terkunci) */
+.badge{position:relative}
+.badge .bst{position:absolute;top:6px;right:6px;display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:9999px;font:800 11px/1 var(--font-ui);padding:0 7px;background:#351E28;color:#E9F056}
+.badge .bst.on{width:20px;padding:0}
+.badge .bst .i{width:12px;height:12px;stroke-width:3}
+.badge .bst .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.badge.off .bst{background:transparent;color:var(--color-text-muted);border:1.5px dashed currentColor}
+.bgrid .badge{padding-top:28px}
+
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
 @media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
