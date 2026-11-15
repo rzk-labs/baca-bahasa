@@ -1005,6 +1005,15 @@
       "nama": "Sederhanakan halaman: jelaskan per paragraf, bukan hanya bagian awal (#1129)",
       "dokumen": "docs/spesifikasi-jelaskan-per-paragraf-1129.md",
       "status": "selesai (#1167)"
+    },
+    {
+      "no": 126,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Arti lain lengkap: kelompok jenis kata, banyak arti, cara baca (#1170)",
+      "dokumen": "docs/spesifikasi-arti-lain-lengkap-1170.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1170.html. Ubah altArti (ui.js) & altFetch (app.js) agar menyimpan pos; maks 6 arti; naikkan versi C di sw.js."
     }
   ],
   "prioritas": [
