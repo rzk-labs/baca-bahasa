@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 125,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar (#1138)",
+      "dokumen": "docs/spesifikasi-sederhanakan-halaman-1138.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 116,
       "peran": "developer",
       "prioritas": "P0",
