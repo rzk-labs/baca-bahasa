@@ -842,6 +842,15 @@
       "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
+    },
+    {
+      "no": 110,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Akun premium khusus 'chiko' (owner): penanda premium di server, nama dicadangkan, lencana Profil (#1093)",
+      "dokumen": "docs/spesifikasi-akun-premium-chiko.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1093.html. Server api/ boleh diubah untuk tugas ini; deploy & migrasi manual oleh founder."
     }
   ],
   "prioritas": [
