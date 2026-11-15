@@ -850,6 +850,15 @@
       "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
+    },
+    {
+      "no": 110,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "XP baca ulang buku tamat: tanpa XP halaman, kata baru tetap (#1088)",
+      "dokumen": "docs/riset-xp-baca-ulang.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) Mockup: docs/mockup-1088.html. Jangan sentuh sheet Tamat (#1068)."
     }
   ],
   "prioritas": [
