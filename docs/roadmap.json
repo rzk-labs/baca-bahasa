@@ -815,6 +815,15 @@
       "dokumen": "docs/riset-pesan-gagal-masuk.md",
       "status": "spesifikasi siap dikerjakan",
       "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
+    },
+    {
+      "no": 107,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header Baca HP: progres bagian singkat '2/12', tombol ruang tetap, judul ellipsis, lipat tombol jarang ke 'Lainnya' (#1064)",
+      "dokumen": "docs/desain-header-baca-progres-singkat.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1064.html. Uji 320/360/390px."
     }
   ],
   "prioritas": [
