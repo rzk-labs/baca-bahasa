@@ -189,6 +189,13 @@ const BADGES = [
   ['fire7', 'bolt', 'Seminggu Nonstop', 'Streak 7 hari', () => streak() >= 7],
   ['lv5', 'star', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
 ];
+/* progres lencana terkunci: data sama dengan syaratnya; hanya tampilan */
+const badgeProgress = id => {
+  const st = db.stat || {};
+  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, 400] }[id];
+  if (!m) return null;
+  return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
+};
 let badgeQ = Promise.resolve();
 /* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
 const lateQ = []; let lateT = null;
@@ -450,7 +457,7 @@ function setTab(t) {
   if (t === 'rak') setTimeout(cadNote, 2500);
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
-const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${spot(mood)}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
+const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? spot(mood) : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
 
 /* ---------- pengaman data (Safari tab biasa) ---------- */
 const isStandalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
@@ -897,7 +904,8 @@ function viewRak() {
     </div>`;
   if (!cur) {
     $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1>
-      <div class="hello-sub">${spot('cheer')}<div class="mut">Halo, aku KEEPO! Aku bantu kamu jago bahasa asing lewat cerita yang kamu suka.</div></div>
+      <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
+      <p class="hero-sub">Baca buku atau cerita sendiri. Ketuk kata yang bikin kepo, artinya langsung muncul.</p>
       <div class="steps3"><div class="t-pink"><b>1</b>Masukin cerita favoritmu</div><div class="t-lav"><b>2</b>Ketuk kata yang bikin bingung</div><div class="t-lime"><b>3</b>Ngomongin kalimatnya, dapet skor & XP</div></div>
       <div class="sec-h"><h2>Mulai dari sini</h2></div>${addCard()}`;
   } else {
@@ -912,7 +920,7 @@ function viewRak() {
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num">${ico('flame', 'numi')}${streak()} <small>hari</small></div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Target tercapai' : `XP hari ini, target ${GOAL}`}</div></div>
-      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP level ini</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
+      <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
