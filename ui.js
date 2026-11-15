@@ -615,6 +615,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
     <div class="set-grp"><div class="set-gt">Lainnya</div>
+    <div class="set-row"><div class="eyebrow">Bunyikan kata otomatis di kartu ulang</div><div class="seg" id="aspk"><button data-v="1" class="${db.autoSpeak ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.autoSpeak ? '' : 'on'}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Kata langsung dibacakan pas kamu ketuk Lihat arti.</div></div>
     <div class="set-row"><div class="eyebrow">Efek suara</div><div class="seg" id="sfxs"><button data-v="1" class="${db.sfx ? 'on' : ''}">${ico('vol')} Nyala</button><button data-v="0" class="${db.sfx ? '' : 'on'}">${ico('mute')} Mati</button></div></div>
     ${b ? `<div class="set-row"><div class="eyebrow">Bahasa cerita ini</div><select id="blang">${langOpts(b.lang)}</select></div>` : ''}
     ${b && 'speechSynthesis' in window ? voiceRow(b.lang) : ''}
@@ -686,6 +687,7 @@ function openSettings() {
   $$('#pbs button').forEach(x => x.onclick = () => { db.progBar = x.dataset.v === '1'; save(); $$('#pbs button').forEach(y => y.classList.toggle('on', y === x)); const r = $('#reader'); if (r) r.classList.toggle('no-prog', !db.progBar); });
   $$('#tes button').forEach(x => x.onclick = () => { db.tapEdge = x.dataset.v === '1'; save(); $$('#tes button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#wks button').forEach(x => x.onclick = () => { db.wake = x.dataset.v === '1'; save(); $$('#wks button').forEach(y => y.classList.toggle('on', y === x)); wakeSync(); });
+  $$('#aspk button').forEach(x => x.onclick = () => { db.autoSpeak = x.dataset.v === '1'; save(); $$('#aspk button').forEach(y => y.classList.toggle('on', y === x)); });
   $$('#sfxs button').forEach(x => x.onclick = () => { db.sfx = x.dataset.v === '1'; save(); $$('#sfxs button').forEach(y => y.classList.toggle('on', y === x)); sfx('ding'); });
   $('#rst').onclick = () => { db.fs = 19; db.fsSet = false; db.lh = 1.7; db.lhSet = false; db.align = null; db.mg = 'm'; db.spacing = 'n'; db.focus = false; db.font = 'serif'; db.theme = 'paper'; db.showBaca = true; db.rt = 0; db.rtSet = false; db.rtLang = {}; db.markOften = true; db.progBar = true; save(); applyTheme(); closeSheet(); if (document.body.classList.contains('reading')) viewBaca(); toast('Setelan dibalikin ke awal.'); };
   if ($('#blang')) $('#blang').onchange = e => { b.lang = e.target.value; save(); cache.id = null; trCache.clear(); closeSheet(); setTab(db.tab); };
@@ -2893,6 +2895,18 @@ function openSemua(v, onSave) {
   };
   load();
 }
+/* pinyin zh: tiap suku kata bertanda nada dibungkus kelas t1-t5; tanpa tanda nada sama sekali = polos */
+const PY_V = 'aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ';
+const PY_T = ['āēīōūǖ', 'áéíóúǘ', 'ǎěǐǒǔǚ', 'àèìòùǜ'];
+const PY_RE = new RegExp('[^' + PY_V + '\\s\'’\\-.,!?;:]*[' + PY_V + ']+(?:ng?|r)?(?![' + PY_V + '])', 'giu');
+function pinyinTone(syl) { for (const ch of syl) { const i = PY_T.findIndex(k => k.includes(ch)); if (i >= 0) return i + 1; } return 5; }
+function pinyinHtml(p, lang) {
+  if (!/^zh/i.test(lang || '') || !/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/i.test(p)) return esc(p);
+  let out = '', last = 0, m;
+  PY_RE.lastIndex = 0;
+  while ((m = PY_RE.exec(p))) { if (!m[0]) { PY_RE.lastIndex++; continue; } out += esc(p.slice(last, m.index)) + `<span class="pt t${pinyinTone(m[0].toLowerCase())}">${esc(m[0])}</span>`; last = m.index + m[0].length; }
+  return out + esc(p.slice(last));
+}
 function deck(kb) {
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => v && v.w && (isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
@@ -2903,13 +2917,13 @@ function deck(kb) {
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="icon tint fsp" id="fSp" type="button" aria-label="Dengerin">${ico('vol')}</button>
         <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${(v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
-        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
+        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">besok</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
     <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>`;
-  const card = $('#card');
-  const flip = () => { if (flipped) return; flipped = true; $('#back').classList.remove('hide'); $('#tapl').classList.add('hide'); $('#actFront').classList.add('hide'); $('#actBack').classList.remove('hide'); sfx('pop'); };
+  const card = $('#card'); let spoken = false;
+  const flip = () => { if (flipped) return; flipped = true; $('#back').classList.remove('hide'); $('#tapl').classList.add('hide'); $('#actFront').classList.add('hide'); $('#actBack').classList.remove('hide'); sfx('pop'); if (db.autoSpeak && !spoken) { spoken = true; speak(v.w, v.lang, 0.8); } };
   const maybe = () => {
     if (!flipped) return;
     card.style.transform = 'translateY(-30px)'; card.style.opacity = '0';
