@@ -889,7 +889,7 @@
       "prioritas": "P0",
       "nama": "Gagal masuk/daftar/sinkron: SATU tombol langkah di bawah pesan (Coba lagi / Daftar / Lanjut tanpa akun) [peta 106] (#1089)",
       "dokumen": "docs/rencana-tombol-langkah-gagal-masuk.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1160)",
       "catatan": "Mockup: docs/mockup-1089.html. Hanya cloud.js (+ui.js bila perlu), naikkan C di sw.js, uji 320/390px. Jangan ubah api/, sheet Tamat, tab Kata, header Baca. Setelah live, ubah status backlog 106 jadi selesai."
     },
     {
