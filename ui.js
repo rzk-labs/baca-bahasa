@@ -1552,10 +1552,25 @@ function openSimplify(b) {
   const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sederhanakan halaman</span>${closeBtn}</div>
     <div class="mut sm">AI jelasin halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
-    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Gratis 5x sehari, jatah sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
+    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Pakai jatah AI harian, sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`, 'Sederhanakan halaman');
   const btn = $('#sgbtn'), qEl = $('#sgq'), out = $('#sgout');
-  const setQ = n => { if (qEl.isConnected) qEl.textContent = n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
+  const setQ = (n, j) => { if (!qEl.isConnected) return; n = Number(n); j = Number(j);
+    qEl.textContent = n <= 0 ? 'Jatah AI hari ini habis. Balik lagi besok ya.' : j > 100 || n > 100 ? 'Jatah AI hari ini: aman' : j >= n ? `Sisa jatah AI hari ini: ${n} dari ${j}` : `Sisa jatah AI hari ini: ${n}`; };
+  /* pecah jawaban jadi Intinya (maks 2 kalimat) + Kata penting (maks 3); buang Struktur/Nuansa & istilah tata bahasa */
+  const GR = /\b(verba|obyek|objek|subjek|kala|predikat|kata kerja|kata benda)\b/i;
+  const parse = t => {
+    const lines = String(t || '').split(/\n+/).map(x => x.trim()).filter(x => x && !/^\W*(struktur|nuansa)\s*:/i.test(x));
+    const inti = [], kata = []; let mode = 'i';
+    for (let l of lines) {
+      const m = l.match(/^\W*(intinya|arti|kata\s+(?:yang\s+perlu\s+kamu\s+tahu|penting))\s*:?\s*(.*)$/i);
+      if (m) { mode = /^kata/i.test(m[1]) ? 'k' : 'i'; l = m[2].trim(); if (!l) continue; }
+      if (mode === 'k') { l = l.replace(/^[-•*\d.)\s]+/, '').trim(); if (l && !GR.test(l)) kata.push(l); }
+      else inti.push(l);
+    }
+    const sents = inti.join(' ').match(/[^.!?。！？]+[.!?。！？]*/g) || [];
+    return { inti: sents.map(x => x.trim()).filter(x => x && !GR.test(x)).slice(0, 2).join(' '), kata: kata.slice(0, 3) };
+  };
   const msg = t => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
   btn.onclick = async () => {
     if (!txt) return msg('Halaman ini belum ada teksnya.');
@@ -1563,11 +1578,13 @@ function openSimplify(b) {
     if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal.');
     btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
     try {
-      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '' } });
+      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '', mode: 'halaman' } });
       if (!out.isConnected) return;
-      setQ(r.sisa);
-      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div>${cut ? '<div class="aij-lbl">Cuma bagian awal halaman yang dijelaskan.</div>' : ''}<div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
-      out.querySelector('.aij-t').textContent = r.teks;
+      setQ(r.sisa, r.jatah);
+      const P = parse(r.teks);
+      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div><div class="aij-t" lang="${esc(db.my)}"><b>Intinya</b><p></p>${P.kata.length ? '<b>Kata yang perlu kamu tahu</b><ul></ul>' : ''}</div>${cut ? '<div class="aij-lbl">Baru bagian awal halaman. Geser ke bawah lalu coba lagi.</div>' : ''}<button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
+      out.querySelector('.aij-t p').textContent = P.inti || 'Belum ada ringkasan. Coba lagi ya.';
+      const ul = out.querySelector('.aij-t ul'); if (ul) P.kata.forEach(k => { const li = document.createElement('li'); li.textContent = k; ul.appendChild(li); });
       $('#sgrep').onclick = () => { const x = $('#sgrep'); x.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, teks: r.teks } }).then(() => { const y = $('#sgrep'); if (y) y.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const y = $('#sgrep'); if (y) { y.disabled = false; y.textContent = 'Gagal kirim, coba lagi'; } }); };
     } catch (e) { if (out.isConnected) { if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else msg(e.message); } }
     btn.disabled = false;
