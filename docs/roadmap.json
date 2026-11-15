@@ -889,7 +889,7 @@
       "prioritas": "P0",
       "nama": "Gagal masuk/daftar/sinkron: SATU tombol langkah di bawah pesan (Coba lagi / Daftar / Lanjut tanpa akun) [peta 106] (#1089)",
       "dokumen": "docs/rencana-tombol-langkah-gagal-masuk.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1160)",
       "catatan": "Mockup: docs/mockup-1089.html. Hanya cloud.js (+ui.js bila perlu), naikkan C di sw.js, uji 320/390px. Jangan ubah api/, sheet Tamat, tab Kata, header Baca. Setelah live, ubah status backlog 106 jadi selesai."
     },
     {
@@ -977,7 +977,7 @@
       "prioritas": "P0",
       "nama": "Cara baca ejaan Indonesia untuk kata berhuruf Latin (vendors → vèn-dors) di kartu Ngomong, sheet arti & tab Kata, pakai saklar cara baca yang ada (#1119)",
       "dokumen": "docs/spesifikasi-cara-baca-bahasa-ibu-1119.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1161)",
       "catatan": "Mockup: docs/mockup-1119.html. Label 'perkiraan' + tombol Dengar; jangan ubah skor ucapan; naikkan C di sw.js."
     },
     {
@@ -986,7 +986,7 @@
       "prioritas": "P0",
       "nama": "Kartu Kata: tombol 'Semua arti' (arti per jenis kata) + frasa & contoh (#1121)",
       "dokumen": "docs/spesifikasi-semua-arti-frasa.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1158)",
       "catatan": "Mockup: docs/mockup-1121.html. Simpan daftar arti di kartu Kata (data lama tetap aman), tambah dt=ex di gtxFetch, jangan timpa arti pilihan #1106. Naikkan versi C di sw.js."
     },
     {
@@ -1008,6 +1008,15 @@
     },
     {
       "no": 126,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Arti lain lengkap: kelompok jenis kata, banyak arti, cara baca (#1170)",
+      "dokumen": "docs/spesifikasi-arti-lain-lengkap-1170.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1170.html. Ubah altArti (ui.js) & altFetch (app.js) agar menyimpan pos; maks 6 arti; naikkan versi C di sw.js."
+    },
+    {
+      "no": 127,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup mini langsung di kartu Siap dicek di Home (#1173)",

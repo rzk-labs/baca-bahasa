@@ -1,5 +1,35 @@
 [
   {
+    "n": 1182,
+    "judul": "Ikon pojok kanan atas HP: jelas mana Profil, Masukan, Pengaturan",
+    "poin": "Di HP, tombol akun kini ikon orang bertulisan \"Profil\".",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1184,
+    "judul": "Tombol 'Menu' tetap di bawah e-reader: munculkan header tanpa salah ketuk kata",
+    "poin": "Layar baca kini punya tombol \"Menu\" di bawah untuk memunculkan bilah atas.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1161,
+    "judul": "[peta 120] Cara baca ejaan Indonesia untuk kata Latin (vendors → vèn-dors)",
+    "poin": "Kata Inggris, Spanyol, Jerman, Prancis kini punya cara baca ejaan Indonesia.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1160,
+    "judul": "[peta 110] Gagal masuk/daftar/sinkron: satu tombol langkah di bawah pesan",
+    "poin": "Gagal masuk sekarang ada satu tombol: Coba lagi, Daftar, atau Lanjut tanpa akun.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1158,
+    "judul": "[peta 121] Kartu Kata: tombol 'Semua arti' + frasa & contoh, tahan balasan aneh",
+    "poin": "Kartu Kata kini punya tombol \"Semua arti\": arti per jenis kata plus contoh.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1166,
     "judul": "[peta 115] Layar Boss: label 'arti mesin' + tautan 'Arti ini salah?'",
     "poin": "Layar Boss sekarang memberi label \"Arti mesin, bisa meleset\" di bawah arti kata.",
@@ -147,36 +177,6 @@
     "n": 1075,
     "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
     "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1069,
-    "judul": "Rak Profil: judul 2 baris, sampul beda warna, buku tak muncul ganda",
-    "poin": "Rak Profil lebih rapi: judul dua baris, warna sampul beda, buku tak dobel.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1063,
-    "judul": "Header Baca HP: 'Bagian 10 dari 10' jadi '10/10', tak tabrak Dengar",
-    "poin": "Posisi bagian di layar baca HP sekarang ringkas, contoh 10/10.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1061,
-    "judul": "Header app: pil Streak & XP bertulisan + Pengaturan jelas, tanpa tebak ikon",
-    "poin": "Header sekarang bertulisan: \"3 hari\", \"120 XP\", dan tombol \"Atur\".",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1059,
-    "judul": "Satu nama 'Buku baru' di semua layar + tanya pinyin cukup Nyala/Mati",
-    "poin": "Tombol tambah buku kini bernama 'Buku baru' di semua layar.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1057,
-    "judul": "Lencana terkunci tampilkan progres (mis. 4/10 kata) + kartu Level 1 baris",
-    "poin": "Lencana yang masih terkunci sekarang menampilkan progres, mis. 4/10 dan bar tipis.",
     "tgl": "2026-11-15"
   }
 ]
