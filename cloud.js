@@ -353,7 +353,7 @@ function friendlyAuthError(err) {
   if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return 'Lagi tak bisa nyambung. Cek internet, lalu coba lagi. Bacaanmu tetap aman di HP.';
   if (/username atau password salah|tidak dikenal/i.test(t)) return 'Username atau password belum pas. Cek ejaannya dan coba lagi, atau ketuk Daftar untuk bikin akun baru.';
   if (/sudah dipakai/i.test(t)) return 'Username itu sudah dipakai. Coba username lain, atau ketuk Masuk kalau itu akunmu.';
-  if (/username 3|username ini khusus|password minimal/i.test(t)) return t;
+  if (/username 3|username ini khusus|sudah dicadangkan|password minimal/i.test(t)) return t;
   return 'Belum berhasil. Coba lagi sebentar lagi.';
 }
 function openAccount(mode) {
