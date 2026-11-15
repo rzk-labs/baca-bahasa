@@ -72,6 +72,7 @@
 - [aksesibilitas-baca](riset-aksesibilitas-baca.md)
 - [arti-kata-sinyal-lemah](riset-arti-kata-sinyal-lemah.md)
 - [baca-malam-offline](riset-baca-malam-offline.md)
+- [munculkan-header-baca](riset-munculkan-header-baca.md)
 - [bacaan-pemula-legal](riset-bacaan-pemula-legal.md)
 - [cara-baca-default-mandarin](riset-cara-baca-default-mandarin.md)
 - [bahasa-rtl-thai-hindi](riset-bahasa-rtl-thai-hindi.md)
