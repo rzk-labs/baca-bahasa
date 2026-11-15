@@ -1,5 +1,29 @@
 [
   {
+    "n": 1107,
+    "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
+    "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1104,
+    "judul": "Home pemula: tombol 'Upload file' tanpa scroll + langkah 1-2-3 jelas",
+    "poin": "Tombol Upload file sekarang langsung terlihat di Home, tanpa scroll.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1099,
+    "judul": "Tab Sosial tak boleh balik ke Home diam-diam: pesan jelas + coba lagi",
+    "poin": "Tab Sosial tak lagi diam-diam balik ke Home.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1095,
+    "judul": "Profil & Home: header jelas, lencana naik, '4 hari' tak berulang",
+    "poin": "Tombol Pengaturan kini jelas, beda dari bulatan akun, dan muat di layar kecil.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1087,
     "judul": "Update app otomatis sampai ke HP + versi di Pengaturan cocok",
     "poin": "Keepo kini cek versi baru sendiri dan muat ulang otomatis di HP.",
@@ -153,30 +177,6 @@
     "n": 1012,
     "judul": "Jelaskan halaman ini dengan bahasa lebih sederhana (AI, sekali ketuk)",
     "poin": "Menu Lainnya di halaman baca punya tombol baru: Sederhanakan halaman (AI).",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1006,
-    "judul": "Judul buku utuh di Profil & Home: status pindah ke baris bawah",
-    "poin": "Judul buku di Profil sekarang tampil penuh, tidak terpotong lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1004,
-    "judul": "[peta 98] Titik kecil \"siap diulang\" di header Baca + lembar Ulang",
-    "poin": "Saat membaca, ada titik kuning kecil kalau ada kata siap diulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1000,
-    "judul": "[peta 98] Titik pengingat 'siap diulang' di header Baca + satu istilah",
-    "poin": "Di halaman Baca ada titik kecil kuning kalau ada kata siap diulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 998,
-    "judul": "[peta 97] Akhir buku rapi: sheet Tamat, nama 'Buku lain', bar bawah",
-    "poin": "Akhir buku sekarang jelas: satu pesan kata baru, satu istilah \"bagian\".",
     "tgl": "2026-11-14"
   }
 ]
