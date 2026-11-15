@@ -995,7 +995,7 @@
       "prioritas": "P0",
       "nama": "Header e-reader tidak kepotong: judul bab rata tengah, satu baris, berakhir '…' (#1135)",
       "dokumen": "docs/spesifikasi-header-kepotong-1135.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1164)",
       "catatan": "Mockup: docs/mockup-1135.html. Hanya CSS .rhead (hapus flex, pakai block + text-overflow); tambah title; naikkan versi C di sw.js."
     },
     {

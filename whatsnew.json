@@ -1,5 +1,11 @@
 [
   {
+    "n": 1164,
+    "judul": "[peta 122] Header e-reader tidak kepotong: judul bab satu baris, '…'",
+    "poin": "Judul bab di atas halaman baca tidak terpotong lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1167,
     "judul": "[peta 123] Sederhanakan halaman: jelaskan per paragraf, bukan awal saja",
     "poin": "Sheet Sederhanakan halaman kini berisi daftar paragraf, masing-masing punya tombol Jelaskan.",
@@ -171,12 +177,6 @@
     "n": 1055,
     "judul": "Profil rapi: 'Sedang dibaca' tak dobel, chip urutan/tema dilipat",
     "poin": "Profil kini menampilkan \"Sedang dibaca\" sekali saja, lewat rak yang bisa diketuk.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1053,
-    "judul": "Header Baca: tombol speaker 'Dengar' bertulisan, tak jadi ikon tanpa nama",
-    "poin": "Tombol speaker di atas halaman baca sekarang bertulisan \"Dengar\".",
     "tgl": "2026-11-14"
   }
 ]
