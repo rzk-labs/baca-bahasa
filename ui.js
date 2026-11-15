@@ -912,8 +912,9 @@ function viewRak() {
   const other = cur && pctOf(cur) >= 100 ? list.find(b => b.id !== cur.id && pctOf(b) < 100) : null; /* buku belum tamat yang terakhir dibaca */
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
   const addCard = (noUp) => `<div class="card">
-      <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
       ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
+      <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
+      ${noUp && !db.books.length ? `<div class="mut sm lang-hint">Bahasa cerita ikut pilihan di sini</div>` : ''}
       <div class="add-grid${noUp ? ' two' : ''}">${noUp ? '' : `<button class="main" id="up"><span class="em">${ico('upload')}</span>Upload file</button>`}<button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
@@ -922,9 +923,9 @@ function viewRak() {
       <p class="hero-sub">Baca buku atau cerita sendiri. Ketuk kata yang bikin kepo, artinya langsung muncul.</p>
       <button class="main hero-up" id="up"><span class="em">${ico('upload')}</span>Upload file</button>
       <div class="mut sm hero-fmt">TXT · EPUB · PDF (yang ada teksnya)</div>
-      <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">
-      <ol class="steps3"><li><button type="button" class="st1" id="step1" aria-label="Langkah 1: Masukin cerita favoritmu. Ketuk untuk pilih file"><b>1</b><span>Masukin cerita favoritmu</span><i class="go" aria-hidden="true">→</i></button></li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ngomongin kalimatnya, dapet skor & XP</li></ol>
-      <div class="sec-h"><h2>Atau mulai dengan</h2></div>${addCard(true)}`;
+      <ol class="steps3"><li><b>1</b>Masukin cerita favoritmu</li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ngomongin kalimatnya, dapet skor & XP</li></ol>
+      <div class="sec-h"><h2>Atau mulai dengan</h2></div>${addCard(true)}
+      <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">`;
   } else {
     $('#view').innerHTML = `
     <h1 class="big${pctOf(cur) >= 100 ? ' big-sm' : ''}">${hi},<br><span class="circle-txt">kepoin</span> apa?</h1>
@@ -963,7 +964,7 @@ function viewRak() {
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
   $('#up').onclick = () => $('#file').click();
-  ['#cta', '#step1'].forEach(q => { const b = $(q); if (b) b.onclick = () => $('#file').click(); });
+  const ct = $('#cta'); if (ct) ct.onclick = () => $('#file').click();
   const startSample = async l => {
     const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
@@ -1397,7 +1398,7 @@ async function viewBaca() {
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${['mati', 'hanya kata baru', 'nyala'][rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
-      <div class="rhead">${esc(b.title)}</div>
+      <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
       ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat${db.aiJelas === false ? '' : ' (+ Jelaskan AI, gratis 5x/hari)'}. <b>${db.tapEdge === false ? 'Ketuk layar' : 'Ketuk tengah'}</b> = menu.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
@@ -1539,40 +1540,80 @@ function pauseListenPage(quiet) {
   if (quiet) lisClear();
   lisUi();
 }
-/* Sederhanakan halaman (AI): hanya saat diminta; jalur & jatah harian sama dengan Jelaskan kalimat */
+/* Sederhanakan halaman (AI): hanya saat diminta; satu kartu per paragraf halaman, jatah harian sama dengan Jelaskan kalimat */
 function openSimplify(b) {
-  const q = (RD.ss || []).filter(x => x.pg === RD.page).map(x => x.el.textContent.trim()).filter(Boolean);
-  const full = q.join(' ').replace(/\s+/g, ' ').trim();
   const LIM = 600;
-  let txt = full, cut = false;
-  if (full.length > LIM) {
-    cut = true; txt = full.slice(0, LIM);
-    const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
-    if (k > 40) txt = txt.slice(0, k + 1);
-  }
+  /* kelompokkan kalimat halaman ini per paragraf (<p>/<h2>); tanpa penanda: ±3 kalimat */
+  const groups = [], seen = new Map(); let loose = null;
+  (RD.ss || []).filter(x => x.pg === RD.page).forEach(x => {
+    const t = x.el.textContent.replace(/\u0001/g, '').replace(/\s+/g, ' ').trim(); if (!t) return;
+    const p = x.el.closest && x.el.closest('p,h2');
+    if (p) { loose = null; let g = seen.get(p); if (!g) { g = []; seen.set(p, g); groups.push(g); } g.push(t); }
+    else { if (!loose || loose.length >= 3) { loose = []; groups.push(loose); } loose.push(t); }
+  });
+  const paras = groups.map(g => g.join(' ').trim()).filter(t => t.length >= 15).map(full => {
+    let txt = full, cut = false;
+    if (full.length > LIM) {
+      cut = true; txt = full.slice(0, LIM);
+      const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
+      if (k > 40) txt = txt.slice(0, k + 1);
+    }
+    return { full, txt, cut };
+  });
   const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
+  const prev = t => { const s = t.length > 70 ? t.slice(0, 70).replace(/\s+\S*$/, '') + '…' : t; return esc(s); };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sederhanakan halaman</span>${closeBtn}</div>
-    <div class="mut sm">AI jelasin halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
-    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Gratis 5x sehari, jatah sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
+    <div class="mut sm">AI jelasin tiap paragraf halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
+    <div class="aij-q mut sm" id="sgq">Satu paragraf = satu jatah AI harian, sama dengan Jelaskan kalimat</div>
+    <div class="sg-list" id="sglist" style="max-height:48vh;overflow-y:auto;margin-top:8px">${paras.length ? paras.map((p, i) => `<div class="aij" data-i="${i}" style="margin-bottom:10px"><div class="sm"><b>${i + 1}.</b> <span lang="${esc(b.lang)}">${prev(p.full)}</span></div><button class="ghost sgbtn" type="button">Jelaskan paragraf ini</button><div class="sgout" aria-live="polite"></div></div>`).join('') : '<div class="ttsnote">Halaman ini belum ada teksnya.</div>'}</div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`, 'Sederhanakan halaman');
-  const btn = $('#sgbtn'), qEl = $('#sgq'), out = $('#sgout');
-  const setQ = n => { if (qEl.isConnected) qEl.textContent = n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
-  const msg = t => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
-  btn.onclick = async () => {
-    if (!txt) return msg('Halaman ini belum ada teksnya.');
-    if (typeof api !== 'function') return msg('Fitur ini belum siap. Lanjut baca aja dulu.');
-    if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal.');
-    btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
-    try {
-      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '' } });
-      if (!out.isConnected) return;
-      setQ(r.sisa);
-      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div>${cut ? '<div class="aij-lbl">Cuma bagian awal halaman yang dijelaskan.</div>' : ''}<div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
-      out.querySelector('.aij-t').textContent = r.teks;
-      $('#sgrep').onclick = () => { const x = $('#sgrep'); x.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, teks: r.teks } }).then(() => { const y = $('#sgrep'); if (y) y.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const y = $('#sgrep'); if (y) { y.disabled = false; y.textContent = 'Gagal kirim, coba lagi'; } }); };
-    } catch (e) { if (out.isConnected) { if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else msg(e.message); } }
-    btn.disabled = false;
+  const qEl = $('#sgq'), list = $('#sglist');
+  let habis = false;
+  const setQ = (n, j) => { if (!qEl.isConnected) return; n = Number(n); j = Number(j);
+    if (n <= 0) { habis = true; list.querySelectorAll('.sgbtn').forEach(x => { if (!x.dataset.done) x.disabled = true; }); }
+    qEl.textContent = n <= 0 ? 'Jatah AI hari ini habis. Balik lagi besok ya.' : j > 100 || n > 100 ? 'Jatah AI hari ini: aman' : j >= n ? `Sisa jatah AI hari ini: ${n} dari ${j}` : `Sisa jatah AI hari ini: ${n}`; };
+  /* pecah jawaban jadi Intinya (maks 2 kalimat) + Kata penting (maks 3); buang Struktur/Nuansa & istilah tata bahasa */
+  const GR = /\b(verba|obyek|objek|subjek|kala|predikat|kata kerja|kata benda)\b/i;
+  const parse = t => {
+    const lines = String(t || '').split(/\n+/).map(x => x.trim()).filter(x => x && !/^\W*(struktur|nuansa)\s*:/i.test(x));
+    const inti = [], kata = []; let mode = 'i';
+    for (let l of lines) {
+      const m = l.match(/^\W*(intinya|arti|kata\s+(?:yang\s+perlu\s+kamu\s+tahu|penting))\s*:?\s*(.*)$/i);
+      if (m) { mode = /^kata/i.test(m[1]) ? 'k' : 'i'; l = m[2].trim(); if (!l) continue; }
+      if (mode === 'k') { l = l.replace(/^[-•*\d.)\s]+/, '').trim(); if (l && !GR.test(l)) kata.push(l); }
+      else inti.push(l);
+    }
+    const sents = inti.join(' ').match(/[^.!?。！？]+[.!?。！？]*/g) || [];
+    return { inti: sents.map(x => x.trim()).filter(x => x && !GR.test(x)).slice(0, 2).join(' '), kata: kata.slice(0, 3) };
   };
+  const msg = (out, t) => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
+  const show = (out, p, r) => {
+    const P = parse(r.teks);
+    out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div><div class="aij-t" lang="${esc(db.my)}"><b>Intinya</b><p></p>${P.kata.length ? '<b>Kata yang perlu kamu tahu</b><ul></ul>' : ''}</div>${p.cut ? '<div class="aij-lbl">Paragraf panjang, baru bagian awalnya yang dijelaskan.</div>' : ''}<button class="ghost aij-rep" type="button">Lapor kalau salah</button></div>`;
+    out.querySelector('.aij-t p').textContent = P.inti || 'Belum ada ringkasan. Coba lagi ya.';
+    const ul = out.querySelector('.aij-t ul'); if (ul) P.kata.forEach(k => { const li = document.createElement('li'); li.textContent = k; ul.appendChild(li); });
+    const rep = out.querySelector('.aij-rep');
+    rep.onclick = () => { rep.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: p.txt, lang: b.lang, teks: r.teks } }).then(() => { rep.textContent = 'Makasih, laporannya masuk'; }).catch(() => { rep.disabled = false; rep.textContent = 'Gagal kirim, coba lagi'; }); };
+  };
+  paras.forEach((p, i) => {
+    const card = list.querySelector(`[data-i="${i}"]`); if (!card) return;
+    const btn = card.querySelector('.sgbtn'), out = card.querySelector('.sgout');
+    btn.onclick = async () => {
+      if (p.res) { btn.hidden = true; return show(out, p, p.res); } /* sudah pernah dijelaskan: tanpa potong jatah */
+      if (typeof api !== 'function') return msg(out, 'Fitur ini belum siap. Lanjut baca aja dulu.');
+      if (!navigator.onLine) return msg(out, 'Lagi offline. Penjelasan AI butuh sinyal.');
+      btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
+      try {
+        const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: p.txt, lang: b.lang, arti: '', mode: 'halaman' } });
+        if (!out.isConnected) return;
+        p.res = r; btn.dataset.done = '1'; btn.hidden = true;
+        setQ(r.sisa, r.jatah); show(out, p, r);
+      } catch (e) {
+        if (!out.isConnected) return;
+        if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else { msg(out, e.message); btn.disabled = habis; }
+      }
+    };
+  });
 }
 function startListenPage(restart) {
   const b = book(); if (!b || !RD.ss) return;
@@ -1757,7 +1798,7 @@ function showPage(p, anim = true) {
   spdNote(b, RD.page);
   b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos; b.frac = (RD.page + 1) / RD.n; b.fracPos = b.pos;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
-  const rh = $('.rhead'); if (rh) rh.textContent = hd ? hd.textContent.trim() : b.title; /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
+  const rh = $('.rhead'); if (rh) { rh.textContent = hd ? hd.textContent.trim() : b.title; rh.title = rh.textContent; } /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
   nudgeTap(b); inlineHint();
   /* bar = seluruh buku: bobot bab dari panjang teks bila sudah dihitung, kalau belum bobot sama */
@@ -2585,6 +2626,37 @@ function recordWeak(w, lang, p) {
   const o = db.weak[k] || { w, lang, n: 0, last: 0, best: 0 };
   o.n++; o.last = p; o.best = Math.max(o.best, p); o.at = Date.now(); db.weak[k] = o; save();
 }
+/* arti di layar Boss: label 'arti mesin' + 'Arti ini salah?' (pilihan disimpan ke kartu Kata, sama seperti sheet kata) */
+function bossArti(w, lang) {
+  const tr = $('#rtr'), tm = $('#rtm'), al = $('#ralt'); if (!tr || !tm || !al) return;
+  const alive = () => $('#rtr') === tr, sv = () => db.vocab.find(v => v.t && sameVocab(v, lang, w));
+  let r = null, pickT = '';
+  const cur = () => (sv() && sv().t) || pickT || (r && r.text) || '';
+  const lbl = () => { const m = tm.querySelector('.itr-m'); if (m) m.textContent = (sv() && sv().pick) || pickT ? 'Arti pilihanmu' : 'Arti mesin, bisa meleset'; };
+  const link = () => { delete al.dataset.open; al.innerHTML = '<button class="ghost walink" id="ralink" type="button">Arti ini salah?</button>'; $('#ralink').onclick = open; };
+  const pick = t => {
+    const v = sv(); if (v) { v.t = t; v.pick = 1; delete v.noTr; delete v.nyusul; save(); } else pickT = t;
+    vib(8); tr.textContent = t; lbl(); delete al.dataset.open;
+    al.innerHTML = '<div class="mut sm" role="status">Oke, arti ini yang dipakai.</div>'; setTimeout(() => { if (alive() && !al.dataset.open) link(); }, 2200);
+  };
+  const open = async () => {
+    al.dataset.open = '1';
+    const fail = msg => { if (!alive()) return; al.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="raretry" type="button">Coba lagi</button><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`; $('#raretry').onclick = open; $('#raclose').onclick = link; };
+    al.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
+    let list = [];
+    try {
+      const c = cur(); list = altArti((r && r.dict) || [], c);
+      if (list.length < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); list = altArti([{ terms: [...list, ...more] }], c); }
+    } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    if (!alive()) return; list = list.slice(0, 3);
+    if (!list.length) { al.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain untuk kata ini.</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>'; $('#raclose').onclick = link; return; }
+    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
+    $$('#ralt .altopt').forEach(e => e.onclick = () => pick(list[+e.dataset.i]));
+    $('#raclose').onclick = link;
+  };
+  const s0 = sv(); if (s0) { tr.textContent = s0.t; tm.hidden = false; lbl(); link(); }
+  translate(w, lang, db.my).then(x => { if (!alive()) return; r = x; if (!sv() && !pickT) tr.textContent = x.text; tm.hidden = false; lbl(); if (!al.firstChild) link(); }).catch(() => { });
+}
 function remedial(list, lang, box, done) {
   let i = 0, tries = 0; const passed = [];
   const step = () => {
@@ -2596,12 +2668,13 @@ function remedial(list, lang, box, done) {
       <div class="eyebrow center lbl" style="margin-top:8px">Kata ${i + 1} dari ${list.length} · Target ${PASS}%</div>
       <div class="rem-word" lang="${esc(lang)}">${esc(x.w)}</div>
       <div class="tr sent center" id="rtr" style="margin:4px 0"></div>
+      <div class="rtm" id="rtm" hidden><span class="itr-m">Arti mesin, bisa meleset</span><div id="ralt"></div></div>
       <div class="aux"><button id="rl">${ico('vol')} Contoh</button><button id="rs">${ico('slow')} Pelan</button></div>
       <div class="rem-score" id="rsc"><span class="eyebrow">Skor sebelumnya</span><b>${x.p}%</b><span class="sm">${x.p < 60 ? 'Pelan-pelan aja.' : 'Dikit lagi!'}</span></div>
       <div class="micwrap"><button class="mic" id="rr" aria-label="Ucapin kata ini">${ico('mic')}</button><div class="mic-lbl" id="rrl" aria-live="polite">Ucapin kata ini</div></div>
       <div class="hint" id="rh">Nggak usah buru-buru. Dengerin contohnya sesering yang kamu mau.</div>
       <div class="row"><button class="ghost" id="rk">Skip dulu ${ico('right')}</button></div></div>`;
-    translate(x.w, lang, db.my).then(r => { if ($('#rtr')) $('#rtr').textContent = r.text; }).catch(() => { });
+    bossArti(x.w, lang);
     $('#rl').onclick = () => speak(x.w, lang, 0.8);
     $('#rs').onclick = () => speak(x.w, lang, 0.45);
     $('#rk').onclick = () => { i++; tries = 0; step(); };
