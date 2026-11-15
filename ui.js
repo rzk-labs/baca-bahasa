@@ -1539,40 +1539,80 @@ function pauseListenPage(quiet) {
   if (quiet) lisClear();
   lisUi();
 }
-/* Sederhanakan halaman (AI): hanya saat diminta; jalur & jatah harian sama dengan Jelaskan kalimat */
+/* Sederhanakan halaman (AI): hanya saat diminta; satu kartu per paragraf halaman, jatah harian sama dengan Jelaskan kalimat */
 function openSimplify(b) {
-  const q = (RD.ss || []).filter(x => x.pg === RD.page).map(x => x.el.textContent.trim()).filter(Boolean);
-  const full = q.join(' ').replace(/\s+/g, ' ').trim();
   const LIM = 600;
-  let txt = full, cut = false;
-  if (full.length > LIM) {
-    cut = true; txt = full.slice(0, LIM);
-    const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
-    if (k > 40) txt = txt.slice(0, k + 1);
-  }
+  /* kelompokkan kalimat halaman ini per paragraf (<p>/<h2>); tanpa penanda: ±3 kalimat */
+  const groups = [], seen = new Map(); let loose = null;
+  (RD.ss || []).filter(x => x.pg === RD.page).forEach(x => {
+    const t = x.el.textContent.replace(/\u0001/g, '').replace(/\s+/g, ' ').trim(); if (!t) return;
+    const p = x.el.closest && x.el.closest('p,h2');
+    if (p) { loose = null; let g = seen.get(p); if (!g) { g = []; seen.set(p, g); groups.push(g); } g.push(t); }
+    else { if (!loose || loose.length >= 3) { loose = []; groups.push(loose); } loose.push(t); }
+  });
+  const paras = groups.map(g => g.join(' ').trim()).filter(t => t.length >= 15).map(full => {
+    let txt = full, cut = false;
+    if (full.length > LIM) {
+      cut = true; txt = full.slice(0, LIM);
+      const k = Math.max(txt.lastIndexOf('. '), txt.lastIndexOf('! '), txt.lastIndexOf('? '), txt.lastIndexOf('。'), txt.lastIndexOf('！'), txt.lastIndexOf('？'));
+      if (k > 40) txt = txt.slice(0, k + 1);
+    }
+    return { full, txt, cut };
+  });
   const devId = () => { let d = localStorage.getItem('kepo.dev'); if (!d) { d = Array.from(crypto.getRandomValues(new Uint8Array(12)), x => x.toString(16).padStart(2, '0')).join(''); localStorage.setItem('kepo.dev', d); } return d; };
+  const prev = t => { const s = t.length > 70 ? t.slice(0, 70).replace(/\s+\S*$/, '') + '…' : t; return esc(s); };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Sederhanakan halaman</span>${closeBtn}</div>
-    <div class="mut sm">AI jelasin halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
-    <div class="aij" id="sgj"><button class="ghost" id="sgbtn" type="button">Sederhanakan halaman ini</button><div class="aij-q mut sm" id="sgq">Gratis 5x sehari, jatah sama dengan Jelaskan kalimat</div><div id="sgout" aria-live="polite"></div></div>
+    <div class="mut sm">AI jelasin tiap paragraf halaman ini dengan bahasa lebih sederhana. Teks bacamu nggak berubah.</div>
+    <div class="aij-q mut sm" id="sgq">Satu paragraf = satu jatah AI harian, sama dengan Jelaskan kalimat</div>
+    <div class="sg-list" id="sglist" style="max-height:48vh;overflow-y:auto;margin-top:8px">${paras.length ? paras.map((p, i) => `<div class="aij" data-i="${i}" style="margin-bottom:10px"><div class="sm"><b>${i + 1}.</b> <span lang="${esc(b.lang)}">${prev(p.full)}</span></div><button class="ghost sgbtn" type="button">Jelaskan paragraf ini</button><div class="sgout" aria-live="polite"></div></div>`).join('') : '<div class="ttsnote">Halaman ini belum ada teksnya.</div>'}</div>
     <div class="row" style="margin-top:10px"><button class="sec" data-close>Lanjut baca</button></div>`, 'Sederhanakan halaman');
-  const btn = $('#sgbtn'), qEl = $('#sgq'), out = $('#sgout');
-  const setQ = n => { if (qEl.isConnected) qEl.textContent = n > 0 ? `Sisa jatah AI hari ini: ${n} dari 5` : 'Jatah AI hari ini habis. Balik lagi besok ya.'; };
-  const msg = t => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
-  btn.onclick = async () => {
-    if (!txt) return msg('Halaman ini belum ada teksnya.');
-    if (typeof api !== 'function') return msg('Fitur ini belum siap. Lanjut baca aja dulu.');
-    if (!navigator.onLine) return msg('Lagi offline. Penjelasan AI butuh sinyal.');
-    btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
-    try {
-      const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, arti: '' } });
-      if (!out.isConnected) return;
-      setQ(r.sisa);
-      out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div>${cut ? '<div class="aij-lbl">Cuma bagian awal halaman yang dijelaskan.</div>' : ''}<div class="aij-t" lang="${esc(db.my)}"></div><button class="ghost aij-rep" id="sgrep" type="button">Lapor kalau salah</button></div>`;
-      out.querySelector('.aij-t').textContent = r.teks;
-      $('#sgrep').onclick = () => { const x = $('#sgrep'); x.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: txt, lang: b.lang, teks: r.teks } }).then(() => { const y = $('#sgrep'); if (y) y.textContent = 'Makasih, laporannya masuk'; }).catch(() => { const y = $('#sgrep'); if (y) { y.disabled = false; y.textContent = 'Gagal kirim, coba lagi'; } }); };
-    } catch (e) { if (out.isConnected) { if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else msg(e.message); } }
-    btn.disabled = false;
+  const qEl = $('#sgq'), list = $('#sglist');
+  let habis = false;
+  const setQ = (n, j) => { if (!qEl.isConnected) return; n = Number(n); j = Number(j);
+    if (n <= 0) { habis = true; list.querySelectorAll('.sgbtn').forEach(x => { if (!x.dataset.done) x.disabled = true; }); }
+    qEl.textContent = n <= 0 ? 'Jatah AI hari ini habis. Balik lagi besok ya.' : j > 100 || n > 100 ? 'Jatah AI hari ini: aman' : j >= n ? `Sisa jatah AI hari ini: ${n} dari ${j}` : `Sisa jatah AI hari ini: ${n}`; };
+  /* pecah jawaban jadi Intinya (maks 2 kalimat) + Kata penting (maks 3); buang Struktur/Nuansa & istilah tata bahasa */
+  const GR = /\b(verba|obyek|objek|subjek|kala|predikat|kata kerja|kata benda)\b/i;
+  const parse = t => {
+    const lines = String(t || '').split(/\n+/).map(x => x.trim()).filter(x => x && !/^\W*(struktur|nuansa)\s*:/i.test(x));
+    const inti = [], kata = []; let mode = 'i';
+    for (let l of lines) {
+      const m = l.match(/^\W*(intinya|arti|kata\s+(?:yang\s+perlu\s+kamu\s+tahu|penting))\s*:?\s*(.*)$/i);
+      if (m) { mode = /^kata/i.test(m[1]) ? 'k' : 'i'; l = m[2].trim(); if (!l) continue; }
+      if (mode === 'k') { l = l.replace(/^[-•*\d.)\s]+/, '').trim(); if (l && !GR.test(l)) kata.push(l); }
+      else inti.push(l);
+    }
+    const sents = inti.join(' ').match(/[^.!?。！？]+[.!?。！？]*/g) || [];
+    return { inti: sents.map(x => x.trim()).filter(x => x && !GR.test(x)).slice(0, 2).join(' '), kata: kata.slice(0, 3) };
   };
+  const msg = (out, t) => { if (out.isConnected) out.innerHTML = `<div class="ttsnote">${esc(t)}</div>`; };
+  const show = (out, p, r) => {
+    const P = parse(r.teks);
+    out.innerHTML = `<div class="aij-box"><div class="aij-lbl">Penjelasan AI, bisa meleset</div><div class="aij-t" lang="${esc(db.my)}"><b>Intinya</b><p></p>${P.kata.length ? '<b>Kata yang perlu kamu tahu</b><ul></ul>' : ''}</div>${p.cut ? '<div class="aij-lbl">Paragraf panjang, baru bagian awalnya yang dijelaskan.</div>' : ''}<button class="ghost aij-rep" type="button">Lapor kalau salah</button></div>`;
+    out.querySelector('.aij-t p').textContent = P.inti || 'Belum ada ringkasan. Coba lagi ya.';
+    const ul = out.querySelector('.aij-t ul'); if (ul) P.kata.forEach(k => { const li = document.createElement('li'); li.textContent = k; ul.appendChild(li); });
+    const rep = out.querySelector('.aij-rep');
+    rep.onclick = () => { rep.disabled = true; api('/jelaskan/lapor', { method: 'POST', body: { dev: devId(), sent: p.txt, lang: b.lang, teks: r.teks } }).then(() => { rep.textContent = 'Makasih, laporannya masuk'; }).catch(() => { rep.disabled = false; rep.textContent = 'Gagal kirim, coba lagi'; }); };
+  };
+  paras.forEach((p, i) => {
+    const card = list.querySelector(`[data-i="${i}"]`); if (!card) return;
+    const btn = card.querySelector('.sgbtn'), out = card.querySelector('.sgout');
+    btn.onclick = async () => {
+      if (p.res) { btn.hidden = true; return show(out, p, p.res); } /* sudah pernah dijelaskan: tanpa potong jatah */
+      if (typeof api !== 'function') return msg(out, 'Fitur ini belum siap. Lanjut baca aja dulu.');
+      if (!navigator.onLine) return msg(out, 'Lagi offline. Penjelasan AI butuh sinyal.');
+      btn.disabled = true; out.innerHTML = '<span class="loading">AI lagi mikir…</span>';
+      try {
+        const r = await api('/jelaskan', { method: 'POST', body: { dev: devId(), sent: p.txt, lang: b.lang, arti: '', mode: 'halaman' } });
+        if (!out.isConnected) return;
+        p.res = r; btn.dataset.done = '1'; btn.hidden = true;
+        setQ(r.sisa, r.jatah); show(out, p, r);
+      } catch (e) {
+        if (!out.isConnected) return;
+        if (/habis/i.test(e.message)) { setQ(0); out.innerHTML = ''; } else { msg(out, e.message); btn.disabled = habis; }
+      }
+    };
+  });
 }
 function startListenPage(restart) {
   const b = book(); if (!b || !RD.ss) return;

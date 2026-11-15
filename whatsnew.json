@@ -1,5 +1,11 @@
 [
   {
+    "n": 1155,
+    "judul": "[peta 125] Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar",
+    "poin": "Sederhanakan halaman sekarang menjelaskan tiap paragraf, satu kartu per paragraf.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1151,
     "judul": "[peta 117] Layar Ngomong ringkas: buang tile Tantangan, mic tanpa scroll",
     "poin": "Layar Ngomong sekarang lebih ringkas: kotak \"Tantangan hari ini\" dibuang.",
@@ -171,12 +177,6 @@
     "n": 1049,
     "judul": "Kata 'siap diulang': satu ajakan jelas per layar, tak dobel",
     "poin": "Ajakan \"Ulang sekarang\" kini cuma satu per layar, tidak dobel lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1047,
-    "judul": "Pesan gagal masuk akun: jelas + langkah lanjut (bukan buntu)",
-    "poin": "Gagal masuk sekarang muncul pesan jelas di layar, lengkap dengan langkah berikutnya.",
     "tgl": "2026-11-14"
   }
 ]
