@@ -166,7 +166,7 @@ async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
   const r = opt.pre || await api('/me');
   if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
-  if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; }
+  if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; db.acct.premium = !!r.user.premium; }
   const changed = mergeSrv(r.data); save();
   const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
   if (opt.force || sig !== lastSync) {
@@ -246,7 +246,7 @@ async function runSync(opt = {}) {
 }
 const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
-  db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles };
+  db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
@@ -353,13 +353,14 @@ function friendlyAuthError(err) {
   if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return 'Lagi tak bisa nyambung. Cek internet, lalu coba lagi. Bacaanmu tetap aman di HP.';
   if (/username atau password salah|tidak dikenal/i.test(t)) return 'Username atau password belum pas. Cek ejaannya dan coba lagi, atau ketuk Daftar untuk bikin akun baru.';
   if (/sudah dipakai/i.test(t)) return 'Username itu sudah dipakai. Coba username lain, atau ketuk Masuk kalau itu akunmu.';
-  if (/username 3|username ini khusus|password minimal/i.test(t)) return t;
+  if (/username 3|username ini khusus|sudah dicadangkan|password minimal/i.test(t)) return t;
   return 'Belum berhasil. Coba lagi sebentar lagi.';
 }
 function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
       <div class="acct-card"><div class="avatar big">${esc(initial(db.acct.nick))}</div><div><b>${esc(db.acct.nick)}</b><div class="mut sm">@${esc(db.acct.username)}</div></div></div>
+      ${db.acct.premium ? '<div class="set-row"><div class="eyebrow">Paket</div><div><span class="hl-txt"><b>Premium (khusus owner)</b></span></div></div>' : ''}
       <div class="set-row"><div class="eyebrow">Nama di leaderboard</div><input id="aNick" maxlength="24" value="${esc(db.acct.nick)}"></div>
       <div class="set-row"><div class="eyebrow">Leaderboard</div><div class="seg" id="aHide"><button data-v="0" class="${db.acct.hidden ? '' : 'on'}">${ico('trophy')}Tampilkan aku</button><button data-v="1" class="${db.acct.hidden ? 'on' : ''}">${ico('eyeoff')}Sembunyikan</button></div></div>
       <div class="set-row"><div class="eyebrow">Profil sosial</div><div class="seg" id="aPub"><button data-v="0" class="${db.acct.publik ? '' : 'on'}">Privat</button><button data-v="1" class="${db.acct.publik ? 'on' : ''}">Publik</button></div>
@@ -546,7 +547,7 @@ async function openProfile(username) {
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b><div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP total</div>` : ''}</div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} XP total</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
