@@ -1,5 +1,29 @@
 [
   {
+    "n": 1087,
+    "judul": "Update app otomatis sampai ke HP + versi di Pengaturan cocok",
+    "poin": "Keepo kini cek versi baru sendiri dan muat ulang otomatis di HP.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1082,
+    "judul": "Tab Kata tak boleh error: tahan data aneh + pesan ramah + ajakan simpan",
+    "poin": "Tab Kata tak lagi error walau datanya aneh atau lama.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1068,
+    "judul": "Sheet Tamat: kata baru & XP hari ini cocok; buku contoh tak dihitung",
+    "poin": "Layar Tamat sekarang jujur soal kata baru, dengan tombol simpan.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1036,
+    "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
+    "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1075,
     "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
     "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
@@ -153,30 +177,6 @@
     "n": 998,
     "judul": "[peta 97] Akhir buku rapi: sheet Tamat, nama 'Buku lain', bar bawah",
     "poin": "Akhir buku sekarang jelas: satu pesan kata baru, satu istilah \"bagian\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 994,
-    "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
-    "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 989,
-    "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
-    "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 986,
-    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
-    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 984,
-    "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
-    "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
     "tgl": "2026-11-14"
   }
 ]
