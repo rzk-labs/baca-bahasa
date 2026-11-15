@@ -1,5 +1,23 @@
 [
   {
+    "n": 1103,
+    "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
+    "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1101,
+    "judul": "[peta 111] Baca ulang buku tamat: tanpa XP halaman, kata baru tetap XP",
+    "poin": "Baca ulang buku yang sudah tamat tidak kasih XP halaman lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1083,
+    "judul": "Setelah tamat: satu 'Baca ulang' saja + Home rapi, tak ada layar kosong",
+    "poin": "Halaman terakhir cuma punya satu \"Baca ulang\", tidak tiga lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1107,
     "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
     "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
@@ -159,24 +177,6 @@
     "n": 1026,
     "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
     "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1020,
-    "judul": "Home: kartu buku tamat lega, tombol satu baris & tak terpotong",
-    "poin": "Kartu buku tamat di Home kini lebih ringkas dan lega.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1018,
-    "judul": "[peta 99] Tombol Muat ulang versi terbaru + versi app di Pengaturan",
-    "poin": "Pengaturan sekarang punya tombol \"Muat ulang versi terbaru\" untuk dapat versi baru di HP.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1012,
-    "judul": "Jelaskan halaman ini dengan bahasa lebih sederhana (AI, sekali ketuk)",
-    "poin": "Menu Lainnya di halaman baca punya tombol baru: Sederhanakan halaman (AI).",
     "tgl": "2026-11-14"
   }
 ]
