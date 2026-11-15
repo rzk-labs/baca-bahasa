@@ -886,6 +886,15 @@
       "dokumen": "docs/riset-arti-ini-salah.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
+    },
+    {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu Kata: tombol 'Semua arti' (arti per jenis kata) + frasa & contoh (#1121)",
+      "dokumen": "docs/spesifikasi-semua-arti-frasa.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1121.html. Simpan daftar arti di kartu Kata (data lama tetap aman), tambah dt=ex di gtxFetch, jangan timpa arti pilihan #1106. Naikkan versi C di sw.js."
     }
   ],
   "prioritas": [
