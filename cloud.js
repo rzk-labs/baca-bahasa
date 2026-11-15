@@ -449,7 +449,7 @@ const titleKey = t => String(t || '').normalize('NFKC').replace(/\.(txt|epub|pdf
 function profileData() {
   const wk = Date.now() - 7 * 864e5;
   const seen = new Map(); /* satu baris per buku (judul+bahasa sama digabung, persen tertinggi) */
-  (db.books || []).filter(b => b.opened || b.pos > 0).sort((a, b) => (b.opened || 0) - (a.opened || 0)).forEach(b => {
+  (db.books || []).filter(b => (b.opened || b.pos > 0) && !/\(contoh\)/i.test(b.title || '')).sort((a, b) => (b.opened || 0) - (a.opened || 0)).forEach(b => {
     const k = titleKey(b.title), pct = typeof pctOf === 'function' ? pctOf(b) : 0, o = seen.get(k);
     if (!o) seen.set(k, { t: String(b.title || '').slice(0, 80), lang: b.lang, pct, at: b.opened || 0 });
     else o.pct = Math.max(o.pct, pct);
@@ -511,8 +511,9 @@ function rakHtml() {
   const head = `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Rak</h2><span class="mut sm">${L.length} buku</span></div>`;
   if (!L.length) return `<div id="rakBox">${head}<div class="rk-empty"><b>Rak masih kosong</b><span class="mut sm">Buku yang kamu tambah akan berdiri di sini sebagai sampul.</span><button class="pri" id="rkAdd">Tambah cerita pertamamu</button></div></div>`;
   const show = rakSemua ? L : L.slice(0, RAK_MAX);
-  const grp = [['Sedang dibaca', b => pctOf(b) > 0 && pctOf(b) < 100], ['Tamat', b => pctOf(b) >= 100], ['Belum dibuka', b => pctOf(b) <= 0]];
-  const bk = b => { const p = pctOf(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p}%">${cover(b)}${p >= 100 ? '<span class="rk-tag">Tamat</span>' : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p}%</span></button>`; };
+  const pp = b => (b.opened || b.pos > 0 || b.pct >= 100) ? pctOf(b) : 0; /* belum pernah dibuka = 0%, bukan 1% */
+  const grp = [['Sedang dibaca', b => pp(b) > 0 && pp(b) < 100], ['Tamat', b => pp(b) >= 100], ['Belum dibuka', b => pp(b) <= 0]]; /* tiap buku hanya di satu rak */
+  const bk = b => { const p = pp(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p}%">${cover(b)}${p >= 100 ? '<span class="rk-tag">Tamat</span>' : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p >= 100 ? 'Selesai' : p > 0 ? p + '%' : 'Belum dibuka'}</span></button>`; };
   const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
   const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
   return `<div id="rakBox">${head}
@@ -549,7 +550,7 @@ async function openProfile(username) {
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
-      ${rdDone.length ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
+      ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? rakHtml() : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
       <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span>${badgeShown(id) ? '' : (pr => pr ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : '')(badgeProgress(id))}</div>`).join('')}</div>` : ''}
