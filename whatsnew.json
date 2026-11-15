@@ -1,5 +1,35 @@
 [
   {
+    "n": 1068,
+    "judul": "Sheet Tamat: kata baru & XP hari ini cocok; buku contoh tak dihitung",
+    "poin": "Layar Tamat sekarang jujur soal kata baru, dengan tombol simpan.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1036,
+    "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
+    "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1075,
+    "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
+    "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1069,
+    "judul": "Rak Profil: judul 2 baris, sampul beda warna, buku tak muncul ganda",
+    "poin": "Rak Profil lebih rapi: judul dua baris, warna sampul beda, buku tak dobel.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1063,
+    "judul": "Header Baca HP: 'Bagian 10 dari 10' jadi '10/10', tak tabrak Dengar",
+    "poin": "Posisi bagian di layar baca HP sekarang ringkas, contoh 10/10.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1061,
     "judul": "Header app: pil Streak & XP bertulisan + Pengaturan jelas, tanpa tebak ikon",
     "poin": "Header sekarang bertulisan: \"3 hari\", \"120 XP\", dan tombol \"Atur\".",
@@ -147,36 +177,6 @@
     "n": 989,
     "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
     "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 986,
-    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
-    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 984,
-    "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
-    "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 974,
-    "judul": "[peta 92] Keepo HQ: tombol Perintah tak menutupi isi, tempat tetap",
-    "poin": "Tombol Perintah tidak melayang lagi di HP, jadi tidak menutupi isi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 972,
-    "judul": "[peta 95] Profil: Rak buku bertema & tersusun sesuai selera (lokal)",
-    "poin": "Profil sekarang punya rak buku: sampul berdiri di papan, lengkap dengan persen.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 981,
-    "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
-    "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
     "tgl": "2026-11-14"
   }
 ]
