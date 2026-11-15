@@ -803,6 +803,23 @@
       "no": 105,
       "peran": "developer",
       "prioritas": "P0",
+      "nama": "Header Baca HP: posisi bagian ringkas 10/10, tak tabrak Dengar (#1063)",
+      "dokumen": "docs/mockup-1063.html",
+      "status": "selesai (#1063)"
+    },
+    {
+      "no": 106,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Pesan gagal masuk/daftar/sinkron: apa yang terjadi + satu tombol langkah (Coba lagi / Daftar / Lanjut tanpa akun), tampil di form, tanpa istilah teknis (#1034)",
+      "dokumen": "docs/riset-pesan-gagal-masuk.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html."
+    },
+    {
+      "no": 107,
+      "peran": "developer",
+      "prioritas": "P0",
       "nama": "Header Baca HP: progres bagian singkat '2/12', tombol ruang tetap, judul ellipsis, lipat tombol jarang ke 'Lainnya' (#1064)",
       "dokumen": "docs/desain-header-baca-progres-singkat.md",
       "status": "siap dikerjakan",

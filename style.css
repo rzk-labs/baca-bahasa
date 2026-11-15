@@ -452,7 +452,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rfoot{flex:none;min-height:48px;display:flex;align-items:center;gap:8px;padding:0 8px;max-width:720px;width:100%;align-self:center}
 .rmid{flex:1;text-align:center;font-size:.75rem;line-height:1.5;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
-.rmid{min-width:0}
+.rmid{min-width:0;margin:0 8px}
 .rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:359px){.rmid #pgn{font-size:.7rem}}
 .reader.no-prog .rmid #pgn,.reader.no-prog .rmid .bar{display:none}
@@ -1009,6 +1009,14 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .mc-i:last-child{border-bottom:0}
 .mc-i.mc-del{color:#A3262F}
 .mc-i.mc-del.sure{background:var(--color-poor);color:#fff;border-radius:12px;padding:0 12px}
+
+/* #1061 header: pil bertulisan (hari/XP), tombol Atur bertulisan, penanda bertulisan */
+#hdx .hsl{display:none}
+#hdx #set{width:auto;min-width:44px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:14px}
+#hdx #set .hsl{display:inline}
+@media (max-width:640px){#hdx #set .i{display:none}#hdx #set{padding:0 6px;font-size:13px}#hdx .hfb{display:none}}
+@media (max-width:430px){#pXp{display:inline-flex}.pill svg.i{display:none}#pStreak,#pXp{padding:0 7px}}
+@media (max-width:340px){#pStreak,#pXp{padding:0 5px;font-size:11px}#hdx #set{min-width:40px;padding:0 4px;font-size:12px}}
 .badge .bp{display:block;font-size:11px;line-height:14px;font-weight:700;margin-top:6px}
 .badge .bar{height:4px;margin-top:3px}
 .badge.off .bar i{background:var(--color-text-muted)}
