@@ -830,7 +830,7 @@
       "prioritas": "P0",
       "nama": "Lencana terkunci bisa diketuk: sheet singkat berisi cara dapat + progres, syarat sekali pakai petunjuk (bukan 0/1), grid 2 kolom/Lihat semua, progres Level 5 sama dengan level (#1074)",
       "dokumen": "docs/riset-lencana-terkunci.md",
-      "status": "spesifikasi siap dikerjakan",
+      "status": "selesai (#1075)",
       "catatan": "(validasi bukti internet) 41 kutipan, 5 jenis sumber. Mockup: docs/mockup-1074.html."
     },
     {
@@ -848,7 +848,7 @@
       "prioritas": "P0",
       "nama": "Level & streak sama di Home, Profil, pil header; XP 1 baris '14/100 XP' (#1071)",
       "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1071)",
       "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
     },
     {
