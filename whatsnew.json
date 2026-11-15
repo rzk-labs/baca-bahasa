@@ -1,5 +1,11 @@
 [
   {
+    "n": 1178,
+    "judul": "Lencana terbuka: tanda centang + teks 'Sudah dapat' (bukan hanya warna)",
+    "poin": "Lencana yang sudah didapat kini punya tanda centang di pojok kartu.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1182,
     "judul": "Ikon pojok kanan atas HP: jelas mana Profil, Masukan, Pengaturan",
     "poin": "Di HP, tombol akun kini ikon orang bertulisan \"Profil\".",
@@ -171,12 +177,6 @@
     "n": 1036,
     "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
     "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1075,
-    "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
-    "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
     "tgl": "2026-11-15"
   }
 ]
