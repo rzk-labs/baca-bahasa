@@ -36,3 +36,8 @@
 - Status backlog tak diperbarui saat PR kode digabung.
 - Satu item salah tempat di milestone, nomornya kembar.
 - Perbaikan: PM cek kode sebelum menulis "siap dikerjakan".
+
+## 6. Cek #1078
+- #107 header Baca '2/12' + judul ellipsis: selesai (#1064, #1067).
+- #106 pesan gagal masuk: pesan ramah ada; tombol langkah (Daftar/Lanjut tanpa akun) belum; tetap terbuka.
+- Antrean developer tidak kosong (#106 terbuka), jadi #108/#109 belum ditambah.

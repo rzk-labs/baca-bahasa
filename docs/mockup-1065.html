@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1065: Munculkan header saat baca</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.note{font-size:12px;font-weight:600;margin:0 0 12px;max-width:390px}
+.lbl{display:inline-block;background:#351E28;color:#D7EFFF;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;margin:8px 0}
+.wrap{display:flex;gap:24px;flex-wrap:wrap}
+.ph{width:390px;height:720px;background:#FBF6EC;border:1px solid #cfc6b4;border-radius:20px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.bar{position:absolute;top:0;left:0;right:0;height:64px;background:#fff;border-bottom:1px solid #e3dccd;display:flex;align-items:center;gap:8px;padding:0 8px;z-index:3}
+.bar b{flex:1;font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ic{min-width:44px;height:44px;border-radius:12px;background:#D7EFFF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;padding:0 6px}
+.head{height:34px;margin-top:20px;text-align:center;font-size:12px;letter-spacing:.1em;font-weight:600;text-transform:uppercase;color:#6d6270}
+.txt{flex:1;margin:8px 24px 0;font-family:Georgia,serif;font-size:18px;line-height:30px}
+.txt mark{background:#E9F056;padding:0 2px}
+.foot{height:64px;border-top:1px solid #e3dccd;display:flex;align-items:center;gap:8px;padding:0 10px;background:#fff}
+.pg{width:44px;height:44px;border-radius:12px;background:#D7EFFF;display:flex;align-items:center;justify-content:center;font-weight:700}
+.mid{flex:1;text-align:center;font-size:12px;color:#6d6270}
+.bar2{height:4px;background:#e3dccd;border-radius:2px;margin-top:4px}.bar2 i{display:block;height:4px;width:34%;background:#351E28;border-radius:2px}
+.menu{height:44px;padding:0 14px;border-radius:99px;background:#351E28;color:#fff;display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px}
+.tag{position:absolute;right:10px;bottom:76px;background:#E9F056;color:#351E28;font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px;z-index:4}
+</style></head><body>
+<p class="note">Gambaran rencana, belum dibangun. Usul P0: tombol Menu tetap di bilah bawah.</p>
+<div class="wrap">
+<div><span class="lbl">Sebelum: tanpa tombol menu</span>
+<div class="ph"><div class="head">Alice's Adventures</div>
+<div class="txt">Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading.</div>
+<div class="foot"><div class="pg">‹</div><div class="mid">Halaman 5 dari 40<div class="bar2"><i></i></div></div><div class="pg">›</div></div></div></div>
+<div><span class="lbl">Sesudah: tombol Menu + header muncul</span>
+<div class="ph"><div class="bar"><div class="ic">‹</div><b>Alice's Adventures in Wonderland</b><div class="ic">Dengar</div><div class="ic">Lainnya</div></div>
+<div class="head" style="margin-top:84px">Bagian 1</div>
+<div class="txt">Alice was beginning to get very tired of sitting by her <mark>sister</mark> on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading.</div>
+<div class="tag">Ketuk lagi = tutup</div>
+<div class="foot"><div class="pg">‹</div><div class="menu">☰ Menu</div><div class="mid">5 dari 40<div class="bar2"><i></i></div></div><div class="pg">›</div></div></div></div>
+</div></body></html>
