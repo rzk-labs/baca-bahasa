@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p .kepo-tmp/shots
           cd .kepo-tmp
-          npm init -y >/dev/null
+          echo "{\"name\":\"kepo-audit\",\"private\":true,\"type\":\"module\"}" > package.json
           npm i playwright >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null 2>&1
           cat > shot.mjs <<'JS'
