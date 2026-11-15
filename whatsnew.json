@@ -1,5 +1,11 @@
 [
   {
+    "n": 1131,
+    "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
+    "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1103,
     "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
     "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
@@ -171,12 +177,6 @@
     "n": 1029,
     "judul": "[peta 100] Angka Home, Baca & catatan sesi cocok (halaman, persen, XP)",
     "poin": "Halaman dibaca di 'Minggu ini' dan catatan sesi sekarang pakai hitungan yang sama.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1026,
-    "judul": "Pinyin Mandarin nyala otomatis + tombol 'Ulang sekarang' kata baru",
-    "poin": "Buku Mandarin sekarang langsung menampilkan pinyin di atas kata, tanpa ketuk satu-satu.",
     "tgl": "2026-11-14"
   }
 ]
