@@ -1049,6 +1049,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
 .badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
 .badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
+.prem-badge{display:inline-block;vertical-align:middle;background:#351E28;color:#E9F056;font:700 12px/1 var(--font-ui);padding:4px 10px;border-radius:9999px}
+.hl-prem{background:#E9F056;color:#351E28;padding:0 6px;border-radius:4px;font-weight:700}
 /* Home pemula (#1107): hero kecil, tombol utama terlihat tanpa scroll, langkah 1 = tombol */
 .hero-pic{max-height:28vh;width:auto;max-width:100%;object-fit:contain;margin-left:auto;margin-right:auto}
 .hero-sub{margin-bottom:var(--space-3)}

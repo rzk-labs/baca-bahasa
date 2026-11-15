@@ -883,7 +883,7 @@
       "prioritas": "P0",
       "nama": "Akun premium khusus 'chiko' (owner): penanda premium di server, nama dicadangkan, lencana Profil (#1093)",
       "dokumen": "docs/spesifikasi-akun-premium-chiko.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1103)",
       "catatan": "Mockup: docs/mockup-1093.html. Server api/ boleh diubah untuk tugas ini; deploy & migrasi manual oleh founder."
     },
     {
