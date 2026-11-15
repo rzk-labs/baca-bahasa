@@ -886,6 +886,15 @@
       "dokumen": "docs/riset-arti-ini-salah.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1106.html. Arti pilihan jangan tertimpa saat kata diketuk lagi. Daftar Mandarin/Korea bergantung kamus (docs/riset-sumber-kamus.md)."
+    },
+    {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: mockup tampil langsung di depan, tanpa tombol 'Tampilkan mockup' (#1125)",
+      "dokumen": "docs/rencana-hq-mockup-langsung-1125.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1125.html. Hanya dev/src/page.html (tile mockup + #mockbtn). Jangan ubah app utama & api/."
     }
   ],
   "prioritas": [
