@@ -842,6 +842,14 @@
       "dokumen": "docs/spesifikasi-level-streak-konsisten.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1071.html. Jangan sentuh sheet Tamat (#1068) & header Baca (#1063/#1064)."
+    },
+    {
+      "no": 110,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
+      "dokumen": "docs/desain-setelah-tamat.md",
+      "status": "siap dikerjakan"
     }
   ],
   "prioritas": [
