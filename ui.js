@@ -2847,6 +2847,38 @@ function viewKataIn() {
   renderList();
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && $('#klist') && kataSeg === 'simpan') renderList(); });
 }
+/* lembar 'Semua arti' (#1158): arti per jenis kata + frasa & contoh. Data lama tanpa daftar = diisi saat dibuka; v.t / pilihan #1106 tak diubah */
+function openSemua(v, onSave) {
+  const hl = s => esc(s).replace(/‹/g, '<mark>').replace(/›/g, '</mark>');
+  const mark = s => { const w = String(v.w || ''); if (!w) return esc(s); const i = s.toLowerCase().indexOf(w.toLowerCase()); return i < 0 ? esc(s) : esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + w.length)) + '</mark>' + esc(s.slice(i + w.length)); };
+  const cur = String(v.t || '').trim().toLowerCase();
+  const body = () => {
+    const all = Array.isArray(v.all) ? v.all : [], ex = Array.isArray(v.ex) ? v.ex : [];
+    const grp = all.map(g => `<div class="semua-grp"><span class="pos">${esc(POS[g.pos] || g.pos || 'arti')}</span><ol>${g.terms.map(t => `<li${String(t).toLowerCase() === cur ? ' class="m"' : ''} dir="auto">${esc(t)}</li>`).join('')}</ol></div>`).join('');
+    const mine = [];
+    if (ctxOf(v)) mine.push({ t: ctxOf(v), src: v.book ? `Dari ceritamu · ${v.book}` : 'Dari ceritamu' });
+    const lo = String(v.w || '').toLowerCase();
+    db.vocab.filter(o => o && o !== v && o.lang === v.lang && o.ctx && lo && o.ctx.toLowerCase().includes(lo)).slice(0, 2).forEach(o => mine.push({ t: ctxOf(o), src: `Dari ceritamu · lewat kata "${o.w}"` }));
+    const exs = ex.map(t => `<div class="semua-ex" dir="auto" lang="${esc(v.lang)}">${hl(t)}<small>contoh otomatis, bisa keliru</small></div>`).join('') + mine.map(m => `<div class="semua-ex" dir="auto" lang="${esc(v.lang)}">${mark(m.t)}<small>${esc(m.src)}</small></div>`).join('');
+    return `<div class="sh-head"><h2 dir="auto">${esc(v.w)} · semua arti</h2>${closeBtn}</div><div class="mut sm">Terjemahan mesin, bisa keliru. Arti pilihanmu tetap yang utama.</div>${grp || '<div class="mut sm" style="margin:10px 0">Belum ada daftar arti untuk kata ini.</div>'}${exs ? `<h3 class="semua-h">Frasa &amp; contoh</h3>${exs}` : ''}`;
+  };
+  const show = () => openSheet(body(), v.w + ' semua arti');
+  if (Array.isArray(v.all)) return show();
+  const load = async () => {
+    openSheet(`<div class="sh-head"><h2 dir="auto">${esc(v.w)} · semua arti</h2>${closeBtn}</div><span class="loading ldots" role="status" aria-label="Lagi nyari semua arti"><i></i><i></i><i></i></span>`, v.w + ' semua arti');
+    try {
+      if (navigator.onLine === false) throw new Error('offline');
+      const d = await fetchSemua(v.w, v.lang, db.my);
+      simpanSemua(v, d); save(); if (onSave) onSave();
+      if (!$('#sheet').classList.contains('hide')) show();
+    } catch (e) {
+      if ($('#sheet').classList.contains('hide')) return;
+      $('#sheetBody').innerHTML = `<div class="sh-head"><h2 dir="auto">${esc(v.w)} · semua arti</h2>${closeBtn}</div><div class="mut sm" role="status">${navigator.onLine === false ? 'Lagi offline, daftar arti belum bisa dibuka.' : 'Daftar arti belum kebuka, kayaknya kena batas layanan gratis.'}</div><div class="altrow"><button class="ghost wretry" id="semuaRetry" type="button">Coba lagi</button><button class="ghost wretry" data-close type="button">Tutup</button></div>`;
+      $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#semuaRetry').onclick = load;
+    }
+  };
+  load();
+}
 function deck(kb) {
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => v && v.w && (isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
@@ -2857,7 +2889,7 @@ function deck(kb) {
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="icon tint fsp" id="fSp" type="button" aria-label="Dengerin">${ico('vol')}</button>
         <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${(v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
-        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div></div>
+        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${esc(bacaOf(v.w, v.baca))}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">besok</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
@@ -2881,6 +2913,7 @@ function deck(kb) {
     setTimeout(() => deck(kb), 280);
   };
   if ($('#fget')) { const g = $('#fget'); g.addEventListener('pointerdown', e => e.stopPropagation()); g.addEventListener('pointerup', e => e.stopPropagation()); g.onclick = e => { e.stopPropagation(); g.disabled = true; g.textContent = 'Nyari…'; refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); else { g.disabled = false; g.textContent = 'Ambil arti'; toast('Belum ketemu, coba lagi nanti'); } }); }; }
+  if ($('#fAll')) { const a = $('#fAll'); a.addEventListener('pointerdown', e => e.stopPropagation()); a.addEventListener('pointerup', e => e.stopPropagation()); a.onclick = e => { e.stopPropagation(); openSemua(v, () => { if (kb.isConnected && $('#fAll')) $('#fAll').textContent = `Semua arti (${(v.all || []).reduce((n, g) => n + g.terms.length, 0)})`; }); }; }
   $('#fShow').onclick = flip; $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fMaybe').onclick = maybe;
   { const sp = $('#fSp'); sp.addEventListener('pointerdown', e => e.stopPropagation()); sp.addEventListener('pointerup', e => e.stopPropagation()); sp.onclick = e => { e.stopPropagation(); speak(v.w, v.lang, 0.8); }; }
   if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }

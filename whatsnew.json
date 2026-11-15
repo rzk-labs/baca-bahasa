@@ -1,5 +1,11 @@
 [
   {
+    "n": 1158,
+    "judul": "[peta 121] Kartu Kata: tombol 'Semua arti' + frasa & contoh, tahan balasan aneh",
+    "poin": "Kartu Kata kini punya tombol \"Semua arti\": arti per jenis kata plus contoh.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1166,
     "judul": "[peta 115] Layar Boss: label 'arti mesin' + tautan 'Arti ini salah?'",
     "poin": "Layar Boss sekarang memberi label \"Arti mesin, bisa meleset\" di bawah arti kata.",
@@ -171,12 +177,6 @@
     "n": 1059,
     "judul": "Satu nama 'Buku baru' di semua layar + tanya pinyin cukup Nyala/Mati",
     "poin": "Tombol tambah buku kini bernama 'Buku baru' di semua layar.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1057,
-    "judul": "Lencana terkunci tampilkan progres (mis. 4/10 kata) + kartu Level 1 baris",
-    "poin": "Lencana yang masih terkunci sekarang menampilkan progres, mis. 4/10 dan bar tipis.",
     "tgl": "2026-11-15"
   }
 ]
