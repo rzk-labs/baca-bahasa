@@ -1,5 +1,65 @@
 [
   {
+    "n": 1083,
+    "judul": "Setelah tamat: satu 'Baca ulang' saja + Home rapi, tak ada layar kosong",
+    "poin": "Halaman terakhir cuma punya satu \"Baca ulang\", tidak tiga lagi.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1107,
+    "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
+    "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1104,
+    "judul": "Home pemula: tombol 'Upload file' tanpa scroll + langkah 1-2-3 jelas",
+    "poin": "Tombol Upload file sekarang langsung terlihat di Home, tanpa scroll.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1099,
+    "judul": "Tab Sosial tak boleh balik ke Home diam-diam: pesan jelas + coba lagi",
+    "poin": "Tab Sosial tak lagi diam-diam balik ke Home.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1095,
+    "judul": "Profil & Home: header jelas, lencana naik, '4 hari' tak berulang",
+    "poin": "Tombol Pengaturan kini jelas, beda dari bulatan akun, dan muat di layar kecil.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1087,
+    "judul": "Update app otomatis sampai ke HP + versi di Pengaturan cocok",
+    "poin": "Keepo kini cek versi baru sendiri dan muat ulang otomatis di HP.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1082,
+    "judul": "Tab Kata tak boleh error: tahan data aneh + pesan ramah + ajakan simpan",
+    "poin": "Tab Kata tak lagi error walau datanya aneh atau lama.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1068,
+    "judul": "Sheet Tamat: kata baru & XP hari ini cocok; buku contoh tak dihitung",
+    "poin": "Layar Tamat sekarang jujur soal kata baru, dengan tombol simpan.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1036,
+    "judul": "Kartu 'Minggu ini' pakai tombol 'Sembunyikan' + Profil tak bertentangan",
+    "poin": "Kartu \"Minggu ini\" sekarang punya tombol jelas \"Sembunyikan\", plus pesan singkat setelahnya.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1075,
+    "judul": "Lencana: ketuk untuk lihat caranya + bar progres + grid tak tersembunyi",
+    "poin": "Lencana terkunci sekarang bisa diketuk, muncul cara dapatnya.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1069,
     "judul": "Rak Profil: judul 2 baris, sampul beda warna, buku tak muncul ganda",
     "poin": "Rak Profil lebih rapi: judul dua baris, warna sampul beda, buku tak dobel.",
@@ -117,66 +177,6 @@
     "n": 1018,
     "judul": "[peta 99] Tombol Muat ulang versi terbaru + versi app di Pengaturan",
     "poin": "Pengaturan sekarang punya tombol \"Muat ulang versi terbaru\" untuk dapat versi baru di HP.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1012,
-    "judul": "Jelaskan halaman ini dengan bahasa lebih sederhana (AI, sekali ketuk)",
-    "poin": "Menu Lainnya di halaman baca punya tombol baru: Sederhanakan halaman (AI).",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1006,
-    "judul": "Judul buku utuh di Profil & Home: status pindah ke baris bawah",
-    "poin": "Judul buku di Profil sekarang tampil penuh, tidak terpotong lagi.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1004,
-    "judul": "[peta 98] Titik kecil \"siap diulang\" di header Baca + lembar Ulang",
-    "poin": "Saat membaca, ada titik kuning kecil kalau ada kata siap diulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 1000,
-    "judul": "[peta 98] Titik pengingat 'siap diulang' di header Baca + satu istilah",
-    "poin": "Di halaman Baca ada titik kecil kuning kalau ada kata siap diulang.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 998,
-    "judul": "[peta 97] Akhir buku rapi: sheet Tamat, nama 'Buku lain', bar bawah",
-    "poin": "Akhir buku sekarang jelas: satu pesan kata baru, satu istilah \"bagian\".",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 994,
-    "judul": "Halaman Baca HP: buang ruang kosong di bawah teks sebelum bar Bagian",
-    "poin": "Di halaman terakhir buku, tombol Baca ulang kini muncul tepat di bawah teks.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 989,
-    "judul": "Satu istilah 'siap diulang' + pengingat kata di tab Baca",
-    "poin": "Istilah sekarang seragam: \"siap diulang\" dan tombol \"Ulang sekarang\" di Home dan tab Kata.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 986,
-    "judul": "Ujung buku tak buntu: tombol Selesai jelas + Home pasca-tamat ajak buku baru",
-    "poin": "Tombol \"Selesai\" di halaman terakhir sekarang jelas, tidak lagi terlihat mati.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 984,
-    "judul": "[peta 94] Keepo HQ: visual loading seragam (bilah, kerangka, tombol)",
-    "poin": "Keepo HQ sekarang punya bilah tipis di atas saat sedang memuat.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 974,
-    "judul": "[peta 92] Keepo HQ: tombol Perintah tak menutupi isi, tempat tetap",
-    "poin": "Tombol Perintah tidak melayang lagi di HP, jadi tidak menutupi isi.",
     "tgl": "2026-11-14"
   }
 ]

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1106 — Arti ini salah?</title>
+<style>
+body{margin:0;padding:16px;background:#e8e4dc;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.note{max-width:390px;font-size:13px;font-weight:700;background:#E9F056;border-radius:12px;padding:8px 12px;margin-bottom:8px}
+.lab{font:700 12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px}
+.ph{width:390px;max-width:100%;background:#FAF7F0;border-radius:24px;padding:16px;box-sizing:border-box;margin-bottom:12px;font-size:17px;line-height:1.7}
+.ph p{margin:0 0 10px}
+mark{background:#E9F056;border-radius:4px;padding:0 2px}
+.sheet{background:#fff;border-radius:22px 22px 0 0;padding:16px;box-shadow:0 -4px 18px rgba(53,30,40,.15);margin:14px -16px -16px;line-height:1.4;font-size:15px}
+.w{font:800 26px "Bricolage Grotesque",Inter,sans-serif}
+.rd{font-size:13px;color:#6b5a62}
+.ar{font:700 20px "Bricolage Grotesque",Inter,sans-serif;margin:6px 0 2px}
+.mt{font-size:12px;color:#6b5a62}
+.alt{font-size:13px;margin-top:6px}
+.lnk{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:14px;text-decoration:underline;color:#351E28}
+.ch{display:flex;flex-direction:column;gap:8px;margin:6px 0}
+.o{border:1.5px solid #351E28;border-radius:14px;padding:10px 12px;min-height:44px;box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.o small{font-weight:400;color:#6b5a62;font-size:12px}
+.o.on{background:#D7EFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:9999px;background:#351E28;color:#E9F056;font-weight:800;font-size:14px}
+.gh{background:transparent;border:1.5px solid #351E28;color:#351E28}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.err{background:#FAF7F0;border-radius:14px;padding:10px 12px;margin-top:8px;font-size:14px}
+.chip{display:inline-block;font-size:12px;font-weight:800;background:#E9F056;border-radius:9999px;padding:2px 8px}
+.kw{background:#fff;border-radius:16px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun (#1106)</div>
+
+<div class="lab">1. Sebelum: kartu arti, tak ada jalan keluar</div>
+<div class="ph">
+<p>他今天心情很<mark>好</mark>，所以请大家吃饭。</p>
+<div class="sheet">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="ar">baik</div>
+<div class="mt">Arti mesin, bisa meleset</div>
+<div class="alt"><b>Bisa juga:</b> bagus, suka</div>
+</div></div>
+
+<div class="lab">2. Sesudah: tautan "Arti ini salah?" di kartu</div>
+<div class="ph">
+<p>他今天心情很<mark>好</mark>，所以请大家吃饭。</p>
+<div class="sheet">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="ar">baik</div>
+<div class="mt">Arti mesin, bisa meleset</div>
+<a class="lnk">Arti ini salah?</a>
+</div></div>
+
+<div class="lab">3. Sesudah: daftar arti lain (maks 3), muncul di tempat</div>
+<div class="ph">
+<p>他今天心情很<mark>好</mark>，所以请大家吃饭。</p>
+<div class="sheet">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="mt" style="margin-top:6px"><b>Mungkin maksudnya:</b></div>
+<div class="ch">
+<div class="o on">baik <small>dipakai sekarang</small></div>
+<div class="o">bagus <small>kamus</small></div>
+<div class="o">sangat (penguat) <small>kamus</small></div>
+</div>
+<div class="row"><span class="btn gh">Tutup</span></div>
+</div></div>
+
+<div class="lab">4. Sesudah: arti pilihan dipakai, tersimpan ke kartu Kata</div>
+<div class="ph">
+<p>他今天心情很<mark>好</mark>，所以请大家吃饭。</p>
+<div class="sheet">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="ar">bagus <span class="chip">pilihanmu</span></div>
+<div class="mt">Oke, arti ini yang dipakai.</div>
+<div class="row" style="margin-top:6px"><span class="btn">Simpan ke Kata</span><a class="lnk">Arti ini salah?</a></div>
+</div></div>
+
+<div class="lab">5. Sesudah: tak ada arti lain</div>
+<div class="ph">
+<div class="sheet" style="margin-top:0">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="mt" style="margin-top:6px"><b>Mungkin maksudnya:</b></div>
+<div class="err">Belum ada arti lain. Coba ketuk kata di sekitarnya.</div>
+<div class="row" style="margin-top:8px"><span class="btn gh">Tutup</span></div>
+</div></div>
+
+<div class="lab">6. Sesudah: layanan gratis kena batas</div>
+<div class="ph">
+<div class="sheet" style="margin-top:0">
+<div class="w">好 <span class="rd">hǎo</span></div>
+<div class="err">Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.</div>
+<div class="row" style="margin-top:8px"><span class="btn">Coba lagi</span></div>
+</div></div>
+
+<div class="lab">7. Sesudah: kartu Kata menampilkan arti pilihanmu</div>
+<div class="ph">
+<div class="kw"><span><b>好</b> hǎo<br>bagus</span><span class="chip">pilihanmu</span></div>
+<div class="kw"><span><b>请客</b> qǐngkè<br>mentraktir</span><span></span></div>
+</div>
+</body></html>

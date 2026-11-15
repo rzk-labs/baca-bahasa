@@ -541,7 +541,7 @@ async function openProfile(username) {
   try {
     const p = await api('/u/' + encodeURIComponent(username));
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
-    if (p.self) p.reading = profileData().reading; /* persen terbaru dari buku lokal */
+    if (p.self) p.reading = rakList().map(b => ({ t: b.title, lang: b.lang, pct: pctOf(b) })).filter(r => r.pct > 0); /* sumber sama dengan rak: tak pernah bertentangan */
     const zero = !(+p.kata7 > 0);
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
@@ -551,12 +551,13 @@ async function openProfile(username) {
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
-      ${p.self ? rakHtml() : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      <div class="hscroll">${BADGES.map(([id, em, name, desc], i) => `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${badgeShown(id) ? '' : ' off'}" title="${esc(badgeShown(id) ? desc : 'Terkunci: ' + (id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc))}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${badgeShown(id) ? desc : `${ico('lock', 'lk')} ${id === 'kepo1' ? 'Ketuk 1 kata & simpan' : desc}`}</span>${badgeShown(id) ? '' : (pr => pr ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : '')(badgeProgress(id))}</div>`).join('')}</div>` : ''}
+      <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div>` : ''}
+      ${p.self ? rakHtml() : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
     if (p.self) wireRak();
+    if (p.self) $$('#pfBody .badge.off').forEach(b => { const go = () => toast('🔒 ' + b.querySelector('b').textContent + ': ' + b.dataset.how, 4200); b.onclick = go; b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }; });
     const f = $('#pfFol'); if (f) f.onclick = async () => { f.disabled = true; try { await api('/ikuti/' + encodeURIComponent(p.username), { method: p.diikuti ? 'DELETE' : 'POST' }); toast(p.diikuti ? `Berhenti mengikuti ${p.nick}.` : `Kamu mengikuti ${p.nick}.`); openProfile(p.username); if ($('#frHome')) homeFriends(); } catch (e) { toast(e.message); f.disabled = false; } };
   } catch (e) { $('#pfBody').textContent = e.message; }
 }
