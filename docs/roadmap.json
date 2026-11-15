@@ -868,6 +868,15 @@
       "dokumen": "docs/riset-xp-baca-ulang.md",
       "status": "spesifikasi siap dikerjakan",
       "catatan": "(validasi bukti internet) Mockup: docs/mockup-1088.html. Jangan sentuh sheet Tamat (#1068)."
+    },
+    {
+      "no": 112,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Akun premium khusus 'chiko' (owner): penanda premium di server, nama dicadangkan, lencana Profil (#1093)",
+      "dokumen": "docs/spesifikasi-akun-premium-chiko.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1093.html. Server api/ boleh diubah untuk tugas ini; deploy & migrasi manual oleh founder."
     }
   ],
   "prioritas": [
