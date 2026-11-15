@@ -80,7 +80,7 @@ const vib = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e
 const today = () => new Date().toISOString().slice(0, 10);
 function markDay() { const d = today(); if (!db.days.includes(d)) { db.days.push(d); db.days = db.days.slice(-400); save(); } }
 function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(d.toISOString().slice(0, 10))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
-function hue(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+function hue(s) { let h = 5381; for (const c of String(s)) h = (Math.imul(h, 33) + c.codePointAt(0)) >>> 0; h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d) >>> 0; h ^= h >>> 12; return h; } /* hash seluruh judul: awalan sama tetap beda warna */
 // Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
 const COVERS = {};
@@ -177,6 +177,8 @@ const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0)
 const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10 };
 const BADGE_REAL = ['kepo1', 'kolektor', 'kutubuku', 'berani', 'perfect', 'boss', 'otak']; /* syarat dihitung dari data nyata di perangkat ini, bukan XP/lencana gabungan */
 const badgeShown = id => db.badges.includes(id) && !(BADGE_REAL.includes(id) && !BADGES.find(b => b[0] === id)[4]());
+const LV5_XP = 4 * 100; /* XP minimum Level 5, selaras level() */
+const BADGE_HOW = { kepo1: 'Ketuk kata di bacaan, lalu Simpan.', kolektor: 'Simpan 10 kata dari bacaanmu.', kutubuku: 'Balik 20 halaman di tab Baca.', berani: 'Buka tab Ngomong, selesaikan 1 tantangan.', perfect: 'Skor kalimat 95%+ di tab Ngomong.', boss: 'Kalahin 5 kata sulit di latihan Kata.', otak: 'Hafal 10 kartu di tab Kata.', fire3: 'Baca atau latihan 3 hari berturut-turut.', fire7: 'Jaga streak 7 hari tanpa putus.', lv5: `Kumpulkan XP sampai Level 5 (${LV5_XP} XP).` };
 const BADGES = [
   ['kepo1', 'eye', 'Keepo Pertama', 'Simpan 1 kata', () => countedVocab(null).length >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => countedVocab(null).length >= 10],
@@ -187,12 +189,12 @@ const BADGES = [
   ['otak', 'cards', 'Otak Encer', 'Hafal 10 kartu', () => db.stat.flash >= 10],
   ['fire3', 'flame', 'On Fire', 'Streak 3 hari', () => streak() >= 3],
   ['fire7', 'bolt', 'Seminggu Nonstop', 'Streak 7 hari', () => streak() >= 7],
-  ['lv5', 'star', 'Level 5', 'Kumpulkan 400 XP', () => level() >= 5]
+  ['lv5', 'star', 'Level 5', `Level 5 (${LV5_XP} XP)`, () => level() >= 5]
 ];
 /* progres lencana terkunci: data sama dengan syaratnya; hanya tampilan */
 const badgeProgress = id => {
   const st = db.stat || {};
-  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, 400] }[id];
+  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, LV5_XP] }[id];
   if (!m) return null;
   return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
 };
@@ -259,10 +261,10 @@ function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
   document.querySelectorAll('.lvlup').forEach(x => x.remove());
   const el = document.createElement('div'); el.className = 'lvlup';
-  el.innerHTML = `<div class="card">${spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
+  el.innerHTML = `<div class="card">${snd === 'lvl' ? `<div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div>` : spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) s.innerHTML = `${ico('flame')}${streak()}`; if (x) { x.innerHTML = `${ico('bolt')}${db.xp}<span class="sr"> XP total</span>`; x.title = 'XP total'; } }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'XP total'; } }
 
 /* ---------- kerangka ---------- */
 let toastT;
@@ -449,7 +451,7 @@ function setTab(t) {
   db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
-  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}</button>`;
+  $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Atur</span></button>`;
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
   window.scrollTo(0, 0);
@@ -877,7 +879,7 @@ function weekCard() {
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="icon" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Tutup dulu</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${it(days, 'hari aktif')}${it(pages, 'halaman dibaca')}${words ? it(words, 'kata disimpan') : ''}</div></div>`;
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
 function streakInfo() {
@@ -936,7 +938,7 @@ function viewRak() {
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
-    const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); };
+    const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
     animRing($('#view'));
     heroMins(cur);
   }
@@ -1371,7 +1373,7 @@ async function viewBaca() {
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="sr"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="rmkl"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${['mati', 'hanya kata baru', 'nyala'][rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
@@ -1648,7 +1650,7 @@ const nw = t => `<span class="nw">${esc(t)}</span>`;
 /* #770: 'Bab' bila bagian itu diawali judul bab terdeteksi (六、 II. Chapter IV), selain itu 'Bagian'; satu istilah di header, bar, daftar isi */
 const secIsBab = sec => !!(sec && sec[0] && gbHead(String(sec[0]).replace(/^[\u0001\u0002]+/, '')));
 const secWord = (b, i) => 'Bagian'; /* #951: satu istilah 'Bagian' di Home, Baca, Tamat, Profil; jumlah = b.total (dihitung dari teks) */
-const secLabel = (pos, total, awal, word) => awal ? 'Awal buku' : `${word || 'Bagian'} ${total > 0 ? Math.min(pos, total) : pos} dari ${total}`; /* 'x dari y' dgn jumlah sebenarnya */
+const secLabel = (pos, total, awal, word, ringkas) => awal ? 'Awal buku' : ringkas ? `${total > 0 ? Math.min(pos, total) : pos}/${total}` : `${word || 'Bagian'} ${total > 0 ? Math.min(pos, total) : pos} dari ${total}`; /* 'x dari y' dgn jumlah sebenarnya */
 function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return statusPct(100).txt;
@@ -1748,12 +1750,12 @@ function showPage(p, anim = true) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
     const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? ml.t.replace(/^(bab|bagian) ini /, '') : '';
     const wd = secWord(b, b.pos), tb = 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
-    const sec = multi ? secLabel(b.pos + 1, b.total, b.pos === 0 && !RD.hs.length, wd) : '';
+    const awalBk = b.pos === 0 && !RD.hs.length, sec = multi ? secLabel(b.pos + 1, b.total, awalBk, wd, true) : '', secFull = multi ? secLabel(b.pos + 1, b.total, awalBk, wd) : '';
     const notes = [ml && ml.part ? 'bagian lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Ujung bagian, geser untuk bagian berikutnya' : ''].filter(Boolean);
     pgn.title = ['persen dari seluruh buku, perkiraan sisa waktu'].concat(notes).join('. ');
     pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
-    const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(nw).join(' · '); };
+    const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
     const bs = statusPct(bp);
     if (bs.done) fill([bs.txt]);
     else {
