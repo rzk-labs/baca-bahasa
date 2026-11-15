@@ -1,4 +1,5 @@
-const C='kepo-v382';
+/* catatan: naikkan C bersama APP_VER di ui.js (nomornya harus sama) */
+const C='kepo-v388';
 const FILES=['./','index.html','app.js','ui.js','kamus-ja.txt','cloud.js','style.css','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','icon-maskable-512.png','favicon.svg','img/hero-home.webp','img/hero-home-640.webp','img/kosong-rak.webp'];
 // pustaka impor EPUB/PDF + font Google (Bricolage Grotesque, Literata, Inter): di-cache saat pertama dipakai online
 const CDN=['https://cdnjs.cloudflare.com/ajax/libs/','https://fonts.googleapis.com/','https://fonts.gstatic.com/'];
