@@ -951,7 +951,7 @@
       "prioritas": "P0",
       "nama": "Layar Ngomong ringkas: buang tile Tantangan hari ini, jarak baris kalimat 1.6, mic tanpa scroll (#1117)",
       "dokumen": "docs/desain-ngomong-ringkas.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1151)",
       "catatan": "Mockup: docs/mockup-1117.html. Ubah viewBicara di ui.js dan .target di style.css; naikkan versi C di sw.js."
     },
     {
@@ -969,7 +969,7 @@
       "prioritas": "P0",
       "nama": "Setelah tamat: satu Baca ulang + Home ringkas (#1083)",
       "dokumen": "docs/desain-setelah-tamat.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1152)"
     },
     {
       "no": 120,

@@ -931,7 +931,7 @@ function viewRak() {
     <div class="mut sm" style="margin:-4px 0 12px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     ${weekCard()}
     <div class="bento">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Selesai · ${langName(cur.lang)}</div></div><button class="sec" id="hRead">Baca ulang</button></div><div class="hero-act"><button class="pri" id="hAdd">Buku baru</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Selesai · ${langName(cur.lang)}</div></div><button class="sec" id="hRead">Baca ulang</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="stat3">
@@ -943,7 +943,7 @@ function viewRak() {
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
-      <div class="bk-act"><button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
+      <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
     $('#hero').onclick = () => open('baca'); $('#hRead').onclick = e => { e.stopPropagation(); if (pctOf(cur) >= 100) restartBook(cur); open('baca'); };
@@ -992,6 +992,7 @@ function viewRak() {
   };
   }
   $$('[data-open]').forEach(el => el.onclick = () => { db.cur = el.dataset.open; save(); setTab('baca'); });
+  $$('[data-reread]').forEach(el => el.onclick = e => { e.stopPropagation(); const rb = db.books.find(x => x.id === el.dataset.reread); if (!rb) return; db.cur = rb.id; restartBook(rb); save(); setTab('baca'); });
   $$('[data-menu]').forEach(el => el.onclick = e => { e.stopPropagation(); menuCerita(el.dataset.menu); });
 }
 // Menu ⋯ kartu buku: Ganti sampul / Hapus sampul / Hapus cerita
@@ -2560,12 +2561,10 @@ async function viewBicara() {
   progress(sents.length ? (b.si + 1) / sents.length * 100 : 0);
   $('#view').innerHTML = `
     ${SR || TEST ? '' : `<div class="note">${ico('alert')}<div>${micError('nosupport')}</div></div>`}
-    <div class="tile t-cream wide chal" style="margin-bottom:12px">${spot('happy')}<div style="flex:1"><div class="eyebrow">Tantangan hari ini</div><b>Ngomongin 1 kalimat, dapet XP</b></div></div>
-    <h1 style="margin:6px 2px 12px">Tantangan <span class="hl-txt">ngomong</span></h1>
+    <h1 style="margin:6px 2px 10px">Ngomong <span class="hl-txt">kalimat ini</span></h1>
     <div class="card">
       <div class="eyebrow center">Kalimat ${b.si + 1} dari ${sents.length}</div>
       <div class="target" id="target" lang="${esc(b.lang)}">${tHtml}</div>
-      <div class="hint">Dengerin dulu, terus baca kalimatnya keras-keras!</div>
       <div class="aux"><button id="ex">${ico('vol')} Contoh</button><button id="exs">${ico('slow')} Pelan</button></div>
       <div class="micwrap"><button class="mic" id="rec" aria-label="Mulai ngomong">${ico('mic')}</button><div class="mic-lbl" id="recl" aria-live="polite">Tap & ngomong</div></div>
       <div class="hint" id="rech">Santai aja, nggak ada yang denger kok</div>
