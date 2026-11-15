@@ -1,5 +1,23 @@
 [
   {
+    "n": 1061,
+    "judul": "Header app: pil Streak & XP bertulisan + Pengaturan jelas, tanpa tebak ikon",
+    "poin": "Header sekarang bertulisan: \"3 hari\", \"120 XP\", dan tombol \"Atur\".",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1059,
+    "judul": "Satu nama 'Buku baru' di semua layar + tanya pinyin cukup Nyala/Mati",
+    "poin": "Tombol tambah buku kini bernama 'Buku baru' di semua layar.",
+    "tgl": "2026-11-15"
+  },
+  {
+    "n": 1057,
+    "judul": "Lencana terkunci tampilkan progres (mis. 4/10 kata) + kartu Level 1 baris",
+    "poin": "Lencana yang masih terkunci sekarang menampilkan progres, mis. 4/10 dan bar tipis.",
+    "tgl": "2026-11-15"
+  },
+  {
     "n": 1055,
     "judul": "Profil rapi: 'Sedang dibaca' tak dobel, chip urutan/tema dilipat",
     "poin": "Profil kini menampilkan \"Sedang dibaca\" sekali saja, lewat rak yang bisa diketuk.",
@@ -159,24 +177,6 @@
     "n": 981,
     "judul": "Baca ulang tak kepencet + toast Urungkan lega + kalimat XP Profil jelas",
     "poin": "Baca ulang di halaman terakhir kini minta konfirmasi dulu, tidak gampang kepencet.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 979,
-    "judul": "[peta 90] Keepo HQ: klik cepat (cache, panggilan bersamaan, optimistis)",
-    "poin": "Keepo HQ lebih cepat: data lama langsung tampil, lalu diperbarui diam-diam.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 977,
-    "judul": "Sheet arti kata: buang arti ganda + rapikan ruang kosong bawah teks",
-    "poin": "Arti ganda di sheet kata sudah dibuang, jadi lebih bersih.",
-    "tgl": "2026-11-14"
-  },
-  {
-    "n": 971,
-    "judul": "[peta 96] Home: penanda 'N kata siap diulang' + kabar sisa kartu",
-    "poin": "Di Home sekarang ada tulisan \"N kata siap diulang\"; diketuk langsung ke latihan kata.",
     "tgl": "2026-11-14"
   }
 ]

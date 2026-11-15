@@ -141,6 +141,9 @@ body.reading::after{display:none}
 .spot.jump{animation:jump .7s var(--ease-pop)}
 @keyframes jump{30%{transform:translateY(-14px) scale(1.05)}}
 /* ---------- home: bento ---------- */
+.hero-pic{display:block;width:100%;max-width:560px;height:auto;aspect-ratio:4/3;border-radius:var(--radius-lg);margin:0 0 var(--space-3);background:var(--ice)}
+.hero-sub{margin:0 0 var(--space-5);font-size:15px;line-height:22px;color:var(--color-text-muted);max-width:44ch}
+.empty .empty-pic{display:block;width:150px;height:150px;margin:0 auto var(--space-2)}
 .hello-sub{display:flex;align-items:center;gap:12px;margin-bottom:var(--space-5);font-size:15px;line-height:22px}
 .hello-sub .spot{width:48px;height:48px}
 .bento{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1014,3 +1017,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:640px){#hdx #set .i{display:none}#hdx #set{padding:0 6px;font-size:13px}#hdx .hfb{display:none}}
 @media (max-width:430px){#pXp{display:inline-flex}.pill svg.i{display:none}#pStreak,#pXp{padding:0 7px}}
 @media (max-width:340px){#pStreak,#pXp{padding:0 5px;font-size:11px}#hdx #set{min-width:40px;padding:0 4px;font-size:12px}}
+.badge .bp{display:block;font-size:11px;line-height:14px;font-weight:700;margin-top:6px}
+.badge .bar{height:4px;margin-top:3px}
+.badge.off .bar i{background:var(--color-text-muted)}
+.stat3 .lbl2{white-space:nowrap;overflow-wrap:normal;font-size:11px}
