@@ -1073,6 +1073,18 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:100%;min-height:56px;text-align:left;font-size:15px;line-height:21px;font-weight:700;padding:12px;border-radius:var(--radius-lg);color:var(--ink);border:2px solid var(--ink)}
 .steps3 .st1 span{flex:1}
 .steps3 .st1 .go{font-style:normal;font-weight:800;font-size:20px}
+/* #1182 HP: tiap tombol header punya nama kecil di bawah ikon (Profil, Atur); area ketuk 44px */
+#hdx .hbl,#hdx .av-p{display:none}
+@media (max-width:640px){
+  #hdx #set,#hdx #acctBtn.avatar{width:44px;min-width:44px;height:44px;padding:0;margin:0;border:1.5px solid var(--color-text-muted);border-radius:14px;background:transparent;color:var(--ink);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+  #hdx #set .i{display:block;width:20px;height:20px}
+  #hdx #set .hsl,#hdx .av-i{display:none}
+  #hdx .av-p{display:flex;flex-direction:column;align-items:center;gap:1px}
+  #hdx .av-p .i{width:20px;height:20px}
+  #hdx .hbl{display:block;font:700 10px/12px var(--font-ui);letter-spacing:0}
+}
+@media (max-width:340px){#hdx #set,#hdx #acctBtn.avatar{width:42px;min-width:42px}}
+[data-theme=night] #hdx #set,[data-theme=night] #hdx #acctBtn.avatar{color:var(--cream)}
 @media (max-width:600px){.big{font-size:40px;line-height:40px;margin:4px 0}}
 @media (max-width:360px){.big{font-size:34px;line-height:34px}.hero-pic{max-height:22vh}}
 
@@ -1100,3 +1112,8 @@ ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;bor
 
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
 @media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
+
+/* Menu baca (#1184): tombol teks tetap di bilah bawah */
+.rfoot .rmenu{min-width:56px;min-height:44px;padding:0 12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
+.reader.chrome .rfoot .rmenu{background:var(--color-surface);color:var(--color-text)}
+.rfoot .rmid{min-width:0}
