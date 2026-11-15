@@ -1027,3 +1027,16 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .stat3 .lbl2{white-space:nowrap;overflow-wrap:normal;font-size:11px}
 .lvlup .lvl-ic{width:88px;height:88px;margin:0 auto 8px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center}
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
+
+/* #1095 header jelas: avatar tanpa teks, tombol Pengaturan berbingkai + ikon; Home: titik 7 hari; Profil: rak pendek, progres lencana jelas */
+#hdx{gap:10px}
+#hdx #set{border:1.5px solid var(--color-text-muted);border-radius:9999px;min-width:44px;height:44px;padding:0 12px;margin-left:4px;background:transparent}
+#hdx #set .i{display:inline-block;width:20px;height:20px}
+#hdx #set .hsl{display:inline;font-size:13px}
+@media (max-width:640px){#hdx{gap:8px}#hdx #set{padding:0 10px;font-size:13px;margin-left:2px}}
+@media (max-width:430px){#hdx #set{width:44px;padding:0}#hdx #set .hsl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (max-width:340px){#hdx{gap:6px}#hdx #set{width:44px;min-width:44px;padding:0}}
+.stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}
+.rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
+.badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
+.badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
