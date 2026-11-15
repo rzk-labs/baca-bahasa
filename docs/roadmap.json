@@ -798,6 +798,14 @@
       "nama": "Header Baca HP: judul pendek tanpa nama penulis, tak terpotong (#1043)",
       "dokumen": "docs/desain-header-baca-judul-pendek.md",
       "status": "selesai (#1043)"
+    },
+    {
+      "no": 105,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header Baca HP: posisi bagian ringkas 10/10, tak tabrak Dengar (#1063)",
+      "dokumen": "docs/mockup-1063.html",
+      "status": "selesai (#1063)"
     }
   ],
   "prioritas": [
