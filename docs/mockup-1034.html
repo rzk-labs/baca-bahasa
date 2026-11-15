@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1034 — Pesan gagal masuk</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#e8e4da;font-family:Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
+.wrap{width:390px}
+.tag{font-size:12px;font-weight:700;color:#5F5059;margin:0 0 6px}
+.plan{font-size:12px;background:#E9F056;color:#351E28;padding:6px 10px;border-radius:8px;margin-bottom:10px;font-weight:600}
+.phone{width:390px;height:640px;background:#D7EFFF;border-radius:28px;border:1px solid #B2CFE2;padding:18px 16px;display:flex;flex-direction:column;overflow:hidden}
+h1{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:22px;margin:0 0 4px}
+.sub{font-size:13px;color:#5F5059;margin:0 0 14px}
+.seg{display:flex;gap:4px;background:#C3E1F4;border-radius:14px;padding:4px}
+.seg span{flex:1;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:14px}
+.seg .on{background:#351E28;color:#FAF7F0}
+label{display:block;font-size:12px;color:#5F5059;margin-top:12px;font-weight:600}
+.in{background:#FAF7F0;border:1px solid #B2CFE2;border-radius:12px;padding:13px;font-size:15px;margin-top:4px;color:#351E28}
+.in.bad{border-color:#351E28;border-width:2px}
+.alert{background:#FAF7F0;border:2px solid #351E28;border-radius:14px;padding:12px 14px;margin-top:14px;font-size:14px;font-weight:600;line-height:1.35}
+.alert small{display:block;font-weight:400;color:#5F5059;margin-top:2px;font-size:13px}
+.alert mark{background:#E9F056;padding:0 3px;border-radius:3px}
+.go{font:inherit;font-weight:700;font-size:15px;border-radius:14px;min-height:52px;width:100%;margin-top:12px;border:0;background:#351E28;color:#FAF7F0}
+.ghost{font:inherit;font-weight:700;font-size:14px;border-radius:14px;min-height:48px;width:100%;margin-top:8px;border:1px solid #B2CFE2;background:#FAF7F0;color:#351E28}
+.toast{margin-top:auto;background:#351E28;color:#FAF7F0;border-radius:14px;padding:12px 14px;font-size:14px}
+.btnrow{display:flex;gap:8px}.btnrow .go,.btnrow .ghost{flex:1;margin-top:10px}
+</style></head><body>
+
+<div class="wrap"><p class="tag">1 · Sebelum (sekarang)</p><div class="phone">
+<h1>Masuk</h1><p class="sub">Lanjutin progres kamu di HP mana aja.</p>
+<div class="seg"><span class="on">Masuk</span><span>Daftar</span></div>
+<label>Username</label><div class="in">rina_baca</div>
+<label>Password</label><div class="in">••••••</div>
+<button class="go">Masuk</button>
+<div class="toast">Username atau password salah.</div>
+</div></div>
+
+<div class="wrap"><p class="plan">Gambaran rencana, belum dibangun</p><p class="tag">2 · Sesudah — salah password</p><div class="phone">
+<h1>Masuk</h1><p class="sub">Lanjutin progres kamu di HP mana aja.</p>
+<div class="seg"><span class="on">Masuk</span><span>Daftar</span></div>
+<label>Username</label><div class="in">rina_baca</div>
+<label>Password</label><div class="in bad">••••••</div>
+<div class="alert" role="alert">Username atau password belum cocok. Cek lagi ya.<small>Progresmu aman di HP.</small></div>
+<button class="go">Coba lagi</button>
+<button class="ghost">Daftar akun baru</button>
+<button class="ghost">Lanjut tanpa akun</button>
+</div></div>
+
+<div class="wrap"><p class="plan">Gambaran rencana, belum dibangun</p><p class="tag">3 · Sesudah — sinyal putus</p><div class="phone">
+<h1>Masuk</h1><p class="sub">Lanjutin progres kamu di HP mana aja.</p>
+<div class="seg"><span class="on">Masuk</span><span>Daftar</span></div>
+<label>Username</label><div class="in">rina_baca</div>
+<label>Password</label><div class="in">••••••</div>
+<div class="alert" role="alert">Sinyalmu lagi putus. <mark>Bacaanmu tetap bisa dibuka.</mark></div>
+<button class="go">Coba lagi</button>
+<button class="ghost">Lanjut tanpa akun</button>
+</div></div>
+
+<div class="wrap"><p class="plan">Gambaran rencana, belum dibangun</p><p class="tag">4 · Sesudah — username kembar (Daftar)</p><div class="phone">
+<h1>Bikin akun</h1><p class="sub">Simpan XP &amp; streak, ikut leaderboard, dan bagikan cerita ke teman.</p>
+<div class="seg"><span>Masuk</span><span class="on">Daftar</span></div>
+<label>Username</label><div class="in bad">rina</div>
+<div class="alert" role="alert">Username itu sudah ada yang pakai.<small>Coba tambah angka, mis. rina_baca2.</small></div>
+<label>Password</label><div class="in">••••••</div>
+<button class="go">Daftar &amp; masuk</button>
+<button class="ghost">Sudah punya akun? Masuk</button>
+</div></div>
+
+</body></html>
