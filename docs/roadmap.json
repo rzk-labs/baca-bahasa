@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 114,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu kata: 'Bisa juga' & arti lain jangan terpotong titik-titik (#1115)",
+      "dokumen": "docs/desain-arti-lain-terpotong.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 104,
       "peran": "developer",
       "prioritas": "P0",
