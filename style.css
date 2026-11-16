@@ -1095,6 +1095,15 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 [data-theme=night] #hdx #set,[data-theme=night] #hdx #acctBtn.avatar{color:var(--cream)}
 @media (max-width:600px){.big{font-size:40px;line-height:40px;margin:4px 0}}
 @media (max-width:360px){.big{font-size:34px;line-height:34px}.hero-pic{max-height:22vh}}
+/* #1206 HP: pil XP disembunyikan di <=430px (override aturan #1039) supaya Profil + Atur tak terdorong keluar header; XP tetap di kartu Home */
+@media (max-width:430px){#pXp{display:none}#hdx{flex:0 0 auto;margin-left:auto}#hdx #set,#hdx #acctBtn.avatar{flex:none}}
+/* #1206 nada pinyin bukan cuma warna: angka nada kecil + garis bawah beda per nada */
+.pt.t1::after,.pt.t2::after,.pt.t3::after,.pt.t4::after{font-size:.6em;line-height:0;vertical-align:super;font-weight:700;margin-left:1px}
+.pt.t1::after{content:"1"}.pt.t2::after{content:"2"}.pt.t3::after{content:"3"}.pt.t4::after{content:"4"}
+.pt.t1{text-decoration:underline solid;text-underline-offset:3px}
+.pt.t2{text-decoration:underline dashed;text-underline-offset:3px}
+.pt.t3{text-decoration:underline dotted;text-underline-offset:3px}
+.pt.t4{text-decoration:underline double;text-underline-offset:3px}
 
 /* #1104 Home pemula: Upload di atas, gambar kecil, langkah = daftar bernomor */
 .hero-up{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin:0 0 6px;border:0;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font:700 16px var(--font-ui)}
