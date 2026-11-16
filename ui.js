@@ -2457,7 +2457,7 @@ function showSentence(word, sent, sIdx, sEl) {
     if (bc && sb) {
       const v = `<div class="sbaca" dir="auto" lang="${esc(b.lang)}">${esc(bc)}</div>`;
       sb.innerHTML = db.showBaca ? v : `<button class="ghost sbaca-peek" id="speek" type="button">Lihat cara baca</button>` + v.replace('class="sbaca"', 'class="sbaca hide" id="speekv"');
-      if ($('#speek')) $('#speek').onclick = () => { $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
+      if ($('#speek')) $('#speek').onclick = () => { db.showBaca = true; save(); $('#speek').classList.add('hide'); $('#speekv').classList.remove('hide'); keepVisible('.s.hl'); };
     }
     keepVisible('.s.hl');
   }).catch(() => {
@@ -2946,7 +2946,7 @@ function deck(kb) {
   if ($('#fAll')) { const a = $('#fAll'); a.addEventListener('pointerdown', e => e.stopPropagation()); a.addEventListener('pointerup', e => e.stopPropagation()); a.onclick = e => { e.stopPropagation(); openSemua(v, () => { if (kb.isConnected && $('#fAll')) $('#fAll').textContent = `Semua arti (${(v.all || []).reduce((n, g) => n + g.terms.length, 0)})`; }); }; }
   $('#fShow').onclick = flip; $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fMaybe').onclick = maybe;
   { const sp = $('#fSp'); sp.addEventListener('pointerdown', e => e.stopPropagation()); sp.addEventListener('pointerup', e => e.stopPropagation()); sp.onclick = e => { e.stopPropagation(); speak(v.w, v.lang, 0.8); }; }
-  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }
+  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); db.showBaca = true; save(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }
   let sx = null, dx = 0;
   card.addEventListener('pointerdown', e => { if (!flipped) return; sx = e.clientX; dx = 0; card.style.transition = 'none'; card.setPointerCapture(e.pointerId); });
   card.addEventListener('pointermove', e => { if (sx == null) return; dx = e.clientX - sx; card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`; card.querySelector('.yes').style.opacity = Math.max(0, dx / 100); card.querySelector('.no').style.opacity = Math.max(0, -dx / 100); });
