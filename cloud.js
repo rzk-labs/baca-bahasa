@@ -157,10 +157,13 @@ function mergeTaps(srv) {
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
 let lastSync = '', syncCur = null;
+// status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
+var bkState = '';
+function bkSet(v) { if (bkState === v) return; bkState = v; if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
 function syncRefresh(force) {
   if (!force && !$('#sheet').classList.contains('hide')) return;
   const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName);
-  if (db.tab === 'rak' || (db.tab === 'kata' && typeof kataSeg !== 'undefined' && kataSeg === 'simpan' && !typing)) setTab(db.tab);
+  if (db.tab === 'rak' || db.tab === 'home' || (db.tab === 'kata' && typeof kataSeg !== 'undefined' && kataSeg === 'simpan' && !typing)) setTab(db.tab);
 }
 async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
@@ -211,6 +214,8 @@ let bkBusy = false;
 async function syncBooks() {
   if (!db.acct || !API || !canGz || bkBusy || navigator.onLine === false) return;
   bkBusy = true;
+  if (!(db.books || []).length) bkSet('load');
+  let bad = false;
   try {
     const rem = (await api('/books')).books || [];
     const remKeys = new Set(rem.map(x => x.key));
@@ -235,7 +240,7 @@ async function syncBooks() {
       } catch (e) { }
     }
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
-  } catch (e) { } finally { bkBusy = false; }
+  } catch (e) { bad = true; } finally { bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
 async function runSync(opt = {}) {
@@ -249,6 +254,7 @@ async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
+  if (!(db.books || []).length) bkState = 'load';
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
   toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun' : 'Progres di HP ini disimpan ke akun'}`);
   closeSheet(); setTab(db.tab || 'rak');
