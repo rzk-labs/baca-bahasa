@@ -150,6 +150,14 @@
   ],
   "backlog": [
     {
+      "no": 130,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ HP: kolom papan kosong jangan melar, judul di atas (#1212)",
+      "dokumen": "docs/pm-papan-kolom-kosong-1212.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 129,
       "peran": "developer",
       "prioritas": "P0",
