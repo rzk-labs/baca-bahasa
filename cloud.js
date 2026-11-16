@@ -157,10 +157,13 @@ function mergeTaps(srv) {
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
 let lastSync = '', syncCur = null;
+// status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
+var bkState = '';
+function bkSet(v) { if (bkState === v) return; bkState = v; if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
 function syncRefresh(force) {
   if (!force && !$('#sheet').classList.contains('hide')) return;
   const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName);
-  if (db.tab === 'rak' || (db.tab === 'kata' && typeof kataSeg !== 'undefined' && kataSeg === 'simpan' && !typing)) setTab(db.tab);
+  if (db.tab === 'rak' || db.tab === 'home' || (db.tab === 'kata' && typeof kataSeg !== 'undefined' && kataSeg === 'simpan' && !typing)) setTab(db.tab);
 }
 async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
@@ -211,6 +214,8 @@ let bkBusy = false;
 async function syncBooks() {
   if (!db.acct || !API || !canGz || bkBusy || navigator.onLine === false) return;
   bkBusy = true;
+  if (!(db.books || []).length) bkSet('load');
+  let bad = false;
   try {
     const rem = (await api('/books')).books || [];
     const remKeys = new Set(rem.map(x => x.key));
@@ -235,7 +240,7 @@ async function syncBooks() {
       } catch (e) { }
     }
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
-  } catch (e) { } finally { bkBusy = false; }
+  } catch (e) { bad = true; } finally { bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
 async function runSync(opt = {}) {
@@ -249,6 +254,7 @@ async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
+  if (!(db.books || []).length) bkState = 'load';
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
   toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun' : 'Progres di HP ini disimpan ke akun'}`);
   closeSheet(); setTab(db.tab || 'rak');
@@ -569,12 +575,12 @@ async function openProfile(username) {
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} Total XP seumur hidup</div>` : ''}</div></div>
-      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
+      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div><b>${p.kata7}</b><span>kata disimpan/minggu</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}" aria-label="${esc('Lencana ' + name + ', ' + (on ? 'sudah didapat' : 'belum didapat'))}">${on ? `<span class="bst on" aria-hidden="true">${ico('check')}</span>` : '<span class="bst" aria-hidden="true">Belum</span>'}<span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${on ? `<span class="got">${ico('check', 'ck')} Didapat</span>` : ''}${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div>` : ''}
+      <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}" aria-label="${esc('Lencana ' + name + ', ' + (on ? 'Sudah dapat' : 'Belum didapat'))}">${on ? `<span class="bst on" aria-hidden="true">${ico('check')}</span>` : ''}<span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${on ? `<span class="got">${ico('check', 'ck')} Didapat</span>` : ''}${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div>` : ''}
       ${p.self ? rakHtml() : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
