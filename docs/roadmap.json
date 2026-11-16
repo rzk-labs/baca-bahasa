@@ -150,6 +150,23 @@
   ],
   "backlog": [
     {
+      "no": 129,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu ulang: tanda nada selain warna (angka kecil + palet aman buta warna + legenda 1-4) (#1205)",
+      "dokumen": "docs/riset-warna-nada-pinyin.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 128,
+      "peran": "riset",
+      "prioritas": "P0",
+      "nama": "Bukti internet: warna nada pinyin + buta warna, tanda nada selain warna (#1205)",
+      "dokumen": "docs/riset-warna-nada-pinyin.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 38 bukti dari 6 jenis sumber. Vonis: warna bantu ingat = belum jelas; warna saja gagal buta warna = terbukti; tanda+warna lebih pintar = gugur (tapi tetap perlu demi aksesibilitas); legenda singkat = belum jelas (condong cukup); palet merah/hijau bermasalah = terbukti. Lihat docs/riset-warna-nada-pinyin.md."
+    },
+    {
       "no": 126,
       "peran": "developer",
       "prioritas": "P0",
