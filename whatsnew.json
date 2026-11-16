@@ -1,5 +1,11 @@
 [
   {
+    "n": 1199,
+    "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
+    "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1219,
     "judul": "Streak & XP harian pakai tanggal lokal (WITA), bukan UTC",
     "poin": "Streak dan XP harian sekarang pakai tanggal di HP, bukan jam dunia.",
@@ -171,12 +177,6 @@
     "n": 1103,
     "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
     "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1101,
-    "judul": "[peta 111] Baca ulang buku tamat: tanpa XP halaman, kata baru tetap XP",
-    "poin": "Baca ulang buku yang sudah tamat tidak kasih XP halaman lagi.",
     "tgl": "2026-11-15"
   }
 ]

@@ -130,7 +130,11 @@ const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0
 /* posisi dalam bab = pecahan stabil b.frac (0-1, milik bab b.fracPos); buku lama: dari pg/pgN; tak ada = awal bab */
 function fracOf(b) {
   const pos = b.pos || 0;
-  if (typeof b.frac === 'number' && b.fracPos === pos && b.frac >= 0 && b.frac <= 1) return b.frac;
+  if (typeof b.frac === 'number' && b.fracPos === pos && b.frac >= 0 && b.frac <= 1) {
+    /* kalimat digeser di luar reader (Ngomong, penanda): perkirakan dari kalimat, bukan halaman basi */
+    if (b.sc > 1 && Number.isFinite(b.fsi) && Number.isFinite(b.si) && b.si !== b.fsi) return Math.max(0, Math.min(1, (Math.min(b.si, b.sc - 1) + 1) / b.sc));
+    return b.frac;
+  }
   if (b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === pos) return (b.pg + 1) / b.pgN;
   return 0;
 }
@@ -899,7 +903,7 @@ function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() +
 function pagesWeek() {
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
   const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
-  return Math.min(n, db.books.reduce((a, b) => a + (b.total || 0), 0));
+  return n; /* #1199: tanpa batas jumlah bagian buku (dulu terpotong, jadi angka tak naik) */
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
@@ -1821,7 +1825,7 @@ function showPage(p, anim = true) {
   if (!sx || sx.pg > RD.page) { for (let i = RD.ss.length - 1; i >= 0; i--) if (RD.ss[i].pg < RD.page) { sx = RD.ss[i]; break; } }
   if (sx) b.si = +sx.el.dataset.s;
   spdNote(b, RD.page);
-  b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos; b.frac = (RD.page + 1) / RD.n; b.fracPos = b.pos;
+  b.pg = RD.page; b.pgN = RD.n; b.pgPos = b.pos; b.frac = (RD.page + 1) / RD.n; b.fracPos = b.pos; b.fsi = b.si; b.sc = RD.ss.length;
   let hd = null; for (const h of RD.hs) { if (h.pg <= RD.page) hd = h.el; else break; }
   const rh = $('.rhead'); if (rh) { rh.textContent = hd ? hd.textContent.trim() : b.title; rh.title = rh.textContent; } /* judul bab hanya setelah judulnya benar-benar tampil; sebelumnya judul buku */
   SESPG.add(b.id + ':' + b.pos + ':' + RD.page);
