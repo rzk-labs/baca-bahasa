@@ -1131,3 +1131,6 @@ ol.steps3 b{flex:none;display:flex;align-items:center;justify-content:center;bor
 .rfoot .rmenu{min-width:56px;min-height:44px;padding:0 12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
 .reader.chrome .rfoot .rmenu{background:var(--color-surface);color:var(--color-text)}
 .rfoot .rmid{min-width:0}
+.asp-ban{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#D7EFFF;color:#351E28;font-size:14px}
+.asp-ban span{flex:1 1 100%}
+.asp-ban button{min-height:40px;padding:0 16px}
