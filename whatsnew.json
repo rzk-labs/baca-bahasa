@@ -1,5 +1,47 @@
 [
   {
+    "n": 1201,
+    "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
+    "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1199,
+    "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
+    "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1219,
+    "judul": "Streak & XP harian pakai tanggal lokal (WITA), bukan UTC",
+    "poin": "Streak dan XP harian sekarang pakai tanggal di HP, bukan jam dunia.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1197,
+    "judul": "Kartu ulang: tombol speaker di depan kartu + tawarkan bunyi otomatis",
+    "poin": "Tombol speaker di kartu ulang sekarang pakai ikon buatan sendiri, sesuai gaya brand.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1203,
+    "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
+    "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1195,
+    "judul": "[peta 114] Keepo HQ: mockup tampil langsung, tanpa tombol",
+    "poin": "Mockup di Keepo HQ sekarang langsung tampil, tanpa ketuk tombol.",
+    "tgl": "2026-11-16"
+  },
+  {
+    "n": 1181,
+    "judul": "[peta 126] Arti lain lengkap: jenis kata, maks 6 arti, tahan balasan aneh",
+    "poin": "Arti lain kini lebih lengkap, dikelompokkan per jenis kata, tanpa batas 6 arti.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1193,
     "judul": "Home: satu pilihan bahasa, langkah 1-3 bukan tombol palsu, kontras",
     "poin": "Home sekarang lebih jelas dan tidak pudar saat dibuka.",
@@ -135,48 +177,6 @@
     "n": 1131,
     "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
     "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1103,
-    "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
-    "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1101,
-    "judul": "[peta 111] Baca ulang buku tamat: tanpa XP halaman, kata baru tetap XP",
-    "poin": "Baca ulang buku yang sudah tamat tidak kasih XP halaman lagi.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1083,
-    "judul": "Setelah tamat: satu 'Baca ulang' saja + Home rapi, tak ada layar kosong",
-    "poin": "Halaman terakhir cuma punya satu \"Baca ulang\", tidak tiga lagi.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1107,
-    "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
-    "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1104,
-    "judul": "Home pemula: tombol 'Upload file' tanpa scroll + langkah 1-2-3 jelas",
-    "poin": "Tombol Upload file sekarang langsung terlihat di Home, tanpa scroll.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1099,
-    "judul": "Tab Sosial tak boleh balik ke Home diam-diam: pesan jelas + coba lagi",
-    "poin": "Tab Sosial tak lagi diam-diam balik ke Home.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1095,
-    "judul": "Profil & Home: header jelas, lencana naik, '4 hari' tak berulang",
-    "poin": "Tombol Pengaturan kini jelas, beda dari bulatan akun, dan muat di layar kecil.",
     "tgl": "2026-11-15"
   }
 ]

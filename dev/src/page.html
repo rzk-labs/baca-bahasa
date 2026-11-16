@@ -608,7 +608,7 @@ async function peta(){
   if(!HQ){skel();try{await load()}catch(e){gagal(e.message,()=>go('peta'));return}}
   const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
   const fases=[...new Set(R.tahap.map(t=>t.fase))];
-  V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta 20 tahap</h1></div>
+  V.innerHTML=`<div style="margin-bottom:16px"><div class="eyebrow mut">${esc(R.produk)} · ${esc(R.tagline||'')}</div><h1>Peta ${R.tahap.length} tahap</h1></div>
   <div class="bento" style="margin-bottom:22px"><div class="tile c t-lav span2"><div class="eyebrow">Progres keseluruhan</div><div class="big">${progres(R)}%</div><div class="bar" style="margin-top:10px"><i style="width:${progres(R)}%"></i></div></div>
   <div class="tile c t-sun span2"><div class="eyebrow">Kapasitas founder</div><div style="font-weight:700;margin-top:6px">${esc(R.kapasitas_founder||'')}</div></div></div>
   ${(()=>{const info=fases.map(f=>{const L=R.tahap.filter(t=>t.fase===f);return {f,L,pr:Math.round(L.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/L.length*100),done:L.every(t=>t.status==='selesai')}});return [...info.filter(x=>!x.done),...info.filter(x=>x.done)]})().map(({f,L,pr,done})=>`<details class="phase"${done?'':' open'}><summary><h3>${esc(f)}</h3><span class="mut sm">${pr}%${done?' · selesai':''}</span><div class="bar"><i style="width:${pr}%"></i></div></summary><div class="stages">${L.map(t=>{const sd=sumberDok(t.catatan);return `<details class="stage"><summary><div class="no">${String(t.no).padStart(2,'0')}</div><b>${esc(t.nama)}</b><span class="chip k-${t.status}">${KS[t.status]||t.status}</span><div class="mut sm ct">${linkDok(t.catatan||'')||'—'}</div></summary><div class="dt2"><div class="mut sm">${linkDok(t.catatan||'')}</div>${sd.length?`<div class="acts">${sd.map(d=>`<button class="btn lime" data-sumber="${esc(d)}">📄 Sumber: ${esc(namaDok(d))}</button>`).join('')}</div>`:''}</div></details>`}).join('')}</div></details>`).join('')}
@@ -708,7 +708,7 @@ function tampilDetail(t,n,mv){
     ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
-  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><button class="btn lime" id="mockbtn">Tampilkan mockup</button></div></section>`:''}
+  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div></section>`:''}
   `:''}
   ${!kerja?mockSec+aksi:''}
   ${h&&!kerja?`
@@ -720,7 +720,7 @@ function tampilDetail(t,n,mv){
     <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
   </details>
   </div>`;
-  if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
+  if($('#mock')){const mk=$('#mock'),muat=()=>{const src=MOCK||t.preview,fw=Math.min(300,mk.clientWidth||300),iw=fw-26,sc=iw/390,vh=560;mk.innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};if('IntersectionObserver'in window){const io=new IntersectionObserver(e=>{if(e.some(x=>x.isIntersecting)){io.disconnect();muat()}},{rootMargin:'200px'});io.observe(mk)}else muat()}
   const mks=V.querySelector('.mk-s');
   if(mks){
     const nn=$('#mkn');

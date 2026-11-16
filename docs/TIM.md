@@ -1,7 +1,7 @@
 # Tim agent Keepo
 
 Tim AI yang mengembangkan Keepo terus-menerus. Founder (Rizka) hanya menyetujui hasil.
-Sumber kebenaran arah produk: `docs/roadmap.json` (20 tahap, prioritas P0-P3, milestone).
+Sumber kebenaran arah produk: `docs/roadmap.json` (33 tahap: 1-20 selesai, Fase 2 = 21-33; prioritas P0-P3, milestone). Pegangan Fase 2: `docs/pm-peta-fase-2.md`.
 
 | Peran | Label | Tugasnya | Hasil |
 |---|---|---|---|
