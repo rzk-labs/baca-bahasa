@@ -28,6 +28,7 @@
 - [mvp-audit](pm-mvp-audit.md)
 - [peta-fase-berikutnya](pm-peta-fase-berikutnya.md)
 - [peta-fase-berikutnya-2](pm-peta-fase-berikutnya-2.md)
+- [peta-fase-2](pm-peta-fase-2.md) — pegangan Fase 2 (tahap 21-33)
 - [peta-hq-rapi](pm-peta-hq-rapi.md)
 - [audit-tugas-terlewat](pm-audit-tugas-terlewat.md)
 - [leaderboard-akun-ai-jelajah](pm-leaderboard-akun-ai-jelajah.md)
