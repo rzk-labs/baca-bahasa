@@ -898,13 +898,13 @@ function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() +
 /* SATU sumber 'halaman dibaca': halaman unik 7 hari terakhir (db.pgDay), batas atas = total halaman semua buku */
 function pagesWeek() {
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
-  const n =Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
+  const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
   return Math.min(n, db.books.reduce((a, b) => a + (b.total || 0), 0));
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
-  const days =db.days.filter(d => d >= from).length;
+  const days = db.days.filter(d => d >= from).length;
   const pages = pagesWeek();
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
