@@ -79,9 +79,10 @@ function spot(mood = 'curious', cls = '') {
 
 /* ---------- utilitas ---------- */
 const vib = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { } };
-const today = () => new Date().toISOString().slice(0, 10);
+const dayKey = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const today = () => dayKey();
 function markDay() { const d = today(); if (!db.days.includes(d)) { db.days.push(d); db.days = db.days.slice(-400); save(); } }
-function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(d.toISOString().slice(0, 10))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
+function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(dayKey(d))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
 function hue(s) { let h = 5381; for (const c of String(s)) h = (Math.imul(h, 33) + c.codePointAt(0)) >>> 0; h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d) >>> 0; h ^= h >>> 12; return h; } /* hash seluruh judul: awalan sama tetap beda warna */
 // Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
@@ -895,13 +896,13 @@ function bindWod() {
 function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
 /* SATU sumber 'halaman dibaca': halaman unik 7 hari terakhir (db.pgDay), batas atas = total halaman semua buku */
 function pagesWeek() {
-  const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  const from = dayKey(new Date(Date.now() - 7 * 864e5));
   const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
   return Math.min(n, db.books.reduce((a, b) => a + (b.total || 0), 0));
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
-  const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  const from = dayKey(new Date(Date.now() - 7 * 864e5));
   const days = db.days.filter(d => d >= from).length;
   const pages = pagesWeek();
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
@@ -953,7 +954,7 @@ function viewRak() {
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     ${weekCard()}
     <div class="stat3">
-      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Tujuh hari terakhir">${ico('flame', 'numi')}${[6, 5, 4, 3, 2, 1, 0].map(k => `<i class="${db.days.includes(new Date(Date.now() - k * 864e5).toISOString().slice(0, 10)) ? 'on' : ''}"></i>`).join('')}</div><div class="lbl2">${streakInfo()}</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Tujuh hari terakhir">${ico('flame', 'numi')}${[6, 5, 4, 3, 2, 1, 0].map(k => `<i class="${db.days.includes(dayKey(new Date(Date.now() - k * 864e5))) ? 'on' : ''}"></i>`).join('')}</div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime"><div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? 'Target tercapai' : `XP hari ini, target ${GOAL}`}</div></div>
       <div class="t-lav"><div class="eyebrow">Level</div><div class="num">${lv}</div><div class="lbl2">${inLv}/100 XP</div><div class="bar" style="margin-top:8px;height:5px"><i style="width:${inLv}%"></i></div></div>
     </div>
