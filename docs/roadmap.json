@@ -242,6 +242,14 @@
   ],
   "backlog": [
     {
+      "no": 133,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: tampilkan QA di tiap peran & total di Kuota (#1228)",
+      "dokumen": "docs/pm-qa-di-kuota-hq.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 132,
       "peran": "developer",
       "prioritas": "P0",
