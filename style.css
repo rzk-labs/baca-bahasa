@@ -4,7 +4,7 @@
    Judul Bricolage Grotesque 800, antarmuka Inter. Tema halaman baca: lihat bagian reader (tugas terpisah).
    ===================================================== */
 :root{
-  --pt1:#C0392B;--pt2:#2E7D32;--pt3:#1D5FBF;--pt4:#7B3FA0;--pt5:#5F5059;
+  --pt1:#A52A1F;--pt2:#1E6B24;--pt3:#1853A8;--pt4:#7B3FA0;--pt5:#5F5059;
   --font-display:"Bricolage Grotesque","Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-reader:"Literata",Georgia,"Times New Roman",serif;
@@ -334,6 +334,12 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .sbaca-peek{min-height:44px;font-size:14px;margin:0 0 var(--space-2)}
 .flash .fb-peek{min-height:44px;margin-top:8px;font-size:14px}
 .flash .fb:has(.pt){opacity:1}.pt.t1{color:var(--pt1)}.pt.t2{color:var(--pt2)}.pt.t3{color:var(--pt3)}.pt.t4{color:var(--pt4)}.pt.t5{color:var(--pt5)}
+/* pembeda nada tanpa warna: gaya garis bawah (t1 lurus, t2 putus-putus, t3 bergelombang, t4 tebal, t5 tanpa) */
+.pt{text-underline-offset:4px;text-decoration-thickness:2px}
+.pt.t1{text-decoration-line:underline;text-decoration-style:solid}.pt.t2{text-decoration-line:underline;text-decoration-style:dashed}
+.pt.t3{text-decoration-line:underline;text-decoration-style:wavy;text-decoration-thickness:1.5px}.pt.t4{text-decoration-line:underline;text-decoration-style:solid;text-decoration-thickness:4px}
+.nlg{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px 6px;margin-top:6px;font-size:12px;line-height:1.4;color:var(--color-text-muted)}
+.nlg .pt{font-weight:700}.nlg-btn{min-height:44px;min-width:44px;padding:0 10px;font-size:12px;background:none;border:0;color:var(--color-text-muted);text-decoration:underline;cursor:pointer}
 .flash .fbase{font-size:13px;line-height:1.3;margin-top:4px;opacity:.8;overflow-wrap:anywhere;max-width:100%}.flash .fbase b{font-weight:700}
 .flash .tap{font-size:15px;font-weight:700;opacity:.8;margin-top:6px}
 .flash .semua-btn{min-height:44px;min-width:44px;margin-top:6px;font-size:14px}
@@ -353,7 +359,8 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .deck-act.hide{display:none}.deck-act .full{grid-column:1/-1}.deck-act.three{grid-template-columns:repeat(3,1fr)}
 .deck-act.three button{flex-direction:column;gap:2px;padding-left:6px;padding-right:6px}.deck-act .dl{display:inline-flex;align-items:center;gap:6px}.deck-act .when{font-size:11px;font-weight:500;line-height:1.2;opacity:.8;white-space:nowrap}
 .deck-act .mid{background:var(--color-surface-soft);color:var(--color-text);border:2px solid var(--color-border)}
-.flash .fsp{position:absolute;top:10px;right:10px;min-width:48px;min-height:48px;touch-action:manipulation}
+.flash .fsp{position:absolute;top:10px;right:10px;min-width:48px;min-height:48px;touch-action:manipulation;padding:0;border:0;background:none;border-radius:14px;cursor:pointer}
+.flash .fsp img{display:block;width:48px;height:48px}
 .sum .s1{background:var(--color-surface-soft);color:var(--color-text)}.sum .s2{background:var(--ink);color:var(--cream)}.sum .s3{background:var(--color-surface);color:var(--color-text);border:2px solid var(--color-border)}
 [data-theme=night] .sum .s2,[data-theme=dark] .sum .s2{background:var(--hl);color:var(--ink)}
 .badge.t-blue{color:var(--cream)}.badge .em svg.i{width:28px;height:28px;margin:5px 0}
@@ -405,8 +412,9 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .walt{margin:4px 0 0}
 .walink{min-height:44px;font-size:14px;font-weight:700;padding-left:0}
 .altbox{background:var(--color-border);border-radius:14px;padding:10px 12px;margin-top:4px}
-.altch{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.altch{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:8px 0}
 .altopt{min-height:44px;border:1.5px solid var(--color-text);border-radius:14px;background:transparent;color:var(--color-text);padding:8px 12px;text-align:left;font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.altpos{margin:8px 0 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.7}
 .altrow{display:flex;gap:8px;flex-wrap:wrap}
 .pickchip{height:24px;font-size:11px;vertical-align:middle;margin-left:4px}
 .aij{margin:8px 0}.aij-q{margin:4px 2px}
@@ -1098,6 +1106,15 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 [data-theme=night] #hdx #set,[data-theme=night] #hdx #acctBtn.avatar{color:var(--cream)}
 @media (max-width:600px){.big{font-size:40px;line-height:40px;margin:4px 0}}
 @media (max-width:360px){.big{font-size:34px;line-height:34px}.hero-pic{max-height:22vh}}
+/* #1206 HP: pil XP disembunyikan di <=430px (override aturan #1039) supaya Profil + Atur tak terdorong keluar header; XP tetap di kartu Home */
+@media (max-width:430px){#pXp{display:none}#hdx{flex:0 0 auto;margin-left:auto}#hdx #set,#hdx #acctBtn.avatar{flex:none}}
+/* #1206 nada pinyin bukan cuma warna: angka nada kecil + garis bawah beda per nada */
+.pt.t1::after,.pt.t2::after,.pt.t3::after,.pt.t4::after{font-size:.6em;line-height:0;vertical-align:super;font-weight:700;margin-left:1px}
+.pt.t1::after{content:"1"}.pt.t2::after{content:"2"}.pt.t3::after{content:"3"}.pt.t4::after{content:"4"}
+.pt.t1{text-decoration:underline solid;text-underline-offset:3px}
+.pt.t2{text-decoration:underline dashed;text-underline-offset:3px}
+.pt.t3{text-decoration:underline dotted;text-underline-offset:3px}
+.pt.t4{text-decoration:underline double;text-underline-offset:3px}
 
 /* #1104 Home pemula: Upload di atas, gambar kecil, langkah = daftar bernomor */
 .hero-up{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin:0 0 6px;border:0;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font:700 16px var(--font-ui)}
@@ -1135,9 +1152,14 @@ ol.steps3 li{cursor:default}
 .bgrid .badge{padding-top:28px}
 
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
-@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
+@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button,#tabs button.on{flex:1 1 0}}
 
 /* Menu baca (#1184): tombol teks tetap di bilah bawah */
 .rfoot .rmenu{min-width:56px;min-height:44px;padding:0 12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
 .reader.chrome .rfoot .rmenu{background:var(--color-surface);color:var(--color-text)}
 .rfoot .rmid{min-width:0}
+.asp-ban{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#D7EFFF;color:#351E28;font-size:14px}
+.asp-ban span{flex:1 1 100%}
+.asp-ban button{min-height:40px;padding:0 16px}
+@media (max-width:480px){#tabs button{font-size:11.5px;letter-spacing:-.02em}}
+.sum .s3{border:0;box-shadow:inset 0 0 0 2px var(--color-border)}
