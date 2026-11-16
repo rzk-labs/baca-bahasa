@@ -94,10 +94,24 @@ function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34),
 const altArti = (dict, main) => {
   const nz = t => String(t || '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
   const seen = new Set(String(main || '').split(/[;,，、；\/]/).map(nz).filter(Boolean)); seen.add(nz(main));
-  const out = [];
-  for (const t of (dict || []).flatMap(x => x.terms.slice(0, 4))) { const k = nz(t); if (!k || seen.has(k)) continue; seen.add(k); out.push(t); }
-  return out.slice(0, 4);
+  const groups = []; let total = 0;
+  for (const x of (Array.isArray(dict) ? dict : [])) {
+    if (!x || !Array.isArray(x.terms)) continue;
+    const pos = typeof x.pos === 'string' ? x.pos : '';
+    for (const t of x.terms) {
+      if (total >= 40) break;
+      const k = typeof t === 'string' ? nz(t) : ''; if (!k || seen.has(k)) continue;
+      let g = groups.find(y => y.pos === pos); if (!g) { g = { pos, terms: [] }; groups.push(g); }
+      if (g.terms.length >= 15) continue;
+      seen.add(k); g.terms.push(t); total++;
+    }
+  }
+  return groups.filter(g => g.terms.length);
 };
+const altCount = gs => gs.reduce((n, g) => n + g.terms.length, 0);
+const altFlat = gs => gs.flatMap(g => g.terms);
+/* kelompok arti -> HTML: label jenis kata (tanpa label bila tak ada), chip bernomor data-i berurutan */
+const altHtml = gs => { let i = 0; return gs.map(g => `${g.pos ? `<div class="altpos">${esc((POS[g.pos] || g.pos).replace(/^./, c => c.toUpperCase()))}</div>` : ''}<div class="altch" role="group" aria-label="Arti lain">${g.terms.map(t => `<button class="altopt" type="button" data-i="${i++}" dir="auto">${esc(t)}</button>`).join('')}</div>`).join(''); };
 function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = splitTitle(b.title).main, ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}" role="img" aria-label="${esc(t)}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
@@ -2232,7 +2246,7 @@ async function onWord(el, lastEl) {
     setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
-    const alt = altArti(d, r.text);
+    const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? d.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
@@ -2252,19 +2266,19 @@ async function onWord(el, lastEl) {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
     const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
     wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
-    let list = [];
+    let groups = [];
     try {
-      const cur = curT();
-      list = altArti((tr && tr.dict) || [], cur);
-      if (list.length < 3 && !(b.lang === 'ja' && db.my === 'id')) {
+      const cur = curT(), base = (tr && tr.dict) || [];
+      groups = altArti(base, cur);
+      if (altCount(groups) < 3 && !(b.lang === 'ja' && db.my === 'id')) {
         const more = await altFetch(qWord(), b.lang, db.my);
-        list = altArti([{ terms: [...list, ...more] }], cur);
+        groups = altArti([...base, ...more], cur);
       }
     } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
     if (word !== w || $('#walt') !== wAlt) return;
-    list = list.slice(0, 3);
+    const list = altFlat(groups);
     if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba ketuk kata di sekitarnya.</div><div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; return; }
-    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
+    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${tr && tr.baca ? `<div class="mut sm">Cara baca: ${esc(bacaDisp(word, bacaShow(word, tr.baca, b.lang)))}</div>` : ''}${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
     $$('#walt .altopt').forEach(x => x.onclick = () => pickArti(list[+x.dataset.i]));
     $('#waclose').onclick = altLink; keepVisible('.w.sel');
   };
@@ -2661,14 +2675,14 @@ function bossArti(w, lang) {
     al.dataset.open = '1';
     const fail = msg => { if (!alive()) return; al.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="raretry" type="button">Coba lagi</button><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`; $('#raretry').onclick = open; $('#raclose').onclick = link; };
     al.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
-    let list = [];
+    let groups = [];
     try {
-      const c = cur(); list = altArti((r && r.dict) || [], c);
-      if (list.length < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); list = altArti([{ terms: [...list, ...more] }], c); }
+      const c = cur(), base = (r && r.dict) || []; groups = altArti(base, c);
+      if (altCount(groups) < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); groups = altArti([...base, ...more], c); }
     } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
-    if (!alive()) return; list = list.slice(0, 3);
+    if (!alive()) return; const list = altFlat(groups);
     if (!list.length) { al.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain untuk kata ini.</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>'; $('#raclose').onclick = link; return; }
-    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
+    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
     $$('#ralt .altopt').forEach(e => e.onclick = () => pick(list[+e.dataset.i]));
     $('#raclose').onclick = link;
   };
