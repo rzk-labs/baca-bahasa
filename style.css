@@ -1147,9 +1147,11 @@ ol.steps3 li{cursor:default}
 .bgrid .badge{padding-top:28px}
 
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
-@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
+@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button,#tabs button.on{flex:1 1 0}}
 
 /* Menu baca (#1184): tombol teks tetap di bilah bawah */
 .rfoot .rmenu{min-width:56px;min-height:44px;padding:0 12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
 .reader.chrome .rfoot .rmenu{background:var(--color-surface);color:var(--color-text)}
 .rfoot .rmid{min-width:0}
+@media (max-width:480px){#tabs button{font-size:11.5px;letter-spacing:-.02em}}
+.sum .s3{border:0;box-shadow:inset 0 0 0 2px var(--color-border)}
