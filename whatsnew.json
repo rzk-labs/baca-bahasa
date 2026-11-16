@@ -1,5 +1,11 @@
 [
   {
+    "n": 1201,
+    "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
+    "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1199,
     "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
     "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
@@ -171,12 +177,6 @@
     "n": 1131,
     "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
     "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1103,
-    "judul": "[peta 112] Akun premium khusus 'chiko': lencana Profil + paket",
-    "poin": "Akun chiko sekarang punya lencana \"Premium\" di Profil dan Pengaturan akun.",
     "tgl": "2026-11-15"
   }
 ]
