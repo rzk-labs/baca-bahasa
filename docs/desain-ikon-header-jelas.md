@@ -27,3 +27,9 @@
 - Mockup: `docs/mockup-1182.html`.
 - `node --check` ui.js, cloud.js, sw.js: lolos.
 - Belum diuji di perangkat nyata; cek 320px & 390px setelah live.
+
+## 5. Catatan #1206
+- Penyebab Profil hilang: pil XP muncul lagi di ≤430px, header sesak, Profil terdorong keluar.
+- Perbaikan: pil XP disembunyikan di ≤430px; streak, Profil, Atur tetap. XP ada di kartu Home.
+- Nada pinyin kartu ulang: angka superskrip 1-4 + garis bawah beda (solid/putus/titik/ganda).
+- `sw.js` naik ke `kepo-v430`. Mockup: `docs/mockup-1206.html`.
