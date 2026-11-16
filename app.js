@@ -868,7 +868,7 @@ async function jaLookup(q, sl) {
   if (sl !== 'ja') return null;
   try { return jaFind(await jaLoad(), q); } catch (e) { return null; }
 }
-async function translate(q, sl, tl, signal) {
+async function translate(q, sl, tl, signal, fresh) {
   pfPause();
   const k = sl + '|' + tl + '|' + q;
   const o = await jaLookup(q, sl);
@@ -880,7 +880,7 @@ async function translate(q, sl, tl, signal) {
     if (o.base) out.base = o.base;
     return out;
   }
-  if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
+  if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
   let out, fb = false;
