@@ -2,9 +2,10 @@
   "produk": "Keepo",
   "tagline": "Baca bukumu sendiri, ngerti bahasanya.",
   "prinsip": "Reader First, AI Second: pengguna datang untuk membaca; AI membantu saat dibutuhkan, bukan mengambil alih.",
-  "fase_sekarang": "Siap Beta (setelah Discovery & Validation selesai)",
-  "peta_fase_berikutnya": "#510: A Siap Beta (sekarang) -> B Beta Privat nyata -> C Buka Publik -> D Monetisasi. Gerbang ke beta: cadangan penuh+persist, kotak centang/matikan Bagikan, takedown+Laporkan+syarat singkat (#545 SELESAI: syarat 'Aturan & Hak cipta' di Pengaturan, jenis masukan 'Takedown', tombol 'Laporkan buku ini' di layar link bagikan). Lihat docs/pm-peta-fase-berikutnya.md.",
+  "fase_sekarang": "Fase 2 · Beta Nyata (tahap 21-24) — 20 tahap Discovery→Launch selesai 16 Nov 2026",
+  "peta_fase_berikutnya": "Fase 2 (tahap 21-33): Beta Nyata → Rilis Toko & Publik → Monetisasi → Skala & Ekosistem. Sekarang: tahap 21-24, ditambah 25 (App Store) & 27 (akuisisi) paralel. Monetisasi baru dimulai setelah tahap 23 selesai. Pegangan tim: docs/pm-peta-fase-2.md. (Peta lama A-D: docs/pm-peta-fase-berikutnya.md.)",
   "kapasitas_founder": "Solo founder, 1-4 jam per minggu. Budget fleksibel selama manfaatnya jelas (spend when proven).",
+  "aturan_fase2": "Tahap 21-33 hanya boleh berstatus \"selesai\" dengan DATA NYATA (angka /hitung, App Store/Play Console, pembayaran, masukan manusia) yang memenuhi \"Keluar bila\". Bukti internet & pengguna AI hanya untuk menyusun rencana (maks status \"draft\"). Tulis angka + tanggal + sumber di catatan.",
   "aturan_validasi": "Keputusan founder: tahap yang biasanya butuh manusia (wawancara, uji kemauan bayar, usability test, beta) divalidasi dulu dengan BUKTI PUBLIK di internet (ulasan Play Store/App Store kompetitor, Reddit, forum, Threads/X, komentar YouTube, survei & studi terbit) ditambah uji oleh tester & pengguna AI. Tahap boleh berstatus \"selesai\" bila: minimal 30 kutipan/bukti nyata dari minimal 3 sumber berbeda (dengan tautan), tiap hipotesis diberi vonis terbukti/gugur/belum jelas, dan ada kesimpulan. Tandai di catatan \"(validasi bukti internet)\". Wawancara manusia nanti hanya penguat, bukan syarat.",
   "tahap": [
     {
@@ -146,6 +147,97 @@
       "fase": "Launch & Growth",
       "status": "selesai",
       "catatan": "(validasi bukti internet) Saluran 4 minggu: Threads asbun + ajak-teman, cadangan fandom; 2-4 jam/minggu. Sebelum monetisasi: urus hak cipta Bagikan. Lihat docs/marketing-saluran-growth.md, docs/marketing-kit-peluncuran.md, docs/riset-hak-cipta.md. Paket launch nyata (akun, kalender, iklan Meta, anggaran): docs/marketing-paket-launch.md. (validasi bukti internet) pengingat baca #565: lihat docs/riset-pengingat-baca-pwa.md. 52 bukti dari 4 jenis sumber (dokumen Apple/WebKit/MDN, forum pengembang, forum & media pengguna, studi kebiasaan). Vonis: pengingat naikkan baca hari itu terbukti sebagian; pengingat saja cukup bentuk kebiasaan gugur; notifikasi belajar bahasa sering mengganggu terbukti; push di Safari biasa gugur (hanya app layar utama iOS 16.4+); mau pasang & beri izin belum jelas. Usul: sapaan lembut saat buka app & ajakan Tambah ke Layar Utama, tanpa push. (validasi bukti internet) rekap sesi baca #589: lihat docs/riset-rekap-sesi-baca.md. 51 butir dari 5 jenis sumber (forum LingQ, forum & blog Readlang, blog e-reader, studi Webb/Nation, ulasan Language Reactor). Vonis: ulas singkat setelah baca terbukti sebagian; statistik ringan naikkan kebiasaan terbukti sebagian; statistik berlebih/streak bikin tertekan terbukti sebagian; manfaat rekap kata, kata tanpa arti ditinggal, dan rekap tersimpan saat tab mati belum jelas. Usul P0 #544/#582: simpan kata sesi saat diketuk, rekap walau 1 kata, maks 10 kata, tanda kata tanpa arti, tiga angka lembut tanpa kata per menit. Reddit & ulasan toko tak terbaca. (validasi bukti internet) setelah tamat buku #643: lihat docs/riset-setelah-tamat-buku.md. ±60 butir dari 6 jenis sumber (forum LingQ, Goodreads/Book Riot, blog & ulasan Readlang, studi extensive reading & baca ulang, Reddit via ringkasan, masukan pengguna AI). Vonis: saran buku berikutnya di level sama/sedikit lebih sulit kurangi bingung terbukti; baca ulang tambah pemahaman & kosakata terbukti sebagian (jangka pendek); rayakan tamat ringkas tanpa tekanan terbukti sebagian; ulas kata sebelum buku berikutnya terbukti sebagian; pembaca hilang setelah tamat belum jelas. Usul P0: kartu Home buku 100% jadi Baca ulang + saran buku berikutnya, sheet Tamat sesuai kondisi. Reddit & ulasan toko tak terbaca langsung."
+    },
+    {
+      "no": 21,
+      "nama": "Ukur Pengguna Nyata",
+      "fase": "Beta Nyata",
+      "status": "awal",
+      "catatan": "Sudah ada: /hitung (baru, balik_h2, sumber ref). Kurang: aktivasi, H7, tampil di Keepo HQ. Keluar bila: HQ menampilkan baru/hari, aktivasi, H2, H7 per sumber, tanpa data pribadi. Peran: developer, pm. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 22,
+      "nama": "Aktivasi Sesi Pertama",
+      "fase": "Beta Nyata",
+      "status": "belum",
+      "catatan": "Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 23,
+      "nama": "Retensi Minggu Pertama",
+      "fase": "Beta Nyata",
+      "status": "awal",
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 24,
+      "nama": "Masukan Pengguna Manusia",
+      "fase": "Beta Nyata",
+      "status": "belum",
+      "catatan": "Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 25,
+      "nama": "Rilis App Store iOS",
+      "fase": "Rilis Toko & Publik",
+      "status": "berjalan",
+      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 26,
+      "nama": "Android / Play Store",
+      "fase": "Rilis Toko & Publik",
+      "status": "belum",
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 27,
+      "nama": "Akuisisi Organik",
+      "fase": "Rilis Toko & Publik",
+      "status": "awal",
+      "catatan": "Sudah ada: docs/LAUNCH-SEKARANG.md, kalender 4 minggu, link ?ref=. Keluar bila: >=300 pengguna baru/bulan, 1 sumber ref terbaik terbukti, biaya iklan Rp0. Peran: marketing (draf), founder (posting). Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 28,
+      "nama": "Keandalan & Skala Teknis",
+      "fase": "Rilis Toko & Publik",
+      "status": "belum",
+      "catatan": "Keluar bila: error dipantau otomatis, nol laporan data hilang 4 minggu, pemakaian kuota gratis Cloudflare <70%. Peran: developer. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 29,
+      "nama": "Uji Kemauan Bayar Nyata",
+      "fase": "Monetisasi",
+      "status": "belum",
+      "catatan": "Mulai setelah tahap 23 selesai. Keluar bila: halaman Keepo Plus (pra-pesan) diklik >=3% pengguna aktif. Acuan harga: docs/riset-harga-rupiah.md. Peran: pm, desain, developer. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 30,
+      "nama": "Pembayaran & Legal",
+      "fase": "Monetisasi",
+      "status": "belum",
+      "catatan": "iOS wajib pembayaran Apple; web pakai gateway lokal (keputusan founder). Cek merek Keepo di DJKI, perbarui syarat & privasi. Keluar bila: pembayaran uji sukses + merek dicek. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 31,
+      "nama": "Pembayar Pertama",
+      "fase": "Monetisasi",
+      "status": "belum",
+      "catatan": "Keluar bila: >=10 pembayar tanpa dibujuk, refund <10%. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 32,
+      "nama": "Konten & Bahasa Baru",
+      "fase": "Skala & Ekosistem",
+      "status": "belum",
+      "catatan": "Bacaan pemula legal (docs/riset-bacaan-pemula-legal.md); bahasa baru dipilih dari data permintaan. Keluar bila: dipakai >=20% pengguna aktif. Lihat docs/pm-peta-fase-2.md."
+    },
+    {
+      "no": 33,
+      "nama": "Komunitas & Kemitraan",
+      "fase": "Skala & Ekosistem",
+      "status": "belum",
+      "catatan": "Fitur sosial tetap P3. Keluar bila: 1 mitra (komunitas fandom/kursus) membawa >=50 pengguna. Lihat docs/pm-peta-fase-2.md."
     }
   ],
   "backlog": [
@@ -1138,6 +1230,32 @@
       "isi": "30-50 pengguna, amati 4 minggu: retensi, kemudahan membaca, peningkatan pemahaman.",
       "status": "selesai",
       "catatan": "Selesai (riset): rencana ukur siap, 4 metrik. Sebelum rekrut manusia: cadangan data, kotak centang & tombol Laporkan untuk Bagikan. Lihat docs/pm-beta-rencana-ukur.md, docs/riset-beta-data-bagikan.md."
+    },
+    {
+      "no": 5,
+      "nama": "Pengguna Nyata Pertama",
+      "isi": "100 pengguna nyata, H2 >=25%.",
+      "status": "berjalan",
+      "catatan": "Per 16 Nov 2026: 42 pengguna baru (28 langsung, 14 iOS), balik_h2 ±7%."
+    },
+    {
+      "no": 6,
+      "nama": "Keepo di App Store",
+      "isi": "App iOS lolos review dan dirilis.",
+      "status": "berjalan",
+      "catatan": "Submit 16 Nov 2026, menunggu review Apple."
+    },
+    {
+      "no": 7,
+      "nama": "Pembaca yang Kembali",
+      "isi": "50 pembaca aktif mingguan selama 4 minggu berturut.",
+      "status": "belum"
+    },
+    {
+      "no": 8,
+      "nama": "Pendapatan Pertama",
+      "isi": "10 pembayar Keepo Plus tanpa dibujuk.",
+      "status": "belum"
     }
   ]
 }
