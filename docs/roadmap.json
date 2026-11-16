@@ -150,6 +150,31 @@
   ],
   "backlog": [
     {
+      "no": 132,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu ulang: kata Lupa/Ragu muncul lagi di sesi yang sama, maks 2 kali (#1214)",
+      "dokumen": "docs/riset-ulang-kata-sesi-sama.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 131,
+      "peran": "riset",
+      "prioritas": "P0",
+      "nama": "Bukti internet: kata 'Belum yakin' diulang lagi di sesi yang sama (#1214)",
+      "dokumen": "docs/riset-ulang-kata-sesi-sama.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 35 bukti dari 4 jenis sumber. Vonis: ulang kata sulit di sesi sama = terbukti; jeda pendek lebih baik = belum jelas (condong terbukti); antrean kepanjangan bikin bosan = terbukti sebagian; maks 1-2 ulang cukup = belum jelas (condong terbukti sebagai batas praktis). Usul: Lupa muncul lagi setelah 3 kartu, Ragu setelah 5, maks 2 ulang. Lihat docs/riset-ulang-kata-sesi-sama.md."
+    },
+    {
+      "no": 130,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ HP: kolom papan kosong jangan melar, judul di atas (#1212)",
+      "dokumen": "docs/pm-papan-kolom-kosong-1212.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 129,
       "peran": "developer",
       "prioritas": "P0",
