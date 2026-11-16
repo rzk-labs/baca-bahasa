@@ -2273,6 +2273,21 @@ async function onWord(el, lastEl) {
     vib(8); setTx('#wtr', t); pickChip(); keepVisible('.w.sel');
     if (wAlt && word === w) { delete wAlt.dataset.open; wAlt.innerHTML = '<div class="mut sm" role="status">Oke, arti ini yang dipakai.</div>'; setTimeout(() => { if ($('#walt') === wAlt && word === w && !wAlt.dataset.open) altLink(); }, 2200); }
   };
+  /* 'Terjemahkan ulang': lewati cache sekali; gagal = arti lama tetap, pesan ramah */
+  const reAlt = async () => {
+    if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
+    wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi terjemahin ulang"><i></i><i></i><i></i></span>';
+    try {
+      const r = await translate(qWord(), b.lang, db.my, undefined, true);
+      if (word !== w || $('#walt') !== wAlt) return;
+      if (r && typeof r.text === 'string' && r.text.trim()) tr = r;
+    } catch (e) {
+      if (word !== w || $('#walt') !== wAlt) return;
+      wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum bisa terjemahin ulang, sinyal lemah? Arti lama tetap aman.</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>';
+      $('#waretry').onclick = reAlt; $('#waclose').onclick = altLink; return;
+    }
+    openAlt();
+  };
   const openAlt = async () => {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
     const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
@@ -2288,8 +2303,9 @@ async function onWord(el, lastEl) {
     } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
     if (word !== w || $('#walt') !== wAlt) return;
     const list = altFlat(groups);
-    if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba ketuk kata di sekitarnya.</div><div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; return; }
-    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${tr && tr.baca ? `<div class="mut sm">Cara baca: ${esc(bacaDisp(word, bacaShow(word, tr.baca, b.lang)))}</div>` : ''}${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
+    if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba terjemahkan ulang.</div><div class="altrow"><button class="ghost wretry" id="warefresh" type="button">Terjemahkan ulang</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; $('#warefresh').onclick = reAlt; return; }
+    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${tr && tr.baca ? `<div class="mut sm">Cara baca: ${esc(bacaDisp(word, bacaShow(word, tr.baca, b.lang)))}</div>` : ''}${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="warefresh" type="button">Terjemahkan ulang</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
+    $('#warefresh').onclick = reAlt;
     $$('#walt .altopt').forEach(x => x.onclick = () => pickArti(list[+x.dataset.i]));
     $('#waclose').onclick = altLink; keepVisible('.w.sel');
   };

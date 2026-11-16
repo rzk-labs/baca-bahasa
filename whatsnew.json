@@ -1,5 +1,11 @@
 [
   {
+    "n": 1226,
+    "judul": "[peta 116] Tombol 'Arti ini salah?' di kartu arti: arti alternatif",
+    "poin": "Kartu arti kini punya tombol \"Terjemahkan ulang\" kalau arti terasa salah.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1220,
     "judul": "Home: tiga angka XP diberi label jelas + 'mnt' jadi 'menit'",
     "poin": "Home sekarang jelas: \"XP hari ini\", \"XP menuju Level berikutnya\", dan \"Total XP seumur hidup\".",
@@ -171,12 +177,6 @@
     "n": 1148,
     "judul": "[peta 116] Papan Tugas HP: kolom kosong jangan melar tinggi",
     "poin": "Di HP, kolom papan tugas yang kosong sekarang jadi pil pendek.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1145,
-    "judul": "[peta 114] Kartu kata: 'Bisa juga' & arti lain tak terpotong titik-titik",
-    "poin": "Arti lain di kartu kata sekarang tampil utuh, tanpa titik-titik.",
     "tgl": "2026-11-15"
   }
 ]
