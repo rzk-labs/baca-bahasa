@@ -519,7 +519,7 @@ function cadNote() {
 
 /* ---------- pengaturan ---------- */
 function voiceRow(lang) {
-  const p = LANGS[lang][1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
+  const p = langInfo(lang)[1].toLowerCase().slice(0, 2), cur = db.voices && db.voices[lang];
   const vs = speechSynthesis.getVoices().filter(v => v.lang.replace('_', '-').toLowerCase().startsWith(p));
   if (!vs.length) {
     const loaded = speechSynthesis.getVoices().length > 0;
