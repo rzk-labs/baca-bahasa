@@ -1,5 +1,11 @@
 [
   {
+    "n": 1220,
+    "judul": "Home: tiga angka XP diberi label jelas + 'mnt' jadi 'menit'",
+    "poin": "Home sekarang jelas: \"XP hari ini\", \"XP menuju Level berikutnya\", dan \"Total XP seumur hidup\".",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1213,
     "judul": "Home ikut segar setelah buku dipulihkan dari akun + status memuat",
     "poin": "Setelah login, Home langsung ikut menampilkan buku yang dipulihkan dari akun.",
@@ -171,12 +177,6 @@
     "n": 1145,
     "judul": "[peta 114] Kartu kata: 'Bisa juga' & arti lain tak terpotong titik-titik",
     "poin": "Arti lain di kartu kata sekarang tampil utuh, tanpa titik-titik.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1140,
-    "judul": "[peta 115] Kata umum (the, that, this) tanpa garis putus-putus",
-    "poin": "Kata umum seperti \"the\", \"that\", \"this\" tidak lagi bergaris putus-putus.",
     "tgl": "2026-11-15"
   }
 ]
