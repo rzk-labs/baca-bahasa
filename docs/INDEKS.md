@@ -92,6 +92,7 @@
 - [impor-andal](riset-impor-andal.md)
 - [impor-buku-sendiri](riset-impor-buku-sendiri.md)
 - [jadwal-ulang-kata](riset-jadwal-ulang-kata.md)
+- [ulang-kata-sesi-sama](riset-ulang-kata-sesi-sama.md)
 - [kata-multi-makna-kamus](riset-kata-multi-makna-kamus.md)
 - [kata-sudah-kenal](riset-kata-sudah-kenal.md)
 - [keamanan-data-lokal](riset-keamanan-data-lokal.md)
