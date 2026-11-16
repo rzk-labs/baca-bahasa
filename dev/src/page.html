@@ -708,7 +708,7 @@ function tampilDetail(t,n,mv){
     ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
-  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><button class="btn lime" id="mockbtn">Tampilkan mockup</button></div></section>`:''}
+  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div></section>`:''}
   `:''}
   ${!kerja?mockSec+aksi:''}
   ${h&&!kerja?`
@@ -720,7 +720,7 @@ function tampilDetail(t,n,mv){
     <a class="mut sm" href="${t.url}" target="_blank">Buka di GitHub ↗</a>
   </details>
   </div>`;
-  if($('#mockbtn'))$('#mockbtn').onclick=()=>{const src=MOCK||t.preview,fw=Math.min(300,$('#mock').clientWidth||300),iw=fw-26,sc=iw/390,vh=560;$('#mock').innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};
+  if($('#mock')){const mk=$('#mock'),muat=()=>{const src=MOCK||t.preview,fw=Math.min(300,mk.clientWidth||300),iw=fw-26,sc=iw/390,vh=560;mk.innerHTML=`<div class="hp" style="width:${fw}px"><div class="poni"></div><div class="hpv" style="width:${iw}px;height:${vh}px"><iframe src="${src}" title="Mockup #${t.n}" style="width:390px;height:${Math.round(vh/sc)}px;transform:scale(${sc})"></iframe></div></div><a class="mut sm" target="_blank" href="${src}">Buka layar penuh ↗</a>`};if('IntersectionObserver'in window){const io=new IntersectionObserver(e=>{if(e.some(x=>x.isIntersecting)){io.disconnect();muat()}},{rootMargin:'200px'});io.observe(mk)}else muat()}
   const mks=V.querySelector('.mk-s');
   if(mks){
     const nn=$('#mkn');

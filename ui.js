@@ -94,10 +94,24 @@ function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34),
 const altArti = (dict, main) => {
   const nz = t => String(t || '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
   const seen = new Set(String(main || '').split(/[;,，、；\/]/).map(nz).filter(Boolean)); seen.add(nz(main));
-  const out = [];
-  for (const t of (dict || []).flatMap(x => x.terms.slice(0, 4))) { const k = nz(t); if (!k || seen.has(k)) continue; seen.add(k); out.push(t); }
-  return out.slice(0, 4);
+  const groups = []; let total = 0;
+  for (const x of (Array.isArray(dict) ? dict : [])) {
+    if (!x || !Array.isArray(x.terms)) continue;
+    const pos = typeof x.pos === 'string' ? x.pos : '';
+    for (const t of x.terms) {
+      if (total >= 40) break;
+      const k = typeof t === 'string' ? nz(t) : ''; if (!k || seen.has(k)) continue;
+      let g = groups.find(y => y.pos === pos); if (!g) { g = { pos, terms: [] }; groups.push(g); }
+      if (g.terms.length >= 15) continue;
+      seen.add(k); g.terms.push(t); total++;
+    }
+  }
+  return groups.filter(g => g.terms.length);
 };
+const altCount = gs => gs.reduce((n, g) => n + g.terms.length, 0);
+const altFlat = gs => gs.flatMap(g => g.terms);
+/* kelompok arti -> HTML: label jenis kata (tanpa label bila tak ada), chip bernomor data-i berurutan */
+const altHtml = gs => { let i = 0; return gs.map(g => `${g.pos ? `<div class="altpos">${esc((POS[g.pos] || g.pos).replace(/^./, c => c.toUpperCase()))}</div>` : ''}<div class="altch" role="group" aria-label="Arti lain">${g.terms.map(t => `<button class="altopt" type="button" data-i="${i++}" dir="auto">${esc(t)}</button>`).join('')}</div>`).join(''); };
 function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = splitTitle(b.title).main, ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}" role="img" aria-label="${esc(t)}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
@@ -708,7 +722,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v396';
+const APP_VER = 'v397';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -917,8 +931,8 @@ function viewRak() {
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
   const addCard = (noUp) => `<div class="card">
       ${db.books.length ? '' : `<div class="try1"><div class="eyebrow">Coba 1 cerita</div><div class="try1-row">${Object.keys(SAMPLES).map(l => `<button data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`}
-      <div class="langs"><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
-      ${noUp && !db.books.length ? `<div class="mut sm lang-hint">Bahasa cerita ikut pilihan di sini</div>` : ''}
+      ${db.books.length ? `<button class="langsum ghost" id="langTog" aria-expanded="false">Cerita ${langName(db.lastLang)} → ${langName(db.my)} <u>Ganti bahasa</u></button>` : ''}
+      <div class="langs" id="langs" hidden><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
       <div class="add-grid${noUp ? ' two' : ''}">${noUp ? '' : `<button class="main" id="up"><span class="em">${ico('upload')}</span>Upload file</button>`}<button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
@@ -966,6 +980,8 @@ function viewRak() {
   blManual = false;
   $('#bl').onchange = e => { db.lastLang = e.target.value; blManual = true; save(); };
   $('#ml').onchange = e => { db.my = e.target.value; save(); trCache.clear(); };
+  const lt = $('#langTog'); if (lt) lt.onclick = () => { const g = $('#langs'); g.hidden = !g.hidden; lt.setAttribute('aria-expanded', String(!g.hidden)); };
+  $$('[data-try]').forEach(el => el.addEventListener('click', () => { db.lastLang = el.dataset.try; const b = $('#bl'); if (b) b.value = db.lastLang; }));
   $('#up').onclick = () => $('#file').click();
   const ct = $('#cta'); if (ct) ct.onclick = () => $('#file').click();
   const startSample = async l => {
@@ -2230,7 +2246,7 @@ async function onWord(el, lastEl) {
     setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
-    const alt = altArti(d, r.text);
+    const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
     $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? d.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
@@ -2250,19 +2266,19 @@ async function onWord(el, lastEl) {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
     const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
     wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
-    let list = [];
+    let groups = [];
     try {
-      const cur = curT();
-      list = altArti((tr && tr.dict) || [], cur);
-      if (list.length < 3 && !(b.lang === 'ja' && db.my === 'id')) {
+      const cur = curT(), base = (tr && tr.dict) || [];
+      groups = altArti(base, cur);
+      if (altCount(groups) < 3 && !(b.lang === 'ja' && db.my === 'id')) {
         const more = await altFetch(qWord(), b.lang, db.my);
-        list = altArti([{ terms: [...list, ...more] }], cur);
+        groups = altArti([...base, ...more], cur);
       }
     } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
     if (word !== w || $('#walt') !== wAlt) return;
-    list = list.slice(0, 3);
+    const list = altFlat(groups);
     if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba ketuk kata di sekitarnya.</div><div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; return; }
-    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
+    wAlt.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${tr && tr.baca ? `<div class="mut sm">Cara baca: ${esc(bacaDisp(word, bacaShow(word, tr.baca, b.lang)))}</div>` : ''}${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`;
     $$('#walt .altopt').forEach(x => x.onclick = () => pickArti(list[+x.dataset.i]));
     $('#waclose').onclick = altLink; keepVisible('.w.sel');
   };
@@ -2659,14 +2675,14 @@ function bossArti(w, lang) {
     al.dataset.open = '1';
     const fail = msg => { if (!alive()) return; al.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="raretry" type="button">Coba lagi</button><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`; $('#raretry').onclick = open; $('#raclose').onclick = link; };
     al.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
-    let list = [];
+    let groups = [];
     try {
-      const c = cur(); list = altArti((r && r.dict) || [], c);
-      if (list.length < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); list = altArti([{ terms: [...list, ...more] }], c); }
+      const c = cur(), base = (r && r.dict) || []; groups = altArti(base, c);
+      if (altCount(groups) < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); groups = altArti([...base, ...more], c); }
     } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
-    if (!alive()) return; list = list.slice(0, 3);
+    if (!alive()) return; const list = altFlat(groups);
     if (!list.length) { al.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain untuk kata ini.</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>'; $('#raclose').onclick = link; return; }
-    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div><div class="altch" role="group" aria-label="Arti lain">${list.map((t, i) => `<button class="altopt" type="button" data-i="${i}" dir="auto">${esc(t)}</button>`).join('')}</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
+    al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
     $$('#ralt .altopt').forEach(e => e.onclick = () => pick(list[+e.dataset.i]));
     $('#raclose').onclick = link;
   };
@@ -2907,6 +2923,21 @@ function pinyinHtml(p, lang) {
   while ((m = PY_RE.exec(p))) { if (!m[0]) { PY_RE.lastIndex++; continue; } out += esc(p.slice(last, m.index)) + `<span class="pt t${pinyinTone(m[0].toLowerCase())}">${esc(m[0])}</span>`; last = m.index + m[0].length; }
   return out + esc(p.slice(last));
 }
+/* legenda nada (hanya Mandarin + pinyin bertanda nada): bisa ditutup, pilihan diingat di localStorage */
+function nadaLegend(p, lang, hidden) {
+  if (!/^zh/i.test(lang || '') || !/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/i.test(p)) return '';
+  let off = false; try { off = localStorage.getItem('kepo-nada-leg') === '0'; } catch (e) {}
+  return `<div class="nlg-wrap${hidden ? ' hide' : ''}" id="nlg">${off ? '' : '<div class="nlg">Nada: <span class="pt t1">1</span> datar · <span class="pt t2">2</span> naik · <span class="pt t3">3</span> turun-naik · <span class="pt t4">4</span> turun</div>'}<button class="nlg-btn" id="nlgb" type="button">${off ? 'Lihat arti nada' : 'Tutup'}</button></div>`;
+}
+function nadaLegendBind() {
+  const b = $('#nlgb'); if (!b) return;
+  ['pointerdown', 'pointerup'].forEach(ev => b.addEventListener(ev, e => e.stopPropagation()));
+  b.onclick = e => {
+    e.stopPropagation();
+    let off = false; try { off = localStorage.getItem('kepo-nada-leg') === '0'; localStorage.setItem('kepo-nada-leg', off ? '1' : '0'); } catch (x) {}
+    const w = $('#nlg'); w.outerHTML = nadaLegend('ā', 'zh', w.classList.contains('hide')); nadaLegendBind();
+  };
+}
 function deck(kb) {
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => v && v.w && (isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
@@ -2915,9 +2946,9 @@ function deck(kb) {
     kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1]; flipped = false;
   kb.innerHTML = `${db.autoSpeakAsked ? '' : `<div class="asp-ban" id="aspBan" role="group" aria-label="Bunyi otomatis"><span>Mau kata dibunyikan otomatis?</span><button class="yes" id="aspOn" type="button">Nyalakan</button><button class="ghost" id="aspOff" type="button">Nanti</button></div>`}<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
-      <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="icon tint fsp" id="fSp" type="button" aria-label="Dengar kata">${ico('vol')}</button>
+      <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="fsp" id="fSp" type="button" aria-label="Dengar kata"><img src="img/ikon-speaker.svg" alt="" width="48" height="48"></button>
         <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${(v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
-        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
+        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, false)}` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, true)}`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">besok</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
@@ -2950,7 +2981,8 @@ function deck(kb) {
   if ($('#fAll')) { const a = $('#fAll'); a.addEventListener('pointerdown', e => e.stopPropagation()); a.addEventListener('pointerup', e => e.stopPropagation()); a.onclick = e => { e.stopPropagation(); openSemua(v, () => { if (kb.isConnected && $('#fAll')) $('#fAll').textContent = `Semua arti (${(v.all || []).reduce((n, g) => n + g.terms.length, 0)})`; }); }; }
   $('#fShow').onclick = flip; $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fMaybe').onclick = maybe;
   { const sp = $('#fSp'); sp.addEventListener('pointerdown', e => e.stopPropagation()); sp.addEventListener('pointerup', e => e.stopPropagation()); sp.onclick = e => { e.stopPropagation(); speak(v.w, v.lang, 0.8); }; }
-  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }
+  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); if ($('#nlg')) $('#nlg').classList.remove('hide'); }; }
+  nadaLegendBind();
   let sx = null, dx = 0;
   card.addEventListener('pointerdown', e => { if (!flipped) return; sx = e.clientX; dx = 0; card.style.transition = 'none'; card.setPointerCapture(e.pointerId); });
   card.addEventListener('pointermove', e => { if (sx == null) return; dx = e.clientX - sx; card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`; card.querySelector('.yes').style.opacity = Math.max(0, dx / 100); card.querySelector('.no').style.opacity = Math.max(0, -dx / 100); });
