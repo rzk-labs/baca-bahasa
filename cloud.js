@@ -344,18 +344,20 @@ const initial = n => (n || '?').trim().charAt(0).toUpperCase();
 function renderAcct() {
   const slot = $('#acctSlot'); if (!slot) return;
   if (!API) { slot.innerHTML = ''; return; }
-  slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Akun ${esc(db.acct.nick)}">${esc(initial(db.acct.nick))}</button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
+  slot.innerHTML = db.acct ? `<button class="avatar" id="acctBtn" aria-label="Profil dan akun ${esc(db.acct.nick)}" title="Profil"><span class="av-i">${esc(initial(db.acct.nick))}</span><span class="av-p">${ico('user')}<span class="hbl">Profil</span></span></button>` : `<button class="pill login" id="acctBtn">Masuk</button>`;
   $('#acctBtn').onclick = openAccount;
 }
 /* pesan gagal masuk/daftar: ramah + satu langkah lanjut */
 function friendlyAuthError(err) {
   const t = String((err && err.message) || '');
-  if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return 'Lagi tak bisa nyambung. Cek internet, lalu coba lagi. Bacaanmu tetap aman di HP.';
-  if (/username atau password salah|tidak dikenal/i.test(t)) return 'Username atau password belum pas. Cek ejaannya dan coba lagi, atau ketuk Daftar untuk bikin akun baru.';
-  if (/sudah dipakai/i.test(t)) return 'Username itu sudah dipakai. Coba username lain, atau ketuk Masuk kalau itu akunmu.';
-  if (/username 3|username ini khusus|sudah dicadangkan|password minimal/i.test(t)) return t;
-  return 'Belum berhasil. Coba lagi sebentar lagi.';
+  if (/koneksi putus|failed to fetch|network|server lagi bermasalah|server akun belum/i.test(t)) return { t: 'Lagi tak bisa nyambung. Bacaanmu tetap aman di HP.', act: 'retry' };
+  if (/tidak dikenal/i.test(t)) return { t: 'Username itu belum terdaftar.', act: 'daftar' };
+  if (/username atau password salah/i.test(t)) return { t: 'Password belum pas. Cek ejaannya, ya.', act: 'retry' };
+  if (/sudah dipakai/i.test(t)) return { t: 'Username itu sudah dipakai.', act: 'masuk' };
+  if (/username 3|username ini khusus|sudah dicadangkan|password minimal/i.test(t)) return { t, act: null };
+  return { t: 'Belum berhasil. Coba lagi sebentar lagi.', act: 'retry' };
 }
+const ERR_BTN = { retry: 'Coba lagi', daftar: 'Daftar', masuk: 'Masuk', skip: 'Lanjut tanpa akun' };
 function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
@@ -369,6 +371,7 @@ function openAccount(mode) {
         <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>
+      <div class="sm" id="aSyncErr" role="alert" style="margin-top:10px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden>Belum bisa sinkron. Progres aman.<div class="row" style="margin-top:8px"><button class="sec" type="button" id="aSyncRetry">Coba lagi</button></div></div>
       <div class="set-row"><div class="eyebrow">Hapus akun</div><div class="mut sm">Akun, XP, kata, dan buku yang dibagikan dihapus dari server. Data di HP ini tetap ada.</div><div class="row"><button class="sec" id="aDel" type="button">Hapus akun permanen</button></div></div>`);
     bkWire();
     const setSocial = async () => { try { await api('/social', { method: 'PUT', body: { publik: !!db.acct.publik, hideTitles: !!db.acct.hideTitles } }); save(); } catch (e) { toast(e.message); } };
@@ -377,7 +380,8 @@ function openAccount(mode) {
     $('#aMe').onclick = () => openProfile(db.acct.username);
     $('#aNick').onchange = e => { const v = e.target.value.trim(); if (v) { db.acct.nick = v.slice(0, 24); save(); renderAcct(); pushSync(true).catch(err => toast(err.message)); } };
     $$('#aHide button').forEach(b => b.onclick = () => { db.acct.hidden = b.dataset.v === '1'; save(); $$('#aHide button').forEach(x => x.classList.toggle('on', x === b)); pushSync(true).catch(err => toast(err.message)); });
-    $('#aSync').onclick = async () => { try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { toast(e.message); } };
+    const doSync = async () => { const er = $('#aSyncErr'); if (er) er.hidden = true; try { const ch = await runSync({ force: true, manual: true }); toast(ch ? 'Tersinkron. Data dari perangkat lain sudah digabung.' : 'Tersinkron'); } catch (e) { if (er && er.isConnected) er.hidden = false; else toast('Belum bisa sinkron. Progres aman.'); } };
+    $('#aSync').onclick = doSync; $('#aSyncRetry').onclick = doSync;
     let delArm = 0;
     $('#aDel').onclick = async () => {
       const x = $('#aDel');
@@ -389,7 +393,7 @@ function openAccount(mode) {
     $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
     return;
   }
-  let m = mode === 'daftar' ? 'daftar' : 'masuk';
+  let m = mode === 'daftar' ? 'daftar' : 'masuk', fails = 0;
   const draw = () => {
     openSheet(`<div class="sh-head"><h2>${m === 'masuk' ? 'Masuk' : 'Bikin akun'}</h2>${closeBtn}</div>
       <div class="hello-sub">${spot('happy')}<div class="mut sm">${m === 'masuk' ? 'Lanjutin progres kamu di HP mana aja.' : 'Simpan XP & streak, ikut leaderboard, dan bagikan cerita ke teman.'}</div></div>
@@ -398,11 +402,11 @@ function openAccount(mode) {
         <label class="eyebrow" style="display:block;margin-top:14px">Username<input id="aU" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, angka, _" required></label>
         ${m === 'daftar' ? `<label class="eyebrow" style="display:block;margin-top:12px">Nama panggilan<input id="aN" maxlength="24" placeholder="Tampil di leaderboard"></label>` : ''}
         <label class="eyebrow" style="display:block;margin-top:12px">Password<input id="aP" type="password" name="password" autocomplete="${m === 'masuk' ? 'current-password' : 'new-password'}" placeholder="min. 6 karakter" required></label>
-        <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden></div>
+        <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden><span id="aErrT"></span><div class="row" style="margin-top:8px"><button class="sec" type="button" id="aErrBtn"></button></div></div>
         <div class="row"><button class="pri" type="submit" id="aGo">${m === 'masuk' ? 'Masuk' : 'Daftar & masuk'}</button></div>
       </form>`);
     $$('#aMode button').forEach(b => b.onclick = () => { m = b.dataset.v; draw(); });
-    const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; el.textContent = ''; } };
+    const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; $('#aErrT').textContent = ''; } };
     $$('#aForm input').forEach(i => i.addEventListener('input', clearErr));
     $('#aForm').onsubmit = async e => {
       e.preventDefault(); const bt = $('#aGo'); bt.disabled = true; clearErr();
@@ -411,7 +415,24 @@ function openAccount(mode) {
         if (m === 'daftar') body.nick = ($('#aN').value || '').trim();
         await afterLogin(await api(m === 'masuk' ? '/login' : '/signup', { method: 'POST', body }));
         if (m === 'daftar') { sfx('win'); confetti(50); }
-      } catch (err) { const el = $('#aErr'); if (el) { el.textContent = friendlyAuthError(err); el.hidden = false; } else toast(friendlyAuthError(err), 5000); bt.disabled = false; }
+      } catch (err) {
+        fails++;
+        const f = friendlyAuthError(err); let act = f.act;
+        if (fails >= 2 && act === 'retry') act = 'skip';
+        const el = $('#aErr');
+        if (!el) toast(f.t, 5000);
+        else {
+          $('#aErrT').textContent = act === 'skip' ? 'Belum berhasil juga. Bacaanmu tetap jalan tanpa akun.' : f.t;
+          const eb = $('#aErrBtn'); eb.hidden = !act; if (act) eb.textContent = ERR_BTN[act];
+          eb.onclick = () => {
+            if (act === 'retry') $('#aForm').requestSubmit();
+            else if (act === 'skip') closeSheet();
+            else { const u = $('#aU').value; m = act; draw(); $('#aU').value = u; }
+          };
+          el.hidden = false;
+        }
+        bt.disabled = false;
+      }
     };
   };
   draw();
@@ -553,7 +574,7 @@ async function openProfile(username) {
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}"><span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div>` : ''}
+      <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}">${on ? `<span class="bst on">${ico('check')}<span class="sr">Sudah dapat</span></span>` : '<span class="bst">Belum</span>'}<span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div>` : ''}
       ${p.self ? rakHtml() : ''}
       ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;

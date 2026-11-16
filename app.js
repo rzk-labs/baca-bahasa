@@ -520,6 +520,53 @@ function vocabCSV(list) {
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
+/* cara baca ejaan Indonesia untuk kata Latin (perkiraan; dihitung saat tampil, tidak disimpan, tidak dipakai skor) */
+const IDB_EX = { en: { though: 'dou', people: 'pi-pel', water: 'wo-ter', the: 'de', one: 'wan', two: 'tu', you: 'yu', your: 'yor', would: 'wud', could: 'kud', should: 'syud', are: 'ar', was: 'woz', were: 'wer', have: 'hèv', said: 'sèd', what: 'wot', who: 'hu', where: 'wer', there: 'der', their: 'der', they: 'dei', this: 'dis', that: 'dèt', with: 'wid', of: 'ov', to: 'tu', do: 'du', does: 'daz', done: 'dan', gone: 'gon', love: 'lav', some: 'sam', come: 'kam', other: 'a-der', mother: 'ma-der', brother: 'bra-der', thought: 'tot', through: 'tru', enough: 'i-naf', know: 'nou', knew: 'nyu', right: 'rait', night: 'nait', light: 'lait', eight: 'eit', great: 'greit', friend: 'frènd', beautiful: 'byu-ti-ful', because: 'bi-koz', many: 'mè-ni', very: 'vè-ri', every: 'èv-ri', business: 'biz-nis', island: 'ai-lend', language: 'lèng-gwij', vendors: 'vèn-dors', world: 'werld', work: 'werk', word: 'werd', heart: 'hart', head: 'hèd', read: 'rid', bread: 'brèd', book: 'buk', good: 'gud', food: 'fud', door: 'dor', floor: 'flor', young: 'yang', country: 'kan-tri' }, fr: { bonjour: 'bon-jur', merci: 'mèr-si', oui: 'wi', beaucoup: 'bo-ku', monsieur: 'me-syö', madame: 'ma-dam', eau: 'o', jamais: 'ja-mè', femme: 'fam', homme: 'om' } };
+const IDB_R = {
+  en: [[/tion|sion/y, 'syen'], [/igh/y, 'ai'], [/ough/y, 'o'], [/augh/y, 'of'], [/ph/y, 'f'], [/th/y, 't'], [/sh/y, 'sy'], [/ch/y, 'ch'], [/ck/y, 'k'], [/wh/y, 'w'], [/kn/y, 'n', 1], [/wr/y, 'r', 1], [/qu/y, 'kw'], [/x/y, 'ks'], [/c(?=[eiy])/y, 's'], [/c/y, 'k'], [/ee|ea/y, 'i'], [/oo/y, 'u'], [/ai|ay/y, 'ei'], [/oa/y, 'ou'], [/ou/y, 'au'], [/ow/y, 'ou'], [/oi|oy/y, 'oi'], [/e(?![\s\S])/y, '', 0, 1], [/a/y, 'è'], [/e/y, 'è'], [/u/y, 'a'], [/y(?![\s\S])/y, 'i'], [/y/y, 'y', 1], [/y/y, 'i']],
+  es: [[/ll/y, 'y'], [/ñ/y, 'ny'], [/ch/y, 'ch'], [/qu/y, 'k'], [/gu(?=[ei])/y, 'g'], [/g(?=[ei])/y, 'h'], [/c(?=[ei])/y, 's'], [/c/y, 'k'], [/z/y, 's'], [/j/y, 'h'], [/h/y, ''], [/v/y, 'b'], [/rr/y, 'r'], [/ü/y, 'u'], [/á/y, 'a'], [/é/y, 'e'], [/í/y, 'i'], [/ó/y, 'o'], [/ú/y, 'u']],
+  de: [[/tsch/y, 'ch'], [/sch/y, 'sy'], [/ch/y, 'h'], [/sp/y, 'syp', 1], [/st/y, 'syt', 1], [/ei|ey|ai/y, 'ai'], [/ie/y, 'i'], [/eu|äu/y, 'oi'], [/ä/y, 'è'], [/ß/y, 's'], [/z/y, 'ts'], [/v/y, 'f'], [/w/y, 'v'], [/s(?=[aeiouäöü])/y, 'z'], [/j/y, 'y'], [/qu/y, 'kv'], [/ph/y, 'f'], [/th/y, 't'], [/ck/y, 'k'], [/tz/y, 'ts']],
+  fr: [[/eau/y, 'o'], [/au/y, 'o'], [/ou/y, 'u'], [/oi/y, 'wa'], [/ai|ei/y, 'è'], [/ch/y, 'sy'], [/qu/y, 'k'], [/gn/y, 'ny'], [/ç/y, 's'], [/c(?=[eiyéè])/y, 's'], [/g(?=[eiyéè])/y, 'j'], [/h/y, ''], [/u/y, 'ü'], [/(?:an|am|en|em)(?![aeiouéèàâêîôûy])/y, 'an'], [/(?:on|om)(?![aeiouéèàâêîôûy])/y, 'on'], [/(?:in|im)(?![aeiouéèàâêîôûy])/y, 'èn'], [/[sxzdtp](?![\s\S])/y, ''], [/e(?![\s\S])/y, '', 0, 1], [/è|ê/y, 'è'], [/à|â/y, 'a'], [/î/y, 'i'], [/ô/y, 'o'], [/û/y, 'ü'], [/ë/y, 'è'], [/ï/y, 'i']]
+};
+function idSyl(p) {
+  const V = 'aeiouèéöü'; let out = '', i = 0; const n = p.length;
+  while (i < n) {
+    out += p[i];
+    if (V.includes(p[i]) && i + 1 < n && !V.includes(p[i + 1])) {
+      let j = i + 1; while (j < n && !V.includes(p[j])) j++;
+      if (j < n) { const cut = j - i - 1 === 1 ? i + 1 : i + 2; out += p.slice(i + 1, cut) + '-'; i = cut; continue; }
+    }
+    i++;
+  }
+  return out;
+}
+function idBaca1(w, lang) {
+  const L = String(lang || '').slice(0, 2).toLowerCase(), rules = IDB_R[L]; if (!rules) return '';
+  w = w.normalize('NFC').toLowerCase().replace(/[’']/g, '');
+  if (!/^[a-zà-ÿß]+$/.test(w) || w.length < 2) return '';
+  const ex = IDB_EX[L] && IDB_EX[L][w]; if (ex) return ex;
+  let o = '', i = 0;
+  while (i < w.length) {
+    let hit = false;
+    for (const [re, rep, init, nz] of rules) {
+      if (init && i) continue; if (nz && w.length < 4) continue;
+      re.lastIndex = i; const m = re.exec(w);
+      if (m) { o += rep; i += m[0].length; hit = true; break; }
+    }
+    if (!hit) { o += w[i]; i++; }
+  }
+  o = o.replace(/([^aeiou])\1+/g, '$1');
+  return o ? '~' + idSyl(o) : '';
+}
+function bacaDisp(w, t) { return t && !NONLATIN.test(w || '') ? t + ' (perkiraan)' : t; }
+/* cara baca untuk tampilan: non-Latin → data romanisasi; Latin → ejaan Indonesia (perkiraan) */
+function bacaShow(w, baca, lang) {
+  const b = bacaOf(w, baca); if (b) return b;
+  if (NONLATIN.test(w || '') || !lang || !db.showBaca) return '';
+  const ws = String(w).trim().split(/\s+/); if (ws.length > 3) return '';
+  const r = ws.map(x => idBaca1(x, lang)); if (r.some(x => !x)) return '';
+  return r.join(' ');
+}
 /* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
 function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
 /* bentuk dasar kata Eropa (#806): pelepas akhiran kecil + kata tak beraturan; HANYA tebakan bila kamus Google tak memberi bentuk dasar */
@@ -567,25 +614,57 @@ async function fetchTimeout(url, ms = 8000, ext) {
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
 async function gtxFetch(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  const j = await r.json();
+  const j = await r.json().catch(() => null);
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
-  const out = { text: j[0].map(x => Array.isArray(x) && x[0] != null ? String(x[0]) : '').join(''), baca: j[0].map(x => Array.isArray(x) && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)).map(d => ({ pos: d[0], terms: (Array.isArray(d[1]) ? d[1] : []).slice(0, 6) })) : [] };
-  const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+  const seg = j[0].filter(x => Array.isArray(x));
+  const out = { text: seg.map(x => typeof x[0] === 'string' ? x[0] : '').join(''), baca: seg.map(x => typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: [], all: [], ex: [] };
+  try {
+    const bd = Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)) : [];
+    const terms = (d, n) => (Array.isArray(d[1]) ? d[1] : []).filter(t => typeof t === 'string' && t).slice(0, n);
+    out.dict = bd.map(d => ({ pos: String(d[0] || ''), terms: terms(d, 6) }));
+    /* semua arti per jenis kata (maks 5 jenis x 8 arti) untuk tombol 'Semua arti' */
+    out.all = bd.slice(0, 5).map(d => ({ pos: String(d[0] || ''), terms: terms(d, 8) })).filter(d => d.terms.length);
+    const bs = bd.map(d => baseOf(q, d[3])).find(Boolean); if (bs) out.base = bs;
+  } catch (e) { }
+  out.ex = exOf(j);
   return out;
 }
-/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal */
+/* contoh kalimat (dt=ex): maks 3, teks polos, kata kunci diapit ‹…›; balasan aneh = daftar kosong */
+function exOf(j) {
+  const out = [];
+  try {
+    const l = Array.isArray(j) && Array.isArray(j[13]) && Array.isArray(j[13][0]) ? j[13][0] : [];
+    for (const e of l) {
+      const t = Array.isArray(e) && typeof e[0] === 'string' ? e[0].replace(/<b>(.*?)<\/b>/gi, '‹$1›').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : '';
+      if (t && t.length <= 160) out.push(t);
+      if (out.length >= 3) break;
+    }
+  } catch (e) { }
+  return out;
+}
+/* tombol 'Semua arti' di kartu Kata: semua arti per jenis kata + contoh; kamus Jepang offline dipakai bila ada */
+async function fetchSemua(w, sl, tl) {
+  const o = await jaLookup(w, sl);
+  if (o && tl === 'id') { const ts = o.e.tr.split(';').map(x => x.trim()).filter(Boolean).slice(0, 8); return { all: ts.length ? [{ pos: JA_POS[o.e.pos] || '', terms: ts }] : [], ex: [] }; }
+  const r = await gtxFetch(w, sl, tl);
+  return { all: r.all || [], ex: r.ex || [] };
+}
+/* simpan ke kartu Kata (maks 40 istilah); v.t / v.pick (arti pilihan #1106) tidak disentuh */
+function simpanSemua(v, d) {
+  let n = 0;
+  v.all = (d.all || []).map(g => ({ pos: g.pos, terms: g.terms.filter(() => n++ < 40) })).filter(g => g.terms.length);
+  v.ex = (d.ex || []).slice(0, 3); v.allAt = Date.now();
+}
+/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal, balasan aneh = daftar kosong */
 async function altFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  let j; try { j = await r.json(); } catch (e) { return []; }
-  const out = [];
+  const j = await r.json().catch(() => null), out = [];
   if (!Array.isArray(j)) return out;
-  try {
-    if (Array.isArray(j[1])) j[1].forEach(d => d && Array.isArray(d[1]) && d[1].slice(0, 4).forEach(t => t != null && out.push(String(t))));
-    if (Array.isArray(j[5])) j[5].forEach(s => s && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && x[0] && out.push(String(x[0]))));
-  } catch (e) { }
+  try { if (Array.isArray(j[1])) j[1].forEach(d => Array.isArray(d) && Array.isArray(d[1]) && d[1].slice(0, 4).forEach(t => t != null && out.push(String(t)))); } catch (e) { }
+  try { if (Array.isArray(j[5])) j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && x[0] && out.push(String(x[0])))); } catch (e) { }
   return out;
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */

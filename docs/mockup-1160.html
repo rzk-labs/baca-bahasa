@@ -1,0 +1,28 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockup #1160 — tombol langkah gagal masuk</title>
+<style>
+body{margin:0;background:#eee;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;padding:20px}
+.col{width:390px}.lab{font:700 12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px;color:#555}
+.ph{width:390px;box-sizing:border-box;background:#D7EFFF;border-radius:22px 22px 0 0;padding:18px 18px 22px}
+h2{font-family:'Bricolage Grotesque',Inter,sans-serif;margin:0 0 10px;font-size:22px}
+.seg{display:flex;gap:4px;background:#fff;border-radius:12px;padding:4px}.seg b{flex:1;text-align:center;padding:8px;border-radius:9px;font-size:14px}.seg .on{background:#351E28;color:#fff}
+label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;margin-top:12px}
+.in{background:#fff;border-radius:10px;padding:11px 12px;margin-top:4px;font-size:15px;font-weight:400;text-transform:none}
+.err{margin-top:12px;background:#E9F056;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600}
+.sec{margin-top:8px;border:2px solid #351E28;background:transparent;color:#351E28;border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px}
+.pri{margin-top:14px;width:100%;background:#351E28;color:#fff;border-radius:999px;padding:13px;text-align:center;font-weight:700}
+</style></head><body>
+<div class="wrap">
+<div class="col"><p class="lab">Gambaran: nama tidak dikenal</p><div class="ph"><h2>Masuk</h2><div class="seg"><b class="on">Masuk</b><b>Daftar</b></div>
+<label>Username<div class="in">tari_uji</div></label><label>Password<div class="in">••••••••</div></label>
+<div class="err">Username itu belum terdaftar.<br><span class="sec" style="display:inline-block">Daftar</span></div><div class="pri">Masuk</div></div></div>
+<div class="col"><p class="lab">Gambaran: tak ada koneksi</p><div class="ph"><h2>Masuk</h2><div class="seg"><b class="on">Masuk</b><b>Daftar</b></div>
+<label>Username<div class="in">nadia</div></label><label>Password<div class="in">••••••••</div></label>
+<div class="err">Lagi tak bisa nyambung. Bacaanmu tetap aman di HP.<br><span class="sec" style="display:inline-block">Coba lagi</span></div><div class="pri">Masuk</div></div></div>
+<div class="col"><p class="lab">Gambaran: gagal 2 kali</p><div class="ph"><h2>Masuk</h2><div class="seg"><b class="on">Masuk</b><b>Daftar</b></div>
+<label>Username<div class="in">nadia</div></label><label>Password<div class="in">••••••••</div></label>
+<div class="err">Belum berhasil juga. Bacaanmu tetap jalan tanpa akun.<br><span class="sec" style="display:inline-block">Lanjut tanpa akun</span></div><div class="pri">Masuk</div></div></div>
+<div class="col"><p class="lab">Gambaran: gagal sinkron (Akun kamu)</p><div class="ph"><h2>Akun kamu</h2>
+<div style="display:flex;gap:8px"><span class="sec" style="flex:1;text-align:center;margin:0">Sinkron sekarang</span><span class="pri" style="flex:1;margin:0">Keluar</span></div>
+<div class="err">Belum bisa sinkron. Progres aman.<br><span class="sec" style="display:inline-block">Coba lagi</span></div></div></div>
+</div></body></html>
