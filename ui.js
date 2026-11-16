@@ -722,7 +722,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v396';
+const APP_VER = 'v397';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -2923,6 +2923,21 @@ function pinyinHtml(p, lang) {
   while ((m = PY_RE.exec(p))) { if (!m[0]) { PY_RE.lastIndex++; continue; } out += esc(p.slice(last, m.index)) + `<span class="pt t${pinyinTone(m[0].toLowerCase())}">${esc(m[0])}</span>`; last = m.index + m[0].length; }
   return out + esc(p.slice(last));
 }
+/* legenda nada (hanya Mandarin + pinyin bertanda nada): bisa ditutup, pilihan diingat di localStorage */
+function nadaLegend(p, lang, hidden) {
+  if (!/^zh/i.test(lang || '') || !/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/i.test(p)) return '';
+  let off = false; try { off = localStorage.getItem('kepo-nada-leg') === '0'; } catch (e) {}
+  return `<div class="nlg-wrap${hidden ? ' hide' : ''}" id="nlg">${off ? '' : '<div class="nlg">Nada: <span class="pt t1">1</span> datar · <span class="pt t2">2</span> naik · <span class="pt t3">3</span> turun-naik · <span class="pt t4">4</span> turun</div>'}<button class="nlg-btn" id="nlgb" type="button">${off ? 'Lihat arti nada' : 'Tutup'}</button></div>`;
+}
+function nadaLegendBind() {
+  const b = $('#nlgb'); if (!b) return;
+  ['pointerdown', 'pointerup'].forEach(ev => b.addEventListener(ev, e => e.stopPropagation()));
+  b.onclick = e => {
+    e.stopPropagation();
+    let off = false; try { off = localStorage.getItem('kepo-nada-leg') === '0'; localStorage.setItem('kepo-nada-leg', off ? '1' : '0'); } catch (x) {}
+    const w = $('#nlg'); w.outerHTML = nadaLegend('ā', 'zh', w.classList.contains('hide')); nadaLegendBind();
+  };
+}
 function deck(kb) {
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
   const cards = db.vocab.filter(v => v && v.w && (isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
@@ -2933,7 +2948,7 @@ function deck(kb) {
   kb.innerHTML = `<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
       <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="icon tint fsp" id="fSp" type="button" aria-label="Dengerin">${ico('vol')}</button>
         <div class="eyebrow">${langName(v.lang)} · ${cards.length} kartu${(v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
-        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
+        <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? (db.showBaca ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, false)}` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, true)}`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${esc(ctxOf(v))}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">besok</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
@@ -2960,7 +2975,8 @@ function deck(kb) {
   if ($('#fAll')) { const a = $('#fAll'); a.addEventListener('pointerdown', e => e.stopPropagation()); a.addEventListener('pointerup', e => e.stopPropagation()); a.onclick = e => { e.stopPropagation(); openSemua(v, () => { if (kb.isConnected && $('#fAll')) $('#fAll').textContent = `Semua arti (${(v.all || []).reduce((n, g) => n + g.terms.length, 0)})`; }); }; }
   $('#fShow').onclick = flip; $('#fYes').onclick = () => decide(true); $('#fNo').onclick = () => decide(false); $('#fMaybe').onclick = maybe;
   { const sp = $('#fSp'); sp.addEventListener('pointerdown', e => e.stopPropagation()); sp.addEventListener('pointerup', e => e.stopPropagation()); sp.onclick = e => { e.stopPropagation(); speak(v.w, v.lang, 0.8); }; }
-  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); }; }
+  if ($('#peek')) { const pk = $('#peek'); pk.addEventListener('pointerdown', e => e.stopPropagation()); pk.addEventListener('pointerup', e => e.stopPropagation()); pk.onclick = e => { e.stopPropagation(); pk.classList.add('hide'); $('#peekv').classList.remove('hide'); if ($('#nlg')) $('#nlg').classList.remove('hide'); }; }
+  nadaLegendBind();
   let sx = null, dx = 0;
   card.addEventListener('pointerdown', e => { if (!flipped) return; sx = e.clientX; dx = 0; card.style.transition = 'none'; card.setPointerCapture(e.pointerId); });
   card.addEventListener('pointermove', e => { if (sx == null) return; dx = e.clientX - sx; card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`; card.querySelector('.yes').style.opacity = Math.max(0, dx / 100); card.querySelector('.no').style.opacity = Math.max(0, -dx / 100); });
