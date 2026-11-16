@@ -359,7 +359,8 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .deck-act.hide{display:none}.deck-act .full{grid-column:1/-1}.deck-act.three{grid-template-columns:repeat(3,1fr)}
 .deck-act.three button{flex-direction:column;gap:2px;padding-left:6px;padding-right:6px}.deck-act .dl{display:inline-flex;align-items:center;gap:6px}.deck-act .when{font-size:11px;font-weight:500;line-height:1.2;opacity:.8;white-space:nowrap}
 .deck-act .mid{background:var(--color-surface-soft);color:var(--color-text);border:2px solid var(--color-border)}
-.flash .fsp{position:absolute;top:10px;right:10px;min-width:48px;min-height:48px;touch-action:manipulation}
+.flash .fsp{position:absolute;top:10px;right:10px;min-width:48px;min-height:48px;touch-action:manipulation;padding:0;border:0;background:none;border-radius:14px;cursor:pointer}
+.flash .fsp img{display:block;width:48px;height:48px}
 .sum .s1{background:var(--color-surface-soft);color:var(--color-text)}.sum .s2{background:var(--ink);color:var(--cream)}.sum .s3{background:var(--color-surface);color:var(--color-text);border:2px solid var(--color-border)}
 [data-theme=night] .sum .s2,[data-theme=dark] .sum .s2{background:var(--hl);color:var(--ink)}
 .badge.t-blue{color:var(--cream)}.badge .em svg.i{width:28px;height:28px;margin:5px 0}
@@ -1147,9 +1148,14 @@ ol.steps3 li{cursor:default}
 .bgrid .badge{padding-top:28px}
 
 /* Tab bar HP: label "Ngomong" tak meluber dari pil aktif */
-@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button.on{flex-grow:1.3}}
+@media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.01em}#tabs button,#tabs button.on{flex:1 1 0}}
 
 /* Menu baca (#1184): tombol teks tetap di bilah bawah */
 .rfoot .rmenu{min-width:56px;min-height:44px;padding:0 12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
 .reader.chrome .rfoot .rmenu{background:var(--color-surface);color:var(--color-text)}
 .rfoot .rmid{min-width:0}
+.asp-ban{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#D7EFFF;color:#351E28;font-size:14px}
+.asp-ban span{flex:1 1 100%}
+.asp-ban button{min-height:40px;padding:0 16px}
+@media (max-width:480px){#tabs button{font-size:11.5px;letter-spacing:-.02em}}
+.sum .s3{border:0;box-shadow:inset 0 0 0 2px var(--color-border)}
