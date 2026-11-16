@@ -27,7 +27,7 @@ Aturan logo: jangan ubah warna stabilo, jangan miring/bayangan, ruang kosong min
 |---|---|---|
 | Plum Noir | `#351E28` | Tinta: teks, tombol utama, tab bar, logo |
 | Stabilo Wasabi | `#E9F056` | **Hanya** kata ditandai, coretan logo, isi progres |
-| Biru Es | `#D7EFFF` | Latar beranda & menu |
+| Biru Es | `#D7EFFF` | Tab aktif, chip & aksen menu (Home berlatar Kertas polos, diputuskan 2026-11-16) |
 | Jade | `#AEB8A0` | Kartu sekunder, status |
 | Kertas | `#FAF7F0` | Permukaan kartu, teks di atas Plum |
 | Abu plum | `#6B5E66` | Teks redup (kontras 5,7 di Kertas) |
@@ -82,7 +82,7 @@ Google Fonts (preconnect, `display=swap`), di-cache service worker. Ukuran teks 
 - Ditampilkan sebagai angka tenang ("5 hari membaca"), bukan sorakan.
 
 ## Layar
-- **Home:** logo → sapaan → Lanjut baca → angka minggu ini → koleksi → Tambah cerita. Latar Biru Es.
+- **Home:** logo → sapaan → Lanjut baca → angka minggu ini → koleksi → Tambah cerita. Latar Kertas polos (bukan Biru Es); Biru Es hanya untuk tab aktif & aksen.
 - **Baca:** layar penuh, lapis baca; ketuk kata → stabilo + lembar arti dari bawah.
 - **Ngomong:** mic bulat Plum Noir, skor per kata, cincin skor → boss.
 - **Kata:** Kartu · Tersimpan · Susah diucap.
