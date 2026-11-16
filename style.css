@@ -1159,3 +1159,10 @@ ol.steps3 li{cursor:default}
 .asp-ban button{min-height:40px;padding:0 16px}
 @media (max-width:480px){#tabs button{font-size:11.5px;letter-spacing:-.02em}}
 .sum .s3{border:0;box-shadow:inset 0 0 0 2px var(--color-border)}
+/* #1229 tombol penanda di bar bawah + chip lanjut */
+.rfoot .rmark{min-width:44px;min-height:44px;padding:0;border-radius:var(--radius-full);background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border);display:inline-flex;align-items:center;justify-content:center}
+.rfoot .rmark svg.i{width:20px;height:20px}
+.rfoot .rmark.on{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.reader.chrome .rfoot .rmark:not(.on){background:var(--color-surface);color:var(--color-text)}
+.rchip{align-self:center;flex:none;min-height:44px;max-width:calc(100% - 24px);margin:0 12px 6px;padding:0 16px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font-size:13px;font-weight:800}
+[data-theme=night] .rchip{background:var(--lime);color:var(--ink)}

@@ -1424,6 +1424,7 @@ async function viewBaca() {
       ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>Tombol Menu</b> di bawah = bilah atas.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
+        <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
         <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
@@ -1432,6 +1433,7 @@ async function viewBaca() {
   if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
   $('#rHome').onclick = () => leaveBaca();
   $('#rMenuBtn').onclick = () => toggleMenu(true);
+  $('#rMark').onclick = e => { e.stopPropagation(); toggleMark(); };
   $('#reader').addEventListener('click', e => { if (e.target.id === 'reader' || e.target.closest('.rhead')) toggleMenu(true); });
   $('#reader').addEventListener('pointerdown', () => { if (menuT) menuHold(); }, true);
   if ($('#rDue')) $('#rDue').onclick = () => { stopListenPage(); const bk = book(); if (bk && RD && RD.n && RD.page != null && bk.total) { bk.pct = readPct(bk); save(); } kataSeg = 'kartu'; setTab('kata'); };
@@ -1710,9 +1712,29 @@ function layout() {
     /* halaman tersimpan dipakai hanya bila jumlah halaman sama & masih cocok dgn kalimat tersimpan (anti data basi) */
     if (x && RD.flash == null && b.pgN === RD.n && Number.isInteger(b.pg) && b.pg >= x.pg && b.pg < RD.n && !(RD.ss[k + 1] && RD.ss[k + 1].pg <= b.pg)) p = b.pg;
   }
+  const resumed = !RD.toEnd && RD.flash == null && cols._chip !== true && ((b.pos || 0) > 0 || (b.si || 0) > 0 || p > 0);
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
+  if (resumed) { cols._chip = true; resumeChip(b); }
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
+}
+/* chip 'Lanjut dari halaman X' ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
+let chipT = 0;
+function resumeChip(b) {
+  clearTimeout(chipT); const old = $('#rchip'); if (old) old.remove();
+  const rd = $('#reader'), ft = $('.rfoot'); if (!rd || !ft) return;
+  const el = document.createElement('button'); el.type = 'button'; el.id = 'rchip'; el.className = 'rchip';
+  const gone = () => { clearTimeout(chipT); el.remove(); };
+  let offer = false;
+  el.textContent = `Lanjut dari halaman ${RD.page + 1}`;
+  el.onclick = e => {
+    e.stopPropagation();
+    const m = nearMark(b);
+    if (!offer && m) { offer = true; el.textContent = 'Dari penanda terakhir'; clearTimeout(chipT); chipT = setTimeout(gone, 4000); return; }
+    gone();
+    if (offer && m) { b.pos = Math.max(0, Math.min(m.p, (b.total || 1) - 1)); b.si = m.s; b.pg = null; b.frac = null; RD.quiet = true; save(); setTab('baca'); }
+  };
+  rd.insertBefore(el, ft); chipT = setTimeout(gone, 4000);
 }
 function pageOf(el, cols) { const r = el.getClientRects()[0] || el.getBoundingClientRect(); return Math.max(0, Math.min(RD.n - 1, Math.floor((r.left - cols.getBoundingClientRect().left + 2) / RD.step))); }
 /* sisa waktu baca dari jumlah kata/huruf teks tersimpan (tanpa ukur layar).
@@ -1911,6 +1933,7 @@ function syncMarks() {
   const b = book(), bt = $('#bmTog'), ls = $('#bmList'); if (!b) return;
   const on = markHere(b).length > 0, n = marksOf(b).length;
   if (bt) { bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on ? 'true' : 'false'); bt.innerHTML = `${ico('bm')} ${on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini'}`; }
+  const rb = $('#rMark'); if (rb) { rb.classList.toggle('on', on); rb.setAttribute('aria-pressed', on ? 'true' : 'false'); const l = on ? 'Hapus penanda halaman ini' : 'Tandai halaman ini'; rb.setAttribute('aria-label', l); rb.title = l; }
   const rm = $('#rMk'); if (rm) { rm.hidden = !n; const rn = $('#rMkN'); if (rn) rn.textContent = n; }
   if (ls) { ls.disabled = !n; ls.innerHTML = `${ico('list')} Daftar penanda (${n})`; }
 }
