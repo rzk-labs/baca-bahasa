@@ -1,5 +1,11 @@
 [
   {
+    "n": 1195,
+    "judul": "[peta 114] Keepo HQ: mockup tampil langsung, tanpa tombol",
+    "poin": "Mockup di Keepo HQ sekarang langsung tampil, tanpa ketuk tombol.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1181,
     "judul": "[peta 126] Arti lain lengkap: jenis kata, maks 6 arti, tahan balasan aneh",
     "poin": "Arti lain kini lebih lengkap, dikelompokkan per jenis kata, tanpa batas 6 arti.",
@@ -171,12 +177,6 @@
     "n": 1104,
     "judul": "Home pemula: tombol 'Upload file' tanpa scroll + langkah 1-2-3 jelas",
     "poin": "Tombol Upload file sekarang langsung terlihat di Home, tanpa scroll.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1099,
-    "judul": "Tab Sosial tak boleh balik ke Home diam-diam: pesan jelas + coba lagi",
-    "poin": "Tab Sosial tak lagi diam-diam balik ke Home.",
     "tgl": "2026-11-15"
   }
 ]
