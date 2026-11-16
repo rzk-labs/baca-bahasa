@@ -404,15 +404,17 @@ function kuotaPerforma(T){
   const selesai=t=>['siap','menuju','live'].includes(t.status), gagal=t=>t.status==='gagal'||t.status==='ditolak';
   const hari=T.filter(t=>selesai(t)&&hariIni(t.diubah)), mulai=T.filter(t=>hariIni(t.dibuat));
   const n=hari.length, pct=Math.min(100,Math.round(n/KUOTA*100)), sisa=Math.max(0,KUOTA-n);
+  const qaAll=T.filter(t=>t.qa), qaOk=qaAll.filter(t=>t.qa==='lolos').length, qaCat=qaAll.length-qaOk;
   const baris=['developer','riset','desain','pm','marketing'].map(k=>{
     const a=T.filter(t=>t.peran===k), ok=a.filter(selesai).length, gg=a.filter(gagal).length, kerja=a.filter(t=>t.status==='dikerjakan'||t.status==='antre').length;
-    const qa=a.filter(t=>t.qa), lolos=qa.filter(t=>t.qa==='lolos').length, hs=hari.filter(t=>t.peran===k).length;
+    const qa=a.filter(t=>t.qa), lolos=qa.filter(t=>t.qa==='lolos').length, cat=qa.length-lolos, hs=hari.filter(t=>t.peran===k).length;
     const rate=ok+gg?Math.round(ok/(ok+gg)*100):0;
-    return `<div class="ev"><div class="ic ${TIM[k].c}">${TIM[k].e}</div><div style="min-width:0;flex:1"><div><b>${TIM[k].n}</b> · ${hs}/${KUOTAP[k]} hari ini</div><div class="mut sm">${ok} selesai · ${kerja} jalan · ${gg} gagal · ${rate}% berhasil${qa.length?` · QA lolos ${lolos}/${qa.length}`:''}</div></div></div>`}).join('');
+    return `<div class="ev"><div class="ic ${TIM[k].c}">${TIM[k].e}</div><div style="min-width:0;flex:1"><div><b>${TIM[k].n}</b> · ${hs}/${KUOTAP[k]} hari ini</div><div class="mut sm">${ok} selesai · ${kerja} jalan · ${gg} gagal · ${rate}% berhasil</div><div class="mut sm">${qa.length?`QA lolos ${lolos}/${qa.length} · ${cat} catatan`:'QA belum ada'}</div></div></div>`}).join('');
   return `<div class="sec"><h2>Kuota & performa</h2><span class="mut sm">Hari ini (WIB) · target ${KUOTA} tugas/hari (developer ${KUOTAP.developer})</span></div>
   <div class="bento"><div class="tile c ${pct>=100?'t-mint':'t-sun'} span2"><div class="eyebrow">Kuota harian</div><div class="big">${n}/${KUOTA}</div><div class="evbar"><i class="k-selesai" style="width:${pct}%"></i></div><div class="sm" style="margin-top:6px">${pct>=100?'Kuota hari ini tercapai ✅':'Sisa '+sisa+' tugas lagi'}</div></div>
   <div class="tile c t-lav"><div class="eyebrow">Dimulai hari ini</div><div class="big">${mulai.length}</div><div class="sm">tugas baru</div></div>
-  <div class="tile c t-pink"><div class="eyebrow">Gagal total</div><div class="big">${T.filter(gagal).length}</div><div class="sm">perlu dicek</div></div></div>
+  <div class="tile c t-pink"><div class="eyebrow">Gagal total</div><div class="big">${T.filter(gagal).length}</div><div class="sm">perlu dicek</div></div>
+  <div class="tile c ${qaAll.length&&!qaCat?'t-mint':'t-sun'} span2"><div class="eyebrow">QA lolos</div><div class="big">${qaAll.length?qaOk+'/'+qaAll.length:'—'}</div><div class="sm">${qaAll.length?(qaCat?qaCat+' catatan perlu dicek':'Tanpa catatan ✅'):'QA belum ada'}</div></div></div>
   <div class="tile" style="margin-top:12px"><div class="feed">${baris}</div></div>`;
 }
 async function markas(again){
