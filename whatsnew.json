@@ -1,5 +1,11 @@
 [
   {
+    "n": 1211,
+    "judul": "Teks kecil 10-11px di HP dinaikkan jadi minimal 12px",
+    "poin": "Semua tulisan kecil di HP sekarang minimal 12, jadi lebih enak dibaca.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1201,
     "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
     "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
@@ -171,12 +177,6 @@
     "n": 1137,
     "judul": "Arti cadangan tak disimpan permanen + tahan balasan Google aneh",
     "poin": "Arti cadangan tidak lagi disimpan permanen, jadi cara baca Jepang/Mandarin tak terkunci hilang.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1131,
-    "judul": "[peta 113] Kartu kata: tautan 'Arti ini salah?' + maks 3 arti lain",
-    "poin": "Kartu kata sekarang punya tautan \"Arti ini salah?\" dengan maksimal 3 arti lain.",
     "tgl": "2026-11-15"
   }
 ]
