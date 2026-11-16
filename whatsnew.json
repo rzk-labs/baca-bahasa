@@ -1,5 +1,11 @@
 [
   {
+    "n": 1197,
+    "judul": "Kartu ulang: tombol speaker di depan kartu + tawarkan bunyi otomatis",
+    "poin": "Tombol speaker di kartu ulang sekarang pakai ikon buatan sendiri, sesuai gaya brand.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1203,
     "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
     "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
@@ -171,12 +177,6 @@
     "n": 1083,
     "judul": "Setelah tamat: satu 'Baca ulang' saja + Home rapi, tak ada layar kosong",
     "poin": "Halaman terakhir cuma punya satu \"Baca ulang\", tidak tiga lagi.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1107,
-    "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
-    "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
     "tgl": "2026-11-15"
   }
 ]
