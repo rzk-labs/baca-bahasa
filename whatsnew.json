@@ -1,5 +1,11 @@
 [
   {
+    "n": 1229,
+    "judul": "E-reader: tombol 'Tandai di sini' terlihat + 'Lanjut dari hal. X'",
+    "poin": "Ada tombol penanda di bawah layar baca, jadi gampang ditemukan.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1226,
     "judul": "[peta 116] Tombol 'Arti ini salah?' di kartu arti: arti alternatif",
     "poin": "Kartu arti kini punya tombol \"Terjemahkan ulang\" kalau arti terasa salah.",
@@ -171,12 +177,6 @@
     "n": 1147,
     "judul": "[peta 118] Tanda berhasil ketuk kata + petunjuk tab Kata kosong",
     "poin": "Setelah kata disimpan, muncul tulisan \"Tersimpan di tab Kata\".",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1148,
-    "judul": "[peta 116] Papan Tugas HP: kolom kosong jangan melar tinggi",
-    "poin": "Di HP, kolom papan tugas yang kosong sekarang jadi pil pendek.",
     "tgl": "2026-11-15"
   }
 ]
