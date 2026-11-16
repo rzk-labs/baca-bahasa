@@ -1,5 +1,11 @@
 [
   {
+    "n": 1193,
+    "judul": "Home: satu pilihan bahasa, langkah 1-3 bukan tombol palsu, kontras",
+    "poin": "Home sekarang lebih jelas dan tidak pudar saat dibuka.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1177,
     "judul": "Lencana terbuka: tanda centang + tulisan 'Didapat', bukan cuma warna",
     "poin": "Lencana yang sudah didapat sekarang punya tanda centang dan tulisan \"Didapat\".",
@@ -171,12 +177,6 @@
     "n": 1095,
     "judul": "Profil & Home: header jelas, lencana naik, '4 hari' tak berulang",
     "poin": "Tombol Pengaturan kini jelas, beda dari bulatan akun, dan muat di layar kecil.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1087,
-    "judul": "Update app otomatis sampai ke HP + versi di Pengaturan cocok",
-    "poin": "Keepo kini cek versi baru sendiri dan muat ulang otomatis di HP.",
     "tgl": "2026-11-15"
   }
 ]
