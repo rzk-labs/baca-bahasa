@@ -4,6 +4,7 @@
    Judul Bricolage Grotesque 800, antarmuka Inter. Tema halaman baca: lihat bagian reader (tugas terpisah).
    ===================================================== */
 :root{
+  --pt1:#C0392B;--pt2:#2E7D32;--pt3:#1D5FBF;--pt4:#7B3FA0;--pt5:#5F5059;
   --font-display:"Bricolage Grotesque","Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-reader:"Literata",Georgia,"Times New Roman",serif;
@@ -42,6 +43,7 @@
   --color-text:#22301F;--color-text-muted:#4A5C45;--color-border:#C3D6B8;--color-hl-sentence:rgba(34,48,31,.1);--color-say:rgba(34,48,31,.17);
 }
 [data-theme=night]{
+  --pt1:#FF8A80;--pt2:#8FDDAA;--pt3:#8CBBFF;--pt4:#D9A8F5;--pt5:#C9BDC3;
   --color-primary:#F2C9A6;--color-on-primary:#22362B;--color-secondary:#E39A74;
   --color-bg:#1E1A1D;--color-surface:#2A2528;--color-surface-soft:#352F33;--color-text:#E8E2DA;--color-text-muted:#B5ADA8;--color-border:#403940;
   --color-success:#7FD9A3;--color-medium:#EDD28F;--color-poor:#FF8A80;
@@ -49,6 +51,7 @@
   --color-scrim:rgba(0,0,0,.6);--shadow-sheet:0 -12px 40px rgba(0,0,0,.5);
 }
 [data-theme=dark]{
+  --pt1:#FF8A80;--pt2:#8FDDAA;--pt3:#8CBBFF;--pt4:#D9A8F5;--pt5:#C9BDC3;
   --lime:#D7EFFF;
   --color-primary:#D7EFFF;--color-on-primary:#351E28;--color-secondary:#AEB8A0;
   --color-bg:#1E1519;--color-surface:#2A1D24;--color-surface-soft:#38272F;--color-text:#FAF7F0;--color-text-muted:#C9BDC3;--color-border:#4A343E;
@@ -58,6 +61,7 @@
   --color-sel-edge:#E9F056;--color-saved-line:#E9F056;--color-often-bg:rgba(233,240,86,.22);
 }
 @media (prefers-color-scheme:dark){[data-theme=auto]{
+  --pt1:#FF8A80;--pt2:#8FDDAA;--pt3:#8CBBFF;--pt4:#D9A8F5;--pt5:#C9BDC3;
   --lime:#D7EFFF;
   --color-primary:#D7EFFF;--color-on-primary:#351E28;--color-secondary:#AEB8A0;
   --color-bg:#1E1519;--color-surface:#2A1D24;--color-surface-soft:#38272F;--color-text:#FAF7F0;--color-text-muted:#C9BDC3;--color-border:#4A343E;
@@ -329,6 +333,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .sbaca{font:700 15px/1.4 var(--font-body,inherit);opacity:.8;overflow-wrap:anywhere;max-width:100%;margin:0 2px var(--space-2)}
 .sbaca-peek{min-height:44px;font-size:14px;margin:0 0 var(--space-2)}
 .flash .fb-peek{min-height:44px;margin-top:8px;font-size:14px}
+.flash .fb:has(.pt){opacity:1}.pt.t1{color:var(--pt1)}.pt.t2{color:var(--pt2)}.pt.t3{color:var(--pt3)}.pt.t4{color:var(--pt4)}.pt.t5{color:var(--pt5)}
 .flash .fbase{font-size:13px;line-height:1.3;margin-top:4px;opacity:.8;overflow-wrap:anywhere;max-width:100%}.flash .fbase b{font-weight:700}
 .flash .tap{font-size:15px;font-weight:700;opacity:.8;margin-top:6px}
 .flash .semua-btn{min-height:44px;min-width:44px;margin-top:6px;font-size:14px}
@@ -1061,6 +1066,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:340px){#hdx{gap:6px}#hdx #set{width:44px;min-width:44px;padding:0}}
 .stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}
 .rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
+.badge .got{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px 2px 6px;border-radius:9999px;background:#351E28;color:#E9F056;font-size:12px;line-height:16px;font-weight:800;max-width:100%}
+.badge .got .ck{flex:none;width:12px;height:12px;stroke-width:3}
 .badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
 .badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
 .prem-badge{display:inline-block;vertical-align:middle;background:var(--ink);color:var(--hl);font:700 12px/1 var(--font-ui,Inter,sans-serif);padding:4px 10px;border-radius:999px;white-space:nowrap}
