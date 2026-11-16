@@ -1,5 +1,11 @@
 [
   {
+    "n": 1203,
+    "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
+    "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
+    "tgl": "2026-11-16"
+  },
+  {
     "n": 1195,
     "judul": "[peta 114] Keepo HQ: mockup tampil langsung, tanpa tombol",
     "poin": "Mockup di Keepo HQ sekarang langsung tampil, tanpa ketuk tombol.",
@@ -171,12 +177,6 @@
     "n": 1107,
     "judul": "Home pemula: tombol 'Masukin cerita' tanpa scroll + langkah 1-2-3 jelas",
     "poin": "Home pemula: gambar lebih kecil, tombol \"Masukin cerita\" langsung terlihat.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1104,
-    "judul": "Home pemula: tombol 'Upload file' tanpa scroll + langkah 1-2-3 jelas",
-    "poin": "Tombol Upload file sekarang langsung terlihat di Home, tanpa scroll.",
     "tgl": "2026-11-15"
   }
 ]
