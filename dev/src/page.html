@@ -555,16 +555,16 @@ function tampilHasil(L){
 }
 
 // Cari, saring, urutkan tugas (dipakai Papan & Hasil)
-let Q='',PF='semua',SF='',SORT='baru';
+let Q='',PF='semua',SF='',SORT='bawaan';
 const STAT=[['antre','Antre'],['dikerjakan','Dikerjakan'],['siap','Siap dicek'],['menuju','Menuju live'],['live','Live'],['gagal','Gagal / ditolak']];
 const cocokQ=(t,extra)=>!Q||(String(t.judul||'')+' #'+t.n+' '+(extra||'')).toLowerCase().includes(Q.toLowerCase().trim());
 const cocokP=t=>PF==='semua'||(PF==='kamu'?!t.otomatis:t.peran===PF);
-const urutT=(L,key)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
+const urutT=(L,key,lama)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'||(SORT==='bawaan'&&lama)?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
 // Bar alat: cari + urutkan + chip peran. ulang() = render ulang halaman, fokus tetap di kotak cari.
 function alatTugas(ulang,denganSort){
   const per=['riset','desain','developer','marketing','pm'];
   const ch=(k,l)=>`<button class="chip ${PF===k?'on':''}" data-pf="${k}">${l}</button>`;
-  return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
+  return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="bawaan" ${SORT==='bawaan'?'selected':''}>Bawaan</option><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
   <div class="row hf" style="margin:10px 0 14px;flex-wrap:wrap;gap:8px">${ch('semua','Semua')}${ch('kamu','✍️ Dari kamu')}${per.map(k=>ch(k,TIM[k].e+' '+TIM[k].n)).join('')}</div>
   <div class="row hf" style="margin:0 0 14px;flex-wrap:wrap;gap:8px"><button class="chip ${SF===''?'on':''}" data-sf="">Semua status</button>${STAT.map(([k,l])=>`<button class="chip ${SF===k?'on':''}" data-sf="${k}">${l}</button>`).join('')}</div>`;
 }
@@ -580,11 +580,11 @@ async function papan(again){
   if(!again){if(HQ)segarkan('papan',papan);else{skel();try{await load()}catch(e){gagal(e.message,()=>go('papan'));return}}}
   if(cur!=='papan')return;
   if(document.activeElement&&document.activeElement.id==='qt'&&again==='auto'){auto(()=>papan('auto'));return} // jangan ganggu saat mengetik
-  const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
+  const cols=[['siap','Siap dicek','t-lime'],['gagal','Gagal / ditolak','t-coral'],['menuju','Menuju live','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['antre','Antre','t-blue'],['live','Live','t-mint']];
   // gagal disembunyikan hanya bila ada tugas pengganti yang ditautkan sebagai revisi/ulang dan benar-benar jalan
   const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.ulang||[]).includes(t.n)&&u.status!=='gagal'&&u.status!=='ditolak');
   const by0=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
-  const by=k=>(SF&&SF!==k)?[]:urutT(by0(k).filter(t=>cocokP(t)&&cocokQ(t)));
+  const by=k=>(SF&&SF!==k)?[]:urutT(by0(k).filter(t=>cocokP(t)&&cocokQ(t)),null,k==='siap'||k==='gagal'||k==='menuju');
   const saring=Q||PF!=='semua'||SF;
   const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const kartuP=t=>kartuTugas(t,{revisi:true,pilih:true});setVis(by('siap'));
