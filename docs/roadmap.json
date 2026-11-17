@@ -247,7 +247,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: tampilkan QA di tiap peran & total di Kuota (#1228)",
       "dokumen": "docs/pm-qa-di-kuota-hq.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1238)"
     },
     {
       "no": 132,
@@ -255,7 +255,7 @@
       "prioritas": "P0",
       "nama": "Kartu ulang: kata Lupa/Ragu muncul lagi di sesi yang sama, maks 2 kali (#1214)",
       "dokumen": "docs/riset-ulang-kata-sesi-sama.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1232)"
     },
     {
       "no": 131,
@@ -272,7 +272,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ HP: kolom papan kosong jangan melar, judul di atas (#1212)",
       "dokumen": "docs/pm-papan-kolom-kosong-1212.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1236)"
     },
     {
       "no": 129,
