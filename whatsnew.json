@@ -1,5 +1,11 @@
 [
   {
+    "n": 1232,
+    "judul": "[peta 132] Kartu ulang: kata Lupa/Ragu muncul lagi di sesi sama, maks 2x",
+    "poin": "Kata yang kamu jawab Lupa atau Ragu sekarang muncul lagi di sesi yang sama.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1229,
     "judul": "E-reader: tombol 'Tandai di sini' terlihat + 'Lanjut dari hal. X'",
     "poin": "Ada tombol penanda di bawah layar baca, jadi gampang ditemukan.",
@@ -171,12 +177,6 @@
     "n": 1152,
     "judul": "[peta 119] Setelah tamat: satu tombol Baca ulang + Home ringkas",
     "poin": "Buku yang sudah tamat sekarang punya satu tombol saja: Baca ulang.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1147,
-    "judul": "[peta 118] Tanda berhasil ketuk kata + petunjuk tab Kata kosong",
-    "poin": "Setelah kata disimpan, muncul tulisan \"Tersimpan di tab Kata\".",
     "tgl": "2026-11-15"
   }
 ]
