@@ -245,10 +245,10 @@
       "no": 142,
       "peran": "developer",
       "prioritas": "P0",
-      "nama": "Home terbuka kepotong: selalu mulai dari atas + gambar buku tampil utuh (#1291)",
+      "nama": "Logo Keepo kepotong di header: chip XP disembunyikan di HP + Home mulai dari atas (#1291)",
       "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
       "status": "siap dikerjakan",
-      "catatan": "Mockup: docs/mockup-1291.html. Ubah ui.js, style.css, naikkan versi C di sw.js."
+      "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
     },
     {
       "no": 140,

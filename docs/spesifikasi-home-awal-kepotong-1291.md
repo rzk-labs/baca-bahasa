@@ -1,31 +1,37 @@
-# Spesifikasi: Home terbuka kepotong (#1291)
+# Spesifikasi: logo Keepo kepotong di header (#1291)
 
 ## Intinya
-- Home pertama kali terbuka sudah tergulir: judul dan tombol "Tambah cerita" tersembunyi.
-- Gambar buku di bawah juga terpotong separuh, jadi terlihat jelek.
-- Perbaikan: Home selalu mulai dari paling atas, gambar tampil utuh atau tidak sama sekali.
+- Yang kepotong itu logo "Keepo" di pojok kiri atas: huruf "o" terpotong.
+- Penyebabnya chip 7 hari, 2211 XP, Masuk, dan Atur terlalu lebar.
+- Perbaikan: logo selalu utuh; chip XP disembunyikan di HP.
 
-## 1. Masalah (screenshot founder)
-- Layar langsung menunjukkan langkah "2" dan "3". Langkah "1", judul, dan tombol utama hilang.
-- Gambar buku dipotong di bagian bawah, halaman terlihat setengah.
-- Kesan pertama pengguna baru: layar berantakan.
+## 1. Masalah (revisi founder)
+- Screenshot kedua: logo terbaca "Keepc". Chip menimpa huruf terakhir.
+- Terjadi saat angka chip besar (7 hari, 2211 XP) di HP 390px.
+- Screenshot pertama: logo utuh, tapi Home terbuka tergulir. Itu masalah kedua (bagian 4).
 
 ## 2. Penyebab
-- `setTab` memanggil `window.scrollTo(0, 0)` (ui.js:491) sebelum Home digambar. Saat dimuat ulang, Safari iPhone memulihkan posisi gulir lama setelahnya.
-- Belum ada `history.scrollRestoration = 'manual'` di mana pun.
-- `.hero-pic` (style.css:1133) memakai `max-height:140px` + `object-fit:cover`, jadi gambar 4:3 terpotong.
+- style.css:957 menyembunyikan `#pXp` di ≤430px demi logo utuh (#932).
+- style.css:1056 menimpanya: `#pXp{display:inline-flex}`. Chip XP tampil lagi.
+- `#hdx` (style.css:1082, `gap:10px`) lebih lebar dari sisa ruang.
+- Hasil: header penuh, logo terdorong dan terpotong. Angka XP makin besar, makin parah.
 
 ## 3. Perbaikan yang diminta
-- Di awal ui.js: set `history.scrollRestoration = 'manual'` (dalam try/catch).
-- Di `viewRak`, setelah `#view` terisi (layar kosong tanpa buku): panggil `window.scrollTo(0, 0)`.
-- Ulangi `scrollTo(0, 0)` pada event `pageshow` bila tab aktif Home dan belum ada buku.
-- `.hero-pic`: ganti `object-fit:cover` jadi `contain`; tinggi otomatis (rasio 4:3), tanpa `max-height:140px`.
-- Layar pendek (`max-height:700px`): gambar tetap disembunyikan, sudah ada.
-- Naikkan versi `C` di sw.js (ui.js dan style.css di-cache).
+- Hapus `#pXp{display:inline-flex}` dari style.css:1056 (≤430px). XP tetap ada di Home & Profil.
+- Logo tetap `flex:0 0 auto; min-width:max-content; overflow:visible` di semua lebar ≤430px.
+- `#hdx` boleh menyusut: `min-width:0`, `gap:6px`.
+- Cek 320, 360, 390, 430px dengan "2211 XP" dan "999 hari". Logo harus utuh.
+- Naikkan versi `C` di sw.js (style.css di-cache).
 
-## 4. Cara cek
-- iPhone Safari lebar 390px: muat ulang Home saat posisi gulir di bawah. Judul tetap di atas.
-- Gambar buku tampil utuh, tidak terpotong, tidak menimpa menu bawah.
-- Cek layar 320px dan layar lebar. Data pengguna lama tidak berubah.
+## 4. Masalah kedua (screenshot pertama)
+- Home pengguna baru terbuka sudah tergulir; gambar buku terpotong separuh.
+- `setTab` memanggil `scrollTo(0,0)` (ui.js:491) sebelum Home digambar; Safari memulihkan gulir lama.
+- Perbaikan: `history.scrollRestoration='manual'` (try/catch) dan `scrollTo(0,0)` setelah `#view` terisi.
+- `.hero-pic` (style.css:1133): `object-fit:contain`, tinggi otomatis, tanpa `max-height:140px`.
+
+## 5. Cara cek
+- iPhone Safari 390px, akun 2211 XP: logo "Keepo" utuh.
+- Muat ulang Home saat gulir di bawah: judul tetap di atas.
+- Data pengguna lama tidak berubah.
 
 Mockup: `docs/mockup-1291.html`.
