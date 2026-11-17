@@ -549,6 +549,15 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .pill.login{background:var(--ink);color:var(--cream);border:0;cursor:pointer}
 [data-theme=night] .pill.login{background:var(--lime);color:var(--ink)}
 @media (max-width:380px){#pStreak{padding:0 7px;gap:2px}#pXp{padding:0 7px}}
+/* #1250 Home memuat: kerangka rak + chip streak/XP netral */
+.big.bk-h{font-size:clamp(26px,8vw,34px);line-height:1.1;margin-bottom:12px}
+.bk-skel{display:flex;gap:12px;overflow:hidden}
+.bk-skel i{flex:1 1 0;min-width:84px;max-width:140px;aspect-ratio:2/3;border-radius:var(--radius-md);background:var(--color-surface-soft);animation:bkPulse 1.4s ease-in-out infinite}
+.bk-skel i:nth-child(2){animation-delay:.2s}.bk-skel i:nth-child(3){animation-delay:.4s}
+.bk-skel.still i{animation:none;opacity:.55}
+@keyframes bkPulse{0%,100%{opacity:.45}50%{opacity:1}}
+.pill.wait{color:var(--color-text-muted)}
+@media (prefers-reduced-motion:reduce){.bk-skel i{animation:none;opacity:.7}}
 @media (max-width:380px){
   #top{padding-left:12px;padding-right:12px;gap:6px}
   #top h1{min-width:0;font-size:26px}

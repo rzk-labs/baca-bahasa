@@ -1,5 +1,11 @@
 [
   {
+    "n": 1250,
+    "judul": "Home saat memuat: kerangka rak + chip streak tak tampil '0 hari'",
+    "poin": "Home saat memuat sekarang tampil kerangka rak yang berdenyut pelan.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1254,
     "judul": "Tips pertama e-reader: satu baris, bergantian, tak tutup teks",
     "poin": "Tips pertama saat baca sekarang cuma satu baris, tidak menutupi teks lagi.",
@@ -171,12 +177,6 @@
     "n": 1166,
     "judul": "[peta 115] Layar Boss: label 'arti mesin' + tautan 'Arti ini salah?'",
     "poin": "Layar Boss sekarang memberi label \"Arti mesin, bisa meleset\" di bawah arti kata.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1164,
-    "judul": "[peta 122] Header e-reader tidak kepotong: judul bab satu baris, '…'",
-    "poin": "Judul bab di atas halaman baca tidak terpotong lagi.",
     "tgl": "2026-11-15"
   }
 ]
