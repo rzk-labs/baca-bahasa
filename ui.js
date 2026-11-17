@@ -1733,7 +1733,7 @@ function layout() {
   if (resumed) { cols._chip = true; resumeChip(b); }
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
-/* chip 'Lanjut dari halaman X' ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
+/* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
 let chipT = 0;
 function resumeChip(b) {
   clearTimeout(chipT); const old = $('#rchip'); if (old) old.remove();
@@ -1741,7 +1741,7 @@ function resumeChip(b) {
   const el = document.createElement('button'); el.type = 'button'; el.id = 'rchip'; el.className = 'rchip';
   const gone = () => { clearTimeout(chipT); el.remove(); };
   let offer = false;
-  el.textContent = `Lanjut dari halaman ${RD.page + 1}`;
+  el.textContent = (b.total || 1) > 1 ? `Lanjut dari ${secWord(b, b.pos)} ${Math.min(b.pos + 1, b.total)}` : 'Lanjut baca';
   el.onclick = e => {
     e.stopPropagation();
     const m = nearMark(b);

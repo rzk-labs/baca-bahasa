@@ -1,5 +1,29 @@
 [
   {
+    "n": 1285,
+    "judul": "E-reader: satu satuan nomor, 'halaman' saja (bukan Bagian + hal.)",
+    "poin": "Nomor di e-reader sekarang satu jenis saja: halaman.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1284,
+    "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
+    "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1277,
+    "judul": "Tips e-reader: pindah ke bawah bilah halaman, tak timpa teks",
+    "poin": "Tips awal baca kini di bawah halaman, tidak lagi menutup teks.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1275,
+    "judul": "Toast 'ikut akun' tak menimpa layar + sinkron punya batas waktu",
+    "poin": "Pesan \"Data kamu ikut akun\" kini singkat, muncul sekali, dan tidak menutup judul.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1273,
     "judul": "[peta 136] Keepo HQ: satu kotak mockup, hapus 'Belum ada gambar'",
     "poin": "Kartu \"Siap dicek\" di Keepo HQ sekarang hanya punya satu kotak mockup.",
@@ -154,29 +178,5 @@
     "judul": "Lencana terbuka: tanda centang + tulisan 'Didapat', bukan cuma warna",
     "poin": "Lencana yang sudah didapat sekarang punya tanda centang dan tulisan \"Didapat\".",
     "tgl": "2026-11-16"
-  },
-  {
-    "n": 1172,
-    "judul": "Tahan balasan Google aneh (reading '0') + Home 'Lanjut baca' di atas",
-    "poin": "Balasan terjemahan yang aneh tidak lagi bikin error; tampil ramah atau kosong.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1188,
-    "judul": "Kartu ulang kata: bunyikan kata otomatis + warna nada pinyin",
-    "poin": "Kartu ulang bisa otomatis membunyikan kata. Nyalakan di Pengaturan, bawaannya mati.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1178,
-    "judul": "Lencana terbuka: tanda centang + teks 'Sudah dapat' (bukan hanya warna)",
-    "poin": "Lencana yang sudah didapat kini punya tanda centang di pojok kartu.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1182,
-    "judul": "Ikon pojok kanan atas HP: jelas mana Profil, Masukan, Pengaturan",
-    "poin": "Di HP, tombol akun kini ikon orang bertulisan \"Profil\".",
-    "tgl": "2026-11-15"
   }
 ]
