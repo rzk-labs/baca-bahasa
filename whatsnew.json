@@ -1,5 +1,11 @@
 [
   {
+    "n": 1275,
+    "judul": "Toast 'ikut akun' tak menimpa layar + sinkron punya batas waktu",
+    "poin": "Pesan \"Data kamu ikut akun\" kini singkat, muncul sekali, dan tidak menutup judul.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1273,
     "judul": "[peta 136] Keepo HQ: satu kotak mockup, hapus 'Belum ada gambar'",
     "poin": "Kartu \"Siap dicek\" di Keepo HQ sekarang hanya punya satu kotak mockup.",
@@ -171,12 +177,6 @@
     "n": 1178,
     "judul": "Lencana terbuka: tanda centang + teks 'Sudah dapat' (bukan hanya warna)",
     "poin": "Lencana yang sudah didapat kini punya tanda centang di pojok kartu.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1182,
-    "judul": "Ikon pojok kanan atas HP: jelas mana Profil, Masukan, Pengaturan",
-    "poin": "Di HP, tombol akun kini ikon orang bertulisan \"Profil\".",
     "tgl": "2026-11-15"
   }
 ]
