@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 142,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home terbuka kepotong: selalu mulai dari atas + gambar buku tampil utuh (#1291)",
+      "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1291.html. Ubah ui.js, style.css, naikkan versi C di sw.js."
+    },
+    {
       "no": 140,
       "peran": "developer",
       "prioritas": "P0",
