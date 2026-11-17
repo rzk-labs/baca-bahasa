@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 140,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Fase 2 · tahap 21: ukur beta nyata (baru, aktivasi, H2, H7 per sumber), tampil di Keepo HQ (#1262)",
+      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1262.html (layar Beta Nyata di Keepo HQ). Ubah api/ (deploy manual founder) + cloud.js + dev/. Tanpa data pribadi. Macet Home sudah ditangani #138/#139."
+    },
+    {
       "no": 139,
       "peran": "developer",
       "prioritas": "P0",

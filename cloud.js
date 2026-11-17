@@ -11,14 +11,19 @@ const SYNC_KEYS = ['xp', 'xpDay', 'pgDay', 'badges', 'stat', 'days', 'scores', '
 const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
 const TOMB_TTL = 90 * 864e5;
 
+const API_TMO = 15000; // batas waktu satu permintaan ke server
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
   const h = { 'Content-Type': 'application/json' };
   if (db.acct && db.acct.token) h.Authorization = 'Bearer ' + db.acct.token;
-  let r;
-  try { r = await fetch(API + path, { method: opt.method || 'GET', headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined }); }
-  catch (e) { throw new Error('Koneksi putus. Coba lagi pas ada internet.'); }
-  const j = await r.json().catch(() => ({}));
+  let r, j;
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), API_TMO);
+  try {
+    r = await fetch(API + path, { method: opt.method || 'GET', headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined, signal: ac.signal });
+    j = await r.json().catch(() => ({}));
+  } catch (e) {
+    throw new Error(ac.signal.aborted ? 'Server kelamaan menjawab. Coba lagi ya.' : 'Koneksi putus. Coba lagi pas ada internet.');
+  } finally { clearTimeout(tm); }
   if (r.status === 401 && db.acct && path !== '/login') { db.acct = null; save(); renderAcct(); }
   if (!r.ok) throw new Error(j.error || 'Server lagi bermasalah.');
   return j;
@@ -232,7 +237,7 @@ async function syncBooks() {
       try { await uploadBook(b); } catch (e) { if (/penuh|besar/i.test(e.message)) { toast(e.message, 5000); break; } }
     }
     // turun: buku di akun yang belum ada di perangkat ini
-    let added = 0;
+    let added = 0, failed = 0;
     for (const x of rem) {
       if (loc.has(x.key) || (gone.get(x.key) || 0) > (x.at || 0)) continue;
       try {
@@ -242,8 +247,10 @@ async function syncBooks() {
         await putText(id, paras);
         db.books.push({ id, title: r.meta.title || 'Tanpa judul', lang: r.meta.lang || 'en', pos: 0, si: 0, total: 0, v: 2, added: r.meta.added || Date.now(), opened: +r.meta.opened || 0, cloud: Date.now() });
         added++; save();
-      } catch (e) { }
+      } catch (e) { failed++; }
     }
+    if (failed && !added && !(db.books || []).length) bad = true;
+    else if (failed) toast('Sebagian buku belum bisa dimuat.', 6000, { label: 'Coba lagi', fn: () => { syncBooks().catch(() => { }); } });
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
   } catch (e) { bad = true; } finally { clearTimeout(tmo); bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
@@ -267,8 +274,11 @@ async function afterLogin(res) {
   if (!localStorage.getItem('kepo.noteAkun2')) { try { localStorage.setItem('kepo.noteAkun2', '1'); } catch (e) { } noteAkunWhenReady(0); }
 }
 // toast catatan: tunggu Home tidak kosong/memuat (maks ~20 detik), lalu hilang sendiri
+let noteShown = false;
 function noteAkunWhenReady(n) {
   if (bkState === 'load' || !(db.books || []).length) { if (n < 20) setTimeout(() => noteAkunWhenReady(n + 1), 1000); return; }
+  if (noteShown || db.tab !== 'rak' || document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide')) { if (n < 20) setTimeout(() => noteAkunWhenReady(n + 1), 1000); return; }
+  noteShown = true; // sekali per sesi
   toast(NOTE_AKUN.replace(/&amp;/g, '&'), 4000);
 }
 setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
