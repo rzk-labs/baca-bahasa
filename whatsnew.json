@@ -1,5 +1,11 @@
 [
   {
+    "n": 1236,
+    "judul": "[peta 130] Keepo HQ HP: kolom papan kosong jangan melar, judul di atas",
+    "poin": "Papan tugas di HP: kolom kosong sekarang pendek dan rata atas.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1234,
     "judul": "Perbaiki crash 'reading 0' (bahasa tak dikenal) + tab bawah 12px",
     "poin": "Buku berbahasa tak dikenal tidak lagi bikin layar baca macet.",
@@ -171,12 +177,6 @@
     "n": 1155,
     "judul": "[peta 125] Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar",
     "poin": "Sederhanakan halaman sekarang menjelaskan tiap paragraf, satu kartu per paragraf.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1151,
-    "judul": "[peta 117] Layar Ngomong ringkas: buang tile Tantangan, mic tanpa scroll",
-    "poin": "Layar Ngomong sekarang lebih ringkas: kotak \"Tantangan hari ini\" dibuang.",
     "tgl": "2026-11-15"
   }
 ]
