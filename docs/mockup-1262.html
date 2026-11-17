@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1262 — Home tidak macet saat memuat</title>
+<style>
+body{margin:0;background:#e9e6df;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.note{max-width:390px;margin:12px auto 4px;font-size:12px;color:#6b5560;padding:0 8px}
+.lbl{max-width:390px;margin:14px auto 4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ph{width:390px;margin:0 auto 20px;background:#D7EFFF;border-radius:22px;overflow:hidden;box-shadow:0 2px 12px #0002;min-height:520px;position:relative}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 6px}
+h1{font:800 26px 'Bricolage Grotesque',Inter,sans-serif;margin:0}
+.chip{background:#351E28;color:#fff;border-radius:99px;padding:6px 12px;font-size:13px;font-weight:700}
+.chip.off{visibility:hidden}
+.mut{font-size:13px;color:#6b5560;padding:0 20px}
+.empty{margin:150px 0 0;text-align:center;font-size:13px;color:#8a7a82}
+.card{margin:12px 20px;background:#fff;border-radius:16px;padding:14px}
+.card b{display:block;font-size:15px}
+.card span{font-size:12px;color:#6b5560}
+.bar{height:6px;border-radius:9px;background:#e6dde1;margin-top:8px}
+.bar i{display:block;height:6px;border-radius:9px;background:#351E28}
+.hl{background:#E9F056;padding:0 3px}
+.sk{margin:12px 20px;height:64px;border-radius:16px;background:#c4dbe9}
+.btn{margin:14px 20px 0;background:#351E28;color:#fff;border-radius:99px;padding:13px;text-align:center;font-weight:700;font-size:14px}
+.tabs{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#fff;padding:12px 0;font-size:12px;font-weight:600}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun.</div>
+
+<div class="lbl">Sebelum (macet, tanpa jalan keluar)</div>
+<div class="ph">
+<div class="top"><h1>Kepoin bahasa baru</h1><span class="chip">0 hari</span></div>
+<div class="empty">Memuat bukumu…</div>
+<div class="tabs"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+
+<div class="lbl">Sesudah (memuat: rak lokal muncul dulu)</div>
+<div class="ph">
+<div class="top"><h1>Kepoin bahasa baru</h1><span class="chip off">0 hari</span></div>
+<div class="mut">Lanjut baca</div>
+<div class="card"><b>The Little Prince</b><span>Halaman 14 dari 62 · Bahasa Inggris</span><div class="bar"><i style="width:23%"></i></div></div>
+<div class="sk"></div><div class="sk"></div>
+<div class="mut">Menyinkronkan akunmu di belakang…</div>
+<div class="tabs"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+
+<div class="lbl">Sesudah (lewat 8 detik, sinkron belum selesai)</div>
+<div class="ph">
+<div class="top"><h1>Kepoin bahasa baru</h1><span class="chip">3 hari</span></div>
+<div class="mut">Lanjut baca</div>
+<div class="card"><b>The Little Prince</b><span>Halaman 14 dari 62 · Bahasa Inggris</span><div class="bar"><i style="width:23%"></i></div></div>
+<div class="card"><b>Sinkron akun belum selesai</b><span>Bukumu aman di HP ini. Coba lagi nanti.</span></div>
+<div class="btn">Coba lagi</div>
+<div class="tabs"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+</body></html>

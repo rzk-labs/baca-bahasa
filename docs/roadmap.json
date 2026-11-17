@@ -242,6 +242,24 @@
   ],
   "backlog": [
     {
+      "no": 139,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Fase 2 · tahap 21: ukur aktivasi & kembali hari 7 per sumber, tampil di Keepo HQ (#1262)",
+      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
+      "status": "siap dikerjakan",
+      "catatan": "Kerjakan SETELAH #138. Ubah api/ (deploy manual founder) + cloud.js + dev/. Tanpa data pribadi."
+    },
+    {
+      "no": 138,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home macet 'Memuat bukumu…': nama bkState bentrok di cloud.js, batas waktu + rak lokal + chip streak disembunyikan saat memuat (#1262)",
+      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1262.html. Ubah cloud.js (baris 37 vs 161), ui.js (Home memuat), app.js (buka database: onblocked/onabort); naikkan versi C di sw.js."
+    },
+    {
       "no": 137,
       "peran": "developer",
       "prioritas": "P0",
