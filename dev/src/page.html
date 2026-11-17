@@ -151,6 +151,7 @@ a{color:inherit}
 textarea,input,select{width:100%;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
 textarea{min-height:120px;resize:vertical}
 .gb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.gb .th{position:relative;width:64px;height:64px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--soft);flex:none}.gb .th img{width:100%;height:100%;object-fit:cover;display:block}.gb .th button{position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);background:var(--wasabi);color:#351E28;font-weight:800;line-height:1;cursor:pointer;padding:0}.gb .hint{flex-basis:100%;font-size:12px;color:var(--mut)}
+.mm{width:144px;height:266px;margin:8px 0 4px;border:3px solid var(--ink);border-radius:18px;padding:5px;background:#111;box-shadow:0 3px 0 var(--ink);overflow:hidden;flex:none}.mm .mv{width:128px;height:250px;border-radius:12px;background:#d9d4d6;overflow:hidden;position:relative}.mm iframe{position:absolute;left:0;top:0;width:390px;height:760px;border:0;background:#fff;transform:scale(.328);transform-origin:0 0;pointer-events:none}
 .kth{display:flex;gap:6px;margin-top:8px}.kth img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1.5px solid var(--ink)}
 .md img{max-width:100%;height:auto;border-radius:12px;border:1.5px solid var(--ink)}
 textarea:focus,input:focus,select:focus{box-shadow:0 0 0 3px var(--wasabi),0 0 0 4.5px #351E28}
@@ -308,7 +309,7 @@ function kartuTugas(t,o){o=o||{};
   const pts=o.laporan&&t.h?t.h.poin.slice(0,3):[];
   const lap=o.laporan?(pts.length?`<ul class="pts sm2 lap">${pts.map(x=>`<li>${inl(x)}</li>`).join('')}</ul>`:`<div class="mut sm lap">${t.status==='dikerjakan'||t.status==='antre'?'Sedang dikerjakan, laporan muncul setelah selesai.':'Laporan tidak ditemukan, buka untuk lihat detail.'}</div>`):'';
   const pil=o.pilih&&t.status==='siap'?`<label class="pil" onclick="event.stopPropagation()"><input type="checkbox" data-n="${t.n}" ${PIL.has(t.n)?'checked':''} onchange="pilih(${t.n},this.checked)" aria-label="Pilih tugas #${t.n}"></label>`:'';
-  return `<div class="card tk" onclick="detail(${t.n})"><div class="row">${pil}${chipP(t.peran)}${chipS(t)}${chipQ(t.qa,t.qaTeks)}${t.otomatis?'':`<span class="chip">${I.pena} dari kamu</span>`}${t.status==='live'&&t.terbuka?`<span class="chip belum" title="Issue masih terbuka">${I.buka} belum ditutup</span>`:''}</div><b>${esc(jdl)}</b><span class="mut sm">#${t.n} · ${lalu(t.w||t.diubah)}</span>${kthumb(t)}${lap}${o.revisi&&t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">${I.pena} Revisi</button>`:''}</div>`;
+  return `<div class="card tk" onclick="detail(${t.n})"><div class="row">${pil}${chipP(t.peran)}${chipS(t)}${chipQ(t.qa,t.qaTeks)}${t.otomatis?'':`<span class="chip">${I.pena} dari kamu</span>`}${t.status==='live'&&t.terbuka?`<span class="chip belum" title="Issue masih terbuka">${I.buka} belum ditutup</span>`:''}</div>${t.status==='siap'&&MM[t.n]!==''?`<div class="mm" data-mm="${t.n}" aria-hidden="true"><div class="mv"></div></div>`:''}<b>${esc(jdl)}</b><span class="mut sm">#${t.n} · ${lalu(t.w||t.diubah)}</span>${kthumb(t)}${lap}${o.revisi&&t.status==='gagal'?`<button class="btn ghost" style="margin-top:8px" onclick="event.stopPropagation();detail(${t.n})">${I.pena} Revisi</button>`:''}</div>`;
 }
 // Setujui massal (#925): pakai alur setujui satuan, berurutan
 let PIL=new Set(),MASSAL=null,VISIAP=[];
@@ -555,16 +556,16 @@ function tampilHasil(L){
 }
 
 // Cari, saring, urutkan tugas (dipakai Papan & Hasil)
-let Q='',PF='semua',SF='',SORT='baru';
+let Q='',PF='semua',SF='',SORT='bawaan';
 const STAT=[['antre','Antre'],['dikerjakan','Dikerjakan'],['siap','Siap dicek'],['menuju','Menuju live'],['live','Live'],['gagal','Gagal / ditolak']];
 const cocokQ=(t,extra)=>!Q||(String(t.judul||'')+' #'+t.n+' '+(extra||'')).toLowerCase().includes(Q.toLowerCase().trim());
 const cocokP=t=>PF==='semua'||(PF==='kamu'?!t.otomatis:t.peran===PF);
-const urutT=(L,key)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
+const urutT=(L,key,lama)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'||(SORT==='bawaan'&&lama)?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
 // Bar alat: cari + urutkan + chip peran. ulang() = render ulang halaman, fokus tetap di kotak cari.
 function alatTugas(ulang,denganSort){
   const per=['riset','desain','developer','marketing','pm'];
   const ch=(k,l)=>`<button class="chip ${PF===k?'on':''}" data-pf="${k}">${l}</button>`;
-  return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
+  return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="bawaan" ${SORT==='bawaan'?'selected':''}>Bawaan</option><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
   <div class="row hf" style="margin:10px 0 14px;flex-wrap:wrap;gap:8px">${ch('semua','Semua')}${ch('kamu','✍️ Dari kamu')}${per.map(k=>ch(k,TIM[k].e+' '+TIM[k].n)).join('')}</div>
   <div class="row hf" style="margin:0 0 14px;flex-wrap:wrap;gap:8px"><button class="chip ${SF===''?'on':''}" data-sf="">Semua status</button>${STAT.map(([k,l])=>`<button class="chip ${SF===k?'on':''}" data-sf="${k}">${l}</button>`).join('')}</div>`;
 }
@@ -580,11 +581,11 @@ async function papan(again){
   if(!again){if(HQ)segarkan('papan',papan);else{skel();try{await load()}catch(e){gagal(e.message,()=>go('papan'));return}}}
   if(cur!=='papan')return;
   if(document.activeElement&&document.activeElement.id==='qt'&&again==='auto'){auto(()=>papan('auto'));return} // jangan ganggu saat mengetik
-  const cols=[['antre','Antre','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['siap','Siap dicek','t-lime'],['menuju','Menuju live','t-blue'],['live','Live','t-mint'],['gagal','Gagal / ditolak','t-coral']];
+  const cols=[['siap','Siap dicek','t-lime'],['gagal','Gagal / ditolak','t-coral'],['menuju','Menuju live','t-blue'],['dikerjakan','Dikerjakan','t-sun'],['antre','Antre','t-blue'],['live','Live','t-mint']];
   // gagal disembunyikan hanya bila ada tugas pengganti yang ditautkan sebagai revisi/ulang dan benar-benar jalan
   const diganti=t=>HQ.tasks.some(u=>u.n>t.n&&(u.ulang||[]).includes(t.n)&&u.status!=='gagal'&&u.status!=='ditolak');
   const by0=k=>HQ.tasks.filter(t=>k==='gagal'?((t.status==='gagal'&&!diganti(t))||t.status==='ditolak'):t.status===k);
-  const by=k=>(SF&&SF!==k)?[]:urutT(by0(k).filter(t=>cocokP(t)&&cocokQ(t)));
+  const by=k=>(SF&&SF!==k)?[]:urutT(by0(k).filter(t=>cocokP(t)&&cocokQ(t)),null,k==='siap'||k==='gagal'||k==='menuju');
   const saring=Q||PF!=='semua'||SF;
   const nCocok=cols.reduce((a,[k])=>a+by(k).length,0);
   const kartuP=t=>kartuTugas(t,{revisi:true,pilih:true});setVis(by('siap'));
@@ -688,7 +689,10 @@ function tampilDetail(t,n,mv){
   const LIM=4;
   // Gambar mockup: file docs/mockup/*.svg|png di PR (lewat rute preview) + gambar di isi PR
   const GBR=[...(t.files||[]).filter(f=>/^docs\/mockup\/[\w.-]+\.(svg|png)$/i.test(f)&&t.preview&&!t.pr?.merged).map(f=>t.preview+f),...((t.pr&&GAMBAR[t.pr.n])||[])];
-  const mockSec=t.status==='siap'||GBR.length?`<section class="tile mk"><div class="lbl">🖼️ Mockup</div>${GBR.length?`<div class="mk-s">${GBR.map((u,i)=>`<button class="mk-i" data-z="${i}" aria-label="Perbesar mockup ${i+1}"><img src="${esc(u)}" alt="Mockup ${i+1}" loading="lazy"></button>`).join('')}</div><div class="mk-n sm mut" id="mkn">${GBR.length>1?`1/${GBR.length} · geser untuk lihat lainnya`:'Ketuk gambar untuk memperbesar'}</div>`:'<span class="chip o">Belum ada gambar</span>'}</section>`:'';
+  const ADAHTML=!!(MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged));
+  const mkGbr=GBR.length?`<div class="mk-s">${GBR.map((u,i)=>`<button class="mk-i" data-z="${i}" aria-label="Perbesar mockup ${i+1}"><img src="${esc(u)}" alt="Mockup ${i+1}" loading="lazy"></button>`).join('')}</div><div class="mk-n sm mut" id="mkn">${GBR.length>1?`1/${GBR.length} · geser untuk lihat lainnya`:'Ketuk gambar untuk memperbesar'}</div>`:'';
+  const mkHtml=ADAHTML?`<p class="mut sm" style="margin:${GBR.length?'14px':'4px'} 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div>`:'';
+  const mockSec=GBR.length||ADAHTML?`<section class="tile mk"><div class="lbl">🖼️ Mockup</div>${mkGbr}${mkHtml}</section>`:t.status==='siap'?`<p class="mut sm">Tugas ini tidak punya tampilan baru untuk dicek.</p>`:'';
   const aksi=t.status==='siap'?`<div class="acts aks"><button class="btn big-b" id="ok">${I.cek} Setujui</button><button class="btn ghost big-b" id="rvb">${I.pena} Revisi</button><button class="btn ghost big-b" id="no">${I.silang} Tolak</button></div>`:'';
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
   const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
@@ -710,7 +714,6 @@ function tampilDetail(t,n,mv){
     ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
-  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div></section>`:''}
   `:''}
   ${!kerja?mockSec+aksi:''}
   ${h&&!kerja?`
@@ -780,6 +783,13 @@ function lampiran(kotak,area){
   add.onclick=()=>inp.click();inp.onchange=()=>{tambah([...inp.files]);inp.value=''};
   area.addEventListener('paste',e=>{const fs=[...(e.clipboardData?.files||[])].filter(f=>f.type.startsWith('image/'));if(fs.length){e.preventDefault();tambah(fs)}});
   return L}
+// Pratinjau HP mini di kartu Siap dicek (#1265): muat malas, maks 2 iframe sekaligus
+const MM={};let MMV=new Set(),MMIO=null;
+async function mmCari(n){if(n in MM)return MM[n];let u='';try{const t=DET[n]||await call('/tasks/'+n);if(t.pr&&!t.pr.merged&&t.preview){if(!(t.pr.n in FILES)){const f=await call('/pr/'+t.pr.n+'/files');FILES[t.pr.n]=f.files||[];GAMBAR[t.pr.n]=f.gambar||[]}if((FILES[t.pr.n]||[]).includes('docs/mockup-'+n+'.html'))u=t.preview+'docs/mockup-'+n+'.html'}}catch(e){return null}return MM[n]=u}
+function mmPompa(){MMV.forEach(e=>{if(!e.isConnected)MMV.delete(e)});let live=[...MMV].filter(e=>e.querySelector('iframe')).length;for(const e of MMV){if(live>=2)break;if(e.querySelector('iframe'))continue;const n=+e.dataset.mm;if(MM[n]){e.firstChild.innerHTML=`<iframe src="${esc(MM[n])}" title="Pratinjau #${n}" tabindex="-1"></iframe>`;live++}}}
+function mmLihat(e){mmCari(+e.dataset.mm).then(u=>{if(u===null)return;if(!u){e.remove();return}if(MMV.has(e))mmPompa()})}
+function mmScan(){if(!('IntersectionObserver'in window))return;if(!MMIO)MMIO=new IntersectionObserver(es=>{es.forEach(x=>{const e=x.target;if(x.isIntersecting){MMV.add(e);mmLihat(e)}else{MMV.delete(e);const f=e.querySelector('iframe');if(f){f.remove();mmPompa()}}})},{rootMargin:'100px'});document.querySelectorAll('.mm[data-mm]:not([data-o])').forEach(e=>{e.dataset.o='1';MMIO.observe(e)})}
+if(V&&window.MutationObserver){let tm;new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(mmScan,60)}).observe(V,{childList:true,subtree:true})}
 const kthumb=t=>(t.gambar&&t.gambar.length)?`<div class="kth">${t.gambar.map(u=>`<img src="${esc(u)}" alt="" loading="lazy">`).join('')}</div>`:'';
 function md(s){return window.marked&&window.DOMPurify?DOMPurify.sanitize(marked.parse(String(s||''))):esc(s).replace(/\n/g,'<br>')}
 
