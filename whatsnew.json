@@ -1,5 +1,11 @@
 [
   {
+    "n": 1254,
+    "judul": "Tips pertama e-reader: satu baris, bergantian, tak tutup teks",
+    "poin": "Tips pertama saat baca sekarang cuma satu baris, tidak menutupi teks lagi.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1240,
     "judul": "[peta 106] Gagal masuk/daftar/sinkron: pesan jelas + satu tombol langkah",
     "poin": "Tombol langkah saat gagal masuk ternyata sudah jalan sejak tugas sebelumnya.",
@@ -171,12 +177,6 @@
     "n": 1164,
     "judul": "[peta 122] Header e-reader tidak kepotong: judul bab satu baris, '…'",
     "poin": "Judul bab di atas halaman baca tidak terpotong lagi.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1167,
-    "judul": "[peta 123] Sederhanakan halaman: jelaskan per paragraf, bukan awal saja",
-    "poin": "Sheet Sederhanakan halaman kini berisi daftar paragraf, masing-masing punya tombol Jelaskan.",
     "tgl": "2026-11-15"
   }
 ]
