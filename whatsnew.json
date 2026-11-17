@@ -1,5 +1,11 @@
 [
   {
+    "n": 1238,
+    "judul": "[peta 133] Keepo HQ: QA tampil di tiap peran + kartu total QA di Kuota",
+    "poin": "Kuota di Keepo HQ sekarang punya kartu total QA.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1236,
     "judul": "[peta 130] Keepo HQ HP: kolom papan kosong jangan melar, judul di atas",
     "poin": "Papan tugas di HP: kolom kosong sekarang pendek dan rata atas.",
@@ -171,12 +177,6 @@
     "n": 1142,
     "judul": "Home pemula: satu tombol Upload, gambar ke bawah, ruang bawah lega",
     "poin": "Home pemula kini punya satu tombol Upload saja, langkah 1 jadi teks biasa.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1155,
-    "judul": "[peta 125] Sederhanakan halaman: bahasa mudah, tanpa istilah, jatah AI benar",
-    "poin": "Sederhanakan halaman sekarang menjelaskan tiap paragraf, satu kartu per paragraf.",
     "tgl": "2026-11-15"
   }
 ]
