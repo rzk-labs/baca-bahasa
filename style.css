@@ -650,7 +650,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 /* #286 ramah jempol: jarak antar target >=8px, area ketuk >=44px */
 .fb-kind,.fb-stars,.seg{gap:8px}.chlist{gap:8px}.sheet-aux{gap:8px 12px}
 .pill{position:relative}
-.pill::after{content:"";position:absolute;left:50%;top:50%;width:100%;height:max(100%,44px);transform:translate(-50%,-50%)}
+.pill::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
 /* #306 HP sempit (<=360px): header tak sesak, logo utuh, tab bawah lega */
 @media (max-width:360px){
   #top{padding-left:10px;padding-right:10px;gap:4px}

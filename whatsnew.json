@@ -1,5 +1,11 @@
 [
   {
+    "n": 1284,
+    "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
+    "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1277,
     "judul": "Tips e-reader: pindah ke bawah bilah halaman, tak timpa teks",
     "poin": "Tips awal baca kini di bawah halaman, tidak lagi menutup teks.",
@@ -172,11 +178,5 @@
     "judul": "Tahan balasan Google aneh (reading '0') + Home 'Lanjut baca' di atas",
     "poin": "Balasan terjemahan yang aneh tidak lagi bikin error; tampil ramah atau kosong.",
     "tgl": "2026-11-16"
-  },
-  {
-    "n": 1188,
-    "judul": "Kartu ulang kata: bunyikan kata otomatis + warna nada pinyin",
-    "poin": "Kartu ulang bisa otomatis membunyikan kata. Nyalakan di Pengaturan, bawaannya mati.",
-    "tgl": "2026-11-15"
   }
 ]
