@@ -288,7 +288,7 @@ function celebrate(title, msg, snd = 'win') {
   el.innerHTML = `<div class="card">${snd === 'lvl' ? `<div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div>` : spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (typeof bkState !== 'undefined' && bkState === 'load') { if (s) { s.innerHTML = `${ico('flame')}<span aria-hidden="true">–</span>`; s.title = 'Streak: lagi dimuat'; s.classList.add('wait'); } if (x) { x.innerHTML = `${ico('bolt')}<span aria-hidden="true">–</span>`; x.title = 'XP: lagi dimuat'; x.classList.add('wait'); } return; } if (s) s.classList.remove('wait'); if (x) x.classList.remove('wait'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
 
 /* ---------- kerangka ---------- */
 let toastT;
@@ -944,8 +944,12 @@ function viewRak() {
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
-    $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
-    const rt = $('#bkRetry'); if (rt) rt.onclick = () => { bkState = 'load'; viewRak(); syncBooks().catch(() => { }); };
+    refreshPills();
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
+    const rt = $('#bkRetry'); if (rt) rt.onclick = () => {
+      if (navigator.onLine === false || bkBusy) { toast(navigator.onLine === false ? 'Lagi offline. Sambungkan internet dulu, lalu coba lagi.' : 'Masih memuat, tunggu sebentar ya.', 4000); return; }
+      bkState = 'load'; viewRak(); syncBooks().catch(() => { });
+    };
     return;
   }
   if (!cur) {
@@ -1431,16 +1435,17 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>Tombol Menu</b> di bawah = bilah atas.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
+      ${tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
         <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
-  tipN = 0; nudgePg = new Set();
-  if (!db.seenTip) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
-  if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
+  tipN = 0; tipDone = false; nudgePg = new Set();
+  if (tipStepNow() > 0 && (!$('#toast').classList.contains('hide') || $('#nchip'))) { tipDone = true; const t = $('#tip'); if (t) t.remove(); } /* tak bareng toast/chip; dicoba lagi kunjungan berikut */
+  if (tipOn()) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
+  if ($('#tipx')) $('#tipx').onclick = () => dismissTip();
   $('#rHome').onclick = () => leaveBaca();
   $('#rMenuBtn').onclick = () => toggleMenu(true);
   $('#rMark').onclick = e => { e.stopPropagation(); toggleMark(); };
@@ -2033,7 +2038,7 @@ async function openMarks() {
     toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   });
 }
-let tipN = 0, nudgePg = new Set(), nudgeT = 0;
+let tipN = 0, tipDone = false, nudgePg = new Set(), nudgeT = 0;
 const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
 function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
 /* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
@@ -2104,8 +2109,12 @@ function toggleMenu(keep) {
   const on = r.classList.toggle('chrome');
   if (on && keep) menuHold();
 }
-function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
-function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
+/* tips e-reader: satu pesan pendek per kunjungan, bergantian. db.tipStep: 0 kata, 1 kalimat, 2 menu, 3 selesai (data lama tanpa field = selesai bila seenTip) */
+const TIPS = ['<b>Ketuk kata</b> = artinya', '<b>Tahan kalimat</b> = arti kalimat', '<b>Ketuk tengah</b> = menu'];
+function tipStepNow() { return typeof db.tipStep === 'number' ? db.tipStep : (db.seenTip ? 3 : 0); }
+function tipOn() { return tipStepNow() < 3 && !tipDone; }
+function dismissTip() { if (tipDone) return; tipDone = true; const n = tipStepNow(); if (n >= 3) return; db.tipStep = n + 1; db.seenTip = true; save(); const t = $('#tip'); if (t) t.remove(); }
+function tipTurn() { if (tipOn() && ++tipN >= 3) dismissTip(); }
 /* indeks kalimat pertama yang mulai di halaman p (dari RD.ss) */
 function firstSent(p) { const ss = RD.ss || [], i = ss.findIndex(x => x.pg >= p); return i < 0 ? ss.length : i; }
 function turn(d) {
@@ -2283,10 +2292,21 @@ async function onWord(el, lastEl) {
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
     const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
-    $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? d.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
+    const paintDict = (dd, al) => al.length ? `<div><b>Bisa juga:</b> ${al.map(esc).join(', ')}</div>` + (dd.length > 1 ? dd.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
+    $('#wdict').innerHTML = paintDict(d, alt);
+    /* arti lain kosong: ambil ulang sekali di latar; tetap kosong = 'Belum ada arti lain' kecil */
+    if (!alt.length && !r.off && !(b.lang === 'ja' && db.my === 'id')) {
+      const q0 = qWord(), txt = r.text;
+      if (navigator.onLine === false) $('#wdict').innerHTML = '<div class="mut sm">Lagi offline, arti lain belum bisa dimuat.</div>';
+      else altFill(q0, b.lang, db.my, sig).then(more => {
+        if (my !== tok || !$('#wdict') || qWord() !== q0) return;
+        const al = altFlat(altArti(more, txt));
+        $('#wdict').innerHTML = al.length ? paintDict(more, al) : '<div class="mut sm">Belum ada arti lain.</div>'; keepVisible('.w.sel');
+      }).catch(() => { if (my === tok && $('#wdict') && !$('#wdict').firstChild) $('#wdict').innerHTML = '<div class="mut sm">Belum ada arti lain.</div>'; });
+    }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
-  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline, arti kata baru belum bisa dimuat. Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
   /* 'Arti ini salah?': daftar maks 3 arti lain; pilihan disimpan ke kartu & tak tertimpa */
   const wAlt = $('#walt');
   const altLink = () => { if (!wAlt) return; delete wAlt.dataset.open; wAlt.innerHTML = '<button class="ghost walink" id="walink" type="button">Arti ini salah?</button>'; $('#walink').onclick = openAlt; };
