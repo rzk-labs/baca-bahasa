@@ -245,6 +245,14 @@
       "no": 140,
       "peran": "developer",
       "prioritas": "P0",
+      "nama": "Keepo HQ: detail tugas jadi pop up + loading saat status pindah (#1283)",
+      "dokumen": "docs/desain-hq-tiket-popup.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 141,
+      "peran": "developer",
+      "prioritas": "P0",
       "nama": "Fase 2 · tahap 21: ukur beta nyata (baru, aktivasi, H2, H7 per sumber), tampil di Keepo HQ (#1262)",
       "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
       "status": "siap dikerjakan",
