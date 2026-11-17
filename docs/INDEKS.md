@@ -19,6 +19,7 @@
 ## 2. Discovery & naskah
 - [discovery-pasar](discovery-pasar.md)
 - [naskah-wawancara-pengguna](naskah-wawancara-pengguna.md)
+- [riset-suara-manusia-tahap-24](riset-suara-manusia-tahap-24.md)
 
 ## 3. PM
 - [beta-rencana-ukur](pm-beta-rencana-ukur.md)
