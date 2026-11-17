@@ -20,4 +20,9 @@
 - Penanda `tipStep` di data (0–3); data lama tanpa field dianggap selesai.
 - Warna ikut Biru Es/Plum Noir dan Wasabi; terbaca di tema gelap.
 
-Mockup: `docs/mockup-1254.html`.
+## 4. Catatan #1277 (diperbarui)
+- Tips kini bagian alur: di antara halaman dan bilah bawah, tidak melayang.
+- Tinggi 36px; area ketuk "Paham" 44px lewat area tak terlihat.
+- Halaman dihitung ulang otomatis saat tips muncul/hilang (tak ada teks terpotong).
+
+Mockup: `docs/mockup-1254.html`, `docs/mockup-1277.html`.
