@@ -34,6 +34,7 @@
 - [leaderboard-akun-ai-jelajah](pm-leaderboard-akun-ai-jelajah.md)
 - [peta-riwayat-catatan](pm-peta-riwayat-catatan.md)
 - [ux-validasi](pm-ux-validasi.md)
+- [kurangi-muat-ulang-1242](pm-kurangi-muat-ulang-1242.md)
 
 ## 4. Marketing
 - [ajak-teman](marketing-ajak-teman.md)
