@@ -1,5 +1,11 @@
 [
   {
+    "n": 1285,
+    "judul": "E-reader: satu satuan nomor, 'halaman' saja (bukan Bagian + hal.)",
+    "poin": "Nomor di e-reader sekarang satu jenis saja: halaman.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1284,
     "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
     "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
@@ -171,12 +177,6 @@
     "n": 1177,
     "judul": "Lencana terbuka: tanda centang + tulisan 'Didapat', bukan cuma warna",
     "poin": "Lencana yang sudah didapat sekarang punya tanda centang dan tulisan \"Didapat\".",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1172,
-    "judul": "Tahan balasan Google aneh (reading '0') + Home 'Lanjut baca' di atas",
-    "poin": "Balasan terjemahan yang aneh tidak lagi bikin error; tampil ramah atau kosong.",
     "tgl": "2026-11-16"
   }
 ]
