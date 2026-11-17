@@ -251,6 +251,15 @@
       "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
     },
     {
+      "no": 143,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP' + logo header tidak kepotong (#1293)",
+      "dokumen": "docs/pm-keluar-akun-1293.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1293.html. Ubah cloud.js, style.css, ui.js bila perlu; naikkan C di sw.js; jangan ubah api/. Uji 320/360/390/430px."
+    },
+    {
       "no": 140,
       "peran": "developer",
       "prioritas": "P0",
