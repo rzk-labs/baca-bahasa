@@ -159,7 +159,7 @@ function mergeTaps(srv) {
 let lastSync = '', syncCur = null;
 // status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
 var bkState = '';
-function bkSet(v) { if (bkState === v) return; bkState = v; if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
+function bkSet(v) { if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
 function syncRefresh(force) {
   if (!force && !$('#sheet').classList.contains('hide')) return;
   const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName);
@@ -259,7 +259,7 @@ async function afterLogin(res) {
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
-  if (!(db.books || []).length) bkState = 'load';
+  if (!(db.books || []).length) bkSet('load');
   try { await runSync({ force: true, pre: { data: res.data }, noRefresh: true }); } catch (e) { }
   toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun' : 'Progres di HP ini disimpan ke akun'}`);
   closeSheet(); setTab(db.tab || 'rak');
@@ -269,7 +269,7 @@ async function afterLogin(res) {
 // toast catatan: tunggu Home tidak kosong/memuat (maks ~20 detik), lalu hilang sendiri
 function noteAkunWhenReady(n) {
   if (bkState === 'load' || !(db.books || []).length) { if (n < 20) setTimeout(() => noteAkunWhenReady(n + 1), 1000); return; }
-  toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000);
+  toast(NOTE_AKUN.replace(/&amp;/g, '&'), 4000);
 }
 setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
 setInterval(() => { if (document.visibilityState === 'visible') runSync().catch(() => { }); }, 60000);
@@ -277,7 +277,7 @@ addEventListener('visibilitychange', () => { if (document.visibilityState === 'v
 addEventListener('online', () => { runSync().catch(() => { }); });
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
-const NOTE_AKUN = 'Kata, XP, buku, posisi baca &amp; penanda ikut akun.';
+const NOTE_AKUN = 'Kata, XP, dan buku ikut akunmu.';
 const bkKey = b => (b.lang || '') + '|' + String(b.title || '').trim().toLowerCase();
 function bkCard() {
   return `<div class="set-row"><div class="mut sm">Kalau masuk akun, semuanya tersimpan otomatis. Cadangan file ini untuk yang tidak pakai akun. Teks buku tidak ikut: impor ulang filenya, lalu pulihkan.</div>
