@@ -34,7 +34,7 @@ function weekXp() { const wk = isoWeekKey(); return Object.entries(db.xpDay || {
 const topTaps = (t, n = 1000) => Object.fromEntries(Object.entries(t && typeof t === 'object' ? t : {}).sort((a, b) => b[1] - a[1]).slice(0, n));
 const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
 // keadaan baca ringan per buku (tanpa teks). Waktu ubah dicatat di db.bkAt saat posisi/penanda berubah.
-function bkState(b) {
+function bkSnap(b) {
   const marks = (Array.isArray(b.marks) ? b.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 80), at: m.at || 0 }));
   const st = { title: b.title, lang: b.lang, pos: b.pos || 0, si: b.si || 0, pct: b.pct == null ? null : (typeof bookPct === 'function' ? bookPct(b) : b.pct), marks };
   st.sig = JSON.stringify([st.pos, st.si, st.pct, marks]);
@@ -43,7 +43,7 @@ function bkState(b) {
 function bkLocal() {
   const out = {}; if (!isObj(db.bkAt)) db.bkAt = {};
   for (const b of db.books || []) {
-    const k = bkKey(b), st = bkState(b); let r = db.bkAt[k];
+    const k = bkKey(b), st = bkSnap(b); let r = db.bkAt[k];
     if (!r || r.sig !== st.sig) db.bkAt[k] = r = { sig: st.sig, at: !r && !st.pos && !st.si && !st.marks.length ? 0 : Date.now() };
     st.at = r.at; delete st.sig; out[k] = st;
   }
@@ -61,7 +61,7 @@ function mergeBooks(srvB) {
     b.pos = x.pos; if (!b.opened && x.pos > 0) b.opened = +x.at || Date.now(); b.si = Number.isFinite(x.si) ? x.si : 0; if (x.pct != null) b.pct = x.pct;
     const mx = typeof MARK_MAX === 'number' ? MARK_MAX : 20;
     b.marks = (Array.isArray(x.marks) ? x.marks : []).filter(m => m && Number.isFinite(m.p) && Number.isFinite(m.s)).slice(0, mx).map(m => ({ p: m.p, s: m.s, t: String(m.t || '').slice(0, 140), at: m.at || Date.now() }));
-    db.bkAt[k] = { sig: bkState(b).sig, at: +x.at };
+    db.bkAt[k] = { sig: bkSnap(b).sig, at: +x.at };
   }
   db.bkRemote = keep;
 }
@@ -212,10 +212,15 @@ async function bookGone(b) {
 }
 let bkBusy = false;
 async function syncBooks() {
-  if (!db.acct || !API || !canGz || bkBusy || navigator.onLine === false) return;
+  if (!db.acct || !API || !canGz || bkBusy || navigator.onLine === false) {
+    // jangan tertinggal 'Memuat…' kalau sinkron tidak jalan
+    if (bkState === 'load' && !bkBusy) bkSet((db.books || []).length || !db.acct ? '' : 'fail');
+    return;
+  }
   bkBusy = true;
   if (!(db.books || []).length) bkSet('load');
   let bad = false;
+  const tmo = setTimeout(() => { if (bkState === 'load' && !(db.books || []).length) bkSet('fail'); }, 10000);
   try {
     const rem = (await api('/books')).books || [];
     const remKeys = new Set(rem.map(x => x.key));
@@ -240,7 +245,7 @@ async function syncBooks() {
       } catch (e) { }
     }
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
-  } catch (e) { bad = true; } finally { bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
+  } catch (e) { bad = true; } finally { clearTimeout(tmo); bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
 async function runSync(opt = {}) {
@@ -259,7 +264,12 @@ async function afterLogin(res) {
   toast(`Hai ${db.acct.nick}! ${had ? 'Progres kamu sudah digabung dengan akun' : 'Progres di HP ini disimpan ke akun'}`);
   closeSheet(); setTab(db.tab || 'rak');
   // catatan jujur: tampil sekali saja setelah login
-  if (!localStorage.getItem('kepo.noteAkun2')) { try { localStorage.setItem('kepo.noteAkun2', '1'); } catch (e) { } setTimeout(() => toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000), 600); }
+  if (!localStorage.getItem('kepo.noteAkun2')) { try { localStorage.setItem('kepo.noteAkun2', '1'); } catch (e) { } noteAkunWhenReady(0); }
+}
+// toast catatan: tunggu Home tidak kosong/memuat (maks ~20 detik), lalu hilang sendiri
+function noteAkunWhenReady(n) {
+  if (bkState === 'load' || !(db.books || []).length) { if (n < 20) setTimeout(() => noteAkunWhenReady(n + 1), 1000); return; }
+  toast(NOTE_AKUN.replace(/&amp;/g, '&'), 7000);
 }
 setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
 setInterval(() => { if (document.visibilityState === 'visible') runSync().catch(() => { }); }, 60000);
