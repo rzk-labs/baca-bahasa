@@ -1220,7 +1220,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup mini langsung di kartu Siap dicek di Home (#1173)",
       "dokumen": "docs/rencana-hq-mockup-depan-home-1173.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1265)",
       "catatan": "Mockup: docs/mockup-1173.html. Kerjakan setelah backlog 114 (#1125). Hanya dev/src/page.html; muat malas, maks 2 pratinjau sekaligus."
     }
   ],
