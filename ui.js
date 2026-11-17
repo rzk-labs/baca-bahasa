@@ -1430,16 +1430,17 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${db.seenTip ? '' : `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt"><b>Ketuk kata</b> = arti. <b>Tahan kalimat</b> = arti kalimat. <b>Tombol Menu</b> di bawah = bilah atas.</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>`}
+      ${tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
         <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
-  tipN = 0; nudgePg = new Set();
-  if (!db.seenTip) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
-  if ($('#tipx')) $('#tipx').onclick = () => { db.seenTip = true; save(); $('#tip').remove(); layout(); };
+  tipN = 0; tipDone = false; nudgePg = new Set();
+  if (tipStepNow() > 0 && (!$('#toast').classList.contains('hide') || $('#nchip'))) { tipDone = true; const t = $('#tip'); if (t) t.remove(); } /* tak bareng toast/chip; dicoba lagi kunjungan berikut */
+  if (tipOn()) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
+  if ($('#tipx')) $('#tipx').onclick = () => dismissTip();
   $('#rHome').onclick = () => leaveBaca();
   $('#rMenuBtn').onclick = () => toggleMenu(true);
   $('#rMark').onclick = e => { e.stopPropagation(); toggleMark(); };
@@ -2032,7 +2033,7 @@ async function openMarks() {
     toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   });
 }
-let tipN = 0, nudgePg = new Set(), nudgeT = 0;
+let tipN = 0, tipDone = false, nudgePg = new Set(), nudgeT = 0;
 const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
 function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
 /* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
@@ -2103,8 +2104,12 @@ function toggleMenu(keep) {
   const on = r.classList.toggle('chrome');
   if (on && keep) menuHold();
 }
-function dismissTip() { if (db.seenTip) return; db.seenTip = true; save(); const t = $('#tip'); if (t) { t.remove(); layout(); } }
-function tipTurn() { if (!db.seenTip && ++tipN >= 3) dismissTip(); }
+/* tips e-reader: satu pesan pendek per kunjungan, bergantian. db.tipStep: 0 kata, 1 kalimat, 2 menu, 3 selesai (data lama tanpa field = selesai bila seenTip) */
+const TIPS = ['<b>Ketuk kata</b> = artinya', '<b>Tahan kalimat</b> = arti kalimat', '<b>Ketuk tengah</b> = menu'];
+function tipStepNow() { return typeof db.tipStep === 'number' ? db.tipStep : (db.seenTip ? 3 : 0); }
+function tipOn() { return tipStepNow() < 3 && !tipDone; }
+function dismissTip() { if (tipDone) return; tipDone = true; const n = tipStepNow(); if (n >= 3) return; db.tipStep = n + 1; db.seenTip = true; save(); const t = $('#tip'); if (t) t.remove(); }
+function tipTurn() { if (tipOn() && ++tipN >= 3) dismissTip(); }
 /* indeks kalimat pertama yang mulai di halaman p (dari RD.ss) */
 function firstSent(p) { const ss = RD.ss || [], i = ss.findIndex(x => x.pg >= p); return i < 0 ? ss.length : i; }
 function turn(d) {
