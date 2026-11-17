@@ -242,6 +242,14 @@
   ],
   "backlog": [
     {
+      "no": 134,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kurangi muat ulang otomatis: update diam-diam, toast error tidak menawarkan muat ulang (#1242)",
+      "dokumen": "docs/pm-kurangi-muat-ulang-1242.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 133,
       "peran": "developer",
       "prioritas": "P0",
