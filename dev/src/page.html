@@ -99,10 +99,10 @@ a{color:inherit}
 .chip.o{background:transparent;color:var(--ink);border-color:var(--ink)}
 .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1s infinite}
 /* board */
-.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:12px;align-items:start;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
 .col{background:var(--soft);border-radius:22px;padding:12px;scroll-snap-align:start}
 @media (min-width:760px){.col{min-height:200px}}
-@media (max-width:759px){.col.kosong{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px}.col.kosong h3{margin:0}.col.kosong .empty{padding:0;margin:0;border:0;background:none}}
+@media (max-width:759px){.col.kosong{align-self:start;min-height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px}.col.kosong h3{margin:0}.col.kosong .empty{padding:0;margin:0;border:0;background:none}}
 .col.k-live .more-btn{width:100%;margin:2px 0 4px}
 @media (max-width:759px){.col.k-siap{order:0}.col.k-dikerjakan{order:1}.col.k-antre{order:2}.col.k-menuju{order:3}.col.k-live{order:4}.col.k-gagal{order:5}.col.k-gagal.ada{order:-1}}
 .col h3{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 12px}
