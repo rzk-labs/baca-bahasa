@@ -1,5 +1,11 @@
 [
   {
+    "n": 1258,
+    "judul": "[peta 135] Kartu kata: 'Bisa juga' tak hilang + pesan saat offline",
+    "poin": "Bagian \"Bisa juga\" di kartu kata sekarang diambil ulang otomatis, tidak hilang lagi.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1253,
     "judul": "Perbaiki Home macet 'Memuat bukumu…': nama bkState bentrok + batas waktu",
     "poin": "Layar Home tidak lagi macet di \"Memuat bukumu…\".",
@@ -171,12 +177,6 @@
     "n": 1160,
     "judul": "[peta 110] Gagal masuk/daftar/sinkron: satu tombol langkah di bawah pesan",
     "poin": "Gagal masuk sekarang ada satu tombol: Coba lagi, Daftar, atau Lanjut tanpa akun.",
-    "tgl": "2026-11-15"
-  },
-  {
-    "n": 1158,
-    "judul": "[peta 121] Kartu Kata: tombol 'Semua arti' + frasa & contoh, tahan balasan aneh",
-    "poin": "Kartu Kata kini punya tombol \"Semua arti\": arti per jenis kata plus contoh.",
     "tgl": "2026-11-15"
   }
 ]
