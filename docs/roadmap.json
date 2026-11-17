@@ -242,11 +242,28 @@
   ],
   "backlog": [
     {
-      "no": 134,
+      "no": 136,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: gabung kotak mockup jadi satu, hapus 'Belum ada gambar' (#1245)",
       "dokumen": "docs/pm-mockup-ganda-hq.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 135,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu kata: 'Bisa juga' (arti lain) jangan hilang saat terjemahan cadangan/kosong (#1243)",
+      "dokumen": "docs/pm-arti-lain-hilang-1243.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1243.html. Ubah ui.js (fungsi load di sheet kata) + app.js (translate/altFetch); naikkan versi C di sw.js."
+    },
+    {
+      "no": 134,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kurangi muat ulang otomatis: update diam-diam, toast error tidak menawarkan muat ulang (#1242)",
+      "dokumen": "docs/pm-kurangi-muat-ulang-1242.md",
       "status": "siap dikerjakan"
     },
     {
@@ -255,7 +272,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: tampilkan QA di tiap peran & total di Kuota (#1228)",
       "dokumen": "docs/pm-qa-di-kuota-hq.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1238)"
     },
     {
       "no": 132,
@@ -263,7 +280,7 @@
       "prioritas": "P0",
       "nama": "Kartu ulang: kata Lupa/Ragu muncul lagi di sesi yang sama, maks 2 kali (#1214)",
       "dokumen": "docs/riset-ulang-kata-sesi-sama.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1232)"
     },
     {
       "no": 131,
@@ -280,7 +297,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ HP: kolom papan kosong jangan melar, judul di atas (#1212)",
       "dokumen": "docs/pm-papan-kolom-kosong-1212.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1236)"
     },
     {
       "no": 129,
@@ -1011,7 +1028,7 @@
       "prioritas": "P0",
       "nama": "Pesan gagal masuk/daftar/sinkron: apa yang terjadi + satu tombol langkah (Coba lagi / Daftar / Lanjut tanpa akun), tampil di form, tanpa istilah teknis (#1034)",
       "dokumen": "docs/riset-pesan-gagal-masuk.md",
-      "status": "spesifikasi siap dikerjakan",
+      "status": "selesai (#1240)",
       "catatan": "(validasi bukti internet) 40 butir, 4 jenis sumber. Mockup: docs/mockup-1034.html. Cek #1078: sebagian live (#1047) - pesan ramah di form (friendlyAuthError, cloud.js) sudah ada. CELAH: belum ada tombol langkah sendiri (Coba lagi/Daftar/Lanjut tanpa akun) di bawah pesan; pesan sinkron belum diperiksa. Ambil sebagai [peta 106]."
     },
     {
