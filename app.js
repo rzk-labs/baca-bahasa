@@ -680,6 +680,14 @@ async function altFetch(q, sl, tl, signal) {
   } catch (e) { }
   return out;
 }
+/* arti lain otomatis (#1243): ambil sekali bila kosong; hasil disimpan ke cache kata itu (r.dict), cache bagus tak ditimpa */
+async function altFill(q, sl, tl, signal) {
+  const more = await altFetch(q, sl, tl, signal);
+  if (!more.length) return more;
+  const c = trCache.get(sl + '|' + tl + '|' + q);
+  if (c && c.text && !(c.dict && c.dict.length)) { c.dict = more; trPersist(); }
+  return more;
+}
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
 function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }

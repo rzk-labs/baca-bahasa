@@ -288,19 +288,20 @@ function celebrate(title, msg, snd = 'win') {
   el.innerHTML = `<div class="card">${snd === 'lvl' ? `<div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div>` : spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (typeof bkState !== 'undefined' && bkState === 'load') { if (s) { s.innerHTML = `${ico('flame')}<span aria-hidden="true">–</span>`; s.title = 'Streak: lagi dimuat'; s.classList.add('wait'); } if (x) { x.innerHTML = `${ico('bolt')}<span aria-hidden="true">–</span>`; x.title = 'XP: lagi dimuat'; x.classList.add('wait'); } return; } if (s) s.classList.remove('wait'); if (x) x.classList.remove('wait'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
 
 /* ---------- kerangka ---------- */
 let toastT;
 const MSG_SIMPAN_GAGAL = 'Gagal nyimpen bukunya, coba lagi ya. Kalau terus gagal, hapus buku lama dulu.';
-let lastErrToast = 0;
+let lastErrToast = 0, verBaruSiap = false;
+const chipVerBaru = () => '<div class="mut sm" id="muChip" role="status"' + (verBaruSiap ? '' : ' hidden') + ' style="display:inline-block;margin:6px 0;padding:4px 10px;border-radius:999px;background:#E9F056;color:#351E28;font-weight:600">Versi baru siap</div>';
 function globalErr(ev) {
   const r = ev && (ev.reason || ev.error), msg = String((r && r.message) || (ev && ev.message) || r || '');
   if (/ResizeObserver|AbortError|Script error/i.test(msg) || (ev && ev.type === 'error' && !ev.error && !ev.message)) return;
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang macet sebentar. Bacaan & katamu tetap aman.', 8000, { label: 'Muat ulang', fn: () => muatUlangPaksa() });
+  toast('Ada yang gagal sebentar. Bacaan & katamu aman.', 8000);
 }
 /* muat ulang paksa: hanya cache app & service worker; data buku/kata/login tidak disentuh */
 async function muatUlangVersi() {
@@ -655,7 +656,7 @@ function openSettings() {
     ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
     <div class="set-grp" id="apl"><div class="set-gt">Aplikasi</div>
-    <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div><div class="mut sm" id="muMsg">Buku, kata, dan XP-mu tetap aman.</div></div>
+    <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div><div class="mut sm" id="muMsg">Buku, kata, dan XP-mu tetap aman.</div>${chipVerBaru()}</div>
     <button class="sec full" id="muBtn" type="button" style="min-height:44px">Muat ulang versi terbaru</button>
     <div class="seg" id="muAsk" hidden style="margin-top:8px"><button type="button" id="muOk" style="min-height:44px">Muat ulang</button><button type="button" id="muNo" style="min-height:44px">Batal</button></div>
     </div>
@@ -943,8 +944,12 @@ function viewRak() {
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
-    $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
-    const rt = $('#bkRetry'); if (rt) rt.onclick = () => { bkState = 'load'; viewRak(); syncBooks().catch(() => { }); };
+    refreshPills();
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
+    const rt = $('#bkRetry'); if (rt) rt.onclick = () => {
+      if (navigator.onLine === false || bkBusy) { toast(navigator.onLine === false ? 'Lagi offline. Sambungkan internet dulu, lalu coba lagi.' : 'Masih memuat, tunggu sebentar ya.', 4000); return; }
+      bkState = 'load'; viewRak(); syncBooks().catch(() => { });
+    };
     return;
   }
   if (!cur) {
@@ -2287,10 +2292,21 @@ async function onWord(el, lastEl) {
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
     const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
-    $('#wdict').innerHTML = alt.length ? `<div><b>Bisa juga:</b> ${alt.map(esc).join(', ')}</div>` + (d.length > 1 ? d.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
+    const paintDict = (dd, al) => al.length ? `<div><b>Bisa juga:</b> ${al.map(esc).join(', ')}</div>` + (dd.length > 1 ? dd.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
+    $('#wdict').innerHTML = paintDict(d, alt);
+    /* arti lain kosong: ambil ulang sekali di latar; tetap kosong = 'Belum ada arti lain' kecil */
+    if (!alt.length && !r.off && !(b.lang === 'ja' && db.my === 'id')) {
+      const q0 = qWord(), txt = r.text;
+      if (navigator.onLine === false) $('#wdict').innerHTML = '<div class="mut sm">Lagi offline, arti lain belum bisa dimuat.</div>';
+      else altFill(q0, b.lang, db.my, sig).then(more => {
+        if (my !== tok || !$('#wdict') || qWord() !== q0) return;
+        const al = altFlat(altArti(more, txt));
+        $('#wdict').innerHTML = al.length ? paintDict(more, al) : '<div class="mut sm">Belum ada arti lain.</div>'; keepVisible('.w.sel');
+      }).catch(() => { if (my === tok && $('#wdict') && !$('#wdict').firstChild) $('#wdict').innerHTML = '<div class="mut sm">Belum ada arti lain.</div>'; });
+    }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
-  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline. Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline, arti kata baru belum bisa dimuat. Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
   /* 'Arti ini salah?': daftar maks 3 arti lain; pilihan disimpan ke kartu & tak tertimpa */
   const wAlt = $('#walt');
   const altLink = () => { if (!wAlt) return; delete wAlt.dataset.open; wAlt.innerHTML = '<button class="ghost walink" id="walink" type="button">Arti ini salah?</button>'; $('#walink').onclick = openAlt; };
@@ -3076,12 +3092,24 @@ if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http'
   const checkUp = () => { if (!swReg || Date.now() - lastUp < 600000) return; lastUp = Date.now(); swReg.update().catch(() => { }); };
   navigator.serviceWorker.register('sw.js').then(r => { swReg = r; r.update().catch(() => { }); }).catch(() => { });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUp(); });
+  const bukaAt = Date.now();
+  let hiddenAt = 0;
+  const lastRel = () => { try { return +localStorage.getItem('kepo-lastReload') || 0; } catch (e) { return 0; } };
+  const bolehRel = () => !busyNow() && Date.now() - lastRel() > 21600000;
+  const relAman = () => { try { localStorage.setItem('kepo-lastReload', String(Date.now())); } catch (e) { } doReload(); };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
+    /* kembali dari latar belakang >30 menit: muat ulang bila versi baru sudah menunggu */
+    if (verBaruSiap && hiddenAt && Date.now() - hiddenAt > 1800000 && bolehRel()) relAman();
+  });
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!ctl) { ctl = true; return; } /* install pertama: abaikan */
     if (reloaded) return;
-    if (!busyNow()) { doReload(); return; }
     try { save(); } catch (e) { }
-    toast('Versi baru siap', Infinity, { label: 'Muat ulang', fn: doReload });
+    if (Date.now() - bukaAt < 5000 && bolehRel()) { relAman(); return; }
+    /* selain itu: update diam-diam, chip kecil di Pengaturan, tanpa toast */
+    verBaruSiap = true;
+    const c = $('#muChip'); if (c) c.hidden = false;
   });
 }
 if ('speechSynthesis' in window) speechSynthesis.getVoices();

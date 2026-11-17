@@ -159,8 +159,8 @@
       "no": 22,
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
-      "status": "belum",
-      "catatan": "Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "status": "awal",
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 23,
@@ -242,22 +242,29 @@
   ],
   "backlog": [
     {
+      "no": 140,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Fase 2 · tahap 21: ukur beta nyata (baru, aktivasi, H2, H7 per sumber), tampil di Keepo HQ (#1262)",
+      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1262.html (layar Beta Nyata di Keepo HQ). Ubah api/ (deploy manual founder) + cloud.js + dev/. Tanpa data pribadi. Macet Home sudah ditangani #138/#139."
+    },
+    {
       "no": 139,
       "peran": "developer",
       "prioritas": "P0",
-      "nama": "Fase 2 · tahap 21: ukur aktivasi & kembali hari 7 per sumber, tampil di Keepo HQ (#1262)",
-      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
-      "status": "siap dikerjakan",
-      "catatan": "Kerjakan SETELAH #138. Ubah api/ (deploy manual founder) + cloud.js + dev/. Tanpa data pribadi."
+      "nama": "Home memuat: rak lokal dulu, batas 8 detik + Coba lagi, sembunyikan chip 0 hari, perbaiki nama bkState, toast sekali (#1251)",
+      "dokumen": "docs/riset-layar-memuat-home.md",
+      "status": "siap dikerjakan"
     },
     {
       "no": 138,
       "peran": "developer",
       "prioritas": "P0",
-      "nama": "Home macet 'Memuat bukumu…': nama bkState bentrok di cloud.js, batas waktu + rak lokal + chip streak disembunyikan saat memuat (#1262)",
-      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
-      "status": "siap dikerjakan",
-      "catatan": "Mockup: docs/mockup-1262.html. Ubah cloud.js (baris 37 vs 161), ui.js (Home memuat), app.js (buka database: onblocked/onabort); naikkan versi C di sw.js."
+      "nama": "Home memuat: kerangka rak + chip '–' bukan '0 hari' (#1250)",
+      "dokumen": "docs/desain-home-memuat-kerangka.md",
+      "status": "siap dikerjakan"
     },
     {
       "no": 137,
@@ -265,7 +272,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: urutkan kolom Papan sesuai kebiasaan founder (#1247)",
       "dokumen": "docs/pm-urutan-papan-1247.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1269)"
     },
     {
       "no": 136,
@@ -273,7 +280,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: gabung kotak mockup jadi satu, hapus 'Belum ada gambar' (#1245)",
       "dokumen": "docs/pm-mockup-ganda-hq.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1273)"
     },
     {
       "no": 135,
@@ -281,7 +288,7 @@
       "prioritas": "P0",
       "nama": "Kartu kata: 'Bisa juga' (arti lain) jangan hilang saat terjemahan cadangan/kosong (#1243)",
       "dokumen": "docs/pm-arti-lain-hilang-1243.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1258)",
       "catatan": "Mockup: docs/mockup-1243.html. Ubah ui.js (fungsi load di sheet kata) + app.js (translate/altFetch); naikkan versi C di sw.js."
     },
     {
@@ -290,7 +297,7 @@
       "prioritas": "P0",
       "nama": "Kurangi muat ulang otomatis: update diam-diam, toast error tidak menawarkan muat ulang (#1242)",
       "dokumen": "docs/pm-kurangi-muat-ulang-1242.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1260)"
     },
     {
       "no": 133,
