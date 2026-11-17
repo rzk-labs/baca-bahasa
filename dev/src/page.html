@@ -688,7 +688,10 @@ function tampilDetail(t,n,mv){
   const LIM=4;
   // Gambar mockup: file docs/mockup/*.svg|png di PR (lewat rute preview) + gambar di isi PR
   const GBR=[...(t.files||[]).filter(f=>/^docs\/mockup\/[\w.-]+\.(svg|png)$/i.test(f)&&t.preview&&!t.pr?.merged).map(f=>t.preview+f),...((t.pr&&GAMBAR[t.pr.n])||[])];
-  const mockSec=t.status==='siap'||GBR.length?`<section class="tile mk"><div class="lbl">🖼️ Mockup</div>${GBR.length?`<div class="mk-s">${GBR.map((u,i)=>`<button class="mk-i" data-z="${i}" aria-label="Perbesar mockup ${i+1}"><img src="${esc(u)}" alt="Mockup ${i+1}" loading="lazy"></button>`).join('')}</div><div class="mk-n sm mut" id="mkn">${GBR.length>1?`1/${GBR.length} · geser untuk lihat lainnya`:'Ketuk gambar untuk memperbesar'}</div>`:'<span class="chip o">Belum ada gambar</span>'}</section>`:'';
+  const ADAHTML=!!(MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged));
+  const mkGbr=GBR.length?`<div class="mk-s">${GBR.map((u,i)=>`<button class="mk-i" data-z="${i}" aria-label="Perbesar mockup ${i+1}"><img src="${esc(u)}" alt="Mockup ${i+1}" loading="lazy"></button>`).join('')}</div><div class="mk-n sm mut" id="mkn">${GBR.length>1?`1/${GBR.length} · geser untuk lihat lainnya`:'Ketuk gambar untuk memperbesar'}</div>`:'';
+  const mkHtml=ADAHTML?`<p class="mut sm" style="margin:${GBR.length?'14px':'4px'} 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div>`:'';
+  const mockSec=GBR.length||ADAHTML?`<section class="tile mk"><div class="lbl">🖼️ Mockup</div>${mkGbr}${mkHtml}</section>`:t.status==='siap'?`<p class="mut sm">Tugas ini tidak punya tampilan baru untuk dicek.</p>`:'';
   const aksi=t.status==='siap'?`<div class="acts aks"><button class="btn big-b" id="ok">${I.cek} Setujui</button><button class="btn ghost big-b" id="rvb">${I.pena} Revisi</button><button class="btn ghost big-b" id="no">${I.silang} Tolak</button></div>`:'';
   const warna={menuju:'t-blue',siap:'t-lime',live:'t-mint',gagal:'t-coral',ditolak:'',antre:'t-blue',dikerjakan:'t-sun'}[t.status]||'';
   const pesan={menuju:'Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.',siap:'Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.',live:'Sudah live.',gagal:'Agent gagal. Coba kirim revisi.',ditolak:'Ditolak.',antre:'Menunggu giliran…',dikerjakan:'Tim sedang bekerja…'}[t.status];
@@ -710,7 +713,6 @@ function tampilDetail(t,n,mv){
     ${h.poin.length>LIM?`<details class="more"><summary>+${h.poin.length-LIM} poin lagi</summary><ul class="pts">${h.poin.slice(LIM).map(x=>`<li>${inl(x)}</li>`).join('')}</ul></details>`:''}
     ${docs.length||(t.preview&&kodeBerubah)?`<div class="acts">${docs.map(d=>`<button class="btn lime" data-doc="${esc(d)}">📄 Baca ${esc(d.replace('docs/','').replace('.md','').replace(/[-_]/g,' '))}</button>`).join('')}${t.preview&&kodeBerubah&&!t.pr?.merged?`<a class="btn lime" target="_blank" href="${t.preview}">📱 Coba di app</a>`:''}</div>`:''}
   </section>
-  ${MOCK||(t.preview&&kodeBerubah&&!t.pr?.merged)?`<section class="tile"><div class="lbl">📱 Mockup visual</div><p class="mut sm" style="margin:4px 0 10px">${MOCK?'Begini tampilannya kalau kamu setujui.':'Mockup khusus belum ada. Ini app hasil tugas, mulai dari halaman awal.'}</p><div class="mock" id="mock"><span class="mut sm">Memuat mockup…</span></div></section>`:''}
   `:''}
   ${!kerja?mockSec+aksi:''}
   ${h&&!kerja?`
