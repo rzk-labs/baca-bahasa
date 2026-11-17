@@ -173,8 +173,8 @@
       "no": 24,
       "nama": "Masukan Pengguna Manusia",
       "fase": "Beta Nyata",
-      "status": "belum",
-      "catatan": "Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Draft 17 Nov 2026: 20 kutipan bukti internet (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 25,
