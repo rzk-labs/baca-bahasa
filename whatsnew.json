@@ -1,5 +1,11 @@
 [
   {
+    "n": 1289,
+    "judul": "[peta 141] Ukur beta nyata (1/2): penanda aktivasi & H7 di /hitung",
+    "poin": "Keepo kini mencatat diam-diam: pengguna baru sudah baca dan sudah ketuk kata.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1271,
     "judul": "[peta 129] Kartu ulang: nada pinyin pakai angka + palet aman buta warna",
     "poin": "Kartu ulang Mandarin kini pakai warna nada yang aman untuk buta warna.",
@@ -171,12 +177,6 @@
     "n": 1203,
     "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
     "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1195,
-    "judul": "[peta 114] Keepo HQ: mockup tampil langsung, tanpa tombol",
-    "poin": "Mockup di Keepo HQ sekarang langsung tampil, tanpa ketuk tombol.",
     "tgl": "2026-11-16"
   }
 ]

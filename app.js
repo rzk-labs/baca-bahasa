@@ -85,6 +85,7 @@ function countTap(lang, w) {
       if (ks.length > TAP_MAX) ks.filter(x => x !== k).sort((a, b) => db.taps[a] - db.taps[b]).slice(0, ks.length - TAP_MAX).forEach(x => delete db.taps[x]);
     }
     save();
+    try { if (window.kepoMark) window.kepoMark('kata'); } catch (e) { }
   }
   return tapsOf(lang, w);
 }
