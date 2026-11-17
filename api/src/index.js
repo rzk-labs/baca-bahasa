@@ -375,10 +375,12 @@ export default {
         await env.DB.prepare('INSERT INTO ai_kuota (who, day, n) VALUES (?,?,1) ON CONFLICT(who, day) DO UPDATE SET n = n + 1').bind(who, day).run();
         let out = '';
         try {
-          const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fp8', { max_tokens: 350, messages: [
+          // llama-3.1-8b-instruct-fp8 dipensiunkan Cloudflare 20 Nov 2026 -> Gemma 4 (mode berpikir dimatikan supaya cepat & hemat)
+          const r = await env.AI.run('@cf/google/gemma-4-26b-a4b-it', { max_tokens: 350, chat_template_kwargs: { enable_thinking: false }, messages: [
             { role: 'system', content: 'Kamu guru bahasa untuk pembelajar level A2-B1. Jawab HANYA dalam Bahasa Indonesia santai, singkat (maks 90 kata), format 3 baris: "Arti: ...", "Struktur: ..." (peran kata/tata bahasa penting), "Nuansa: ..." (nada, kesopanan, atau idiom; tulis "tidak ada yang khusus" bila tak ada). Jangan mengarang; kalau ragu, bilang ragu.' },
             { role: 'user', content: `Bahasa kalimat: ${lang}\nKalimat: ${sent}` + (arti ? `\nArti dari mesin (bisa meleset): ${arti}` : '') }] });
-          out = String(r && (r.response || r.result || '')).trim().slice(0, 1200);
+          const c0 = r && r.choices && r.choices[0] && r.choices[0].message;
+          out = String((c0 && c0.content) || (r && (r.response || r.result)) || '').trim().slice(0, 1200);
         } catch (e) { out = ''; }
         if (!out) {
           await env.DB.prepare('UPDATE ai_kuota SET n = MAX(0, n - 1) WHERE who=? AND day=?').bind(who, day).run();
