@@ -928,9 +928,10 @@ async function refillVocab() {
 }
 
 /* ---------- suara: baca (TTS) & dengar (rekognisi) ---------- */
+const langInfo = lang => LANGS[lang] || [String(lang || 'en'), String(lang || 'en')];
 function findVoice(lang) {
   const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
-  return (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2))) || null;
+  return (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langInfo(lang)[1].toLowerCase().slice(0, 2))) || null;
 }
 /* Daftar suara bisa kosong saat pertama dimuat: tunggu voiceschanged maks ±1 detik. */
 function voiceFor(lang) {
@@ -954,8 +955,8 @@ function speak(text, lang, rate = 0.9, h) {
   const my = ++speakTok;
   voiceFor(lang).then(v => {
     if (my !== speakTok) return;
-    if (!v) { if (h && h.fail) h.fail(); return toast(`HP ini belum punya suara ${(LANGS[lang][0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000); }
-    const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate; u.voice = v;
+    if (!v) { if (h && h.fail) h.fail(); return toast(`HP ini belum punya suara ${(langInfo(lang)[0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000); }
+    const u = new SpeechSynthesisUtterance(text); u.lang = langInfo(lang)[1]; u.rate = rate; u.voice = v;
     if (h) { u.onend = () => { if (my === speakTok && h.end) h.end(); }; u.onerror = () => { if (my === speakTok && h.fail) h.fail(); }; }
     speechSynthesis.speak(u);
   });
@@ -967,7 +968,7 @@ function listen(lang, { onInterim, single } = {}) {
   if (!SR) return Promise.reject(new Error('nosupport'));
   return new Promise((res, rej) => {
     const r = new SR(); recog = r;
-    r.lang = LANGS[lang][1]; r.interimResults = true; r.maxAlternatives = 5; r.continuous = !single;
+    r.lang = langInfo(lang)[1]; r.interimResults = true; r.maxAlternatives = 5; r.continuous = !single;
     let finals = [], interim = '', err = null, idle;
     const bump = () => { clearTimeout(idle); idle = setTimeout(() => { try { r.stop(); } catch (e) { } }, single ? 2500 : 3000); };
     const hard = setTimeout(() => { try { r.stop(); } catch (e) { } }, single ? 8000 : 40000);
