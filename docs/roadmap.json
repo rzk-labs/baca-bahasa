@@ -242,6 +242,41 @@
   ],
   "backlog": [
     {
+      "no": 142,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Logo Keepo kepotong di header: chip XP disembunyikan di HP + Home mulai dari atas (#1291)",
+      "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 143,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP' + logo header tidak kepotong (#1293)",
+      "dokumen": "docs/pm-keluar-akun-1293.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1293.html. Ubah cloud.js, style.css, ui.js bila perlu; naikkan C di sw.js; jangan ubah api/. Uji 320/360/390/430px."
+    },
+    {
+      "no": 140,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: detail tugas jadi pop up + loading saat status pindah (#1283)",
+      "dokumen": "docs/desain-hq-tiket-popup.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 141,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Fase 2 · tahap 21: ukur beta nyata (baru, aktivasi, H2, H7 per sumber), tampil di Keepo HQ (#1262)",
+      "dokumen": "docs/pm-kerjakan-fase-2-1262.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1262.html (layar Beta Nyata di Keepo HQ). Ubah api/ (deploy manual founder) + cloud.js + dev/. Tanpa data pribadi. Macet Home sudah ditangani #138/#139."
+    },
+    {
       "no": 139,
       "peran": "developer",
       "prioritas": "P0",
@@ -255,7 +290,7 @@
       "prioritas": "P0",
       "nama": "Home memuat: kerangka rak + chip '–' bukan '0 hari' (#1250)",
       "dokumen": "docs/desain-home-memuat-kerangka.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1276)"
     },
     {
       "no": 137,

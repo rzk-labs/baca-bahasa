@@ -84,7 +84,7 @@ const dayKey = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() +
 const today = () => dayKey();
 function markDay() { const d = today(); if (!db.days.includes(d)) { db.days.push(d); db.days = db.days.slice(-400); save(); } }
 function streak() { let n = 0; const d = new Date(); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); for (; ;) { if (db.days.includes(dayKey(d))) { n++; d.setDate(d.getDate() - 1); } else return n; } }
-function hue(s) { let h = 5381; for (const c of String(s)) h = (Math.imul(h, 33) + c.codePointAt(0)) >>> 0; h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d) >>> 0; h ^= h >>> 12; return h; } /* hash seluruh judul: awalan sama tetap beda warna */
+function hue(s) { let h = 5381; for (const c of String(s)) h = (Math.imul(h, 33) + c.codePointAt(0)) >>> 0; h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d) >>> 0; h ^= h >>> 12; return h >>> 0; } /* hash seluruh judul: awalan sama tetap beda warna */
 // Sampul brand v9: [latar, teks, aksen inisial]. Plum di atas warna terang, Krem di atas Plum.
 const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28'], ['#AEB8A0', '#351E28', '#351E28'], ['#FAF7F0', '#351E28', '#351E28'], ['#E4EDD6', '#351E28', '#351E28'], ['#B9CBD8', '#351E28', '#351E28'], ['#351E28', '#FAF7F0', '#E9F056'], ['#4A3340', '#FAF7F0', '#E9F056']];
 const COVERS = {};
@@ -631,7 +631,7 @@ function openSettings() {
     <div class="set-row"><div class="eyebrow">Jelaskan kalimat (AI)</div><div class="seg" id="ais"><button data-v="1" class="${db.aiJelas === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.aiJelas === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Tombol penjelas di arti kalimat. Cuma jalan kalau diketuk, gratis 5x sehari.</div></div>
     <div class="set-row"><div class="eyebrow">Tampilkan cara baca</div><div class="seg" id="bcs"><button data-v="1" class="${db.showBaca ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.showBaca ? '' : 'on'}">Mati</button></div></div>
     ${'speechSynthesis' in window ? `<div class="set-row"><div class="eyebrow">Laju suara</div><div class="seg" id="trs"><button data-v="normal" class="${db.ttsRate === 'slow' ? '' : 'on'}">${ico('vol')} Normal</button><button data-v="slow" class="${db.ttsRate === 'slow' ? 'on' : ''}">${ico('vol')} Lambat</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Lambat bikin suara lebih pelan, enak buat nangkep tiap kata.</div></div><div class="set-row"><div class="eyebrow">Lanjut otomatis</div><div class="seg" id="las"><button data-v="1" class="${db.lisAuto ? 'on' : ''}">Nyala</button><button data-v="0" class="${db.lisAuto ? '' : 'on'}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Dengar halaman lanjut sendiri ke halaman berikutnya. Berhenti di akhir bab. Di iPhone, suara berhenti saat layar mati. Biarkan layar menyala.</div></div>` : ''}
-    <div class="set-row"><div class="eyebrow">Bar progres</div><div class="seg" id="pbs"><button data-v="1" class="${db.progBar === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.progBar === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = teks Bagian/Hal/Sisa dan bar tipis di bawah disembunyiin. Tombol panah tetap ada.</div></div>
+    <div class="set-row"><div class="eyebrow">Bar progres</div><div class="seg" id="pbs"><button data-v="1" class="${db.progBar === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.progBar === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = teks Halaman/Sisa dan bar tipis di bawah disembunyiin. Tombol panah tetap ada.</div></div>
     <div class="set-row"><div class="eyebrow">Ketuk tepi ganti halaman</div><div class="seg" id="tes"><button data-v="1" class="${db.tapEdge === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.tapEdge === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Mati = ketuk layar cuma buka/tutup menu. Geser & tombol panah tetap jalan.</div></div>
     <div class="set-row"><div class="eyebrow">Layar tetap menyala saat baca</div><div class="seg" id="wks"><button data-v="1" class="${db.wake === false ? '' : 'on'}">Nyala</button><button data-v="0" class="${db.wake === false ? 'on' : ''}">Mati</button></div><div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--color-text-muted)">Layar tidak mati sendiri saat kamu baca. Matikan kalau boros baterai.</div></div>
     </div>
@@ -729,7 +729,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v397';
+const APP_VER = 'v398';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1428,6 +1428,7 @@ async function viewBaca() {
   const nightChip = db.theme === 'paper' && !db.themeSet && !!db.seenTip && (hr >= 19 || hr < 5 || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)); /* panduan dulu; saran tema malam baru setelah panduan ditutup, tak pernah bersamaan */
   $('#view').innerHTML = `
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
+      <button class="icon rback" id="rBack" type="button" aria-label="Kembali ke Home">${ico('left')}</button>
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="rmkl"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${['mati', 'hanya kata baru', 'nyala'][rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
@@ -1447,6 +1448,7 @@ async function viewBaca() {
   if (tipOn()) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
   if ($('#tipx')) $('#tipx').onclick = () => dismissTip();
   $('#rHome').onclick = () => leaveBaca();
+  $('#rBack').onclick = () => leaveBaca();
   $('#rMenuBtn').onclick = () => toggleMenu(true);
   $('#rMark').onclick = e => { e.stopPropagation(); toggleMark(); };
   $('#reader').addEventListener('click', e => { if (e.target.id === 'reader' || e.target.closest('.rhead')) toggleMenu(true); });
@@ -1685,7 +1687,7 @@ function lisAdvance() {
     setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400);
     return;
   }
-  stopListenPage(); toast('Bagian selesai');
+  stopListenPage(); toast('Selesai didengar');
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && LIS.on) { pauseListenPage(true); toast('Dengar dijeda'); } });
 const MG = { s: 12, m: 24, l: 48 };
@@ -1733,7 +1735,7 @@ function layout() {
   if (resumed) { cols._chip = true; resumeChip(b); }
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
-/* chip 'Lanjut dari halaman X' ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
+/* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
 let chipT = 0;
 function resumeChip(b) {
   clearTimeout(chipT); const old = $('#rchip'); if (old) old.remove();
@@ -1741,7 +1743,7 @@ function resumeChip(b) {
   const el = document.createElement('button'); el.type = 'button'; el.id = 'rchip'; el.className = 'rchip';
   const gone = () => { clearTimeout(chipT); el.remove(); };
   let offer = false;
-  el.textContent = `Lanjut dari halaman ${RD.page + 1}`;
+  el.textContent = (b.total || 1) > 1 ? `Lanjut dari ${secWord(b, b.pos)} ${Math.min(b.pos + 1, b.total)}` : 'Lanjut baca';
   el.onclick = e => {
     e.stopPropagation();
     const m = nearMark(b);
@@ -1778,7 +1780,6 @@ function heroPos(b, mins, part) {
   const p = progInfo(b);
   if (p.done) return statusPct(100).txt;
   const bits = [];
-  if (p.bab && p.total > 1) bits.push(secLabel(p.pos, p.total, false, 'Bagian')); /* sama dengan bar baca (hanya buku multi-bab) */
   if (p.pct != null && p.pct > 0) bits.push(`${p.pct}%`);
   const t = bits.map(esc).join(' · ') + (mins ? (bits.length ? ' · ' : '') + nw(mins) : '');
   return t + (part ? '<span class="mnote">bagian lain belum dihitung</span>' : '');
@@ -1873,10 +1874,11 @@ function showPage(p, anim = true) {
     const multi = (b.total || 1) > 1, lastPg = RD.page === RD.n - 1;
     const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? ml.t.replace(/^(bab|bagian) ini /, '') : '';
     const wd = secWord(b, b.pos), tb = 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
-    const awalBk = b.pos === 0 && !RD.hs.length, sec = multi ? secLabel(b.pos + 1, b.total, awalBk, wd, true) : '', secFull = multi ? secLabel(b.pos + 1, b.total, awalBk, wd) : '';
-    const notes = [ml && ml.part ? 'bagian lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Ujung bagian, geser untuk bagian berikutnya' : ''].filter(Boolean);
+    /* #1285: satu satuan = halaman (1-based, sama dengan chip 'Lanjut dari halaman'); nomor bagian tak ditulis */
+    const sec = `Hal. ${RD.page + 1}/${RD.n}`, secFull = `Halaman ${RD.page + 1} dari ${RD.n}`;
+    const notes = [ml && ml.part ? 'bagian lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Halaman terakhir di bab ini, geser untuk lanjut' : ''].filter(Boolean);
     pgn.title = ['persen dari seluruh buku, perkiraan sisa waktu'].concat(notes).join('. ');
-    pgn.setAttribute('aria-label', [multi ? (b.pos === 0 && !RD.hs.length ? `Awal buku, dari ${b.total} bagian` : `${wd} ${b.pos + 1} dari ${b.total}`) : '', RD.n === 1 ? '' : `halaman ${RD.page + 1} dari ${RD.n}`, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
+    pgn.setAttribute('aria-label', [secFull, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
     const bs = statusPct(bp);
