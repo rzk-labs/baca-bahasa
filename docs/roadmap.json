@@ -173,8 +173,8 @@
       "no": 24,
       "nama": "Masukan Pengguna Manusia",
       "fase": "Beta Nyata",
-      "status": "belum",
-      "catatan": "Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Draft 17 Nov 2026: 20 kutipan bukti internet (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 25,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 142,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Logo Keepo kepotong di header: chip XP disembunyikan di HP + Home mulai dari atas (#1291)",
+      "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 143,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP' + logo header tidak kepotong (#1293)",
+      "dokumen": "docs/pm-keluar-akun-1293.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1293.html. Ubah cloud.js, style.css, ui.js bila perlu; naikkan C di sw.js; jangan ubah api/. Uji 320/360/390/430px."
+    },
     {
       "no": 140,
       "peran": "developer",
@@ -346,7 +364,7 @@
       "prioritas": "P0",
       "nama": "Kartu ulang: tanda nada selain warna (angka kecil + palet aman buta warna + legenda 1-4) (#1205)",
       "dokumen": "docs/riset-warna-nada-pinyin.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1271)"
     },
     {
       "no": 128,
@@ -1237,7 +1255,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup mini langsung di kartu Siap dicek di Home (#1173)",
       "dokumen": "docs/rencana-hq-mockup-depan-home-1173.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1265)",
       "catatan": "Mockup: docs/mockup-1173.html. Kerjakan setelah backlog 114 (#1125). Hanya dev/src/page.html; muat malas, maks 2 pratinjau sekaligus."
     }
   ],

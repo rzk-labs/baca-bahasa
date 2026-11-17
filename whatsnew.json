@@ -1,5 +1,29 @@
 [
   {
+    "n": 1289,
+    "judul": "[peta 141] Ukur beta nyata (1/2): penanda aktivasi & H7 di /hitung",
+    "poin": "Keepo kini mencatat diam-diam: pengguna baru sudah baca dan sudah ketuk kata.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1271,
+    "judul": "[peta 129] Kartu ulang: nada pinyin pakai angka + palet aman buta warna",
+    "poin": "Kartu ulang Mandarin kini pakai warna nada yang aman untuk buta warna.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1267,
+    "judul": "[peta 139] Home memuat: sisa perbaikan (IndexedDB macet, rak lokal dulu)",
+    "poin": "Kalau tab Keepo lain menahan, atau simpan gagal, kamu dapat pesan jelas.",
+    "tgl": "2026-11-17"
+  },
+  {
+    "n": 1265,
+    "judul": "[peta 127] Keepo HQ: mockup mini di kartu Siap dicek di Home",
+    "poin": "Pratinjau HP di kartu Siap dicek sekarang lebih besar dan lebih jelas dibaca.",
+    "tgl": "2026-11-17"
+  },
+  {
     "n": 1285,
     "judul": "E-reader: satu satuan nomor, 'halaman' saja (bukan Bagian + hal.)",
     "poin": "Nomor di e-reader sekarang satu jenis saja: halaman.",
@@ -153,30 +177,6 @@
     "n": 1203,
     "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
     "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1195,
-    "judul": "[peta 114] Keepo HQ: mockup tampil langsung, tanpa tombol",
-    "poin": "Mockup di Keepo HQ sekarang langsung tampil, tanpa ketuk tombol.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1181,
-    "judul": "[peta 126] Arti lain lengkap: jenis kata, maks 6 arti, tahan balasan aneh",
-    "poin": "Arti lain kini lebih lengkap, dikelompokkan per jenis kata, tanpa batas 6 arti.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1193,
-    "judul": "Home: satu pilihan bahasa, langkah 1-3 bukan tombol palsu, kontras",
-    "poin": "Home sekarang lebih jelas dan tidak pudar saat dibuka.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1177,
-    "judul": "Lencana terbuka: tanda centang + tulisan 'Didapat', bukan cuma warna",
-    "poin": "Lencana yang sudah didapat sekarang punya tanda centang dan tulisan \"Didapat\".",
     "tgl": "2026-11-16"
   }
 ]
