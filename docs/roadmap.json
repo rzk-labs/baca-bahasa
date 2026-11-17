@@ -242,6 +242,14 @@
   ],
   "backlog": [
     {
+      "no": 134,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home memuat: kerangka rak + chip '–' bukan '0 hari' (#1250)",
+      "dokumen": "docs/desain-home-memuat-kerangka.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 133,
       "peran": "developer",
       "prioritas": "P0",

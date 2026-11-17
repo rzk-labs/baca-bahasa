@@ -288,7 +288,7 @@ function celebrate(title, msg, snd = 'win') {
   el.innerHTML = `<div class="card">${snd === 'lvl' ? `<div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div>` : spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (typeof bkState !== 'undefined' && bkState === 'load') { if (s) { s.innerHTML = `${ico('flame')}<span aria-hidden="true">–</span>`; s.title = 'Streak: lagi dimuat'; s.classList.add('wait'); } if (x) { x.innerHTML = `${ico('bolt')}<span aria-hidden="true">–</span>`; x.title = 'XP: lagi dimuat'; x.classList.add('wait'); } return; } if (s) s.classList.remove('wait'); if (x) x.classList.remove('wait'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Streak: ' + n + ' hari berturut-turut'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
 
 /* ---------- kerangka ---------- */
 let toastT;
@@ -943,7 +943,8 @@ function viewRak() {
       <div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
-    $('#view').innerHTML = `<h1 class="big">Kepoin<br>bahasa <span class="hl-txt">baru.</span></h1><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
+    refreshPills();
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
     const rt = $('#bkRetry'); if (rt) rt.onclick = () => { bkState = 'load'; viewRak(); syncBooks().catch(() => { }); };
     return;
   }
