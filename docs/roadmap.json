@@ -159,8 +159,8 @@
       "no": 22,
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
-      "status": "belum",
-      "catatan": "Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "status": "awal",
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 23,
@@ -241,6 +241,38 @@
     }
   ],
   "backlog": [
+    {
+      "no": 139,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home memuat: rak lokal dulu, batas 8 detik + Coba lagi, sembunyikan chip 0 hari, perbaiki nama bkState, toast sekali (#1251)",
+      "dokumen": "docs/riset-layar-memuat-home.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 138,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home memuat: kerangka rak + chip '–' bukan '0 hari' (#1250)",
+      "dokumen": "docs/desain-home-memuat-kerangka.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 137,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: urutkan kolom Papan sesuai kebiasaan founder (#1247)",
+      "dokumen": "docs/pm-urutan-papan-1247.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 136,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Keepo HQ: gabung kotak mockup jadi satu, hapus 'Belum ada gambar' (#1245)",
+      "dokumen": "docs/pm-mockup-ganda-hq.md",
+      "status": "siap dikerjakan"
+    },
     {
       "no": 135,
       "peran": "developer",
