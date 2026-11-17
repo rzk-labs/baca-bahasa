@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1251: Home memuat</title>
+<style>
+body{margin:0;background:#e9e6ea;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.note{max-width:390px;margin:0 auto 10px;font-size:12px;background:#E9F056;padding:6px 10px;border-radius:8px;font-weight:600}
+.lbl{max-width:390px;margin:18px auto 6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ph{width:390px;margin:0 auto;background:#fff;border-radius:22px;padding:18px 16px 76px;position:relative;min-height:560px;box-sizing:border-box;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.logo{font-family:"Bricolage Grotesque",Inter,sans-serif;font-weight:800;font-size:18px}
+.chip{background:#D7EFFF;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:600}
+.chip.hide{visibility:hidden}
+h1{font-family:"Bricolage Grotesque",Inter,sans-serif;font-size:34px;line-height:1.05;margin:10px 0}
+h1 span{background:#E9F056;padding:0 4px}
+.mut{color:#7a6670;font-size:13px;margin:12px 2px}
+.sk{display:flex;gap:10px;margin-top:12px}
+.sk i{display:block;width:104px;height:150px;border-radius:12px;background:#ece7ea}
+.sk i.w{height:14px;width:100px;margin-top:0}
+.btns{display:flex;gap:8px;margin-top:16px}
+.btn{flex:1;text-align:center;padding:12px;border-radius:12px;font-weight:700;font-size:14px;background:#351E28;color:#fff}
+.btn.s{background:#D7EFFF;color:#351E28}
+.err{background:#fff6f6;border:1px solid #e9b8b8;border-radius:12px;padding:12px;font-size:14px;margin-top:12px}
+.bk{width:104px}.bk b{display:block;height:150px;border-radius:12px;background:#D7EFFF}
+.bk span{font-size:12px;display:block;margin-top:4px;font-weight:600}
+.hero{background:#E9F056;border-radius:16px;padding:14px;margin-top:12px;font-weight:700}
+.tab{position:absolute;bottom:0;left:0;right:0;height:60px;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;font-size:12px;background:#fff}
+.toast{position:absolute;left:16px;right:16px;bottom:78px;background:#351E28;color:#fff;border-radius:12px;padding:10px 12px;font-size:13px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Bukan halaman Home final.</div>
+
+<div class="lbl">1. Sebelum (sekarang): kosong, "0 hari"</div>
+<div class="ph">
+<div class="top"><span class="logo">Keepo</span><span class="chip">🔥 0 hari</span></div>
+<h1>Kepoin<br>bahasa <span>baru.</span></h1>
+<div class="mut">Memuat bukumu…</div>
+<div class="toast">Kata, XP, buku, posisi baca &amp; penanda ikut akun.</div>
+<div class="tab"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+
+<div class="lbl">2. Sesudah, detik 1-8: rak kerangka, chip disembunyikan</div>
+<div class="ph">
+<div class="top"><span class="logo">Keepo</span><span class="chip hide">🔥 0 hari</span></div>
+<h1>Kepoin<br>bahasa <span>baru.</span></h1>
+<div class="mut">Memuat bukumu…</div>
+<div class="sk"><i></i><i></i><i></i></div>
+<div class="tab"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+
+<div class="lbl">3. Sesudah, rak lokal siap: sinkron di belakang</div>
+<div class="ph">
+<div class="top"><span class="logo">Keepo</span><span class="chip">🔥 3 hari</span></div>
+<div class="hero">Lanjut baca · The Little Prince<br><small>Inggris · 42%</small></div>
+<div class="mut">Menyinkronkan akunmu…</div>
+<div style="display:flex;gap:10px"><div class="bk"><b></b><span>The Little Prince</span></div><div class="bk"><b></b><span>Momo</span></div><div class="bk"><b></b><span>Kimi no Na wa</span></div></div>
+<div class="toast">Hai Rani! Progres kamu sudah digabung dengan akun.</div>
+<div class="tab"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+
+<div class="lbl">4. Sesudah, lewat 8 detik: pesan jelas + jalan keluar</div>
+<div class="ph">
+<div class="top"><span class="logo">Keepo</span><span class="chip hide">🔥 0 hari</span></div>
+<h1>Kepoin<br>bahasa <span>baru.</span></h1>
+<div class="err">Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.</div>
+<div class="btns"><div class="btn">Coba lagi</div><div class="btn s">Lanjut tanpa menunggu</div></div>
+<div class="tab"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div>
+</div>
+</body></html>
