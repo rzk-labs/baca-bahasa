@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1300: detail tugas jadi pop up</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28;width:390px}
+h1,h2,h3{font-family:'Bricolage Grotesque',Inter,sans-serif;margin:0}
+.lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:14px 16px 6px}
+.scr{position:relative;height:660px;background:#FAF7F0;overflow:hidden;border-top:2px solid #351E28;margin-bottom:6px}
+.col{padding:12px 16px}
+.card{background:#fff;border:2px solid #351E28;border-radius:18px;padding:12px;margin-bottom:10px;font-size:13px}
+.card b{display:block;margin:4px 0}
+.chip{display:inline-block;font-size:11px;font-weight:800;border:1.5px solid #351E28;border-radius:999px;padding:2px 8px;background:#AEB8A0}
+.veil{position:absolute;inset:0;background:rgba(53,30,40,.55);display:flex;align-items:flex-end}
+.sheet{background:#FAF7F0;width:100%;border:2px solid #351E28;border-bottom:0;border-radius:20px 20px 0 0;padding:12px 12px 14px;height:88%;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;padding-bottom:8px}
+.x{border:1.5px solid #351E28;border-radius:999px;padding:10px 14px;font-weight:800;font-size:13px;min-height:44px}
+.pita{margin:0 0 10px;border:2px solid #351E28;border-radius:16px;padding:10px 14px;font-size:13px;font-weight:800;background:#E9F056}
+.pita.ok{background:#D7EFFF}
+.gar{display:block;height:4px;border-radius:2px;background:rgba(53,30,40,.2);margin-top:6px;position:relative}
+.gar i{position:absolute;left:0;top:0;height:4px;width:35%;background:#351E28;border-radius:2px}
+.sp{display:inline-block;width:14px;height:14px;border:2.5px solid #351E28;border-right-color:transparent;border-radius:50%;vertical-align:-2px;margin-right:4px}
+.hero{background:#AEB8A0;border:2px solid #351E28;border-radius:20px;padding:14px;margin-bottom:10px}
+.hero h2{font-size:24px;line-height:1.05;margin:8px 0 6px}
+.body{flex:1;overflow:hidden;font-size:13px}
+.body ul{padding-left:18px;margin:6px 0}
+.acts{display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.btn{text-align:center;border:2px solid #351E28;border-radius:999px;padding:12px 4px;font-weight:800;font-size:14px;min-height:44px}
+.btn.p{background:#351E28;color:#FAF7F0}
+.btn.off{opacity:.55}
+</style></head><body>
+
+<div class="lab">Sesudah: ketuk kartu, muncul pop up</div>
+<div class="scr"><div class="col">
+<h2 style="font-size:24px;margin:4px 0 10px">Tugas</h2>
+<div class="card"><span class="chip">Developer</span> <span class="chip" style="background:#E9F056">Siap dicek</span><b>Keepo HQ: detail tugas jadi pop up</b><span style="opacity:.7">#1300 · baru saja</span></div>
+<div class="card"><span class="chip">Developer</span><b>Tugas lain di belakang</b><span style="opacity:.7">#1301</span></div>
+</div>
+<div class="veil"><div class="sheet">
+<div class="top"><span>Detail tugas</span><span class="x">✕ Tutup</span></div>
+<div class="body">
+<div class="hero"><span class="chip" style="background:#FAF7F0">Developer</span> #1300
+<h2>Detail tugas jadi pop up</h2><div style="font-weight:700">Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.</div></div>
+<div class="card">✨ Hasilnya<ul><li>Kartu terbuka sebagai pop up</li><li>Tutup: tombol, ketuk latar, Esc</li></ul></div>
+</div>
+<div class="acts"><div class="btn p">✓ Setujui</div><div class="btn">✎ Revisi</div><div class="btn">✕ Tolak</div></div>
+</div></div></div>
+
+<div class="lab">Sesudah: saat menyetujui (loading)</div>
+<div class="scr"><div class="col">
+<h2 style="font-size:24px;margin:4px 0 10px">Tugas</h2>
+<div class="card"><span class="chip">Developer</span> <span class="chip" style="background:#D7EFFF">Menuju live</span><b>Keepo HQ: detail tugas jadi pop up</b><span style="opacity:.7">#1300 · pindah kolom</span></div>
+</div>
+<div class="veil"><div class="sheet">
+<div class="top"><span>Detail tugas</span><span class="x" style="opacity:.5">✕ Tutup</span></div>
+<div class="pita"><span class="sp"></span>Memproses…<span class="gar"><i></i></span></div>
+<div class="body">
+<div class="hero" style="opacity:.75"><span class="chip" style="background:#FAF7F0">Developer</span> #1300
+<h2>Detail tugas jadi pop up</h2><div style="font-weight:700">Hasil sudah jadi. Cek, lalu Setujui, Revisi, atau Tolak.</div></div>
+</div>
+<div class="acts"><div class="btn p">Menyetujui…</div><div class="btn off">✎ Revisi</div><div class="btn off">✕ Tolak</div></div>
+</div></div></div>
+
+<div class="lab">Sesudah: berhasil</div>
+<div class="scr" style="height:300px"><div class="veil"><div class="sheet" style="height:92%">
+<div class="top"><span>Detail tugas</span><span class="x">✕ Tutup</span></div>
+<div class="pita ok">✓ Masuk antrean live</div>
+<div class="body"><div class="hero" style="background:#D7EFFF"><h2>Detail tugas jadi pop up</h2><div style="font-weight:700">Disetujui. Masuk antrean live, otomatis tayang ±2–10 menit.</div></div></div>
+</div></div></div>
+</body></html>
