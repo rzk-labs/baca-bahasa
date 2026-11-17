@@ -263,7 +263,7 @@
       "prioritas": "P0",
       "nama": "Kartu kata: 'Bisa juga' (arti lain) jangan hilang saat terjemahan cadangan/kosong (#1243)",
       "dokumen": "docs/pm-arti-lain-hilang-1243.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1258)",
       "catatan": "Mockup: docs/mockup-1243.html. Ubah ui.js (fungsi load di sheet kata) + app.js (translate/altFetch); naikkan versi C di sw.js."
     },
     {
