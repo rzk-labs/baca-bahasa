@@ -1191,4 +1191,12 @@ ol.steps3 b{min-width:0}
 /* tombol Home selalu terlihat di e-reader saat menu tersembunyi (menu hanya muncul lewat ketuk tengah) */
 .rback{position:absolute;top:calc(env(safe-area-inset-top) + 4px);left:4px;z-index:2;background:var(--color-surface);border:1px solid var(--color-border);border-radius:999px;opacity:.85}
 .reader.chrome .rback{display:none}
+/* #1306: judul & penulis kartu buku Home: penulis selalu baris sendiri (di luar clamp 2 baris); statistik Profil selebar layar */
+.bk .t .t-main,.hero .t .t-main{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;overflow-wrap:break-word}
+.bk .t:has(.t-au),.hero .t:has(.t-au){display:block;overflow:visible}
+.bk .t .t-au,.hero .t .t-au{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-stats{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);width:100%}
+.fr-stats div{align-items:center;justify-content:flex-start;min-width:0}
+.fr-stats b{max-width:100%;white-space:nowrap}
+.fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
