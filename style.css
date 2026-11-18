@@ -1190,4 +1190,8 @@ ol.steps3 b{min-width:0}
 /* tombol Home selalu terlihat di e-reader saat menu tersembunyi (menu hanya muncul lewat ketuk tengah) */
 .rback{position:absolute;top:calc(env(safe-area-inset-top) + 4px);left:4px;z-index:2;background:var(--color-surface);border:1px solid var(--color-border);border-radius:999px;opacity:.85}
 .reader.chrome .rback{display:none}
+/* #1307 rak Koleksi: judul 2 baris di bawah sampul, penulis baris kecil redup sendiri */
+.bk .t{min-height:38px;max-height:38px;-webkit-line-clamp:2;line-clamp:2;text-wrap:auto;overflow-wrap:anywhere}
+.bk .au{font:500 12px/16px var(--font-ui);color:var(--color-text-muted);margin-top:2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero .t .t-au{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
