@@ -263,6 +263,7 @@ async function runSync(opt = {}) {
 }
 const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
+  delete db.keluar;
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
@@ -384,6 +385,43 @@ function friendlyAuthError(err) {
   return { t: 'Belum berhasil. Coba lagi sebentar lagi.', act: 'retry' };
 }
 const ERR_BTN = { retry: 'Coba lagi', daftar: 'Daftar', masuk: 'Masuk', skip: 'Lanjut tanpa akun' };
+/* Keluar: sheet 2 pilihan. 'Keluar saja' = data HP tetap; 'Keluar & bersihkan HP' = hapus buku/kata/XP lokal hanya setelah sinkron sukses */
+const WIPE_KEYS = [...SYNC_KEYS, 'cur', 'bkRemote', 'sentLooks'];
+async function syncBeforeOut() {
+  if (navigator.onLine === false) throw new Error('offline');
+  await runSync({ force: true, manual: true });
+  await syncBooks();
+  if (canGz && (db.books || []).some(b => b && !b.cloud)) throw new Error('buku belum naik');
+}
+async function wipeLocal() {
+  for (const b of db.books || []) { try { await delText(b.id); } catch (e) { } try { localStorage.removeItem('kepo_sesi_' + b.id); } catch (e) { } }
+  const d = DEF();
+  for (const k of WIPE_KEYS) { if (k in d) db[k] = d[k]; else delete db[k]; }
+  db.xp = 0; db.taps = {};
+}
+async function finishOut(wipe) {
+  try { await api('/logout', { method: 'POST' }); } catch (e) { }
+  if (wipe) await wipeLocal();
+  db.acct = null; db.keluar = 1; lastSync = ''; save(); closeSheet();
+  toast(wipe ? 'Kamu sudah keluar. HP ini sudah dibersihkan.' : 'Kamu sudah keluar. Progres tetap ada di HP ini.');
+  setTab(db.tab || 'rak');
+}
+function openLogout() {
+  openSheet(`<div class="sh-head"><h2>Keluar dari akun?</h2>${closeBtn}</div>
+    <div class="mut sm">Progresmu disinkron dulu sebelum keluar.</div>
+    <div class="set-row set-acts"><button class="pri full" id="loStay" type="button">Keluar saja</button><div class="mut sm center">Buku, kata, dan XP tetap ada di HP ini.</div>
+    <button class="sec full" id="loWipe" type="button">Keluar & bersihkan HP</button><div class="mut sm center">Buku, kata, dan XP di HP ini dihapus. Tetap aman di akunmu.</div></div>
+    <div class="sm" id="loWarn" role="alert" style="margin-top:10px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden>Sinkron gagal. Kalau dibersihkan, data yang belum tersimpan di akun bisa hilang permanen.<div class="set-acts" style="margin-top:8px"><button class="sec full" id="loForce" type="button">Tetap bersihkan & keluar</button><button class="sec full" id="loBack" type="button">Batal</button></div></div>`, 'Keluar dari akun');
+  const busy = on => $$('#loStay,#loWipe,#loForce,#loBack').forEach(b => b.disabled = on);
+  $('#loStay').onclick = async () => { busy(true); $('#loStay').textContent = 'Menyinkron…'; try { await runSync({ force: true, manual: true }); } catch (e) { } await finishOut(false); };
+  $('#loWipe').onclick = async () => {
+    busy(true); $('#loWipe').textContent = 'Menyinkron…';
+    try { await syncBeforeOut(); } catch (e) { busy(false); $('#loWipe').textContent = 'Keluar & bersihkan HP'; $('#loWarn').hidden = false; return; }
+    await finishOut(true);
+  };
+  $('#loForce').onclick = async () => { busy(true); $('#loForce').textContent = 'Membersihkan…'; await finishOut(true); };
+  $('#loBack').onclick = closeSheet;
+}
 function openAccount(mode) {
   if (db.acct) {
     openSheet(`<div class="sh-head"><h2>Akun kamu</h2>${closeBtn}</div>
@@ -416,7 +454,7 @@ function openAccount(mode) {
       try { await api('/me', { method: 'DELETE' }); db.acct = null; save(); closeSheet(); toast('Akunmu sudah dihapus. Progres di HP ini tetap ada.'); setTab(db.tab || 'rak'); }
       catch (e) { x.disabled = false; x.textContent = 'Hapus akun permanen'; toast(e.message || 'Gagal hapus, coba lagi'); }
     };
-    $('#aOut').onclick = async () => { try { await pushSync(true); await api('/logout', { method: 'POST' }); } catch (e) { } db.acct = null; save(); closeSheet(); toast('Kamu sudah keluar. Progres tetap ada di HP ini.'); setTab(db.tab || 'rak'); };
+    $('#aOut').onclick = openLogout;
     return;
   }
   let m = mode === 'daftar' ? 'daftar' : 'masuk', fails = 0;
