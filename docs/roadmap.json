@@ -247,7 +247,7 @@
       "prioritas": "P0",
       "nama": "Logo Keepo kepotong di header: chip XP disembunyikan di HP + Home mulai dari atas (#1291)",
       "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1296)",
       "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
     },
     {
