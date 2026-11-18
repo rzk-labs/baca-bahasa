@@ -1,5 +1,11 @@
 [
   {
+    "n": 1296,
+    "judul": "[peta 142] Logo Keepo tak kepotong di HP + Home mulai dari atas",
+    "poin": "Logo Keepo sekarang selalu utuh di HP, tidak kepotong lagi.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1289,
     "judul": "[peta 141] Ukur beta nyata (1/2): penanda aktivasi & H7 di /hitung",
     "poin": "Keepo kini mencatat diam-diam: pengguna baru sudah baca dan sudah ketuk kata.",
@@ -171,12 +177,6 @@
     "n": 1197,
     "judul": "Kartu ulang: tombol speaker di depan kartu + tawarkan bunyi otomatis",
     "poin": "Tombol speaker di kartu ulang sekarang pakai ikon buatan sendiri, sesuai gaya brand.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1203,
-    "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
-    "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
     "tgl": "2026-11-16"
   }
 ]
