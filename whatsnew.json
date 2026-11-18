@@ -1,5 +1,11 @@
 [
   {
+    "n": 1300,
+    "judul": "[peta 140] Keepo HQ: detail tugas jadi pop up + loading saat pindah status",
+    "poin": "Di Keepo HQ, ketuk tugas sekarang membuka pop up, bukan pindah halaman.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1309,
     "judul": "Cerita contoh Mandarin (HSK 2-3) supaya pembelajar Mandarin bisa coba",
     "poin": "Sekarang ada cerita contoh Mandarin, jadi pembelajar Mandarin bisa langsung coba.",
@@ -171,12 +177,6 @@
     "n": 1201,
     "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
     "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1199,
-    "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
-    "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
     "tgl": "2026-11-16"
   }
 ]
