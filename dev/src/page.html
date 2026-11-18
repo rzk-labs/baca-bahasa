@@ -138,6 +138,7 @@ a{color:inherit}
 .stage[open]>summary b,.stage[open]>summary .ct{display:block}
 .stage .dt2 .acts{margin-top:10px;flex-wrap:wrap}
 .stage .dt2 .btn{max-width:100%;white-space:normal;text-align:left}
+.bn{border-collapse:collapse;width:100%;font-size:calc(var(--fs)*.9)}.bn th,.bn td{padding:9px 8px;text-align:right}.bn th:first-child,.bn td:first-child{text-align:left;padding-left:14px}.bn th{background:#351E28;color:#FAF7F0;font-weight:600}.bn tr+tr td{border-top:1.5px solid var(--line)}
 .bk4{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:640px){.bk4{grid-template-columns:repeat(2,minmax(0,1fr))}}.bk4 .eyebrow{white-space:normal}.bkj{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.evl{padding:16px}.evl .big{font-size:30px}.evs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.evs .eyebrow{white-space:normal;font-size:11px}.evbar{display:flex;height:12px;border-radius:999px;overflow:hidden;border:1.5px solid var(--ink);margin-top:6px}.evbar i{display:block;height:100%}.k-selesai{background:var(--jade)}.k-draft,.k-berjalan{background:var(--wasabi)}.k-awal{background:#D7EFFF}.k-belum{background:transparent;color:var(--ink);border-style:dashed}
 .bar{height:10px;border-radius:99px;background:rgba(53,30,40,.15);overflow:hidden}.bar i{display:block;height:100%;background:var(--wasabi);box-shadow:inset 0 0 0 1px #351E28;border-radius:99px}
 /* doc */
@@ -285,11 +286,12 @@ const IC={
   papan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>',
   peta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
   dokumen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  beta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
   hasil:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>',
   set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
   play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>'
 };
-const NAV=[['markas','Markas'],['hasil','Laporan'],['papan','Tugas'],['peta','Peta'],['dokumen','Dokumen']];
+const NAV=[['markas','Markas'],['hasil','Laporan'],['papan','Tugas'],['peta','Peta'],['dokumen','Dokumen'],['beta','Beta Nyata']];
 const TIM={
   pm:{n:'PM',e:'🧭',c:'t-lav',d:'Memilih tugas harian dari roadmap'},
   riset:{n:'Riset',e:'🔎',c:'t-blue',d:'Pasar, kompetitor, persona'},
@@ -381,7 +383,7 @@ function navs(){
   $('#sidenav').innerHTML+=sb;$('#tabbar').innerHTML+=sb;
 }
 function go(k,arg){tutupPop(true,true);clearTimeout(timer);VIEW++;cur=k;navs();scrollTo(0,0);
-  if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();
+  if(k==='markas')markas();else if(k==='papan')papan();else if(k==='peta')peta();else if(k==='dokumen')dokumen(arg);else if(k==='hasil')hasilKerja();else if(k==='beta')betaNyata();
   try{history.replaceState(null,'','#'+k+(arg?'/'+arg:''))}catch(e){}
 }
 // Penanda kecil "memperbarui…" selama ada segar-ulang di belakang
@@ -504,6 +506,31 @@ function daftarKerja(){
 }
 // Laporan: data lama tampil dulu, lalu disegarkan di belakang. again=true: gambar ulang dari data (saringan); 'segar': ambil baru.
 let LASTH=null;
+// Beta Nyata (#1302): angka anonim dari /hitung. Kosong = "Belum ada data", tanpa angka palsu.
+const SUMBER={langsung:'Langsung',direct:'Langsung',ios:'iOS (TestFlight)',testflight:'iOS (TestFlight)',threads:'Threads'};
+const namaSumber=s=>{const k=String(s||'').trim().toLowerCase();return SUMBER[k]||(k?k.replace(/[^a-z0-9 _.-]/g,'').slice(0,24)||'Lainnya':'Langsung')};
+const pctB=(a,b)=>b>0?Math.round(a/b*100)+'%':'–';
+async function betaNyata(){
+  const v=VIEW;skel();let D;
+  try{D=await call('/beta')}catch(e){if(v===VIEW&&cur==='beta')gagal(e.message,()=>go('beta'));return}
+  if(v!==VIEW||cur!=='beta')return;
+  const rows=D.data?D.data.per_sumber.filter(r=>+r.baru>0):[];
+  const tgl=new Date(D.diambil).toLocaleString('id-ID',{timeZone:'Asia/Jakarta',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const cap=`<div class="mut sm" style="margin-top:12px">Diambil ${esc(tgl)} WIB · sumber: hitungan anonim app (30 hari terakhir), tanpa ID atau data pribadi.</div>`;
+  const head=`<div class="sec"><h1>Beta Nyata</h1><span class="mut sm">Fase 2 · tahap 21 · 30 hari terakhir</span></div>`;
+  if(!rows.length){V.innerHTML=head+`<div class="tile c t-blue"><div class="eyebrow">Belum ada data</div><div class="sm" style="margin-top:6px">${D.data?'Belum ada pengguna baru tercatat.':'Data belum bisa diambil dari app. Coba lagi nanti.'} Angka muncul di sini begitu ada.</div></div>`+cap+`<div class="row" style="margin-top:12px"><button class="btn" id="ulang">Muat ulang</button></div>`;$('#ulang').onclick=()=>go('beta');return}
+  const sum=k=>rows.reduce((a,r)=>a+(+r[k]||0),0),baru=sum('baru'),akt=sum('aktivasi'),h2=sum('h2'),h7=sum('h7');
+  const ukurAkt=sum('baca')+sum('kata')+akt>0,ukurH7=h7>0;
+  const kartu=(l,x,ket)=>`<div class="tile c"><div class="eyebrow">${l}</div><div class="big" style="font-size:36px">${x}</div><div class="sm">${ket}</div></div>`;
+  V.innerHTML=head+`<div class="bento">`
+   +kartu('Pengguna baru',baru,'30 hari terakhir')
+   +kartu('Aktivasi',ukurAkt?pctB(akt,baru):'–',ukurAkt?'target ≥60%':'belum diukur')
+   +kartu('Kembali hari ke-2',pctB(h2,baru),'target ≥25%')
+   +kartu('Kembali hari ke-7',ukurH7?pctB(h7,baru):'–',ukurH7?'target ≥10%':'belum ada yang genap 7 hari')
+   +`</div><div class="sec"><h2>Per sumber</h2></div><div class="tile" style="padding:0;overflow-x:auto"><table class="bn"><tr><th>Sumber</th><th>Baru</th><th>Aktivasi</th><th>H2</th><th>H7</th></tr>`
+   +rows.map(r=>{const b=+r.baru;return `<tr><td>${esc(namaSumber(r.src))}</td><td>${b}</td><td>${ukurAkt?pctB(+r.aktivasi||0,b):'–'}</td><td>${pctB(+r.h2||0,b)}</td><td>${+r.h7>0?pctB(+r.h7,b):'–'}</td></tr>`}).join('')
+   +`</table></div><div class="tile" style="margin-top:12px"><span class="chip o">Catatan</span> <mark>Aktivasi</mark> = baca ≥1 halaman dan ketuk ≥1 kata di hari pertama. H2 / H7 = kembali di hari ke-2 / ke-7.</div>`+cap;
+}
 async function hasilKerja(again){
   if(again===true&&LASTH)return tampilHasil(LASTH);
   const v=VIEW;

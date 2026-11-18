@@ -1,5 +1,11 @@
 [
   {
+    "n": 1302,
+    "judul": "[peta 141] Ukur beta nyata (2/2): halaman Beta Nyata di Keepo HQ",
+    "poin": "Keepo HQ punya menu baru \"Beta Nyata\": angka baru, aktivasi, hari ke-2, hari ke-7.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1300,
     "judul": "[peta 140] Keepo HQ: detail tugas jadi pop up + loading saat pindah status",
     "poin": "Di Keepo HQ, ketuk tugas sekarang membuka pop up, bukan pindah halaman.",
@@ -171,12 +177,6 @@
     "n": 1211,
     "judul": "Teks kecil 10-11px di HP dinaikkan jadi minimal 12px",
     "poin": "Semua tulisan kecil di HP sekarang minimal 12, jadi lebih enak dibaca.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1201,
-    "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
-    "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
     "tgl": "2026-11-16"
   }
 ]
