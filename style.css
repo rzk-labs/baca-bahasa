@@ -1171,6 +1171,7 @@ ol.steps3 li{cursor:default}
 /* #1220 label XP jelas: dua baris, tidak mepet; langkah 1-3 rapat; status baca boleh wrap */
 .stat3 .lbl2{white-space:normal;overflow-wrap:normal}
 .stat3 .t-lime .lbl2,.stat3 .t-lav .lbl2{display:flex;flex-direction:column;gap:1px;padding:0 6px}
+.stat3 .t-lav .lbl2.lv-one{display:block;white-space:nowrap}
 ol.steps3 li{gap:8px}
 ol.steps3 b{min-width:0}
 .mut.sm{overflow-wrap:anywhere}
