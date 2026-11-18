@@ -852,7 +852,7 @@ setTimeout(kirimUlangFeedback, 3000);
 /* judul + penulis dalam kurung ('こころ（夏目漱石）') -> penulis di baris sendiri */
 function heroTitle(t) {
   const p = splitTitle(t);
-  return p.au ? `${esc(p.main)}<span class="t-au">${esc(p.au)}</span>` : esc(p.main);
+  return p.au ? `<span class="t-main">${esc(p.main)}</span> <span class="t-au">${esc(p.au)}</span>` : esc(p.main);
 }
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
