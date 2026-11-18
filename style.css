@@ -1171,6 +1171,14 @@ ol.steps3 li{cursor:default}
 /* #1220 label XP jelas: dua baris, tidak mepet; langkah 1-3 rapat; status baca boleh wrap */
 .stat3 .lbl2{white-space:normal;overflow-wrap:normal}
 .stat3 .t-lime .lbl2,.stat3 .t-lav .lbl2{display:flex;flex-direction:column;gap:1px;padding:0 6px}
+/* #1318 kartu Level: bar 6px + satu baris "64/100 XP" (+ "→ Lv 5" bila muat); 320px hanya XP */
+.stat3 .t-lav .lbl2.lvl-line{flex-direction:row;justify-content:space-between;align-items:baseline;gap:6px;padding:0;white-space:nowrap;text-wrap:nowrap;font-size:var(--fs-min);line-height:16px;margin-top:6px}
+.stat3 .t-lav .lv-xp,.stat3 .t-lav .lv-next{white-space:nowrap}
+.stat3 .t-lav .lv-xp{font-variant-numeric:tabular-nums}
+.stat3 .t-lav .lv-next{font-weight:600}
+.stat3 .t-lav .lvbar{height:6px;margin-top:8px;background:var(--ink)}
+.stat3 .t-lav .lvbar i{background:var(--hl)}
+@media(max-width:379px){.stat3 .t-lav .lv-next{display:none}}
 ol.steps3 li{gap:8px}
 ol.steps3 b{min-width:0}
 .mut.sm{overflow-wrap:anywhere}
