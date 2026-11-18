@@ -1,5 +1,11 @@
 [
   {
+    "n": 1306,
+    "judul": "Home: judul & penulis buku terpisah jelas + statistik Profil selebar layar",
+    "poin": "Di Home, nama penulis buku sekarang selalu di baris sendiri, tidak nempel judul.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1302,
     "judul": "[peta 141] Ukur beta nyata (2/2): halaman Beta Nyata di Keepo HQ",
     "poin": "Keepo HQ punya menu baru \"Beta Nyata\": angka baru, aktivasi, hari ke-2, hari ke-7.",
@@ -171,12 +177,6 @@
     "n": 1213,
     "judul": "Home ikut segar setelah buku dipulihkan dari akun + status memuat",
     "poin": "Setelah login, Home langsung ikut menampilkan buku yang dipulihkan dari akun.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1211,
-    "judul": "Teks kecil 10-11px di HP dinaikkan jadi minimal 12px",
-    "poin": "Semua tulisan kecil di HP sekarang minimal 12, jadi lebih enak dibaca.",
     "tgl": "2026-11-16"
   }
 ]
