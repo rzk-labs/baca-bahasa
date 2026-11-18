@@ -242,6 +242,24 @@
   ],
   "backlog": [
     {
+      "no": 144,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Bukti internet: PDF scan & komik (masukan Ilham) (#1308)",
+      "dokumen": "docs/riset-pdf-scan-komik.md",
+      "status": "selesai",
+      "catatan": "Vonis (validasi bukti internet): H1 terbukti; H2 belum jelas; H3 gugur untuk komik/CJK; H4 belum jelas; H5 belum jelas. Rekomendasi: pesan lebih baik, bukan OCR di HP. Mockup: docs/mockup-1308.html."
+    },
+    {
+      "no": 145,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Pesan PDF scan lebih membantu: kartu + cerita contoh + cara OCR (#1308)",
+      "dokumen": "docs/riset-pdf-scan-komik.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1308.html. Ubah pesan di app.js:490 jadi kode 'scan', kartu di ui.js. Naikkan C di sw.js; uji 320-430px. Ukuran kecil (±0,5-1 hari)."
+    },
+    {
       "no": 142,
       "peran": "developer",
       "prioritas": "P0",
