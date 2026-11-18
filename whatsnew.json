@@ -1,5 +1,11 @@
 [
   {
+    "n": 1318,
+    "judul": "Kartu Level: bar progres + \"64/100 XP\" satu baris, tak pecah",
+    "poin": "Kartu Level di Profil kini rapi: angka besar, bar tipis, \"64/100 XP\" satu baris.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1306,
     "judul": "Home: judul & penulis buku terpisah jelas + statistik Profil selebar layar",
     "poin": "Di Home, nama penulis buku sekarang selalu di baris sendiri, tidak nempel judul.",
@@ -171,12 +177,6 @@
     "n": 1220,
     "judul": "Home: tiga angka XP diberi label jelas + 'mnt' jadi 'menit'",
     "poin": "Home sekarang jelas: \"XP hari ini\", \"XP menuju Level berikutnya\", dan \"Total XP seumur hidup\".",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1213,
-    "judul": "Home ikut segar setelah buku dipulihkan dari akun + status memuat",
-    "poin": "Setelah login, Home langsung ikut menampilkan buku yang dipulihkan dari akun.",
     "tgl": "2026-11-16"
   }
 ]
