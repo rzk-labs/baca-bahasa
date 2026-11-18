@@ -159,8 +159,8 @@
       "no": 22,
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
-      "status": "awal",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 23,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 144,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Aturan angka: satu sumber, satu satuan 'halaman', halaman unik, '–' bila tak yakin (#1316)",
+      "dokumen": "docs/riset-angka-statistik-dipercaya.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1316.html. Perbaiki 'Minggu ini' (pagesWeek di ui.js tanpa batas atas), XP Tamat vs Home, kata disimpan di catatan sesi, streak vs titik, 'bagian' jadi 'halaman'. Baca ulang tak menambah halaman. Naikkan C di sw.js; uji 320-430px."
+    },
+    {
+      "no": 145,
+      "peran": "riset",
+      "prioritas": "P0",
+      "nama": "Bukti internet: angka statistik salah bikin pengguna tak percaya app (#1316)",
+      "dokumen": "docs/riset-angka-statistik-dipercaya.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 39 bukti, 8 sumber. Kepercayaan: terbukti; retensi: belum jelas; baca ulang tak menambah halaman. 5 aturan angka untuk developer di #144."
+    },
     {
       "no": 142,
       "peran": "developer",
