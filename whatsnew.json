@@ -1,5 +1,11 @@
 [
   {
+    "n": 1309,
+    "judul": "Cerita contoh Mandarin (HSK 2-3) supaya pembelajar Mandarin bisa coba",
+    "poin": "Sekarang ada cerita contoh Mandarin, jadi pembelajar Mandarin bisa langsung coba.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1298,
     "judul": "[peta 143] Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP'",
     "poin": "Tombol Keluar sekarang menawarkan dua pilihan: keluar saja, atau keluar dan bersihkan HP.",
@@ -171,12 +177,6 @@
     "n": 1199,
     "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
     "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1219,
-    "judul": "Streak & XP harian pakai tanggal lokal (WITA), bukan UTC",
-    "poin": "Streak dan XP harian sekarang pakai tanggal di HP, bukan jam dunia.",
     "tgl": "2026-11-16"
   }
 ]
