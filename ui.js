@@ -201,14 +201,16 @@ function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lv
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
 /* tampilan lencana jujur: lencana berbasis kata tersimpan hanya tampil terbuka bila syaratnya masih terpenuhi (db.badges tak diubah) */
-const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10 };
-const BADGE_REAL = ['kepo1', 'kolektor', 'kutubuku', 'berani', 'perfect', 'boss', 'otak']; /* syarat dihitung dari data nyata di perangkat ini, bukan XP/lencana gabungan */
+const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10, koleksi50: 50, koleksi100: 100 };
+const BADGE_REAL = ['kepo1', 'kolektor', 'koleksi50', 'koleksi100', 'kutubuku', 'berani', 'perfect', 'boss', 'otak']; /* syarat dihitung dari data nyata di perangkat ini, bukan XP/lencana gabungan */
 const badgeShown = id => db.badges.includes(id) && !(BADGE_REAL.includes(id) && !BADGES.find(b => b[0] === id)[4]());
 const LV5_XP = 4 * 100; /* XP minimum Level 5, selaras level() */
-const BADGE_HOW = { kepo1: 'Ketuk kata di bacaan, lalu Simpan.', kolektor: 'Simpan 10 kata dari bacaanmu.', kutubuku: 'Balik 20 halaman di tab Baca.', berani: 'Buka tab Ngomong, selesaikan 1 tantangan.', perfect: 'Skor kalimat 95%+ di tab Ngomong.', boss: 'Kalahin 5 kata sulit di latihan Kata.', otak: 'Hafal 10 kartu di tab Kata.', fire3: 'Baca atau latihan 3 hari berturut-turut.', fire7: 'Jaga streak 7 hari tanpa putus.', lv5: `Kumpulkan XP sampai Level 5 (${LV5_XP} XP).` };
+const BADGE_HOW = { kepo1: 'Ketuk kata di bacaan, lalu Simpan.', kolektor: 'Simpan 10 kata dari bacaanmu.', koleksi50: 'Simpan 50 kata. Kamu bisa!', koleksi100: 'Simpan 100 kata. Koleksi jumbo!', kutubuku: 'Balik 20 halaman di tab Baca.', berani: 'Buka tab Ngomong, selesaikan 1 tantangan.', perfect: 'Skor kalimat 95%+ di tab Ngomong.', boss: 'Kalahin 5 kata sulit di latihan Kata.', otak: 'Hafal 10 kartu di tab Kata.', fire3: 'Baca atau latihan 3 hari berturut-turut.', fire7: 'Jaga streak 7 hari tanpa putus.', lv5: `Kumpulkan XP sampai Level 5 (${LV5_XP} XP).` };
 const BADGES = [
   ['kepo1', 'eye', 'Keepo Pertama', 'Simpan 1 kata', () => countedVocab(null).length >= 1],
   ['kolektor', 'bm', 'Kolektor', 'Simpan 10 kata', () => countedVocab(null).length >= 10],
+  ['koleksi50', 'bm', 'Koleksi 50', 'Simpan 50 kata', () => countedVocab(null).length >= 50],
+  ['koleksi100', 'star', 'Koleksi 100', 'Simpan 100 kata', () => countedVocab(null).length >= 100],
   ['kutubuku', 'book', 'Kutu Buku', 'Balik 20 halaman', () => db.stat.page >= 20],
   ['berani', 'mic', 'Berani Ngomong', 'Selesaikan 1 tantangan', () => db.stat.speak >= 1],
   ['perfect', 'target', 'Sempurna', 'Skor kalimat 95%+', () => db.stat.perfect >= 1],
@@ -221,7 +223,7 @@ const BADGES = [
 /* progres lencana terkunci: data sama dengan syaratnya; hanya tampilan */
 const badgeProgress = id => {
   const st = db.stat || {};
-  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, LV5_XP] }[id];
+  const m = { kepo1: [() => countedVocab(null).length, 1], kolektor: [() => countedVocab(null).length, 10], koleksi50: [() => countedVocab(null).length, 50], koleksi100: [() => countedVocab(null).length, 100], kutubuku: [() => st.page, 20], berani: [() => st.speak, 1], perfect: [() => st.perfect, 1], boss: [() => st.rem, 5], otak: [() => st.flash, 10], fire3: [() => streak(), 3], fire7: [() => streak(), 7], lv5: [() => db.xp, LV5_XP] }[id];
   if (!m) return null;
   return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
 };
