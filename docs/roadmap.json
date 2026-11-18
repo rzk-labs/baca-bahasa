@@ -167,7 +167,7 @@
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat."
     },
     {
       "no": 24,
@@ -241,6 +241,33 @@
     }
   ],
   "backlog": [
+    {
+      "no": 144,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 1 retensi: kartu 'Lanjut dari halaman X · ±N menit' di atas Home (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Ukur klik lanjut baca & balik_h2 lewat /hitung. Satu perubahan per minggu. Naikkan C di sw.js."
+    },
+    {
+      "no": 145,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 2 retensi: tombol 'Ulang 3 kata' satu ketuk di Home (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Hanya bila >=3 kata tersimpan; tanpa kata 'tertinggal'. Ukur ulangan selesai per pengguna. Kerjakan setelah #144."
+    },
+    {
+      "no": 146,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 3 retensi: bar tonggak 'X dari 50 kata' + lencana kata ke-50/100 (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Usul Sinta & Ilham; bukti belum jelas, jadi uji lewat balik_h7. Kerjakan setelah #145."
+    },
     {
       "no": 142,
       "peran": "developer",
