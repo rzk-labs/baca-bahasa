@@ -406,12 +406,17 @@ async function finishOut(wipe) {
   toast(wipe ? 'Kamu sudah keluar. HP ini sudah dibersihkan.' : 'Kamu sudah keluar. Progres tetap ada di HP ini.');
   setTab(db.tab || 'rak');
 }
+function wipeCount() {
+  const b = (db.books || []).length, k = (db.vocab || []).length;
+  return { b, k, t: b || k ? `${b} buku & ${k} kata` : '' };
+}
 function openLogout() {
+  const wc = wipeCount();
   openSheet(`<div class="sh-head"><h2>Keluar dari akun?</h2>${closeBtn}</div>
     <div class="mut sm">Progresmu disinkron dulu sebelum keluar.</div>
     <div class="set-row set-acts"><button class="pri full" id="loStay" type="button">Keluar saja</button><div class="mut sm center">Buku, kata, dan XP tetap ada di HP ini.</div>
-    <button class="sec full" id="loWipe" type="button">Keluar & bersihkan HP</button><div class="mut sm center">Buku, kata, dan XP di HP ini dihapus. Tetap aman di akunmu.</div></div>
-    <div class="sm" id="loWarn" role="alert" style="margin-top:10px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden>Sinkron gagal. Kalau dibersihkan, data yang belum tersimpan di akun bisa hilang permanen.<div class="set-acts" style="margin-top:8px"><button class="sec full" id="loForce" type="button">Tetap bersihkan & keluar</button><button class="sec full" id="loBack" type="button">Batal</button></div></div>`, 'Keluar dari akun');
+    <button class="sec full" id="loWipe" type="button">Keluar & bersihkan HP</button><div class="mut sm center" id="loCount">${wc.t ? `Menghapus ${wc.t} dari HP ini. Semuanya sudah ada di akunmu.` : 'HP ini sudah kosong.'}</div></div>
+    <div class="sm" id="loWarn" role="alert" style="margin-top:10px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden>Sinkron gagal. ${wc.t ? `${wc.t} di HP ini bisa hilang permanen kalau belum masuk akun.` : 'Data yang belum tersimpan di akun bisa hilang permanen.'}<div class="set-acts" style="margin-top:8px"><button class="sec full" id="loForce" type="button">Tetap bersihkan & keluar</button><button class="sec full" id="loBack" type="button">Batal</button></div></div>`, 'Keluar dari akun');
   const busy = on => $$('#loStay,#loWipe,#loForce,#loBack').forEach(b => b.disabled = on);
   $('#loStay').onclick = async () => { busy(true); $('#loStay').textContent = 'Menyinkron…'; try { await runSync({ force: true, manual: true }); } catch (e) { } await finishOut(false); };
   $('#loWipe').onclick = async () => {
