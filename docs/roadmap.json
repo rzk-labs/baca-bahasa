@@ -247,7 +247,7 @@
       "prioritas": "P0",
       "nama": "Logo Keepo kepotong di header: chip XP disembunyikan di HP + Home mulai dari atas (#1291)",
       "dokumen": "docs/spesifikasi-home-awal-kepotong-1291.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1296)",
       "catatan": "Mockup: docs/mockup-1291.html. Hapus aturan #pXp inline-flex (style.css:1056), cek 320-430px. Lalu scroll reset Home + gambar utuh. Naikkan versi C di sw.js."
     },
     {
@@ -256,7 +256,7 @@
       "prioritas": "P0",
       "nama": "Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP' + logo header tidak kepotong (#1293)",
       "dokumen": "docs/pm-keluar-akun-1293.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1298)",
       "catatan": "Mockup: docs/mockup-1293.html. Ubah cloud.js, style.css, ui.js bila perlu; naikkan C di sw.js; jangan ubah api/. Uji 320/360/390/430px."
     },
     {
@@ -265,7 +265,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: detail tugas jadi pop up + loading saat status pindah (#1283)",
       "dokumen": "docs/desain-hq-tiket-popup.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1300)"
     },
     {
       "no": 141,

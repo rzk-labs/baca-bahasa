@@ -489,9 +489,19 @@ function setTab(t) {
   $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP seumur hidup"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Pengaturan</span><span class="hbl">Atur</span></button>`;
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: viewSosialAman })[t]();
-  if (t === 'rak') setTimeout(cadNote, 2500);
+  requestAnimationFrame(() => window.scrollTo(0, 0));
+  if (t === 'rak') { guestBanner(); setTimeout(cadNote, 2500); }
+}
+/* setelah keluar akun: Home menampilkan status tamu + tombol Masuk */
+function guestBanner() {
+  if (db.acct || !db.keluar || typeof API === 'undefined' || !API) return;
+  const v = $('#view'); if (!v) return;
+  const d = document.createElement('div'); d.className = 'guest-card';
+  d.innerHTML = '<div><b>Kamu lagi tamu</b><div class="mut sm">Belum masuk akun. Progres hanya di HP ini.</div></div><button class="pri" id="gMasuk" type="button">Masuk</button>';
+  v.insertBefore(d, v.firstChild); $('#gMasuk').onclick = () => openAccount('masuk');
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? spot(mood) : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
