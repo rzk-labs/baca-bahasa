@@ -1,5 +1,11 @@
 [
   {
+    "n": 1298,
+    "judul": "[peta 143] Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP'",
+    "poin": "Tombol Keluar sekarang menawarkan dua pilihan: keluar saja, atau keluar dan bersihkan HP.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1296,
     "judul": "[peta 142] Logo Keepo tak kepotong di HP + Home mulai dari atas",
     "poin": "Logo Keepo sekarang selalu utuh di HP, tidak kepotong lagi.",
@@ -171,12 +177,6 @@
     "n": 1219,
     "judul": "Streak & XP harian pakai tanggal lokal (WITA), bukan UTC",
     "poin": "Streak dan XP harian sekarang pakai tanggal di HP, bukan jam dunia.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1197,
-    "judul": "Kartu ulang: tombol speaker di depan kartu + tawarkan bunyi otomatis",
-    "poin": "Tombol speaker di kartu ulang sekarang pakai ikon buatan sendiri, sesuai gaya brand.",
     "tgl": "2026-11-16"
   }
 ]

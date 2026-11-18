@@ -492,8 +492,16 @@ function setTab(t) {
   try { history.scrollRestoration = 'manual'; } catch (e) {}
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: viewSosialAman })[t]();
-  window.scrollTo(0, 0); requestAnimationFrame(() => window.scrollTo(0, 0));
-  if (t === 'rak') setTimeout(cadNote, 2500);
+  requestAnimationFrame(() => window.scrollTo(0, 0));
+  if (t === 'rak') { guestBanner(); setTimeout(cadNote, 2500); }
+}
+/* setelah keluar akun: Home menampilkan status tamu + tombol Masuk */
+function guestBanner() {
+  if (db.acct || !db.keluar || typeof API === 'undefined' || !API) return;
+  const v = $('#view'); if (!v) return;
+  const d = document.createElement('div'); d.className = 'guest-card';
+  d.innerHTML = '<div><b>Kamu lagi tamu</b><div class="mut sm">Belum masuk akun. Progres hanya di HP ini.</div></div><button class="pri" id="gMasuk" type="button">Masuk</button>';
+  v.insertBefore(d, v.firstChild); $('#gMasuk').onclick = () => openAccount('masuk');
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? spot(mood) : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
