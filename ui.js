@@ -256,6 +256,7 @@ function award(n, stat, pk0, si) {
     if (sk0 in day && idx <= day[sk0]) return;
     day[sk0] = idx;
   }
+  if (stat === 'page') { try { if (window.kepoMark) window.kepoMark('baca'); } catch (e) { } }
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   if (n && stat) { db.xpSrc = db.xpSrc || {}; db.xpSrc[stat] = (db.xpSrc[stat] || 0) + n; } /* asal XP, hanya untuk tampilan */
   if (stat === 'page') {

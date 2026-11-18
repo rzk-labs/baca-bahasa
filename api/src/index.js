@@ -62,13 +62,21 @@ export default {
         const b = await body(req), D = /^\d{4}-\d{2}-\d{2}$/;
         const day = String(b.day || ''), first = String(b.first || ''), src = String(b.src || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 20) || 'langsung';
         if (!D.test(day) || !D.test(first) || first > day) return json(req, { ok: false }, 400);
+        // Penanda aktivasi (sekali per HP): 'baca' / 'kata'; akt = kedua penanda selesai di hari pertama. Tidak menambah hitungan buka.
+        if (b.mark === 'baca' || b.mark === 'kata') {
+          const cb = b.mark === 'baca' ? 1 : 0, ck = b.mark === 'kata' ? 1 : 0, ca = b.akt === true ? 1 : 0;
+          await env.DB.prepare('INSERT INTO hitung (day, first, src, n, baca, kata, akt) VALUES (?,?,?,0,?,?,?) ON CONFLICT(day, first, src) DO UPDATE SET baca = baca + ?, kata = kata + ?, akt = akt + ?').bind(day, first, src, cb, ck, ca, cb, ck, ca).run();
+          return json(req, { ok: true });
+        }
         await env.DB.prepare('INSERT INTO hitung (day, first, src, n) VALUES (?,?,?,1) ON CONFLICT(day, first, src) DO UPDATE SET n = n + 1').bind(day, first, src).run();
         return json(req, { ok: true });
       }
       if (p === '/hitung' && req.method === 'GET') {
-        const r = await env.DB.prepare("SELECT day, SUM(n) total, SUM(CASE WHEN first = day THEN n ELSE 0 END) baru, SUM(CASE WHEN julianday(day) - julianday(first) = 1 THEN n ELSE 0 END) balik_h2 FROM hitung WHERE day >= date('now','-30 day') GROUP BY day ORDER BY day DESC").all();
+        const r = await env.DB.prepare("SELECT day, SUM(n) total, SUM(CASE WHEN first = day THEN n ELSE 0 END) baru, SUM(CASE WHEN julianday(day) - julianday(first) = 1 THEN n ELSE 0 END) balik_h2, SUM(CASE WHEN julianday(day) - julianday(first) = 7 THEN n ELSE 0 END) balik_h7 FROM hitung WHERE day >= date('now','-30 day') GROUP BY day ORDER BY day DESC").all();
         const s = await env.DB.prepare("SELECT src, SUM(n) baru FROM hitung WHERE first = day GROUP BY src ORDER BY baru DESC").all();
-        return json(req, { hari: r.results, sumber_pengguna_baru: s.results });
+        // Per sumber (menurut hari pertama buka, 30 hari): baru, aktivasi, H2, H7.
+        const q = await env.DB.prepare("SELECT src, SUM(CASE WHEN first = day THEN n ELSE 0 END) baru, SUM(akt) aktivasi, SUM(baca) baca, SUM(kata) kata, SUM(CASE WHEN julianday(day) - julianday(first) = 1 THEN n ELSE 0 END) h2, SUM(CASE WHEN julianday(day) - julianday(first) = 7 THEN n ELSE 0 END) h7 FROM hitung WHERE first >= date('now','-30 day') GROUP BY src ORDER BY baru DESC").all();
+        return json(req, { hari: r.results, sumber_pengguna_baru: s.results, per_sumber: q.results });
       }
       if (p === '/signup' && req.method === 'POST') {
         const { username = '', password = '', nick = '' } = await body(req);

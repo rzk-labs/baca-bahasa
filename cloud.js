@@ -792,3 +792,17 @@ if (db.acct) runSync({ profile: true }).catch(() => { });
     localStorage.setItem('kepo.hitDay', day);
   } catch (e) { }
 })();
+/* Penanda aktivasi anonim: 'baca' (halaman pertama dibaca) & 'kata' (ketukan kata pertama), sekali per perangkat. Tanpa ID/IP/teks. Gagal kirim = diam. */
+window.kepoMark = function (m) {
+  try {
+    if ((m !== 'baca' && m !== 'kata') || localStorage.getItem('kepo.m.' + m)) return;
+    if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
+    const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+    const first = localStorage.getItem('kepo.first') || day, other = m === 'baca' ? 'kata' : 'baca', od = localStorage.getItem('kepo.m.' + other);
+    const akt = !!od && od === first && day === first; /* penanda kedua selesai di hari pertama = aktivasi */
+    const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '', mark: m, akt });
+    localStorage.setItem('kepo.m.' + m, day);
+    const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
+    if (!ok) fetch(API_PROD + '/hitung', { method: 'POST', body: data, keepalive: true }).catch(() => { });
+  } catch (e) { }
+};
