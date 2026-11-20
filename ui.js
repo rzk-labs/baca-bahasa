@@ -1278,6 +1278,7 @@ async function importFile(f, paksa) {
     if (err && err.batal) return toast('Impor dibatalin. Bisa coba lagi kapan aja.', 4000);
     if (err && err.telat) return toast('Gagal: kelamaan nyiapin file. Coba file .txt, atau sambungkan Wi-Fi lalu coba lagi.', 9000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
+    if (err && err.kode === 'scan') return kartuScan();
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
     if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
@@ -1289,6 +1290,13 @@ async function importFile(f, paksa) {
     toast(msg, 6000);
   }
   finally { if (imporBatal === me) imporBatal = null; }
+}
+function kartuScan() {
+  openSheet(`<div class="sh-head"><h2>Ini PDF scan: isinya gambar</h2>${closeBtn}</div>
+    <div class="scan-card"><p>Keepo belum bisa baca tulisan di dalam gambar. Komik biasanya begini.</p>
+    <ul><li>Cari versi <b>EPUB</b> atau <b>TXT</b>.</li><li>Atau ubah scan jadi teks lewat OCR gratis, lalu impor.</li><li>Contoh OCR gratis: Google Drive atau Adobe online.</li></ul></div>
+    <div class="row"><button class="pri" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
+  $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample'); if (x) x.click(); }, 150); } };
 }
 async function addBook(title, paras, lang, src, cov) {
   const id = 'b' + Date.now().toString(36);

@@ -292,7 +292,7 @@
       "prioritas": "P1",
       "nama": "Pesan PDF scan lebih membantu: kartu + cerita contoh + cara OCR (#1308)",
       "dokumen": "docs/riset-pdf-scan-komik.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1375)",
       "catatan": "Mockup: docs/mockup-1308.html. Ubah pesan di app.js:490 jadi kode 'scan', kartu di ui.js. Naikkan C di sw.js; uji 320-430px. Ukuran kecil (±0,5-1 hari)."
     },
     {

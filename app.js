@@ -534,7 +534,7 @@ async function parsePdf(buf, title) {
   const merged = [];
   for (const p of paras) { const last = merged[merged.length - 1]; if (last && !/[.!?:"”’。！？)]$/.test(last) && /^[\p{Ll}]/u.test(p)) merged[merged.length - 1] = last + ' ' + p; else merged.push(p); }
   const huruf = (merged.join('').match(/\p{L}/gu) || []).length;
-  if (!huruf || huruf / Math.max(1, pdf.numPages) < 40) throw new Error('PDF ini kelihatannya scan (gambar), jadi teksnya tak terbaca. Coba versi EPUB atau TXT-nya.');
+  if (!huruf || huruf / Math.max(1, pdf.numPages) < 40) { const e = new Error('PDF ini kelihatannya scan (gambar), jadi teksnya tak terbaca. Coba versi EPUB atau TXT-nya.'); e.kode = 'scan'; throw e; }
   return { title, paras: splitLong(merged) };
 }
 
