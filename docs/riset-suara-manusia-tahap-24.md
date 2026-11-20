@@ -26,21 +26,21 @@
 ## 2B. Suara Indonesia (tambahan 20 Nov 2026)
 | # | Kutipan | Sumber (tanggal) | Tema | Keepo menjawab? |
 |---|---|---|---|---|
-| 21 | "hal itu membuat saya jadi malas dan sulit untuk menyelesaikan bacaan tersebut" | [Goodreads Indonesia](https://www.goodreads.com/topic/show/2068329-bagaimana-cara-membaca-buku-bahasa-inggris-untuk-pemula) (3 Nov 2014) | Kamus bikin malas | Sebagian: arti langsung di bacaan; belum ada lanjut-dulu (#146) |
+| 21 | "hal itu membuat saya jadi malas dan sulit untuk menyelesaikan bacaan tersebut" | [Goodreads Indonesia](https://www.goodreads.com/topic/show/2068329-bagaimana-cara-membaca-buku-bahasa-inggris-untuk-pemula) (3 Nov 2014) | Kamus bikin malas | Sebagian: arti langsung di bacaan; belum ada lanjut-dulu (#147) |
 | 22 | "tidak masalah skip beberapa kata yang kurang dimengerti jika agak malas buka kamus" | Goodreads Indonesia, tautan sama (4 Nov 2014) | Boleh lewati kata | Sebagian: boleh tak mengetuk; belum ada tandai-lalu-lanjut |
 | 23 | "Karena saya banyakan baca ebook bahasa inggris, kamus yang saya pakai juga digital" | Goodreads Indonesia, tautan sama (3 Nov 2014) | Baca di layar | Ya: kamus ada di dalam bacaan |
 | 24 | "karena emang pegel kalo tiap kata susah dicari di kamus" | Goodreads Indonesia, tautan sama (9 Mei 2016) | Kamus bikin pegal | Ya: tanpa pindah aplikasi |
-| 25 | "capek sih apalagi waktu ceritanya lagi asyik-asyiknya, nggak bisa ngebut." | Goodreads Indonesia, tautan sama (9 Mei 2016) | Alur terputus | Sebagian: arti cepat, alur tetap terputus (#146) |
+| 25 | "capek sih apalagi waktu ceritanya lagi asyik-asyiknya, nggak bisa ngebut." | Goodreads Indonesia, tautan sama (9 Mei 2016) | Alur terputus | Sebagian: arti cepat, alur tetap terputus (#147) |
 | 26 | "baca pake google playbook dan download offline dictionarynya" | Goodreads Indonesia, tautan sama (11 Mei 2016) | HP & tanpa sinyal | Celah: arti kata offline belum teruji |
-| 27 | "Waktu pertama kali nekat beli novel dalam bahasa Inggris, jujur aku sempat nyesel" | [Lemon8, esai pribadi](https://www.lemon8-app.com/shanifiction/7162132198802358785?region=id) (4 Nov 2022) | Novel terlalu sulit | Celah: penunjuk tingkat kesulitan (#147) |
-| 28 | "Dulu aku sering berhenti setiap ketemu kata yang nggak ngerti, terus buka kamus. ... Bacanya lama banget dan malah kehilangan mood." | Lemon8, tautan sama (4 Nov 2022) | Kamus bikin hilang mood | Sebagian: #146 |
-| 29 | "Saya nekat baca endingnya dalam bahasa Inggris ala British.. dan langsung megap - megap ga ngerti." | [Blog pribadi](http://renslittlecorner.blogspot.com/2014/06/kenapa-saya-membaca-buku-bahasa-inggris.html) (10 Jun 2014) | Teks asli bikin kaget | Celah: #147 |
-| 30 | "Sejak saat itu saya semacam kapok." | Blog pribadi, tautan sama (10 Jun 2014) | Kapok sejak awal | Celah: awal harus mudah (#147) |
-| 31 | "Buat yang masih suka minder kalau lihat isi buku bahasa Inggris penuh teks, tenang, aku juga dulu begitu." | [Lemon8, esai pribadi](https://www.lemon8-app.com/asukamai/7200319474581635586?region=id) (15 Feb 2023) | Minder lihat teks | Sebagian: bagian pendek; #147 |
+| 27 | "Waktu pertama kali nekat beli novel dalam bahasa Inggris, jujur aku sempat nyesel" | [Lemon8, esai pribadi](https://www.lemon8-app.com/shanifiction/7162132198802358785?region=id) (4 Nov 2022) | Novel terlalu sulit | Celah: penunjuk tingkat kesulitan (#148) |
+| 28 | "Dulu aku sering berhenti setiap ketemu kata yang nggak ngerti, terus buka kamus. ... Bacanya lama banget dan malah kehilangan mood." | Lemon8, tautan sama (4 Nov 2022) | Kamus bikin hilang mood | Sebagian: #147 |
+| 29 | "Saya nekat baca endingnya dalam bahasa Inggris ala British.. dan langsung megap - megap ga ngerti." | [Blog pribadi](http://renslittlecorner.blogspot.com/2014/06/kenapa-saya-membaca-buku-bahasa-inggris.html) (10 Jun 2014) | Teks asli bikin kaget | Celah: #148 |
+| 30 | "Sejak saat itu saya semacam kapok." | Blog pribadi, tautan sama (10 Jun 2014) | Kapok sejak awal | Celah: awal harus mudah (#148) |
+| 31 | "Buat yang masih suka minder kalau lihat isi buku bahasa Inggris penuh teks, tenang, aku juga dulu begitu." | [Lemon8, esai pribadi](https://www.lemon8-app.com/asukamai/7200319474581635586?region=id) (15 Feb 2023) | Minder lihat teks | Sebagian: bagian pendek; #148 |
 | 32 | "Aku dari dulu males belajar, dan ga pede sama bahasa Inggris aku." | [Lemon8, posting Duolingo](https://www.lemon8-app.com/@ateecautydesu/7510430690786148881?region=id) (tanggal tak tampil) | Tidak pede | Sebagian: baca dulu, ngomong belakangan |
 | 33 | "Notifikasi burung Duolingo yang muncul seolah 'ngejar' aku itu kadang bikin merasa bersalah kalau belum belajar" | Lemon8, tautan sama (31 Mei 2025) | Pengingat menekan | Celah: pengingat Keepo harus lembut |
 | 34 | "Merasa aplikasinya mulai terlalu banyak iklan (untuk yang versi gratis)." (penulis mengutip alasan orang lain) | [Lemon8, posting Duolingo](https://www.lemon8-app.com/experience/ini-kenapa-aku-hapus-duolingo?region=id) (10 Nov 2024) | Iklan di versi gratis | Ya: Keepo tanpa iklan; bukti tipis, tak langsung |
-| 35 | "Duolingo ni best tapi semakin lama semakin susah lak dah." | Lemon8, tautan sama (tanggal tak tampil) | Makin susah | Sebagian: bacaan pilihan sendiri; #147 |
+| 35 | "Duolingo ni best tapi semakin lama semakin susah lak dah." | Lemon8, tautan sama (tanggal tak tampil) | Makin susah | Sebagian: bacaan pilihan sendiri; #148 |
 | 36 | "Namun, pola soal dan jawaban dalam Duolingo cenderung begitu-begitu saja dan tidak ada variasi dalam cara pembelajarannya." | [Mojok](https://mojok.co/terminal/cake-aplikasi-belajar-bahasa-inggris-saingan-berat-duolingo/) (11 Jan 2021) | Bosan, monoton | Ya: bacaan beda tiap buku |
 | 37 | "Kalau nggak dipakai juga lama-lama luntur keilmuannya." | [Mojok](https://mojok.co/terminal/suka-duka-menjadi-mahasiswa-dan-setelah-lulus-dari-jurusan-sastra-jepang/) (7 Agu 2021) | Lupa kalau tak dipakai | Sebagian: ulang kata lama; belum teruji |
 | 38 | "Sekali lagi, hubungan dengan bahasa Jepang itu susah-susah gampang." | Mojok, tautan sama (7 Agu 2021) | Susah-susah gampang | Belum jelas: terlalu umum |
@@ -90,8 +90,8 @@ Catatan: #19-20 ada di halaman yang saya baca sebagai ulasan ekstensi Language R
 | H6. Pengingat/streak menekan bikin menjauh | Sebagian terbukti | #33 (1 kutipan Indonesia) |
 
 ## 5C. Tiga masalah teratas (jadi tugas)
-- Kamus memutus alur: tandai kata, lanjut baca, lihat nanti. Backlog #146.
-- Bacaan terlalu sulit di awal: penunjuk tingkat + saran bagian mulai. Backlog #147.
+- Kamus memutus alur: tandai kata, lanjut baca, lihat nanti. Backlog #147.
+- Bacaan terlalu sulit di awal: penunjuk tingkat + saran bagian mulai. Backlog #148.
 - Pengingat menekan: cek nada pengingat Keepo. Belum jadi tugas; tunggu data manusia.
 
 ## 6. Batas bukti
@@ -118,4 +118,4 @@ Catatan: #19-20 ada di halaman yang saya baca sebagai ulasan ekstensi Language R
 - Founder posting ke 3 kanal; target 5 orang menjawab. Naskah: `docs/naskah-wawancara-pengguna.md`.
 - Gabungkan jawaban dengan 41 kutipan ini; hitung ulang tema teratas.
 - Tahap 24 tetap draft: aturan fase 2 butuh ≥20 masukan manusia Keepo.
-- Mockup usulan #146/#147: `docs/mockup-1353.html`.
+- Mockup usulan #147/#148: `docs/mockup-1353.html`.

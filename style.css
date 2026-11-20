@@ -786,6 +786,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .wk-g div{display:flex;flex-direction:column;min-width:0}
 .wk-g b{font-size:24px;line-height:28px}
+.wk-n{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .wk-g span{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 /* teks sistem besar (#740): tombol sheet boleh 2 baris, min 44px, tak keluar layar */
@@ -852,7 +853,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #1020: kartu buku tamat lebih lega & ringkas */
 #hero.hero-done{padding:14px}
 #hero.hero-done .hero-act{margin-top:10px}
-.fb-acts{display:block}.fb-acts .pri{width:100%}
+.fb-acts{display:flex;flex-direction:column;gap:12px}.fb-acts button{flex:0 0 auto;width:100%;min-height:44px;margin:0}
 .fb-sec{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
 .fb-sec .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
 .fb-next{padding:10px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
@@ -1057,7 +1058,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:340px){#pStreak,#pXp{padding:0 5px;font-size:var(--fs-min)}#hdx #set{min-width:40px;padding:0 4px;font-size:12px}}
 .badge .bp{display:block;font-size:var(--fs-min);line-height:14px;font-weight:700;margin-top:6px}
 .badge .bar{height:4px;margin-top:3px}
-.badge.off .bar{background:#351E28}.badge.off .bar i{background:#E9F056}
+.badge.off .bar{background:#D7EFFF}.badge.off .bar i{background:#351E28}
 .bgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3)}
 .bgrid .badge{width:auto;min-width:0;padding-right:10px}
 .badge.off[role=button]{cursor:pointer}
@@ -1091,7 +1092,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .badge .got{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px 2px 6px;border-radius:9999px;background:#351E28;color:#E9F056;font-size:12px;line-height:16px;font-weight:800;max-width:100%}
 .badge .got .ck{flex:none;width:12px;height:12px;stroke-width:3}
 .badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
-.badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
+.badge.off .bar{height:8px;border-radius:9999px;background:#D7EFFF;box-shadow:inset 0 0 0 1px rgba(53,30,40,.35);margin-top:6px}.badge.off .bar i{background:#351E28;border-radius:9999px}
+.goal-ok{display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}.goal-ok .ck{width:14px;height:14px;stroke-width:3}
 .prem-badge{display:inline-block;vertical-align:middle;background:var(--ink);color:var(--hl);font:700 12px/1 var(--font-ui,Inter,sans-serif);padding:4px 10px;border-radius:999px;white-space:nowrap}
 .hl-prem{background:#E9F056;color:#351E28;padding:0 6px;border-radius:4px;font-weight:700}
 /* Home pemula (#1107): hero kecil, tombol utama terlihat tanpa scroll, langkah 1 = tombol */
@@ -1206,7 +1208,14 @@ ol.steps3 b{min-width:0}
 .fr-stats div{align-items:center;justify-content:flex-start;min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
+/* #1349 bar bawah reader HP: tombol Selesai/Buku baru tak mepet tepi, tinggi sentuh >=44px */
+.rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
+.rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
+/* #1341 jalur bar lencana terkunci: terang/netral (0% tampak kosong), isian tetap Wasabi */
+.badge.off .bar{background:rgba(53,30,40,.1);box-shadow:inset 0 0 0 1.5px var(--color-text-muted);overflow:hidden}
+.badge.off .bar i{background:#E9F056;box-shadow:inset 0 0 0 1.5px #351E28}
+[data-theme=dark] .badge.off .bar,[data-theme=night] .badge.off .bar{background:rgba(250,247,240,.12)}
 /* #1335 label posisi bilah atas: HP <=430px pakai N/N (angka tabular); jarak >=8px ke Dengar; label menyusut ellipsis, tombol tidak */
 .rchap .rcs{display:none;font-variant-numeric:tabular-nums}
 .rtitle .rchap{min-width:44px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
