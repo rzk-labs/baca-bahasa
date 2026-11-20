@@ -2,7 +2,7 @@
 
 ## Intinya
 - Semua dokumen tim ada di sini, dikelompokkan per peran. Tidak ada yang terlewat.
-- Dokumen Keepo HQ punya bagian sendiri (nomor 1).
+- Dokumen Keepo HQ punya bagian sendiri (nomor 1) dan folder sendiri: `docs/hq/`.
 - Arah produk di `roadmap.json`; aturan tim di `TIM.md`. Mockup: `mockup-<nomor-issue>.html`.
 
 ## Daftar bagian
@@ -17,28 +17,28 @@
 
 ## 1. Keepo HQ
 Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tombolnya.
-- [peta-hq-rapi](pm-peta-hq-rapi.md)
-- [mockup-ganda-hq](pm-mockup-ganda-hq.md)
-- [qa-di-kuota-hq](pm-qa-di-kuota-hq.md)
-- [rapikan-hasil-papan-siap-cek](pm-rapikan-hasil-papan-siap-cek.md)
-- [urutan-papan-1247](pm-urutan-papan-1247.md)
-- [papan-kolom-kosong-1212](pm-papan-kolom-kosong-1212.md)
-- [peta-riwayat-catatan](pm-peta-riwayat-catatan.md)
-- [hq-tiket-popup](desain-hq-tiket-popup.md)
-- [rencana-hq-mockup-langsung-1125](rencana-hq-mockup-langsung-1125.md)
-- [rencana-hq-mockup-depan-home-1173](rencana-hq-mockup-depan-home-1173.md)
-- [hq-brand-v9](spesifikasi-hq-brand-v9.md)
-- [hq-form-perintah-hp](spesifikasi-hq-form-perintah-hp.md)
-- [hq-judul-tugas-rapi](spesifikasi-hq-judul-tugas-rapi.md)
-- [hq-klik-cepat](spesifikasi-hq-klik-cepat.md)
-- [hq-mockup-persetujuan](spesifikasi-hq-mockup-persetujuan.md)
-- [hq-pengaturan-baca](spesifikasi-hq-pengaturan-baca.md)
-- [hq-setujui-massal](spesifikasi-hq-setujui-massal.md)
-- [hq-status-kartu-hasil](spesifikasi-hq-status-kartu-hasil.md)
-- [hq-tombol-perintah](spesifikasi-hq-tombol-perintah.md)
-- [hq-visual-loading](spesifikasi-hq-visual-loading.md)
-- [feedback-langsung-hq](spesifikasi-feedback-langsung-hq.md)
-- [papan-kosong-1132](spesifikasi-papan-kosong-1132.md)
+- [peta-hq-rapi](hq/pm-peta-hq-rapi.md)
+- [mockup-ganda-hq](hq/pm-mockup-ganda-hq.md)
+- [qa-di-kuota-hq](hq/pm-qa-di-kuota-hq.md)
+- [rapikan-hasil-papan-siap-cek](hq/pm-rapikan-hasil-papan-siap-cek.md)
+- [urutan-papan-1247](hq/pm-urutan-papan-1247.md)
+- [papan-kolom-kosong-1212](hq/pm-papan-kolom-kosong-1212.md)
+- [peta-riwayat-catatan](hq/pm-peta-riwayat-catatan.md)
+- [hq-tiket-popup](hq/desain-hq-tiket-popup.md)
+- [rencana-hq-mockup-langsung-1125](hq/rencana-hq-mockup-langsung-1125.md)
+- [rencana-hq-mockup-depan-home-1173](hq/rencana-hq-mockup-depan-home-1173.md)
+- [hq-brand-v9](hq/spesifikasi-hq-brand-v9.md)
+- [hq-form-perintah-hp](hq/spesifikasi-hq-form-perintah-hp.md)
+- [hq-judul-tugas-rapi](hq/spesifikasi-hq-judul-tugas-rapi.md)
+- [hq-klik-cepat](hq/spesifikasi-hq-klik-cepat.md)
+- [hq-mockup-persetujuan](hq/spesifikasi-hq-mockup-persetujuan.md)
+- [hq-pengaturan-baca](hq/spesifikasi-hq-pengaturan-baca.md)
+- [hq-setujui-massal](hq/spesifikasi-hq-setujui-massal.md)
+- [hq-status-kartu-hasil](hq/spesifikasi-hq-status-kartu-hasil.md)
+- [hq-tombol-perintah](hq/spesifikasi-hq-tombol-perintah.md)
+- [hq-visual-loading](hq/spesifikasi-hq-visual-loading.md)
+- [feedback-langsung-hq](hq/spesifikasi-feedback-langsung-hq.md)
+- [papan-kosong-1132](hq/spesifikasi-papan-kosong-1132.md)
 
 ## 2. Pegangan tim & peluncuran
 - [TIM](TIM.md) — peran, aturan, kuota
