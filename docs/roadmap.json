@@ -167,7 +167,7 @@
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat."
     },
     {
       "no": 24,
@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 146,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Pengaturan baca: mode 'Baca polos' tanpa garis bawah & tanda bantu (#1359)",
+      "dokumen": "docs/spesifikasi-baca-polos-1359.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1359.html. Ubah ui.js, style.css, sw.js (C kepo-v478→v479); db.plain default false, ikut #rst, matikan prafetch #458. Jangan ubah api/, prepHtml/bindPrep. Uji 320px, tema Kertas & Malam."
+    },
+    {
       "no": 150,
       "peran": "developer",
       "prioritas": "P1",
@@ -287,6 +296,33 @@
       "catatan": "Mockup: docs/mockup-1308.html. Ubah pesan di app.js:490 jadi kode 'scan', kartu di ui.js. Naikkan C di sw.js; uji 320-430px. Ukuran kecil (±0,5-1 hari)."
     },
     {
+      "no": 149,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 1 retensi: kartu 'Lanjut dari halaman X · ±N menit' di atas Home (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Ukur klik lanjut baca & balik_h2 lewat /hitung. Satu perubahan per minggu. Naikkan C di sw.js."
+    },
+    {
+      "no": 150,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 2 retensi: tombol 'Ulang 3 kata' satu ketuk di Home (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Hanya bila >=3 kata tersimpan; tanpa kata 'tertinggal'. Ukur ulangan selesai per pengguna. Kerjakan setelah backlog 149."
+    },
+    {
+      "no": 151,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Eksperimen 3 retensi: bar tonggak 'X dari 50 kata' + lencana kata ke-50/100 (#1323)",
+      "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1323.html. Usul Sinta & Ilham; bukti belum jelas, jadi uji lewat balik_h7. Kerjakan setelah backlog 150."
+    },
+    {
       "no": 142,
       "peran": "developer",
       "prioritas": "P0",
@@ -327,7 +363,7 @@
       "prioritas": "P0",
       "nama": "Home memuat: rak lokal dulu, batas 8 detik + Coba lagi, sembunyikan chip 0 hari, perbaiki nama bkState, toast sekali (#1251)",
       "dokumen": "docs/riset-layar-memuat-home.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1354)"
     },
     {
       "no": 138,
@@ -1336,7 +1372,7 @@
       "prioritas": "P1",
       "nama": "Baca tanpa putus: tandai kata sambil lanjut, lihat arti nanti (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1363)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: 7 kutipan Indonesia bilang buka kamus tiap kata bikin capek & hilang mood. Tambah 'Tandai & lanjut' di kartu arti; daftar tinjau di akhir bagian. Data lama aman. Naikkan versi C di sw.js."
     },
     {
@@ -1345,7 +1381,7 @@
       "prioritas": "P1",
       "nama": "Penunjuk tingkat kesulitan bacaan + saran bagian mulai (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1365)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: kutipan 'kapok', 'nyesel beli novel', 'minder' = bacaan terlalu sulit di awal. Hitung kata baru per halaman dari data yang ada; tampil di kartu buku saat impor. Naikkan versi C di sw.js."
     },
     {
@@ -1356,6 +1392,15 @@
       "dokumen": "docs/riset-app-store-42.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1337.html. Dikerjakan bila build 12 ditolak 4.2 atau untuk build berikutnya. Mulai dengan spesifikasi singkat (acuan: docs/riset-pengingat-baca-pwa.md); jangan tempel fitur kosong, harus berguna. Naikkan versi C di sw.js bila file app berubah."
+    },
+    {
+      "no": 152,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Minggu ini: 'halaman dibaca' tak membengkak karena baca ulang (#1350)",
+      "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
+      "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
     }
   ],
   "prioritas": [

@@ -138,8 +138,8 @@ const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; 
 // Minta penyimpanan permanen (diam-diam, tanpa pesan). Hasil disimpan di STORAGE_PERSISTED.
 let STORAGE_PERSISTED = null;
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then(ok => { STORAGE_PERSISTED = !!ok; }, () => {}); } catch (e) {}
-const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
+const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => { try { toast('Keepo terbuka di tab lain. Tutup tab itu, lalu coba lagi.', 8000); } catch (e) {} }; });
+const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('Memori HP penuh, progres belum tersimpan. Kosongkan ruang dulu.')); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const allFeedback = () => idb.then(d => new Promise((res, rej) => { const q = d.transaction('fb', 'readonly').objectStore('fb').getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }));
 const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim === false)); // data lama (tanpa kolom terkirim) dianggap sudah beres
@@ -202,11 +202,44 @@ function tokens(text, lang) {
 /* Kunci kata: harakat Arab & niqqud Ibrani diabaikan (berharakat = tanpa harakat). Kata lama tersimpan tak diubah. */
 const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '').replace(/[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ֑-ׇֽֿׁׂׅׄ]/g, '');
 /* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
-function perkiraanBaru(paras, lang) {
+function knownSet(lang) {
   const known = new Set();
   for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
   for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
   known.delete('');
+  return known;
+}
+/* Tingkat kesulitan (#148): kata baru per halaman (±250 kata), offline, dari kosakata yang ada. secs = bagian buku (array of array teks).
+   Hasil {l: ringan|sedang|berat, pg, m}: m = indeks bagian paling ringan untuk mulai (hanya bila berat & lebih ringan dari rata-rata), else -1. null bila belum ada kosakata/teks terlalu pendek. */
+function kesulitanBuku(secs, lang) {
+  const known = knownSet(lang);
+  if (!known.size) return null;
+  let N = 0, B = 0; const per = [];
+  for (const sec of secs || []) {
+    let n = 0, baru = 0;
+    for (const raw of sec) {
+      for (const t of tokens(String(raw).replace(/^[\u0001\u0002]/, ''), lang)) {
+        if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+        n++; if (!known.has(norm(t.t))) baru++;
+        if (n >= 1200) break;
+      }
+      if (n >= 1200) break;
+    }
+    per.push({ n, baru }); N += n; B += baru;
+  }
+  if (N < 20) return null;
+  const pg = Math.round(B * 250 / N);
+  const l = pg <= 10 ? 'ringan' : pg <= 25 ? 'sedang' : 'berat';
+  let m = -1;
+  if (l === 'berat' && per.length > 1) {
+    let best = -1, br = 2;
+    per.forEach((x, i) => { if (x.n >= 60 && x.baru / x.n < br) { br = x.baru / x.n; best = i; } });
+    if (best >= 0 && br < (B / N) * 0.85) m = best;
+  }
+  return { l, pg, m };
+}
+function perkiraanBaru(paras, lang) {
+  const known = knownSet(lang);
   if (!known.size) return null;
   let n = 0, baru = 0;
   for (const p of paras || []) {
@@ -705,7 +738,7 @@ async function altFill(q, sl, tl, signal) {
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
-function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfOk() { return !db.plain && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
 function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
 function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
 function pfStop() { pfPause(); PF.q = []; pfFlush(); }
