@@ -1264,7 +1264,7 @@
       "prioritas": "P0",
       "nama": "Kartu arti saat baca: semua arti & frasa tampil menonjol sebagai chip (#1330)",
       "dokumen": "docs/spesifikasi-arti-menonjol-1330.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1333)",
       "catatan": "Mockup: docs/mockup-1330.html. Ubah paintDict (ui.js) jadi chip besar bisa diketuk (alur #1106), tambah frasa dt=ex; data lama aman. Naikkan versi C di sw.js."
     },
     {
