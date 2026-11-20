@@ -1,5 +1,11 @@
 [
   {
+    "n": 1349,
+    "judul": "E-reader HP: tombol 'Selesai' di bar bawah tak mepet tepi kanan",
+    "poin": "Tombol \"Selesai\" di bar bawah reader sekarang punya jarak aman dari tepi layar.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1340,
     "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
     "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
@@ -171,12 +177,6 @@
     "n": 1234,
     "judul": "Perbaiki crash 'reading 0' (bahasa tak dikenal) + tab bawah 12px",
     "poin": "Buku berbahasa tak dikenal tidak lagi bikin layar baca macet.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1232,
-    "judul": "[peta 132] Kartu ulang: kata Lupa/Ragu muncul lagi di sesi sama, maks 2x",
-    "poin": "Kata yang kamu jawab Lupa atau Ragu sekarang muncul lagi di sesi yang sama.",
     "tgl": "2026-11-17"
   }
 ]
