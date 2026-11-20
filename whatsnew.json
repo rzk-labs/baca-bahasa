@@ -1,5 +1,11 @@
 [
   {
+    "n": 1360,
+    "judul": "Home Minggu ini: beda 'hari baca' vs streak dijelaskan, tak bikin bingung",
+    "poin": "Kartu Minggu ini sekarang bilang \"5 dari 7 hari baca\", bukan \"7 hari\".",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1355,
     "judul": "Sheet Tamat: tombol utama & 'Selesai' diberi jarak, kartu teks disembunyikan",
     "poin": "Layar Tamat: tombol 'Selesai' sekarang ada jarak, tidak gampang salah ketuk.",
@@ -171,12 +177,6 @@
     "n": 1238,
     "judul": "[peta 133] Keepo HQ: QA tampil di tiap peran + kartu total QA di Kuota",
     "poin": "Kuota di Keepo HQ sekarang punya kartu total QA.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1236,
-    "judul": "[peta 130] Keepo HQ HP: kolom papan kosong jangan melar, judul di atas",
-    "poin": "Papan tugas di HP: kolom kosong sekarang pendek dan rata atas.",
     "tgl": "2026-11-17"
   }
 ]
