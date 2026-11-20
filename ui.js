@@ -90,7 +90,7 @@ const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28
 const COVERS = {};
 async function muatCover() { let ada = false; for (const b of db.books) { if ((b.cov || b.covU) && !COVERS[b.id]) { try { const u = (b.covU && await getCoverU(b.id)) || (b.cov && await getCover(b.id)); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
 /* pisahkan penulis dalam kurung: 'こころ（夏目漱石）' -> {main:'こころ', au:'夏目漱石'} (hanya tampilan) */
-function splitTitle(t) { t = String(t || '').trim(); const m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); return m ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
+function splitTitle(t) { t = String(t || '').trim(); let m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); if (m) return { main: m[1], au: m[2].trim() }; m = t.match(/^(.*?\S)\s+[-–—]\s+(\S.*)$/); /* "Judul - Penulis": hanya bila ada spasi di kedua sisi tanda */ return m && m[2].length <= 40 ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
 function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34), i = c.search(/\s\S*$/); return (i > 12 ? c.slice(0, i) : c).replace(/[\s,;:\-–—]+$/, '') + '…'; }
 /* arti alternatif tanpa pengulangan arti utama (abaikan huruf besar/kecil, spasi, tanda baca); kosong = sembunyikan 'Bisa juga' */
 const altArti = (dict, main) => {
@@ -860,6 +860,11 @@ function heroTitle(t) {
   const p = splitTitle(t);
   return p.au ? `<span class="t-main">${esc(p.main)}</span> <span class="t-au">${esc(p.au)}</span>` : esc(p.main);
 }
+/* kartu rak: judul (maks 2 baris) & penulis di baris kecil terpisah */
+function shelfTitle(t) {
+  const p = splitTitle(t);
+  return `<div class="t" dir="auto" title="${esc(t)}">${esc(p.main)}</div>${p.au ? `<div class="au">${esc(p.au)}</div>` : ''}`;
+}
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
   return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
@@ -994,7 +999,7 @@ function viewRak() {
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
-    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
+    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
