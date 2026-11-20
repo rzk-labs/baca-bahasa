@@ -468,6 +468,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
 .wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
+.reader.plain .cols .w.saved:not(.sel),.reader.plain .cols .w.often:not(.saved):not(.sel){text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
 #wkenal[hidden]{display:none}

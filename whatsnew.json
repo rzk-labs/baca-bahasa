@@ -1,5 +1,11 @@
 [
   {
+    "n": 1359,
+    "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
+    "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1324,
     "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
     "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
@@ -171,12 +177,6 @@
     "n": 1253,
     "judul": "Perbaiki Home macet 'Memuat bukumu…': nama bkState bentrok + batas waktu",
     "poin": "Layar Home tidak lagi macet di \"Memuat bukumu…\".",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1250,
-    "judul": "Home saat memuat: kerangka rak + chip streak tak tampil '0 hari'",
-    "poin": "Home saat memuat sekarang tampil kerangka rak yang berdenyut pelan.",
     "tgl": "2026-11-17"
   }
 ]
