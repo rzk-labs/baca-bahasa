@@ -561,6 +561,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .bk-skel{display:flex;gap:12px;overflow:hidden}
 .bk-skel i{flex:1 1 0;min-width:84px;max-width:140px;aspect-ratio:2/3;border-radius:var(--radius-md);background:var(--color-surface-soft);animation:bkPulse 1.4s ease-in-out infinite}
 .bk-skel i:nth-child(2){animation-delay:.2s}.bk-skel i:nth-child(3){animation-delay:.4s}
+.bk-off{margin:10px 2px 0}.empty .bk-off{margin:10px auto 0}.bk-act{gap:8px;flex-wrap:wrap;margin-top:12px}.bk-act button,.empty .row button{min-height:44px}
 .bk-skel.still i{animation:none;opacity:.55}
 @keyframes bkPulse{0%,100%{opacity:.45}50%{opacity:1}}
 .pill.wait{color:var(--color-text-muted)}
