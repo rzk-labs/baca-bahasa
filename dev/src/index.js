@@ -263,6 +263,17 @@ async function api0(req, env, url) {
       })) : null,
     });
   }
+  if (p === '/beta' && req.method === 'GET') {
+    // Beta Nyata: baca angka anonim /hitung dari API app (hanya hitungan, tanpa ID). Gagal/kosong = data null.
+    const d = await memo('beta', 60000, async () => {
+      try {
+        const r = await fetch('https://kepo-api.rizkachoirunnisa0403.workers.dev/hitung', { headers: { accept: 'application/json' } });
+        return r.ok ? await r.json() : null;
+      } catch (e) { return null; }
+    });
+    if (!d) MEMO.delete('beta');
+    return json({ data: d && Array.isArray(d.per_sumber) ? { per_sumber: d.per_sumber } : null, diambil: new Date().toISOString() });
+  }
   if (p === '/hasil' && req.method === 'GET') {
     // Komentar repo sangat ramai. Awalnya 1 halaman; halaman 2-6 (600 komentar) hanya bila laporan tugas "Siap dicek" belum ketemu.
     const pgK = pg => memo('kom:' + pg, 20000, () => gh(env, `/repos/${REPO}/issues/comments?sort=created&direction=desc&per_page=100&page=${pg}`, { soft: true }));
@@ -293,6 +304,14 @@ async function api0(req, env, url) {
       body: JSON.stringify({ ref: 'main', inputs: { paksa: String(!!body.paksa) } }),
     });
     if (!r.ok) return json({ error: r.status === 403 ? 'Token GitHub belum punya izin Actions (Read and write)' : 'Gagal menjalankan PM (' + r.status + ')' }, 400);
+    return json({ ok: true });
+  }
+  if (p === '/uji' && req.method === 'POST') {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/kepo-pengguna.yml/dispatches`, {
+      method: 'POST', headers: { authorization: 'Bearer ' + env.GH_TOKEN, accept: 'application/vnd.github+json', 'user-agent': 'kepo-dev', 'content-type': 'application/json' },
+      body: JSON.stringify({ ref: 'main', inputs: { setelah_live: 'false' } }),
+    });
+    if (!r.ok) return json({ error: r.status === 403 ? 'Token GitHub belum punya izin Actions (Read and write)' : 'Gagal menjalankan tester (' + r.status + ')' }, 400);
     return json({ ok: true });
   }
   if (p === '/tasks' && req.method === 'GET') {

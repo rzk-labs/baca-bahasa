@@ -1,5 +1,83 @@
 [
   {
+    "n": 1360,
+    "judul": "Home Minggu ini: beda 'hari baca' vs streak dijelaskan, tak bikin bingung",
+    "poin": "Kartu Minggu ini sekarang bilang \"5 dari 7 hari baca\", bukan \"7 hari\".",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1355,
+    "judul": "Sheet Tamat: tombol utama & 'Selesai' diberi jarak, kartu teks disembunyikan",
+    "poin": "Layar Tamat: tombol 'Selesai' sekarang ada jarak, tidak gampang salah ketuk.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1349,
+    "judul": "E-reader HP: tombol 'Selesai' di bar bawah tak mepet tepi kanan",
+    "poin": "Tombol \"Selesai\" di bar bawah reader sekarang punya jarak aman dari tepi layar.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1340,
+    "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
+    "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1335,
+    "judul": "Header e-reader HP: 'Bagian 12 dari 12' tak tabrak tombol Dengar",
+    "poin": "Di HP, posisi bacaan kini tampil \"12/12\", tidak menabrak tombol Dengar lagi.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1333,
+    "judul": "[peta 144] Kartu arti: semua arti & frasa tampil sebagai chip menonjol",
+    "poin": "Arti lain sekarang tampil sebagai tombol besar, langsung di kartu arti.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1318,
+    "judul": "Kartu Level: bar progres + \"64/100 XP\" satu baris, tak pecah",
+    "poin": "Kartu Level di Profil kini rapi: angka besar, bar tipis, \"64/100 XP\" satu baris.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1306,
+    "judul": "Home: judul & penulis buku terpisah jelas + statistik Profil selebar layar",
+    "poin": "Di Home, nama penulis buku sekarang selalu di baris sendiri, tidak nempel judul.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1302,
+    "judul": "[peta 141] Ukur beta nyata (2/2): halaman Beta Nyata di Keepo HQ",
+    "poin": "Keepo HQ punya menu baru \"Beta Nyata\": angka baru, aktivasi, hari ke-2, hari ke-7.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1300,
+    "judul": "[peta 140] Keepo HQ: detail tugas jadi pop up + loading saat pindah status",
+    "poin": "Di Keepo HQ, ketuk tugas sekarang membuka pop up, bukan pindah halaman.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1309,
+    "judul": "Cerita contoh Mandarin (HSK 2-3) supaya pembelajar Mandarin bisa coba",
+    "poin": "Sekarang ada cerita contoh Mandarin, jadi pembelajar Mandarin bisa langsung coba.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1298,
+    "judul": "[peta 143] Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP'",
+    "poin": "Tombol Keluar sekarang menawarkan dua pilihan: keluar saja, atau keluar dan bersihkan HP.",
+    "tgl": "2026-11-18"
+  },
+  {
+    "n": 1296,
+    "judul": "[peta 142] Logo Keepo tak kepotong di HP + Home mulai dari atas",
+    "poin": "Logo Keepo sekarang selalu utuh di HP, tidak kepotong lagi.",
+    "tgl": "2026-11-18"
+  },
+  {
     "n": 1289,
     "judul": "[peta 141] Ukur beta nyata (1/2): penanda aktivasi & H7 di /hitung",
     "poin": "Keepo kini mencatat diam-diam: pengguna baru sudah baca dan sudah ketuk kata.",
@@ -100,83 +178,5 @@
     "judul": "[peta 133] Keepo HQ: QA tampil di tiap peran + kartu total QA di Kuota",
     "poin": "Kuota di Keepo HQ sekarang punya kartu total QA.",
     "tgl": "2026-11-17"
-  },
-  {
-    "n": 1236,
-    "judul": "[peta 130] Keepo HQ HP: kolom papan kosong jangan melar, judul di atas",
-    "poin": "Papan tugas di HP: kolom kosong sekarang pendek dan rata atas.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1234,
-    "judul": "Perbaiki crash 'reading 0' (bahasa tak dikenal) + tab bawah 12px",
-    "poin": "Buku berbahasa tak dikenal tidak lagi bikin layar baca macet.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1232,
-    "judul": "[peta 132] Kartu ulang: kata Lupa/Ragu muncul lagi di sesi sama, maks 2x",
-    "poin": "Kata yang kamu jawab Lupa atau Ragu sekarang muncul lagi di sesi yang sama.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1229,
-    "judul": "E-reader: tombol 'Tandai di sini' terlihat + 'Lanjut dari hal. X'",
-    "poin": "Ada tombol penanda di bawah layar baca, jadi gampang ditemukan.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1226,
-    "judul": "[peta 116] Tombol 'Arti ini salah?' di kartu arti: arti alternatif",
-    "poin": "Kartu arti kini punya tombol \"Terjemahkan ulang\" kalau arti terasa salah.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1220,
-    "judul": "Home: tiga angka XP diberi label jelas + 'mnt' jadi 'menit'",
-    "poin": "Home sekarang jelas: \"XP hari ini\", \"XP menuju Level berikutnya\", dan \"Total XP seumur hidup\".",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1213,
-    "judul": "Home ikut segar setelah buku dipulihkan dari akun + status memuat",
-    "poin": "Setelah login, Home langsung ikut menampilkan buku yang dipulihkan dari akun.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1211,
-    "judul": "Teks kecil 10-11px di HP dinaikkan jadi minimal 12px",
-    "poin": "Semua tulisan kecil di HP sekarang minimal 12, jadi lebih enak dibaca.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1201,
-    "judul": "Ingat 'Lihat cara baca' + Profil: lencana tak dobel, label jelas",
-    "poin": "'Lihat cara baca' sekali diketuk, kartu berikutnya langsung tampil cara bacanya.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1199,
-    "judul": "Home & e-reader: persen sama, 'Minggu ini' ikut naik, kartu tak mepet",
-    "poin": "Persen baca di Home dan di halaman baca kini sama, juga setelah balik.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1219,
-    "judul": "Streak & XP harian pakai tanggal lokal (WITA), bukan UTC",
-    "poin": "Streak dan XP harian sekarang pakai tanggal di HP, bukan jam dunia.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1197,
-    "judul": "Kartu ulang: tombol speaker di depan kartu + tawarkan bunyi otomatis",
-    "poin": "Tombol speaker di kartu ulang sekarang pakai ikon buatan sendiri, sesuai gaya brand.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1203,
-    "judul": "Warna nada pinyin: bukan cuma warna + legenda nada 1-4 di kartu",
-    "poin": "Pinyin di kartu kini punya garis bawah beda tiap nada, bukan cuma warna.",
-    "tgl": "2026-11-16"
   }
 ]
