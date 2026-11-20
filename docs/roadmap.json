@@ -1309,7 +1309,7 @@
       "prioritas": "P1",
       "nama": "Baca tanpa putus: tandai kata sambil lanjut, lihat arti nanti (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1363)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: 7 kutipan Indonesia bilang buka kamus tiap kata bikin capek & hilang mood. Tambah 'Tandai & lanjut' di kartu arti; daftar tinjau di akhir bagian. Data lama aman. Naikkan versi C di sw.js."
     },
     {

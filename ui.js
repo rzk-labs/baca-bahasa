@@ -2138,12 +2138,25 @@ function dismissTip() { if (tipDone) return; tipDone = true; const n = tipStepNo
 function tipTurn() { if (tipOn() && ++tipN >= 3) dismissTip(); }
 /* indeks kalimat pertama yang mulai di halaman p (dari RD.ss) */
 function firstSent(p) { const ss = RD.ss || [], i = ss.findIndex(x => x.pg >= p); return i < 0 ? ss.length : i; }
+/* #1363 kata yang ditandai sambil baca, hanya di memori sesi (tak mengubah data tersimpan) */
+const MARKS = [];
+function marksReview(b, pos) {
+  const mine = MARKS.filter(m => m.bid === b.id && m.pos === pos);
+  for (const m of mine) MARKS.splice(MARKS.indexOf(m), 1);
+  const rows = mine.map(m => db.vocab.find(v => sameVocab(v, m.lang, m.w))).filter(Boolean);
+  if (!rows.length || !$('#sheet').classList.contains('hide')) return;
+  const list = rows.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>arti nyusul</i>'}</div></div></div>`).join('');
+  openSheet(`<div class="sh-head"><span class="stepchip">Tinjau kata</span>${closeBtn}</div>
+    <h2>${rows.length} kata kamu tandai tadi</h2><p class="mut sm">Sudah tersimpan di tab Kata. Intip artinya, atau langsung lanjut.</p>
+    ${list}${rows.length > 8 ? `<p class="mut sm">+${rows.length - 8} kata lainnya ada di tab Kata.</p>` : ''}
+    <div class="row" style="margin-top:12px"><button class="pri full" data-close style="min-height:48px">Lanjut baca</button></div>`, 'Tinjau kata');
+}
 function turn(d) {
   const b = book(); closeSheet(); const was = LIS.on && !!db.lisAuto; stopListenPage();
   const np = RD.page + d;
   const resume = () => { if (!was) return; const id = ++LIS.id; LIS.on = true; setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400); };
   if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold(); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
-  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); }
+  if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; const op = b.pos; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); setTimeout(() => marksReview(b, op), 150); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { if (b.doneAt) setTab('rak'); else finishBook(b); }
   else toast('Ini halaman pertama.');
@@ -2228,7 +2241,7 @@ async function onWord(el, lastEl) {
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="walt" id="walt"></div>
-    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
+    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="sec" id="wtanda" type="button">Tandai &amp; lanjut</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
     <div class="wact2"><button class="ghost" data-close id="wdone">Selesai</button><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`, 'Arti kata');
   const kenalLbl = () => isKenal(b.lang, word) ? `${ico('bmcheck')} Belum kenal` : 'Sudah kenal';
   const updKenal = () => { const k = $('#wkenal'); if (!k) return; k.hidden = isSaved() || isNama(b, word); k.innerHTML = kenalLbl(); updHafal(); };
@@ -2457,6 +2470,17 @@ async function onWord(el, lastEl) {
     vib(10); sfx('ding');
     mark(w, true);
     $('#wsave').innerHTML = saveLbl(); updNama(); award(2, 'save'); toast(r ? 'Tersimpan di tab Kata' : 'Lagi offline, arti nyusul ya', r ? 3200 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(b.lang, w) });
+  };
+  /* #1363 Tandai & lanjut: pakai alur Simpan yang sama (XP & hitungan kata tak dobel), kartu tertutup, posisi baca tetap */
+  const updTanda = () => { const t = $('#wtanda'); if (t) t.hidden = isSaved() || isNama(b, word); };
+  updTanda(); const wsv0 = $('#wsave'); if (wsv0) new MutationObserver(updTanda).observe(wsv0, { childList: true, attributes: true, attributeFilter: ['hidden'] });
+  $('#wtanda').onclick = async () => {
+    const t = $('#wtanda'); if (t.disabled) return; t.disabled = true;
+    const w = word, lang = b.lang, pos = b.pos;
+    try { await $('#wsave').onclick(); } finally { if (t.isConnected) t.disabled = false; }
+    if (!db.vocab.some(v => sameVocab(v, lang, w))) return;
+    if (!MARKS.some(m => m.bid === b.id && m.pos === pos && m.lang === lang && m.w.toLowerCase() === w.toLowerCase())) MARKS.push({ bid: b.id, pos, lang, w });
+    closeSheet();
   };
   $('#wnext').onclick = () => showSentence(word, sent, sIdx, sEl);
 }
