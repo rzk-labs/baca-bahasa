@@ -1381,7 +1381,7 @@
       "prioritas": "P1",
       "nama": "Penunjuk tingkat kesulitan bacaan + saran bagian mulai (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1365)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: kutipan 'kapok', 'nyesel beli novel', 'minder' = bacaan terlalu sulit di awal. Hitung kata baru per halaman dari data yang ada; tampil di kartu buku saat impor. Naikkan versi C di sw.js."
     },
     {

@@ -1,5 +1,11 @@
 [
   {
+    "n": 1365,
+    "judul": "[peta 148] Penunjuk tingkat kesulitan bacaan di kartu buku saat impor",
+    "poin": "Kartu buku di Home sekarang menampilkan tingkat bacaan: Ringan, Sedang, atau Berat.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1363,
     "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
     "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
@@ -171,12 +177,6 @@
     "n": 1260,
     "judul": "[peta 134] Kurangi muat ulang otomatis: update diam-diam, toast tanpa tombol",
     "poin": "Update app sekarang masuk diam-diam, layar tidak berganti sendiri saat dipakai.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1258,
-    "judul": "[peta 135] Kartu kata: 'Bisa juga' tak hilang + pesan saat offline",
-    "poin": "Bagian \"Bisa juga\" di kartu kata sekarang diambil ulang otomatis, tidak hilang lagi.",
     "tgl": "2026-11-17"
   }
 ]
