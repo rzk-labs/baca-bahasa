@@ -488,7 +488,7 @@ function viewSosialAman() {
   try {
     if (typeof viewSosial === 'function') { viewSosial(); return; }
   } catch (e) { console.warn('viewSosial gagal', e); }
-  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm" style="margin-top:6px">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
   $('#sosRetry').onclick = () => setTab('sosial');
   $('#sosHome').onclick = () => setTab('rak');
 }
@@ -1081,7 +1081,7 @@ function viewRak() {
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
     refreshPills();
-    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.'}</div>${bkState === 'fail' ? '<div class="row"><button class="sec" id="bkRetry" type="button">Coba lagi</button><button class="ghost" id="bkSkip" type="button">Lanjut tanpa menunggu</button></div>' : ''}`;
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.'}</div><div class="mut sm" style="margin:-8px 2px 12px">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="flex-wrap:wrap">${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}<button class="ghost" id="bkSkip" type="button">Lanjut tanpa menunggu</button></div>`;
     const sk = $('#bkSkip'); if (sk) sk.onclick = () => { bkSkip = true; bkState = ''; viewRak(); };
     const rt = $('#bkRetry'); if (rt) rt.onclick = () => {
       if (navigator.onLine === false || bkBusy) { toast(navigator.onLine === false ? 'Lagi offline. Sambungkan internet dulu, lalu coba lagi.' : 'Masih memuat, tunggu sebentar ya.', 4000); return; }
