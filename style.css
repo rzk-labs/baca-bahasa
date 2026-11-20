@@ -1147,7 +1147,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 .lang-hint{margin:6px 0 0}
 .try1{margin-top:0;margin-bottom:var(--space-3)}
 [data-theme=night] .hero-up{background:var(--hl);color:var(--ink)}
-body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 120px)}
+body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
 ol.steps3 b{flex:none;display:block;min-width:22px;background:none;color:var(--color-text);font:800 22px/1 var(--font-display);cursor:default}
@@ -1259,3 +1259,9 @@ ol.steps3 b{min-width:0}
 .wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
 /* #1375 Kartu PDF scan */
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
+/* #1390: judul rak terbaca penuh & bisa digulir melewati menu bawah */
+body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
+.hscroll:has(>.bk){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.bk .t{height:auto;min-height:38px;max-height:none;overflow:hidden}
+.bk .t .t-main{max-height:38px}
+.bk .au,.bk .m{position:relative;z-index:1}

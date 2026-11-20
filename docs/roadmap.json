@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 153,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home HP: judul buku rak terlihat + label bar bawah buku tamat 'Tamat · N/N' (#1390)",
+      "dokumen": "docs/mockup-1390.html",
+      "status": "siap dikerjakan",
+      "catatan": "Kode sudah diubah (style.css akhir file, ui.js bar reader, sw.js kepo-v498). Tinggal uji 320/360/390/430px, tema Kertas & Malam."
+    },
+    {
       "no": 146,
       "peran": "developer",
       "prioritas": "P0",
