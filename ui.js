@@ -620,6 +620,82 @@ function bindPrep(b, sec) {
   };
   addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
 }
+/* 'Siapkan offline' (#1367): arti kata baru bagian ini + berikutnya, maks 150 kata. Hanya gtx, satu permintaan sekali, jeda 400 ms, berhenti setelah 2 gagal beruntun. Simpan di IndexedDB per buku. */
+const OFF_GAP = 400, OFF_FAIL = 2;
+async function offWords(b) {
+  const secs = await pagesOf(b), from = Math.max(0, Math.min(b.pos || 0, secs.length - 1));
+  const saved = new Set((db.vocab || []).filter(v => v && v.lang === b.lang && v.w).map(v => String(v.w).trim().toLowerCase()));
+  const seen = new Set(), out = [];
+  for (const sec of secs.slice(from, from + 2)) for (const P of secParas(sec, b.lang)) { if (P.h) continue; for (const { s, i } of P.sents) { if (i < 0) continue; for (const t of tokens(s, b.lang)) {
+    if (!t.w) continue; const k = t.t.toLowerCase();
+    if (seen.has(k)) continue; seen.add(k);
+    if (isKataSampah(b.lang, t.t, { b, kenal: true, saved })) continue;
+    out.push(t.t);
+  } } }
+  return out;
+}
+function offHtml() {
+  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" hidden><i></i></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
+}
+async function bindOff(b) {
+  const box = $('#offBox'); if (!box) return;
+  const go = $('#offGo'), cancel = $('#offCancel'), del = $('#offDel'), msg = $('#offMsg'), bar = $('#offBar'), ttl = $('#offT');
+  const live = () => box.isConnected;
+  let run = 0, words = [];
+  const have = () => { const a = AO.id === b.id && AO.sl === b.lang && AO.tl === db.my ? AO.m : null; return q => !!(a && a.has(q)) || prepHas(b, q); };
+  await aoLoad(b.id); if (!live()) return;
+  const mine = () => AO.id === b.id && AO.sl === b.lang && AO.tl === db.my ? AO.m.size : 0;
+  const sync = () => {
+    if (run || !live()) return;
+    const n = mine(), h = have(), todo = words.filter(q => !h(q)).slice(0, PREP_MAX);
+    del.hidden = !AO.m.size || AO.id !== b.id;
+    ttl.textContent = n ? 'Siap dibaca offline' : 'Siapkan offline';
+    go.textContent = n ? 'Siapkan lagi' : 'Siapkan offline';
+    if (n) msg.textContent = `${n} kata siap offline. Kalimat utuh tetap butuh internet.`;
+    else msg.textContent = 'Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.';
+    if (!words.length) { go.disabled = true; if (!n) msg.textContent = 'Belum ada kata baru untuk diunduh.'; return; }
+    if (n >= AO_MAX) { go.disabled = true; msg.textContent = `Sudah penuh (${n} kata). Hapus dulu kalau mau mulai lagi.`; return; }
+    if (!todo.length) { go.disabled = true; go.textContent = 'Siap dibaca offline'; return; }
+    if (navigator.onLine === false) { go.disabled = true; msg.textContent = 'Lagi offline. Sambung internet dulu ya.'; return; }
+    if (navigator.connection && navigator.connection.saveData) { go.disabled = true; msg.textContent = 'Hemat Data lagi nyala. Matikan dulu kalau mau unduh.'; return; }
+    go.disabled = false; if (!n) msg.textContent =`${todo.length} kata menunggu. Pakai ±0,3 MB data, sebaiknya di Wi-Fi.`;
+  };
+  go.disabled = true; msg.textContent = 'Lagi cek kata baru…';
+  try { words = await offWords(b); } catch (e) { words = []; }
+  if (!live()) return; sync();
+  const start = async () => {
+    if (run) return; const my = ++run, h = have();
+    const todo = words.filter(q => !h(q)).slice(0, PREP_MAX), total = todo.length; if (!total) { run = 0; return sync(); }
+    if (AO.sl !== b.lang || AO.tl !== db.my) { AO.sl = b.lang; AO.tl = db.my; AO.m = new Map(); }
+    let done = 0, ok = 0, fails = 0, stop = false, err = '';
+    const ac = new AbortController();
+    cancel.onclick = () => { stop = true; ac.abort(); };
+    go.hidden = true; cancel.hidden = false; del.hidden = true; bar.hidden = false; ttl.textContent = 'Mengunduh arti…';
+    const show = () => { msg.textContent = `Mengunduh ${done}/${total}`; bar.firstElementChild.style.width = Math.round(done / total * 100) + '%'; };
+    show();
+    for (const q of todo) {
+      if (stop || !live() || my !== run) break;
+      if (navigator.onLine === false) { err = 'Sinyal putus.'; break; }
+      try {
+        const out = await gtxFetch(q, b.lang, db.my, ac.signal);
+        if (!out.text) throw new Error('kosong');
+        if (AO.m.size < AO_MAX) AO.m.set(q, out); ok++; fails = 0;
+      } catch (e) { if (stop) break; fails++; if (fails >= OFF_FAIL) { err = 'Sinyal lemah.'; break; } }
+      done++; if (live()) show();
+      if (ok && ok % 10 === 0) aoSave().catch(() => { });
+      await new Promise(r => setTimeout(r, OFF_GAP));
+    }
+    try { await aoSave(); } catch (e) { err = err || 'Penyimpanan penuh.'; }
+    if (!live() || my !== run) return;
+    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true;
+    sync();
+    if (err || stop) { ttl.textContent = `Berhenti di ${mine()} kata`; msg.textContent = `${err || 'Dibatalkan.'} ${mine()} kata yang sudah masuk tetap tersimpan. Lanjutkan nanti.`; go.textContent = 'Lanjutkan'; }
+    else if (ok) toast('Siap dibaca offline');
+  };
+  go.onclick = start;
+  del.onclick = async () => { if (run) return; await aoDel(b.id); if (live()) sync(); };
+  addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
+}
 function openSettings() {
   const b = book();
   const th = [['paper', 'Kertas'], ['sepia', 'Sepia'], ['green', 'Hijau'], ['night', 'Malam']];
@@ -1061,7 +1137,9 @@ function menuCerita(id) {
     <button class="mc-i" id="mcGanti">${ico('image')}<span>Ganti sampul</span></button>
     ${b.covU ? `<button class="mc-i" id="mcHapusS">${ico('stop')}<span>Hapus sampul</span></button>` : ''}
     <button class="mc-i mc-del" id="mcDel">${ico('trash')}<span>Hapus cerita</span></button></div>
+    ${offHtml()}
     <input type="file" id="mcFile" accept="image/*" hidden>`, 'Menu cerita');
+  bindOff(b);
   const f = $('#mcFile');
   $('#mcGanti').onclick = () => f.click();
   f.onchange = async () => {
@@ -1393,6 +1471,7 @@ async function viewBaca() {
   b.opened = Date.now(); const baruBuka = SESS.id !== b.id; if (baruBuka) { SESS.id = b.id; SESS.t = Date.now(); } save();
   if (baruBuka) setTimeout(() => sesiSisa(b), 400);
   const secs = await pagesOf(b);
+  await aoLoad(b.id); /* arti offline buku ini siap untuk ketukan kata (#1367) */
   b.pos = Math.max(0, Math.min(b.pos, secs.length - 1));
   document.body.classList.add('reading'); wakeSync();
   if (db.vocab.some(needsArti)) refillVocab();

@@ -247,7 +247,7 @@
       "prioritas": "P1",
       "nama": "Tombol 'Siapkan offline' di sheet buku: unduh arti kata baru bab ini + berikutnya, maks 150 kata (#1345)",
       "dokumen": "docs/riset-unduh-arti-sebelum-baca.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1367)",
       "catatan": "Mockup: docs/mockup-1345.html. Hanya gtx (tanpa MyMemory), satu permintaan sekali, jeda 400 ms, stop setelah 2 gagal, simpan di IndexedDB per buku, pakai fungsi saring #80, hormati Hemat Data/offline. Ukur 150 permintaan beruntun dulu. Naikkan versi C di sw.js."
     },
     {
