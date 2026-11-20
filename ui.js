@@ -1447,7 +1447,7 @@ async function viewBaca() {
     <div class="reader${RD.quiet ? '' : ' chrome'}${db.font === 'serif' ? ' serif' : ''}${db.focus ? ' focus' : ''}${db.markOften === false ? ' no-often' : ''}${db.progBar === false ? ' no-prog' : ''}" id="reader" data-align="${effAlign()}" lang="${esc(b.lang)}" style="--reader-lh:${readLh(b.lang)};--reader-mg:${MG[db.mg] || 24}px${db.spacing === 'w' ? ';--reader-ls:.04em;--reader-ws:.12em' : ''}">
       <button class="icon rback" id="rBack" type="button" aria-label="Kembali ke Home">${ico('left')}</button>
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
-        <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length} ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="rmkl"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
+        <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}"><span class="rcf">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length}</span><span class="rcs" aria-hidden="true">${b.pos + 1}/${secs.length}</span> ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="rmkl"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
         ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${['mati', 'hanya kata baru', 'nyala'][rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
@@ -2311,8 +2311,17 @@ async function onWord(el, lastEl) {
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');
     const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
-    const paintDict = (dd, al) => al.length ? `<div><b>Bisa juga:</b> ${al.map(esc).join(', ')}</div>` + (dd.length > 1 ? dd.slice(1, 3).map(x => `<div><b>${esc(POS[x.pos] || x.pos)}:</b> ${x.terms.slice(0, 3).map(esc).join(', ')}</div>`).join('') : '') : '';
-    $('#wdict').innerHTML = paintDict(d, alt);
+    /* #1333: semua arti lain = chip besar (ketuk = pilih, alur #1106); maks 8/jenis, tampil 6 + 'Lihat semua'; frasa (dt=ex) maks 3 */
+    const chipList = dd => altFlat(altArti(dd, curT() || r.text).map(g => ({ pos: g.pos, terms: g.terms.slice(0, 8) })));
+    const paintDict = (dd, al, ex) => {
+      if (!al.length) return '';
+      const flat = chipList(dd);
+      const chip = (t, i) => `<button class="wchip" type="button" data-i="${i}" dir="auto"${i >= 6 ? ' hidden' : ''}>${esc(t)}</button>`;
+      const exs = (Array.isArray(ex) ? ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('');
+      return `<div class="wchips-h">Arti lain · ketuk untuk pakai</div><div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">Terjemahan mesin, bisa keliru.</div>`;
+    };
+    const bindDict = dd => { const el = $('#wdict'); if (!el) return; const flat = chipList(dd); el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); }); const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); }; };
+    $('#wdict').innerHTML = paintDict(d, alt, r.ex); bindDict(d);
     /* arti lain kosong: ambil ulang sekali di latar; tetap kosong = 'Belum ada arti lain' kecil */
     if (!alt.length && !r.off && !(b.lang === 'ja' && db.my === 'id')) {
       const q0 = qWord(), txt = r.text;
@@ -2320,7 +2329,7 @@ async function onWord(el, lastEl) {
       else altFill(q0, b.lang, db.my, sig).then(more => {
         if (my !== tok || !$('#wdict') || qWord() !== q0) return;
         const al = altFlat(altArti(more, txt));
-        $('#wdict').innerHTML = al.length ? paintDict(more, al) : '<div class="mut sm">Belum ada arti lain.</div>'; keepVisible('.w.sel');
+        $('#wdict').innerHTML = al.length ? paintDict(more, al, r.ex) : '<div class="mut sm">Belum ada arti lain.</div>'; if (al.length) bindDict(more); keepVisible('.w.sel');
       }).catch(() => { if (my === tok && $('#wdict') && !$('#wdict').firstChild) $('#wdict').innerHTML = '<div class="mut sm">Belum ada arti lain.</div>'; });
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);

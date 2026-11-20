@@ -1208,3 +1208,17 @@ ol.steps3 b{min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
+/* #1335 label posisi bilah atas: HP <=430px pakai N/N (angka tabular); jarak >=8px ke Dengar; label menyusut ellipsis, tombol tidak */
+.rchap .rcs{display:none;font-variant-numeric:tabular-nums}
+.rtitle .rchap{min-width:44px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.rtitle{margin-right:8px}
+.rbar .rrt,.rbar .rlis{flex:none;min-width:44px;min-height:44px}
+@media (max-width:430px){.rchap .rcf{display:none}.rchap .rcs{display:inline}.rtitle .rchap{padding:0 8px}}
+/* #1333: chip arti lain di kartu arti */
+.wchips-h{font:800 15px "Bricolage Grotesque",Inter,sans-serif;margin:10px 0 4px}
+.wchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.wchip{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border-radius:9999px;background:#D7EFFF;color:#351E28;border:1.5px solid #351E28;font-weight:800;font-size:15px;max-width:100%;overflow-wrap:anywhere;text-align:left}
+.wchip[hidden]{display:none}
+.wchip.wmore{background:#351E28;color:#E9F056}
+#wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
+#wdict{max-height:40vh;overflow-y:auto}
