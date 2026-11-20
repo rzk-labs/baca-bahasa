@@ -90,7 +90,7 @@ const CCOL = [['#D7EFFF', '#351E28', '#351E28'], ['#C3E1F4', '#351E28', '#351E28
 const COVERS = {};
 async function muatCover() { let ada = false; for (const b of db.books) { if ((b.cov || b.covU) && !COVERS[b.id]) { try { const u = (b.covU && await getCoverU(b.id)) || (b.cov && await getCover(b.id)); if (u) { COVERS[b.id] = u; ada = true; } } catch (e) { } } } if (ada && (db.tab === 'rak' || db.tab === 'home')) setTab(db.tab); }
 /* pisahkan penulis dalam kurung: 'こころ（夏目漱石）' -> {main:'こころ', au:'夏目漱石'} (hanya tampilan) */
-function splitTitle(t) { t = String(t || '').trim(); const m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); return m ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
+function splitTitle(t) { t = String(t || '').trim(); let m = t.match(/^(.*\S)\s*[（(]([^（）()]+)[）)]\s*$/); if (m) return { main: m[1], au: m[2].trim() }; m = t.match(/^(.*?\S)\s+[-–—]\s+(\S.*)$/); /* "Judul - Penulis": hanya bila ada spasi di kedua sisi tanda */ return m && m[2].length <= 40 ? { main: m[1], au: m[2].trim() } : { main: t, au: '' }; }
 function coverTitle(t) { if (t.length <= 34) return t; const c = t.slice(0, 34), i = c.search(/\s\S*$/); return (i > 12 ? c.slice(0, i) : c).replace(/[\s,;:\-–—]+$/, '') + '…'; }
 /* arti alternatif tanpa pengulangan arti utama (abaikan huruf besar/kecil, spasi, tanda baca); kosong = sembunyikan 'Bisa juga' */
 const altArti = (dict, main) => {
@@ -295,7 +295,7 @@ function celebrate(title, msg, snd = 'win') {
   el.innerHTML = `<div class="card">${snd === 'lvl' ? `<div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div>` : spot('cheer', 'jump')}<h1>${esc(title)}</h1><p class="mut">${esc(msg)}</p><button class="lime full">Lanjut!</button></div>`;
   document.body.appendChild(el); el.querySelector('button').onclick = () => el.remove(); el.onclick = e => { if (e.target === el) el.remove(); };
 }
-function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (typeof bkState !== 'undefined' && bkState === 'load') { if (s) { s.innerHTML = `${ico('flame')}<span aria-hidden="true">–</span>`; s.title = 'Streak: lagi dimuat'; s.classList.add('wait'); } if (x) { x.innerHTML = `${ico('bolt')}<span aria-hidden="true">–</span>`; x.title = 'XP: lagi dimuat'; x.classList.add('wait'); } return; } if (s) s.classList.remove('wait'); if (x) x.classList.remove('wait'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n} hari`; s.title = 'Beruntun ' + n + ' hari tanpa putus'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
+function refreshPills() { const s = $('#pStreak'), x = $('#pXp'); if (typeof bkState !== 'undefined' && bkState === 'load') { if (s) { s.innerHTML = `${ico('flame')}<span aria-hidden="true">–</span>`; s.title = 'Streak: lagi dimuat'; s.classList.add('wait'); } if (x) { x.innerHTML = `${ico('bolt')}<span aria-hidden="true">–</span>`; x.title = 'XP: lagi dimuat'; x.classList.add('wait'); } return; } if (s) s.classList.remove('wait'); if (x) x.classList.remove('wait'); if (s) { const n = streak(); s.innerHTML = `${ico('flame')}${n ? n + ' hari' : 'Mulai hari ini'}`; s.title = 'Beruntun ' + n + ' hari tanpa putus'; } if (x) { x.innerHTML = `${ico('bolt')}${db.xp} XP`; x.title = 'Total XP seumur hidup'; } }
 
 /* ---------- kerangka ---------- */
 let toastT;
@@ -860,6 +860,11 @@ function heroTitle(t) {
   const p = splitTitle(t);
   return p.au ? `<span class="t-main">${esc(p.main)}</span> <span class="t-au">${esc(p.au)}</span>` : esc(p.main);
 }
+/* kartu rak: judul (maks 2 baris) & penulis di baris kecil terpisah */
+function shelfTitle(t) {
+  const p = splitTitle(t);
+  return `<div class="t" dir="auto" title="${esc(t)}">${esc(p.main)}</div>${p.au ? `<div class="au">${esc(p.au)}</div>` : ''}`;
+}
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
   return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
@@ -963,10 +968,11 @@ function viewRak() {
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
     refreshPills();
-    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Bukumu belum bisa dimuat. Coba lagi bentar ya.'}</div>${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}`;
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.'}</div>${bkState === 'fail' ? '<div class="row"><button class="sec" id="bkRetry" type="button">Coba lagi</button><button class="ghost" id="bkSkip" type="button">Lanjut tanpa menunggu</button></div>' : ''}`;
+    const sk = $('#bkSkip'); if (sk) sk.onclick = () => { bkSkip = true; bkState = ''; viewRak(); };
     const rt = $('#bkRetry'); if (rt) rt.onclick = () => {
       if (navigator.onLine === false || bkBusy) { toast(navigator.onLine === false ? 'Lagi offline. Sambungkan internet dulu, lalu coba lagi.' : 'Masih memuat, tunggu sebentar ya.', 4000); return; }
-      bkState = 'load'; viewRak(); syncBooks().catch(() => { });
+      bkSkip = false; bkState = 'load'; viewRak(); syncBooks().catch(() => { });
     };
     return;
   }
@@ -994,7 +1000,7 @@ function viewRak() {
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
-    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}<div class="t">${heroTitle(b.title)}</div><div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
+    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${b.nw != null ? `<div class="m nw">Perkiraan kata baru ~${b.nw}%</div>` : ''}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
@@ -1750,7 +1756,7 @@ function layout() {
   const resumed = !RD.toEnd && RD.flash == null && cols._chip !== true && ((b.pos || 0) > 0 || (b.si || 0) > 0 || p > 0);
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
-  if (resumed) { cols._chip = true; resumeChip(b); }
+  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100)) resumeChip(b); } /* buku tamat: tanpa chip 'Lanjut' (#1304) */
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 /* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
@@ -1913,7 +1919,7 @@ function showPage(p, anim = true) {
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
-  else if (last && b.doneAt) { nx.textContent = 'Buku baru'; nx.dataset.ulang = '1'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buku baru'); }
+  else if (last && b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buka layar Tamat'); }
   else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
@@ -2145,7 +2151,7 @@ function turn(d) {
   if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold(); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
   if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
-  else if (d > 0) { if (b.doneAt) setTab('rak'); else finishBook(b); }
+  else if (d > 0) { if (b.doneAt) tamatSeen = null; finishBook(b); }
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));
