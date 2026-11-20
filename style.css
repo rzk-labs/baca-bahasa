@@ -1208,6 +1208,10 @@ ol.steps3 b{min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
+/* #1341 jalur bar lencana terkunci: terang/netral (0% tampak kosong), isian tetap Wasabi */
+.badge.off .bar{background:rgba(53,30,40,.1);box-shadow:inset 0 0 0 1.5px var(--color-text-muted);overflow:hidden}
+.badge.off .bar i{background:#E9F056;box-shadow:inset 0 0 0 1.5px #351E28}
+[data-theme=dark] .badge.off .bar,[data-theme=night] .badge.off .bar{background:rgba(250,247,240,.12)}
 /* #1335 label posisi bilah atas: HP <=430px pakai N/N (angka tabular); jarak >=8px ke Dengar; label menyusut ellipsis, tombol tidak */
 .rchap .rcs{display:none;font-variant-numeric:tabular-nums}
 .rtitle .rchap{min-width:44px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
