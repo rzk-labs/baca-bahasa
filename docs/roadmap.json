@@ -1390,7 +1390,7 @@
       "prioritas": "P0",
       "nama": "Rencana B bila ditolak App Store 4.2: pengingat baca lokal + bagikan di Profil (#1337)",
       "dokumen": "docs/riset-app-store-42.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1369)",
       "catatan": "Mockup: docs/mockup-1337.html. Dikerjakan bila build 12 ditolak 4.2 atau untuk build berikutnya. Mulai dengan spesifikasi singkat (acuan: docs/riset-pengingat-baca-pwa.md); jangan tempel fitur kosong, harus berguna. Naikkan versi C di sw.js bila file app berubah."
     },
     {

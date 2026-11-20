@@ -1,5 +1,11 @@
 [
   {
+    "n": 1369,
+    "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
+    "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1367,
     "judul": "[peta 150] Tombol 'Siapkan offline': unduh arti kata bab ini",
     "poin": "Menu ⋯ buku kini punya tombol \"Siapkan offline\": arti kata baru diunduh, maks 150.",
@@ -171,12 +177,6 @@
     "n": 1273,
     "judul": "[peta 136] Keepo HQ: satu kotak mockup, hapus 'Belum ada gambar'",
     "poin": "Kartu \"Siap dicek\" di Keepo HQ sekarang hanya punya satu kotak mockup.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1269,
-    "judul": "[peta 137] Keepo HQ: urutkan kolom Papan sesuai kebiasaan founder",
-    "poin": "Papan sekarang mulai dari yang butuh kamu: Siap dicek paling kiri.",
     "tgl": "2026-11-17"
   }
 ]
