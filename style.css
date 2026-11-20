@@ -731,7 +731,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   .ksrow{gap:8px}.ksrow .csvcnt{font-size:13px}
   .fchip{padding:0 14px}
 }
-.prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
+.prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px;flex-wrap:wrap}#offBox{margin:var(--space-3) 0 0}#offBox .prep-acts button{flex:1 1 140px;min-width:0}#offMsg{overflow-wrap:anywhere}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
 /* Sosial: teman membaca & profil */
 .fr-row{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:9px 6px;border-radius:14px;color:inherit;font:inherit;cursor:pointer}
 .fr-row:hover,.fr-row:focus-visible{background:var(--color-surface-soft)}

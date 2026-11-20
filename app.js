@@ -146,7 +146,21 @@ const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim =
 const markFeedbackSent = id => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'), st = tx.objectStore('fb'), q = st.get(id); q.onsuccess = () => { if (q.result) st.put({ ...q.result, terkirim: true }); }; tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
-const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); return s.delete(id); });
+const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); s.delete('ao_' + id); return s.delete(id); });
+/* arti offline per buku (#1367): kunci baru 'ao_<id>' di store 't' (data lama tak disentuh, tanpa migrasi). Isi: { v:1, sl, tl, m: { kata: hasil gtx } } */
+const AO_MAX = 1500;
+const AO = { id: '', sl: '', tl: '', m: new Map() };
+async function aoLoad(id) {
+  if (AO.id === id) return AO;
+  let o = null; try { o = await idbOp('readonly', s => s.get('ao_' + id)); } catch (e) { }
+  AO.id = id; AO.sl = (o && o.sl) || ''; AO.tl = (o && o.tl) || '';
+  AO.m = new Map(o && o.v === 1 && o.m && typeof o.m === 'object' ? Object.entries(o.m) : []);
+  return AO;
+}
+const aoSave = () => AO.id ? idbOp('readwrite', s => s.put({ v: 1, sl: AO.sl, tl: AO.tl, m: Object.fromEntries(AO.m) }, 'ao_' + AO.id)) : Promise.resolve();
+const aoDel = async id => { try { await idbOp('readwrite', s => s.delete('ao_' + id)); } catch (e) { } if (AO.id === id) { AO.m = new Map(); AO.sl = AO.tl = ''; } };
+/* arti tersimpan untuk kata q (hanya bila bahasa & 'Artiin ke' sama dengan saat diunduh) */
+const aoGet = (sl, tl, q) => (AO.id && AO.sl === sl && AO.tl === tl && AO.m.get(q)) || null;
 // Cover EPUB: gambar kecil (data URL) di IndexedDB kunci 'c_<id>', terpisah dari teks & localStorage
 const putCover = (id, url) => idbOp('readwrite', s => s.put(url, 'c_' + id));
 const getCover = id => idbOp('readonly', s => s.get('c_' + id));
@@ -923,6 +937,7 @@ async function translate(q, sl, tl, signal, fresh) {
     return out;
   }
   if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
+  { const a = !fresh && aoGet(sl, tl, q); if (a && a.text) return mix(a); } /* arti unduhan offline (#1367): tanpa jaringan */
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
   let out, fb = false;
