@@ -242,12 +242,21 @@
   ],
   "backlog": [
     {
+      "no": 146,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Pengaturan baca: mode 'Baca polos' tanpa garis bawah & tanda bantu (#1359)",
+      "dokumen": "docs/spesifikasi-baca-polos-1359.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1359.html. Ubah ui.js, style.css, sw.js (C kepo-v478→v479); db.plain default false, ikut #rst, matikan prafetch #458. Jangan ubah api/, prepHtml/bindPrep. Uji 320px, tema Kertas & Malam."
+    },
+    {
       "no": 150,
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Tombol 'Siapkan offline' di sheet buku: unduh arti kata baru bab ini + berikutnya, maks 150 kata (#1345)",
       "dokumen": "docs/riset-unduh-arti-sebelum-baca.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1367)",
       "catatan": "Mockup: docs/mockup-1345.html. Hanya gtx (tanpa MyMemory), satu permintaan sekali, jeda 400 ms, stop setelah 2 gagal, simpan di IndexedDB per buku, pakai fungsi saring #80, hormati Hemat Data/offline. Ukur 150 permintaan beruntun dulu. Naikkan versi C di sw.js."
     },
     {
@@ -1363,7 +1372,7 @@
       "prioritas": "P1",
       "nama": "Baca tanpa putus: tandai kata sambil lanjut, lihat arti nanti (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1363)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: 7 kutipan Indonesia bilang buka kamus tiap kata bikin capek & hilang mood. Tambah 'Tandai & lanjut' di kartu arti; daftar tinjau di akhir bagian. Data lama aman. Naikkan versi C di sw.js."
     },
     {
@@ -1372,7 +1381,7 @@
       "prioritas": "P1",
       "nama": "Penunjuk tingkat kesulitan bacaan + saran bagian mulai (#1353)",
       "dokumen": "docs/riset-suara-manusia-tahap-24.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1365)",
       "catatan": "Mockup: docs/mockup-1353.html. Alasan: kutipan 'kapok', 'nyesel beli novel', 'minder' = bacaan terlalu sulit di awal. Hitung kata baru per halaman dari data yang ada; tampil di kartu buku saat impor. Naikkan versi C di sw.js."
     },
     {
@@ -1381,8 +1390,17 @@
       "prioritas": "P0",
       "nama": "Rencana B bila ditolak App Store 4.2: pengingat baca lokal + bagikan di Profil (#1337)",
       "dokumen": "docs/riset-app-store-42.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1369)",
       "catatan": "Mockup: docs/mockup-1337.html. Dikerjakan bila build 12 ditolak 4.2 atau untuk build berikutnya. Mulai dengan spesifikasi singkat (acuan: docs/riset-pengingat-baca-pwa.md); jangan tempel fitur kosong, harus berguna. Naikkan versi C di sw.js bila file app berubah."
+    },
+    {
+      "no": 152,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Minggu ini: 'halaman dibaca' tak membengkak karena baca ulang (#1350)",
+      "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
+      "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
     }
   ],
   "prioritas": [

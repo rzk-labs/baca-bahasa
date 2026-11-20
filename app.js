@@ -146,7 +146,21 @@ const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim =
 const markFeedbackSent = id => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'), st = tx.objectStore('fb'), q = st.get(id); q.onsuccess = () => { if (q.result) st.put({ ...q.result, terkirim: true }); }; tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
-const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); return s.delete(id); });
+const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); s.delete('ao_' + id); return s.delete(id); });
+/* arti offline per buku (#1367): kunci baru 'ao_<id>' di store 't' (data lama tak disentuh, tanpa migrasi). Isi: { v:1, sl, tl, m: { kata: hasil gtx } } */
+const AO_MAX = 1500;
+const AO = { id: '', sl: '', tl: '', m: new Map() };
+async function aoLoad(id) {
+  if (AO.id === id) return AO;
+  let o = null; try { o = await idbOp('readonly', s => s.get('ao_' + id)); } catch (e) { }
+  AO.id = id; AO.sl = (o && o.sl) || ''; AO.tl = (o && o.tl) || '';
+  AO.m = new Map(o && o.v === 1 && o.m && typeof o.m === 'object' ? Object.entries(o.m) : []);
+  return AO;
+}
+const aoSave = () => AO.id ? idbOp('readwrite', s => s.put({ v: 1, sl: AO.sl, tl: AO.tl, m: Object.fromEntries(AO.m) }, 'ao_' + AO.id)) : Promise.resolve();
+const aoDel = async id => { try { await idbOp('readwrite', s => s.delete('ao_' + id)); } catch (e) { } if (AO.id === id) { AO.m = new Map(); AO.sl = AO.tl = ''; } };
+/* arti tersimpan untuk kata q (hanya bila bahasa & 'Artiin ke' sama dengan saat diunduh) */
+const aoGet = (sl, tl, q) => (AO.id && AO.sl === sl && AO.tl === tl && AO.m.get(q)) || null;
 // Cover EPUB: gambar kecil (data URL) di IndexedDB kunci 'c_<id>', terpisah dari teks & localStorage
 const putCover = (id, url) => idbOp('readwrite', s => s.put(url, 'c_' + id));
 const getCover = id => idbOp('readonly', s => s.get('c_' + id));
@@ -188,11 +202,44 @@ function tokens(text, lang) {
 /* Kunci kata: harakat Arab & niqqud Ibrani diabaikan (berharakat = tanpa harakat). Kata lama tersimpan tak diubah. */
 const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '').replace(/[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ֑-ׇֽֿׁׂׅׄ]/g, '');
 /* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
-function perkiraanBaru(paras, lang) {
+function knownSet(lang) {
   const known = new Set();
   for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
   for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
   known.delete('');
+  return known;
+}
+/* Tingkat kesulitan (#148): kata baru per halaman (±250 kata), offline, dari kosakata yang ada. secs = bagian buku (array of array teks).
+   Hasil {l: ringan|sedang|berat, pg, m}: m = indeks bagian paling ringan untuk mulai (hanya bila berat & lebih ringan dari rata-rata), else -1. null bila belum ada kosakata/teks terlalu pendek. */
+function kesulitanBuku(secs, lang) {
+  const known = knownSet(lang);
+  if (!known.size) return null;
+  let N = 0, B = 0; const per = [];
+  for (const sec of secs || []) {
+    let n = 0, baru = 0;
+    for (const raw of sec) {
+      for (const t of tokens(String(raw).replace(/^[\u0001\u0002]/, ''), lang)) {
+        if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+        n++; if (!known.has(norm(t.t))) baru++;
+        if (n >= 1200) break;
+      }
+      if (n >= 1200) break;
+    }
+    per.push({ n, baru }); N += n; B += baru;
+  }
+  if (N < 20) return null;
+  const pg = Math.round(B * 250 / N);
+  const l = pg <= 10 ? 'ringan' : pg <= 25 ? 'sedang' : 'berat';
+  let m = -1;
+  if (l === 'berat' && per.length > 1) {
+    let best = -1, br = 2;
+    per.forEach((x, i) => { if (x.n >= 60 && x.baru / x.n < br) { br = x.baru / x.n; best = i; } });
+    if (best >= 0 && br < (B / N) * 0.85) m = best;
+  }
+  return { l, pg, m };
+}
+function perkiraanBaru(paras, lang) {
+  const known = knownSet(lang);
   if (!known.size) return null;
   let n = 0, baru = 0;
   for (const p of paras || []) {
@@ -691,7 +738,7 @@ async function altFill(q, sl, tl, signal) {
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
-function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfOk() { return !db.plain && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
 function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
 function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
 function pfStop() { pfPause(); PF.q = []; pfFlush(); }
@@ -890,6 +937,7 @@ async function translate(q, sl, tl, signal, fresh) {
     return out;
   }
   if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
+  { const a = !fresh && aoGet(sl, tl, q); if (a && a.text) return mix(a); } /* arti unduhan offline (#1367): tanpa jaringan */
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
   let out, fb = false;
