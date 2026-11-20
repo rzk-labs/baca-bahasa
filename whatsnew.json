@@ -1,5 +1,11 @@
 [
   {
+    "n": 1363,
+    "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
+    "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1359,
     "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
     "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
@@ -171,12 +177,6 @@
     "n": 1258,
     "judul": "[peta 135] Kartu kata: 'Bisa juga' tak hilang + pesan saat offline",
     "poin": "Bagian \"Bisa juga\" di kartu kata sekarang diambil ulang otomatis, tidak hilang lagi.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1253,
-    "judul": "Perbaiki Home macet 'Memuat bukumu…': nama bkState bentrok + batas waktu",
-    "poin": "Layar Home tidak lagi macet di \"Memuat bukumu…\".",
     "tgl": "2026-11-17"
   }
 ]

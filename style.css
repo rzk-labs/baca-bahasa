@@ -1249,3 +1249,5 @@ ol.steps3 b{min-width:0}
 .wchip.wmore{background:#351E28;color:#E9F056}
 #wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 #wdict{max-height:40vh;overflow-y:auto}
+/* #1363 Tandai & lanjut */
+.wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
