@@ -1275,6 +1275,15 @@
       "dokumen": "docs/desain-header-reader-1335.md",
       "status": "selesai (dikerjakan di #1335, perlu dicek di HP 320/375px)",
       "catatan": "Mockup: docs/mockup-1335.html. Label ringkas N/N di <=430px, aria-label tetap penuh. Versi C di sw.js naik ke kepo-v474."
+    },
+    {
+      "no": 146,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home Minggu ini: 'N dari 7 hari baca' vs 'Beruntun N hari' (#1360)",
+      "dokumen": "docs/desain-minggu-vs-streak-1360.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1360.html. Teks sudah diubah di ui.js; tinggal cek di HP 320px."
     }
   ],
   "prioritas": [
