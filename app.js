@@ -138,8 +138,8 @@ const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; 
 // Minta penyimpanan permanen (diam-diam, tanpa pesan). Hasil disimpan di STORAGE_PERSISTED.
 let STORAGE_PERSISTED = null;
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then(ok => { STORAGE_PERSISTED = !!ok; }, () => {}); } catch (e) {}
-const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
+const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => { try { toast('Keepo terbuka di tab lain. Tutup tab itu, lalu coba lagi.', 8000); } catch (e) {} }; });
+const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('Memori HP penuh, progres belum tersimpan. Kosongkan ruang dulu.')); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const allFeedback = () => idb.then(d => new Promise((res, rej) => { const q = d.transaction('fb', 'readonly').objectStore('fb').getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }));
 const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim === false)); // data lama (tanpa kolom terkirim) dianggap sudah beres
@@ -724,7 +724,7 @@ async function altFill(q, sl, tl, signal) {
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
-function pfOk() { return navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfOk() { return !db.plain && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
 function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
 function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
 function pfStop() { pfPause(); PF.q = []; pfFlush(); }

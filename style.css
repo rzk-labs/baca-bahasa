@@ -473,6 +473,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
 .wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
+.reader.plain .cols .w.saved:not(.sel),.reader.plain .cols .w.often:not(.saved):not(.sel){text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
 #wkenal[hidden]{display:none}
@@ -1092,7 +1093,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:640px){#hdx{gap:8px}#hdx #set{padding:0 10px;font-size:13px;margin-left:2px}}
 @media (max-width:430px){#hdx #set{width:44px;padding:0}#hdx #set .hsl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (max-width:340px){#hdx{gap:6px}#hdx #set{width:44px;min-width:44px;padding:0}}
-.stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}
+.stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}.sdots i.old{background:rgba(53,30,40,.4)}.sdots i.ring{background:transparent;box-shadow:inset 0 0 0 1.5px #351E28}.streak1{min-width:0}.streak1 .lbl2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0}
 .rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
 .badge .got{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px 2px 6px;border-radius:9999px;background:#351E28;color:#E9F056;font-size:12px;line-height:16px;font-weight:800;max-width:100%}
 .badge .got .ck{flex:none;width:12px;height:12px;stroke-width:3}
@@ -1221,6 +1222,20 @@ ol.steps3 b{min-width:0}
 .rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
 .rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
+/* Profil: lencana hampir tercapai + daftar terlipat (#1346) */
+.near-list{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3)}
+.near-row{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);cursor:pointer}
+.near-row .em{flex:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.near-row .em svg.i{width:24px;height:24px}
+.near-row .nb{flex:1;min-width:0}
+.near-row .nb b{display:block;font:800 15px/18px var(--font-display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.near-row .bar{height:8px;margin-top:6px;background:#351E28}.near-row .bar i{background:#E9F056}
+.near-row .np{flex:none;font:800 13px/16px var(--font-ui);color:var(--color-text)}
+.all-badges summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;font:800 15px/20px var(--font-display);list-style:none}
+.all-badges summary::-webkit-details-marker{display:none}
+.all-badges summary::after{content:"";margin-left:auto;width:8px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .15s}
+.all-badges[open] summary::after{transform:rotate(-135deg)}
+.all-badges .bgrid{margin-top:var(--space-2)}
 /* #1341 jalur bar lencana terkunci: terang/netral (0% tampak kosong), isian tetap Wasabi */
 .badge.off .bar{background:rgba(53,30,40,.1);box-shadow:inset 0 0 0 1.5px var(--color-text-muted);overflow:hidden}
 .badge.off .bar i{background:#E9F056;box-shadow:inset 0 0 0 1.5px #351E28}
@@ -1239,3 +1254,5 @@ ol.steps3 b{min-width:0}
 .wchip.wmore{background:#351E28;color:#E9F056}
 #wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 #wdict{max-height:40vh;overflow-y:auto}
+/* #1363 Tandai & lanjut */
+.wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
