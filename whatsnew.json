@@ -1,5 +1,11 @@
 [
   {
+    "n": 1335,
+    "judul": "Header e-reader HP: 'Bagian 12 dari 12' tak tabrak tombol Dengar",
+    "poin": "Di HP, posisi bacaan kini tampil \"12/12\", tidak menabrak tombol Dengar lagi.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1333,
     "judul": "[peta 144] Kartu arti: semua arti & frasa tampil sebagai chip menonjol",
     "poin": "Arti lain sekarang tampil sebagai tombol besar, langsung di kartu arti.",
@@ -171,12 +177,6 @@
     "n": 1229,
     "judul": "E-reader: tombol 'Tandai di sini' terlihat + 'Lanjut dari hal. X'",
     "poin": "Ada tombol penanda di bawah layar baca, jadi gampang ditemukan.",
-    "tgl": "2026-11-16"
-  },
-  {
-    "n": 1226,
-    "judul": "[peta 116] Tombol 'Arti ini salah?' di kartu arti: arti alternatif",
-    "poin": "Kartu arti kini punya tombol \"Terjemahkan ulang\" kalau arti terasa salah.",
     "tgl": "2026-11-16"
   }
 ]

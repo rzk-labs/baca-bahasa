@@ -1266,6 +1266,15 @@
       "dokumen": "docs/spesifikasi-arti-menonjol-1330.md",
       "status": "selesai (#1333)",
       "catatan": "Mockup: docs/mockup-1330.html. Ubah paintDict (ui.js) jadi chip besar bisa diketuk (alur #1106), tambah frasa dt=ex; data lama aman. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 145,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Header e-reader HP: label 'N/N' tak tabrak tombol Dengar (#1335)",
+      "dokumen": "docs/desain-header-reader-1335.md",
+      "status": "selesai (dikerjakan di #1335, perlu dicek di HP 320/375px)",
+      "catatan": "Mockup: docs/mockup-1335.html. Label ringkas N/N di <=430px, aria-label tetap penuh. Versi C di sw.js naik ke kepo-v474."
     }
   ],
   "prioritas": [
