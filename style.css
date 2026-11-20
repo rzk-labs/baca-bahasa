@@ -1206,4 +1206,7 @@ ol.steps3 b{min-width:0}
 .fr-stats div{align-items:center;justify-content:flex-start;min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
+/* #1349 bar bawah reader HP: tombol Selesai/Buku baru tak mepet tepi, tinggi sentuh >=44px */
+.rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
+.rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}

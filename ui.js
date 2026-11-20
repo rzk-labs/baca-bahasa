@@ -1912,8 +1912,8 @@ function showPage(p, anim = true) {
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
-  else if (last && b.doneAt) { nx.textContent = 'Buku baru'; nx.dataset.ulang = '1'; nx.classList.add('fin'); nx.style.cssText = 'width:auto;min-width:44px;min-height:44px;padding:0 16px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Buku baru'); }
-  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = 'width:auto;padding:0 14px;font-weight:700;white-space:nowrap'; nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else if (last && b.doneAt) { nx.textContent = 'Buku baru'; nx.dataset.ulang = '1'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buku baru'); }
+  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
   pfArm();
