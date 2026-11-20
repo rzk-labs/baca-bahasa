@@ -1,5 +1,11 @@
 [
   {
+    "n": 1340,
+    "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
+    "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1335,
     "judul": "Header e-reader HP: 'Bagian 12 dari 12' tak tabrak tombol Dengar",
     "poin": "Di HP, posisi bacaan kini tampil \"12/12\", tidak menabrak tombol Dengar lagi.",
@@ -172,11 +178,5 @@
     "judul": "[peta 132] Kartu ulang: kata Lupa/Ragu muncul lagi di sesi sama, maks 2x",
     "poin": "Kata yang kamu jawab Lupa atau Ragu sekarang muncul lagi di sesi yang sama.",
     "tgl": "2026-11-17"
-  },
-  {
-    "n": 1229,
-    "judul": "E-reader: tombol 'Tandai di sini' terlihat + 'Lanjut dari hal. X'",
-    "poin": "Ada tombol penanda di bawah layar baca, jadi gampang ditemukan.",
-    "tgl": "2026-11-16"
   }
 ]
