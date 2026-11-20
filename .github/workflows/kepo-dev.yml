@@ -167,7 +167,9 @@ jobs:
             Kamu agent QA tim Keepo. Periksa hasil kerja agent untuk tugas berikut (jangan mengubah file apa pun selain menulis laporan).
             Tugas: lihat .kepo-tmp/judul.txt dan .kepo-tmp/isi.txt (revisi, bila ada: .kepo-tmp/revisi.txt).
             Perubahan: .kepo-tmp/diff.patch. Baca file terkait di repo seperlunya.
-            Cek: (1) sesuai permintaan, (2) node --check untuk tiap file .js yang berubah, (3) risiko merusak data pengguna/fitur lain, (4) tampilan HP, (5) versi C di sw.js naik bila file app berubah.
+            Peran agent: ${{ env.PERAN }}. Untuk peran riset/desain/pm/marketing, hasil yang diminta biasanya DOKUMEN (spesifikasi/riset/mockup), bukan kode: jangan beri CATATAN hanya karena kode app tidak berubah, kecuali isi tugas jelas meminta mengubah app.
+            Cek: (1) sesuai permintaan, (2) node --check untuk tiap file .js yang berubah, (3) risiko merusak data pengguna/fitur lain, (4) tampilan HP dari kode (bukan uji langsung), (5) versi C di sw.js naik bila file app berubah.
+            Aturan nilai: tulis LOLOS bila permintaan terpenuhi dan tidak ada masalah nyata di (2), (3), (5). Hal yang memang tidak bisa diuji di sini (tampilan di HP asli, kontras di tema tertentu), masalah lama yang bukan dari perubahan ini, dan file tambahan yang tidak berbahaya TIDAK membuat CATATAN; cukup sebut sebagai poin. CATATAN hanya bila: permintaan belum terpenuhi, ada error sintaks, ada fitur/data yang rusak atau hilang, atau sw.js tidak naik padahal file app berubah.
             Tulis laporan ke .kepo-tmp/qa.md. Baris pertama HARUS persis "LOLOS" atau "CATATAN". Lalu maksimal 3 poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari untuk founder non-teknis (ADHD). Tulis hanya hal yang penting diketahui founder.
           claude_args: >-
             --max-turns 40
