@@ -1207,3 +1207,17 @@ ol.steps3 b{min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
 .guest-card{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--hl);color:var(--ink)}.guest-card .mut{color:inherit;opacity:.8}.guest-card button{flex:none;min-height:44px}
+/* Profil: lencana hampir tercapai + daftar terlipat (#1346) */
+.near-list{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3)}
+.near-row{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);cursor:pointer}
+.near-row .em{flex:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.near-row .em svg.i{width:24px;height:24px}
+.near-row .nb{flex:1;min-width:0}
+.near-row .nb b{display:block;font:800 15px/18px var(--font-display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.near-row .bar{height:8px;margin-top:6px;background:#351E28}.near-row .bar i{background:#E9F056}
+.near-row .np{flex:none;font:800 13px/16px var(--font-ui);color:var(--color-text)}
+.all-badges summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;font:800 15px/20px var(--font-display);list-style:none}
+.all-badges summary::-webkit-details-marker{display:none}
+.all-badges summary::after{content:"";margin-left:auto;width:8px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .15s}
+.all-badges[open] summary::after{transform:rotate(-135deg)}
+.all-badges .bgrid{margin-top:var(--space-2)}
