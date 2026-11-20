@@ -1259,3 +1259,7 @@ ol.steps3 b{min-width:0}
 .wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
 /* #1375 Kartu PDF scan */
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
+/* #1381: kartu Streak: angka hari + huruf nama hari di bawah titik */
+.stat3 .sbig{gap:3px;white-space:nowrap}.stat3 .sbig small{font:700 13px/17px var(--font-body,inherit)}
+.streak1 .sdots{display:flex;justify-content:center;gap:1px;margin:4px 0}.streak1 .sd{display:flex;flex-direction:column;align-items:center;gap:2px;width:10px}
+.streak1 .sd b{font:500 11px/13px var(--font-body,inherit);color:rgba(53,30,40,.6)}.streak1 .sd.now b{font-weight:800;color:#351E28}
