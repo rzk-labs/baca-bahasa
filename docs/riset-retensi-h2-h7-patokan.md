@@ -4,7 +4,7 @@ Tugas #1323 (tahap 23). Bukti internet, bukan data pengguna Keepo. Pelengkap `do
 
 ## Intinya
 - Patokan umum: balik hari berikutnya ±25%, hari ke-7 ±8-18%. App kecil jarang mencapainya.
-- Target H2 25% / H7 10% terlalu tinggi tanpa notifikasi. Usul: H2 15%, H7 5%.
+- Target H2 25% / H7 10% terlalu tinggi tanpa notifikasi. Usul target sekarang: H2 12%, H7 4% (naik bertahap ke 18%/7%, lalu 25%/10%).
 - Pemicu terkuat tanpa notifikasi: lanjut dari halaman terakhir, ulang 3 kata, tonggak kata.
 
 ## 1. Apakah target 25% / 10% realistis? (H-A)

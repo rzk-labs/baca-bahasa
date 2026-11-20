@@ -1,0 +1,31 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockup #1321 — Sheet Keluar akun</title>
+<style>
+body{margin:0;padding:16px;background:#e8e4da;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.lbl{font:700 12px Inter,sans-serif;margin:12px auto 6px;width:390px;text-transform:uppercase;letter-spacing:.06em}
+.ph{width:390px;margin:0 auto;background:rgba(53,30,40,.45);border-radius:20px;padding:150px 0 0;box-sizing:border-box}
+.sheet{background:#FAF7F0;border-radius:20px 20px 0 0;padding:18px 16px 22px}
+h2{font:800 20px 'Bricolage Grotesque',Inter,sans-serif;margin:0 0 8px}
+.sh{display:flex;justify-content:space-between;align-items:center}
+.x{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #351E28;text-align:center;line-height:30px}
+.mut{opacity:.7;font-size:13px;line-height:1.4}.c{text-align:center}
+button{display:block;width:100%;border-radius:12px;font:700 15px Inter,sans-serif;padding:12px;margin:10px 0 6px;border:1.5px solid #351E28}
+.pri{background:#351E28;color:#FAF7F0}.sec{background:#fff;color:#351E28}
+.warn{margin-top:12px;background:#E9F056;border-radius:10px;padding:10px 12px;font-weight:600;font-size:13px}
+</style></head><body>
+<div class="lbl">Kondisi 1: sinkron normal, ada data</div>
+<div class="ph"><div class="sheet"><div class="sh"><h2>Keluar dari akun?</h2><span class="x">✕</span></div>
+<div class="mut">Progresmu disinkron dulu sebelum keluar.</div>
+<button class="pri">Keluar saja</button><div class="mut c">Buku, kata, dan XP tetap ada di HP ini.</div>
+<button class="sec">Keluar &amp; bersihkan HP</button><div class="mut c">Menghapus 3 buku &amp; 42 kata dari HP ini. Semuanya sudah ada di akunmu.</div></div></div>
+<div class="lbl">Kondisi 2: HP kosong</div>
+<div class="ph"><div class="sheet"><div class="sh"><h2>Keluar dari akun?</h2><span class="x">✕</span></div>
+<div class="mut">Progresmu disinkron dulu sebelum keluar.</div>
+<button class="pri">Keluar saja</button><div class="mut c">Buku, kata, dan XP tetap ada di HP ini.</div>
+<button class="sec">Keluar &amp; bersihkan HP</button><div class="mut c">HP ini sudah kosong.</div></div></div>
+<div class="lbl">Kondisi 3: sinkron gagal</div>
+<div class="ph"><div class="sheet"><div class="sh"><h2>Keluar dari akun?</h2><span class="x">✕</span></div>
+<div class="mut">Progresmu disinkron dulu sebelum keluar.</div>
+<button class="pri">Keluar saja</button><div class="mut c">Buku, kata, dan XP tetap ada di HP ini.</div>
+<button class="sec">Keluar &amp; bersihkan HP</button><div class="mut c">Menghapus 3 buku &amp; 42 kata dari HP ini. Semuanya sudah ada di akunmu.</div>
+<div class="warn">Sinkron gagal. 3 buku &amp; 42 kata di HP ini bisa hilang permanen kalau belum masuk akun.<button class="sec">Tetap bersihkan &amp; keluar</button><button class="sec">Batal</button></div></div></div>
+</body></html>
