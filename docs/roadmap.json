@@ -1266,6 +1266,15 @@
       "dokumen": "docs/spesifikasi-arti-menonjol-1330.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1330.html. Ubah paintDict (ui.js) jadi chip besar bisa diketuk (alur #1106), tambah frasa dt=ex; data lama aman. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 145,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Bilah atas e-reader HP: 'Bagian N dari N' jadi 'N/N' di layar sempit, tak menabrak tombol Dengar (#1336)",
+      "dokumen": "docs/spesifikasi-header-bagian-dengar-1336.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1336.html. Chip #rChap di ui.js:1450 (bukan secLabel); CSS style.css:949. Ringkas ≤430px, min-width:0 + ellipsis, jarak 8px, tombol 44px. Naikkan C di sw.js."
     }
   ],
   "prioritas": [
