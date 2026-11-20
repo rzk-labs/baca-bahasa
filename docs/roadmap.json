@@ -282,7 +282,7 @@
       "prioritas": "P0",
       "nama": "Home memuat: rak lokal dulu, batas 8 detik + Coba lagi, sembunyikan chip 0 hari, perbaiki nama bkState, toast sekali (#1251)",
       "dokumen": "docs/riset-layar-memuat-home.md",
-      "status": "siap dikerjakan"
+      "status": "selesai (#1354)"
     },
     {
       "no": 138,

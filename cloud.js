@@ -163,8 +163,8 @@ function mergeTaps(srv) {
 }
 let lastSync = '', syncCur = null;
 // status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
-var bkState = '';
-function bkSet(v) { if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
+var bkState = '', bkSkip = false; // bkSkip: pengguna pilih 'Lanjut tanpa menunggu'
+function bkSet(v) { if (bkSkip && v === 'fail') v = ''; if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
 function syncRefresh(force) {
   if (!force && !$('#sheet').classList.contains('hide')) return;
   const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName);
@@ -225,7 +225,7 @@ async function syncBooks() {
   bkBusy = true;
   if (!(db.books || []).length) bkSet('load');
   let bad = false;
-  const tmo = setTimeout(() => { if (bkState === 'load' && !(db.books || []).length) bkSet('fail'); }, 10000);
+  const tmo = setTimeout(() => { if (bkState === 'load' && !(db.books || []).length) bkSet('fail'); }, 8000);
   try {
     const rem = (await api('/books')).books || [];
     const remKeys = new Set(rem.map(x => x.key));
