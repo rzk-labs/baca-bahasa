@@ -310,7 +310,7 @@
       "prioritas": "P1",
       "nama": "Eksperimen 2 retensi: tombol 'Ulang 3 kata' satu ketuk di Home (#1323)",
       "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1377)",
       "catatan": "Mockup: docs/mockup-1323.html. Hanya bila >=3 kata tersimpan; tanpa kata 'tertinggal'. Ukur ulangan selesai per pengguna. Kerjakan setelah backlog 149."
     },
     {
