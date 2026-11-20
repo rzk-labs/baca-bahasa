@@ -1,5 +1,41 @@
 [
   {
+    "n": 1371,
+    "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
+    "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1369,
+    "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
+    "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1367,
+    "judul": "[peta 150] Tombol 'Siapkan offline': unduh arti kata bab ini",
+    "poin": "Menu ⋯ buku kini punya tombol \"Siapkan offline\": arti kata baru diunduh, maks 150.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1365,
+    "judul": "[peta 148] Penunjuk tingkat kesulitan bacaan di kartu buku saat impor",
+    "poin": "Kartu buku di Home sekarang menampilkan tingkat bacaan: Ringan, Sedang, atau Berat.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1363,
+    "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
+    "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1359,
+    "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
+    "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1324,
     "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
     "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
@@ -141,42 +177,6 @@
     "n": 1275,
     "judul": "Toast 'ikut akun' tak menimpa layar + sinkron punya batas waktu",
     "poin": "Pesan \"Data kamu ikut akun\" kini singkat, muncul sekali, dan tidak menutup judul.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1273,
-    "judul": "[peta 136] Keepo HQ: satu kotak mockup, hapus 'Belum ada gambar'",
-    "poin": "Kartu \"Siap dicek\" di Keepo HQ sekarang hanya punya satu kotak mockup.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1269,
-    "judul": "[peta 137] Keepo HQ: urutkan kolom Papan sesuai kebiasaan founder",
-    "poin": "Papan sekarang mulai dari yang butuh kamu: Siap dicek paling kiri.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1260,
-    "judul": "[peta 134] Kurangi muat ulang otomatis: update diam-diam, toast tanpa tombol",
-    "poin": "Update app sekarang masuk diam-diam, layar tidak berganti sendiri saat dipakai.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1258,
-    "judul": "[peta 135] Kartu kata: 'Bisa juga' tak hilang + pesan saat offline",
-    "poin": "Bagian \"Bisa juga\" di kartu kata sekarang diambil ulang otomatis, tidak hilang lagi.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1253,
-    "judul": "Perbaiki Home macet 'Memuat bukumu…': nama bkState bentrok + batas waktu",
-    "poin": "Layar Home tidak lagi macet di \"Memuat bukumu…\".",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1250,
-    "judul": "Home saat memuat: kerangka rak + chip streak tak tampil '0 hari'",
-    "poin": "Home saat memuat sekarang tampil kerangka rak yang berdenyut pelan.",
     "tgl": "2026-11-17"
   }
 ]
