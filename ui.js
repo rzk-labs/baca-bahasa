@@ -1756,7 +1756,7 @@ function layout() {
   const resumed = !RD.toEnd && RD.flash == null && cols._chip !== true && ((b.pos || 0) > 0 || (b.si || 0) > 0 || p > 0);
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
-  if (resumed) { cols._chip = true; resumeChip(b); }
+  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100)) resumeChip(b); } /* buku tamat: tanpa chip 'Lanjut' (#1304) */
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 /* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
@@ -1919,7 +1919,7 @@ function showPage(p, anim = true) {
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
-  else if (last && b.doneAt) { nx.textContent = 'Buku baru'; nx.dataset.ulang = '1'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buku baru'); }
+  else if (last && b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buka layar Tamat'); }
   else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Selesai membaca'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
@@ -2151,7 +2151,7 @@ function turn(d) {
   if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold(); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
   if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
-  else if (d > 0) { if (b.doneAt) setTab('rak'); else finishBook(b); }
+  else if (d > 0) { if (b.doneAt) tamatSeen = null; finishBook(b); }
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));

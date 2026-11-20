@@ -1,5 +1,11 @@
 [
   {
+    "n": 1304,
+    "judul": "Layar Tamat: satu set tombol + sembunyikan 'Lanjut dari' di buku tamat",
+    "poin": "Buku yang sudah tamat kini punya lagi tombol Baca ulang dan Buku baru.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1346,
     "judul": "Profil: lencana hampir tercapai di atas, sisanya dilipat",
     "poin": "Profil sekarang menampilkan 3 lencana yang hampir tercapai di bagian atas.",
@@ -171,12 +177,6 @@
     "n": 1254,
     "judul": "Tips pertama e-reader: satu baris, bergantian, tak tutup teks",
     "poin": "Tips pertama saat baca sekarang cuma satu baris, tidak menutupi teks lagi.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1240,
-    "judul": "[peta 106] Gagal masuk/daftar/sinkron: pesan jelas + satu tombol langkah",
-    "poin": "Tombol langkah saat gagal masuk ternyata sudah jalan sejak tugas sebelumnya.",
     "tgl": "2026-11-17"
   }
 ]
