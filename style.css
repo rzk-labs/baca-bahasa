@@ -786,6 +786,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .wk-g div{display:flex;flex-direction:column;min-width:0}
 .wk-g b{font-size:24px;line-height:28px}
+.wk-n{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .wk-g span{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 /* teks sistem besar (#740): tombol sheet boleh 2 baris, min 44px, tak keluar layar */
