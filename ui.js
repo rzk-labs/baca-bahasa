@@ -266,8 +266,13 @@ function award(n, stat, pk0, si) {
   if (stat) db.stat[stat] = (db.stat[stat] || 0) + 1;
   if (n && stat) { db.xpSrc = db.xpSrc || {}; db.xpSrc[stat] = (db.xpSrc[stat] || 0) + n; } /* asal XP, hanya untuk tampilan */
   if (stat === 'page') {
-    db.pgDay = db.pgDay || {}; const pd = today(); db.pgDay[pd] = (db.pgDay[pd] || 0) + 1;
-    const pk = Object.keys(db.pgDay).sort(); if (pk.length > 60) delete db.pgDay[pk[0]];
+    /* #1350: 'halaman dibaca' tak bertambah saat baca ulang buku tamat, dan halaman yang sama hanya dihitung sekali per 7 hari */
+    const rb2 = book(), pd = today(), wk = (pk0 || '?') + '#' + (Number.isFinite(si) ? si : 0);
+    if (!db.pgWeek || typeof db.pgWeek !== 'object' || Array.isArray(db.pgWeek)) db.pgWeek = {};
+    const lim = dayKey(new Date(Date.now() - 8 * 864e5));
+    for (const k in db.pgWeek) if (db.pgWeek[k] < lim) delete db.pgWeek[k];
+    if (!(rb2 && rb2.doneAt) && !(wk in db.pgWeek)) { db.pgWeek[wk] = pd; db.pgDay = db.pgDay || {}; db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; }
+    const pk = Object.keys(db.pgDay || {}).sort(); if (pk.length > 60) delete db.pgDay[pk[0]];
     const sg = Object.keys(db.pgSeen).sort(); while (sg.length > 8) delete db.pgSeen[sg.shift()];
   }
   const before = level();

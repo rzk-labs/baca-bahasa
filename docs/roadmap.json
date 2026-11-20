@@ -1383,6 +1383,15 @@
       "dokumen": "docs/riset-app-store-42.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1337.html. Dikerjakan bila build 12 ditolak 4.2 atau untuk build berikutnya. Mulai dengan spesifikasi singkat (acuan: docs/riset-pengingat-baca-pwa.md); jangan tempel fitur kosong, harus berguna. Naikkan versi C di sw.js bila file app berubah."
+    },
+    {
+      "no": 152,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Minggu ini: 'halaman dibaca' tak membengkak karena baca ulang (#1350)",
+      "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
+      "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
     }
   ],
   "prioritas": [
