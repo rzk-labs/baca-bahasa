@@ -174,7 +174,7 @@
       "nama": "Masukan Pengguna Manusia",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "Draft 17 Nov 2026: 20 kutipan bukti internet (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "Draft 20 Nov 2026: 41 kutipan bukti internet dari 9 sumber, 22 di antaranya suara pembelajar Indonesia (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; vonis: kamus memutus alur terbukti, harga & sinyal belum jelas; tetap draft karena aturan_fase2; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 25,
@@ -1275,6 +1275,24 @@
       "dokumen": "docs/desain-header-reader-1335.md",
       "status": "selesai (dikerjakan di #1335, perlu dicek di HP 320/375px)",
       "catatan": "Mockup: docs/mockup-1335.html. Label ringkas N/N di <=430px, aria-label tetap penuh. Versi C di sw.js naik ke kepo-v474."
+    },
+    {
+      "no": 146,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Baca tanpa putus: tandai kata sambil lanjut, lihat arti nanti (#1353)",
+      "dokumen": "docs/riset-suara-manusia-tahap-24.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1353.html. Alasan: 7 kutipan Indonesia bilang buka kamus tiap kata bikin capek & hilang mood. Tambah 'Tandai & lanjut' di kartu arti; daftar tinjau di akhir bagian. Data lama aman. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 147,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Penunjuk tingkat kesulitan bacaan + saran bagian mulai (#1353)",
+      "dokumen": "docs/riset-suara-manusia-tahap-24.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1353.html. Alasan: kutipan 'kapok', 'nyesel beli novel', 'minder' = bacaan terlalu sulit di awal. Hitung kata baru per halaman dari data yang ada; tampil di kartu buku saat impor. Naikkan versi C di sw.js."
     }
   ],
   "prioritas": [

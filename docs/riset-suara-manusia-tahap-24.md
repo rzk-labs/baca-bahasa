@@ -1,14 +1,14 @@
 # Suara manusia asli dari internet (Tahap 24)
 
 ## Intinya
-- 20 kutipan asli terkumpul. Hanya 1 dari pembelajar Indonesia; sisanya forum luar.
-- Tiga pola: ribet di awal, paket gratis dianggap tak berguna, harga sensitif.
-- Ini bukti internet, bukan data manusia Keepo. Status tahap 24: draft.
+- 41 kutipan asli; 22 dari pembelajar Indonesia. Syarat 30+ bukti terpenuhi, tahap tetap draft.
+- Terbukti: buka kamus tiap kata bikin capek, hilang mood, lalu berhenti.
+- Harga dan sinyal belum jelas: bukti Indonesia terlalu tipis.
 
 ## 1. Cara dan batas
 - Kutipan disalin dari halaman yang benar-benar terbuka. Nama pengguna tidak ditulis.
 - Tidak terbaca: Reddit (hanya mirror yang gagal dimuat), Threads/X, Play Store/App Store.
-- Pencarian Indonesia hanya menemukan artikel dan satu esai pribadi. Celah ini nyata.
+- Pencarian Indonesia awalnya hanya menemukan artikel. Putaran 20 Nov 2026 menambah 21 kutipan (bagian 2B).
 
 ## 2. Berhenti di minggu pertama
 | # | Kutipan | Sumber (tanggal) | Tema | Keepo menjawab? |
@@ -22,6 +22,36 @@
 | 7 | "I think the book I was using was actually WAY beyond my level." | [Forum WaniKani](https://community.wanikani.com/t/how-do-you-even-read-a-japanese-book/48774/30) (27 Jan 2021) | Buku terlalu sulit | Sebagian: bacaan sendiri bebas, tapi belum ada penunjuk tingkat kesulitan |
 | 8 | "it's not the end of the world if you don't understand a passage fully." | Forum WaniKani, tautan sama (tanggal tak tampil) | Terima paham sebagian | Ya: ketuk kata saat perlu, tidak wajib |
 | 9 | "sering banget gue udah capek belajar, pengen nyerah." | [Mojok](https://mojok.co/terminal/tips-belajar-bahasa-inggris-dari-yang-awalnya-bego-banget-sampai-bisa-kuliah-ke-eropa/amp/) (8 Nov 2019), pembelajar Indonesia | Capek, ingin menyerah | Sebagian: streak/XP; belum teruji pada manusia |
+
+## 2B. Suara Indonesia (tambahan 20 Nov 2026)
+| # | Kutipan | Sumber (tanggal) | Tema | Keepo menjawab? |
+|---|---|---|---|---|
+| 21 | "hal itu membuat saya jadi malas dan sulit untuk menyelesaikan bacaan tersebut" | [Goodreads Indonesia](https://www.goodreads.com/topic/show/2068329-bagaimana-cara-membaca-buku-bahasa-inggris-untuk-pemula) (3 Nov 2014) | Kamus bikin malas | Sebagian: arti langsung di bacaan; belum ada lanjut-dulu (#146) |
+| 22 | "tidak masalah skip beberapa kata yang kurang dimengerti jika agak malas buka kamus" | Goodreads Indonesia, tautan sama (4 Nov 2014) | Boleh lewati kata | Sebagian: boleh tak mengetuk; belum ada tandai-lalu-lanjut |
+| 23 | "Karena saya banyakan baca ebook bahasa inggris, kamus yang saya pakai juga digital" | Goodreads Indonesia, tautan sama (3 Nov 2014) | Baca di layar | Ya: kamus ada di dalam bacaan |
+| 24 | "karena emang pegel kalo tiap kata susah dicari di kamus" | Goodreads Indonesia, tautan sama (9 Mei 2016) | Kamus bikin pegal | Ya: tanpa pindah aplikasi |
+| 25 | "capek sih apalagi waktu ceritanya lagi asyik-asyiknya, nggak bisa ngebut." | Goodreads Indonesia, tautan sama (9 Mei 2016) | Alur terputus | Sebagian: arti cepat, alur tetap terputus (#146) |
+| 26 | "baca pake google playbook dan download offline dictionarynya" | Goodreads Indonesia, tautan sama (11 Mei 2016) | HP & tanpa sinyal | Celah: arti kata offline belum teruji |
+| 27 | "Waktu pertama kali nekat beli novel dalam bahasa Inggris, jujur aku sempat nyesel" | [Lemon8, esai pribadi](https://www.lemon8-app.com/shanifiction/7162132198802358785?region=id) (4 Nov 2022) | Novel terlalu sulit | Celah: penunjuk tingkat kesulitan (#147) |
+| 28 | "Dulu aku sering berhenti setiap ketemu kata yang nggak ngerti, terus buka kamus. ... Bacanya lama banget dan malah kehilangan mood." | Lemon8, tautan sama (4 Nov 2022) | Kamus bikin hilang mood | Sebagian: #146 |
+| 29 | "Saya nekat baca endingnya dalam bahasa Inggris ala British.. dan langsung megap - megap ga ngerti." | [Blog pribadi](http://renslittlecorner.blogspot.com/2014/06/kenapa-saya-membaca-buku-bahasa-inggris.html) (10 Jun 2014) | Teks asli bikin kaget | Celah: #147 |
+| 30 | "Sejak saat itu saya semacam kapok." | Blog pribadi, tautan sama (10 Jun 2014) | Kapok sejak awal | Celah: awal harus mudah (#147) |
+| 31 | "Buat yang masih suka minder kalau lihat isi buku bahasa Inggris penuh teks, tenang, aku juga dulu begitu." | [Lemon8, esai pribadi](https://www.lemon8-app.com/asukamai/7200319474581635586?region=id) (15 Feb 2023) | Minder lihat teks | Sebagian: bagian pendek; #147 |
+| 32 | "Aku dari dulu males belajar, dan ga pede sama bahasa Inggris aku." | [Lemon8, posting Duolingo](https://www.lemon8-app.com/@ateecautydesu/7510430690786148881?region=id) (tanggal tak tampil) | Tidak pede | Sebagian: baca dulu, ngomong belakangan |
+| 33 | "Notifikasi burung Duolingo yang muncul seolah 'ngejar' aku itu kadang bikin merasa bersalah kalau belum belajar" | Lemon8, tautan sama (31 Mei 2025) | Pengingat menekan | Celah: pengingat Keepo harus lembut |
+| 34 | "Merasa aplikasinya mulai terlalu banyak iklan (untuk yang versi gratis)." (penulis mengutip alasan orang lain) | [Lemon8, posting Duolingo](https://www.lemon8-app.com/experience/ini-kenapa-aku-hapus-duolingo?region=id) (10 Nov 2024) | Iklan di versi gratis | Ya: Keepo tanpa iklan; bukti tipis, tak langsung |
+| 35 | "Duolingo ni best tapi semakin lama semakin susah lak dah." | Lemon8, tautan sama (tanggal tak tampil) | Makin susah | Sebagian: bacaan pilihan sendiri; #147 |
+| 36 | "Namun, pola soal dan jawaban dalam Duolingo cenderung begitu-begitu saja dan tidak ada variasi dalam cara pembelajarannya." | [Mojok](https://mojok.co/terminal/cake-aplikasi-belajar-bahasa-inggris-saingan-berat-duolingo/) (11 Jan 2021) | Bosan, monoton | Ya: bacaan beda tiap buku |
+| 37 | "Kalau nggak dipakai juga lama-lama luntur keilmuannya." | [Mojok](https://mojok.co/terminal/suka-duka-menjadi-mahasiswa-dan-setelah-lulus-dari-jurusan-sastra-jepang/) (7 Agu 2021) | Lupa kalau tak dipakai | Sebagian: ulang kata lama; belum teruji |
+| 38 | "Sekali lagi, hubungan dengan bahasa Jepang itu susah-susah gampang." | Mojok, tautan sama (7 Agu 2021) | Susah-susah gampang | Belum jelas: terlalu umum |
+| 39 | "Membantu banget aplikasi nya" | [App Store Indonesia, Duolingo](https://apps.apple.com/id/app/duolingo-belajar-bahasa/id570060128) (7 Okt 2020) | Pujian singkat | Tidak berlaku: tanpa alasan |
+| 40 | "Aplikasi ini sangat berguna bagi saya dan sangat membantu saya dalam belajar bahasa" | [App Store Indonesia, Cakap](https://apps.apple.com/id/app/cakap/id1434645453) (17 Jun 2022) | Pujian singkat | Tidak berlaku: tanpa alasan |
+| 41 | "Dan setelah di cari tau, sayang banget apk ini pro akan pelangi dan aku memutuskan buat uninstall apk ini." | Lemon8, [tautan #34](https://www.lemon8-app.com/experience/ini-kenapa-aku-hapus-duolingo?region=id) (10 Nov 2024) | Berhenti karena nilai pribadi | Tidak berlaku: bukan soal belajar/harga |
+
+Catatan:
+- Tanpa nama pengguna. Kutipan disalin apa adanya dari halaman terbuka.
+- Lemon8 hanya menampilkan sebagian teks; "tanggal tak tampil" = halaman tak menunjukkannya.
+- #41 alasan nilai pribadi, bukan soal belajar; dihitung bukti, tak dipakai untuk vonis.
 
 ## 3. Yang disukai
 | # | Kutipan | Sumber (tanggal) | Tema | Keepo menjawab? |
@@ -47,12 +77,30 @@ Catatan: #19-20 ada di halaman yang saya baca sebagai ulasan ekstensi Language R
 ## 5. Pelajaran
 - Gratis yang terasa mati bikin orang pergi dan marah. Gratis yang berguna menang.
 - Tunggakan kata dan ulasan bikin kewalahan. Baca harus tetap terasa ringan.
-- Bacaan terlalu sulit bikin menyerah. Bacaan sendiri butuh penunjuk tingkat.
+- Bacaan terlalu sulit bikin kapok. Buka kamus tiap kata bikin hilang mood.
+
+## 5B. Vonis per hipotesis
+| Hipotesis | Vonis | Dasar |
+|---|---|---|
+| H1. Orang berhenti awal karena capek/ribet, bukan malas baca | Terbukti | #24, #25, #28, #36 |
+| H2. Teks asli sulit & kamus memutus alur | Terbukti | 7 kutipan Indonesia (#21-26, #28) |
+| H3. Bacaan terlalu sulit bikin minder/kapok | Terbukti | #27, #29, #30, #31 |
+| H4. Harga & paket gratis alasan berhenti (Indonesia) | Belum jelas | 1 kutipan iklan tak langsung (#34); kuat di forum luar (#1, #15) |
+| H5. Baca di HP & sinyal jelek mengganggu | Belum jelas | #23 dan #26 sebut e-book/HP; tak ada soal sinyal |
+| H6. Pengingat/streak menekan bikin menjauh | Sebagian terbukti | #33 (1 kutipan Indonesia) |
+
+## 5C. Tiga masalah teratas (jadi tugas)
+- Kamus memutus alur: tandai kata, lanjut baca, lihat nanti. Backlog #146.
+- Bacaan terlalu sulit di awal: penunjuk tingkat + saran bagian mulai. Backlog #147.
+- Pengingat menekan: cek nada pengingat Keepo. Belum jadi tugas; tunggu data manusia.
 
 ## 6. Batas bukti
-- 1 kutipan Indonesia dari 20. Gen Z Indonesia belum terwakili.
-- Sumber: forum LingQ, forum Readlang, forum WaniKani, Mojok, Chrome Web Store (5 sumber).
-- Kutipan forum ditulis penggunanya dalam konteks lain; jangan dibaca sebagai data Keepo.
+- 41 kutipan; 22 Indonesia (Goodreads 6, Lemon8 8, Mojok 4, blog pribadi 2, App Store 2).
+- Sumber: LingQ, Readlang, WaniKani, Mojok, Chrome Web Store, Goodreads, Lemon8, blog pribadi, App Store (9).
+- Tidak terbaca: Play Store, Quora, Threads/X, Kompasiana (halaman kosong), App Store Beelinguapp (404).
+- Ulasan App Store Indonesia yang terbaca hanya pujian pendek; tak ada keluhan harga/sinyal.
+- Harga & sinyal Indonesia belum punya bukti langsung. Jangan klaim terbukti.
+- Kutipan ditulis penggunanya dalam konteks lain; bukan data Keepo.
 
 ## 7. Lima pertanyaan untuk 5 pengguna nyata
 - Kapan terakhir kamu berhenti baca di tengah buku bahasa asing? Apa yang terjadi?
@@ -68,5 +116,6 @@ Catatan: #19-20 ada di halaman yang saya baca sebagai ulasan ekstensi Language R
 
 ## 9. Langkah berikutnya
 - Founder posting ke 3 kanal; target 5 orang menjawab. Naskah: `docs/naskah-wawancara-pengguna.md`.
-- Gabungkan jawaban dengan 20 kutipan ini; hitung ulang tema teratas.
-- Tahap 24 baru selesai setelah ≥20 masukan manusia Keepo.
+- Gabungkan jawaban dengan 41 kutipan ini; hitung ulang tema teratas.
+- Tahap 24 tetap draft: aturan fase 2 butuh ≥20 masukan manusia Keepo.
+- Mockup usulan #146/#147: `docs/mockup-1353.html`.
