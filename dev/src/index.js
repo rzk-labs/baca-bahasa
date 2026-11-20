@@ -306,6 +306,14 @@ async function api0(req, env, url) {
     if (!r.ok) return json({ error: r.status === 403 ? 'Token GitHub belum punya izin Actions (Read and write)' : 'Gagal menjalankan PM (' + r.status + ')' }, 400);
     return json({ ok: true });
   }
+  if (p === '/uji' && req.method === 'POST') {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/kepo-pengguna.yml/dispatches`, {
+      method: 'POST', headers: { authorization: 'Bearer ' + env.GH_TOKEN, accept: 'application/vnd.github+json', 'user-agent': 'kepo-dev', 'content-type': 'application/json' },
+      body: JSON.stringify({ ref: 'main', inputs: { setelah_live: 'false' } }),
+    });
+    if (!r.ok) return json({ error: r.status === 403 ? 'Token GitHub belum punya izin Actions (Read and write)' : 'Gagal menjalankan tester (' + r.status + ')' }, 400);
+    return json({ ok: true });
+  }
   if (p === '/tasks' && req.method === 'GET') {
     const l = await gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=40&sort=created&direction=desc`);
     return json(l.filter(i => !i.pull_request).map(brief));
