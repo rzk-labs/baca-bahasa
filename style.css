@@ -1057,7 +1057,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:340px){#pStreak,#pXp{padding:0 5px;font-size:var(--fs-min)}#hdx #set{min-width:40px;padding:0 4px;font-size:12px}}
 .badge .bp{display:block;font-size:var(--fs-min);line-height:14px;font-weight:700;margin-top:6px}
 .badge .bar{height:4px;margin-top:3px}
-.badge.off .bar{background:#351E28}.badge.off .bar i{background:#E9F056}
+.badge.off .bar{background:#D7EFFF}.badge.off .bar i{background:#351E28}
 .bgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3)}
 .bgrid .badge{width:auto;min-width:0;padding-right:10px}
 .badge.off[role=button]{cursor:pointer}
@@ -1091,7 +1091,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .badge .got{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px 2px 6px;border-radius:9999px;background:#351E28;color:#E9F056;font-size:12px;line-height:16px;font-weight:800;max-width:100%}
 .badge .got .ck{flex:none;width:12px;height:12px;stroke-width:3}
 .badge.off .bp{font-size:13px;line-height:16px;font-weight:800;color:#E9F056;background:#351E28;border-radius:9999px;padding:2px 8px;display:inline-block}
-.badge.off .bar{height:8px;border-radius:9999px;background:#351E28;margin-top:6px}.badge.off .bar i{background:#E9F056;border-radius:9999px}
+.badge.off .bar{height:8px;border-radius:9999px;background:#D7EFFF;box-shadow:inset 0 0 0 1px rgba(53,30,40,.35);margin-top:6px}.badge.off .bar i{background:#351E28;border-radius:9999px}
+.goal-ok{display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}.goal-ok .ck{width:14px;height:14px;stroke-width:3}
 .prem-badge{display:inline-block;vertical-align:middle;background:var(--ink);color:var(--hl);font:700 12px/1 var(--font-ui,Inter,sans-serif);padding:4px 10px;border-radius:999px;white-space:nowrap}
 .hl-prem{background:#E9F056;color:#351E28;padding:0 6px;border-radius:4px;font-weight:700}
 /* Home pemula (#1107): hero kecil, tombol utama terlihat tanpa scroll, langkah 1 = tombol */
