@@ -207,6 +207,11 @@ body.reading::after{display:none}
 .bk .t{overflow-wrap:normal;word-break:normal;-webkit-hyphens:manual;hyphens:manual;font-weight:700;font-size:14px;line-height:19px;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bk .m{font-size:12px;line-height:16px;color:var(--color-text-muted);font-weight:600}
 .bk .m.nw{font-weight:500;margin-top:2px}
+.bk .kb{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:4px}
+.bk .kbt{font-size:12px;line-height:16px;font-weight:700;padding:2px 10px;border-radius:9999px;color:var(--ink)}
+.bk .kbt.ringan{background:#CBD4BF}.bk .kbt.sedang{background:#EFEBCB}.bk .kbt.berat{background:#E7DADF}
+.bk .kb .m.nw{margin-top:0;white-space:normal}
+.bk .kb .kbs{font-weight:700;color:var(--ink)}
 .bk .bk-act{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:14px;padding-top:4px}
 .bk .del{position:static;min-width:44px;height:44px;min-height:0;padding:0 12px;gap:6px;font-size:12px;font-weight:700;background:rgba(0,0,0,.06);color:var(--ink)}
 .bk .del.sure{background:var(--color-poor);color:#fff;white-space:nowrap}
@@ -468,6 +473,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
 .wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
+.reader.plain .cols .w.saved:not(.sel),.reader.plain .cols .w.often:not(.saved):not(.sel){text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
 #wkenal[hidden]{display:none}
@@ -725,7 +731,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
   .ksrow{gap:8px}.ksrow .csvcnt{font-size:13px}
   .fchip{padding:0 14px}
 }
-.prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
+.prep{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-lg);background:var(--color-surface);margin:var(--space-2) 0}.prep-t{display:flex;align-items:center;gap:8px}.prep-t .i{width:20px;height:20px}.prep-bar{height:6px;border-radius:3px;background:var(--color-surface-soft);overflow:hidden}.prep-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}.prep-acts{display:flex;gap:8px;flex-wrap:wrap}#offBox{margin:var(--space-3) 0 0}#offBox .prep-acts button{flex:1 1 140px;min-width:0}#offMsg{overflow-wrap:anywhere}.prep-acts button{min-height:44px}.prep-acts button:disabled{opacity:.6}
 /* Sosial: teman membaca & profil */
 .fr-row{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:9px 6px;border-radius:14px;color:inherit;font:inherit;cursor:pointer}
 .fr-row:hover,.fr-row:focus-visible{background:var(--color-surface-soft)}
@@ -1087,7 +1093,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 @media (max-width:640px){#hdx{gap:8px}#hdx #set{padding:0 10px;font-size:13px;margin-left:2px}}
 @media (max-width:430px){#hdx #set{width:44px;padding:0}#hdx #set .hsl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (max-width:340px){#hdx{gap:6px}#hdx #set{width:44px;min-width:44px;padding:0}}
-.stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}
+.stat3 .num.sdots{gap:3px}.sdots i{width:8px;height:8px;border-radius:50%;background:rgba(53,30,40,.22)}.sdots i.on{background:#351E28}.sdots i.old{background:rgba(53,30,40,.4)}.sdots i.ring{background:transparent;box-shadow:inset 0 0 0 1.5px #351E28}.streak1{min-width:0}.streak1 .lbl2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0}
 .rk-bk .cover{height:72px}.rk-shelf{padding-top:8px}.rk-p{margin-bottom:6px}
 .badge .got{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px 2px 6px;border-radius:9999px;background:#351E28;color:#E9F056;font-size:12px;line-height:16px;font-weight:800;max-width:100%}
 .badge .got .ck{flex:none;width:12px;height:12px;stroke-width:3}
@@ -1248,3 +1254,5 @@ ol.steps3 b{min-width:0}
 .wchip.wmore{background:#351E28;color:#E9F056}
 #wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 #wdict{max-height:40vh;overflow-y:auto}
+/* #1363 Tandai & lanjut */
+.wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
