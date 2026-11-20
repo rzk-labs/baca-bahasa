@@ -1,5 +1,11 @@
 [
   {
+    "n": 1324,
+    "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
+    "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1304,
     "judul": "Layar Tamat: satu set tombol + sembunyikan 'Lanjut dari' di buku tamat",
     "poin": "Buku yang sudah tamat kini punya lagi tombol Baca ulang dan Buku baru.",
@@ -171,12 +177,6 @@
     "n": 1250,
     "judul": "Home saat memuat: kerangka rak + chip streak tak tampil '0 hari'",
     "poin": "Home saat memuat sekarang tampil kerangka rak yang berdenyut pelan.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1254,
-    "judul": "Tips pertama e-reader: satu baris, bergantian, tak tutup teks",
-    "poin": "Tips pertama saat baca sekarang cuma satu baris, tidak menutupi teks lagi.",
     "tgl": "2026-11-17"
   }
 ]

@@ -746,7 +746,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v398';
+const APP_VER = 'v482';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -941,6 +941,15 @@ function weekCard() {
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
   return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${[pages ? it(pages, 'halaman dibaca') : '', words ? it(words, 'kata disimpan') : ''].join('') || it(days, 'dari 7 hari baca')}</div>${!pages && !words ? `<div class="wk-n">Beruntun ${streak()} hari tanpa putus</div>` : ''}</div>`; /* #1095: 'hari aktif' tak diulang; streak cukup di pil atas */
 }
+/* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
+function streakDots() {
+  const n = streak(), has = db.days.includes(today()), off = has ? 0 : 1;
+  return [6, 5, 4, 3, 2, 1, 0].map(k => {
+    const act = db.days.includes(dayKey(new Date(Date.now() - k * 864e5)));
+    const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
+    return `<i class="${cls}"></i>`;
+  }).join('');
+}
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
 function streakInfo() {
   const cur = streak(), ds = db.days.slice().sort();
@@ -993,7 +1002,7 @@ function viewRak() {
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     ${weekCard()}
     <div class="stat3">
-      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Tujuh hari terakhir">${ico('flame', 'numi')}${[6, 5, 4, 3, 2, 1, 0].map(k => `<i class="${db.days.includes(dayKey(new Date(Date.now() - k * 864e5))) ? 'on' : ''}"></i>`).join('')}</div><div class="lbl2">${streakInfo()}</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Streak ${streak()} hari, 7 hari terakhir">${ico('flame', 'numi')}${streakDots()}</div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime" id="goalCard">${goalCardHtml(xt)}</div>
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
