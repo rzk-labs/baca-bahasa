@@ -15,13 +15,13 @@ permissions:
   issues: write
   actions: write
 
-concurrency:
-  group: kepo-gabung
-  cancel-in-progress: false
-
 jobs:
   gabung:
     if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'antre-live'
+    # concurrency di level job: event label lain (job di-skip) tidak lagi membatalkan antrean yang menunggu.
+    concurrency:
+      group: kepo-gabung
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
