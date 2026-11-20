@@ -468,6 +468,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
 .wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
+.reader.plain .cols .w.saved:not(.sel),.reader.plain .cols .w.often:not(.saved):not(.sel){text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel){color:var(--color-text-muted);text-decoration:none}
 .cols .w.kenal:not(.saved):not(.sel) rt{color:var(--color-text-muted)}
 #wkenal[hidden]{display:none}
@@ -786,6 +787,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .wk-g div{display:flex;flex-direction:column;min-width:0}
 .wk-g b{font-size:24px;line-height:28px}
+.wk-n{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .wk-g span{font-size:12px;line-height:16px;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 /* teks sistem besar (#740): tombol sheet boleh 2 baris, min 44px, tak keluar layar */
@@ -852,7 +854,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #1020: kartu buku tamat lebih lega & ringkas */
 #hero.hero-done{padding:14px}
 #hero.hero-done .hero-act{margin-top:10px}
-.fb-acts{display:block}.fb-acts .pri{width:100%}
+.fb-acts{display:flex;flex-direction:column;gap:12px}.fb-acts button{flex:0 0 auto;width:100%;min-height:44px;margin:0}
 .fb-sec{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
 .fb-sec .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
 .fb-next{padding:10px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
