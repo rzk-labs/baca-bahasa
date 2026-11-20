@@ -160,7 +160,7 @@
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 23,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 153,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Ukur aktivasi hari pertama lewat /hitung: 3 langkah, detik ke ketuk kata pertama, per sumber & jalur (#1384)",
+      "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1384.html (kartu Aktivasi di Keepo HQ). Tanpa data pribadi. Ubah cloud.js + dev/ (api/ deploy manual founder). Target usul: >=25% sekarang, >=40% setelah perbaikan. Naikkan C di sw.js bila file app berubah."
+    },
+    {
+      "no": 154,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Bukti internet: patokan aktivasi hari pertama app baca & bahasa (#1384)",
+      "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 46 butir, 4 jenis sumber. H1 belum jelas (60% condong terlalu tinggi); H2 belum jelas; H3 terbukti sebagian; H4 terbukti sebagian; H5 belum jelas. Usul target dua tingkat 25%/40%; ukur lewat #153."
+    },
     {
       "no": 146,
       "peran": "developer",
