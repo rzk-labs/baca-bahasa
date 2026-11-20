@@ -439,10 +439,11 @@ function openAccount(mode) {
         <label class="row" style="gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="aHideT" style="width:auto" ${db.acct.hideTitles ? 'checked' : ''}> <span class="sm">Sembunyikan judul buku</span></label>
         <div class="row" style="margin-top:8px"><button class="sec" id="aMe">Lihat profilku</button></div></div>
       <div class="mut sm">${NOTE_AKUN}</div>${bkCard()}
+      ${remHtml()}
       <div class="row"><button class="sec" id="aSync">Sinkron sekarang</button><button class="pri" id="aOut">Keluar</button></div>
       <div class="sm" id="aSyncErr" role="alert" style="margin-top:10px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden>Belum bisa sinkron. Progres aman.<div class="row" style="margin-top:8px"><button class="sec" type="button" id="aSyncRetry">Coba lagi</button></div></div>
       <div class="set-row"><div class="eyebrow">Hapus akun</div><div class="mut sm">Akun, XP, kata, dan buku yang dibagikan dihapus dari server. Data di HP ini tetap ada.</div><div class="row"><button class="sec" id="aDel" type="button">Hapus akun permanen</button></div></div>`);
-    bkWire();
+    bkWire(); remWire();
     const setSocial = async () => { try { await api('/social', { method: 'PUT', body: { publik: !!db.acct.publik, hideTitles: !!db.acct.hideTitles } }); save(); } catch (e) { toast(e.message); } };
     $$('#aPub button').forEach(b => b.onclick = () => { db.acct.publik = b.dataset.v === '1'; $$('#aPub button').forEach(x => x.classList.toggle('on', x === b)); setSocial().then(() => toast(db.acct.publik ? 'Profilmu sekarang publik.' : 'Profilmu sekarang privat.')); });
     $('#aHideT').onchange = e => { db.acct.hideTitles = e.target.checked; setSocial(); };

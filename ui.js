@@ -672,6 +672,7 @@ function openSettings() {
     </ul>
     ${document.body.classList.contains('reading') ? '' : `<button class="sec full fb-open" id="fbTake">${ico('flag')}Minta hapus konten</button>`}
     </div>
+    ${document.body.classList.contains('reading') ? '' : remHtml()}
     <div class="set-grp" id="apl"><div class="set-gt">Aplikasi</div>
     <div class="set-row"><div class="eyebrow">Versi app: ${APP_VER}</div><div class="mut sm" id="muMsg">Buku, kata, dan XP-mu tetap aman.</div>${chipVerBaru()}</div>
     <button class="sec full" id="muBtn" type="button" style="min-height:44px">Muat ulang versi terbaru</button>
@@ -686,6 +687,7 @@ function openSettings() {
     <div class="mut sm" id="muatMsg" role="status" style="margin-top:8px"></div>
     </div>
     </div>`, 'Pengaturan baca');
+  remWire();
   $('#muatUlang').onclick = () => {
     if (navigator.onLine === false) { $('#muatMsg').textContent = 'Butuh internet untuk ambil versi baru'; return; }
     openSheet(`<div class="sh-head"><h2>Muat ulang versi terbaru?</h2></div><p>Buku &amp; katamu tetap aman.</p><button class="full" id="muatOk" style="min-height:44px">Muat ulang</button><button class="ghost full" id="muatNo" style="min-height:44px">Batal</button>`, 'Muat ulang versi terbaru');
@@ -3116,6 +3118,69 @@ function deck(kb) {
   card.addEventListener('pointermove', e => { if (sx == null) return; dx = e.clientX - sx; card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`; card.querySelector('.yes').style.opacity = Math.max(0, dx / 100); card.querySelector('.no').style.opacity = Math.max(0, -dx / 100); });
   card.addEventListener('pointerup', () => { if (sx == null) return; sx = null; card.style.transition = ''; if (Math.abs(dx) > 90) decide(dx > 0); else { card.style.transform = ''; card.querySelectorAll('.stamp').forEach(s => s.style.opacity = 0); } });
 }
+
+/* ---------- Pengingat baca lokal + Bagikan progres (#1369) ----------
+   Tanpa server & pelacak. db.remind = { on, jam:'HH:MM', shown:'tanggal' } (opsional; data lama aman).
+   Notifikasi muncul saat Keepo dibuka/terbuka lewat jam pilihan dan hari itu belum baca. */
+const APP_LINK = 'https://rzk-labs.github.io/baca-bahasa/';
+const remSupport = () => 'Notification' in window && 'serviceWorker' in navigator;
+const remJam = () => (db.remind && /^\d\d:\d\d$/.test(db.remind.jam) ? db.remind.jam : '19:30');
+function remText() {
+  const b = book(), n = (db.vocab || []).filter(isDue).length;
+  const t = b && b.title ? splitTitle(b.title).main.slice(0, 28) : '';
+  if (t) return n ? `Lanjut ${t}? ${n} kata menunggu diulang` : `Lanjut ${t}? Satu halaman cukup.`;
+  return n ? `${n} kata menunggu diulang. Yuk, 2 menit aja.` : 'Yuk baca satu halaman hari ini.';
+}
+let remTimer = 0;
+async function remCheck() {
+  clearTimeout(remTimer);
+  const r = db.remind;
+  if (!r || !r.on || !remSupport() || Notification.permission !== 'granted') return;
+  const [h, m] = remJam().split(':').map(Number), at = new Date(); at.setHours(h, m, 0, 0);
+  const wait = at - Date.now();
+  if (wait > 0) { remTimer = setTimeout(remCheck, Math.min(wait, 2147e6)); return; }
+  if (r.shown === today() || db.days.includes(today())) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    await reg.showNotification('Keepo', { body: remText(), icon: 'icon-192.png', tag: 'keepo-baca' });
+    r.shown = today(); save();
+  } catch (e) { }
+}
+function remHtml() {
+  const r = db.remind || {}, sup = remSupport(), perm = sup ? Notification.permission : '';
+  let body;
+  if (!sup) body = `<div class="mut sm">Pasang Keepo ke layar utama dulu. Di Safari: ketuk Bagikan, lalu <b>Tambah ke Layar Utama</b>. Buka lewat ikonnya, pengingat muncul di sini.</div>`;
+  else if (perm === 'denied') body = `<div class="sm" role="alert" style="font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px">Izin notifikasi ditolak. Pengingat belum nyala.<div class="mut sm" style="margin-top:4px;font-weight:400">Izinkan di pengaturan HP atau browser, lalu coba lagi.</div><div class="row" style="margin-top:8px"><button class="sec" type="button" id="remRetry">Coba lagi</button></div></div>`;
+  else body = `<div class="row" style="justify-content:space-between;align-items:center;gap:10px"><span class="eyebrow" style="margin:0">Ingatkan aku baca</span><div class="seg" id="remSw" role="group" aria-label="Pengingat baca"><button data-v="0" aria-pressed="${r.on ? 'false' : 'true'}" class="${r.on ? '' : 'on'}">Mati</button><button data-v="1" aria-pressed="${r.on ? 'true' : 'false'}" class="${r.on ? 'on' : ''}">Nyala</button></div></div>
+      ${r.on ? `<label class="row" style="gap:10px;margin-top:10px;align-items:center"><span class="sm">Jam</span><input type="time" id="remJam" value="${remJam()}" style="width:auto;min-height:44px"></label>` : ''}
+      <div class="mut sm" style="margin-top:6px">Muncul saat Keepo terbuka lewat jam itu dan kamu belum baca hari ini. Tanpa server.</div>`;
+  return `<div class="set-grp" id="remGrp"><div class="set-gt">Pengingat baca</div><div class="set-row">${body}</div>
+    <div class="set-row"><div class="eyebrow">Bagikan progres</div><div class="mut sm" style="margin-bottom:8px">Isinya streak, jumlah kata, dan tautan app. Tanpa data pribadi.</div><button class="sec full" id="shProg" type="button" style="min-height:44px">Bagikan progres</button></div></div>`;
+}
+async function remSet(on) {
+  if (!on) { db.remind = Object.assign(db.remind || {}, { on: false }); save(); return; }
+  let p = Notification.permission;
+  if (p !== 'granted') { try { p = await Notification.requestPermission(); } catch (e) { p = 'denied'; } }
+  db.remind = Object.assign(db.remind || {}, { on: p === 'granted', jam: remJam() });
+  save(); if (p === 'granted') { remCheck(); toast('Pengingat nyala, jam ' + remJam()); }
+}
+async function shareProg() {
+  const n = streak(), w = countedVocab(null).length;
+  const text = `${n ? `Streak ${n} hari` : 'Baru mulai'}, ${w} kata tersimpan di Keepo. Kepoin bahasa baru lewat cerita: ${APP_LINK}`;
+  if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(text); toast('Teks progres disalin. Tinggal tempel.'); }
+  catch (e) { toast('Gagal membagikan. Coba lagi.'); }
+}
+function remWire() {
+  const g = $('#remGrp'); if (!g) return;
+  const redraw = () => { g.outerHTML = remHtml(); remWire(); };
+  const sw = $('#remSw'); if (sw) $$('#remSw button').forEach(b => b.onclick = async () => { await remSet(b.dataset.v === '1'); redraw(); });
+  const rt = $('#remRetry'); if (rt) rt.onclick = async () => { await remSet(true); redraw(); if (Notification.permission === 'denied') toast('Masih ditolak. Izinkan dulu di pengaturan HP.'); };
+  const j = $('#remJam'); if (j) j.onchange = e => { if (/^\d\d:\d\d$/.test(e.target.value)) { db.remind.jam = e.target.value; db.remind.shown = ''; save(); remCheck(); toast('Jam pengingat: ' + e.target.value); } };
+  const sp = $('#shProg'); if (sp) sp.onclick = shareProg;
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) remCheck(); });
+setTimeout(remCheck, 1500);
 
 /* ---------- mulai ---------- */
 applyTheme(); save();
