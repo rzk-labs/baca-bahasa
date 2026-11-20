@@ -1363,7 +1363,7 @@
       "prioritas": "P0",
       "nama": "Home Minggu ini: 'N dari 7 hari baca' vs 'Beruntun N hari' (#1360)",
       "dokumen": "docs/desain-minggu-vs-streak-1360.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1382)",
       "catatan": "Mockup: docs/mockup-1360.html. Teks sudah diubah di ui.js; tinggal cek di HP 320px."
     },
     {
