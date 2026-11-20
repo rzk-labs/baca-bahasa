@@ -1257,6 +1257,15 @@
       "dokumen": "docs/rencana-hq-mockup-depan-home-1173.md",
       "status": "selesai (#1265)",
       "catatan": "Mockup: docs/mockup-1173.html. Kerjakan setelah backlog 114 (#1125). Hanya dev/src/page.html; muat malas, maks 2 pratinjau sekaligus."
+    },
+    {
+      "no": 144,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kartu arti saat baca: semua arti & frasa tampil menonjol sebagai chip (#1330)",
+      "dokumen": "docs/spesifikasi-arti-menonjol-1330.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1330.html. Ubah paintDict (ui.js) jadi chip besar bisa diketuk (alur #1106), tambah frasa dt=ex; data lama aman. Naikkan versi C di sw.js."
     }
   ],
   "prioritas": [
