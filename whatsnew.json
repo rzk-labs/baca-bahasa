@@ -1,5 +1,11 @@
 [
   {
+    "n": 1371,
+    "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
+    "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1369,
     "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
     "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
@@ -171,12 +177,6 @@
     "n": 1275,
     "judul": "Toast 'ikut akun' tak menimpa layar + sinkron punya batas waktu",
     "poin": "Pesan \"Data kamu ikut akun\" kini singkat, muncul sekali, dan tidak menutup judul.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1273,
-    "judul": "[peta 136] Keepo HQ: satu kotak mockup, hapus 'Belum ada gambar'",
-    "poin": "Kartu \"Siap dicek\" di Keepo HQ sekarang hanya punya satu kotak mockup.",
     "tgl": "2026-11-17"
   }
 ]

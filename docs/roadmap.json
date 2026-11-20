@@ -265,7 +265,7 @@
       "prioritas": "P0",
       "nama": "Aturan angka: satu sumber, satu satuan 'halaman', halaman unik, '–' bila tak yakin (#1316)",
       "dokumen": "docs/riset-angka-statistik-dipercaya.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1371)",
       "catatan": "Mockup: docs/mockup-1316.html. Perbaiki 'Minggu ini' (pagesWeek di ui.js tanpa batas atas), XP Tamat vs Home, kata disimpan di catatan sesi, streak vs titik, 'bagian' jadi 'halaman'. Baca ulang tak menambah halaman. Naikkan C di sw.js; uji 320-430px."
     },
     {
