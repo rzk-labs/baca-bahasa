@@ -1022,13 +1022,15 @@ function bindWod() {
 }
 /* kartu 'Minggu ini' di Beranda: 7 hari terakhir dari data yang ada; tampil sekali per minggu, tanpa hukuman streak */
 function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
-/* SATU sumber 'halaman dibaca': halaman unik 7 hari terakhir (db.pgDay), batas atas = total halaman semua buku */
+/* SATU sumber 'halaman dibaca' (#1523): jumlah kunci halaman unik di db.pgWeek yang tanggalnya dalam 7 hari terakhir.
+   Kunci 'buku#halaman' unik per halaman, jadi baca ulang tak menambah; tanpa batas pgN x bab yang longgar. */
 function pagesWeek() {
+  const pw = db.pgWeek;
+  if (!pw || typeof pw !== 'object' || Array.isArray(pw)) return 0;
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
-  const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
-  /* #1371: batas atas = halaman unik yang mungkin (halaman per bab x bab, semua buku); lewat batas / tanpa buku = null -> tampil '–' */
-  const cap = (db.books || []).reduce((a, b) => a + Math.max(1, b.pgN || 1) * Math.max(1, b.total || 1), 0);
-  return n > cap || !cap ? (n ? null : 0) : n;
+  let n = 0;
+  for (const k in pw) if (typeof pw[k] === 'string' && pw[k] >= from) n++;
+  return n;
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
