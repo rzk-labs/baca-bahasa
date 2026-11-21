@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1494: cerita contoh + kata pertama dipandu</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#e9e6df;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.note{max-width:390px;margin:0 auto 12px;font:600 12px Inter,sans-serif;background:#E9F056;padding:8px 10px;border-radius:8px}
+.lbl{max-width:390px;margin:18px auto 6px;font:700 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6b5560}
+.phone{width:390px;max-width:100%;margin:0 auto;background:#FAF7F0;border-radius:22px;overflow:hidden;border:1px solid #d9d3c7;min-height:620px;position:relative}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font:700 14px 'Bricolage Grotesque',Inter,sans-serif}
+.top small{font:500 12px Inter,sans-serif;color:#6b5560}
+h1{font:800 22px/1.2 'Bricolage Grotesque',Inter,sans-serif;margin:8px 16px 4px}
+.sub{margin:0 16px 14px;font-size:13px;color:#6b5560}
+.page{margin:0 16px;padding:18px 16px;background:#fff;border-radius:14px;font:400 19px/1.8 Georgia,serif}
+.w{border-radius:4px}
+.pulse{background:#E9F056;padding:1px 4px;box-shadow:0 0 0 3px rgba(233,240,86,.55)}
+.hint{margin:12px 16px 0;display:flex;align-items:center;gap:10px;background:#351E28;color:#FAF7F0;border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600}
+.hint b{flex:1}
+.skip{background:none;border:1px solid #FAF7F0;color:#FAF7F0;border-radius:999px;padding:6px 12px;font:600 13px Inter,sans-serif}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#D7EFFF;border-radius:20px 20px 0 0;padding:16px 16px 20px}
+.sheet h2{margin:0;font:800 24px 'Bricolage Grotesque',Inter,sans-serif}
+.sheet p{margin:4px 0 10px;font-size:15px}
+.chip{display:inline-block;background:#351E28;color:#FAF7F0;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+.btn{display:block;width:100%;margin-top:12px;background:#351E28;color:#FAF7F0;border:0;border-radius:12px;padding:13px;font:700 15px Inter,sans-serif;text-align:center}
+.home{padding:0 16px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #e6dfd2}
+.card h3{margin:0 0 6px;font:800 18px 'Bricolage Grotesque',Inter,sans-serif}
+.card p{margin:0 0 10px;font-size:14px;color:#6b5560}
+.sec{display:block;text-align:center;font-size:13px;color:#6b5560;text-decoration:underline;margin-top:8px}
+.old .row{display:flex;gap:8px}
+.old .row span{flex:1;background:#fff;border:1px solid #e6dfd2;border-radius:12px;padding:14px 6px;text-align:center;font-weight:700;font-size:13px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Layar yang berubah: e-reader menit pertama (bukan Home).</div>
+
+<div class="lbl">Sebelum: buku pertama terbuka, tanpa petunjuk jelas</div>
+<div class="phone">
+  <div class="top"><span>Cerita contoh</span><small>Dengar · Lainnya</small></div>
+  <h1>The Red Bird</h1>
+  <p class="sub">Inggris · artinya ke Indonesia</p>
+  <div class="page">The red bird sits on a tree. It sings a small song. The sun is warm today.</div>
+  <div class="hint" style="background:#fff;color:#351E28;border:1px solid #e6dfd2"><b style="font-weight:500">Ketuk kata untuk arti, tahan untuk kalimat, geser untuk halaman. Petunjuk ini sama untuk semua cerita.</b></div>
+</div>
+
+<div class="lbl">Sesudah (1): kata pertama dipandu, bisa dilewati</div>
+<div class="phone">
+  <div class="top"><span>Cerita contoh</span><small>Dengar · Lainnya</small></div>
+  <h1>The Red Bird</h1>
+  <p class="sub">Inggris · 3 kalimat pendek · ±1 menit</p>
+  <div class="page">The <span class="pulse">bird</span> sits on a tree. It sings a small song. The sun is warm today.</div>
+  <div class="hint"><b>Ketuk kata yang menyala</b><button class="skip">Lewati</button></div>
+</div>
+
+<div class="lbl">Sesudah (2): setelah ketuk, arti muncul, petunjuk hilang</div>
+<div class="phone">
+  <div class="top"><span>Cerita contoh</span><small>Dengar · Lainnya</small></div>
+  <h1>The Red Bird</h1>
+  <p class="sub">Inggris · 3 kalimat pendek · ±1 menit</p>
+  <div class="page">The <span class="pulse">bird</span> sits on a tree. It sings a small song. The sun is warm today.</div>
+  <div class="sheet">
+    <span class="chip">kata benda</span>
+    <h2>bird</h2>
+    <p>burung</p>
+    <button class="btn">Lanjut baca</button>
+  </div>
+</div>
+
+<div class="lbl">Sesudah (3): petunjuk dilewati, teks tetap bersih</div>
+<div class="phone">
+  <div class="top"><span>Cerita contoh</span><small>Dengar · Lainnya</small></div>
+  <h1>The Red Bird</h1>
+  <p class="sub">Inggris · 3 kalimat pendek · ±1 menit</p>
+  <div class="page">The bird sits on a tree. It sings a small song. The sun is warm today.</div>
+  <div class="home" style="margin-top:14px"><div class="card"><p style="margin:0">Ketuk kata kapan saja untuk lihat artinya.</p></div></div>
+</div>
+</body></html>

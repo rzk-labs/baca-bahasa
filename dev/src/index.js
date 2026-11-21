@@ -126,7 +126,7 @@ const brief = i => {
     gambar: [...new Set(String(i.body || '').match(/https:\/\/raw\.githubusercontent\.com\/[\w.-]+\/[\w.-]+\/main\/masukan-img\/[\w.-]+/g) || [])].slice(0, 3),
     rujuk: [...new Set(((i.title || '') + '\n' + (i.body || '') + '\n' + L.join(' ')).match(/#\d+/g) || [])].map(x => +x.slice(1)).filter(x => x !== i.number).slice(0, 20) };
 };
-const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing'];
+const PERAN = ['developer', 'riset', 'desain', 'pm', 'marketing', 'ux', 'kreatif', 'interaksi', 'sistem', 'aksesibilitas'];
 const WF = { 'kepo-dev.yml': 'kerja', 'kepo-pm.yml': 'pm', 'kepo-pengguna.yml': 'pengguna' };
 
 async function openPR(env, n) {
