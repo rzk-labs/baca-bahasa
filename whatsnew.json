@@ -1,5 +1,11 @@
 [
   {
+    "n": 1388,
+    "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
+    "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1382,
     "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
     "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
@@ -171,12 +177,6 @@
     "n": 1271,
     "judul": "[peta 129] Kartu ulang: nada pinyin pakai angka + palet aman buta warna",
     "poin": "Kartu ulang Mandarin kini pakai warna nada yang aman untuk buta warna.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1267,
-    "judul": "[peta 139] Home memuat: sisa perbaikan (IndexedDB macet, rak lokal dulu)",
-    "poin": "Kalau tab Keepo lain menahan, atau simpan gagal, kamu dapat pesan jelas.",
     "tgl": "2026-11-17"
   }
 ]
