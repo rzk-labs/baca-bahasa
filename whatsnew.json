@@ -1,5 +1,11 @@
 [
   {
+    "n": 1539,
+    "judul": "Arti kata: tombol 'Coba lagi' muncul di detik ke-3, bukan ke-8",
+    "poin": "Pesan \"sinyal lemah\" sekarang muncul di detik ke-3, bukan ke-8.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1538,
     "judul": "Sheet arti kata: 'Coba lagi' muncul ~3 detik, bukan 8 detik",
     "poin": "Saat sinyal lemah, tombol \"Coba lagi\" kini muncul sekitar 3 detik, bukan 8.",
@@ -171,12 +177,6 @@
     "n": 1459,
     "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
     "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1455,
-    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
-    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
     "tgl": "2026-11-21"
   }
 ]
