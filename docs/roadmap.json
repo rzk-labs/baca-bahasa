@@ -181,14 +181,14 @@
       "nama": "Rilis App Store iOS",
       "fase": "Rilis Toko & Publik",
       "status": "berjalan",
-      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md."
+      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 26,
       "nama": "Android / Play Store",
       "fase": "Rilis Toko & Publik",
       "status": "draft",
-      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md."
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 27,
@@ -273,7 +273,7 @@
       "prioritas": "P1",
       "nama": "Popup level sekali & jeda alami, satu angka level, label hari Sen/Sel (#1481)",
       "dokumen": "docs/riset-popup-level-huruf-hari.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1521)",
       "catatan": "Ikuti bagian 7 (aturan 1-9). Mockup: docs/mockup-1481.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. Uji 320px & 390px."
     },
     {
@@ -291,7 +291,7 @@
       "prioritas": "P0",
       "nama": "Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran (#1478)",
       "dokumen": "docs/spesifikasi-latihan-ekstra-cukup-1478.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1517)",
       "catatan": "Mockup: docs/mockup-1478.html. Ubah ui.js & sw.js (naikkan C). Jangan ubah api/. Jangan sentuh #1473. Maks 2 XP/putaran lewat award(...,'rem'). Uji 320px & 390px."
     },
     {
@@ -318,7 +318,7 @@
       "prioritas": "P0",
       "nama": "Saring kata menurut aksara buku saat ketuk & tampil; satu hitungan kata sesi untuk Catatan sesi & sheet Tamat (#1487)",
       "dokumen": "docs/riset-kata-bahasa-lain-di-buku.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1519)",
       "catatan": "Mockup: docs/mockup-1487.html. Ubah app.js (isKataSampah, himpunan aksara per bahasa), ui.js (recSess, sessRecap, finishBook), sw.js (naikkan C). Jangan ubah api/. Kasus uji di dokumen bagian 4."
     },
     {
