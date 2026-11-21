@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1511 · Filter level HSK di tab Kata</title>
+<style>
+body{margin:0;background:#e8e4e6;font:15px/1.4 Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:24px}
+.col{width:390px}
+.lab{font:700 12px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+.ph{width:390px;box-sizing:border-box;background:#fff;border-radius:24px;padding:16px;min-height:640px;position:relative}
+h1{font:800 24px/1.1 "Bricolage Grotesque",Inter,sans-serif;margin:4px 2px 12px}
+.seg{display:flex;gap:4px;background:#F1ECEE;border-radius:999px;padding:4px;margin:0 0 12px}
+.seg span{flex:1;text-align:center;padding:10px 0;border-radius:999px;font-weight:700;font-size:14px}
+.seg .on{background:#351E28;color:#fff}
+.chips{display:flex;gap:6px;margin:0 0 10px}
+.chip{flex:1 1 0;min-width:0;min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:0 6px;border-radius:22px;background:#D7EFFF;font-weight:700;font-size:13px}
+.chip.on{background:#351E28;color:#fff}
+.go{display:flex;align-items:center;justify-content:center;margin:0 0 10px;background:#E9F056;border-radius:14px;padding:12px;font-weight:700;min-height:44px;box-sizing:border-box}
+.cnt{font-size:13px;margin:0 2px 10px}
+.card{border:1px solid #e3d9de;border-radius:18px;padding:12px 14px;margin-bottom:8px}
+.card b{font:800 20px "Bricolage Grotesque",Inter,sans-serif}
+.card small{display:block;color:#6b5a62;margin-top:2px}
+.tag{display:inline-block;background:#D7EFFF;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;margin-left:6px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:64px;background:#351E28;border-radius:0 0 24px 24px;color:#D7EFFF;display:flex;justify-content:space-around;align-items:center;font-size:12px;font-weight:700}
+.note{font-size:12px;margin-top:10px}
+</style></head><body>
+
+<div class="col"><p class="lab">Sesudah · HSK 3 dipilih (ada kata HSK)</p>
+<div class="ph"><h1>Kata kamu</h1>
+<div class="seg"><span>Kartu</span><span class="on">Tersimpan</span><span>Sulit</span></div>
+<div class="chips"><span class="chip">Semua</span><span class="chip">HSK 1</span><span class="chip">HSK 2</span><span class="chip on">HSK 3</span></div>
+<div class="go">Ulang 2 kata HSK 3</div>
+<p class="cnt"><b>3</b> dari 12 kata</p>
+<div class="card"><b>虽然</b><span class="tag">HSK 3</span><small>suīrán · walaupun</small></div>
+<div class="card"><b>参加</b><span class="tag">HSK 3</span><small>cānjiā · ikut serta</small></div>
+<div class="card"><b>终于</b><span class="tag">HSK 3</span><small>zhōngyú · akhirnya</small></div>
+<div class="nav"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div></div></div>
+
+<div class="col"><p class="lab">Kondisi lain · Pilihan "Semua", level kosong disembunyikan</p>
+<div class="ph"><h1>Kata kamu</h1>
+<div class="seg"><span>Kartu</span><span class="on">Tersimpan</span><span>Sulit</span></div>
+<div class="chips"><span class="chip on">Semua</span><span class="chip">HSK 1</span><span class="chip">HSK 3</span></div>
+<p class="cnt"><b>12</b> kata</p>
+<div class="card"><b>虽然</b><span class="tag">HSK 3</span><small>suīrán · walaupun</small></div>
+<div class="card"><b>学习</b><span class="tag">HSK 1</span><small>xuéxí · belajar</small></div>
+<div class="card"><b>lantern</b><small>lentera</small></div>
+<div class="note">Contoh ini tak punya kata HSK 2, jadi chip HSK 2 tak tampil.</div>
+<div class="nav"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div></div></div>
+
+<div class="col"><p class="lab">Kondisi lain · Tidak ada kata HSK</p>
+<div class="ph"><h1>Kata kamu</h1>
+<div class="seg"><span>Kartu</span><span class="on">Tersimpan</span><span>Sulit</span></div>
+<p class="cnt"><b>5</b> kata</p>
+<div class="card"><b>lantern</b><small>lentera</small></div>
+<div class="card"><b>decorate</b><small>hias</small></div>
+<div class="note">Baris chip HSK tidak muncul sama sekali.</div>
+<div class="nav"><span>Home</span><span>Baca</span><span>Ngomong</span><span>Kata</span></div></div></div>
+
+</body></html>

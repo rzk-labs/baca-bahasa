@@ -255,7 +255,7 @@
       "prioritas": "P1",
       "nama": "Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati (#1494)",
       "dokumen": "docs/riset-cerita-contoh-kata-pertama.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1507)",
       "catatan": "Mockup: docs/mockup-1494.html. Cerita contoh pertama 3 kalimat pendek (panjang bisa diubah untuk uji). Satu kata berdenyut + 1 baris 'Ketuk kata yang menyala' + tombol 'Lewati'; hilang setelah ketuk pertama atau Lewati; tak menutup teks; tampil sekali. Catat lewat /hitung: detik ke ketuk pertama, jalur (contoh vs impor), pemandu diketuk vs dilewati (gabung dengan #153). Naikkan C di sw.js. Uji 320px & 390px."
     },
     {
@@ -300,7 +300,7 @@
       "prioritas": "P0",
       "nama": "Uji banner Level di iPhone & 320px (#1482)",
       "dokumen": "docs/mockup-1482.html",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1505)",
       "catatan": "Banner sudah dibuat (ui.js celebrate, style.css .lvlbn). Uji: tab tetap bisa diketuk, safe-area atas, hilang ±4 dtk, sekali per level, angka Level Home sama."
     },
     {
@@ -426,7 +426,7 @@
       "prioritas": "P1",
       "nama": "Tab Kata: satu baris chip filter level HSK, hanya muncul bila ada kata HSK (#1395)",
       "dokumen": "docs/riset-filter-level-kata-simpanan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1511)",
       "catatan": "Mockup: docs/mockup-1395.html. Chip 'Semua · HSK n' hanya level yang ada isinya; tombol ulang ikut filter. Tambah penghitung /hitung 'filter dipakai' & 'ulang dari filter' (api/ diubah hanya bila diminta). Tanpa tag/folder buatan. Naikkan versi C di sw.js."
     },
     {
