@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1483: halaman terakhir</title>
+<style>
+:root{--ink:#351E28;--cream:#FAF7F0;--hl:#E9F056;--ice:#D7EFFF;--bd:#d9d2c6}
+*{box-sizing:border-box}body{margin:0;padding:16px;background:#eee;font:15px/1.5 Inter,system-ui,sans-serif;color:var(--ink)}
+.note{max-width:390px;margin:0 auto 8px;font-size:12px;font-weight:700;background:#fff;border-left:4px solid var(--hl);padding:6px 10px}
+.lbl{max-width:390px;margin:16px auto 6px;font:800 12px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.ph{position:relative;width:390px;height:760px;margin:0 auto;background:var(--cream);border:1px solid var(--bd);border-radius:24px;overflow:hidden}
+.top{height:52px;display:flex;align-items:center;padding:0 16px;font:700 14px 'Bricolage Grotesque',Inter,sans-serif;border-bottom:1px solid var(--bd)}
+.txt{padding:20px 22px;font:18px/1.7 Georgia,serif}
+.bar{position:absolute;left:0;right:0;bottom:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--cream);border-top:1px solid var(--bd);font-size:13px}
+.fin{background:var(--ink);color:#fff;border-radius:999px;padding:12px 20px;font-weight:700}
+.card{margin:24px 22px 0;display:flex;flex-direction:column;gap:6px;align-items:center}
+.sec{width:100%;min-height:54px;border:1.5px solid var(--bd);background:#fff;border-radius:16px;font:700 15px Inter,sans-serif;color:var(--ink)}
+.pri{width:100%;min-height:54px;border:0;background:var(--ink);color:#fff;border-radius:16px;font:700 15px Inter,sans-serif}
+.lnk{background:none;border:0;min-height:44px;font:600 14px Inter,sans-serif;color:var(--ink);text-decoration:underline}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:18px 20px 24px;box-shadow:0 -8px 30px rgba(0,0,0,.2)}
+.chip{display:inline-block;background:var(--hl);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:800}
+h2{font:800 20px 'Bricolage Grotesque',Inter,sans-serif;margin:10px 0 6px}
+.mut{color:#6b5a62;font-size:13px;margin:0 0 8px}
+.acts{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px}
+.dup{outline:3px dashed #c0392b;outline-offset:2px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun</div>
+
+<div class="lbl">Sebelum: Buku baru muncul dua kali (setelah sheet ditutup)</div>
+<div class="ph">
+  <div class="top">Buku contoh · Hal. 5/5</div>
+  <div class="txt">Dan begitulah cerita ini berakhir. Mereka pulang dengan senyum lebar.</div>
+  <div class="card dup"><button class="sec">Buku baru</button><button class="lnk">Baca ulang</button></div>
+  <div class="sheet" style="top:340px;bottom:auto;height:auto;position:absolute;bottom:64px;top:auto">
+    <span class="chip">Tamat</span>
+    <h2>Tamat! Keren banget</h2>
+    <div class="acts"><button class="pri">Lihat 3 kata</button><button class="sec dup">Buku baru</button></div>
+  </div>
+  <div class="bar"><span>Tamat · 5/5</span><span class="fin">Rekap</span></div>
+</div>
+
+<div class="lbl">Sesudah: sheet Tamat terbuka, kartu tidak ada</div>
+<div class="ph">
+  <div class="top">Buku contoh · Hal. 5/5</div>
+  <div class="txt">Dan begitulah cerita ini berakhir. Mereka pulang dengan senyum lebar.</div>
+  <div class="sheet" style="bottom:64px">
+    <span class="chip">Tamat</span>
+    <h2>Tamat! Keren banget</h2>
+    <p class="mut">Besok: baca 2 halaman, dapat lencana Kutu Buku</p>
+    <div class="acts"><button class="pri">Lihat 3 kata</button><button class="sec">Buku baru</button></div>
+    <button class="lnk">Baca ulang</button> <button class="lnk">Ke Home</button>
+  </div>
+  <div class="bar"><span>Tamat · 5/5</span><span class="fin">Rekap</span></div>
+</div>
+
+<div class="lbl">Sesudah: sheet ditutup, kartu tetap tidak ada</div>
+<div class="ph">
+  <div class="top">Buku contoh · Hal. 5/5</div>
+  <div class="txt">Dan begitulah cerita ini berakhir. Mereka pulang dengan senyum lebar.</div>
+  <div class="bar"><span>Tamat · 5/5</span><span class="fin">Rekap</span></div>
+</div>
+
+<div class="lbl">Sesudah: buku belum tamat, tombol 'Tamatkan' dan kartu satu-satunya</div>
+<div class="ph">
+  <div class="top">Buku contoh · Hal. 5/5</div>
+  <div class="txt">Dan begitulah cerita ini berakhir. Mereka pulang dengan senyum lebar.</div>
+  <div class="card"><button class="sec">Buku berikutnya</button><button class="lnk">Baca ulang</button></div>
+  <div class="bar"><span>Hal. 5/5 · 96%</span><span class="fin">Tamatkan</span></div>
+</div>
+</body></html>
