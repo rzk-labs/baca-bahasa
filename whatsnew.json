@@ -1,5 +1,41 @@
 [
   {
+    "n": 1539,
+    "judul": "Arti kata: tombol 'Coba lagi' muncul di detik ke-3, bukan ke-8",
+    "poin": "Pesan \"sinyal lemah\" sekarang muncul di detik ke-3, bukan ke-8.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1538,
+    "judul": "Sheet arti kata: 'Coba lagi' muncul ~3 detik, bukan 8 detik",
+    "poin": "Saat sinyal lemah, tombol \"Coba lagi\" kini muncul sekitar 3 detik, bukan 8.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1537,
+    "judul": "Sheet Tamat: baris kecil di tombol 'Lanjut' terbaca jelas",
+    "poin": "Tulisan kecil di tombol \"Lanjut\" setelah tamat baca sekarang jelas terbaca.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1536,
+    "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
+    "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1535,
+    "judul": "Sheet Tamat: teks kecil di tombol 'Lanjut' kontras cukup (4.5:1)",
+    "poin": "Tulisan kecil di tombol 'Lanjut' setelah tamat buku sekarang jelas terbaca.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1534,
+    "judul": "Tab Kata: ringkasan 'X dari Y kata HSK' di baris chip level",
+    "poin": "Tab Kata kini punya ringkasan kecil, misalnya \"HSK 1: 12/150\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1523,
     "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
     "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
@@ -141,42 +177,6 @@
     "n": 1459,
     "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
     "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1455,
-    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
-    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1453,
-    "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
-    "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1451,
-    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
-    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1449,
-    "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
-    "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1446,
-    "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
-    "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1444,
-    "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
-    "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
     "tgl": "2026-11-21"
   }
 ]
