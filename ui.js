@@ -1037,8 +1037,8 @@ function streakDots() {
   return [6, 5, 4, 3, 2, 1, 0].map(k => {
     const act = db.days.includes(dayKey(new Date(Date.now() - k * 864e5)));
     const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
-    const L = 'MSSRKJS'[new Date(Date.now() - k * 864e5).getDay()]; /* M=Minggu, S=Senin/Selasa/Sabtu, R=Rabu, K=Kamis, J=Jumat */
-    return `<span class="sd${k === 0 ? ' td' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
+    const dw = new Date(Date.now() - k * 864e5).getDay(), L = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][dw], F = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][dw];
+    return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
   }).join('');
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
@@ -1960,7 +1960,7 @@ function lanjutCard(b) {
   const pg = b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === b.pos ? b.pg + 1 : 0;
   if (!pg && !((b.pos || 0) > 0 || (b.si || 0) > 0)) return '';
   const lbl = pg ? `Lanjut dari halaman ${pg}` : 'Lanjut dari terakhir kamu baca';
-  return `<button type="button" class="lanjut-card" id="lanjutCard" aria-label="${esc(lbl)}: ${esc(b.title)}"><span class="lj-t">${esc(b.title)}</span><span class="lj-s"><b>${lbl}</b><span id="ljMin"></span></span><span class="lj-go" aria-hidden="true">→</span></button>`;
+  return `<button type="button" class="lanjut-card" id="lanjutCard" aria-label="${esc(lbl)}: ${esc(b.title)}"><span class="lj-t">${esc(b.title)}</span><span class="lj-s"><b>${lbl}</b><span id="ljMin"></span></span><span class="lj-go" aria-hidden="true">Lanjut</span></button>`;
 }
 async function heroMins(b) {
   try {
