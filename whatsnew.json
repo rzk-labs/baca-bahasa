@@ -1,5 +1,11 @@
 [
   {
+    "n": 1477,
+    "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
+    "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1471,
     "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
     "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
@@ -171,12 +177,6 @@
     "n": 1389,
     "judul": "Ajakan Home & sheet Tamat: ulang kata/buku baru, bukan 'ketuk kata'",
     "poin": "Buku tamat: Home sekarang mengajak pilih buku berikutnya, bukan \"ketuk kata\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1388,
-    "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
-    "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
     "tgl": "2026-11-21"
   }
 ]
