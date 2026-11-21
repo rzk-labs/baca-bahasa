@@ -1442,7 +1442,7 @@ function finishBook(b) {
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
-    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Selesai</button>` : '<button class="sec full" id="fbh">Selesai</button>'}</div>${nxHtml}
+    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Tutup</button>` : '<button class="sec full" id="fbh">Tutup</button>'}</div>${nxHtml}
     <div class="fb-sec">${none ? '' : '<button class="lnk" id="fbr">Baca ulang</button>'}${nx.length && !none ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
@@ -2065,7 +2065,7 @@ function showPage(p, anim = true) {
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
   else if (last && b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Rekap'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buka layar Tamat'); }
-  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Tamatkan'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Tamatkan buku dan buka rekap'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
   pfArm();
@@ -2078,7 +2078,7 @@ function endCard(b, last) {
   if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
-  c.innerHTML = `<button class="sec" id="ecr">Baca ulang</button><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button>`;
+  c.innerHTML = `<button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr">Baca ulang</button>`;
   c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };

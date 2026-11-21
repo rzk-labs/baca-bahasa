@@ -256,7 +256,7 @@
       "prioritas": "P0",
       "nama": "Rapikan UI: bar reader Tamat, kartu Tamat, kartu Home, sampul koleksi (#1421)",
       "dokumen": "docs/spesifikasi-rapikan-ui-1421.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1437)",
       "catatan": "Mockup: docs/mockup-1421.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/ atau cara hitung angka. Uji 320px & 390px, tema Kertas & Malam."
     },
     {
