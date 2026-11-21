@@ -3131,7 +3131,8 @@ const mileHtml = () => {
   else if (db.mile50 === 0) { db.mile50 = d; save(); }
   if (n >= 50 && typeof db.mile50 === 'string') { if (db.mile50 === d) card = `<div class="mile-card" id="mileCard" role="status"><b>Lencana 50 kata! Lanjut ke 100</b><button type="button" class="ghost" onclick="mileClose()">Tutup</button></div>`; else { db.mile50 = 1; save(); } }
   if (n >= 1 && db.mstD !== d) { db.mstD = d; db.mst = (+db.mst || 0) + 1; save(); } /* hari bar dilihat dengan >=1 kata, lokal (api/ tak diubah) */
-  const head = n < 1 ? `<b>Satu kata, satu langkah. 0 dari 50 kata</b><span class="mile-tip">Ketuk kata di halaman baca, lalu Simpan</span>` : `<b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span>`;
+  if (n < 1) return '';
+  const head = `<b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span>`;
   return `${card}<div class="mile" id="mileBar" role="group" aria-label="${n} dari ${t} kata tersimpan"><div class="mile-h">${head}</div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><i style="width:${Math.round(n / t * 100)}%"></i></div></div>`;
 };
 /* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
