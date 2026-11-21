@@ -173,6 +173,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
+.soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
 .fw-nudge:active{transform:scale(.98)}
@@ -1264,6 +1265,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .wchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
 .wchip{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border-radius:9999px;background:#D7EFFF;color:#351E28;border:1.5px solid #351E28;font-weight:800;font-size:15px;max-width:100%;overflow-wrap:anywhere;text-align:left}
 .wchip[hidden]{display:none}
+.wchip.on{background:#E9F056}
+.wchip.wskel{width:84px;min-width:84px;border-color:transparent;background:color-mix(in srgb,var(--color-text-muted,#777) 22%,transparent);animation:bkPulse 1.2s ease-in-out infinite}
+.wchips-msg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:44px;margin:6px 0 10px}
+@media (prefers-reduced-motion:reduce){.wchip.wskel{animation:none;opacity:.7}}
 .wchip.wmore{background:#351E28;color:#E9F056}
 #wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 #wdict{max-height:40vh;overflow-y:auto}
@@ -1273,7 +1278,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .lanjut-card{display:grid;grid-template-columns:1fr auto;column-gap:10px;align-items:center;width:100%;min-height:56px;margin:4px 0 12px;padding:10px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;font:600 13px/18px var(--font-ui)}
 .lanjut-card .lj-t{grid-column:1;font:700 15px/20px var(--font-display);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lanjut-card .lj-s{grid-column:1;min-width:0}
-.lanjut-card .lj-go{grid-column:2;grid-row:1/3;font-size:20px;font-weight:700}
+.lanjut-card .lj-go{grid-column:2;grid-row:1/3;display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);font:700 13px/1 var(--font-ui)}
+[data-theme=night] .lanjut-card .lj-go{background:var(--hl);color:var(--ink)}
 .lanjut-card:active{transform:scale(.98)}
 .lanjut-card:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1375 Kartu PDF scan */
@@ -1290,7 +1296,7 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 .sdots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;margin:6px 0 4px;min-width:0}
 .sdots .sd{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
 .sdots .sd i{flex:none}
-.sdots .sd em{font:600 10px/12px var(--font-body,inherit);font-style:normal;color:#351E28;opacity:.75}
+.sdots .sd em{font:600 11px/12px var(--font-body,inherit);letter-spacing:0;white-space:nowrap;font-style:normal;color:#351E28;opacity:.75}
 .sdots .sd.td em{font-weight:800;opacity:1;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
