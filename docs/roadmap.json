@@ -426,7 +426,7 @@
       "prioritas": "P1",
       "nama": "Tab Kata: satu baris chip filter level HSK, hanya muncul bila ada kata HSK (#1395)",
       "dokumen": "docs/riset-filter-level-kata-simpanan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1511)",
       "catatan": "Mockup: docs/mockup-1395.html. Chip 'Semua · HSK n' hanya level yang ada isinya; tombol ulang ikut filter. Tambah penghitung /hitung 'filter dipakai' & 'ulang dari filter' (api/ diubah hanya bila diminta). Tanpa tag/folder buatan. Naikkan versi C di sw.js."
     },
     {
