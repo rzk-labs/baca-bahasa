@@ -1,5 +1,11 @@
 [
   {
+    "n": 1446,
+    "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
+    "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1444,
     "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
     "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
@@ -171,12 +177,6 @@
     "n": 1359,
     "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
     "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1324,
-    "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
-    "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
     "tgl": "2026-11-20"
   }
 ]
