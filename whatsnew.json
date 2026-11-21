@@ -1,5 +1,11 @@
 [
   {
+    "n": 1536,
+    "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
+    "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1535,
     "judul": "Sheet Tamat: teks kecil di tombol 'Lanjut' kontras cukup (4.5:1)",
     "poin": "Tulisan kecil di tombol 'Lanjut' setelah tamat buku sekarang jelas terbaca.",
@@ -171,12 +177,6 @@
     "n": 1451,
     "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
     "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1449,
-    "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
-    "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
     "tgl": "2026-11-21"
   }
 ]
