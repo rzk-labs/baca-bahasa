@@ -1080,6 +1080,16 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 .lvlup .lvl-ic{width:88px;height:88px;margin:0 auto 8px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center}
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
+/* #1482: banner Level ringan — tanpa overlay, hanya kartu yang menerima ketukan */
+.lvlup.lvlbn{inset:calc(env(safe-area-inset-top,0px) + 8px) 0 auto 0;padding:0 12px;background:none;justify-content:center;align-items:flex-start;pointer-events:none;animation:none}
+.lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
+.lvlup.lvlbn .lvl-ic{width:40px;height:40px;margin:0;flex:none}
+.lvlup.lvlbn .lvl-ic .i,.lvlup.lvlbn .lvl-ic svg{width:22px;height:22px}
+.lvlup.lvlbn .lvl-tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.lvlup.lvlbn .lvl-tx b{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:20px;line-height:24px}
+.lvlup.lvlbn .lvl-tx span{font-size:13px;line-height:17px}
+.lvlup.lvlbn button.lime{width:auto;margin:0;flex:none;padding:8px 12px;min-height:40px}
+@media (prefers-reduced-motion:reduce){.lvlup.lvlbn .card{animation:none}}
 /* #1083: Home pasca-tamat ringkas */
 .big.big-sm{font-size:34px;line-height:36px;margin:6px 0 4px}
 #hero.hero-done{padding:12px 14px}
