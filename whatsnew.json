@@ -1,5 +1,11 @@
 [
   {
+    "n": 1444,
+    "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
+    "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1442,
     "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
     "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
@@ -171,12 +177,6 @@
     "n": 1324,
     "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
     "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1304,
-    "judul": "Layar Tamat: satu set tombol + sembunyikan 'Lanjut dari' di buku tamat",
-    "poin": "Buku yang sudah tamat kini punya lagi tombol Baca ulang dan Buku baru.",
     "tgl": "2026-11-20"
   }
 ]
