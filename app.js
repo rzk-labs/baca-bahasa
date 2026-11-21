@@ -848,6 +848,19 @@ try {
     if (!gone.length || save()) localStorage.setItem('kepo.vocabPart1', '1');
   }
 } catch (e) { }
+/* ---------- level HSK 1-3 (hsk.js): dimuat malas hanya untuk zh-CN; level dihitung saat tampil, tidak disimpan ---------- */
+let hskMap = null, hskP = null;
+function hskLoad() {
+  if (hskMap) return Promise.resolve(hskMap);
+  if (!hskP) hskP = loadScript('hsk.js').then(() => {
+    const m = new Map();
+    for (const lv of [1, 2, 3]) for (const w of String((window.HSK_DATA || {})[lv] || '').split(' ')) if (w && !m.has(w)) m.set(w, lv);
+    return (hskMap = m);
+  }).catch(() => { hskP = null; return null; });
+  return hskP;
+}
+/* level HSK (1-3) untuk kata utuh; 0 = tak ada di daftar / belum dimuat. Tidak menebak dari karakter tunggal. */
+function hskOf(w) { return hskMap && w ? hskMap.get(String(w).trim()) || 0 : 0; }
 let jaDict = null, jaP = null;
 function jaLoad() {
   if (jaDict) return Promise.resolve(jaDict);

@@ -1,5 +1,71 @@
 [
   {
+    "n": 1471,
+    "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
+    "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1469,
+    "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
+    "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1467,
+    "judul": "Home: kartu 'Minggu ini' ringkas satu baris, angka punya satuan",
+    "poin": "Kartu \"Minggu ini\" di Home sekarang pendek, satu baris.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1465,
+    "judul": "[peta 157] Data HSK 1-3 + chip 'HSK n' di sheet kata & kartu Kata",
+    "poin": "Kata Mandarin kini punya label level HSK 1–3 di arti kata dan tab Kata.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1463,
+    "judul": "Sheet Tamat: ringkas jadi 2 pilihan + 'Besok' target lencana",
+    "poin": "Layar Tamat sekarang cuma 2 tombol, sisanya tautan kecil.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1461,
+    "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
+    "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1459,
+    "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
+    "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1455,
+    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
+    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1453,
+    "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
+    "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1451,
+    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
+    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1449,
+    "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
+    "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1446,
     "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
     "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
@@ -112,71 +178,5 @@
     "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
     "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
     "tgl": "2026-11-21"
-  },
-  {
-    "n": 1382,
-    "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
-    "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1381,
-    "judul": "Kartu Streak Home: angka hari jelas + huruf nama hari di bawah titik",
-    "poin": "Kartu Streak di Home sekarang menampilkan angka hari, mis. \"9 hari\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1379,
-    "judul": "[peta 149] Eksperimen retensi: kartu 'Lanjut dari halaman X' di Home",
-    "poin": "Home sekarang punya kartu kecil \"Lanjut dari halaman X · ±N menit\", sekali ketuk.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1377,
-    "judul": "[peta 150] Eksperimen retensi: tombol 'Ulang 3 kata' satu ketuk di Home",
-    "poin": "Home sekarang punya tombol \"Ulang 3 kata\", muncul kalau kata tersimpan 3 atau lebih.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1375,
-    "judul": "[peta 147] Pesan PDF scan/komik jelas: kartu + cerita contoh + saran",
-    "poin": "Impor PDF gambar/komik kini tampil kartu ramah, bukan pesan singkat.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1371,
-    "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
-    "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1369,
-    "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
-    "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1367,
-    "judul": "[peta 150] Tombol 'Siapkan offline': unduh arti kata bab ini",
-    "poin": "Menu ⋯ buku kini punya tombol \"Siapkan offline\": arti kata baru diunduh, maks 150.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1365,
-    "judul": "[peta 148] Penunjuk tingkat kesulitan bacaan di kartu buku saat impor",
-    "poin": "Kartu buku di Home sekarang menampilkan tingkat bacaan: Ringan, Sedang, atau Berat.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1363,
-    "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
-    "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1359,
-    "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
-    "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
-    "tgl": "2026-11-20"
   }
 ]
