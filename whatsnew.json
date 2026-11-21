@@ -1,5 +1,17 @@
 [
   {
+    "n": 1523,
+    "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
+    "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1521,
+    "judul": "[peta 160] Popup level sekali, jeda alami, satu angka level",
+    "poin": "Popup naik level sudah tampil sekali saja dan tidak menimpa pesan lain.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1519,
     "judul": "[peta 166] Saringan kata menurut aksara buku (Latin, Kiril, Han di buku ko)",
     "poin": "Kata dari tulisan lain (mis. Jepang di buku Inggris) tak ikut dihitung lagi.",
@@ -165,18 +177,6 @@
     "n": 1444,
     "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
     "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1442,
-    "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
-    "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1440,
-    "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
-    "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
     "tgl": "2026-11-21"
   }
 ]
