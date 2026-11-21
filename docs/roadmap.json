@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 154,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Logika ketuk vs hafal: kata tak diketuk = paham & disimpan, diketuk = masuk Kata, garis hilang bila paham (#1423)",
+      "dokumen": "docs/pm-logika-ketuk-hafal-1423.md",
+      "status": "siap dikerjakan",
+      "catatan": "Revisi founder. Mockup: docs/mockup-1423.html. Hitung & simpan kata tak diketuk (paham) dan kata diketuk (tambah vocab); kata pernah diketuk/disimpan lalu paham: garis stabilo dihapus. Pengaman & Urungkan. Asumsi di dokumen bagian 5. Naikkan C di sw.js."
+    },
+    {
       "no": 158,
       "peran": "developer",
       "prioritas": "P0",
