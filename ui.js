@@ -204,6 +204,8 @@ const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0)
 /* tampilan lencana jujur: lencana berbasis kata tersimpan hanya tampil terbuka bila syaratnya masih terpenuhi (db.badges tak diubah) */
 const BADGE_VOCAB_MIN = { kepo1: 1, kolektor: 10, koleksi50: 50, koleksi100: 100 };
 const BADGE_REAL = ['kepo1', 'kolektor', 'koleksi50', 'koleksi100', 'kutubuku', 'berani', 'perfect', 'boss', 'otak']; /* syarat dihitung dari data nyata di perangkat ini, bukan XP/lencana gabungan */
+/* satu sumber target kata: dipakai kartu milestone Home & sheet Tamat (0 = semua target terlewati) */
+const wordMile = n => n < 50 ? 50 : n < 100 ? 100 : 0;
 const badgeShown = id => db.badges.includes(id) && !(BADGE_REAL.includes(id) && !BADGES.find(b => b[0] === id)[4]());
 const LV5_XP = 4 * 100; /* XP minimum Level 5, selaras level() */
 const BADGE_HOW = { kepo1: 'Ketuk kata di bacaan, lalu Simpan.', kolektor: 'Simpan 10 kata dari bacaanmu.', koleksi50: 'Simpan 50 kata. Kamu bisa!', koleksi100: 'Simpan 100 kata. Koleksi jumbo!', kutubuku: 'Balik 20 halaman di tab Baca.', berani: 'Buka tab Ngomong, selesaikan 1 tantangan.', perfect: 'Skor kalimat 95%+ di tab Ngomong.', boss: 'Kalahin 5 kata sulit di latihan Kata.', otak: 'Hafal 10 kartu di tab Kata.', fire3: 'Baca atau latihan 3 hari berturut-turut.', fire7: 'Jaga streak 7 hari tanpa putus.', lv5: `Kumpulkan XP sampai Level 5 (${LV5_XP} XP).` };
@@ -1498,8 +1500,12 @@ function finishBook(b) {
   let besok = '';
   if (nb) {
     const pr = nb[0] === 'kutubuku' ? badgeProgress('kutubuku') : null, rem = pr ? pr.need - pr.now : 0;
-    const apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1);
-    besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}, dapat ${esc(nb[2])}</p>`;
+    let apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1), nama = nb[2];
+    if (nb[0] in BADGE_VOCAB_MIN) { /* lencana kata: target & sisa sama persis dgn kartu Home */
+      const n = countedVocab(null).length, t = wordMile(n), tb = BADGES.find(x => x[0] === 'koleksi' + t);
+      if (t && tb) { apa = `simpan ${t - n} kata lagi`; nama = tb[2]; } else apa = '';
+    }
+    if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}, dapat ${esc(nama)}</p>`;
   }
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
@@ -3121,7 +3127,7 @@ const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 /* #1383 bar tonggak: pakai hitungan & lencana koleksi50/koleksi100 (#1325), tanpa hitungan sendiri; tersembunyi bila 0 kata */
 const mileClose = () => { db.mile50 = 1; save(); const e = document.getElementById('mileCard'); if (e) e.remove(); };
 const mileHtml = () => {
-  const n = countedVocab(null).length, t = n < 50 ? 50 : n < 100 ? 100 : 0;
+  const n = countedVocab(null).length, t = wordMile(n);
   if (!t) return '';
   const d = new Date().toDateString();
   let card = '';

@@ -1,5 +1,11 @@
 [
   {
+    "n": 1503,
+    "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
+    "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1501,
     "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
     "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
@@ -171,12 +177,6 @@
     "n": 1415,
     "judul": "Halaman terakhir: kartu 'Baca ulang / Buku baru' tak menutup teks",
     "poin": "Kartu \"Baca ulang / Buku baru\" di halaman terakhir tak lagi menutupi cerita.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1411,
-    "judul": "Sampul tanpa gambar: huruf awal + judul pendek, buku mudah dikenali",
-    "poin": "Sampul buku tanpa gambar kini menampilkan huruf awal dan judul pendek.",
     "tgl": "2026-11-21"
   }
 ]
