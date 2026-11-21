@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran (#1478)",
+      "dokumen": "docs/spesifikasi-latihan-ekstra-cukup-1478.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1478.html. Ubah ui.js & sw.js (naikkan C). Jangan ubah api/. Jangan sentuh #1473. Maks 2 XP/putaran lewat award(...,'rem'). Uji 320px & 390px."
+    },
+    {
       "no": 159,
       "peran": "developer",
       "prioritas": "P0",
