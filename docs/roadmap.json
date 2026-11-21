@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 171,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut' (#1561)",
+      "dokumen": "docs/mockup-1561.html",
+      "status": "selesai (#1561)",
+      "catatan": "Kartu fw-nudge buka bacaan terakhir. Jadwal ulang & XP tak berubah. Uji 320px."
+    },
+    {
       "no": 170,
       "peran": "developer",
       "prioritas": "P1",
