@@ -1,5 +1,29 @@
 [
   {
+    "n": 1499,
+    "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
+    "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1495,
+    "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
+    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1489,
+    "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
+    "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1482,
+    "judul": "Popup 'Level N!' jadi banner ringan, tak menutupi tab & layar lain",
+    "poin": "Popup \"Level N!\" kini jadi banner kecil di atas, tidak menutupi tab lain.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1477,
     "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
     "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
@@ -153,30 +177,6 @@
     "n": 1409,
     "judul": "Kartu Target Home: judul satu baris, cincin XP lega di HP",
     "poin": "Judul kartu target di Home sekarang cukup \"Target\", satu baris saja.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1403,
-    "judul": "Profil Rak: label 'Tamat' sekali saja + teks XP kartu Level lega",
-    "poin": "Label \"Tamat\" di Rak Profil tinggal satu, judul buku jadi lebih lega.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1400,
-    "judul": "Kartu ulang: pilihan cara baca (pinyin) tampil langsung (masukan Sinta)",
-    "poin": "Di Pengaturan baca ada pilihan baru: cara baca di kartu ulang Langsung atau Ketuk dulu.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1396,
-    "judul": "Home memuat: 'Lanjut tanpa menunggu' muncul dari awal + info offline",
-    "poin": "Saat Home memuat, tombol \"Lanjut tanpa menunggu\" kini langsung muncul.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1389,
-    "judul": "Ajakan Home & sheet Tamat: ulang kata/buku baru, bukan 'ketuk kata'",
-    "poin": "Buku tamat: Home sekarang mengajak pilih buku berikutnya, bukan \"ketuk kata\".",
     "tgl": "2026-11-21"
   }
 ]
