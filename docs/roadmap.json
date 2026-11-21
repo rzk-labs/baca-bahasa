@@ -167,7 +167,7 @@
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
     },
     {
       "no": 24,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 161,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Riset popup naik level & huruf hari streak (#1481)",
+      "dokumen": "docs/riset-popup-level-huruf-hari.md",
+      "status": "selesai",
+      "catatan": "39 butir bukti; 4 dugaan vonis sebagian. Mockup: docs/mockup-1481.html."
+    },
+    {
+      "no": 160,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Popup level sekali & jeda alami, satu angka level, label hari Sen/Sel (#1481)",
+      "dokumen": "docs/riset-popup-level-huruf-hari.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ikuti bagian 7 (aturan 1-9). Mockup: docs/mockup-1481.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. Uji 320px & 390px."
+    },
     {
       "no": 159,
       "peran": "developer",
