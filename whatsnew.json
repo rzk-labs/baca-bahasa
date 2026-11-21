@@ -1,5 +1,29 @@
 [
   {
+    "n": 1430,
+    "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
+    "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1427,
+    "judul": "[peta 146] Pengaturan baca: mode 'Baca polos' tanpa garis bawah",
+    "poin": "Pengaturan baca punya saklar \"Baca polos\": halaman bersih tanpa garis bawah.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1425,
+    "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
+    "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1407,
+    "judul": "Ulang 3 kata: satu tombol di Home, tahan sesi, hadiah & 'Ulang 3 lagi'",
+    "poin": "Home sekarang punya satu tombol \"Ulang 3 kata\", tidak ada kartu kembar lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1415,
     "judul": "Halaman terakhir: kartu 'Baca ulang / Buku baru' tak menutup teks",
     "poin": "Kartu \"Baca ulang / Buku baru\" di halaman terakhir tak lagi menutupi cerita.",
@@ -154,29 +178,5 @@
     "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
     "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
     "tgl": "2026-11-20"
-  },
-  {
-    "n": 1335,
-    "judul": "Header e-reader HP: 'Bagian 12 dari 12' tak tabrak tombol Dengar",
-    "poin": "Di HP, posisi bacaan kini tampil \"12/12\", tidak menabrak tombol Dengar lagi.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1333,
-    "judul": "[peta 144] Kartu arti: semua arti & frasa tampil sebagai chip menonjol",
-    "poin": "Arti lain sekarang tampil sebagai tombol besar, langsung di kartu arti.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1318,
-    "judul": "Kartu Level: bar progres + \"64/100 XP\" satu baris, tak pecah",
-    "poin": "Kartu Level di Profil kini rapi: angka besar, bar tipis, \"64/100 XP\" satu baris.",
-    "tgl": "2026-11-18"
-  },
-  {
-    "n": 1306,
-    "judul": "Home: judul & penulis buku terpisah jelas + statistik Profil selebar layar",
-    "poin": "Di Home, nama penulis buku sekarang selalu di baris sendiri, tidak nempel judul.",
-    "tgl": "2026-11-18"
   }
 ]
