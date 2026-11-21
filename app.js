@@ -100,6 +100,17 @@ const isKenal = (lang, w) => !!db.kenal && db.kenal[vocabKey(lang, w)] > 0;
 const isNama = (b, w) => !!b && Array.isArray(b.names) && b.names.includes(String(w || '').trim().toLowerCase());
 function setNama(b, w, on) { if (!b) return; const k = String(w || '').trim().toLowerCase(); if (!k) return; if (!Array.isArray(b.names)) b.names = []; const i = b.names.indexOf(k); if (on && i < 0) b.names.push(k); else if (!on && i >= 0) b.names.splice(i, 1); save(); }
 function setKenal(lang, w, on) { if (!db.kenal || typeof db.kenal !== 'object' || Array.isArray(db.kenal)) db.kenal = {}; db.kenal[vocabKey(lang, w)] = on ? Date.now() : -Date.now(); save(); }
+/* 'paham' (#1435): kata di halaman yang dilewati tanpa diketuk. db.paham[kunci] = waktu (positif = paham, negatif = dibatalkan; ikut sinkron). Beda dari 'kenal' (tombol manual, kata jadi abu-abu). */
+const PAHAM_MAX = 6000;
+const isPaham = (lang, w) => !!db.paham && db.paham[vocabKey(lang, w)] > 0;
+function setPaham(items, on) {
+  if (!db.paham || typeof db.paham !== 'object' || Array.isArray(db.paham)) db.paham = {};
+  const t = Date.now();
+  for (const [lang, w] of items) db.paham[vocabKey(lang, w)] = on ? t : -t;
+  const ks = Object.keys(db.paham);
+  if (ks.length > PAHAM_MAX) ks.sort((x, y) => Math.abs(db.paham[x]) - Math.abs(db.paham[y])).slice(0, ks.length - PAHAM_MAX).forEach(k => { delete db.paham[k]; });
+  save();
+}
 const sameVocab =(v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
 /* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
 function dedupeVocab() {
@@ -206,6 +217,7 @@ function knownSet(lang) {
   const known = new Set();
   for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
   for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
+  for (const k in (db.paham || {})) if (db.paham[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
   known.delete('');
   return known;
 }
