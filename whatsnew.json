@@ -1,5 +1,11 @@
 [
   {
+    "n": 1515,
+    "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
+    "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1513,
     "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
     "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
@@ -171,12 +177,6 @@
     "n": 1435,
     "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
     "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1433,
-    "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
-    "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
     "tgl": "2026-11-21"
   }
 ]
