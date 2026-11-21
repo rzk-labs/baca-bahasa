@@ -1,5 +1,11 @@
 [
   {
+    "n": 1389,
+    "judul": "Ajakan Home & sheet Tamat: ulang kata/buku baru, bukan 'ketuk kata'",
+    "poin": "Buku tamat: Home sekarang mengajak pilih buku berikutnya, bukan \"ketuk kata\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1388,
     "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
     "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
@@ -171,12 +177,6 @@
     "n": 1289,
     "judul": "[peta 141] Ukur beta nyata (1/2): penanda aktivasi & H7 di /hitung",
     "poin": "Keepo kini mencatat diam-diam: pengguna baru sudah baca dan sudah ketuk kata.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1271,
-    "judul": "[peta 129] Kartu ulang: nada pinyin pakai angka + palet aman buta warna",
-    "poin": "Kartu ulang Mandarin kini pakai warna nada yang aman untuk buta warna.",
     "tgl": "2026-11-17"
   }
 ]
