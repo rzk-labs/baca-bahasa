@@ -265,7 +265,7 @@
       "prioritas": "P0",
       "nama": "XP hari ini: sheet Tamat & Target Home selalu sama angkanya (#1414)",
       "dokumen": "docs/spesifikasi-xp-tamat-home-1414.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1433)",
       "catatan": "Mockup: docs/mockup-1414.html. Satu fungsi teks dari xpToday(); tulis 'N XP hari ini' (tanpa +); tercapai → 'Target harian tercapai'; segarkan Home saat sheet ditutup. Ubah ui.js saja, jangan api/. Naikkan C di sw.js."
     },
     {
