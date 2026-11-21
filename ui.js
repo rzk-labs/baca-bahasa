@@ -2154,8 +2154,11 @@ function endCard(b, last) {
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };
   $('#ecn').onclick = () => { if (nx) { db.cur = nx.id; save(); setTab('baca'); } else { setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); } };
   /* tampil hanya bila ruang kosong di bawah SEMUA teks halaman aktif cukup; jangan pernah menimpa teks */
+  /* #1509: ukur di posisi AKHIR geseran (transform masih beranimasi saat showPage/closeSheet) supaya kartu tak menimpa teks */
   let bottom = 0; const vr = vp.getBoundingClientRect();
-  const add = x => { if (x.width > 0 && x.height > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); };
+  let sx = 0, sy = 0;
+  try { const m = new DOMMatrixReadOnly(getComputedStyle(cols).transform); sx = -RD.page * RD.step - m.m41; sy = (RD.dy || 0) - m.m42; } catch (e) { }
+  const add = x => { const l = x.left + sx, r = x.right + sx, bt = x.bottom + sy; if (x.width > 0 && x.height > 0 && r > vr.left && l < vr.right) bottom = Math.max(bottom, bt); };
   try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(add); } catch (e) { }
   try { (RD.ss || []).forEach(x => { if (x.pg === RD.page && x.el && x.el.isConnected) [...x.el.getClientRects()].forEach(add); }); } catch (e) { }
   if (!bottom || vr.bottom - bottom < c.offsetHeight + 48) { c.remove(); return; }
