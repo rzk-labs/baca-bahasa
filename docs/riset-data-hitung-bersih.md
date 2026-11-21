@@ -114,3 +114,10 @@ Jenis: D = dokumen analitik, P = pratinjau tautan/bot, S = Safari/penyimpanan, T
 | 44 | F | Bitdefender: klaim 46% pendaftaran dari bot (vendor, belum diverifikasi) | https://www.bitdefender.com/en-us/blog/hotforsecurity/fake-signups-are-on-the-rise-heres-what-small-business-owners-should-know |
 
 Catatan jujur: hitungan Wilson 3/42 dihitung sendiri (z = 1,96), bukan dari sumber. Tautan berasal dari hasil pencarian; Reddit & Threads/X tak terbaca.
+
+## Catatan #1449 (backlog 161, sudah dibangun di HQ)
+- H2/H7 kini rentang Wilson 95% + "n=…"; sampel <100 = "belum cukup data", tanpa warna.
+- Kartu atas: H2 dibagi pengguna baru kelompok hari pertama yang sama (hanya hari yang sudah genap).
+- Tabel per sumber belum per kelompok: API belum kirim kelompok per sumber.
+- **Perlu deploy manual founder** bila ingin tabel sumber akurat: kueri baru di `api/` (hitung per `first` + `src`).
+- Mockup: `docs/mockup-1449.html`.
