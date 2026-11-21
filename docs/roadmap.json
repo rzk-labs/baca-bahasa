@@ -355,7 +355,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: pisahkan sumber 'uji' (?ref=uji) dari angka pengguna nyata (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1446)",
       "catatan": "Usaha S. ref=uji sudah tersimpan sebagai sumber; HQ cukup mengecualikan dan menampilkan baris 'uji' terpisah. Tester berbekal tautan ?ref=uji. Mockup: docs/mockup-1419.html."
     },
     {
