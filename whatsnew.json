@@ -1,5 +1,11 @@
 [
   {
+    "n": 1501,
+    "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
+    "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1499,
     "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
     "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
@@ -171,12 +177,6 @@
     "n": 1411,
     "judul": "Sampul tanpa gambar: huruf awal + judul pendek, buku mudah dikenali",
     "poin": "Sampul buku tanpa gambar kini menampilkan huruf awal dan judul pendek.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1409,
-    "judul": "Kartu Target Home: judul satu baris, cincin XP lega di HP",
-    "poin": "Judul kartu target di Home sekarang cukup \"Target\", satu baris saja.",
     "tgl": "2026-11-21"
   }
 ]
