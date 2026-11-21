@@ -1,5 +1,11 @@
 [
   {
+    "n": 1437,
+    "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
+    "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1435,
     "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
     "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
@@ -171,12 +177,6 @@
     "n": 1360,
     "judul": "Home Minggu ini: beda 'hari baca' vs streak dijelaskan, tak bikin bingung",
     "poin": "Kartu Minggu ini sekarang bilang \"5 dari 7 hari baca\", bukan \"7 hari\".",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1355,
-    "judul": "Sheet Tamat: tombol utama & 'Selesai' diberi jarak, kartu teks disembunyikan",
-    "poin": "Layar Tamat: tombol 'Selesai' sekarang ada jarak, tidak gampang salah ketuk.",
     "tgl": "2026-11-20"
   }
 ]
