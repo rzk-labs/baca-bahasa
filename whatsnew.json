@@ -1,5 +1,35 @@
 [
   {
+    "n": 1489,
+    "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
+    "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1482,
+    "judul": "Popup 'Level N!' jadi banner ringan, tak menutupi tab & layar lain",
+    "poin": "Popup \"Level N!\" kini jadi banner kecil di atas, tidak menutupi tab lain.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1477,
+    "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
+    "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1471,
+    "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
+    "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1469,
+    "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
+    "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1467,
     "judul": "Home: kartu 'Minggu ini' ringkas satu baris, angka punya satuan",
     "poin": "Kartu \"Minggu ini\" di Home sekarang pendek, satu baris.",
@@ -147,36 +177,6 @@
     "n": 1400,
     "judul": "Kartu ulang: pilihan cara baca (pinyin) tampil langsung (masukan Sinta)",
     "poin": "Di Pengaturan baca ada pilihan baru: cara baca di kartu ulang Langsung atau Ketuk dulu.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1396,
-    "judul": "Home memuat: 'Lanjut tanpa menunggu' muncul dari awal + info offline",
-    "poin": "Saat Home memuat, tombol \"Lanjut tanpa menunggu\" kini langsung muncul.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1389,
-    "judul": "Ajakan Home & sheet Tamat: ulang kata/buku baru, bukan 'ketuk kata'",
-    "poin": "Buku tamat: Home sekarang mengajak pilih buku berikutnya, bukan \"ketuk kata\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1388,
-    "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
-    "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1382,
-    "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
-    "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1381,
-    "judul": "Kartu Streak Home: angka hari jelas + huruf nama hari di bawah titik",
-    "poin": "Kartu Streak di Home sekarang menampilkan angka hari, mis. \"9 hari\".",
     "tgl": "2026-11-21"
   }
 ]
