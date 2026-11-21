@@ -173,7 +173,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
-.q3-lock{opacity:.7;cursor:default;font-weight:600}.q3-lock span.bar{display:block;height:6px;margin-top:8px}
+.q3-lock{font-weight:600}.q3-lock .q3-go{text-decoration:none;padding:8px 12px;min-height:36px;border-radius:999px;background:var(--ink);color:var(--ice);display:inline-flex;align-items:center;white-space:nowrap}@media(max-width:360px){.q3-lock .q3-go{margin-left:30px}}.q3-lock span.bar{display:block;height:6px;margin-top:8px}
 .soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
@@ -555,6 +555,11 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 #bmList svg.i{width:18px;height:18px;margin-right:6px}
 .rtip .rtl{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1;font-size:14px;line-height:20px}
 .rtip .rtl>div{display:flex;gap:10px;align-items:flex-start}
+/* #1507 pemandu kata pertama: satu kata berdenyut (stabilo Wasabi), bar petunjuk di luar teks */
+.cols .w.guide-w{background:#E9F056;color:#351E28;border-radius:4px;box-shadow:0 0 0 3px rgba(233,240,86,.55);animation:gpulse 1.4s ease-in-out infinite}
+@keyframes gpulse{0%,100%{box-shadow:0 0 0 2px rgba(233,240,86,.55)}50%{box-shadow:0 0 0 6px rgba(233,240,86,.15)}}
+@media (prefers-reduced-motion:reduce){.cols .w.guide-w{animation:none}}
+.rtip.gtip button{background:transparent;color:var(--cream);border:1px solid var(--cream)}
 .rtip .rtl svg.i{width:18px;height:18px;margin-top:1px;stroke:var(--lime)}
 @media (prefers-reduced-motion:reduce){body.reading .xpfly.mini{animation-duration:.8s!important}*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
 /* ---------- akun, leaderboard, bagikan ---------- */
@@ -1088,12 +1093,14 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
 /* #1482: banner Level ringan — tanpa overlay, hanya kartu yang menerima ketukan */
 .lvlup.lvlbn{inset:calc(env(safe-area-inset-top,0px) + 8px) 0 auto 0;padding:0 12px;background:none;justify-content:center;align-items:flex-start;pointer-events:none;animation:none}
-.lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
+.lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin:0;box-sizing:border-box;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
 .lvlup.lvlbn .lvl-ic{width:40px;height:40px;margin:0;flex:none}
 .lvlup.lvlbn .lvl-ic .i,.lvlup.lvlbn .lvl-ic svg{width:22px;height:22px}
 .lvlup.lvlbn .lvl-tx{flex:1;min-width:0;display:flex;flex-direction:column}
 .lvlup.lvlbn .lvl-tx b{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:20px;line-height:24px}
-.lvlup.lvlbn .lvl-tx span{font-size:13px;line-height:17px}
+.lvlup.lvlbn .lvl-tx b{overflow-wrap:anywhere}
+.lvlup.lvlbn .lvl-tx span{font-size:13px;line-height:17px;overflow-wrap:anywhere}
+@media (max-width:359px){.lvlup.lvlbn{padding:0 8px}.lvlup.lvlbn .card{gap:8px;padding:8px 10px}.lvlup.lvlbn .lvl-ic{width:34px;height:34px}.lvlup.lvlbn button.lime{padding:8px 10px}}
 .lvlup.lvlbn button.lime{width:auto;margin:0;flex:none;padding:8px 12px;min-height:40px}
 @media (prefers-reduced-motion:reduce){.lvlup.lvlbn .card{animation:none}}
 /* #1083: Home pasca-tamat ringkas */
@@ -1311,6 +1318,11 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 .sdots .sd em{font:600 11px/12px var(--font-body,inherit);letter-spacing:0;white-space:nowrap;font-style:normal;color:#351E28;opacity:.75}
 .sdots .sd.td em{font-weight:800;opacity:1;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
+/* #1501 huruf hari satu huruf satu baris; info bawah diberi jarak, dipotong ellipsis */
+.sdots{margin:6px 0 8px;gap:0}
+.sdots .sd{overflow:hidden}
+.sdots .sd em{display:block;max-width:100%;overflow:hidden;white-space:nowrap;font-size:11px;line-height:13px}
+.stat3 .streak1 .lbl2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;margin-top:auto;position:relative}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
 .stat3 .sbig{white-space:nowrap}
 /* #1411 sampul tanpa gambar: huruf awal + judul pendek (maks 3 baris; kecil 2 baris) */
