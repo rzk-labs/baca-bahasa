@@ -300,7 +300,7 @@
       "prioritas": "P0",
       "nama": "Uji banner Level di iPhone & 320px (#1482)",
       "dokumen": "docs/mockup-1482.html",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1505)",
       "catatan": "Banner sudah dibuat (ui.js celebrate, style.css .lvlbn). Uji: tab tetap bisa diketuk, safe-area atas, hilang ±4 dtk, sekali per level, angka Level Home sama."
     },
     {
