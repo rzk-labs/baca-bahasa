@@ -7,15 +7,17 @@ const API = (() => {
   return localStorage.getItem('kepo.api') || API_PROD;
 })();
 db.acct = db.acct || null; // { token, username, nick, hidden }
-const SYNC_KEYS = ['xp', 'xpDay', 'pgDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal', 'bkGone'];
+const SYNC_KEYS = ['xp', 'xpDay', 'pgDay', 'badges', 'stat', 'days', 'scores', 'vocab', 'weak', 'taps', 'vocabDel', 'books', 'kenal', 'paham', 'bkGone'];
 const SYNC_MAX = 340 * 1024; // di bawah MAX_DATA server (400 KB)
 const TOMB_TTL = 90 * 864e5;
 
 const API_TMO = 15000; // batas waktu satu permintaan ke server
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
+  const demo = !!db.acct && db.acct.token === 'demo'; // mode demo: akun & sosial dijawab lokal (demo.js)
+  if (demo && DEMO_RE.test(path)) return demoApi(path, opt);
   const h = { 'Content-Type': 'application/json' };
-  if (db.acct && db.acct.token) h.Authorization = 'Bearer ' + db.acct.token;
+  if (db.acct && db.acct.token && !demo) h.Authorization = 'Bearer ' + db.acct.token;
   let r, j;
   const ac = new AbortController(), tm = setTimeout(() => ac.abort(), API_TMO);
   try {
@@ -85,7 +87,7 @@ function mergeVocabEntry(a, b) {
 // gabung data server ke db (bukan timpa). true bila tampilan perlu digambar ulang.
 function mergeSrv(d) {
   if (!isObj(d)) return false;
-  const snap = () => JSON.stringify([db.kenal, db.vocab, db.xp, db.badges, (db.books || []).map(b => [b.pos, b.si, b.marks])]);
+  const snap = () => JSON.stringify([db.kenal, db.paham, db.vocab, db.xp, db.badges, (db.books || []).map(b => [b.pos, b.si, b.marks])]);
   const before = snap(), now = Date.now(), tomb = new Map();
   for (const t of [].concat(Array.isArray(db.vocabDel) ? db.vocabDel : [], Array.isArray(d.vocabDel) ? d.vocabDel : [])) {
     if (!t || !t.k || !(+t.at > now - TOMB_TTL)) continue;
@@ -122,6 +124,10 @@ function mergeSrv(d) {
   if (isObj(d.kenal)) {
     if (!isObj(db.kenal)) db.kenal = {};
     for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
+  }
+  if (isObj(d.paham)) {
+    if (!isObj(db.paham)) db.paham = {};
+    for (const k in d.paham) { const n = +d.paham[k] || 0; if (n && Math.abs(n) > Math.abs(+db.paham[k] || 0)) db.paham[k] = n; }
   }
   mergeTaps(d.taps);
   mergeBooks(d.books);
@@ -474,7 +480,9 @@ function openAccount(mode) {
         <label class="eyebrow" style="display:block;margin-top:12px">Password<input id="aP" type="password" name="password" autocomplete="${m === 'masuk' ? 'current-password' : 'new-password'}" placeholder="min. 6 karakter" required></label>
         <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden><span id="aErrT"></span><div class="row" style="margin-top:8px"><button class="sec" type="button" id="aErrBtn"></button></div></div>
         <div class="row"><button class="pri" type="submit" id="aGo">${m === 'masuk' ? 'Masuk' : 'Daftar & masuk'}</button></div>
-      </form>`);
+      </form>
+      <div class="set-row"><div class="mut sm">Mau lihat Sosial & peringkat dulu tanpa akun?</div><div class="row"><button class="sec" type="button" id="aDemo">Coba mode demo</button></div></div>`);
+    $('#aDemo').onclick = () => startDemo().catch(e => toast(e.message));
     $$('#aMode button').forEach(b => b.onclick = () => { m = b.dataset.v; draw(); });
     const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; $('#aErrT').textContent = ''; } };
     $$('#aForm input').forEach(i => i.addEventListener('input', clearErr));
@@ -644,7 +652,7 @@ async function openProfile(username) {
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Selesai</div>${rdDone.map(bacaBaris).join('')}` : ''}
       ${p.self ? `<div class="sec-h" style="margin:16px 0 8px"><h2 style="font-size:18px">Lencana</h2><span class="mut sm">${BADGES.filter(b => badgeShown(b[0])).length}/${BADGES.length} kebuka</span></div>
-      ${(() => { const near = BADGES.map(([id, em, name]) => ({ id, em, name, pr: badgeShown(id) ? null : badgeProgress(id) })).filter(x => x.pr && x.pr.now > 0).sort((x, y) => y.pr.now / y.pr.need - x.pr.now / x.pr.need).slice(0, 3); return near.length ? `<div class="eyebrow" style="margin:0 0 6px">Hampir tercapai</div><div class="near-list">${near.map(x => `<div class="near-row" role="button" tabindex="0" data-how="${esc(BADGE_HOW[x.id] || x.name)}"><span class="em">${ico(x.em)}</span><div class="nb"><b>${x.name}</b><div class="bar"><i style="width:${Math.round(x.pr.now / x.pr.need * 100)}%"></i></div></div><span class="np">${x.pr.now}/${x.pr.need}</span></div>`).join('')}</div>` : ''; })()}
+      ${(() => { const NG = { kepo1: 'kata', kolektor: 'kata', koleksi50: 'kata', koleksi100: 'kata', fire3: 'streak', fire7: 'streak' }, seenG = {}; /* tangga sama: hanya lencana berikutnya yang belum didapat */ const near = BADGES.map(([id, em, name]) => ({ id, em, name, g: NG[id] || id, pr: badgeShown(id) ? null : badgeProgress(id) })).filter(x => { if (!x.pr || seenG[x.g]) return false; seenG[x.g] = 1; return x.pr.now > 0; }).sort((x, y) => y.pr.now / y.pr.need - x.pr.now / x.pr.need).slice(0, 3); return near.length ? `<div class="eyebrow" style="margin:0 0 6px">Hampir tercapai</div><div class="near-list">${near.map(x => `<div class="near-row" role="button" tabindex="0" data-how="${esc(BADGE_HOW[x.id] || x.name)}"><span class="em">${ico(x.em)}</span><div class="nb"><b>${x.name}</b><div class="bar"><i style="width:${Math.round(x.pr.now / x.pr.need * 100)}%"></i></div></div><span class="np">${x.pr.now}/${x.pr.need}</span></div>`).join('')}</div>` : ''; })()}
       <details class="all-badges"><summary>Semua lencana (${BADGES.length})</summary>
       <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}" aria-label="${esc('Lencana ' + name + ', ' + (on ? 'Sudah dapat' : 'Belum didapat'))}">${on ? `<span class="bst on" aria-hidden="true">${ico('check')}</span>` : ''}<span class="em">${ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${on ? `<span class="got">${ico('check', 'ck')} Didapat</span>` : ''}${multi ? `<span class="bp">${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div></details>` : ''}
       ${p.self ? rakHtml() : ''}
@@ -830,7 +838,7 @@ if (db.acct) runSync({ profile: true }).catch(() => { });
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
     const ref = new URLSearchParams(location.search).get('ref');
     let first = localStorage.getItem('kepo.first');
-    if (!first) { first = day; localStorage.setItem('kepo.first', day); if (ref) localStorage.setItem('kepo.src', ref); }
+    if (!first) { first = day; localStorage.setItem('kepo.first', day); localStorage.setItem('kepo.t0', String(Date.now())); if (ref) localStorage.setItem('kepo.src', ref); } /* #1440: t0 = jam buka pertama, hanya di perangkat */
     if (localStorage.getItem('kepo.hitDay') === day) return;
     const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '' });
     const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
@@ -849,7 +857,13 @@ window.kepoMark = function (m) {
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
     const first = localStorage.getItem('kepo.first') || day, other = m === 'baca' ? 'kata' : 'baca', od = localStorage.getItem('kepo.m.' + other);
     const akt = !!od && od === first && day === first; /* penanda kedua selesai di hari pertama = aktivasi */
-    const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '', mark: m, akt });
+    /* #1440: jalur & kelompok detik ditaruh di nama sumber (api/ tak diubah): 'sumber-c|i|x[-t1..t5]'. c = cerita contoh, i = impor sendiri, x = belum jelas.
+       Detik = dari buka pertama sampai ketukan kata pertama (hanya hari pertama): t1 <30, t2 <60, t3 <120, t4 <300, t5 lebih. Tanpa nama/email/isi buku. */
+    let jalur = 'x'; try { const bk = typeof book === 'function' ? book() : null; if (bk) jalur = /\(contoh\)\s*$/i.test(bk.title || '') ? 'c' : 'i'; } catch (e) { }
+    let sfx = '-' + jalur;
+    if (m === 'kata' && first === day) { const t0 = +localStorage.getItem('kepo.t0') || 0, d = t0 ? (Date.now() - t0) / 1000 : -1; if (d >= 0) sfx += '-t' + (d < 30 ? 1 : d < 60 ? 2 : d < 120 ? 3 : d < 300 ? 4 : 5); }
+    const base = (localStorage.getItem('kepo.src') || 'langsung').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 10) || 'langsung';
+    const data = JSON.stringify({ day, first, src: base + sfx, mark: m, akt });
     localStorage.setItem('kepo.m.' + m, day);
     const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
     if (!ok) fetch(API_PROD + '/hitung', { method: 'POST', body: data, keepalive: true }).catch(() => { });
