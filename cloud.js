@@ -14,8 +14,10 @@ const TOMB_TTL = 90 * 864e5;
 const API_TMO = 15000; // batas waktu satu permintaan ke server
 async function api(path, opt = {}) {
   if (!API) throw new Error('Server akun belum aktif. Coba lagi nanti ya.');
+  const demo = !!db.acct && db.acct.token === 'demo'; // mode demo: akun & sosial dijawab lokal (demo.js)
+  if (demo && DEMO_RE.test(path)) return demoApi(path, opt);
   const h = { 'Content-Type': 'application/json' };
-  if (db.acct && db.acct.token) h.Authorization = 'Bearer ' + db.acct.token;
+  if (db.acct && db.acct.token && !demo) h.Authorization = 'Bearer ' + db.acct.token;
   let r, j;
   const ac = new AbortController(), tm = setTimeout(() => ac.abort(), API_TMO);
   try {
@@ -478,7 +480,9 @@ function openAccount(mode) {
         <label class="eyebrow" style="display:block;margin-top:12px">Password<input id="aP" type="password" name="password" autocomplete="${m === 'masuk' ? 'current-password' : 'new-password'}" placeholder="min. 6 karakter" required></label>
         <div class="sm" id="aErr" role="alert" style="margin-top:12px;color:var(--ink);font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px" hidden><span id="aErrT"></span><div class="row" style="margin-top:8px"><button class="sec" type="button" id="aErrBtn"></button></div></div>
         <div class="row"><button class="pri" type="submit" id="aGo">${m === 'masuk' ? 'Masuk' : 'Daftar & masuk'}</button></div>
-      </form>`);
+      </form>
+      <div class="set-row"><div class="mut sm">Mau lihat Sosial & peringkat dulu tanpa akun?</div><div class="row"><button class="sec" type="button" id="aDemo">Coba mode demo</button></div></div>`);
+    $('#aDemo').onclick = () => startDemo().catch(e => toast(e.message));
     $$('#aMode button').forEach(b => b.onclick = () => { m = b.dataset.v; draw(); });
     const clearErr = () => { const el = $('#aErr'); if (el) { el.hidden = true; $('#aErrT').textContent = ''; } };
     $$('#aForm input').forEach(i => i.addEventListener('input', clearErr));
