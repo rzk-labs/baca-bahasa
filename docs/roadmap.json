@@ -319,7 +319,7 @@
       "prioritas": "P1",
       "nama": "Eksperimen 1 retensi: kartu 'Lanjut dari halaman X · ±N menit' di atas Home (#1323)",
       "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1379)",
       "catatan": "Mockup: docs/mockup-1323.html. Ukur klik lanjut baca & balik_h2 lewat /hitung. Satu perubahan per minggu. Naikkan C di sw.js."
     },
     {
@@ -337,7 +337,7 @@
       "prioritas": "P1",
       "nama": "Eksperimen 3 retensi: bar tonggak 'X dari 50 kata' + lencana kata ke-50/100 (#1323)",
       "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1383)",
       "catatan": "Mockup: docs/mockup-1323.html. Usul Sinta & Ilham; bukti belum jelas, jadi uji lewat balik_h7. Kerjakan setelah backlog 150."
     },
     {
@@ -363,7 +363,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: detail tugas jadi pop up + loading saat status pindah (#1283)",
-      "dokumen": "docs/desain-hq-tiket-popup.md",
+      "dokumen": "docs/hq/desain-hq-tiket-popup.md",
       "status": "selesai (#1300)"
     },
     {
@@ -396,7 +396,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: urutkan kolom Papan sesuai kebiasaan founder (#1247)",
-      "dokumen": "docs/pm-urutan-papan-1247.md",
+      "dokumen": "docs/hq/pm-urutan-papan-1247.md",
       "status": "selesai (#1269)"
     },
     {
@@ -404,7 +404,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: gabung kotak mockup jadi satu, hapus 'Belum ada gambar' (#1245)",
-      "dokumen": "docs/pm-mockup-ganda-hq.md",
+      "dokumen": "docs/hq/pm-mockup-ganda-hq.md",
       "status": "selesai (#1273)"
     },
     {
@@ -429,7 +429,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: tampilkan QA di tiap peran & total di Kuota (#1228)",
-      "dokumen": "docs/pm-qa-di-kuota-hq.md",
+      "dokumen": "docs/hq/pm-qa-di-kuota-hq.md",
       "status": "selesai (#1238)"
     },
     {
@@ -454,7 +454,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ HP: kolom papan kosong jangan melar, judul di atas (#1212)",
-      "dokumen": "docs/pm-papan-kolom-kosong-1212.md",
+      "dokumen": "docs/hq/pm-papan-kolom-kosong-1212.md",
       "status": "selesai (#1236)"
     },
     {
@@ -495,7 +495,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Papan Tugas HP: kolom kosong jangan melar tinggi (#1132)",
-      "dokumen": "docs/spesifikasi-papan-kosong-1132.md",
+      "dokumen": "docs/hq/spesifikasi-papan-kosong-1132.md",
       "status": "selesai (#1148)"
     },
     {
@@ -527,7 +527,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Pengaturan keterbacaan Keepo HQ",
-      "dokumen": "docs/spesifikasi-hq-pengaturan-baca.md",
+      "dokumen": "docs/hq/spesifikasi-hq-pengaturan-baca.md",
       "status": "selesai (#666)"
     },
     {
@@ -599,7 +599,7 @@
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Tombol feedback kirim langsung ke HQ, tanpa salin-tempel (#234)",
-      "dokumen": "docs/spesifikasi-feedback-langsung-hq.md",
+      "dokumen": "docs/hq/spesifikasi-feedback-langsung-hq.md",
       "status": "selesai (#690)"
     },
     {
@@ -663,7 +663,7 @@
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Keepo HQ pakai brand v9: Plum Noir, Biru Es, Wasabi, Bricolage + Inter, tanpa maskot (#479)",
-      "dokumen": "docs/spesifikasi-hq-brand-v9.md",
+      "dokumen": "docs/hq/spesifikasi-hq-brand-v9.md",
       "status": "selesai (#694)"
     },
     {
@@ -671,7 +671,7 @@
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Keepo HQ: judul tugas rapi, tidak terpotong di tengah kata (#294)",
-      "dokumen": "docs/spesifikasi-hq-judul-tugas-rapi.md",
+      "dokumen": "docs/hq/spesifikasi-hq-judul-tugas-rapi.md",
       "status": "selesai (#698)"
     },
     {
@@ -695,7 +695,7 @@
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Keepo HQ: kartu Hasil punya status 3 jenis: Belum diproses, Progres, Selesai (#586)",
-      "dokumen": "docs/spesifikasi-hq-status-kartu-hasil.md",
+      "dokumen": "docs/hq/spesifikasi-hq-status-kartu-hasil.md",
       "status": "selesai (#702)"
     },
     {
@@ -864,7 +864,7 @@
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Keepo HQ Peta ringkas: kartu tahap 1 baris, catatan & sumber dilipat (perintah founder #527)",
-      "dokumen": "docs/pm-peta-hq-rapi.md",
+      "dokumen": "docs/hq/pm-peta-hq-rapi.md",
       "status": "selesai (#704)"
     },
     {
@@ -1016,7 +1016,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: samakan Hasil, Papan, Siap kamu cek (satu kamus status, satu kartu, satu bar saring) (#923)",
-      "dokumen": "docs/pm-rapikan-hasil-papan-siap-cek.md",
+      "dokumen": "docs/hq/pm-rapikan-hasil-papan-siap-cek.md",
       "status": "selesai (#937)"
     },
     {
@@ -1024,7 +1024,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: Setujui massal untuk tugas Siap dicek (kotak centang, pilih semua, laporan gagal sebagian) (#925)",
-      "dokumen": "docs/spesifikasi-hq-setujui-massal.md",
+      "dokumen": "docs/hq/spesifikasi-hq-setujui-massal.md",
       "status": "selesai (#948)"
     },
     {
@@ -1040,7 +1040,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: form Perintah ke tim rapi di HP (tanpa zoom, 5 peran muat, tidak terpotong) (#931)",
-      "dokumen": "docs/spesifikasi-hq-form-perintah-hp.md",
+      "dokumen": "docs/hq/spesifikasi-hq-form-perintah-hp.md",
       "status": "selesai (#954)"
     },
     {
@@ -1064,7 +1064,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: tombol Perintah tidak menutupi isi, pindah ke tempat tetap (#921)",
-      "dokumen": "docs/spesifikasi-hq-tombol-perintah.md",
+      "dokumen": "docs/hq/spesifikasi-hq-tombol-perintah.md",
       "status": "selesai (#974)"
     },
     {
@@ -1072,7 +1072,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: klik cepat (cache server, panggilan GitHub bersamaan, layar langsung berubah, segar-ulang di belakang) (#943)",
-      "dokumen": "docs/spesifikasi-hq-klik-cepat.md",
+      "dokumen": "docs/hq/spesifikasi-hq-klik-cepat.md",
       "status": "selesai (#979)"
     },
     {
@@ -1080,7 +1080,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup visual di setiap hasil yang perlu disetujui (#957)",
-      "dokumen": "docs/spesifikasi-hq-mockup-persetujuan.md",
+      "dokumen": "docs/hq/spesifikasi-hq-mockup-persetujuan.md",
       "status": "selesai (#997)"
     },
     {
@@ -1088,7 +1088,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: visual loading seragam (bilah tipis, kerangka di semua tab, tombol proses) (#965)",
-      "dokumen": "docs/spesifikasi-hq-visual-loading.md",
+      "dokumen": "docs/hq/spesifikasi-hq-visual-loading.md",
       "status": "selesai (#984)"
     },
     {
@@ -1257,7 +1257,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup tampil langsung di depan, tanpa tombol 'Tampilkan mockup' (#1125)",
-      "dokumen": "docs/rencana-hq-mockup-langsung-1125.md",
+      "dokumen": "docs/hq/rencana-hq-mockup-langsung-1125.md",
       "status": "selesai (#1195)",
       "catatan": "Mockup: docs/mockup-1125.html. Hanya dev/src/page.html (tile mockup + #mockbtn). Jangan ubah app utama & api/."
     },
@@ -1353,7 +1353,7 @@
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Keepo HQ: mockup mini langsung di kartu Siap dicek di Home (#1173)",
-      "dokumen": "docs/rencana-hq-mockup-depan-home-1173.md",
+      "dokumen": "docs/hq/rencana-hq-mockup-depan-home-1173.md",
       "status": "selesai (#1265)",
       "catatan": "Mockup: docs/mockup-1173.html. Kerjakan setelah backlog 114 (#1125). Hanya dev/src/page.html; muat malas, maks 2 pratinjau sekaligus."
     },
@@ -1381,7 +1381,7 @@
       "prioritas": "P0",
       "nama": "Home Minggu ini: 'N dari 7 hari baca' vs 'Beruntun N hari' (#1360)",
       "dokumen": "docs/desain-minggu-vs-streak-1360.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1382)",
       "catatan": "Mockup: docs/mockup-1360.html. Teks sudah diubah di ui.js; tinggal cek di HP 320px."
     },
     {

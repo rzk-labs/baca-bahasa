@@ -82,7 +82,7 @@ async function docInfo(env, paths) {
   try {
     const [owner, name] = REPO.split('/');
     const hist = paths.map((p, i) => `h${i}:history(path:"${p}",first:1){nodes{committedDate}}`).join(' ');
-    const q = `{repository(owner:"${owner}",name:"${name}"){ref:ref(qualifiedName:"refs/heads/main"){target{...on Commit{${hist}}}} tree:object(expression:"main:docs"){...on Tree{entries{name object{...on Blob{text}}}}}}}`;
+    const q = `{repository(owner:"${owner}",name:"${name}"){ref:ref(qualifiedName:"refs/heads/main"){target{...on Commit{${hist}}}} tree:object(expression:"main:docs"){...on Tree{entries{name object{...on Blob{text}}}}} hq:object(expression:"main:docs/hq"){...on Tree{entries{name object{...on Blob{text}}}}}}}`;
     const r = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: { authorization: 'Bearer ' + env.GH_TOKEN, 'user-agent': 'kepo-dev', 'content-type': 'application/json' },
@@ -94,6 +94,7 @@ async function docInfo(env, paths) {
     const tgt = (repo.ref && repo.ref.target) || {};
     const teks = {};
     ((repo.tree && repo.tree.entries) || []).forEach(e => { if (e.object && e.object.text != null) teks['docs/' + e.name] = e.object.text; });
+    ((repo.hq && repo.hq.entries) || []).forEach(e => { if (e.object && e.object.text != null) teks['docs/hq/' + e.name] = e.object.text; });
     const out = {};
     paths.forEach((p, i) => {
       const n = tgt['h' + i] && tgt['h' + i].nodes && tgt['h' + i].nodes[0];
@@ -215,9 +216,9 @@ async function api0(req, env, url) {
   if (p === '/hq' && req.method === 'GET') {
     // Semua panggilan jalan bersamaan: dokumen, masukan, dan catatan QA menempel pada panggilan awalnya.
     const issuesP = gh(env, `/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=60&sort=created&direction=desc`);
-    const docsP = gh(env, `/repos/${REPO}/contents/docs`, { soft: true });
+    const docsP = Promise.all([gh(env, `/repos/${REPO}/contents/docs`, { soft: true }), gh(env, `/repos/${REPO}/contents/docs/hq`, { soft: true })]).then(([a, b]) => (Array.isArray(a) ? a : []).concat(Array.isArray(b) ? b : []));
     const infoP = docsP.then(docs => {
-      const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
+      const dl = Array.isArray(docs) ? docs.filter(d => d.name.endsWith('.md') && /^docs\/(hq\/)?[\w.-]+\.md$/.test(d.path)).map(d => d.path) : [];
       return memo('docinfo:' + dl.join(','), 300000, () => docInfo(env, dl));
     });
     const masP = gh(env, `/repos/${REPO}/issues?labels=masukan-pengguna&state=open&per_page=1`, { soft: true }).then(async mi => {
@@ -292,7 +293,7 @@ async function api0(req, env, url) {
   }
   if (p === '/doc' && req.method === 'GET') {
     const path = url.searchParams.get('path') || '';
-    if (!/^docs\/[\w.-]+\.md$/.test(path)) return json({ error: 'path' }, 400);
+    if (!/^docs\/(hq\/)?[\w.-]+\.md$/.test(path)) return json({ error: 'path' }, 400);
     const ref = url.searchParams.get('ref') || '';
     if (ref && !/^kepo\/issue-\d+$/.test(ref)) return json({ error: 'ref' }, 400);
     const r = await gh(env, `/repos/${REPO}/contents/${path}${ref ? '?ref=' + encodeURIComponent(ref) : ''}`, { raw: true });

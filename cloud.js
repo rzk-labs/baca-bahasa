@@ -841,6 +841,9 @@ if (db.acct) runSync({ profile: true }).catch(() => { });
 /* Penanda aktivasi anonim: 'baca' (halaman pertama dibaca) & 'kata' (ketukan kata pertama), sekali per perangkat. Tanpa ID/IP/teks. Gagal kirim = diam. */
 window.kepoMark = function (m) {
   try {
+    if (m === 'lanjut_baca') { /* #1379: hitung klik kartu 'Lanjut dari halaman' di perangkat (angka saja); /hitung server belum punya kolom ini, jadi tidak dikirim agar hitungan buka tak membengkak */
+      localStorage.setItem('kepo.m.lanjut_baca', String((+localStorage.getItem('kepo.m.lanjut_baca') || 0) + 1)); return;
+    }
     if ((m !== 'baca' && m !== 'kata') || localStorage.getItem('kepo.m.' + m)) return;
     if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
