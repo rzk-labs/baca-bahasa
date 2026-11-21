@@ -1471,16 +1471,30 @@ function finishBook(b) {
   const nPaham = SESSP.bid === b.id && SESSP.t === SESS.t ? SESSP.set.size : 0, nTap = ws.length + pend;
   const pahamTxt = nTap ? `${nTap} kata ditambah ke Kata.${nPaham ? ` ${nPaham} kata dianggap paham.` : ''}` : nPaham ? 'Tidak ada kata yang kamu ketuk. Semuanya dianggap paham.' : '';
   const none = !ws.length && !pend; /* tak ada kata baru: Buku baru jadi tombol utama */
-  const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
-    : '';
+  const nx1 = nx[0];
+  const acts = [];
+  if (nx1) acts.push(`<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t" dir="auto" lang="${esc(nx1.lang)}">Lanjut: ${esc(nx1.title)}</span><span class="fbn-m mut sm">${langName(nx1.lang)} · ${pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai'}</span></button>`);
+  const aBaru = '<button class="__C__ full" id="fbadd">Buku baru</button>';
+  const aKata = total > 0 ? `<button class="__C__ full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button>` : '';
+  (none ? [aBaru, aKata] : [aKata, aBaru]).forEach(x => { if (x) acts.push(x); });
+  const actsHtml = acts.slice(0, 2).map((x, i) => x.replace('__C__', i ? 'sec' : 'pri')).join('');
+  /* 'Besok': lencana berikutnya yang belum didapat (data BADGES yang sudah ada) */
+  const nb = BADGES.find(x => !badgeShown(x[0]));
+  let besok = '';
+  if (nb) {
+    const pr = nb[0] === 'kutubuku' ? badgeProgress('kutubuku') : null, rem = pr ? pr.need - pr.now : 0;
+    const apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1);
+    besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}, dapat ${esc(nb[2])}</p>`;
+  }
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
+    ${besok}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? '<p class="mut">Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
-    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Tutup</button>` : '<button class="sec full" id="fbh">Tutup</button>'}</div>${nxHtml}
-    <div class="fb-sec">${none ? '' : '<button class="lnk" id="fbr">Baca ulang</button>'}${nx.length && !none ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
+    <div class="fb-acts">${actsHtml}</div>
+    <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
