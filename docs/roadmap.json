@@ -371,7 +371,6 @@
       "no": 161,
       "peran": "developer",
       "prioritas": "P0",
-      "prioritas": "P0",
       "nama": "Keepo HQ: tulis H2/H7 sebagai rentang + jumlah sampel; hitung per kelompok hari pertama (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
       "status": "selesai (#1449)",
@@ -1537,6 +1536,15 @@
       "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
       "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
       "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Catatan sesi dan sheet Tamat: satu saringan bahasa buku (#1488)",
+      "dokumen": "docs/saringan-kata-sesi-1488.md",
+      "status": "selesai (kode sudah di cabang #1488, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1488.html. sw.js naik ke kepo-v534."
     }
   ],
   "prioritas": [
