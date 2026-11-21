@@ -160,14 +160,14 @@
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md. (bukti internet tipis, #1487) kata bahasa lain di buku & angka kata bentrok merusak kepercayaan; pencarian publik tak menemukan dokumentasi LingQ/Readlang/Language Reactor/Kindle soal teks campuran, sumber utama kode & masukan AI; status tetap draft, lihat docs/riset-kata-bahasa-lain-di-buku.md (backlog #162)."
     },
     {
       "no": 23,
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
     },
     {
       "no": 24,
@@ -187,8 +187,8 @@
       "no": 26,
       "nama": "Android / Play Store",
       "fase": "Rilis Toko & Publik",
-      "status": "belum",
-      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md."
     },
     {
       "no": 27,
@@ -242,7 +242,70 @@
   ],
   "backlog": [
     {
+      "no": 161,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Riset popup naik level & huruf hari streak (#1481)",
+      "dokumen": "docs/riset-popup-level-huruf-hari.md",
+      "status": "selesai",
+      "catatan": "39 butir bukti; 4 dugaan vonis sebagian. Mockup: docs/mockup-1481.html."
+    },
+    {
+      "no": 160,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Popup level sekali & jeda alami, satu angka level, label hari Sen/Sel (#1481)",
+      "dokumen": "docs/riset-popup-level-huruf-hari.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ikuti bagian 7 (aturan 1-9). Mockup: docs/mockup-1481.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. Uji 320px & 390px."
+    },
+    {
       "no": 162,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Latihan ekstra: tak menempel saat keluar + pesan Lupa jujur (#1473)",
+      "dokumen": "docs/spesifikasi-latihan-ekstra-1473.md",
+      "status": "siap dikerjakan",
+      "catatan": "Masukan Ilham. Mockup: docs/mockup-1473.html. Ubah ui.js (setTab reset quickExtra/quickRun/quickPend; teks Lupa & xtraBtn), sw.js (naikkan C). Jangan ubah api/, XP, lencana."
+    },
+    {
+      "no": 163,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran (#1478)",
+      "dokumen": "docs/spesifikasi-latihan-ekstra-cukup-1478.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1478.html. Ubah ui.js & sw.js (naikkan C). Jangan ubah api/. Jangan sentuh #1473. Maks 2 XP/putaran lewat award(...,'rem'). Uji 320px & 390px."
+    },
+    {
+      "no": 164,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Uji banner Level di iPhone & 320px (#1482)",
+      "dokumen": "docs/mockup-1482.html",
+      "status": "siap dikerjakan",
+      "catatan": "Banner sudah dibuat (ui.js celebrate, style.css .lvlbn). Uji: tab tetap bisa diketuk, safe-area atas, hilang ±4 dtk, sekali per level, angka Level Home sama."
+    },
+    {
+      "no": 165,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat (#1483)",
+      "dokumen": "docs/spesifikasi-aksi-tunggal-halaman-akhir-1483.md",
+      "status": "siap dikerjakan",
+      "catatan": "Lapor Raka. Ubah ui.js (endCard, finishBook), style.css bila perlu, sw.js (naikkan C). Jangan ubah api/ dan XP. Mockup: docs/mockup-1483.html. Uji 360px & layar lebar."
+    },
+    {
+      "no": 166,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Saring kata menurut aksara buku saat ketuk & tampil; satu hitungan kata sesi untuk Catatan sesi & sheet Tamat (#1487)",
+      "dokumen": "docs/riset-kata-bahasa-lain-di-buku.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1487.html. Ubah app.js (isKataSampah, himpunan aksara per bahasa), ui.js (recSess, sessRecap, finishBook), sw.js (naikkan C). Jangan ubah api/. Kasus uji di dokumen bagian 4."
+    },
+    {
+      "no": 167,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Reader: buku sudah Tamat, tombol bawah halaman terakhir jadi 'Baca ulang' (#1493)",
@@ -368,6 +431,15 @@
       "catatan": "Usaha S. Data kolom baca sudah ada di /hitung; hanya ubah dev/ (tanpa ubah api/). Mockup: docs/mockup-1419.html."
     },
     {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Android: manifest lengkap + halaman web Hapus akun (#1472)",
+      "dokumen": "docs/riset-android-play-store-26.md",
+      "status": "siap dikerjakan",
+      "catatan": "Peta 1-2 dari riset. Lengkapi manifest (id, description, lang, categories); buat halaman hapus akun yang tertaut dari privasi & bantuan. Naikkan C di sw.js. Jangan ubah api/. Mockup: docs/mockup-1472.html. Assetlinks & build AAB menunggu keputusan founder (akun, domain)."
+    },
+    {
       "no": 160,
       "peran": "developer",
       "prioritas": "P0",
@@ -379,7 +451,6 @@
     {
       "no": 161,
       "peran": "developer",
-      "prioritas": "P0",
       "prioritas": "P0",
       "nama": "Keepo HQ: tulis H2/H7 sebagai rentang + jumlah sampel; hitung per kelompok hari pertama (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
@@ -1546,6 +1617,24 @@
       "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
       "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
       "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Catatan sesi dan sheet Tamat: satu saringan bahasa buku (#1488)",
+      "dokumen": "docs/saringan-kata-sesi-1488.md",
+      "status": "selesai (kode sudah di cabang #1488, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1488.html. sw.js naik ke kepo-v534."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Bar atas reader lega: hanya Dengar + Lainnya di HP (#1471)",
+      "dokumen": "docs/desain-bar-atas-reader-lega.md",
+      "status": "selesai (#1471, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1471.html. Pinggir >=12px + safe-area, jarak 8px, sentuh 44px; Ulang pindah ke Lainnya di <=430px. Naik ke kepo-v527."
     }
   ],
   "prioritas": [

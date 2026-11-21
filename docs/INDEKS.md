@@ -135,6 +135,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 
 ## 7. Riset
 ### Pasar, bisnis, brand
+- [android-play-store-26](riset-android-play-store-26.md)
 - [app-store-42](riset-app-store-42.md)
 - [brand-identitas](riset-brand-identitas.md)
 - [customer-discovery](riset-customer-discovery.md)
