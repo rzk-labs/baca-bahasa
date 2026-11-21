@@ -830,7 +830,7 @@ if (db.acct) runSync({ profile: true }).catch(() => { });
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
     const ref = new URLSearchParams(location.search).get('ref');
     let first = localStorage.getItem('kepo.first');
-    if (!first) { first = day; localStorage.setItem('kepo.first', day); if (ref) localStorage.setItem('kepo.src', ref); }
+    if (!first) { first = day; localStorage.setItem('kepo.first', day); localStorage.setItem('kepo.t0', String(Date.now())); if (ref) localStorage.setItem('kepo.src', ref); } /* #1440: t0 = jam buka pertama, hanya di perangkat */
     if (localStorage.getItem('kepo.hitDay') === day) return;
     const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '' });
     const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
@@ -849,7 +849,13 @@ window.kepoMark = function (m) {
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
     const first = localStorage.getItem('kepo.first') || day, other = m === 'baca' ? 'kata' : 'baca', od = localStorage.getItem('kepo.m.' + other);
     const akt = !!od && od === first && day === first; /* penanda kedua selesai di hari pertama = aktivasi */
-    const data = JSON.stringify({ day, first, src: localStorage.getItem('kepo.src') || '', mark: m, akt });
+    /* #1440: jalur & kelompok detik ditaruh di nama sumber (api/ tak diubah): 'sumber-c|i|x[-t1..t5]'. c = cerita contoh, i = impor sendiri, x = belum jelas.
+       Detik = dari buka pertama sampai ketukan kata pertama (hanya hari pertama): t1 <30, t2 <60, t3 <120, t4 <300, t5 lebih. Tanpa nama/email/isi buku. */
+    let jalur = 'x'; try { const bk = typeof book === 'function' ? book() : null; if (bk) jalur = /\(contoh\)\s*$/i.test(bk.title || '') ? 'c' : 'i'; } catch (e) { }
+    let sfx = '-' + jalur;
+    if (m === 'kata' && first === day) { const t0 = +localStorage.getItem('kepo.t0') || 0, d = t0 ? (Date.now() - t0) / 1000 : -1; if (d >= 0) sfx += '-t' + (d < 30 ? 1 : d < 60 ? 2 : d < 120 ? 3 : d < 300 ? 4 : 5); }
+    const base = (localStorage.getItem('kepo.src') || 'langsung').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 10) || 'langsung';
+    const data = JSON.stringify({ day, first, src: base + sfx, mark: m, akt });
     localStorage.setItem('kepo.m.' + m, day);
     const ok = navigator.sendBeacon && navigator.sendBeacon(API_PROD + '/hitung', new Blob([data], { type: 'text/plain' }));
     if (!ok) fetch(API_PROD + '/hitung', { method: 'POST', body: data, keepalive: true }).catch(() => { });
