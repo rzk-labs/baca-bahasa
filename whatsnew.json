@@ -1,5 +1,11 @@
 [
   {
+    "n": 1403,
+    "judul": "Profil Rak: label 'Tamat' sekali saja + teks XP kartu Level lega",
+    "poin": "Label \"Tamat\" di Rak Profil tinggal satu, judul buku jadi lebih lega.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1400,
     "judul": "Kartu ulang: pilihan cara baca (pinyin) tampil langsung (masukan Sinta)",
     "poin": "Di Pengaturan baca ada pilihan baru: cara baca di kartu ulang Langsung atau Ketuk dulu.",
@@ -171,12 +177,6 @@
     "n": 1309,
     "judul": "Cerita contoh Mandarin (HSK 2-3) supaya pembelajar Mandarin bisa coba",
     "poin": "Sekarang ada cerita contoh Mandarin, jadi pembelajar Mandarin bisa langsung coba.",
-    "tgl": "2026-11-18"
-  },
-  {
-    "n": 1298,
-    "judul": "[peta 143] Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP'",
-    "poin": "Tombol Keluar sekarang menawarkan dua pilihan: keluar saja, atau keluar dan bersihkan HP.",
     "tgl": "2026-11-18"
   }
 ]
