@@ -255,7 +255,7 @@
       "prioritas": "P1",
       "nama": "Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati (#1494)",
       "dokumen": "docs/riset-cerita-contoh-kata-pertama.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1507)",
       "catatan": "Mockup: docs/mockup-1494.html. Cerita contoh pertama 3 kalimat pendek (panjang bisa diubah untuk uji). Satu kata berdenyut + 1 baris 'Ketuk kata yang menyala' + tombol 'Lewati'; hilang setelah ketuk pertama atau Lewati; tak menutup teks; tampil sekali. Catat lewat /hitung: detik ke ketuk pertama, jalur (contoh vs impor), pemandu diketuk vs dilewati (gabung dengan #153). Naikkan C di sw.js. Uji 320px & 390px."
     },
     {

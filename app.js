@@ -1179,3 +1179,13 @@ const SAMPLES = {
   ja: { title: '雨の日の小さな本屋 (contoh)', text: SAMPLE_JA },
   'zh-CN': { title: '雨天的小书店 (contoh)', text: SAMPLE_ZH },
 };
+/* #1507: cerita contoh PENDEK untuk pembaca baru (belum punya buku). Panjang = SHORT_N kalimat: ubah angka ini untuk uji (maks 4). SAMPLES di atas tak disentuh. */
+const SHORT_N = 3;
+const SHORT_BASE = {
+  en: { title: 'The Red Bird (contoh)', pick: 'bird', gap: ' ', s: ['The red bird sits on a tree.', 'It sings a small song.', 'The sun is warm today.', 'The bird is happy.'] },
+  ko: { title: '빨간 새 (contoh)', pick: '새', gap: ' ', s: ['빨간 새가 나무에 앉아요.', '새가 작은 노래를 불러요.', '오늘은 해가 따뜻해요.', '새는 행복해요.'] },
+  ja: { title: '赤い鳥 (contoh)', pick: '鳥', gap: '', s: ['赤い鳥が木にいます。', '鳥は小さい歌をうたいます。', '今日は太陽があたたかいです。', '鳥はうれしそうです。'] },
+  'zh-CN': { title: '红色的小鸟 (contoh)', pick: '小鸟', gap: '', s: ['红色的小鸟站在树上。', '它唱着一首小歌。', '今天太阳很暖和。', '小鸟很开心。'] },
+};
+const SAMPLES_SHORT = Object.fromEntries(Object.entries(SHORT_BASE).map(([l, x]) => [l, { title: x.title, pick: x.pick, text: x.title.replace(' (contoh)', '') + '\n\n' + x.s.slice(0, Math.max(1, Math.min(SHORT_N, x.s.length))).join(x.gap) }]));
+const isShortSample = b => !!b && Object.keys(SAMPLES_SHORT).some(l => b.lang === l && b.title === SAMPLES_SHORT[l].title);
