@@ -282,7 +282,7 @@
       "prioritas": "P1",
       "nama": "Latihan ekstra: tak menempel saat keluar + pesan Lupa jujur (#1473)",
       "dokumen": "docs/spesifikasi-latihan-ekstra-1473.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1550)",
       "catatan": "Masukan Ilham. Mockup: docs/mockup-1473.html. Ubah ui.js (setTab reset quickExtra/quickRun/quickPend; teks Lupa & xtraBtn), sw.js (naikkan C). Jangan ubah api/, XP, lencana."
     },
     {
