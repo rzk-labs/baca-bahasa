@@ -1,5 +1,11 @@
 [
   {
+    "n": 1463,
+    "judul": "Sheet Tamat: ringkas jadi 2 pilihan + 'Besok' target lencana",
+    "poin": "Layar Tamat sekarang cuma 2 tombol, sisanya tautan kecil.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1461,
     "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
     "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
@@ -171,12 +177,6 @@
     "n": 1377,
     "judul": "[peta 150] Eksperimen retensi: tombol 'Ulang 3 kata' satu ketuk di Home",
     "poin": "Home sekarang punya tombol \"Ulang 3 kata\", muncul kalau kata tersimpan 3 atau lebih.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1375,
-    "judul": "[peta 147] Pesan PDF scan/komik jelas: kartu + cerita contoh + saran",
-    "poin": "Impor PDF gambar/komik kini tampil kartu ramah, bukan pesan singkat.",
     "tgl": "2026-11-20"
   }
 ]
