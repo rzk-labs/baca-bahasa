@@ -374,7 +374,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: tulis H2/H7 sebagai rentang + jumlah sampel; hitung per kelompok hari pertama (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1449)",
       "catatan": "Usaha M. Rentang Wilson 95%, label 'belum cukup data' bila <100. Bagi H2 dengan jumlah baru di hari pertama yang sama, bukan baru hari ini. Ubah dev/ (api/ deploy manual bila perlu kueri baru). Mockup: docs/mockup-1419.html."
     },
     {
