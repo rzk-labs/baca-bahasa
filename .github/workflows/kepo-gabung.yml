@@ -15,13 +15,13 @@ permissions:
   issues: write
   actions: write
 
-concurrency:
-  group: kepo-gabung
-  cancel-in-progress: false
-
 jobs:
   gabung:
     if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'antre-live'
+    # concurrency di level job: event label lain (job di-skip) tidak lagi membatalkan antrean yang menunggu.
+    concurrency:
+      group: kepo-gabung
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -75,10 +75,10 @@ jobs:
             echo "Masih ada tanda konflik"; exit 1
           fi
           node -e "JSON.parse(require('fs').readFileSync('docs/roadmap.json','utf8'))"
-          for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] && node --check "$f"; done
+          for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] || continue; case "$f" in api/*|dev/*) node --input-type=module --check < "$f";; *) node --check "$f";; esac; done
           # catat di "Yang baru" (whatsnew.json, tampil di Beranda app) bila ini perubahan app
           P=$(gh issue view "$N" --json labels --jq '[.labels[].name|select(startswith("peran:"))][0] // ""')
-          if [ "$P" = "peran:developer" ] || [ "$P" = "peran:desain" ]; then
+          if case "$P" in peran:developer|peran:desain|peran:ux|peran:kreatif|peran:interaksi|peran:sistem|peran:aksesibilitas) true;; *) false;; esac; then
             J=$(gh issue view "$N" --json title --jq .title)
             POIN=$(gh issue view "$N" --json comments --jq '[.comments[].body|select(test("Siap dicek"))][-1] // ""' | grep -m1 -E '^\s*- ' | sed -E 's/^\s*-\s*//' || true)
             [ -f whatsnew.json ] || echo '[]' > whatsnew.json

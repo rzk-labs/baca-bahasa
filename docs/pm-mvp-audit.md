@@ -137,3 +137,4 @@ Hasil: 4 terbukti, 0 gugur, 1 belum jelas. Mode gelap: tak ada bukti pesaing; te
 - MVP P0 siap diuji pengguna setelah 3 celah di atas.
 - Tak perlu fitur besar baru; fokus rapikan simpan kata, layar, dan hak cipta.
 - Tahap 18 naik ke selesai (validasi bukti internet). Beta manusia tetap penguat.
+- Celah 'layar tetap menyala' sudah ditutup (#436): layar tidak mati saat baca, ada sakelar di Pengaturan.

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1081 — Tanda ketuk kata & tab Kata kosong</title>
+<style>
+body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.ph{width:390px;margin:16px auto;background:#FAF7F0;border-radius:24px;padding:16px;box-sizing:border-box;position:relative}
+.lbl{display:inline-block;background:#E9F056;color:#351E28;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin:0 6px 8px 0}
+.note{font-size:12px;color:#6b5a62;margin:0 0 10px}
+h2{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:22px;margin:4px 0 12px}
+.txt{font-family:Georgia,serif;font-size:18px;line-height:30px}
+.sel{background:#E9F056;border-radius:4px;padding:0 2px}
+.hint{display:flex;gap:8px;align-items:center;background:#351E28;color:#FAF7F0;border-radius:14px;padding:10px 12px;font-size:14px;line-height:19px;margin-bottom:12px}
+.hint b{flex:none;background:#E9F056;color:#351E28;border-radius:10px;padding:8px 12px;font-size:14px;min-height:20px}
+.sheet{margin-top:14px;border:1.5px solid #351E28;border-radius:16px;padding:14px;background:#fff}
+.w{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:700;font-size:20px}
+.mut{font-size:13px;line-height:18px;color:#6b5a62;margin:4px 0 10px}
+.btn{display:block;width:100%;min-height:44px;border-radius:12px;font:600 15px Inter,sans-serif;border:1.5px solid #351E28;text-align:center;line-height:44px;box-sizing:border-box}
+.pri{background:#351E28;color:#FAF7F0}
+.done{background:#E9F056;color:#351E28}
+.toast{margin-top:10px;background:#351E28;color:#FAF7F0;border-radius:12px;padding:10px 14px;font-size:14px;text-align:center}
+.empty{text-align:center;padding:36px 12px 20px}
+.empty .big{font-family:'Bricolage Grotesque',Inter,sans-serif;font-weight:700;font-size:20px;margin-bottom:8px}
+.empty p{font-size:15px;line-height:21px;color:#6b5a62;margin:0 0 18px}
+.tabs{display:flex;justify-content:space-around;border-top:1px solid #d9cfd3;margin-top:16px;padding-top:10px;font-size:12px;font-weight:600;color:#6b5a62}
+.tabs .on{color:#351E28;border-bottom:3px solid #E9F056}
+</style></head><body>
+<div class="ph"><span class="lbl">Gambaran rencana, belum dibangun</span><span class="lbl">Kondisi 1: Halaman baca pertama</span>
+<p class="note">Petunjuk muncul sekali, hilang setelah "Paham".</p>
+<div class="hint"><span>Ketuk kata untuk lihat artinya, lalu Simpan.</span><b>Paham</b></div>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari <span class="sel">melewati</span> mereka.</div>
+</div>
+
+<div class="ph"><span class="lbl">Gambaran rencana, belum dibangun</span><span class="lbl">Kondisi 2: Setelah ketuk kata</span>
+<p class="note">Kata disorot, kartu arti muncul, tombol Simpan jelas.</p>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari <span class="sel">melewati</span> mereka.</div>
+<div class="sheet"><div class="w">melewati</div><div class="mut">arti mesin: <b>to pass by</b></div><div class="btn pri">Simpan kata</div></div>
+</div>
+
+<div class="ph"><span class="lbl">Gambaran rencana, belum dibangun</span><span class="lbl">Kondisi 3: Setelah Simpan</span>
+<p class="note">Tombol berubah, toast muncul, kata tetap bertanda di teks.</p>
+<div class="txt">Alice mulai bosan duduk di samping kakaknya. Lalu seekor kelinci putih berlari <span class="sel">melewati</span> mereka.</div>
+<div class="sheet"><div class="w">melewati</div><div class="mut">arti mesin: <b>to pass by</b></div><div class="btn done">Tersimpan ✓</div></div>
+<div class="toast">Tersimpan di tab Kata</div>
+</div>
+
+<div class="ph"><span class="lbl">Gambaran rencana, belum dibangun</span><span class="lbl">Kondisi 4: Tab Kata kosong</span>
+<h2>Kata</h2>
+<div class="empty"><div class="big">Belum ada kata</div><p>Ketuk kata di halaman baca, lalu Simpan. Katamu muncul di sini.</p><div class="btn pri">Mulai baca</div></div>
+<div class="tabs"><span>Home</span><span>Baca</span><span>Ngomong</span><span class="on">Kata</span></div>
+</div>
+</body></html>

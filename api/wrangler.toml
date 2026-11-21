@@ -6,3 +6,7 @@ compatibility_date = "2026-11-01"
 binding = "DB"
 database_name = "kepo-db"
 database_id = "efa6834d-e976-4465-9282-f25d8bdd7566"
+
+# Workers AI (gratis dalam jatah harian Cloudflare) untuk POST /jelaskan
+[ai]
+binding = "AI"

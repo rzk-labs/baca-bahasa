@@ -16,7 +16,7 @@ on:
       peran:
         description: Wajib pilih tugas untuk peran ini (kosong = bebas)
         type: choice
-        options: ['', riset, desain, developer, pm, marketing]
+        options: ['', riset, desain, developer, pm, marketing, ux, kreatif, interaksi, sistem, aksesibilitas]
         default: ''
       fokus:
         description: Arahan fokus dari founder (opsional)
@@ -76,10 +76,15 @@ jobs:
             Baca juga .kepo-tmp/masukan.txt (bila ada): masukan terbaru dari 2 tester AI & 2 pengguna AI. Masalah nyata yang berulang/berat dari mereka layak jadi tugas upgrade app; sebut nama mereka di "alasan".
             Batas antrean sekarang 5 tugas menunggu (bukan 2); jangan lewati hanya karena ada 2-4 tugas menunggu.
             Tugas harus bisa diselesaikan agent dalam satu kali kerja (kecil, jelas).
+            Peran spesialis desain (ux = UX Architect: struktur & alur; kreatif = Creative UI Director: arah visual; interaksi = Interaction Designer: tombol/gesture/animasi; sistem = Design System: konsistensi warna/tipografi/komponen; aksesibilitas = Accessibility UX: keterbacaan/kontras/fokus) dipilih HANYA bila ada pekerjaan di bidangnya (backlog peran itu, masukan tester, atau temuan nyata di kode). Hasilnya dokumen, kecuali tugas jelas menyuruh mengubah style.css/ui.js.
+            Judul & isi harus cocok dengan peran: perubahan/perbaikan yang terlihat di app (bug, fitur, tampilan) = peran developer (atau desain yang memang mengubah style.css/ui.js). Peran riset/pm/desain-dokumen menghasilkan DOKUMEN, jadi judulnya diawali "Spesifikasi: ", "Riset: " atau "Rancangan: " dan isinya tidak menyuruh mengubah kode app.
+            EFEKTIF (aturan founder: ada pekerjaan "belum" + peran kosong = langsung kerjakan): untuk SETIAP peran, AMBIL DULU dari docs/roadmap.json "backlog" yang peran-nya sama & status belum selesai ("siap dikerjakan"/"spesifikasi siap dikerjakan"/sejenis, bukan menunggu keputusan founder) (P0 dulu, lalu nomor terkecil), yang belum ada tugas terbukanya di tugas.txt (cek judul "[peta N]"; developer bisa jalan 2 tugas paralel, pilih fitur yang menyentuh file berbeda). Judul WAJIB diawali "[peta N] " (N = nomor backlog). Isi WAJIB menyebut dokumen spesifikasinya dan diakhiri: "Terakhir, ubah status backlog no. N di docs/roadmap.json jadi \"selesai (#nomor-issue)\" (edit baris itu saja)." Fitur besar boleh dipecah; tugas pecahan tetap pakai [peta N] dan hanya pecahan terakhir yang menandai selesai.
+            Untuk riset/desain/pm: JANGAN membuat spesifikasi/dokumen baru bila sudah ada 5+ fitur developer siap dikerjakan; pilih yang membuka jalan bagi developer (mis. melengkapi spesifikasi yang kurang) atau tulis lewati.
             KEPUTUSAN FOUNDER (lihat "aturan_validasi" di roadmap.json): JANGAN menunggu manusia. Tahap yang butuh manusia (wawancara, kemauan bayar, usability, beta) dikerjakan dengan BUKTI PUBLIK di internet (WebSearch: ulasan aplikasi kompetitor, Reddit, forum, Threads/X, studi) + uji tester/pengguna AI, lalu tahapnya boleh dinaikkan ke "selesai". Prioritaskan tahap "belum" dan "awal" di fase sekarang.
             Tiap tugas riset/pm WAJIB berakhir dengan menaikkan status tahap terkait di docs/roadmap.json (belum→awal→draft→selesai) bila syarat aturan_validasi terpenuhi; tahap "draft" yang dokumennya sudah lengkap & divalidasi bukti → jadikan "selesai".
+            FASE 2 (tahap 21-33, lihat docs/pm-peta-fase-2.md): ikuti "aturan_fase2" di roadmap.json. Tahap 21-33 HANYA boleh "selesai" dengan data nyata (angka /hitung, App Store, pembayaran, masukan manusia) yang memenuhi "Keluar bila"; bukti internet/pengguna AI maks "draft". Utamakan tugas yang menggerakkan metrik "Keluar bila" tahap fase sekarang (21-24, lalu 25 & 27); sebut nomor tahap & metriknya di "alasan". Jangan mulai Monetisasi (29-31) sebelum tahap 23 selesai.
             Tulis HANYA file .kepo-tmp/tugas.json berisi JSON:
-            {"peran":"developer|riset|desain|pm|marketing","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
+            {"peran":"developer|riset|desain|pm|marketing|ux|kreatif|interaksi|sistem|aksesibilitas","judul":"<maks 70 karakter>","isi":"<instruksi jelas untuk agent, Bahasa Indonesia>","alasan":"<1-2 kalimat kenapa ini sekarang, untuk founder>"}
             Jika TIDAK ada tugas baru yang layak (mis. bahan sudah lengkap dan menunggu founder), tulis {"lewati":true,"alasan":"<1 kalimat>"} ke file yang sama.
           claude_args: >-
             --max-turns 30
@@ -93,7 +98,7 @@ jobs:
             A=$(jq -r '.alasan // "tidak ada tugas baru yang layak"' "$F" 2>/dev/null || echo "tidak ada tugas baru")
             echo "::notice title=PM istirahat::$A"; echo "PM istirahat: $A" >> "$GITHUB_STEP_SUMMARY"; exit 0
           fi
-          PERAN=$(jq -r .peran "$F"); [ -n "${{ inputs.peran }}" ] && PERAN="${{ inputs.peran }}"; case "$PERAN" in developer|riset|desain|pm|marketing) ;; *) PERAN=developer ;; esac
+          PERAN=$(jq -r .peran "$F"); [ -n "${{ inputs.peran }}" ] && PERAN="${{ inputs.peran }}"; case "$PERAN" in developer|riset|desain|pm|marketing|ux|kreatif|interaksi|sistem|aksesibilitas) ;; *) PERAN=developer ;; esac
           gh label create "peran:$PERAN" --color C9B8FF 2>/dev/null || true
           gh label create otomatis --color 9CC8FF 2>/dev/null || true
           jq -r '.isi + "\n\n---\n_Dipilih PM agent: " + .alasan + "_"' "$F" > ".kepo-tmp/body.md"

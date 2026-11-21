@@ -83,12 +83,18 @@ jobs:
             riset)  PERAN_TXT="Kamu agent RISET tim Keepo. Hasil kerjamu berupa dokumen riset di docs/riset-<topik>.md (Bahasa Indonesia, ringkas, ada kesimpulan & langkah berikutnya). Jangan ubah kode aplikasi. Kalau hasilnya mengubah status tahap/milestone, perbarui docs/roadmap.json. Untuk tahap yang biasanya butuh manusia, pakai BUKTI PUBLIK (WebSearch/WebFetch: ulasan aplikasi, Reddit, forum, Threads/X, studi) sesuai aturan_validasi di roadmap.json; jika syarat terpenuhi, naikkan status tahap ke selesai dan tulis (validasi bukti internet) di catatan." ;;
             desain) PERAN_TXT="Kamu agent DESAIN (UX/UI & brand) tim Keepo. Hasil kerjamu berupa dokumen docs/desain-<topik>.md dan/atau perubahan kecil di style.css/ui.js bila diminta. Ikuti BRAND.md." ;;
             marketing) PERAN_TXT="Kamu agent MARKETING tim Keepo, spesialis Threads (Instagram). Gaya: asbun, santai, receh, relate Gen Z Indonesia, tapi jujur (tanpa klaim palsu/angka karangan). Tujuan utama sekarang: dapat tester & calon pengguna Keepo. Pahami strategi Threads: hook kuat di baris pertama, opini/hot take yang memancing balasan, thread berseri, ajak reply/quote, waktu posting, ikut topik ramai, balas komentar cepat. Hasil kerjamu: docs/marketing-<topik>.md berisi strategi singkat + draf posting siap salin (tiap post maks 500 karakter, beri label Post 1/2/3, CTA jelas ke form tester bila ada di docs/), jadwal posting, dan cara ukur (reply, follow, pendaftar). JANGAN memposting atau menghubungi siapa pun; founder yang memposting. Jangan ubah kode aplikasi." ;;
+            ux) PERAN_TXT="Kamu agent UX ARCHITECT tim Keepo: struktur informasi, alur layar, dan jalur pengguna (onboarding, baca, kata, ngomong). Hasil: docs/desain-ux-<topik>.md (alur sebelum/sesudah, titik gesekan, usulan) dan/atau perubahan kecil di ui.js/index.html bila diminta. Ikuti BRAND.md. Pegangan: Reader First, AI Second." ;;
+            kreatif) PERAN_TXT="Kamu agent CREATIVE UI DIRECTOR tim Keepo: arah visual, suasana, dan kekhasan tampilan agar Keepo berkarakter untuk Gen Z. Hasil: docs/desain-kreatif-<topik>.md dan/atau perubahan kecil style.css/ui.js bila diminta. WAJIB patuhi BRAND.md v9 (Plum Noir, Biru Es, Wasabi; tanpa maskot); usulan di luar brand hanya ditulis di dokumen, jangan diterapkan." ;;
+            interaksi) PERAN_TXT="Kamu agent INTERACTION DESIGNER tim Keepo: kenyamanan interaksi: ukuran tombol (min 44px), gesture, animasi, umpan balik sentuh, responsivitas di iPhone Safari. Hasil: docs/desain-interaksi-<topik>.md dan/atau perubahan kecil style.css/ui.js bila diminta." ;;
+            sistem) PERAN_TXT="Kamu agent DESIGN SYSTEM tim Keepo: menjaga konsistensi warna, tipografi, spacing, dan komponen antara style.css, ui.js, dan BRAND.md. Hasil: docs/desain-sistem-<topik>.md (daftar token & komponen, penyimpangan yang ditemukan) dan/atau perapian kecil style.css bila diminta. Jangan merombak tampilan; hanya menyeragamkan." ;;
+            aksesibilitas) PERAN_TXT="Kamu agent ACCESSIBILITY & COGNITIVE UX tim Keepo: keterbacaan, kontras (WCAG AA), fokus, label, ukuran teks, dan beban kognitif (founder dan banyak pengguna ADHD). Hasil: docs/desain-aksesibilitas-<topik>.md dan/atau perbaikan kecil style.css/ui.js bila diminta." ;;
             pm)     PERAN_TXT="Kamu agent PM tim Keepo. Hasil kerjamu berupa dokumen perencanaan di docs/ dan pembaruan docs/roadmap.json. Jangan ubah kode aplikasi. Naikkan status tahap di roadmap.json bila syarat aturan_validasi terpenuhi (draft lengkap + bukti → selesai)." ;;
             *)      PERAN_TXT="Kamu agent DEVELOPER tim Keepo. Kerjakan permintaan dengan mengubah kode aplikasi seperlunya." ;;
           esac
           {
             echo "$PERAN_TXT"
             echo "Baca CLAUDE.md, docs/TIM.md, dan docs/roadmap.json dulu untuk konteks."
+            if [ "$PERAN" != "developer" ] && [ "$PERAN" != "marketing" ]; then echo "WAJIB (aturan founder, supaya perintah tidak hilang): bila hasilmu berisi rencana/spesifikasi/perbaikan yang harus dikerjakan developer, TAMBAHKAN item baru di docs/roadmap.json bagian backlog (no = nomor terbesar + 1, peran developer, prioritas P0 bila dari perintah founder, nama ringkas + (#nomor-issue), dokumen = file-mu, status \"siap dikerjakan\"). Tanpa item backlog, rencanamu tidak akan pernah dikerjakan."; fi
             echo "Masukan terbaru dari tester AI (Tari, Bima) & pengguna AI (Nadia, Raka) ada di .kepo-tmp/masukan.txt; pakai bila relevan."
             echo ""
             echo "## Tugas #$N: $(cat $T/judul.txt)"
@@ -109,6 +115,7 @@ jobs:
             echo "- Ubah file seperlunya. Jangan git commit/push, jangan buat PR: workflow yang mengurusnya."
             echo "- Cek sintaks JS yang kamu ubah dengan node --check. Kalau mengubah file app yang di-cache, naikkan versi C di sw.js."
             echo "- Terakhir, tulis .kepo-ringkasan.md untuk founder (non-teknis, ADHD). Format WAJIB: maksimal 3 baris poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari, tanpa nama file/istilah teknis. Jika founder perlu melakukan sesuatu, tambah SATU poin terakhir diawali 'Langkah kamu:' (maks 20 kata). Tanpa judul, tanpa paragraf. Kalau tugas tidak bisa dikerjakan, jangan ubah apa pun dan tulis 1 poin alasannya."
+            if [ "$PERAN" != "marketing" ]; then echo "- WAJIB bila hasilmu mengubah ATAU merencanakan/mengusulkan tampilan app (termasuk dokumen riset/PM/desain yang usulannya terlihat di layar): tulis docs/mockup-${N}.html = mockup statis layar HP (lebar 390px) yang menunjukkan layar yang BERUBAH persis seperti hasilnya setelah disetujui atau dibangun (untuk usulan tulis di atasnya: Gambaran rencana, belum dibangun; bukan halaman Home, kecuali Home yang diubah). Satu file HTML mandiri, CSS inline mengikuti BRAND.md dan style.css, tanpa script, tanpa gambar eksternal, isi teks nyata. Tambahkan label kecil kalau ada beberapa kondisi (mis. Sebelum / Sesudah). Jangan lewatkan."; fi
             echo "- Dokumen di docs/ untuk founder juga harus mudah dipindai (ADHD): mulai dengan bagian '## Intinya' berisi 3 poin, lalu bagian bernomor dengan judul ##, poin pendek, tanpa paragraf panjang."
           } > "$T/prompt.md"
           echo "PROMPT_FILE=$T/prompt.md" >> "$GITHUB_ENV"
@@ -122,7 +129,7 @@ jobs:
           prompt: Baca file ${{ env.PROMPT_FILE }} lalu kerjakan instruksinya.
           claude_args: >-
             --max-turns 80
-            --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(node:*),Bash(ls:*),Bash(cat:*),Bash(grep:*),Bash(git diff:*),Bash(git status:*)"
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(node:*),Bash(ls:*),Bash(cat:*),Bash(grep:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*),Bash(sed:*),Bash(head:*),Bash(tail:*),Bash(find:*),Bash(wc:*)"
 
       - name: Commit, push, PR
         id: pr
@@ -165,7 +172,9 @@ jobs:
             Kamu agent QA tim Keepo. Periksa hasil kerja agent untuk tugas berikut (jangan mengubah file apa pun selain menulis laporan).
             Tugas: lihat .kepo-tmp/judul.txt dan .kepo-tmp/isi.txt (revisi, bila ada: .kepo-tmp/revisi.txt).
             Perubahan: .kepo-tmp/diff.patch. Baca file terkait di repo seperlunya.
-            Cek: (1) sesuai permintaan, (2) node --check untuk tiap file .js yang berubah, (3) risiko merusak data pengguna/fitur lain, (4) tampilan HP, (5) versi C di sw.js naik bila file app berubah.
+            Peran agent: ${{ env.PERAN }}. Untuk peran riset/desain/pm/marketing, hasil yang diminta biasanya DOKUMEN (spesifikasi/riset/mockup), bukan kode: jangan beri CATATAN hanya karena kode app tidak berubah, kecuali isi tugas jelas meminta mengubah app.
+            Cek: (1) sesuai permintaan, (2) node --check untuk tiap file .js yang berubah, (3) risiko merusak data pengguna/fitur lain, (4) tampilan HP dari kode (bukan uji langsung), (5) versi C di sw.js naik bila file app berubah.
+            Aturan nilai: tulis LOLOS bila permintaan terpenuhi dan tidak ada masalah nyata di (2), (3), (5). Hal yang memang tidak bisa diuji di sini (tampilan di HP asli, kontras di tema tertentu), masalah lama yang bukan dari perubahan ini, dan file tambahan yang tidak berbahaya TIDAK membuat CATATAN; cukup sebut sebagai poin. CATATAN hanya bila: permintaan belum terpenuhi, ada error sintaks, ada fitur/data yang rusak atau hilang, atau sw.js tidak naik padahal file app berubah.
             Tulis laporan ke .kepo-tmp/qa.md. Baris pertama HARUS persis "LOLOS" atau "CATATAN". Lalu maksimal 3 poin '- ...', tiap poin maksimal 15 kata, bahasa sehari-hari untuk founder non-teknis (ADHD). Tulis hanya hal yang penting diketahui founder.
           claude_args: >-
             --max-turns 40
@@ -184,12 +193,9 @@ jobs:
           fi
           if [ "$V" = "LOLOS" ]; then L=qa-lolos; H="✅ QA lolos"; else L=qa-catatan; H="⚠️ QA ada catatan"; fi
           gh issue comment "$N" --body-file <(printf '**Siap dicek.**\n\n%s\n\n---\n**%s**\n%s' "$(cat $T/ringkasan.md)" "$H" "$QA")
-          # Auto-setujui SEMUA hasil (permintaan founder): langsung masuk antrean live.
-          # Catatan QA tetap tersimpan di komentar; founder bisa Revisi/Tolak setelah live.
-          gh label create antre-live --color 7DD3FC 2>/dev/null || true
-          gh issue edit "$N" --add-label antre-live --add-label "$L" --remove-label sedang-dikerjakan
-          gh issue comment "$N" --body "🚀 **Otomatis disetujui** ($H), masuk antrean live."
-          gh workflow run kepo-gabung.yml
+          # Tanpa auto-setujui: hasil menunggu tombol Setujui founder di Keepo HQ.
+          gh issue edit "$N" --add-label siap-dicek --add-label "$L" --remove-label sedang-dikerjakan
+          gh issue comment "$N" --body "⏳ Menunggu Setujui dari founder ($H)."
 
       - name: Tandai gagal
         if: failure()

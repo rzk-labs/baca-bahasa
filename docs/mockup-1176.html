@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1176 — chip level HSK di kartu kata</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e9e6df;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.plan{max-width:390px;margin:0 auto 12px;background:#E9F056;color:#351E28;font-weight:600;font-size:13px;padding:8px 12px;border-radius:10px}
+.lab{max-width:390px;margin:16px auto 6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.phone{width:390px;margin:0 auto;background:#FAF7F0;border-radius:22px;overflow:hidden;box-shadow:0 2px 12px #351E2833}
+.page{padding:20px 18px;height:150px;font-size:18px;line-height:1.7;opacity:.45;font-family:Georgia,serif}
+.sheet{background:#fff;border-radius:20px 20px 0 0;padding:16px 18px 20px;box-shadow:0 -4px 16px #351E281f}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stepchip{background:#D7EFFF;border-radius:99px;padding:4px 10px;font-size:12px;font-weight:600}
+.x{font-size:20px;opacity:.6}
+.wd{display:flex;align-items:center;gap:10px}.wd b{font-family:"Bricolage Grotesque",Inter,sans-serif;font-size:32px}
+.ic{width:32px;height:32px;border-radius:50%;background:#D7EFFF;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.wmeta{display:flex;gap:8px;align-items:center;margin:8px 0 6px;font-size:13px}
+.pos{background:#f1ece4;border-radius:6px;padding:2px 8px}
+.lvl{background:#D7EFFF;border-radius:6px;padding:2px 8px;font-weight:600}
+.baca{opacity:.7}
+.tr{font-size:20px;font-weight:600;margin:8px 0}
+.mut{font-size:13px;opacity:.65}
+.wact{display:flex;gap:8px;margin-top:14px}
+.pri{flex:1;background:#351E28;color:#fff;border:0;border-radius:12px;padding:12px;font-weight:600;font-size:15px}
+.sec{background:#D7EFFF;border:0;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#351E28}
+.ghost{margin-top:10px;font-size:13px;opacity:.7}
+</style></head><body>
+<div class="plan">Gambaran rencana, belum dibangun. Kartu "Arti kata" untuk Mandarin.</div>
+
+<div class="lab">Sebelum</div>
+<div class="phone"><div class="page">她今天去图书馆看书,觉得很开心。</div>
+<div class="sheet"><div class="head"><span class="stepchip">Arti kata</span><span class="x">×</span></div>
+<div class="wd"><b>图书馆</b><span class="ic">🔊</span></div>
+<div class="wmeta"><span class="pos">nomina</span><span class="baca">túshūguǎn</span></div>
+<div class="tr">perpustakaan</div><div class="mut">arti mesin</div>
+<div class="wact"><button class="pri">Simpan</button><button class="sec">Sudah kenal</button></div>
+<div class="ghost">Masih bingung? Lihat kalimatnya</div></div></div>
+
+<div class="lab">Sesudah (chip "HSK 3" di baris yang sama, tanpa baris baru)</div>
+<div class="phone"><div class="page">她今天去图书馆看书,觉得很开心。</div>
+<div class="sheet"><div class="head"><span class="stepchip">Arti kata</span><span class="x">×</span></div>
+<div class="wd"><b>图书馆</b><span class="ic">🔊</span></div>
+<div class="wmeta"><span class="pos">nomina</span><span class="lvl" aria-label="Level HSK 3, daftar baru">HSK 3</span><span class="baca">túshūguǎn</span></div>
+<div class="tr">perpustakaan</div><div class="mut">arti mesin</div>
+<div class="wact"><button class="pri">Simpan</button><button class="sec">Sudah kenal</button></div>
+<div class="ghost">Masih bingung? Lihat kalimatnya</div></div></div>
+
+<div class="lab">Kata di luar daftar (mis. nama tokoh): tanpa chip</div>
+<div class="phone"><div class="page">小明今天去图书馆看书。</div>
+<div class="sheet"><div class="head"><span class="stepchip">Arti kata</span><span class="x">×</span></div>
+<div class="wd"><b>小明</b><span class="ic">🔊</span></div>
+<div class="wmeta"><span class="baca">Xiǎomíng</span></div>
+<div class="tr">Xiaoming</div><div class="mut">arti mesin</div>
+<div class="wact"><button class="pri">Simpan</button><button class="sec">Ini nama</button></div></div></div>
+</body></html>

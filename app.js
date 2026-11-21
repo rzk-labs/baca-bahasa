@@ -6,7 +6,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const LANGS = {
   en: ['English', 'en-US'], ja: ['Jepang 日本語', 'ja-JP'], ko: ['Korea 한국어', 'ko-KR'], 'zh-CN': ['Mandarin 中文', 'zh-CN'],
   fr: ['Prancis', 'fr-FR'], de: ['Jerman', 'de-DE'], es: ['Spanyol', 'es-ES'], it: ['Italia', 'it-IT'], nl: ['Belanda', 'nl-NL'],
-  pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
+  pt: ['Portugis', 'pt-PT'], ru: ['Rusia', 'ru-RU'], ar: ['Arab', 'ar-SA'], th: ['Thai ไทย', 'th-TH'], hi: ['Hindi हिन्दी', 'hi-IN'], tr: ['Turki', 'tr-TR'], id: ['Indonesia', 'id-ID']
 };
 const CJK = l => l === 'ja' || l === 'zh-CN';
 /* Tebak bahasa cerita dari 1.500 karakter pertama; ragu → null. */
@@ -25,6 +25,8 @@ function guessLang(text) {
   if (n(/[一-鿿]/g) >= 3) return 'zh-CN';
   if (n(/[Ѐ-ӿ]/g) >= 10) return 'ru';
   if (n(/[؀-ۿ]/g) >= 10) return 'ar';
+  if (n(/[฀-๿]/g) >= 10) return 'th';
+  if (n(/[ऀ-ॿ]/g) >= 10) return 'hi';
   const w = s.toLowerCase().match(/[a-zà-ÿ']+/g) || [];
   if (w.length < 15) return null;
   let best = null, bs = 0, second = 0;
@@ -39,7 +41,7 @@ const PASS = 85; // batas lulus per kata (%)
 
 /* ---------- penyimpanan ---------- */
 const KEY = 'bacabahasa.v1';
-const DEF = () => ({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, tab: 'rak' });
+const DEF = () => ({ books: [], cur: null, my: 'id', lastLang: 'en', fs: 19, vocab: [], weak: {}, kenal: {}, tab: 'rak' });
 let db = (() => {
   const raw = localStorage.getItem(KEY);
   try { return Object.assign(DEF(), JSON.parse(raw || '{}')); }
@@ -57,7 +59,7 @@ const save = () => {
         localStorage.setItem(KEY, JSON.stringify(db)); return true;
       }
     } catch (e3) { }
-    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang penuh: hapus buku lama atau cache, lalu coba lagi.', 6000); } catch (e2) { } }
+    if (Date.now() - fullWarn > 8000) { fullWarn = Date.now(); try { toast('Progres/kata gagal tersimpan. Ruang browser penuh. Hapus kata yang tak perlu atau kosongkan cache terjemahan (buku kamu aman), lalu coba lagi.', 6000); } catch (e2) { } }
     return false;
   }
 };
@@ -66,15 +68,15 @@ const TAP_MAX = 2000, TAP_GAP = 3000;
 let lastTap = { k: '', t: 0 };
 const tapKey = (lang, w) => lang + '|' + String(w || '').toLowerCase();
 const tapsOf = (lang, w) => {
-  const v = (db.vocab || []).find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w || '').toLowerCase());
+  const v = (db.vocab || []).find(x => sameVocab(x, lang, w));
   return (v && +v.tap > 0 ? +v.tap : 0) + ((db.taps && +db.taps[tapKey(lang, w)]) || 0);
 };
 function countTap(lang, w) {
   const k = tapKey(lang, w), now = Date.now();
-  if (!lang || !String(w || '').trim()) return 0;
+  if (!lang || !String(w || '').trim() || isParticle(lang, w)) return 0;
   const dup = lastTap.k === k && now - lastTap.t < TAP_GAP; lastTap = { k, t: now };
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
-  const v = db.vocab.find(x => x.lang === lang && String(x.w || '').toLowerCase() === String(w).toLowerCase());
+  const v = db.vocab.find(x => sameVocab(x, lang, w));
   if (!dup) {
     if (v) v.tap = (+v.tap || 0) + 1;
     else {
@@ -83,9 +85,53 @@ function countTap(lang, w) {
       if (ks.length > TAP_MAX) ks.filter(x => x !== k).sort((a, b) => db.taps[a] - db.taps[b]).slice(0, ks.length - TAP_MAX).forEach(x => delete db.taps[x]);
     }
     save();
+    try { if (window.kepoMark) window.kepoMark('kata'); } catch (e) { }
   }
   return tapsOf(lang, w);
 }
+/* ---------- kunci kata tersimpan: kata lowercase + bahasa (dipakai SEMUA jalur simpan/cari/gabung) ---------- */
+const vocabKey = (lang, w) => (lang || '') + '|' + String(w || '').trim().toLowerCase();
+/* tombstone kata dihapus (ikut sinkron akun): daftar {k,at}; kata yang ditambah lagi setelah 'at' dianggap hidup */
+function tombVocab(lang, w) { const k = vocabKey(lang, w); db.vocabDel = (Array.isArray(db.vocabDel) ? db.vocabDel : []).filter(t => t && t.k !== k); db.vocabDel.push({ k, at: Date.now() }); }
+function untombVocab(lang, w) { if (Array.isArray(db.vocabDel)) db.vocabDel = db.vocabDel.filter(t => t && t.k !== vocabKey(lang, w)); }
+/* 'sudah kenal': db.kenal[kunci] = waktu (positif = kenal, negatif = dibatalkan; sinkron menang-terbaru) */
+const isKenal = (lang, w) => !!db.kenal && db.kenal[vocabKey(lang, w)] > 0;
+/* 'Ini nama': b.names = array kata huruf kecil per buku (bahasa = bahasa buku). Buku lama tanpa b.names tetap aman. */
+const isNama = (b, w) => !!b && Array.isArray(b.names) && b.names.includes(String(w || '').trim().toLowerCase());
+function setNama(b, w, on) { if (!b) return; const k = String(w || '').trim().toLowerCase(); if (!k) return; if (!Array.isArray(b.names)) b.names = []; const i = b.names.indexOf(k); if (on && i < 0) b.names.push(k); else if (!on && i >= 0) b.names.splice(i, 1); save(); }
+function setKenal(lang, w, on) { if (!db.kenal || typeof db.kenal !== 'object' || Array.isArray(db.kenal)) db.kenal = {}; db.kenal[vocabKey(lang, w)] = on ? Date.now() : -Date.now(); save(); }
+/* 'paham' (#1435): kata di halaman yang dilewati tanpa diketuk. db.paham[kunci] = waktu (positif = paham, negatif = dibatalkan; ikut sinkron). Beda dari 'kenal' (tombol manual, kata jadi abu-abu). */
+const PAHAM_MAX = 6000;
+const isPaham = (lang, w) => !!db.paham && db.paham[vocabKey(lang, w)] > 0;
+function setPaham(items, on) {
+  if (!db.paham || typeof db.paham !== 'object' || Array.isArray(db.paham)) db.paham = {};
+  const t = Date.now();
+  for (const [lang, w] of items) db.paham[vocabKey(lang, w)] = on ? t : -t;
+  const ks = Object.keys(db.paham);
+  if (ks.length > PAHAM_MAX) ks.sort((x, y) => Math.abs(db.paham[x]) - Math.abs(db.paham[y])).slice(0, ks.length - PAHAM_MAX).forEach(k => { delete db.paham[k]; });
+  save();
+}
+const sameVocab =(v, lang, w) => !!v && vocabKey(v.lang, v.w) === vocabKey(lang, w);
+/* gabung duplikat: arti/konteks terpanjang, tap dijumlah, 'at' paling awal. Aman diulang (tanpa duplikat = tidak ada perubahan). */
+function dedupeVocab() {
+  if (!Array.isArray(db.vocab)) return false;
+  const seen = new Map(), out = []; let changed = false;
+  for (const v of db.vocab) {
+    if (!v || typeof v !== 'object') { out.push(v); continue; }
+    const k = vocabKey(v.lang, v.w), a = seen.get(k);
+    if (!a) { seen.set(k, v); out.push(v); continue; }
+    changed = true;
+    for (const f of ['t', 'baca', 's', 'ctx', 'base', 'pos']) if (String(v[f] || '').length > String(a[f] || '').length) a[f] = v[f];
+    const tp = (+a.tap || 0) + (+v.tap || 0); if (tp > 0) a.tap = tp;
+    if (v.at && (!a.at || v.at < a.at)) a.at = v.at;
+    if ((v.lv || 0) > (a.lv || 0)) { a.lv = v.lv; a.due = v.due; }
+    if (v.known) a.known = v.known;
+    if (String(a.t || '').trim()) { delete a.noTr; delete a.nyusul; }
+  }
+  if (changed) db.vocab = out;
+  return changed;
+}
+try { if (!localStorage.getItem('kepo.vocabDedupe1')) { dedupeVocab(); db.vocab = db.vocab || []; if (save()) localStorage.setItem('kepo.vocabDedupe1', '1'); } } catch (e) { }
 const takeTaps = (lang, w) => { const k = tapKey(lang, w), n = (db.taps && +db.taps[k]) || 0; if (db.taps) delete db.taps[k]; return n; };
 /* ---------- statistik lokal per buku (db.sentLooks: idBuku → {kata, kalimat}; opsional, tidak disinkron) ---------- */
 const SL_MAX = 200;
@@ -100,12 +146,53 @@ function bumpSentLook(bookId, field) {
   save();
 }
 const sentLooksOf = bookId => { const o = db.sentLooks && db.sentLooks[bookId]; return { kata: +(o && o.kata) || 0, kalimat: +(o && o.kalimat) || 0 }; };
-const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }));
+// Minta penyimpanan permanen (diam-diam, tanpa pesan). Hasil disimpan di STORAGE_PERSISTED.
+let STORAGE_PERSISTED = null;
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then(ok => { STORAGE_PERSISTED = !!ok; }, () => {}); } catch (e) {}
+const idb = new Promise((res, rej) => { const r = indexedDB.open('bacabahasa', 2); r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains('t')) d.createObjectStore('t'); if (!d.objectStoreNames.contains('fb')) d.createObjectStore('fb', { keyPath: 'id' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => { try { toast('Keepo terbuka di tab lain. Tutup tab itu, lalu coba lagi.', 8000); } catch (e) {} }; });
+const idbOp = (mode, fn) => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('t', mode); const q = fn(tx.objectStore('t')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('Memori HP penuh, progres belum tersimpan. Kosongkan ruang dulu.')); }));
 const putFeedback = o => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'); tx.objectStore('fb').put(o); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
+const allFeedback = () => idb.then(d => new Promise((res, rej) => { const q = d.transaction('fb', 'readonly').objectStore('fb').getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }));
+const pendingFeedback = () => allFeedback().then(a => a.filter(f => f.terkirim === false)); // data lama (tanpa kolom terkirim) dianggap sudah beres
+const markFeedbackSent = id => idb.then(d => new Promise((res, rej) => { const tx = d.transaction('fb', 'readwrite'), st = tx.objectStore('fb'), q = st.get(id); q.onsuccess = () => { if (q.result) st.put({ ...q.result, terkirim: true }); }; tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); }));
 const putText = (id, paras) => idbOp('readwrite', s => s.put(paras, id));
 const getText = id => idbOp('readonly', s => s.get(id));
-const delText = id => idbOp('readwrite', s => s.delete(id));
+const delText = id => idbOp('readwrite', s => { s.delete('c_' + id); s.delete('cu_' + id); s.delete('ao_' + id); return s.delete(id); });
+/* arti offline per buku (#1367): kunci baru 'ao_<id>' di store 't' (data lama tak disentuh, tanpa migrasi). Isi: { v:1, sl, tl, m: { kata: hasil gtx } } */
+const AO_MAX = 1500;
+const AO = { id: '', sl: '', tl: '', m: new Map() };
+async function aoLoad(id) {
+  if (AO.id === id) return AO;
+  let o = null; try { o = await idbOp('readonly', s => s.get('ao_' + id)); } catch (e) { }
+  AO.id = id; AO.sl = (o && o.sl) || ''; AO.tl = (o && o.tl) || '';
+  AO.m = new Map(o && o.v === 1 && o.m && typeof o.m === 'object' ? Object.entries(o.m) : []);
+  return AO;
+}
+const aoSave = () => AO.id ? idbOp('readwrite', s => s.put({ v: 1, sl: AO.sl, tl: AO.tl, m: Object.fromEntries(AO.m) }, 'ao_' + AO.id)) : Promise.resolve();
+const aoDel = async id => { try { await idbOp('readwrite', s => s.delete('ao_' + id)); } catch (e) { } if (AO.id === id) { AO.m = new Map(); AO.sl = AO.tl = ''; } };
+/* arti tersimpan untuk kata q (hanya bila bahasa & 'Artiin ke' sama dengan saat diunduh) */
+const aoGet = (sl, tl, q) => (AO.id && AO.sl === sl && AO.tl === tl && AO.m.get(q)) || null;
+// Cover EPUB: gambar kecil (data URL) di IndexedDB kunci 'c_<id>', terpisah dari teks & localStorage
+const putCover = (id, url) => idbOp('readwrite', s => s.put(url, 'c_' + id));
+const getCover = id => idbOp('readonly', s => s.get('c_' + id));
+// Sampul buatan pengguna: kunci 'cu_<id>' (penanda b.covU=1). Sampul EPUB 'c_<id>' tidak disentuh.
+const putCoverU = (id, url) => idbOp('readwrite', s => s.put(url, 'cu_' + id));
+const getCoverU = id => idbOp('readonly', s => s.get('cu_' + id));
+const delCoverU = id => idbOp('readwrite', s => s.delete('cu_' + id));
+// Kecilkan foto: sisi terpanjang maks 480px, WebP (cadangan JPEG), ±80KB. Gagal = lempar error.
+async function kecilkanGambar(file) {
+  const u = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('gambar')); i.src = u; });
+    const w0 = img.naturalWidth, h0 = img.naturalHeight; if (!w0 || !h0) throw new Error('gambar');
+    const k = Math.min(1, 480 / Math.max(w0, h0)), w = Math.max(1, Math.round(w0 * k)), h = Math.max(1, Math.round(h0 * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+    const enc = q => { let d = c.toDataURL('image/webp', q); if (!d.startsWith('data:image/webp')) d = c.toDataURL('image/jpeg', q); return d; };
+    let d = enc(0.8); if (d.length > 110000) d = enc(0.65);
+    if (!d.startsWith('data:image/')) throw new Error('gambar');
+    return d;
+  } finally { URL.revokeObjectURL(u); }
+}
 
 /* ---------- teks: kalimat & kata ---------- */
 const segCache = {};
@@ -123,7 +210,60 @@ function tokens(text, lang) {
   if (s) return [...s.segment(text)].map(x => ({ t: x.segment, w: !!x.isWordLike }));
   return text.split(/([\p{L}\p{N}\p{M}'’-]+)/u).filter(Boolean).map(t => ({ t, w: /[\p{L}\p{N}]/u.test(t) }));
 }
-const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '');
+/* Kunci kata: harakat Arab & niqqud Ibrani diabaikan (berharakat = tanpa harakat). Kata lama tersimpan tak diubah. */
+const norm = w => w.toLowerCase().normalize('NFC').replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}\p{M}]/gu, '').replace(/[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ֑-ׇֽֿׁׂׅׄ]/g, '');
+/* Perkiraan % kata baru: 3.000 kata pertama vs kata tersimpan/dikenal (offline). null bila kosakata/buku kosong. */
+function knownSet(lang) {
+  const known = new Set();
+  for (const v of (db.vocab || [])) if (v && v.lang === lang && v.w) known.add(norm(String(v.w)));
+  for (const k in (db.kenal || {})) if (db.kenal[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
+  for (const k in (db.paham || {})) if (db.paham[k] > 0 && k.startsWith(lang + '|')) known.add(norm(k.slice(lang.length + 1)));
+  known.delete('');
+  return known;
+}
+/* Tingkat kesulitan (#148): kata baru per halaman (±250 kata), offline, dari kosakata yang ada. secs = bagian buku (array of array teks).
+   Hasil {l: ringan|sedang|berat, pg, m}: m = indeks bagian paling ringan untuk mulai (hanya bila berat & lebih ringan dari rata-rata), else -1. null bila belum ada kosakata/teks terlalu pendek. */
+function kesulitanBuku(secs, lang) {
+  const known = knownSet(lang);
+  if (!known.size) return null;
+  let N = 0, B = 0; const per = [];
+  for (const sec of secs || []) {
+    let n = 0, baru = 0;
+    for (const raw of sec) {
+      for (const t of tokens(String(raw).replace(/^[\u0001\u0002]/, ''), lang)) {
+        if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+        n++; if (!known.has(norm(t.t))) baru++;
+        if (n >= 1200) break;
+      }
+      if (n >= 1200) break;
+    }
+    per.push({ n, baru }); N += n; B += baru;
+  }
+  if (N < 20) return null;
+  const pg = Math.round(B * 250 / N);
+  const l = pg <= 10 ? 'ringan' : pg <= 25 ? 'sedang' : 'berat';
+  let m = -1;
+  if (l === 'berat' && per.length > 1) {
+    let best = -1, br = 2;
+    per.forEach((x, i) => { if (x.n >= 60 && x.baru / x.n < br) { br = x.baru / x.n; best = i; } });
+    if (best >= 0 && br < (B / N) * 0.85) m = best;
+  }
+  return { l, pg, m };
+}
+function perkiraanBaru(paras, lang) {
+  const known = knownSet(lang);
+  if (!known.size) return null;
+  let n = 0, baru = 0;
+  for (const p of paras || []) {
+    for (const t of tokens(p, lang)) {
+      if (!t.w || /^[\p{N}\p{P}\s]+$/u.test(t.t) || isParticle(lang, t.t)) continue;
+      n++; if (!known.has(norm(t.t))) baru++;
+      if (n >= 3000) break;
+    }
+    if (n >= 3000) break;
+  }
+  return n >= 20 ? Math.min(100, Math.round(baru * 100 / n)) : null;
+}
 const EN_NUM = 'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty'.split(' ');
 
 function cleanParas(raw) {
@@ -153,27 +293,130 @@ function paginate(paras, lang) {
 
 /* ---------- impor file ---------- */
 const loaded = {};
-function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Gagal memuat pustaka (cek internet)')); }; document.head.appendChild(s); })); }
+const LOAD_TIMEOUT = 20000, PARSE_TIMEOUT = 90000;
+function loadScript(src) {
+  return loaded[src] || (loaded[src] = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    const gagal = msg => { clearTimeout(tm); delete loaded[src]; s.onload = s.onerror = null; s.remove(); rej(new Error(msg)); };
+    const tm = setTimeout(() => gagal('Pustaka lama dimuat, cek sinyal lalu coba lagi'), LOAD_TIMEOUT);
+    s.src = src; s.onload = () => { clearTimeout(tm); res(); };
+    s.onerror = () => gagal('Gagal memuat pustaka (cek internet)');
+    document.head.appendChild(s);
+  }));
+}
+function dgnBatas(p, ms) {
+  let tm;
+  return Promise.race([p, new Promise((_, no) => { tm = setTimeout(() => no(Object.assign(new Error('timeout'), { telat: true })), ms); })]).finally(() => clearTimeout(tm));
+}
 const JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
 const PDFJS_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+// true hanya bila ketiga pustaka benar-benar ada di cache service worker
+async function libsCached() {
+  try {
+    if (!('caches' in window)) return false;
+    const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
+    const r = await Promise.all(urls.map(u => caches.match(u)));
+    return r.every(Boolean);
+  } catch (e) { return false; }
+}
 // siapkan pustaka EPUB/PDF lebih awal (sekali per perangkat) supaya impor tetap jalan offline
 function prefetchImportLibs() {
   try {
     if (localStorage.getItem('kepo_libs_ready') || !navigator.onLine || navigator.connection?.saveData) return;
     const urls = [JSZIP_URL, PDFJS_BASE + 'pdf.min.js', PDFJS_BASE + 'pdf.worker.min.js'];
-    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } }).catch(() => { });
+    Promise.all(urls.map(u => fetch(u, { mode: 'no-cors' }))).then(() => libsCached()).then(ok => { if (ok) { try { localStorage.setItem('kepo_libs_ready', '1'); } catch (e) { } } }).catch(() => { });
   } catch (e) { }
 }
 window.addEventListener('load', () => {
   const go = () => setTimeout(prefetchImportLibs, 0);
   if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 8000 }); else setTimeout(prefetchImportLibs, 4000);
 });
+/* ---------- Project Gutenberg: buang lisensi, daftar isi, halaman judul; mulai dari bab pertama ---------- */
+const GB_START = /\*\*\*\s*START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\*\*\*[^\n]*\n?/i;
+const GB_END = /\*\*\*\s*END OF (?:THE|THIS) PROJECT GUTENBERG/i;
+const CH_WORD = '(?:chapter|chap\\.|bab|kapitel|chapitre|cap[ií]tulo|capitolo|kapitola|hoofdstuk)';
+const CH_ID = '(?:[ivxlc]{1,7}|\\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|first|second|third)';
+const CH_STRICT = new RegExp('^' + CH_WORD + '\\s+' + CH_ID + '\\b\\.?(?:\\s*[:.\\-–—]?\\s*.{0,60})?$', 'i');
+const CH_ROMAN = /^(?:[IVXL]{1,6})\.(?:\s+.{0,60})?$/;
+/* judul bab Jepang: '六、題名', '一．題名', '第三章 題名', '上 先生と私' (pendek, tanpa tanda kalimat) */
+const CH_JA = /^(?:(?:[一二三四五六七八九十百〇]{1,4}|[0-9０-９]{1,3})[、．.][　 ]*[^\s、。．.][^\n]{0,28}|第[一二三四五六七八九十百〇0-9０-９]{1,4}[章節回話][　 ]*[^\n]{0,28}|[上中下前後][　 ]+[^\s、。][^\n]{0,24})$/;
+const CH_JA1 = /^[一二三四五六七八九十]{1,3}$/;
+function gbHead(p) {
+  const t = p.replace(/^[\u0001\u0002]+/, '').trim();
+  if (!t || t.length > 90) return 0;
+  if (CH_STRICT.test(t)) return 2;
+  if (CH_ROMAN.test(t)) return 1;
+  if (CH_JA.test(t) && !/[。！？「」『』]/.test(t)) return 2;
+  if (CH_JA1.test(t)) return 1;
+  return 0;
+}
+function gbTrim(txt) {
+  let t = txt, found = false;
+  const m = t.match(GB_START);
+  if (m) { t = t.slice(m.index + m[0].length); found = true; }
+  const e = t.search(GB_END); if (e >= 0) { t = t.slice(0, e); found = true; }
+  return { text: t, found };
+}
+function gbParas(paras, isGb) {
+  if (!paras || paras.length < 8) return paras;
+  const re = new RegExp(CH_WORD + '\\s+' + CH_ID + '\\b', 'gi');
+  let toc = false, out = [];
+  for (let i = 0; i < paras.length; i++) {
+    const p = paras[i];
+    if (i < 120) {
+      // satu paragraf berisi banyak judul bab beruntun = daftar isi yang menyatu
+      if (p.length < 1500 && (p.match(re) || []).length >= 4) { toc = true; continue; }
+      // beberapa paragraf pendek beruntun berisi judul bab
+      let j = i; while (j < paras.length && j < 160 && paras[j].length < 90 && gbHead(paras[j])) j++;
+      if (j - i >= 4) { toc = true; i = j - 1; continue; }
+    }
+    out.push(p);
+  }
+  if (!isGb && !toc) return gbChapters(paras);
+  if (isGb) out = out.filter(p => !/^\[?\s*illustration[^\]]{0,80}\]?$/i.test(p.replace(/^[\u0001\u0002]+/, '').trim()));
+  const first = out.findIndex((p, i) => i < 80 && gbHead(p) === 2);
+  if (first > 0 && out.slice(first).length >= 5) out = out.slice(first);
+  out = gbChapters(out);
+  return out.length >= 3 ? out : paras;
+}
+/* hitungan bab: tiap judul bab jelas = bab baru (hanya bila belum ada pembatas bab & ada ≥3 judul).
+   Judul 'II.' saja dipakai bila tak ada 'Chapter …'. Hasil sama sejak impor. */
+const CH_VER = 2; /* versi deteksi bab; naikkan bila aturan deteksi berubah (buku lama dihitung ulang saat dibuka) */
+function gbChapters(out) {
+  if (!out || out.includes('\u0002')) return out;
+  let lv = 2, n = out.filter(p => gbHead(p) === 2).length;
+  if (n < 3) { lv = 1; n = out.filter(p => gbHead(p) === 1).length; if (n < 3) return out; }
+  const r = []; let k = 0;
+  out.forEach((p, i) => { if (gbHead(p) === lv) { if (k++ > 0 && i > 0) r.push('\u0002'); } r.push(p); });
+  return r;
+}
+/* penanda miring Gutenberg: _kata_ -> kata (teks biasa) */
+const UL_ITALIC = /(^|[^\p{L}\p{N}_])_([^_\n]{1,200}?)_(?![\p{L}\p{N}_])/gu;
+function noUnderscore(p) { return typeof p === 'string' && p.includes('_') ? p.replace(UL_ITALIC, '$1$2').replace(UL_ITALIC, '$1$2') : p; }
+/* judul hanya untuk baris pendek yang cocok pola judul; kalimat/dialog biasa bukan judul */
+function isHeadLine(raw) {
+  const t = raw.replace(/^[\u0001\u0002]+/, '').trim();
+  if (!t) return false;
+  if (raw.startsWith('\u0001')) return t.length <= 120 && !/^[「『“"‘(（]/.test(t);
+  if (t.length > 60 || /^[「『“"‘'(（—–-]/.test(t)) return false;
+  if (gbHead(t)) return true;
+  if (/^第?[一二三四五六七八九十百〇\d]+[章節节回話话編]?$/.test(t) || /^[上中下前後]?[　 ]?[一二三四五六七八九十]+$/.test(t)) return true;
+  if (/[.!?,;:"”'’)\]」』）。！？、…]$/.test(t)) return false;
+  if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return t.length <= 16 && !/[。、！？「」『』]/.test(t);
+  const w = t.split(/\s+/);
+  if (w.length > 7 || /[,;:.!?"“”]/.test(t)) return false;
+  if (t === t.toUpperCase() && /\p{L}{3}/u.test(t)) return true;
+  return w.filter(x => x.length > 3).every(x => /^\p{Lu}/u.test(x));
+}
 async function parseFile(file) {
   const name = file.name.replace(/\.[^.]+$/, '');
   const ext = (file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase();
-  if (ext === 'epub') return parseEpub(await file.arrayBuffer(), name);
-  if (ext === 'pdf') return parsePdf(await file.arrayBuffer(), name);
-  return { title: name, paras: cleanParas(decodeText(await file.arrayBuffer())) };
+  if (ext === 'epub') return dgnBatas(parseEpub(await file.arrayBuffer(), name).then(r => { try { const gb = r.paras.slice(0, 40).some(p => /project gutenberg/i.test(p)); r.paras = gbParas(r.paras, gb); if (gb) r.paras = r.paras.map(noUnderscore); } catch (e) { } return r; }), PARSE_TIMEOUT);
+  if (ext === 'pdf') return dgnBatas(parsePdf(await file.arrayBuffer(), name), PARSE_TIMEOUT);
+  const g = gbTrim(decodeText(await file.arrayBuffer()));
+  let paras = cleanParas(g.text);
+  try { paras = gbParas(paras, g.found); if (g.found) paras = paras.map(noUnderscore); } catch (e) { }
+  return { title: name, paras };
 }
 function decodeText(buf) {
   let s = null;
@@ -189,6 +432,18 @@ function decodeText(buf) {
     s = best != null ? best : new TextDecoder('utf-8').decode(buf);
   }
   return s.replace(/^﻿/, '');
+}
+// Teks buku Jepang sering memakai huruf kompatibilitas (⽂, Ａ, ㈱). NFKC mengubahnya ke huruf biasa.
+// Tanda baca penting (「」『』、。…・ー) tidak diubah oleh NFKC; kalau ada yang berubah, teks asli dipakai.
+const JA_PUNCT = /[「」『』、。…・ー]/g;
+function normJa(s) {
+  const n = s.normalize('NFKC');
+  return (s.match(JA_PUNCT) || []).join('') === (n.match(JA_PUNCT) || []).join('') ? n : s;
+}
+// Halaman dengan sedikit blok <p> tapi banyak teks di luarnya (mis. hanya <br>) -> pakai teks body.
+function needBodyFallback(nBlocks, blockLen, bodyLen) {
+  const outside = bodyLen - blockLen;
+  return nBlocks <= 3 && outside >= 200 && outside > blockLen * 2;
 }
 async function parseEpub(buf, fallback) {
   await loadScript(JSZIP_URL);
@@ -210,56 +465,100 @@ async function parseEpub(buf, fallback) {
     const href = man[ref.getAttribute('idref')]; if (!href) continue;
     const f = zf(resolve(href)); if (!f) continue;
     const doc = new DOMParser().parseFromString(await f.async('string'), 'text/html');
+    // furigana: buang <rt>/<rp>/<rtc> supaya bacaan tak tercampur di teks (teks dasar <ruby>/<rb> tetap)
+    doc.querySelectorAll('rt,rp,rtc').forEach(n => n.remove());
     // bab baru (\u0002) per file spine, kecuali bab sebelumnya masih sangat pendek (sampul, halaman judul)
     if (chLen >= 800) { paras.push('\u0002'); chLen = 0; }
     const blocks = doc.body ? doc.body.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,blockquote,pre') : [];
     const add = t => { paras.push(t); chLen += t.length; };
-    if (blocks.length) blocks.forEach(b => { if (!b.querySelector('p')) { const t = b.textContent.replace(/\s+/g, ' ').trim(); if (t) add(/^H[1-4]$/.test(b.tagName) ? '\u0001' + t : t); } });
-    else if (doc.body) cleanParas(doc.body.textContent).forEach(add);
+    let blockLen = 0;
+    const got = [];
+    blocks.forEach(b => { if (!b.querySelector('p')) { const t = b.textContent.replace(/\s+/g, ' ').trim(); if (t) { blockLen += t.length; got.push(/^H[1-4]$/.test(b.tagName) ? '\u0001' + t : t); } } });
+    const bodyLen = doc.body ? doc.body.textContent.replace(/\s+/g, '').length : 0;
+    if (doc.body && (!blocks.length || needBodyFallback(got.length, blockLen, bodyLen))) {
+      doc.body.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+      cleanParas(doc.body.textContent).forEach(add);
+    } else got.forEach(add);
   }
-  return { title, paras: splitLong(paras) };
+  for (let i = 0; i < paras.length; i++) paras[i] = normJa(paras[i]);
+  let cover = null; try { cover = await epubCover(opf, zf, resolve); } catch (e) { }
+  return { title, paras: splitLong(paras), cover };
+}
+// Ambil gambar cover EPUB, kecilkan (maks 300px, JPEG). Gagal = null (impor tetap jalan).
+async function epubCover(opf, zf, resolve) {
+  const items = [...opf.getElementsByTagNameNS('*', 'item')];
+  const img = it => /^image\//.test(it.getAttribute('media-type') || '');
+  let it = items.find(i => /(^|\s)cover-image(\s|$)/.test(i.getAttribute('properties') || '') && img(i));
+  if (!it) { const m = [...opf.getElementsByTagNameNS('*', 'meta')].find(x => x.getAttribute('name') === 'cover'); const id = m && m.getAttribute('content'); if (id) it = items.find(i => i.getAttribute('id') === id && img(i)); }
+  if (!it) it = items.find(i => img(i) && /cover/i.test((i.getAttribute('id') || '') + (i.getAttribute('href') || '')));
+  if (!it) return null;
+  const f = zf(resolve(it.getAttribute('href') || '')); if (!f) return null;
+  const u = URL.createObjectURL(new Blob([await f.async('arraybuffer')], { type: it.getAttribute('media-type') }));
+  try {
+    const im = new Image(); im.src = u; await im.decode();
+    const w0 = im.naturalWidth, h0 = im.naturalHeight; if (!w0 || !h0) return null;
+    const k = Math.min(1, 300 / Math.max(w0, h0)), cv = document.createElement('canvas');
+    cv.width = Math.max(1, Math.round(w0 * k)); cv.height = Math.max(1, Math.round(h0 * k));
+    const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(im, 0, 0, cv.width, cv.height);
+    const url = cv.toDataURL('image/jpeg', 0.8); cv.width = cv.height = 0;
+    return url.length < 120000 && url.startsWith('data:image/') ? url : null;
+  } finally { URL.revokeObjectURL(u); }
 }
 async function parsePdf(buf, title) {
   const V = PDFJS_BASE;
   await loadScript(V + 'pdf.min.js');
   pdfjsLib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js';
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  const lines = [];
+  const LIG = { 'ﬀ': 'ff', 'ﬁ': 'fi', 'ﬂ': 'fl', 'ﬃ': 'ffi', 'ﬄ': 'ffl', 'ﬅ': 'st', 'ﬆ': 'st' };
+  const pages = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const tc = await (await pdf.getPage(i)).getTextContent();
-    let line = '';
-    for (const it of tc.items) { line += it.str; if (it.hasEOL) { lines.push(line.trim()); line = ''; } }
-    if (line.trim()) lines.push(line.trim());
-    lines.push('');
-    if (i % 10 === 0) toast(`Membaca PDF… halaman ${i}/${pdf.numPages}`);
+    const pl = []; let line = '';
+    for (const it of tc.items) { line += String(it.str || '').replace(/[ﬀ-ﬆ]/g, c => LIG[c] || c); if (it.hasEOL) { pl.push(line.trim()); line = ''; } }
+    if (line.trim()) pl.push(line.trim());
+    pages.push(pl);
+    if (i % 10 === 0 && typeof imporStatus === 'function') imporStatus(`Membaca PDF… halaman ${i}/${pdf.numPages}`);
   }
+  // header/footer/nomor halaman: pola baris pertama & terakhir (angka jadi #) yang berulang di banyak halaman dibuang
+  const pola = l => l.toLowerCase().replace(/\d+/g, '#').replace(/\s+/g, ' ').trim();
+  const edge = pl => { const f = pl.findIndex(Boolean); let e = -1; for (let k = pl.length - 1; k >= 0; k--) if (pl[k]) { e = k; break; } return f < 0 ? [] : f === e ? [f] : [f, e]; };
+  const hitung = new Map();
+  for (const pl of pages) for (const p of new Set(edge(pl).map(k => pola(pl[k])))) hitung.set(p, (hitung.get(p) || 0) + 1);
+  const ulang = new Set([...hitung].filter(([p, n]) => p.length > 1 && n >= 3 && n >= pages.length * 0.4).map(x => x[0]));
+  const lines = [];
+  for (const pl of pages) { const ed = new Set(edge(pl).filter(k => ulang.has(pola(pl[k])))); pl.forEach((l, k) => { if (!ed.has(k)) lines.push(l); }); lines.push(''); }
   // gabungkan baris jadi paragraf: putus kalau baris kosong atau baris pendek berakhir tanda titik
   const lens = lines.filter(Boolean).map(l => l.length).sort((a, b) => a - b);
   const typical = lens[Math.floor(lens.length * 0.8)] || 60;
+  const AWALAN = /(?:^|[^\p{L}])(self|well|non|ex|anti|co|semi|half|all|cross|post|pre|vice)-$/iu;
   const paras = []; let cur = '';
   for (const l of lines) {
     if (!l) { if (cur) { paras.push(cur); cur = ''; } continue; }
     if (/^\d+$/.test(l)) continue; // nomor halaman
-    cur = cur ? (/-$/.test(cur) ? cur.slice(0, -1) + l : cur + ' ' + l) : l;
+    if (!cur) cur = l;
+    else if (/\p{L}-$/u.test(cur) && /^\p{Ll}/u.test(l) && !AWALAN.test(cur)) cur = cur.slice(0, -1) + l; // kata terpotong: sambung
+    else if (/\p{L}-$/u.test(cur) && /^\p{L}/u.test(l)) cur += l; // tanda hubung asli (self-aware, Jean-Paul): pertahankan
+    else cur += ' ' + l;
     if (/[.!?:"”’。！？]$/.test(l) && l.length < typical * 0.85) { paras.push(cur); cur = ''; }
   }
   if (cur) paras.push(cur);
   // paragraf yang terpotong pergantian halaman: sambung kalau tidak diakhiri tanda baca
   const merged = [];
   for (const p of paras) { const last = merged[merged.length - 1]; if (last && !/[.!?:"”’。！？)]$/.test(last) && /^[\p{Ll}]/u.test(p)) merged[merged.length - 1] = last + ' ' + p; else merged.push(p); }
-  if (!merged.join('').trim()) throw new Error('PDF ini berupa gambar/scan, teksnya tidak bisa dibaca');
+  const huruf = (merged.join('').match(/\p{L}/gu) || []).length;
+  if (!huruf || huruf / Math.max(1, pdf.numPages) < 40) { const e = new Error('PDF ini kelihatannya scan (gambar), jadi teksnya tak terbaca. Coba versi EPUB atau TXT-nya.'); e.kode = 'scan'; throw e; }
   return { title, paras: splitLong(merged) };
 }
 
 /* ---------- terjemahan ---------- */
-const TR_KEY = 'bacabahasa.tr', TR_MAX = 200;
+const TR_KEY = 'bacabahasa.tr', TR_MAX = 300;
 const trCache = new Map((() => { try { const x = JSON.parse(localStorage.getItem(TR_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; } })());
 function trFlush() {
   clearTimeout(trTimer); trTimer = 0;
   while (trCache.size > TR_MAX) trCache.delete(trCache.keys().next().value);
   try { localStorage.setItem(TR_KEY, JSON.stringify([...trCache])); } catch (e) { }
 }
-function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 1000); }
+function trPersist() { if (!trTimer) trTimer = setTimeout(trFlush, 3000); }
 document.addEventListener('visibilitychange', () => { if (document.hidden && trTimer) trFlush(); });
 addEventListener('pagehide', () => { if (trTimer) trFlush(); });
 const POS = { noun: 'kata benda', verb: 'kata kerja', adjective: 'kata sifat', adverb: 'kata keterangan', preposition: 'kata depan', pronoun: 'kata ganti', conjunction: 'kata sambung', interjection: 'kata seru', article: 'artikel', abbreviation: 'singkatan', prefix: 'awalan', suffix: 'akhiran' };
@@ -277,29 +576,398 @@ function vocabCSV(list) {
   const ok = (list || []).filter(v => v && !v.noTr && String(v.t || '').trim());
   const tg = x => String(x || '').trim().toLowerCase().replace(/\s+/g, '_').replace(/[^\p{L}\p{N}_]/gu, '').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
   const tagOf = v => { const l = tg((LANGS[v.lang] || [v.lang])[0]), b = tg(v.book); return ['keepo', l && 'bahasa_' + l, b && 'buku_' + b].filter(Boolean).join(' '); };
-  const rows = [['kata', 'arti', 'bentuk dasar', 'cara baca', 'kalimat contoh', 'buku', 'tag', 'diketuk']].concat(ok.map(v => [v.w, v.t, baseOf(v.w, v.base), bacaOf(v.w, v.baca), ctxOf(v), String(v.book || '').trim(), tagOf(v), +v.tap > 0 ? +v.tap : 0]));
+  const rows = [['kata', 'arti', 'bentuk dasar', 'cara baca', 'kalimat contoh', 'buku', 'tag']].concat(ok.map(v => [v.w, v.t, baseOf(v.w, v.base), bacaOf(v.w, v.baca), ctxOf(v), String(v.book || '').trim().replace(/\s+/g, '_'), tagOf(v)]));
   return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n') + '\r\n';
 }
 function bacaOf(w, baca) { const b = (baca || '').trim(); return b && NONLATIN.test(w || '') && b.toLowerCase() !== (w || '').trim().toLowerCase() ? b : ''; }
+/* cara baca ejaan Indonesia untuk kata Latin (perkiraan; dihitung saat tampil, tidak disimpan, tidak dipakai skor) */
+const IDB_EX = { en: { though: 'dou', people: 'pi-pel', water: 'wo-ter', the: 'de', one: 'wan', two: 'tu', you: 'yu', your: 'yor', would: 'wud', could: 'kud', should: 'syud', are: 'ar', was: 'woz', were: 'wer', have: 'hèv', said: 'sèd', what: 'wot', who: 'hu', where: 'wer', there: 'der', their: 'der', they: 'dei', this: 'dis', that: 'dèt', with: 'wid', of: 'ov', to: 'tu', do: 'du', does: 'daz', done: 'dan', gone: 'gon', love: 'lav', some: 'sam', come: 'kam', other: 'a-der', mother: 'ma-der', brother: 'bra-der', thought: 'tot', through: 'tru', enough: 'i-naf', know: 'nou', knew: 'nyu', right: 'rait', night: 'nait', light: 'lait', eight: 'eit', great: 'greit', friend: 'frènd', beautiful: 'byu-ti-ful', because: 'bi-koz', many: 'mè-ni', very: 'vè-ri', every: 'èv-ri', business: 'biz-nis', island: 'ai-lend', language: 'lèng-gwij', vendors: 'vèn-dors', world: 'werld', work: 'werk', word: 'werd', heart: 'hart', head: 'hèd', read: 'rid', bread: 'brèd', book: 'buk', good: 'gud', food: 'fud', door: 'dor', floor: 'flor', young: 'yang', country: 'kan-tri' }, fr: { bonjour: 'bon-jur', merci: 'mèr-si', oui: 'wi', beaucoup: 'bo-ku', monsieur: 'me-syö', madame: 'ma-dam', eau: 'o', jamais: 'ja-mè', femme: 'fam', homme: 'om' } };
+const IDB_R = {
+  en: [[/tion|sion/y, 'syen'], [/igh/y, 'ai'], [/ough/y, 'o'], [/augh/y, 'of'], [/ph/y, 'f'], [/th/y, 't'], [/sh/y, 'sy'], [/ch/y, 'ch'], [/ck/y, 'k'], [/wh/y, 'w'], [/kn/y, 'n', 1], [/wr/y, 'r', 1], [/qu/y, 'kw'], [/x/y, 'ks'], [/c(?=[eiy])/y, 's'], [/c/y, 'k'], [/ee|ea/y, 'i'], [/oo/y, 'u'], [/ai|ay/y, 'ei'], [/oa/y, 'ou'], [/ou/y, 'au'], [/ow/y, 'ou'], [/oi|oy/y, 'oi'], [/e(?![\s\S])/y, '', 0, 1], [/a/y, 'è'], [/e/y, 'è'], [/u/y, 'a'], [/y(?![\s\S])/y, 'i'], [/y/y, 'y', 1], [/y/y, 'i']],
+  es: [[/ll/y, 'y'], [/ñ/y, 'ny'], [/ch/y, 'ch'], [/qu/y, 'k'], [/gu(?=[ei])/y, 'g'], [/g(?=[ei])/y, 'h'], [/c(?=[ei])/y, 's'], [/c/y, 'k'], [/z/y, 's'], [/j/y, 'h'], [/h/y, ''], [/v/y, 'b'], [/rr/y, 'r'], [/ü/y, 'u'], [/á/y, 'a'], [/é/y, 'e'], [/í/y, 'i'], [/ó/y, 'o'], [/ú/y, 'u']],
+  de: [[/tsch/y, 'ch'], [/sch/y, 'sy'], [/ch/y, 'h'], [/sp/y, 'syp', 1], [/st/y, 'syt', 1], [/ei|ey|ai/y, 'ai'], [/ie/y, 'i'], [/eu|äu/y, 'oi'], [/ä/y, 'è'], [/ß/y, 's'], [/z/y, 'ts'], [/v/y, 'f'], [/w/y, 'v'], [/s(?=[aeiouäöü])/y, 'z'], [/j/y, 'y'], [/qu/y, 'kv'], [/ph/y, 'f'], [/th/y, 't'], [/ck/y, 'k'], [/tz/y, 'ts']],
+  fr: [[/eau/y, 'o'], [/au/y, 'o'], [/ou/y, 'u'], [/oi/y, 'wa'], [/ai|ei/y, 'è'], [/ch/y, 'sy'], [/qu/y, 'k'], [/gn/y, 'ny'], [/ç/y, 's'], [/c(?=[eiyéè])/y, 's'], [/g(?=[eiyéè])/y, 'j'], [/h/y, ''], [/u/y, 'ü'], [/(?:an|am|en|em)(?![aeiouéèàâêîôûy])/y, 'an'], [/(?:on|om)(?![aeiouéèàâêîôûy])/y, 'on'], [/(?:in|im)(?![aeiouéèàâêîôûy])/y, 'èn'], [/[sxzdtp](?![\s\S])/y, ''], [/e(?![\s\S])/y, '', 0, 1], [/è|ê/y, 'è'], [/à|â/y, 'a'], [/î/y, 'i'], [/ô/y, 'o'], [/û/y, 'ü'], [/ë/y, 'è'], [/ï/y, 'i']]
+};
+function idSyl(p) {
+  const V = 'aeiouèéöü'; let out = '', i = 0; const n = p.length;
+  while (i < n) {
+    out += p[i];
+    if (V.includes(p[i]) && i + 1 < n && !V.includes(p[i + 1])) {
+      let j = i + 1; while (j < n && !V.includes(p[j])) j++;
+      if (j < n) { const cut = j - i - 1 === 1 ? i + 1 : i + 2; out += p.slice(i + 1, cut) + '-'; i = cut; continue; }
+    }
+    i++;
+  }
+  return out;
+}
+function idBaca1(w, lang) {
+  const L = String(lang || '').slice(0, 2).toLowerCase(), rules = IDB_R[L]; if (!rules) return '';
+  w = w.normalize('NFC').toLowerCase().replace(/[’']/g, '');
+  if (!/^[a-zà-ÿß]+$/.test(w) || w.length < 2) return '';
+  const ex = IDB_EX[L] && IDB_EX[L][w]; if (ex) return ex;
+  let o = '', i = 0;
+  while (i < w.length) {
+    let hit = false;
+    for (const [re, rep, init, nz] of rules) {
+      if (init && i) continue; if (nz && w.length < 4) continue;
+      re.lastIndex = i; const m = re.exec(w);
+      if (m) { o += rep; i += m[0].length; hit = true; break; }
+    }
+    if (!hit) { o += w[i]; i++; }
+  }
+  o = o.replace(/([^aeiou])\1+/g, '$1');
+  return o ? '~' + idSyl(o) : '';
+}
+function bacaDisp(w, t) { return t && !NONLATIN.test(w || '') ? t + ' (perkiraan)' : t; }
+/* cara baca untuk tampilan: non-Latin → data romanisasi; Latin → ejaan Indonesia (perkiraan) */
+function bacaShow(w, baca, lang) {
+  const b = bacaOf(w, baca); if (b) return b;
+  if (NONLATIN.test(w || '') || !lang || !db.showBaca) return '';
+  const ws = String(w).trim().split(/\s+/); if (ws.length > 3) return '';
+  const r = ws.map(x => idBaca1(x, lang)); if (r.some(x => !x)) return '';
+  return r.join(' ');
+}
 /* bentuk dasar: hanya dari data kamus gtx (d[3]); kosong bila tidak ada / sama dengan kata */
 function baseOf(w, base) { const b = typeof base === 'string' ? base.trim() : '', x = (w || '').trim(); return b && b.length < 40 && !/\s/.test(x) && b.toLowerCase() !== x.toLowerCase() ? b : ''; }
+/* bentuk dasar kata Eropa (#806): pelepas akhiran kecil + kata tak beraturan; HANYA tebakan bila kamus Google tak memberi bentuk dasar */
+const EU_IRR = {
+  en: { was: 'be', were: 'be', been: 'be', is: 'be', are: 'be', am: 'be', went: 'go', gone: 'go', goes: 'go', had: 'have', has: 'have', did: 'do', done: 'do', does: 'do', said: 'say', made: 'make', took: 'take', taken: 'take', came: 'come', saw: 'see', seen: 'see', knew: 'know', known: 'know', got: 'get', gotten: 'get', gave: 'give', given: 'give', found: 'find', thought: 'think', told: 'tell', became: 'become', left: 'leave', felt: 'feel', brought: 'bring', began: 'begin', begun: 'begin', kept: 'keep', held: 'hold', wrote: 'write', written: 'write', stood: 'stand', heard: 'hear', meant: 'mean', met: 'meet', ran: 'run', paid: 'pay', sat: 'sit', spoke: 'speak', spoken: 'speak', led: 'lead', grew: 'grow', grown: 'grow', lost: 'lose', fell: 'fall', fallen: 'fall', sent: 'send', built: 'build', understood: 'understand', drew: 'draw', drawn: 'draw', broke: 'break', broken: 'break', spent: 'spend', rose: 'rise', risen: 'rise', drove: 'drive', driven: 'drive', bought: 'buy', wore: 'wear', worn: 'wear', chose: 'choose', chosen: 'choose', ate: 'eat', eaten: 'eat', slept: 'sleep', sang: 'sing', sung: 'sing', swam: 'swim', flew: 'fly', flown: 'fly', threw: 'throw', thrown: 'throw', caught: 'catch', taught: 'teach', fought: 'fight', sold: 'sell', won: 'win', hid: 'hide', hidden: 'hide', forgot: 'forget', forgotten: 'forget', woke: 'wake', woken: 'wake', shook: 'shake', stole: 'steal', stolen: 'steal', hung: 'hang', rang: 'ring', sought: 'seek', dug: 'dig', fed: 'feed', bit: 'bite', bitten: 'bite', blew: 'blow', blown: 'blow', dealt: 'deal', froze: 'freeze', frozen: 'freeze', rode: 'ride', ridden: 'ride', swept: 'sweep', wept: 'weep', children: 'child', men: 'man', women: 'woman', people: 'person', feet: 'foot', teeth: 'tooth', mice: 'mouse', better: 'good', best: 'good', worse: 'bad', worst: 'bad', lives: 'life', wives: 'wife', knives: 'knife', leaves: 'leaf', wolves: 'wolf', halves: 'half', shelves: 'shelf', thieves: 'thief' },
+  es: { soy: 'ser', eres: 'ser', es: 'ser', somos: 'ser', son: 'ser', era: 'ser', eran: 'ser', fue: 'ser', fui: 'ser', fuiste: 'ser', fueron: 'ser', fuimos: 'ser', sido: 'ser', estoy: 'estar', estás: 'estar', está: 'estar', estamos: 'estar', están: 'estar', estaba: 'estar', estaban: 'estar', estuvo: 'estar', estuve: 'estar', estado: 'estar', he: 'haber', ha: 'haber', hemos: 'haber', han: 'haber', había: 'haber', habían: 'haber', hubo: 'haber', habido: 'haber', voy: 'ir', vas: 'ir', va: 'ir', vamos: 'ir', van: 'ir', iba: 'ir', iban: 'ir', ido: 'ir', tengo: 'tener', tienes: 'tener', tiene: 'tener', tenemos: 'tener', tienen: 'tener', tenía: 'tener', tenían: 'tener', tuvo: 'tener', tuve: 'tener', tuvieron: 'tener', hago: 'hacer', haces: 'hacer', hace: 'hacer', hacemos: 'hacer', hacen: 'hacer', hacía: 'hacer', hizo: 'hacer', hice: 'hacer', hicieron: 'hacer', hecho: 'hacer', digo: 'decir', dices: 'decir', dice: 'decir', dicen: 'decir', decía: 'decir', dijo: 'decir', dije: 'decir', dijeron: 'decir', dicho: 'decir', puedo: 'poder', puedes: 'poder', puede: 'poder', podemos: 'poder', pueden: 'poder', podía: 'poder', pudo: 'poder', quiero: 'querer', quieres: 'querer', quiere: 'querer', queremos: 'querer', quieren: 'querer', quería: 'querer', quiso: 'querer', veo: 'ver', ves: 'ver', ve: 'ver', vemos: 'ver', ven: 'ver', veía: 'ver', vio: 'ver', visto: 'ver', doy: 'dar', das: 'dar', da: 'dar', damos: 'dar', dan: 'dar', dio: 'dar', sé: 'saber', sabes: 'saber', sabe: 'saber', sabemos: 'saber', saben: 'saber', sabía: 'saber', supo: 'saber', vengo: 'venir', vienes: 'venir', viene: 'venir', venimos: 'venir', vienen: 'venir', vino: 'venir', vine: 'venir', pongo: 'poner', pone: 'poner', ponen: 'poner', puso: 'poner', puesto: 'poner', salgo: 'salir', sale: 'salir', salen: 'salir', traigo: 'traer', trae: 'traer', trajo: 'traer', duermo: 'dormir', duerme: 'dormir', durmió: 'dormir', pide: 'pedir', pidió: 'pedir', sigue: 'seguir', siguió: 'seguir', muere: 'morir', murió: 'morir', muerto: 'morir', escrito: 'escribir', abierto: 'abrir', vuelto: 'volver', vuelve: 'volver', vuelven: 'volver', encuentra: 'encontrar', piensa: 'pensar', siente: 'sentir', sintió: 'sentir', cuenta: 'contar', empieza: 'empezar', conozco: 'conocer', parece: 'parecer', mejor: 'bueno', peor: 'malo' },
+  fr: { suis: 'être', es: 'être', est: 'être', sommes: 'être', êtes: 'être', sont: 'être', était: 'être', étaient: 'être', été: 'être', fut: 'être', sera: 'être', ai: 'avoir', as: 'avoir', a: 'avoir', avons: 'avoir', avez: 'avoir', ont: 'avoir', avait: 'avoir', avaient: 'avoir', eu: 'avoir', eut: 'avoir', aura: 'avoir', vais: 'aller', vas: 'aller', va: 'aller', allons: 'aller', allez: 'aller', vont: 'aller', allait: 'aller', ira: 'aller', fais: 'faire', fait: 'faire', faisons: 'faire', faites: 'faire', font: 'faire', faisait: 'faire', fera: 'faire', peux: 'pouvoir', peut: 'pouvoir', pouvons: 'pouvoir', peuvent: 'pouvoir', pouvait: 'pouvoir', pu: 'pouvoir', veux: 'vouloir', veut: 'vouloir', voulons: 'vouloir', veulent: 'vouloir', voulait: 'vouloir', voulu: 'vouloir', dois: 'devoir', doit: 'devoir', devons: 'devoir', doivent: 'devoir', devait: 'devoir', sais: 'savoir', sait: 'savoir', savons: 'savoir', savent: 'savoir', savait: 'savoir', su: 'savoir', vois: 'voir', voit: 'voir', voyons: 'voir', voient: 'voir', voyait: 'voir', vu: 'voir', vécu: 'vivre', dis: 'dire', dit: 'dire', disons: 'dire', disent: 'dire', disait: 'dire', viens: 'venir', vient: 'venir', venons: 'venir', viennent: 'venir', venait: 'venir', venu: 'venir', prends: 'prendre', prend: 'prendre', prenons: 'prendre', prennent: 'prendre', prenait: 'prendre', pris: 'prendre', mets: 'mettre', met: 'mettre', mis: 'mettre', mit: 'mettre', mettent: 'mettre', écrit: 'écrire', lu: 'lire', ouvert: 'ouvrir', cru: 'croire', croit: 'croire', crois: 'croire', connais: 'connaître', connaît: 'connaître', connu: 'connaître', reçu: 'recevoir', reçoit: 'recevoir', tenu: 'tenir', tient: 'tenir', tiens: 'tenir', sort: 'sortir', dort: 'dormir', sert: 'servir', suit: 'suivre', suivi: 'suivre', meurt: 'mourir', mort: 'mourir', né: 'naître', yeux: 'œil', chevaux: 'cheval', journaux: 'journal', animaux: 'animal', travaux: 'travail', meilleur: 'bon', meilleure: 'bon' },
+  de: { bin: 'sein', bist: 'sein', ist: 'sein', sind: 'sein', seid: 'sein', war: 'sein', warst: 'sein', waren: 'sein', wart: 'sein', gewesen: 'sein', habe: 'haben', hast: 'haben', hat: 'haben', hatte: 'haben', hatten: 'haben', gehabt: 'haben', werde: 'werden', wirst: 'werden', wird: 'werden', wurde: 'werden', wurden: 'werden', geworden: 'werden', ging: 'gehen', gingen: 'gehen', gegangen: 'gehen', geht: 'gehen', kam: 'kommen', kamen: 'kommen', gekommen: 'kommen', sah: 'sehen', sahen: 'sehen', gesehen: 'sehen', sieht: 'sehen', gab: 'geben', gaben: 'geben', gegeben: 'geben', gibt: 'geben', nahm: 'nehmen', nahmen: 'nehmen', genommen: 'nehmen', nimmt: 'nehmen', fand: 'finden', fanden: 'finden', gefunden: 'finden', dachte: 'denken', gedacht: 'denken', wusste: 'wissen', gewusst: 'wissen', weiß: 'wissen', weißt: 'wissen', konnte: 'können', konnten: 'können', kann: 'können', kannst: 'können', musste: 'müssen', mussten: 'müssen', muss: 'müssen', musst: 'müssen', wollte: 'wollen', wollten: 'wollen', will: 'wollen', willst: 'wollen', sollte: 'sollen', sollten: 'sollen', soll: 'sollen', durfte: 'dürfen', darf: 'dürfen', mochte: 'mögen', mag: 'mögen', sprach: 'sprechen', sprachen: 'sprechen', gesprochen: 'sprechen', spricht: 'sprechen', stand: 'stehen', standen: 'stehen', gestanden: 'stehen', lag: 'liegen', lagen: 'liegen', gelegen: 'liegen', saß: 'sitzen', saßen: 'sitzen', gesessen: 'sitzen', lief: 'laufen', liefen: 'laufen', gelaufen: 'laufen', läuft: 'laufen', fuhr: 'fahren', fuhren: 'fahren', gefahren: 'fahren', fährt: 'fahren', schrieb: 'schreiben', schrieben: 'schreiben', geschrieben: 'schreiben', las: 'lesen', lasen: 'lesen', gelesen: 'lesen', liest: 'lesen', aß: 'essen', gegessen: 'essen', isst: 'essen', trank: 'trinken', getrunken: 'trinken', schlief: 'schlafen', geschlafen: 'schlafen', schläft: 'schlafen', rief: 'rufen', gerufen: 'rufen', ließ: 'lassen', gelassen: 'lassen', lässt: 'lassen', blieb: 'bleiben', blieben: 'bleiben', geblieben: 'bleiben', zog: 'ziehen', gezogen: 'ziehen', brachte: 'bringen', gebracht: 'bringen', brachten: 'bringen', hielt: 'halten', gehalten: 'halten', hält: 'halten', fiel: 'fallen', gefallen: 'fallen', fällt: 'fallen', half: 'helfen', geholfen: 'helfen', hilft: 'helfen', starb: 'sterben', gestorben: 'sterben', verlor: 'verlieren', verloren: 'verlieren', begann: 'beginnen', begonnen: 'beginnen', verstand: 'verstehen', verstanden: 'verstehen', stieg: 'steigen', gestiegen: 'steigen', schien: 'scheinen', trug: 'tragen', getragen: 'tragen', trägt: 'tragen', warf: 'werfen', geworfen: 'werfen', schloss: 'schließen', geschlossen: 'schließen', nannte: 'nennen', genannt: 'nennen', kannte: 'kennen', gekannt: 'kennen', rannte: 'rennen', gerannt: 'rennen', besser: 'gut', beste: 'gut', mehr: 'viel' },
+  deN: { kinder: 'Kind', männer: 'Mann', frauen: 'Frau', häuser: 'Haus', bücher: 'Buch', städte: 'Stadt', länder: 'Land', augen: 'Auge' }
+};
+/* akhiran: [akhiran, pengganti, panjang minimal akar]; dicoba berurutan, yang pertama cocok dipakai */
+const EU_SUF = {
+  en: [['ies', 'y', 2], ['ied', 'y', 2], ['ing', '', 3], ['ing', 'e', 3], ['ed', '', 3], ['ed', 'e', 3], ['es', '', 3], ['s', '', 3]],
+  es: [['ábamos', 'ar', 2], ['aban', 'ar', 2], ['abas', 'ar', 2], ['aba', 'ar', 2], ['ando', 'ar', 2], ['iendo', 'er', 2], ['ían', 'er', 2], ['ías', 'er', 2], ['ía', 'er', 2], ['aron', 'ar', 2], ['ieron', 'er', 2], ['ados', 'ar', 2], ['adas', 'ar', 2], ['ado', 'ar', 2], ['ada', 'ar', 2], ['ido', 'er', 2], ['amos', 'ar', 2], ['asteis', 'ar', 2], ['aste', 'ar', 2], ['emos', 'er', 2], ['ó', 'ar', 2], ['é', 'ar', 2], ['es', '', 3], ['os', 'o', 3], ['as', 'a', 3], ['s', '', 3]],
+  fr: [['aient', 'er', 2], ['ait', 'er', 2], ['ons', 'er', 2], ['ez', 'er', 2], ['ées', 'er', 2], ['ée', 'er', 2], ['és', 'er', 2], ['é', 'er', 2], ['ant', 'er', 2], ['erai', 'er', 2], ['eront', 'er', 2], ['era', 'er', 2], ['aux', 'al', 2], ['es', 'e', 3], ['s', '', 3], ['x', '', 3]],
+  de: [['ungen', 'ung', 3], ['ten', 'en', 3], ['tet', 'en', 3], ['te', 'en', 3], ['st', 'en', 3], ['en', '', 3], ['er', '', 3], ['es', '', 3], ['em', '', 3], ['e', '', 3]]
+};
+const EU_INF = { es: /(ar|er|ir)$/, fr: /(er|ir|re)$/, de: /en$/ };
+/* tebakan bentuk dasar ('' bila tak yakin). Hanya dipakai bila kamus Google tak memberi bentuk dasar. */
+function guessBase(w, lang) {
+  const l = String(lang || '').toLowerCase().split('-')[0], x = String(w || '').trim();
+  if (!EU_SUF[l] || x.length < 3 || x.length > 30 || /[\s\d]/.test(x)) return '';
+  const lo = x.toLowerCase(), has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  const ir = has(EU_IRR[l], lo) ? EU_IRR[l][lo] : (l === 'de' && has(EU_IRR.deN, lo) ? EU_IRR.deN[lo] : '');
+  if (ir) return ir.toLowerCase() === lo ? '' : ir;
+  if (l === 'de' && x[0] !== lo[0]) return '';
+  if (l === 'en' && /eed$/.test(lo)) return ''; // proceed/agreed/succeed: lebih baik kosong daripada tebakan salah ("proce")
+  if (EU_INF[l] && EU_INF[l].test(lo) && !(l === 'de' && /[^aeiouäöü]ten$/.test(lo))) return '';
+  for (const [suf, rep, min] of EU_SUF[l]) {
+    if (!lo.endsWith(suf)) continue;
+    const stem = lo.slice(0, lo.length - suf.length);
+    if (stem.length < min) continue;
+    let b = (stem + rep).replace(/eer$/, 'er');
+    if (l === 'en' && rep === '' && /([bdgklmnprt])\1$/.test(stem)) b = stem.slice(0, -1);
+    if (l === 'en' && suf === 'es' && !/(s|x|z|ch|sh|o)$/.test(stem)) continue;
+    if (l === 'de' && /^ge/.test(b) && b.length > 6) b = b.slice(2);
+    if (b.length < 3 || b === lo) continue;
+    return b;
+  }
+  return '';
+}
 async function fetchTimeout(url, ms = 8000, ext) {
   const ac = new AbortController(), t = setTimeout(() => ac.abort(), ms);
   const onAb = () => ac.abort(); if (ext) { if (ext.aborted) ac.abort(); else ext.addEventListener('abort', onAb); }
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
-async function translate(q, sl, tl, signal) {
-  const k = sl + '|' + tl + '|' + q;
-  if (trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return v; }
-  const stale = trCache.get(k);
-  if (stale && stale.text && navigator.onLine === false) return stale;
-  let out;
+async function gtxFetch(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json().catch(() => null);
+  if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
+  const seg = j[0].filter(x => Array.isArray(x) && x.length);
+  const out = { text: seg.map(x => typeof x[0] === 'string' ? x[0] : '').join(''), baca: seg.map(x => typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: [], all: [], ex: [] };
   try {
-    const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&q=${encodeURIComponent(q)}`, 8000, signal);
-    if (!r.ok) throw new Error('gtx ' + r.status);
-    const j = await r.json();
-    out = { text: (j[0] || []).map(x => x[0] || '').join(''), baca: (j[0] || []).map(x => x && typeof x[3] === 'string' ? x[3] : '').join(' ').replace(/\s+/g, ' ').trim(), dict: Array.isArray(j[1]) ? j[1].map(d => ({ pos: d[0], terms: (d[1] || []).slice(0, 6) })) : [] };
-    const bs = Array.isArray(j[1]) ? j[1].map(d => baseOf(q, d && d[3])).find(Boolean) : ''; if (bs) out.base = bs;
+    const bd = Array.isArray(j[1]) ? j[1].filter(d => Array.isArray(d)) : [];
+    const terms = (d, n) => (Array.isArray(d[1]) ? d[1] : []).filter(t => typeof t === 'string' && t).slice(0, n);
+    out.dict = bd.map(d => ({ pos: String(d[0] || ''), terms: terms(d, 6) }));
+    /* semua arti per jenis kata (maks 5 jenis x 8 arti) untuk tombol 'Semua arti' */
+    out.all = bd.slice(0, 5).map(d => ({ pos: String(d[0] || ''), terms: terms(d, 8) })).filter(d => d.terms.length);
+    const bs = bd.map(d => baseOf(q, d[3])).find(Boolean); if (bs) out.base = bs;
+  } catch (e) { }
+  out.ex = exOf(j);
+  return out;
+}
+/* contoh kalimat (dt=ex): maks 3, teks polos, kata kunci diapit ‹…›; balasan aneh = daftar kosong */
+function exOf(j) {
+  const out = [];
+  try {
+    const l = Array.isArray(j) && Array.isArray(j[13]) && Array.isArray(j[13][0]) ? j[13][0] : [];
+    for (const e of l) {
+      const t = Array.isArray(e) && typeof e[0] === 'string' ? e[0].replace(/<b>(.*?)<\/b>/gi, '‹$1›').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : '';
+      if (t && t.length <= 160) out.push(t);
+      if (out.length >= 3) break;
+    }
+  } catch (e) { }
+  return out;
+}
+/* tombol 'Semua arti' di kartu Kata: semua arti per jenis kata + contoh; kamus Jepang offline dipakai bila ada */
+async function fetchSemua(w, sl, tl) {
+  const o = await jaLookup(w, sl);
+  if (o && tl === 'id') { const ts = o.e.tr.split(';').map(x => x.trim()).filter(Boolean).slice(0, 8); return { all: ts.length ? [{ pos: JA_POS[o.e.pos] || '', terms: ts }] : [], ex: [] }; }
+  const r = await gtxFetch(w, sl, tl);
+  return { all: r.all || [], ex: r.ex || [] };
+}
+/* simpan ke kartu Kata (maks 40 istilah); v.t / v.pick (arti pilihan #1106) tidak disentuh */
+function simpanSemua(v, d) {
+  let n = 0;
+  v.all = (d.all || []).map(g => ({ pos: g.pos, terms: g.terms.filter(() => n++ < 40) })).filter(g => g.terms.length);
+  v.ex = (d.ex || []).slice(0, 3); v.allAt = Date.now();
+}
+/* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal, balasan aneh = daftar kosong */
+async function altFetch(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json().catch(() => null), out = [];
+  if (!Array.isArray(j)) return out;
+  /* hasil: [{pos, terms}] (maks 6 arti per jenis kata); item kosong/aneh dilewati, bukan galat */
+  try {
+    if (Array.isArray(j[1])) j[1].forEach(d => {
+      if (!Array.isArray(d) || !Array.isArray(d[1])) return;
+      const terms = d[1].filter(t => typeof t === 'string' && t).slice(0, 15);
+      if (terms.length) out.push({ pos: typeof d[0] === 'string' ? d[0] : '', terms });
+    });
+  } catch (e) { }
+  try {
+    if (Array.isArray(j[5])) {
+      const terms = [];
+      j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && typeof x[0] === 'string' && x[0] && terms.push(x[0])));
+      if (terms.length) out.push({ pos: '', terms: terms.slice(0, 15) });
+    }
+  } catch (e) { }
+  return out;
+}
+/* arti lain otomatis (#1243): ambil sekali bila kosong; hasil disimpan ke cache kata itu (r.dict), cache bagus tak ditimpa */
+async function altFill(q, sl, tl, signal) {
+  const more = await altFetch(q, sl, tl, signal);
+  if (!more.length) return more;
+  const c = trCache.get(sl + '|' + tl + '|' + q);
+  if (c && c.text && !(c.dict && c.dict.length)) { c.dict = more; trPersist(); }
+  return more;
+}
+/* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
+const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
+function pfOk() { return !db.plain && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
+function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
+function pfStop() { pfPause(); PF.q = []; pfFlush(); }
+function pfResume(ms) {
+  pfPause(); if (!PF.q.length || PF.fails >= 2) return pfFlush();
+  const g = PF.gen; PF.t = setTimeout(() => { PF.t = 0; pfRun(g); }, ms == null ? 1000 : ms);
+}
+function pfStart(list, sl, tl) {
+  pfStop(); if (!pfOk() || !Array.isArray(list)) return;
+  PF.sl = sl; PF.tl = tl; PF.fails = 0;
+  PF.q = [...new Set(list.map(x => String(x || '').trim()).filter(Boolean))].filter(q => !trCache.has(sl + '|' + tl + '|' + q)).slice(0, 12);
+  if (PF.q.length) pfResume(0);
+}
+async function pfRun(g) {
+  if (g !== PF.gen || PF.busy) return;
+  if (!pfOk() || !PF.q.length || PF.fails >= 2) return pfStop();
+  const q = PF.q.shift(), k = PF.sl + '|' + PF.tl + '|' + q; PF.busy = true;
+  if (!trCache.has(k)) {
+    const ac = PF.ac = new AbortController();
+    try {
+      const out = await gtxFetch(q, PF.sl, PF.tl, ac.signal);
+      if (g !== PF.gen) return;
+      if (!out.text) throw new Error('kosong');
+      if (!trCache.has(k)) trCache.set(k, out);
+      PF.dirty = true; PF.fails = 0;
+    } catch (e) { if (g !== PF.gen) return; PF.fails++; }
+  }
+  PF.busy = false; PF.ac = null;
+  if (!PF.q.length || PF.fails >= 2) return pfStop();
+  PF.t = setTimeout(() => { PF.t = 0; pfRun(g); }, 400);
+}
+addEventListener('offline', pfStop);
+document.addEventListener('visibilitychange', () => { if (document.hidden) pfStop(); });
+/* baca cache terjemahan tanpa jaringan & tanpa mengubah urutan LRU; kosong bila belum ada */
+function cachedTr(q, sl, tl) { const v = trCache.get(sl + '|' + tl + '|' + q); return v && v.text ? v.text : ''; }
+/* ---------- kamus Jepang kecil offline (kamus-ja.txt): dimuat malas hanya saat membaca buku ja ---------- */
+const JA_PART = new Set(['が', 'は', 'を', 'に', 'の', 'で', 'と', 'も', 'へ', 'や', 'か', 'ね', 'よ']);
+/* kata fungsi (partikel dasar ja): tidak dihitung sebagai kata baru (tanpa ketukan, catatan sesi, garis bawah, intip, perkiraan impor) */
+/* Korea: 1 suku Hangul yang bukan kata utuh (partikel/potongan salah) dianggap kata fungsi; kata 1 suku umum tetap dihitung */
+const KO_ONE = new Set([...'물책집말밥날꿈손눈비밤길힘문몸발꽃술돈옷차일때것수곳분쌀강산별달해밖안위앞뒤옆키개새꿀땅불벌목뼈피귀입코팔']);
+const KO_PARTS = ['에서', '에게', '으로', '까지', '부터', '한테', '처럼', '보다', '이', '가', '은', '는', '을', '를', '에', '의', '도', '로', '와', '과'];
+const HANGUL_ONLY = /^[가-힣]+$/;
+/* kata ko berpartikel di ujung dengan sisa >=2 suku -> { stem, part }; selain itu null */
+function koSplit(w) {
+  const s = String(w || '').trim();
+  if (!HANGUL_ONLY.test(s)) return null;
+  for (const p of KO_PARTS) if (s.length - p.length >= 2 && s.endsWith(p)) return { stem: s.slice(0, -p.length), part: p };
+  return null;
+}
+const isKataFungsi = (lang, w) => {
+  const s = String(w || '').trim();
+  if (lang === 'ko') return s.length === 1 && HANGUL_ONLY.test(s) && !KO_ONE.has(s);
+  return lang === 'ja' && JA_PART.has(s);
+};
+const isParticle = isKataFungsi;
+/* #847: daftar awal kata fungsi per bahasa (huruf kecil); tambah lewat masukan tester, bukan kamus besar */
+const FUNC_WORDS = {
+  ja: 'だから しかし でも そして それで すると ところが また から まで より です ます だ して ない ある いる この その あの これ それ ので けど',
+  ko: '은 는 이 가 을 를 에 의 도 로 와 과 에서 에게 으로 까지 부터 한테 처럼 보다 하다 있다 없다 그 저 것 수',
+  zh: '的 了 在 是 我 你 他 她 它 们 这 那 有 不 也 都 和 就 吗 呢 吧 啊 着 过 个 很 要 会 说 到',
+  es: 'el la los las un una de del y o a en que se no por con para es lo su al más pero como le me te mi tu',
+  fr: 'le la les un une des de du et ou à en que qui ne pas pour avec est sur dans au aux ce se sa son je tu il elle nous vous',
+  de: 'der die das den dem des ein eine und oder zu in von mit ist nicht auf für er sie es ich du wir ihr auch',
+  en: 'the a an and or of to in is it that for on with as was he she they we you i at be this but not are by these those there from have had has his her its their'
+};
+const FUNC_SET = {};
+for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
+/* SATU saringan 'kata baru': true = bukan kandidat. Dipakai Home, ringkasan, catatan sesi, Intip kata bab.
+   ctx: { b: buku (untuk nama), kenal: true (buang kata sudah kenal), saved: Set kata tersimpan }. Hanya saat TAMPIL; data tak dihapus. */
+function isKataSampah(lang, w, ctx) {
+  const raw = String(w == null ? '' : w).trim(), c = ctx || {};
+  if (!raw || /^[\p{N}\p{P}\p{S}\s]+$/u.test(raw)) return true;
+  const lg = String(lang || '').toLowerCase().split('-')[0], k = raw.toLowerCase();
+  if (isKataFungsi(lang, raw)) return true;
+  if (!/^(ja|ko|zh)$/.test(lg) && [...raw].length === 1) return true; /* huruf tunggal */
+  if (/^(ja|zh)$/.test(lg) && /[가-힣]/.test(raw)) return true; /* kata Korea di buku Jepang/Mandarin */
+  if (lg === 'ko' && /[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(raw)) return true;
+  if (FUNC_SET[lg] && FUNC_SET[lg].has(k)) return true;
+  if (lg === 'ja' && /^[一二三四五六七八九十百千万]+$/.test(raw)) return true;
+  if (c.kenal && isKenal(lang, raw)) return true;
+  if (c.saved && c.saved.has(k)) return true;
+  if (c.b && isNama(c.b, raw)) return true;
+  return false;
+}
+/* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
+const countedVocab = (langs, since = 0, book = null) => { const seen = new Set(); return (db.vocab || []).filter(v => { if (!v || !v.w || v.noTr || !String(v.t || '').trim() || isKataSampah(v.lang, v.w)) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; })
+  .filter(v => (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book)); };
+/* SATU hitungan 'kata baru minggu ini' = kata tersimpan di tab Kata (bukan ketukan/lookup) */
+const kataBaruMinggu = (langs = null) => countedVocab(langs, Date.now() - 7 * 864e5 + 1).length;
+/* migrasi sekali jalan: buang entri kata lama yang sebenarnya partikel (tombstone supaya tak balik lewat sinkron) */
+try {
+  if (!localStorage.getItem('kepo.vocabPart1') && Array.isArray(db.vocab)) {
+    const gone = db.vocab.filter(v => v && v.w && isParticle(v.lang, v.w));
+    if (gone.length) { db.vocab = db.vocab.filter(v => !gone.includes(v)); gone.forEach(v => tombVocab(v.lang, v.w)); }
+    if (!gone.length || save()) localStorage.setItem('kepo.vocabPart1', '1');
+  }
+} catch (e) { }
+/* ---------- level HSK 1-3 (hsk.js): dimuat malas hanya untuk zh-CN; level dihitung saat tampil, tidak disimpan ---------- */
+let hskMap = null, hskP = null;
+function hskLoad() {
+  if (hskMap) return Promise.resolve(hskMap);
+  if (!hskP) hskP = loadScript('hsk.js').then(() => {
+    const m = new Map();
+    for (const lv of [1, 2, 3]) for (const w of String((window.HSK_DATA || {})[lv] || '').split(' ')) if (w && !m.has(w)) m.set(w, lv);
+    return (hskMap = m);
+  }).catch(() => { hskP = null; return null; });
+  return hskP;
+}
+/* level HSK (1-3) untuk kata utuh; 0 = tak ada di daftar / belum dimuat. Tidak menebak dari karakter tunggal. */
+function hskOf(w) { return hskMap && w ? hskMap.get(String(w).trim()) || 0 : 0; }
+let jaDict = null, jaP = null;
+function jaLoad() {
+  if (jaDict) return Promise.resolve(jaDict);
+  if (!jaP) jaP = fetch('kamus-ja.txt').then(r => r.ok ? r.text() : Promise.reject(new Error('kamus'))).then(t => {
+    const m = new Map();
+    for (const ln of t.split('\n')) {
+      if (!ln || ln[0] === '#') continue;
+      const p = ln.trim().split('|'); if (p.length < 4 || !p[0]) continue;
+      const e = { w: p[0], kana: p[1] || p[0], pos: p[2], tr: p.slice(3).join('|') };
+      if (!m.has(e.w)) m.set(e.w, e);
+      if (p[1] && !m.has(p[1])) m.set(p[1], e);
+    }
+    return (jaDict = m);
+  }).catch(() => { jaP = null; return null; });
+  return jaP;
+}
+const KANA_R = {}; (function () {
+  const rows = ['あ a い i う u え e お o', 'か ka き ki く ku け ke こ ko', 'さ sa し shi す su せ se そ so', 'た ta ち chi つ tsu て te と to', 'な na に ni ぬ nu ね ne の no', 'は ha ひ hi ふ fu へ he ほ ho', 'ま ma み mi む mu め me も mo', 'や ya ゆ yu よ yo', 'ら ra り ri る ru れ re ろ ro', 'わ wa を o ん n', 'が ga ぎ gi ぐ gu げ ge ご go', 'ざ za じ ji ず zu ぜ ze ぞ zo', 'だ da ぢ ji づ zu で de ど do', 'ば ba び bi ぶ bu べ be ぼ bo', 'ぱ pa ぴ pi ぷ pu ぺ pe ぽ po'];
+  for (const r of rows) { const a = r.split(' '); for (let i = 0; i < a.length; i += 2) KANA_R[a[i]] = a[i + 1]; }
+})();
+/* kana → romaji (Hepburn sederhana); null bila ada huruf non-kana (kanji) */
+function kanaRomaji(s) {
+  s = String(s || '').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  let o = '', dbl = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === 'っ') { dbl = true; continue; }
+    if (c === 'ー') { o += o.slice(-1); continue; }
+    let r = KANA_R[c]; if (!r) return null;
+    const n = s[i + 1];
+    if (n && 'ゃゅょ'.includes(n) && r.endsWith('i')) {
+      const y = { ゃ: 'a', ゅ: 'u', ょ: 'o' }[n];
+      r = /^(sh|ch|j)i$/.test(r) ? r.slice(0, -1) + y : r.slice(0, -1) + 'y' + y; i++;
+    }
+    if (dbl) { r = (r[0] === 'c' ? 't' : r[0]) + r; dbl = false; }
+    if (c === 'ん' && n && /[あいうえおやゆよ]/.test(n)) r = "n'";
+    o += r;
+  }
+  return o;
+}
+/* bentuk dasar: coba lepas akhiran konjugasi, cocokkan dengan jenis kata di kamus */
+const JA_ROWS = { う: ['わ', 'い', 'え', 'お', 'っ', 'っ'], く: ['か', 'き', 'け', 'こ', 'い', 'い'], ぐ: ['が', 'ぎ', 'げ', 'ご', 'い', 'い'], す: ['さ', 'し', 'せ', 'そ', 'し', 'し'], つ: ['た', 'ち', 'て', 'と', 'っ', 'っ'], ぬ: ['な', 'に', 'ね', 'の', 'ん', 'ん'], ぶ: ['ば', 'び', 'べ', 'ぼ', 'ん', 'ん'], む: ['ま', 'み', 'め', 'も', 'ん', 'ん'], る: ['ら', 'り', 'れ', 'ろ', 'っ', 'っ'] };
+const JA_A = ['ない', 'なかった', 'なくて', 'れる', 'せる', 'ず'], JA_I = ['ます', 'ました', 'ません', 'ませんでした', 'たい', 'たかった', 'ながら', 'に'], JA_ICH = ['ます', 'ました', 'ません', 'ませんでした', 'ない', 'なかった', 'なくて', 'た', 'て', 'たい', 'られる', 'させる', 'れば', 'よう', 'ず', 'ている', 'ていた'];
+function jaCands(w) {
+  const c = [];
+  const add = (stem, end, cls) => c.push([stem + end, cls]);
+  const L = w.length;
+  for (let i = 1; i <= Math.min(L, 8); i++) {
+    const stem = w.slice(0, L - i), suf = w.slice(L - i);
+    if (!stem) continue;
+    for (const s of JA_ICH) if (suf === s) add(stem, 'る', 'v1');
+    for (const [end, f] of Object.entries(JA_ROWS)) {
+      for (const s of JA_A) if (suf === f[0] + s) add(stem, end, 'v5');
+      for (const s of JA_I) if (suf === f[1] + s) add(stem, end, 'v5');
+      if (suf === f[2] + 'ば' || suf === f[2] + 'る') add(stem, end, 'v5');
+      if (suf === f[3] + 'う') add(stem, end, 'v5');
+      const ex = end === 'ぐ' ? ['いで', 'いだ'] : end === 'く' ? ['いて', 'いた'] : end === 'す' ? ['して', 'した'] : 'ぬぶむ'.includes(end) ? ['んで', 'んだ'] : ['って', 'った'];
+      for (const s of ex) for (const t of ['', 'いる', 'いた', 'います', 'いない']) if (suf === s + t) add(stem, end, 'v5');
+    }
+    if (suf === 'って' || suf === 'った') if (w === '行' + suf) add('行', 'く', 'v5');
+    for (const s of ['かった', 'くない', 'くなかった', 'くて', 'ければ', 'く']) if (suf === s) add(stem, 'い', 'adj');
+    for (const s of ['し', 'した', 'して', 'しない', 'します', 'しました', 'しません', 'しよう', 'すれば', 'している']) if (suf === s) { add(stem, 'する', 'vs'); }
+    for (const s of ['た', 'て', 'ない', 'ます', 'ました', 'ません', 'れば']) if (suf === s && /[来]$/.test(stem)) add(stem, 'る', 'vk');
+  }
+  if (/^(来|き|こ)(た|て|ない|ます|ました|ません)$/.test(w)) c.push([w[0] === '来' ? '来る' : w[0] === 'き' ? 'きる' : 'くる', 'vk']);
+  if (/^(し|さ)(た|て|ない|ます|ました|ません|よう)$/.test(w)) c.push(['する', 'vs']);
+  return c;
+}
+const JA_CLS = { v1: ['v1'], v5: ['v5'], adj: ['adj'], vs: ['vs'], vk: ['vk'] };
+function jaFind(m, w) {
+  w = String(w || '').trim();
+  if (!m || !w || /\s/.test(w) || w.length > 12) return null;
+  let e = m.get(w), base = '';
+  if (!e) {
+    for (const [b, cls] of jaCands(w)) { const x = m.get(b); if (x && x.pos === cls) { e = x; base = x.w; break; } }
+    if (!e) return null;
+  }
+  const rom = kanaRomaji(e.kana), kk = { は: 'wa', へ: 'e' }[e.kana];
+  const romaji = e.pos === 'prt' && kk ? kk : rom;
+  const kana = e.kana !== w ? e.kana : '';
+  const baca = [kana, romaji && romaji !== w ? romaji : ''].filter(Boolean).join(' · ');
+  return { e, base: base && base !== w ? base : '', baca };
+}
+const JA_POS = { v1: 'kata kerja', v5: 'kata kerja', vk: 'kata kerja', vs: 'kata kerja', adj: 'kata sifat', na: 'kata sifat', n: 'kata benda', pron: 'kata ganti', prt: 'partikel', adv: 'kata keterangan', conj: 'kata sambung', int: 'kata seru', num: 'bilangan', exp: 'ungkapan', aux: 'kata bantu' };
+async function jaLookup(q, sl) {
+  if (sl !== 'ja') return null;
+  try { return jaFind(await jaLoad(), q); } catch (e) { return null; }
+}
+async function translate(q, sl, tl, signal, fresh) {
+  pfPause();
+  const k = sl + '|' + tl + '|' + q;
+  const o = await jaLookup(q, sl);
+  const mix = v => { if (!o || !v) return v; const r = { ...v }; if (!r.baca && o.baca) r.baca = o.baca; if (!r.base && o.base) r.base = o.base; return r; };
+  /* arti kamus offline didahulukan (hanya bila 'Artiin ke' = Indonesia); selain itu cuma cara baca + bentuk dasar */
+  if (o && tl === 'id') {
+    const ts = o.e.tr.split(';').map(x => x.trim()).filter(Boolean);
+    const out = { text: ts.join('; '), baca: o.baca, dict: [{ pos: JA_POS[o.e.pos] || '', terms: ts.slice(1, 5) }], off: 1 };
+    if (o.base) out.base = o.base;
+    return out;
+  }
+  if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
+  { const a = !fresh && aoGet(sl, tl, q); if (a && a.text) return mix(a); } /* arti unduhan offline (#1367): tanpa jaringan */
+  const stale = trCache.get(k);
+  if (stale && stale.text && navigator.onLine === false) return mix(stale);
+  let out, fb = false;
+  try {
+    out = await gtxFetch(q, sl, tl, signal);
   } catch (e) {
     if (signal && signal.aborted) throw new Error('dibatalkan');
     try {
@@ -307,37 +975,73 @@ async function translate(q, sl, tl, signal) {
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
-      out = { text: t, dict: [], baca: '' };
-    } catch (e2) { if (stale && stale.text) return stale; throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
+      out = { text: t, dict: [], baca: '' }; fb = true;
+    } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
+  /* hasil cadangan (MyMemory) hanya untuk tampilan saat itu: tak disimpan, arti lama tak tertimpa */
+  if (fb) return mix(stale && stale.text ? stale : out);
   trCache.delete(k); trCache.set(k, out); trPersist();
-  return out;
+  return mix(out);
 }
 
 /* isi ulang arti kata tersimpan yang masih kosong; true bila ada yang terisi */
+/* kata tanpa arti (termasuk data lama tanpa tanda) dianggap nyusul */
+const needsArti = v => !!(v && v.w && !String(v.t || '').trim());
 let refilling = false;
 async function refillVocab() {
   if (refilling || navigator.onLine === false) return false;
   refilling = true; let n = 0;
   try {
-    for (const v of db.vocab.filter(x => x.noTr).slice(0, 20)) {
-      try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; n++; } catch (e) { break; }
-    }
+    const todo = db.vocab.filter(needsArti).slice(0, 8);
+    let i = 0, stop = false;
+    /* maks 2 permintaan bersamaan + jeda kecil; gagal = berhenti (tanpa loop), dicoba lagi lain waktu */
+    const worker = async () => {
+      while (!stop && i < todo.length) {
+        const v = todo[i++];
+        try { const r = await translate(v.w, v.lang, db.my); v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; delete v.nyusul; n++; } catch (err) { stop = true; break; }
+        await new Promise(res => setTimeout(res, 250));
+      }
+    };
+    await Promise.all([worker(), worker()]);
     if (n) save();
   } finally { refilling = false; }
   return n > 0;
 }
 
 /* ---------- suara: baca (TTS) & dengar (rekognisi) ---------- */
-function speak(text, lang, rate = 0.9) {
-  if (!('speechSynthesis' in window)) return toast('Perangkat tidak mendukung suara');
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = LANGS[lang][1]; u.rate = rate;
+const langInfo = lang => LANGS[lang] || [String(lang || 'en'), String(lang || 'en')];
+function findVoice(lang) {
   const vs = speechSynthesis.getVoices(), pick = db.voices && db.voices[lang];
-  const v = (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(LANGS[lang][1].toLowerCase().slice(0, 2)));
-  if (v) u.voice = v;
-  speechSynthesis.speak(u);
+  return (pick && vs.find(v => v.voiceURI === pick)) || vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langInfo(lang)[1].toLowerCase().slice(0, 2))) || null;
+}
+/* Daftar suara bisa kosong saat pertama dimuat: tunggu voiceschanged maks ±1 detik. */
+function voiceFor(lang) {
+  const v = findVoice(lang);
+  if (v || speechSynthesis.getVoices().length) return Promise.resolve(v);
+  return new Promise(res => {
+    let done = false;
+    const fin = () => { if (done) return; done = true; clearTimeout(t); try { speechSynthesis.removeEventListener('voiceschanged', fin); } catch (e) { } res(findVoice(lang)); };
+    const t = setTimeout(fin, 1000);
+    try { speechSynthesis.addEventListener('voiceschanged', fin); } catch (e) { }
+  });
+}
+let speakTok = 0;
+const ttsRate = r => db.ttsRate === 'slow' ? Math.max(0.4, r * 0.75) : r;
+function stopSpeak() { speakTok++; try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) { } }
+/* h = { end, fail } opsional: end saat selesai diucapkan, fail bila suara tak tersedia/error */
+function speak(text, lang, rate = 0.9, h) {
+  rate = ttsRate(rate);
+  if (!('speechSynthesis' in window)) { if (h && h.fail) h.fail(); return toast('Perangkat tidak mendukung suara'); }
+  speechSynthesis.cancel();
+  const my = ++speakTok;
+  voiceFor(lang).then(v => {
+    if (my !== speakTok) return;
+    if (!v) { if (h && h.fail) h.fail(); return toast(`HP ini belum punya suara ${(langInfo(lang)[0].split(' ')[0])}. Pasang di Pengaturan HP > Aksesibilitas > Suara.`, 6000); }
+    const u = new SpeechSynthesisUtterance(text); u.lang = langInfo(lang)[1]; u.rate = rate; u.voice = v;
+    if (h) { u.onend = () => { if (my === speakTok && h.end) h.end(); }; u.onerror = () => { if (my === speakTok && h.fail) h.fail(); }; }
+    speechSynthesis.speak(u);
+  });
 }
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recog = null;
@@ -346,7 +1050,7 @@ function listen(lang, { onInterim, single } = {}) {
   if (!SR) return Promise.reject(new Error('nosupport'));
   return new Promise((res, rej) => {
     const r = new SR(); recog = r;
-    r.lang = LANGS[lang][1]; r.interimResults = true; r.maxAlternatives = 5; r.continuous = !single;
+    r.lang = langInfo(lang)[1]; r.interimResults = true; r.maxAlternatives = 5; r.continuous = !single;
     let finals = [], interim = '', err = null, idle;
     const bump = () => { clearTimeout(idle); idle = setTimeout(() => { try { r.stop(); } catch (e) { } }, single ? 2500 : 3000); };
     const hard = setTimeout(() => { try { r.stop(); } catch (e) { } }, single ? 8000 : 40000);
@@ -461,8 +1165,17 @@ const SAMPLE_JA = `雨の日の小さな本屋
 
 ミナは棚の前で、青い表紙の本を見つけました。それは子どものころに大好きだった絵本でした。彼女はとてもうれしくなって、その本を買いました。雨がやんだとき、ミナは「また来ます」と言って、元気に帰っていきました。`;
 
+const SAMPLE_ZH = `雨天的小书店
+
+车站附近有一家小书店。老板姓王，每天早上七点开门，一本一本地把书擦干净。
+
+有一天下雨了，一个叫小美的女孩走进书店。她的伞上还在滴水。她问：“我可以在这里休息一下吗？”王老板笑着说：“当然可以，请坐。”然后他给她倒了一杯热茶。
+
+小美在书架前看到一本蓝色的书。那是她小时候最喜欢的故事书。她非常高兴，马上买了那本书。雨停了以后，小美对老板说：“我明天还会再来。”然后她开心地回家了。`;
+
 const SAMPLES = {
   en: { title: 'The Lighthouse Keeper (contoh)', text: SAMPLE_EN },
   ko: { title: '우산을 두고 온 날 (contoh)', text: SAMPLE_KO },
   ja: { title: '雨の日の小さな本屋 (contoh)', text: SAMPLE_JA },
+  'zh-CN': { title: '雨天的小书店 (contoh)', text: SAMPLE_ZH },
 };

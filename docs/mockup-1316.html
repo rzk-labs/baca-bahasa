@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1316: angka yang cocok</title>
+<style>
+body{margin:0;background:#e9e6ea;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+h1{font:700 16px/1.3 "Bricolage Grotesque",Inter,sans-serif;margin:0 0 4px}
+.note{max-width:390px;margin:0 auto 14px;font-size:12px;background:#E9F056;padding:8px 10px;border-radius:8px}
+.lbl{max-width:390px;margin:18px auto 6px;font:700 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.ph{width:390px;margin:0 auto;background:#D7EFFF;border-radius:22px;padding:16px;box-sizing:border-box}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px}
+.card h2{font:700 15px "Bricolage Grotesque",Inter,sans-serif;margin:0 0 8px}
+.g{display:flex;gap:10px}.g div{flex:1;background:#f6f3f5;border-radius:12px;padding:10px;text-align:center}
+.g b{display:block;font:800 24px "Bricolage Grotesque",Inter,sans-serif}.g span{font-size:11px;color:#6b5560}
+.bad b{color:#b3261e}.dots{display:flex;gap:6px;margin-top:10px}.dots i{width:18px;height:18px;border-radius:50%;background:#351E28}.dots i.o{background:#e3dde0}
+.pill{display:inline-block;background:#351E28;color:#fff;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700}
+.hl{background:#E9F056;padding:0 4px;border-radius:4px}
+.bar{height:8px;background:#e3dde0;border-radius:99px;overflow:hidden;margin:8px 0 4px}.bar u{display:block;height:100%;background:#351E28}
+small{color:#6b5560;font-size:11px}
+</style></head><body>
+<div class="note"><b>Gambaran rencana, belum dibangun.</b> Contoh: buku 5 halaman, dibaca ulang 3 kali.</div>
+
+<div class="lbl">Sebelum (angka tak cocok)</div>
+<div class="ph">
+<div class="card bad"><h2>Minggu ini</h2><div class="g"><div><b>256</b><span>halaman dibaca</span></div><div><b>0</b><span>kata disimpan</span></div></div></div>
+<div class="card"><h2>Streak <span class="pill">2 hari</span></h2><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small>Rekor barumu!</small></div>
+<div class="card"><h2>Tamat! Keren banget</h2><small>+20 XP hari ini · 11 bagian · Tidak ada kata baru</small><br><small>Home: 10 XP · 1 kata disimpan</small></div>
+</div>
+
+<div class="lbl">Sesudah (satu sumber, satu satuan)</div>
+<div class="ph">
+<div class="card"><h2>Minggu ini</h2><div class="g"><div><b>5</b><span>halaman dibaca</span></div><div><b>1</b><span>kata disimpan</span></div></div><small>Baca ulang tak menambah halaman.</small></div>
+<div class="card"><h2>Streak</h2><div style="font:800 28px 'Bricolage Grotesque',Inter,sans-serif">2 hari</div><div class="dots"><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i></div><small>Rekor: 4 hari · titik = hari yang sama</small></div>
+<div class="card"><h2>Tamat! Keren banget</h2><small><span class="hl">+10 XP</span> hari ini · 5 halaman · 1 kata disimpan</small><div class="bar"><u style="width:100%"></u></div><small>Home juga: 10 XP.</small></div>
+</div>
+
+<div class="lbl">Bila data belum yakin (mis. belum sinkron)</div>
+<div class="ph">
+<div class="card"><h2>Minggu ini</h2><div class="g"><div><b>–</b><span>halaman dibaca</span></div><div><b>–</b><span>kata disimpan</span></div></div><small>Angka muncul setelah data sinkron.</small></div>
+</div>
+</body></html>

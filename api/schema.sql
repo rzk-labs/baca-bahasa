@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   week TEXT,                 -- minggu ISO, mis. 2026-W46
   week_xp INTEGER NOT NULL DEFAULT 0,
   hidden INTEGER NOT NULL DEFAULT 0,
+  premium INTEGER NOT NULL DEFAULT 0, -- akun premium (peta 112)
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
@@ -31,3 +32,20 @@ CREATE TABLE IF NOT EXISTS shares (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_shares_user ON shares(user_id);
+-- Buku di akun (teks gzip+base64, dipotong per baris)
+CREATE TABLE IF NOT EXISTS book_meta (
+  user_id INTEGER NOT NULL,
+  bkey TEXT NOT NULL,
+  meta TEXT NOT NULL,        -- JSON {title, lang, added}
+  n INTEGER NOT NULL,        -- jumlah potongan
+  size INTEGER NOT NULL,     -- ukuran terkompresi
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, bkey)
+);
+CREATE TABLE IF NOT EXISTS book_chunk (
+  user_id INTEGER NOT NULL,
+  bkey TEXT NOT NULL,
+  idx INTEGER NOT NULL,
+  data TEXT NOT NULL,
+  PRIMARY KEY (user_id, bkey, idx)
+);

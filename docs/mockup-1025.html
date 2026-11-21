@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1025 — Pinyin untuk buku Mandarin</title>
+<style>
+body{margin:0;background:#EDE8E0;font:14px/1.4 Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px}
+.note{width:390px;max-width:100%;box-sizing:border-box;background:#E9F056;color:#351E28;border-radius:12px;padding:8px 12px;font:700 12px Inter,sans-serif}
+.lbl{font:700 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#66584A;margin:0 0 6px}
+.phone{position:relative;width:390px;max-width:100%;box-sizing:border-box;background:#FAF7F0;border-radius:20px;padding:18px 16px;min-height:360px;overflow:hidden}
+h2{font:800 18px/24px "Bricolage Grotesque",Inter,sans-serif;margin:0 0 4px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#66584A;margin-bottom:14px}
+.chi{display:inline-flex;gap:6px;align-items:center;border:1px solid #DDD6C8;border-radius:9999px;padding:6px 12px;font-weight:600;font-size:13px;background:#fff;color:#351E28}
+.chi b{font-weight:700;color:#351E28;background:#D7EFFF;border-radius:9999px;padding:1px 8px;font-size:12px}
+.chi b.off{background:#E4DDD0;color:#66584A}
+.txt{font:400 22px/3 "Noto Serif SC",serif;margin-top:10px}
+ruby rt{font:500 11px Inter,sans-serif;color:#66584A}
+mark{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
+.shade{position:absolute;inset:0;background:rgba(53,30,40,.45)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#FAF7F0;border-radius:20px 20px 0 0;padding:18px 16px 20px;box-shadow:0 -6px 24px rgba(53,30,40,.2)}
+.sheet p{margin:4px 0 12px;color:#66584A}
+.opt{display:block;width:100%;box-sizing:border-box;text-align:left;border:1px solid #DDD6C8;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;font:600 15px Inter,sans-serif;color:#351E28}
+.opt small{display:block;font-weight:400;font-size:12px;color:#66584A;margin-top:2px}
+.opt.pri{background:#351E28;color:#FAF7F0;border-color:#351E28}
+.opt.pri small{color:#D7EFFF}
+.toast{position:absolute;left:16px;right:16px;bottom:16px;background:#351E28;color:#FAF7F0;border-radius:12px;padding:10px 14px;font-size:13px}
+.seg{display:flex;gap:6px;margin-top:6px}
+.seg span{flex:1;text-align:center;border:1px solid #DDD6C8;border-radius:9999px;padding:8px 4px;font-weight:600;font-size:13px;background:#fff}
+.seg span.on{background:#351E28;color:#FAF7F0;border-color:#351E28}
+.eyebrow{font:700 12px Inter,sans-serif;color:#66584A;margin:16px 0 4px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Buku Mandarin: tanya pinyin sekali.</div>
+
+<div><p class="lbl">Sebelum — pinyin Mati, kata kosong</p>
+<div class="phone"><div class="top"><span>‹ Beranda</span><span class="chi">Cara baca <b class="off">Mati</b></span></div>
+<h2>我的朋友</h2>
+<div class="txt">我有一个<mark>朋友</mark>，他喜欢<br>读书。</div>
+</div></div>
+
+<div><p class="lbl">Sesudah 1 — pertama kali buka buku Mandarin</p>
+<div class="phone"><div class="top"><span>‹ Beranda</span><span class="chi">Pinyin <b>…</b></span></div>
+<h2>我的朋友</h2>
+<div class="txt">我有一个朋友，他喜欢<br>读书。</div>
+<div class="shade"></div>
+<div class="sheet"><h2>Mau pinyin di atas kata?</h2><p>Bisa diubah kapan saja di menu Pinyin.</p>
+<span class="opt pri">Nyala<small>Cocok untuk pemula. Semua kata dapat pinyin.</small></span>
+<span class="opt">Hanya kata baru<small>Kata yang belum kamu ketuk atau simpan.</small></span>
+<span class="opt">Mati<small>Hanya hanzi.</small></span></div>
+</div></div>
+
+<div><p class="lbl">Sesudah 2 — pilih "Nyala"</p>
+<div class="phone"><div class="top"><span>‹ Beranda</span><span class="chi">Pinyin <b>Nyala</b></span></div>
+<h2>我的朋友</h2>
+<div class="txt"><ruby>我<rt>wǒ</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>一个<rt>yí gè</rt></ruby><ruby>朋友<rt>péng you</rt></ruby>，<ruby>他<rt>tā</rt></ruby><ruby>喜欢<rt>xǐ huan</rt></ruby><br><ruby>读书<rt>dú shū</rt></ruby>。</div>
+</div></div>
+
+<div><p class="lbl">Sesudah 3 — ketuk chip untuk ganti, ketuk lagi untuk matikan</p>
+<div class="phone"><div class="top"><span>‹ Beranda</span><span class="chi">Pinyin <b class="off">Mati</b></span></div>
+<h2>我的朋友</h2>
+<div class="txt">我有一个朋友，他喜欢<br>读书。</div>
+<div class="toast">Pinyin mati. Nyalakan lagi di menu Pinyin.</div>
+</div></div>
+
+<div><p class="lbl">Sesudah 4 — Pengaturan baca (zh-CN)</p>
+<div class="phone"><h2>Pengaturan baca</h2>
+<div class="eyebrow">Pinyin di atas kata</div>
+<div class="seg"><span class="on">Nyala</span><span>Kata baru</span><span>Mati</span></div>
+</div></div>
+</body></html>

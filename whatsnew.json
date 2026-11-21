@@ -1,182 +1,182 @@
 [
   {
-    "n": 391,
-    "judul": "Ketuk beruntun ‹ + di sheet kata: tunggu sebentar, batalkan permintaan lama",
-    "poin": "Ketuk ‹ atau + beruntun sekarang cuma minta arti frasa terakhir.",
-    "tgl": "2026-11-12"
+    "n": 1501,
+    "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
+    "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 387,
-    "judul": "Pesan gagal yang ramah: impor buku, sinyal lemah & error tak terduga",
-    "poin": "Kalau simpan buku gagal, muncul pesan ramah dan tombol aktif lagi.",
-    "tgl": "2026-11-12"
+    "n": 1499,
+    "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
+    "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 381,
-    "judul": "Catat ketukan kata vs arti kalimat per buku (statistik lokal)",
-    "poin": "Kepo sekarang mencatat berapa kata dan kalimat yang kamu cek di tiap buku.",
-    "tgl": "2026-11-12"
+    "n": 1495,
+    "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
+    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 376,
-    "judul": "Pengaturan baca: bagi jadi grup & pratinjau teks hidup di sheet",
-    "poin": "Pengaturan baca sekarang dibagi 3 grup: Tampilan baca, Bantuan kata, Lainnya.",
-    "tgl": "2026-11-12"
+    "n": 1489,
+    "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
+    "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 369,
-    "judul": "E-reader: ketuk 2 sisi layar balik halaman & tombol panah keyboard",
-    "poin": "Balik halaman lewat ketuk tepi dan panah keyboard ternyata sudah ada.",
-    "tgl": "2026-11-12"
+    "n": 1482,
+    "judul": "Popup 'Level N!' jadi banner ringan, tak menutupi tab & layar lain",
+    "poin": "Popup \"Level N!\" kini jadi banner kecil di atas, tidak menutupi tab lain.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 364,
-    "judul": "E-reader: sorotan kata & seleksi jelas di mode terang, sepia, gelap",
-    "poin": "Kata tersimpan sekarang digaris bawah tegas, jadi beda dari kata yang sering diketuk.",
-    "tgl": "2026-11-12"
+    "n": 1477,
+    "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
+    "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 359,
-    "judul": "Sheet kalimat: tombol ‹ › pindah kalimat tanpa tutup sheet",
-    "poin": "Di jendela arti kalimat ada tombol panah kiri dan kanan.",
-    "tgl": "2026-11-12"
+    "n": 1471,
+    "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
+    "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 352,
-    "judul": "Tombol kecil di HP: pil, chip, avatar & tips jadi 44px ramah jempol",
-    "poin": "Semua tombol di HP kini minimal 44px, jadi gampang diketuk jempol.",
-    "tgl": "2026-11-12"
+    "n": 1469,
+    "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
+    "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 350,
-    "judul": "Tab bawah HP: label 13px & area ketuk 48px, tak mepet",
-    "poin": "Tab bawah di HP sekarang lebih besar dan lega, mudah diketuk jempol.",
-    "tgl": "2026-11-12"
+    "n": 1467,
+    "judul": "Home: kartu 'Minggu ini' ringkas satu baris, angka punya satuan",
+    "poin": "Kartu \"Minggu ini\" di Home sekarang pendek, satu baris.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 344,
-    "judul": "Sheet kata/kalimat: spinner lama jadi pesan 'sinyal lemah' + Coba lagi",
-    "poin": "Arti kata/kalimat kini bilang \"Sinyalnya lemah nih…\" setelah 8 detik menunggu.",
-    "tgl": "2026-11-12"
+    "n": 1465,
+    "judul": "[peta 157] Data HSK 1-3 + chip 'HSK n' di sheet kata & kartu Kata",
+    "poin": "Kata Mandarin kini punya label level HSK 1–3 di arti kata dan tab Kata.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 341,
-    "judul": "Sheet kalimat: tombol balik pulihkan frasa pilihan, bukan 1 kata",
-    "poin": "Tombol balik dari arti kalimat sekarang mengembalikan frasa pilihanmu, bukan 1 kata.",
-    "tgl": "2026-11-12"
+    "n": 1463,
+    "judul": "Sheet Tamat: ringkas jadi 2 pilihan + 'Besok' target lencana",
+    "poin": "Layar Tamat sekarang cuma 2 tombol, sisanya tautan kecil.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 333,
-    "judul": "HP kecil: streak tetap terlihat & rata teks ikut saat HP diputar",
-    "poin": "Streak api 🔥 sekarang tetap kelihatan di HP kecil, dalam bentuk ringkas.",
-    "tgl": "2026-11-12"
+    "n": 1461,
+    "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
+    "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 329,
-    "judul": "Beranda: tombol 'Kata lain' & kartu ajakan saat belum ada kata",
-    "poin": "Kartu kata hari ini di Beranda sekarang punya tombol 'Kata lain'.",
-    "tgl": "2026-11-12"
+    "n": 1459,
+    "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
+    "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 323,
-    "judul": "Keepo HQ: daftar dokumen rapi (Baru di atas, ringkasan, tabel)",
-    "poin": "Daftar dokumen di Keepo HQ kini urut terbaru, dengan lencana Baru dan ringkasan.",
-    "tgl": "2026-11-11"
+    "n": 1455,
+    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
+    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 317,
-    "judul": "Sheet kata: tombol '+' bisa perluas ke kiri & ketuk beruntun tak antre",
-    "poin": "Sheet arti kata kini punya tombol ‹ untuk menambah kata sebelumnya.",
-    "tgl": "2026-11-11"
+    "n": 1453,
+    "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
+    "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 315,
-    "judul": "Sheet arti kalimat: tombol 'Coba lagi' & offline jelas saat gagal",
-    "poin": "Arti kalimat kini punya tombol \"Coba lagi\" saat sinyal putus.",
-    "tgl": "2026-11-11"
+    "n": 1451,
+    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
+    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 308,
-    "judul": "E-reader: pintasan 'Cara baca' di bar baca untuk JP/KR/ZH (kecil)",
-    "poin": "Buku Jepang/Korea/Mandarin kini punya tombol kecil \"Cara baca\" di bar atas.",
-    "tgl": "2026-11-11"
+    "n": 1449,
+    "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
+    "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 306,
-    "judul": "HP sempit (320px): header tak sesak & tab bawah lega",
-    "poin": "Bagian atas dan menu bawah di HP kecil kini lebih lega.",
-    "tgl": "2026-11-11"
+    "n": 1446,
+    "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
+    "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 297,
-    "judul": "E-reader: pilihan rata teks (Rata kiri/Rata penuh) di Pengaturan",
-    "poin": "Di Pengaturan ada pilihan baru \"Rata teks\": rata kiri atau rata penuh.",
-    "tgl": "2026-11-11"
+    "n": 1444,
+    "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
+    "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 286,
-    "judul": "Ramah jempol: target ketuk min 44px & kontras teks kecil (HP)",
-    "poin": "Tombol di HP kini lebih lega: area ketuk minimal 44px, jarak antar tombol 8px.",
-    "tgl": "2026-11-11"
+    "n": 1442,
+    "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
+    "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 285,
-    "judul": "Beranda: kartu 'Kata hari ini' dari kata yang pernah kamu ketuk",
-    "poin": "Beranda sekarang punya kartu \"Kata hari ini\" dari kata yang pernah kamu ketuk.",
-    "tgl": "2026-11-11"
+    "n": 1440,
+    "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
+    "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 282,
-    "judul": "E-reader: kata sering diketuk diberi tanda halus di teks",
-    "poin": "Di e-reader, kata yang sering kamu ketuk sekarang diberi warna tipis di teks.",
-    "tgl": "2026-11-11"
+    "n": 1437,
+    "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
+    "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 274,
-    "judul": "Impor buku: tebak bahasa cerita otomatis, pemula tak perlu pilih",
-    "poin": "Sekarang bahasa cerita ditebak otomatis saat upload file atau tempel teks.",
-    "tgl": "2026-11-11"
+    "n": 1435,
+    "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
+    "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 272,
-    "judul": "E-reader: tawarkan tema gelap/Ikut HP saat baca malam, 1 ketukan",
-    "poin": "Saat baca malam, muncul saran halus: pakai tema gelap atau ikut HP.",
-    "tgl": "2026-11-11"
+    "n": 1433,
+    "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
+    "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 266,
-    "judul": "Sheet arti kalimat: tampilkan cara baca seluruh kalimat (JP/KR/ZH)",
-    "poin": "Arti kalimat sekarang menampilkan cara baca seluruh kalimat Jepang/Korea/China.",
-    "tgl": "2026-11-11"
+    "n": 1430,
+    "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
+    "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 264,
-    "judul": "E-reader: tanda 'Offline' halus + sheet arti jelas saat sinyal putus",
-    "poin": "Reader sekarang kasih tanda 'Offline' kecil saat sinyal putus.",
-    "tgl": "2026-11-11"
+    "n": 1427,
+    "judul": "[peta 146] Pengaturan baca: mode 'Baca polos' tanpa garis bawah",
+    "poin": "Pengaturan baca punya saklar \"Baca polos\": halaman bersih tanpa garis bawah.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 257,
-    "judul": "Pengaturan: pilihan suara tak hilang diam-diam + arti offline",
-    "poin": "Pilihan suara baca tak hilang lagi; muncul pesan saat suara belum siap.",
-    "tgl": "2026-11-11"
+    "n": 1425,
+    "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
+    "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 255,
-    "judul": "E-reader: cara baca kecil di atas kata yang pernah diketuk (opsional)",
-    "poin": "Baca Jepang/Korea/Mandarin kini bisa tampil cara baca kecil di atas kata.",
-    "tgl": "2026-11-11"
+    "n": 1407,
+    "judul": "Ulang 3 kata: satu tombol di Home, tahan sesi, hadiah & 'Ulang 3 lagi'",
+    "poin": "Home sekarang punya satu tombol \"Ulang 3 kata\", tidak ada kartu kembar lagi.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 248,
-    "judul": "Impor .txt: deteksi Shift-JIS/GBK/Big5 + pesan error file jelas",
-    "poin": "File .txt Jepang, Mandarin, dan Korea sekarang tampil benar, nggak rusak lagi.",
-    "tgl": "2026-11-11"
+    "n": 1415,
+    "judul": "Halaman terakhir: kartu 'Baca ulang / Buku baru' tak menutup teks",
+    "poin": "Kartu \"Baca ulang / Buku baru\" di halaman terakhir tak lagi menutupi cerita.",
+    "tgl": "2026-11-21"
   },
   {
-    "n": 246,
-    "judul": "HP kecil: header tak sesak, tab bawah lega, sheet arti tanpa '1/2'",
-    "poin": "Header di HP kecil lebih rapi: tombol dikecilkan, logo tidak terpotong.",
-    "tgl": "2026-11-11"
+    "n": 1411,
+    "judul": "Sampul tanpa gambar: huruf awal + judul pendek, buku mudah dikenali",
+    "poin": "Sampul buku tanpa gambar kini menampilkan huruf awal dan judul pendek.",
+    "tgl": "2026-11-21"
   }
 ]
