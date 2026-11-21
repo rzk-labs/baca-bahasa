@@ -511,11 +511,31 @@ let LASTH=null;
 const SUMBER={langsung:'Langsung',direct:'Langsung',ios:'iOS (TestFlight)',testflight:'iOS (TestFlight)',threads:'Threads'};
 const namaSumber=s=>{const k=String(s||'').trim().toLowerCase();return SUMBER[k]||(k?k.replace(/[^a-z0-9 _.-]/g,'').slice(0,24)||'Lainnya':'Langsung')};
 const pctB=(a,b)=>b>0?Math.round(a/b*100)+'%':'–';
+// Kartu Aktivasi (#1440): 3 langkah hari pertama, detik ke ketuk kata pertama, per jalur. Kosong = '–', tanpa angka palsu.
+function aktivasiKartu(baru,baca,kata,akt,J,T){
+  const tot=T.reduce((a,x)=>a+x,0),med=(()=>{if(!tot)return null;let c=0;for(let i=1;i<=5;i++){c+=T[i];if(c>=tot/2)return i}})();
+  const NM=['','kurang dari 30 dtk','30-60 dtk','1-2 menit','2-5 menit','lebih dari 5 menit'],cepat=T[1]+T[2]+T[3];
+  const baris=(l,x)=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-top:1px solid rgba(128,128,128,.25)"><span>${l}</span><b>${x}</b></div>`;
+  const p=akt>0||baca+kata>0;
+  return `<div class="sec"><h2>Aktivasi hari pertama</h2></div><div class="tile"><div class="eyebrow">Baca + ketuk kata</div><div class="big" style="font-size:36px">${p?pctB(akt,baru):'–'}</div>`
+   +`<div class="sm">${p?'Sekarang ≥25% · setelah perbaikan ≥40% · cita-cita 60%':'Belum diukur. Muncul setelah pengguna baru membuka versi terbaru.'}</div>`
+   +baris('1. Buka app (pengguna baru)',baru||'–')+baris('2. Baca 1 halaman',p?pctB(baca,baru):'–')+baris('3. Ketuk 1 kata',p?pctB(kata,baru):'–')+`</div>`
+   +`<div class="tile" style="margin-top:12px"><div class="eyebrow">Detik ke ketuk kata pertama</div><div class="big" style="font-size:28px">${med?'± '+NM[med]:'–'}</div>`
+   +`<div class="sm">${tot?'Target median &lt;120 dtk · '+pctB(cepat,tot)+' ketuk dalam 2 menit (dari '+tot+' pengguna)':'Belum ada data detik.'}</div></div>`
+   +`<div class="tile" style="margin-top:12px"><div class="eyebrow">Per jalur</div>`+['c','i','x'].map(k=>baris(J[k].n,J[k].k+J[k].b>0?'baca '+J[k].b+' · ketuk '+J[k].k+' · aktif '+J[k].a:'–')).join('')
+   +`<div class="sm" style="margin-top:6px">Jumlah orang, bukan persen. Sampel kecil, baca tren.</div></div>`;
+}
 async function betaNyata(){
   const v=VIEW;skel();let D;
   try{D=await call('/beta')}catch(e){if(v===VIEW&&cur==='beta')gagal(e.message,()=>go('beta'));return}
   if(v!==VIEW||cur!=='beta')return;
-  const rows=D.data?D.data.per_sumber.filter(r=>+r.baru>0):[];
+  /* #1440: baris penanda punya sumber 'basis-c|i|x[-t1..t5]' (baru=0). Digabung ke sumber dasarnya (10 huruf pertama). */
+  const semua=D.data?D.data.per_sumber:[],G={},J={c:{n:'Cerita contoh',b:0,k:0,a:0},i:{n:'Impor sendiri',b:0,k:0,a:0},x:{n:'Belum jelas',b:0,k:0,a:0}},T=[0,0,0,0,0,0];
+  semua.forEach(r=>{const src=String(r.src||''),m=+r.baru>0?null:src.match(/^(.+)-([cix])(?:-t([1-5]))?$/),k=(m?m[1]:src).slice(0,10);
+   const g=G[k]||(G[k]={src:m?m[1]:src,baru:0,aktivasi:0,baca:0,kata:0,h2:0,h7:0});
+   ['baru','aktivasi','baca','kata','h2','h7'].forEach(f=>g[f]+=(+r[f]||0));
+   if(m){const j=J[m[2]];j.b+=+r.baca||0;j.k+=+r.kata||0;j.a+=+r.aktivasi||0;if(m[3])T[+m[3]]+=+r.kata||0}});
+  const rows=Object.values(G).filter(r=>r.baru>0).sort((x,y)=>y.baru-x.baru);
   const tgl=new Date(D.diambil).toLocaleString('id-ID',{timeZone:'Asia/Jakarta',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   const cap=`<div class="mut sm" style="margin-top:12px">Diambil ${esc(tgl)} WIB · sumber: hitungan anonim app (30 hari terakhir), tanpa ID atau data pribadi.</div>`;
   const head=`<div class="sec"><h1>Beta Nyata</h1><span class="mut sm">Fase 2 · tahap 21 · 30 hari terakhir</span></div>`;
@@ -526,12 +546,12 @@ async function betaNyata(){
   V.innerHTML=head+`<div class="bento">`
    +kartu('Pengguna baru',baru,'30 hari terakhir')
    +kartu('Baru aktif',ukurAkt?aktif+' <span style="font-size:16px;font-weight:600">('+pctB(aktif,baru)+')</span>':'–',ukurAkt?'baca ≥1 halaman, dari '+baru+' baru':'belum diukur')
-   +kartu('Aktivasi',ukurAkt?pctB(akt,baru):'–',ukurAkt?'target ≥60%':'belum diukur')
+   +kartu('Aktivasi',ukurAkt?pctB(akt,baru):'–',ukurAkt?'target ≥25% (usul)':'belum diukur')
    +kartu('Kembali hari ke-2',pctB(h2,baru),'target ≥25%')
    +kartu('Kembali hari ke-7',ukurH7?pctB(h7,baru):'–',ukurH7?'target ≥10%':'belum ada yang genap 7 hari')
    +`</div><div class="sec"><h2>Per sumber</h2></div><div class="tile" style="padding:0;overflow-x:auto"><table class="bn"><tr><th>Sumber</th><th>Baru</th><th>Baru aktif</th><th>Aktivasi</th><th>H2</th><th>H7</th></tr>`
    +rows.map(r=>{const b=+r.baru;return `<tr><td>${esc(namaSumber(r.src))}</td><td>${b}</td><td>${ukurAkt?(+r.baca||0)+' ('+pctB(+r.baca||0,b)+')':'–'}</td><td>${ukurAkt?pctB(+r.aktivasi||0,b):'–'}</td><td>${pctB(+r.h2||0,b)}</td><td>${+r.h7>0?pctB(+r.h7,b):'–'}</td></tr>`}).join('')
-   +`</table></div><div class="tile" style="margin-top:12px"><span class="chip o">Catatan</span> <mark>Baru aktif</mark> = pengguna baru yang baca ≥1 halaman. <mark>Aktivasi</mark> = baca ≥1 halaman dan ketuk ≥1 kata di hari pertama. H2 / H7 = kembali di hari ke-2 / ke-7.</div>`+cap;
+   +`</table></div>`+aktivasiKartu(baru,sum('baca'),sum('kata'),akt,J,T)+`<div class="tile" style="margin-top:12px"><span class="chip o">Catatan</span> <mark>Baru aktif</mark> = pengguna baru yang baca ≥1 halaman. <mark>Aktivasi</mark> = baca ≥1 halaman dan ketuk ≥1 kata di hari pertama. H2 / H7 = kembali di hari ke-2 / ke-7.</div>`+cap;
 }
 async function hasilKerja(again){
   if(again===true&&LASTH)return tampilHasil(LASTH);

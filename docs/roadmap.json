@@ -242,12 +242,21 @@
   ],
   "backlog": [
     {
+      "no": 159,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Arti lain selalu tampil, tak hilang-muncul (#1429)",
+      "dokumen": "docs/spesifikasi-arti-lain-tetap-1429.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1429.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. 4 kondisi: ada, memuat, gagal, kosong. Uji 320px & 390px."
+    },
+    {
       "no": 154,
       "peran": "developer",
       "prioritas": "P0",
       "nama": "Logika ketuk vs hafal: kata tak diketuk = paham & disimpan, diketuk = masuk Kata, garis hilang bila paham (#1423)",
       "dokumen": "docs/pm-logika-ketuk-hafal-1423.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1435)",
       "catatan": "Revisi founder. Mockup: docs/mockup-1423.html. Hitung & simpan kata tak diketuk (paham) dan kata diketuk (tambah vocab); kata pernah diketuk/disimpan lalu paham: garis stabilo dihapus. Pengaman & Urungkan. Asumsi di dokumen bagian 5. Naikkan C di sw.js."
     },
     {
@@ -256,7 +265,7 @@
       "prioritas": "P0",
       "nama": "Rapikan UI: bar reader Tamat, kartu Tamat, kartu Home, sampul koleksi (#1421)",
       "dokumen": "docs/spesifikasi-rapikan-ui-1421.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1437)",
       "catatan": "Mockup: docs/mockup-1421.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/ atau cara hitung angka. Uji 320px & 390px, tema Kertas & Malam."
     },
     {
@@ -265,7 +274,7 @@
       "prioritas": "P0",
       "nama": "XP hari ini: sheet Tamat & Target Home selalu sama angkanya (#1414)",
       "dokumen": "docs/spesifikasi-xp-tamat-home-1414.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1433)",
       "catatan": "Mockup: docs/mockup-1414.html. Satu fungsi teks dari xpToday(); tulis 'N XP hari ini' (tanpa +); tercapai → 'Target harian tercapai'; segarkan Home saat sheet ditutup. Ubah ui.js saja, jangan api/. Naikkan C di sw.js."
     },
     {
@@ -274,7 +283,7 @@
       "prioritas": "P1",
       "nama": "Latihan ekstra: label & aturan ulang dini kata belum jatuh tempo di Home (#1412)",
       "dokumen": "docs/riset-ulang-dini-belum-jatuh-tempo.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1442)",
       "catatan": "Mockup: docs/mockup-1412.html. 3+ kata jatuh tempo: tampil hanya 'N kata siap diulang'; 0: 'Latihan ekstra · 3 kata' + 'Belum waktunya. Jadwal tidak berubah'. Maks 3 kata, 1 ulang per kata, maks 2 putaran/hari, kecualikan kata dijawab <24 jam, Hafal tak ubah lv/due, Lupa turunkan lv. Ubah ui.js + style.css; naikkan C di sw.js."
     },
     {
@@ -292,7 +301,7 @@
       "prioritas": "P1",
       "nama": "Ukur aktivasi hari pertama lewat /hitung: 3 langkah, detik ke ketuk kata pertama, per sumber & jalur (#1384)",
       "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1440)",
       "catatan": "Mockup: docs/mockup-1384.html (kartu Aktivasi di Keepo HQ). Tanpa data pribadi. Ubah cloud.js + dev/ (api/ deploy manual founder). Target usul: >=25% sekarang, >=40% setelah perbaikan. Naikkan C di sw.js bila file app berubah."
     },
     {
@@ -374,7 +383,7 @@
       "prioritas": "P0",
       "nama": "Pengaturan baca: mode 'Baca polos' tanpa garis bawah & tanda bantu (#1359)",
       "dokumen": "docs/spesifikasi-baca-polos-1359.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1427)",
       "catatan": "Mockup: docs/mockup-1359.html. Ubah ui.js, style.css, sw.js (C kepo-v478→v479); db.plain default false, ikut #rst, matikan prafetch #458. Jangan ubah api/, prepHtml/bindPrep. Uji 320px, tema Kertas & Malam."
     },
     {
