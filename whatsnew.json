@@ -1,5 +1,53 @@
 [
   {
+    "n": 1459,
+    "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
+    "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1455,
+    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
+    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1453,
+    "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
+    "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1451,
+    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
+    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1449,
+    "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
+    "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1446,
+    "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
+    "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1444,
+    "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
+    "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1442,
+    "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
+    "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1440,
     "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
     "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
@@ -129,54 +177,6 @@
     "n": 1371,
     "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
     "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1369,
-    "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
-    "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1367,
-    "judul": "[peta 150] Tombol 'Siapkan offline': unduh arti kata bab ini",
-    "poin": "Menu ⋯ buku kini punya tombol \"Siapkan offline\": arti kata baru diunduh, maks 150.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1365,
-    "judul": "[peta 148] Penunjuk tingkat kesulitan bacaan di kartu buku saat impor",
-    "poin": "Kartu buku di Home sekarang menampilkan tingkat bacaan: Ringan, Sedang, atau Berat.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1363,
-    "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
-    "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1359,
-    "judul": "Pengaturan baca: mode 'Baca polos' (tanpa garis bawah & tanda bantu)",
-    "poin": "Ada pilihan baru \"Baca polos\" di pengaturan baca. Bawaannya mati.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1324,
-    "judul": "Kartu Streak Home: titik 7 hari sejalan dengan angka streak",
-    "poin": "Teks bawah kartu Streak kini pasti satu baris, dipotong \"…\" bila sempit.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1304,
-    "judul": "Layar Tamat: satu set tombol + sembunyikan 'Lanjut dari' di buku tamat",
-    "poin": "Buku yang sudah tamat kini punya lagi tombol Baca ulang dan Buku baru.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1346,
-    "judul": "Profil: lencana hampir tercapai di atas, sisanya dilipat",
-    "poin": "Profil sekarang menampilkan 3 lencana yang hampir tercapai di bagian atas.",
     "tgl": "2026-11-20"
   }
 ]
