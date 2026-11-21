@@ -818,6 +818,19 @@ const FUNC_WORDS = {
 };
 const FUNC_SET = {};
 for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
+/* #1519: aksara buku per bahasa; kata tanpa satu pun huruf beraksara buku = bukan kandidat. Bahasa tak dikenal/kosong: aturan dilewati */
+const AKSARA_BUKU = {
+  ja: /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u,
+  ko: /\p{Script=Hangul}/u,
+  zh: /\p{Script=Han}/u,
+  ru: /\p{Script=Cyrillic}/u, ar: /\p{Script=Arabic}/u, th: /\p{Script=Thai}/u
+};
+for (const l of 'en fr de es id pt it nl tr vi ms sv da no nb fi pl cs ro hu ca jv su tl'.split(' ')) AKSARA_BUKU[l] = /\p{Script=Latin}/u;
+/* buku ja/ko/zh: huruf Latin (OK, nama merek) tetap sah */
+const punyaAksaraBuku = (lang, w) => {
+  const lg = String(lang || '').toLowerCase().split('-')[0], re = AKSARA_BUKU[lg], s = String(w || '');
+  return !re || re.test(s) || (/^(ja|ko|zh)$/.test(lg) && /\p{Script=Latin}/u.test(s));
+};
 /* SATU saringan 'kata baru': true = bukan kandidat. Dipakai Home, ringkasan, catatan sesi, Intip kata bab.
    ctx: { b: buku (untuk nama), kenal: true (buang kata sudah kenal), saved: Set kata tersimpan }. Hanya saat TAMPIL; data tak dihapus. */
 function isKataSampah(lang, w, ctx) {
@@ -825,6 +838,7 @@ function isKataSampah(lang, w, ctx) {
   if (!raw || /^[\p{N}\p{P}\p{S}\s]+$/u.test(raw)) return true;
   const lg = String(lang || '').toLowerCase().split('-')[0], k = raw.toLowerCase();
   if (isKataFungsi(lang, raw)) return true;
+  if (!punyaAksaraBuku(lang, raw)) return true; /* #1519: bukan aksara buku */
   if (!/^(ja|ko|zh)$/.test(lg) && [...raw].length === 1) return true; /* huruf tunggal */
   if (/^(ja|zh)$/.test(lg) && /[가-힣]/.test(raw)) return true; /* kata Korea di buku Jepang/Mandarin */
   if (lg === 'ko' && /[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(raw)) return true;

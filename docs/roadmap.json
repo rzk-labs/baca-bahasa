@@ -318,7 +318,7 @@
       "prioritas": "P0",
       "nama": "Saring kata menurut aksara buku saat ketuk & tampil; satu hitungan kata sesi untuk Catatan sesi & sheet Tamat (#1487)",
       "dokumen": "docs/riset-kata-bahasa-lain-di-buku.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1519)",
       "catatan": "Mockup: docs/mockup-1487.html. Ubah app.js (isKataSampah, himpunan aksara per bahasa), ui.js (recSess, sessRecap, finishBook), sw.js (naikkan C). Jangan ubah api/. Kasus uji di dokumen bagian 4."
     },
     {
