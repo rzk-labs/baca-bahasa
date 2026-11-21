@@ -1312,3 +1312,6 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 @media(max-width:359px){#goalCard .goal-row .ring,#goalCard .goal-row .ring svg{width:66px;height:66px}#goalCard .goal-row .ring .score .gn{font-size:17px;line-height:17px}}
 /* #1437: kartu akhir halaman: satu aksi utama, Baca ulang tautan kecil */
 .endcard .sec{flex:1 1 100%}.endcard .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
+/* #1471 bar atas reader lega: pinggir >=12px + safe-area, jarak >=8px, sentuh >=44px; HP <=430px hanya Dengar + Lainnya (Ulang pindah ke Lainnya) */
+.rbar{gap:8px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+@media (max-width:430px){.rbar{gap:8px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}#rDue{display:none}}
