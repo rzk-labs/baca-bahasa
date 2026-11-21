@@ -1333,6 +1333,12 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 @media(max-width:359px){#goalCard .goal-row .ring,#goalCard .goal-row .ring svg{width:66px;height:66px}#goalCard .goal-row .ring .score .gn{font-size:17px;line-height:17px}}
 /* #1437: kartu akhir halaman: satu aksi utama, Baca ulang tautan kecil */
 .endcard .sec{flex:1 1 100%}.endcard .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
+/* #1495 Home HP: rak 'Koleksi kamu' tak tertutup menu bawah. Jarak bawah = menu + safe-area + napas; judul maks 2 baris utuh */
+body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up):has(.hscroll>.bk){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 10px + 72px)}
+.hscroll:has(>.bk){padding-bottom:var(--space-4,16px);scroll-padding-bottom:calc(var(--tabbar-h) + 96px)}
+.bk{scroll-margin-bottom:calc(var(--tabbar-h) + 96px)}
+.bk .t{height:auto;min-height:40px;max-height:40px;line-height:20px;overflow:hidden}
+.bk .t .t-main,.bk .t:not(:has(.t-main)){max-height:40px;line-height:20px}
 /* #1477: rak Profil: judul satu kali di bawah sampul (maks 2 baris), tak dobel di sampul; aman dari menu bawah */
 .rk-bk .cover .ct{display:none}
 .rk-bk .cover{justify-content:center;align-items:center}

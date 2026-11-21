@@ -1,5 +1,11 @@
 [
   {
+    "n": 1495,
+    "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
+    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1489,
     "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
     "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
@@ -171,12 +177,6 @@
     "n": 1403,
     "judul": "Profil Rak: label 'Tamat' sekali saja + teks XP kartu Level lega",
     "poin": "Label \"Tamat\" di Rak Profil tinggal satu, judul buku jadi lebih lega.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1400,
-    "judul": "Kartu ulang: pilihan cara baca (pinyin) tampil langsung (masukan Sinta)",
-    "poin": "Di Pengaturan baca ada pilihan baru: cara baca di kartu ulang Langsung atau Ketuk dulu.",
     "tgl": "2026-11-21"
   }
 ]
