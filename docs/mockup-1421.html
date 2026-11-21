@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1421 — Rapikan UI</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#e9e4dc;font:16px/1.4 Inter,system-ui,sans-serif;color:#351E28;padding:16px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.note{width:390px;background:#E9F056;padding:8px 12px;border-radius:10px;font-weight:700;font-size:13px}
+.lbl{width:390px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b5560}
+.ph{width:390px;background:#FAF6EF;border-radius:28px;overflow:hidden;border:1px solid #d8cfc2;padding:18px}
+h2{font:800 22px/1.2 "Bricolage Grotesque",Inter,sans-serif;margin-bottom:12px}
+.card{background:#D7EFFF;border-radius:20px;padding:14px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.t{font:800 17px/1.25 "Bricolage Grotesque",Inter,sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.s{font-size:13px;color:#5a444e;margin-top:2px}
+.btn{min-height:36px;padding:0 14px;border-radius:999px;background:#351E28;color:#FAF6EF;font:700 13px/36px Inter,sans-serif;white-space:nowrap}
+.ring{width:64px;height:64px;border-radius:50%;border:6px solid #fff;display:flex;align-items:center;justify-content:center;font:800 13px Inter;flex:none}
+.cov{width:84px;height:116px;border-radius:12px;padding:8px;color:#FAF6EF;font:800 13px/1.2 "Bricolage Grotesque",Inter,sans-serif;display:flex;align-items:flex-end;overflow:hidden}
+.page{font:17px/1.7 "Source Serif 4",Georgia,serif;color:#2a1d22;margin-bottom:14px}
+.tamat{background:#351E28;color:#FAF6EF;border-radius:20px;padding:16px;text-align:center}
+.tamat b{font:800 20px "Bricolage Grotesque",Inter,sans-serif;display:block}
+.tamat .big{margin:12px 0 8px;background:#E9F056;color:#351E28;border-radius:999px;min-height:48px;line-height:48px;font-weight:800}
+.tamat u{font-size:13px}
+.bar{margin-top:14px;background:#fff;border-radius:20px;padding:10px 16px;border:1px solid #d8cfc2}
+.bar .row{justify-content:space-between}
+.bar .l{font-weight:800}
+.xp{font-size:12px;color:#5a444e;margin-top:6px}
+.b{background:#E9F056;display:inline-block;padding:0 6px;border-radius:4px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun</div>
+
+<div class="lbl">1 · Home · kartu buku (Sesudah)</div>
+<div class="ph"><h2>Lanjut baca</h2>
+ <div class="card"><div class="row"><div class="grow"><div class="t">The Adventures of Sherlock Holmes</div><div class="s">Tamat · 10/10 halaman</div></div><div class="btn">Baca ulang</div></div></div></div>
+
+<div class="lbl">2 · Home · Target &amp; Minggu ini (Sesudah)</div>
+<div class="ph">
+ <div class="card"><div class="row"><div class="grow"><div class="t">Target</div><div class="s">10 XP lagi hari ini</div></div><div class="ring">0 XP</div></div></div>
+ <div class="card"><div class="t">Minggu ini</div><div class="s" style="font-size:15px;margin-top:6px"><b>0 halaman</b> · 2 hari baca</div><div class="s">Belum ada bacaan minggu ini? Mulai dari satu halaman.</div></div>
+</div>
+
+<div class="lbl">3 · Home · Koleksi kamu (Sesudah)</div>
+<div class="ph"><h2>Koleksi kamu</h2>
+ <div class="row" style="align-items:flex-start">
+  <div class="cov" style="background:#351E28">The Adventures of Sherlock</div>
+  <div class="cov" style="background:#5b6f86">Alice in Wonderland</div>
+  <div class="cov" style="background:#7a4f60">Dracula</div>
+ </div></div>
+
+<div class="lbl">4 · Halaman terakhir (Sesudah)</div>
+<div class="ph">
+ <p class="page">“It is a capital mistake to theorise before one has data,” said Holmes, and we walked home together through the fog.</p>
+ <div class="tamat"><b>Tamat! 🎉</b><div class="big">Buku baru</div><u>Baca ulang</u></div>
+</div>
+
+<div class="lbl">5 · Bar bawah reader, buku tamat (Sesudah)</div>
+<div class="ph">
+ <div class="bar"><div class="row"><span class="l">Tamat</span><div class="btn" style="background:#E9F056;color:#351E28">Buku baru</div></div>
+ <div class="xp">47/100 XP → Lv 10</div></div>
+</div>
+</body></html>
