@@ -1,5 +1,11 @@
 [
   {
+    "n": 1505,
+    "judul": "[peta 164] Banner Level: uji & perbaiki di iPhone dan layar 320px",
+    "poin": "Banner Level sudah dicek: tab tetap bisa diketuk, hilang sendiri, muncul sekali per level.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1503,
     "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
     "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
@@ -171,12 +177,6 @@
     "n": 1407,
     "judul": "Ulang 3 kata: satu tombol di Home, tahan sesi, hadiah & 'Ulang 3 lagi'",
     "poin": "Home sekarang punya satu tombol \"Ulang 3 kata\", tidak ada kartu kembar lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1415,
-    "judul": "Halaman terakhir: kartu 'Baca ulang / Buku baru' tak menutup teks",
-    "poin": "Kartu \"Baca ulang / Buku baru\" di halaman terakhir tak lagi menutupi cerita.",
     "tgl": "2026-11-21"
   }
 ]
