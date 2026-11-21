@@ -238,7 +238,7 @@ function flushLate(force) {
   step();
 }
 new MutationObserver(flushLate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-const XP_WHY = { save: 'kata disimpan', page: 'halaman selesai', done: 'buku tamat', look: 'kata dicek', speak: 'ngomong', rem: 'kata sulit' };
+const XP_WHY = { save: 'kata disimpan', page: 'halaman selesai', done: 'buku tamat', look: 'kata dicek', speak: 'ngomong', rem: 'kata sulit', q3: '3 kata beres' };
 /* popup Level: tampil sekali per level (lvlSeen di penyimpanan lokal); ditunda saat lembar Tamat terbuka */
 let lvlPending = false;
 const sheetOpen = () => { const sh = $('#sheet'); return !!sh && !sh.classList.contains('hide'); };
@@ -1111,8 +1111,7 @@ function viewRak() {
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
-    ${quickPick().length >= 3 ? `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit">${ico('cards')}<span>Ulang 3 kata · ±1 menit</span><b>Mulai</b></button>` : ''}
+    ${(() => { const n = db.vocab.filter(isDue).length; if (quickPick().length >= 3) return `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit${n ? '. ' + n + ' kata siap' : ''}">${ico('cards')}<span>Ulang 3 kata · ±1 menit${n ? `<small>${n} kata siap</small>` : ''}</span><b>Mulai</b></button>`; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
@@ -2998,7 +2997,8 @@ let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'ba
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 /* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
 let quickPend = null, quickRun = null, quickLogged = false;
-const quickPick = () => (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);
+let quickXpGot = false;
+const quickPick = () => { const bt = (book() || {}).title || ''; return (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => ((bt && b.book === bt ? 1 : 0) - (bt && a.book === bt ? 1 : 0)) || (+a.due || 0) - (+b.due || 0)).slice(0, 3); }; /* kata dari buku yang terakhir dibaca dulu, lalu urut jatuh tempo */
 let deckDone = 0, deckHint = '';
 let deckRetry = [], deckAns = new Set(), deckRetryTot = 0; /* ulang di sesi sama: antrean di memori, hitungan di localStorage */
 const RETRY_KEY = 'kepo-deck-retry', RETRY_MAX = 2, RETRY_SESI = 8, RETRY_GAP = { lupa: 3, ragu: 5 };
@@ -3018,7 +3018,8 @@ function viewKata() {
   }
 }
 function viewKataIn() {
-  deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; quickRun = quickPend; quickPend = null;
+  if (quickPend) { quickRun = quickPend; quickPend = null; quickLogged = false; quickXpGot = false; deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; }
+  else if (!quickRun) { deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; } /* sesi 3 kata bertahan saat pindah sub-tab */
   if (!Array.isArray(db.vocab)) db.vocab = [];
   const weakAll = Object.values(db.weak || {}).filter(o => o && o.w && (+o.last || 0) < PASS).sort((a, b) => (+a.last || 0) - (+b.last || 0));
   const known = db.vocab.filter(v => v && v.known).length, learning = db.vocab.filter(isLearning).length;
@@ -3212,6 +3213,15 @@ function deck(kb) {
   if (rdy) cards.unshift(rdy.v);
   if (!cards.length) {
     if (quickRun && deckDone >= 1 && !quickLogged) { quickLogged = true; db.q3s = (+db.q3s || 0) + 1; save(); }
+    if (quickRun) {
+      quickRun = null;
+      if (deckDone >= 1 && !quickXpGot) { quickXpGot = true; const d = today(), qx = db.q3xp && db.q3xp.d === d ? db.q3xp : (db.q3xp = { d, n: 0 }); if (qx.n < 3) { qx.n++; award(3, 'q3'); } else save(); }
+      const nSaved = (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).length, more = quickPick().length >= 3;
+      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>3 kata beres</h2><div class="mut sm">${more ? 'Mantap. Mau lanjut 3 kata lagi?' : `Simpan kata dulu (${Math.min(nSaved, 3)}/3) biar bisa ulang 3 kata lagi.`}</div>${more ? '<button class="pri" id="q3Again" type="button">Ulang 3 lagi</button>' : '<button class="pri" id="q3Read" type="button">Lanjut baca</button>'}</div>`;
+      if ($('#q3Again')) $('#q3Again').onclick = () => { const p = quickPick(); if (p.length < 3) return; quickPend = p; sfx('pop'); viewKata(); };
+      if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
+      return;
+    }
     const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = db.vocab.filter(isDue).length, left = nLeft > 0;
     kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false;
@@ -3223,7 +3233,8 @@ function deck(kb) {
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">sebentar lagi</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
-    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>`;
+    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? '<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">Tutup sesi 3 kata</button></div>' : ''}`;
+  if ($('#q3Close')) $('#q3Close').onclick = () => { quickRun = null; viewKata(); };
   const card = $('#card'); let spoken = false;
   const autoSay = () => { if (db.autoSpeak && !spoken) { spoken = true; speak(v.w, v.lang, 0.8); } };
   if ($('#aspBan')) {
