@@ -274,7 +274,7 @@
       "prioritas": "P1",
       "nama": "Latihan ekstra: label & aturan ulang dini kata belum jatuh tempo di Home (#1412)",
       "dokumen": "docs/riset-ulang-dini-belum-jatuh-tempo.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1442)",
       "catatan": "Mockup: docs/mockup-1412.html. 3+ kata jatuh tempo: tampil hanya 'N kata siap diulang'; 0: 'Latihan ekstra · 3 kata' + 'Belum waktunya. Jadwal tidak berubah'. Maks 3 kata, 1 ulang per kata, maks 2 putaran/hari, kecualikan kata dijawab <24 jam, Hafal tak ubah lv/due, Lupa turunkan lv. Ubah ui.js + style.css; naikkan C di sw.js."
     },
     {

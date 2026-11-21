@@ -1116,7 +1116,7 @@ function viewRak() {
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
     ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; if (quickPick().length >= 3) return `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit${n ? '. ' + n + ' kata siap' : ''}">${ico('cards')}<span>Ulang 3 kata · ±1 menit${n ? `<small>${n} kata siap</small>` : ''}</span><b>Mulai</b></button>`; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>` : ''; })()}
+    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>`; const x = extraPick().length; return x ? `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, jadwal tidak berubah">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Jadwal tidak berubah</small></span><b>Mulai</b></button>` : ''; })()}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
@@ -1129,7 +1129,7 @@ function viewRak() {
     const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
-    const q3 = $('#q3Btn'); if (q3) q3.onclick = () => { const p = quickPick(); if (p.length < 3) return; db.q3k = (+db.q3k || 0) + 1; save(); quickPend = p; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1377: hitungan klik disimpan lokal (api/ tak diubah) */
+    const xb = $('#xtraBtn'); if (xb) xb.onclick = () => { const p = extraPick(); if (!p.length) return; db.q3k = (+db.q3k || 0) + 1; extraRoundUse(); save(); quickPend = p; quickExtra = true; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1442: satu tombol ulang; latihan ekstra tak ubah jadwal (api/ tak diubah) */
     const nn = $('#nextNudge'); if (nn) nn.onclick = () => { if (other) { db.cur = other.id; save(); setTab('baca'); } else $('#addBtn').click(); };
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
     const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
@@ -3021,7 +3021,12 @@ const mileHtml = () => {
   return `<div class="mile" id="mileBar" role="group" aria-label="${n} dari ${t} kata tersimpan"><div class="mile-h"><b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><i style="width:${Math.round(n / t * 100)}%"></i></div></div>`;
 };
 /* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
-let quickPend = null, quickRun = null, quickLogged = false;
+let quickPend = null, quickRun = null, quickLogged = false, quickExtra = false;
+/* #1442 Latihan ekstra: hanya bila 0 kata jatuh tempo; maks 3 kata, 2 putaran/hari, kata dijawab <24 jam lalu dikecualikan */
+const lastAns = v => +v.la || ((v.lv || 0) > 0 && +v.due ? +v.due - REVIEW_DAYS[Math.min(v.lv, REVIEW_DAYS.length) - 1] * DAY_MS : 0);
+const extraRounds = () => db.xr && db.xr.d === today() ? +db.xr.n || 0 : 0;
+const extraRoundUse = () => { db.xr = { d: today(), n: extraRounds() + 1 }; };
+const extraPick = () => extraRounds() >= 2 || (db.vocab || []).some(isDue) ? [] : (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim() && Date.now() - lastAns(v) >= DAY_MS).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);
 let quickXpGot = false;
 const quickPick = () => { const bt = (book() || {}).title || ''; return (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => ((bt && b.book === bt ? 1 : 0) - (bt && a.book === bt ? 1 : 0)) || (+a.due || 0) - (+b.due || 0)).slice(0, 3); }; /* kata dari buku yang terakhir dibaca dulu, lalu urut jatuh tempo */
 let deckDone = 0, deckHint = '';
@@ -3240,10 +3245,8 @@ function deck(kb) {
     if (quickRun && deckDone >= 1 && !quickLogged) { quickLogged = true; db.q3s = (+db.q3s || 0) + 1; save(); }
     if (quickRun) {
       quickRun = null;
-      if (deckDone >= 1 && !quickXpGot) { quickXpGot = true; const d = today(), qx = db.q3xp && db.q3xp.d === d ? db.q3xp : (db.q3xp = { d, n: 0 }); if (qx.n < 3) { qx.n++; award(3, 'q3'); } else save(); }
-      const nSaved = (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).length, more = quickPick().length >= 3;
-      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>3 kata beres</h2><div class="mut sm">${more ? 'Mantap. Mau lanjut 3 kata lagi?' : `Simpan kata dulu (${Math.min(nSaved, 3)}/3) biar bisa ulang 3 kata lagi.`}</div>${more ? '<button class="pri" id="q3Again" type="button">Ulang 3 lagi</button>' : '<button class="pri" id="q3Read" type="button">Lanjut baca</button>'}</div>`;
-      if ($('#q3Again')) $('#q3Again').onclick = () => { const p = quickPick(); if (p.length < 3) return; quickPend = p; sfx('pop'); viewKata(); };
+      quickExtra = false;
+      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap sama.</div><button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
       if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
       return;
     }
@@ -3258,8 +3261,8 @@ function deck(kb) {
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">sebentar lagi</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
-    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? '<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">Tutup sesi 3 kata</button></div>' : ''}`;
-  if ($('#q3Close')) $('#q3Close').onclick = () => { quickRun = null; viewKata(); };
+    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? '<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">Tutup latihan ekstra</button></div>' : ''}`;
+  if ($('#q3Close')) $('#q3Close').onclick = () => { quickRun = null; quickExtra = false; viewKata(); };
   const card = $('#card'); let spoken = false;
   const autoSay = () => { if (db.autoSpeak && !spoken) { spoken = true; speak(v.w, v.lang, 0.8); } };
   if ($('#aspBan')) {
@@ -3271,6 +3274,7 @@ function deck(kb) {
   /* catat jawaban; mode 0 = tutup kata, 1 = Ragu (ulang 1x), 2 = Lupa (maks 2x). true bila dijadwalkan ulang */
   const sched = mode => {
     if (!rt) deckDone++;
+    v.la = Date.now(); /* #1442: waktu jawab terakhir, untuk kecualikan kata <24 jam dari Latihan ekstra */
     deckRetry = deckRetry.filter(r => r !== rt); deckRetry.forEach(r => r.wait--); deckAns.add(v);
     if (!mode) return false;
     const st = retryGet(), id = retryId(v), n = +st.k[id] || 0;
@@ -3283,7 +3287,7 @@ function deck(kb) {
     if (!flipped) return;
     card.style.transform = 'translateY(-30px)'; card.style.opacity = '0';
     deckExtra = deckExtra.filter(x => x !== v);
-    v.due = Date.now() + DAY_MS; v.known = false; deckHint = 'Besok muncul lagi'; sched(1);
+    if (quickExtra) { v.la = Date.now(); deckHint = 'Jadwal kata ini tidak berubah'; sched(0); } else { v.due = Date.now() + DAY_MS; v.known = false; deckHint = 'Besok muncul lagi'; sched(1); }
     save(); sfx('pop');
     refreshHafal();
     setTimeout(() => deck(kb), 280);
@@ -3292,7 +3296,8 @@ function deck(kb) {
     if (!flipped) return;
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
     deckExtra = deckExtra.filter(x => x !== v);
-    if (ok && rt) { v.known = false; v.due = Math.max(+v.due || 0, Date.now() + DAY_MS); deckHint = 'Nah, ingat. Kata ini selesai untuk sesi ini'; sched(0); save(); sfx('ding'); }
+    if (quickExtra) { sched(0); v.la = Date.now(); if (ok) { deckHint = 'Mantap. Jadwal kata ini tidak berubah'; sfx('ding'); } else { v.lv = Math.max(0, (v.lv || 0) - 1); deckHint = 'Nggak apa-apa, levelnya turun satu. Jadwal tetap'; sfx('soft'); } save(); }
+    else if (ok && rt) { v.known = false; v.due = Math.max(+v.due || 0, Date.now() + DAY_MS); deckHint = 'Nah, ingat. Kata ini selesai untuk sesi ini'; sched(0); save(); sfx('ding'); }
     else if (ok) { sched(0); const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Mantap! Muncul lagi ${d} hari ke depan · ${REVIEW_DAYS.length - lv} tahap lagi jadi hafal`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = 'Lupa nggak apa-apa, kata ini muncul lagi'; if (!sched(2)) { v.due = Date.now() + DAY_MS; deckHint = 'Besok kita coba lagi'; } save(); sfx('soft'); }
     refreshHafal();
     setTimeout(() => deck(kb), 280);
