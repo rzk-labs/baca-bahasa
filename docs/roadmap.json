@@ -160,7 +160,7 @@
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 23,
@@ -194,8 +194,8 @@
       "no": 27,
       "nama": "Akuisisi Organik",
       "fase": "Rilis Toko & Publik",
-      "status": "awal",
-      "catatan": "Sudah ada: docs/LAUNCH-SEKARANG.md, kalender 4 minggu, link ?ref=. Keluar bila: >=300 pengguna baru/bulan, 1 sumber ref terbaik terbukti, biaya iklan Rp0. Peran: marketing (draf), founder (posting). Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Sudah ada: docs/LAUNCH-SEKARANG.md, kalender 4 minggu, link ?ref=. Keluar bila: >=300 pengguna baru/bulan, 1 sumber ref terbaik terbukti, biaya iklan Rp0. Peran: marketing (draf), founder (posting). Lihat docs/pm-peta-fase-2.md. Patokan corong & target kerja 100/bulan: docs/riset-corong-akuisisi-organik.md (bukti internet, belum data nyata)."
     },
     {
       "no": 28,
@@ -241,6 +241,60 @@
     }
   ],
   "backlog": [
+    {
+      "no": 153,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Ukur aktivasi hari pertama lewat /hitung: 3 langkah, detik ke ketuk kata pertama, per sumber & jalur (#1384)",
+      "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1384.html (kartu Aktivasi di Keepo HQ). Tanpa data pribadi. Ubah cloud.js + dev/ (api/ deploy manual founder). Target usul: >=25% sekarang, >=40% setelah perbaikan. Naikkan C di sw.js bila file app berubah."
+    },
+    {
+      "no": 154,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Bukti internet: patokan aktivasi hari pertama app baca & bahasa (#1384)",
+      "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 46 butir, 4 jenis sumber. H1 belum jelas (60% condong terlalu tinggi); H2 belum jelas; H3 terbukti sebagian; H4 terbukti sebagian; H5 belum jelas. Usul target dua tingkat 25%/40%; ukur lewat #153."
+    },
+    {
+      "no": 155,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home HP: judul buku rak terlihat + label bar bawah buku tamat 'Tamat · N/N' (#1390)",
+      "dokumen": "docs/mockup-1390.html",
+      "status": "siap dikerjakan",
+      "catatan": "Kode sudah diubah (style.css akhir file, ui.js bar reader, sw.js kepo-v504). Tinggal uji 320/360/390/430px, tema Kertas & Malam."
+    },
+    {
+      "no": 156,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Riset: filter level HSK di daftar Kata simpanan (#1395)",
+      "dokumen": "docs/riset-filter-level-kata-simpanan.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 36 bukti dari 6 jenis sumber. Vonis: pelajar menyaring per level/set = terbukti; pakai tag/kategori/deck = terbukti; filter menambah ulang kata = belum jelas. Rekomendasi: ya, satu baris chip di tab Kata."
+    },
+    {
+      "no": 157,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Tab Kata: satu baris chip filter level HSK, hanya muncul bila ada kata HSK (#1395)",
+      "dokumen": "docs/riset-filter-level-kata-simpanan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1395.html. Chip 'Semua · HSK n' hanya level yang ada isinya; tombol ulang ikut filter. Tambah penghitung /hitung 'filter dipakai' & 'ulang dari filter' (api/ diubah hanya bila diminta). Tanpa tag/folder buatan. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 158,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio (#1404)",
+      "dokumen": "docs/riset-corong-akuisisi-organik.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1404.html. Periksa dulu apakah ref bebas tercatat per kunjungan & pengguna baru; bila sudah, cukup tulis hasil cek di dokumen, tanpa ubah kode. Tanpa data pribadi. api/ hanya bila terpaksa dan diminta founder."
+    },
     {
       "no": 146,
       "peran": "developer",
@@ -301,7 +355,7 @@
       "prioritas": "P1",
       "nama": "Eksperimen 1 retensi: kartu 'Lanjut dari halaman X · ±N menit' di atas Home (#1323)",
       "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1379)",
       "catatan": "Mockup: docs/mockup-1323.html. Ukur klik lanjut baca & balik_h2 lewat /hitung. Satu perubahan per minggu. Naikkan C di sw.js."
     },
     {
@@ -319,7 +373,7 @@
       "prioritas": "P1",
       "nama": "Eksperimen 3 retensi: bar tonggak 'X dari 50 kata' + lencana kata ke-50/100 (#1323)",
       "dokumen": "docs/riset-retensi-h2-h7-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1383)",
       "catatan": "Mockup: docs/mockup-1323.html. Usul Sinta & Ilham; bukti belum jelas, jadi uji lewat balik_h7. Kerjakan setelah backlog 150."
     },
     {
@@ -1363,7 +1417,7 @@
       "prioritas": "P0",
       "nama": "Home Minggu ini: 'N dari 7 hari baca' vs 'Beruntun N hari' (#1360)",
       "dokumen": "docs/desain-minggu-vs-streak-1360.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1382)",
       "catatan": "Mockup: docs/mockup-1360.html. Teks sudah diubah di ui.js; tinggal cek di HP 320px."
     },
     {

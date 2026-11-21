@@ -174,6 +174,7 @@ body.reading::after{display:none}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
+.mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
@@ -561,6 +562,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .bk-skel{display:flex;gap:12px;overflow:hidden}
 .bk-skel i{flex:1 1 0;min-width:84px;max-width:140px;aspect-ratio:2/3;border-radius:var(--radius-md);background:var(--color-surface-soft);animation:bkPulse 1.4s ease-in-out infinite}
 .bk-skel i:nth-child(2){animation-delay:.2s}.bk-skel i:nth-child(3){animation-delay:.4s}
+.bk-off{margin:10px 2px 0}.empty .bk-off{margin:10px auto 0}.bk-act{gap:8px;flex-wrap:wrap;margin-top:12px}.bk-act button,.empty .row button{min-height:44px}
 .bk-skel.still i{animation:none;opacity:.55}
 @keyframes bkPulse{0%,100%{opacity:.45}50%{opacity:1}}
 .pill.wait{color:var(--color-text-muted)}
@@ -1021,7 +1023,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .rk-bk{position:relative;min-width:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;display:block;cursor:pointer}
 .rk-bk .cover{width:100%;height:92px;padding:6px}
 .rk-bk .cover .em{font-size:28px}
-.rk-tag{position:absolute;top:5px;right:5px;font:700 9px Inter,sans-serif;background:#E9F056;color:#351E28;border-radius:9999px;padding:2px 6px}
+.rk-tag{display:none} /* #1403: 'Tamat' cukup di judul grup */
 .rk-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:var(--fs-min);line-height:1.25;font-weight:600;margin-top:5px;overflow:hidden;overflow-wrap:anywhere}
 .rk-p{display:block;font-size:var(--fs-min);color:var(--rk-mu);margin-bottom:8px}
 .rk-board{height:8px;margin:0 -10px;background:var(--rk-bd)}
@@ -1147,7 +1149,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 .lang-hint{margin:6px 0 0}
 .try1{margin-top:0;margin-bottom:var(--space-3)}
 [data-theme=night] .hero-up{background:var(--hl);color:var(--ink)}
-body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 120px)}
+body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
 ol.steps3 b{flex:none;display:block;min-width:22px;background:none;color:var(--color-text);font:800 22px/1 var(--font-display);cursor:default}
@@ -1181,13 +1183,12 @@ ol.steps3 li{cursor:default}
 .stat3 .lbl2{white-space:normal;overflow-wrap:normal}
 .stat3 .t-lime .lbl2,.stat3 .t-lav .lbl2{display:flex;flex-direction:column;gap:1px;padding:0 6px}
 /* #1318 kartu Level: bar 6px + satu baris "64/100 XP" (+ "→ Lv 5" bila muat); 320px hanya XP */
-.stat3 .t-lav .lbl2.lvl-line{flex-direction:row;justify-content:space-between;align-items:baseline;gap:6px;padding:0;white-space:nowrap;text-wrap:nowrap;font-size:var(--fs-min);line-height:16px;margin-top:6px}
+.stat3 .t-lav .lbl2.lvl-line{flex-direction:column;align-items:flex-start;gap:1px;padding:0 10px 0 0;white-space:nowrap;text-wrap:nowrap;font-size:var(--fs-min);line-height:16px;margin-top:6px}
 .stat3 .t-lav .lv-xp,.stat3 .t-lav .lv-next{white-space:nowrap}
 .stat3 .t-lav .lv-xp{font-variant-numeric:tabular-nums}
 .stat3 .t-lav .lv-next{font-weight:600}
 .stat3 .t-lav .lvbar{height:6px;margin-top:8px;background:var(--ink)}
 .stat3 .t-lav .lvbar i{background:var(--hl)}
-@media(max-width:379px){.stat3 .t-lav .lv-next{display:none}}
 ol.steps3 li{gap:8px}
 ol.steps3 b{min-width:0}
 .mut.sm{overflow-wrap:anywhere}
@@ -1219,6 +1220,13 @@ ol.steps3 b{min-width:0}
 .fr-stats div{align-items:center;justify-content:flex-start;min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
+/* #1388 Home HP: judul buku di bawah sampul terbaca penuh (maks 2 baris + ellipsis), tak tertutup menu bawah */
+.bk{min-width:0;overflow:visible}
+.bk .cover{position:relative;z-index:0}
+.bk .t{position:relative;z-index:1;display:block;width:100%;min-height:38px;max-height:none;overflow:visible;word-break:normal;overflow-wrap:break-word;text-wrap:auto}
+.bk .t .t-main,.bk .t:not(:has(.t-main)){display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;max-height:38px;line-height:19px;text-overflow:ellipsis}
+.hscroll:has(>.bk){align-items:flex-start;padding-bottom:calc(var(--space-3) + 8px);scroll-padding-bottom:0}
+body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up):has(.hscroll>.bk){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 148px)}
 /* #1349 bar bawah reader HP: tombol Selesai/Buku baru tak mepet tepi, tinggi sentuh >=44px */
 .rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
 .rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -1257,5 +1265,29 @@ ol.steps3 b{min-width:0}
 #wdict{max-height:40vh;overflow-y:auto}
 /* #1363 Tandai & lanjut */
 .wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
+/* #1379 kartu 'Lanjut dari halaman X' di atas Home */
+.lanjut-card{display:grid;grid-template-columns:1fr auto;column-gap:10px;align-items:center;width:100%;min-height:56px;margin:4px 0 12px;padding:10px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;font:600 13px/18px var(--font-ui)}
+.lanjut-card .lj-t{grid-column:1;font:700 15px/20px var(--font-display);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lanjut-card .lj-s{grid-column:1;min-width:0}
+.lanjut-card .lj-go{grid-column:2;grid-row:1/3;font-size:20px;font-weight:700}
+.lanjut-card:active{transform:scale(.98)}
+.lanjut-card:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1375 Kartu PDF scan */
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
+/* #1390: judul rak terbaca penuh & bisa digulir melewati menu bawah */
+body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
+.hscroll:has(>.bk){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.bk .t{height:auto;min-height:38px;max-height:none;overflow:hidden}
+.bk .t .t-main{max-height:38px}
+.bk .au,.bk .m{position:relative;z-index:1}
+/* #1382 kartu Streak: angka + 'hari' di samping api; 7 titik dengan huruf hari (S S R K J S M), hari ini tebal + garis bawah */
+.streak1 .num b{font:800 28px/30px var(--font-display)}.streak1 .num small{font:700 12px/16px var(--font-body,inherit);align-self:flex-end;padding-bottom:3px}
+.stat3 .streak1 .num{gap:3px}
+.sdots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;margin:6px 0 4px;min-width:0}
+.sdots .sd{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.sdots .sd i{flex:none}
+.sdots .sd em{font:600 10px/12px var(--font-body,inherit);font-style:normal;color:#351E28;opacity:.75}
+.sdots .sd.td em{font-weight:800;opacity:1;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
+/* #1381: teks 'Mulai hari ini' tidak patah baris */
+.stat3 .sbig{white-space:nowrap}
