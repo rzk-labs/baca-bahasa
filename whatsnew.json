@@ -1,5 +1,11 @@
 [
   {
+    "n": 1440,
+    "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
+    "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1437,
     "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
     "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
@@ -171,12 +177,6 @@
     "n": 1346,
     "judul": "Profil: lencana hampir tercapai di atas, sisanya dilipat",
     "poin": "Profil sekarang menampilkan 3 lencana yang hampir tercapai di bagian atas.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1360,
-    "judul": "Home Minggu ini: beda 'hari baca' vs streak dijelaskan, tak bikin bingung",
-    "poin": "Kartu Minggu ini sekarang bilang \"5 dari 7 hari baca\", bukan \"7 hari\".",
     "tgl": "2026-11-20"
   }
 ]

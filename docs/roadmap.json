@@ -301,7 +301,7 @@
       "prioritas": "P1",
       "nama": "Ukur aktivasi hari pertama lewat /hitung: 3 langkah, detik ke ketuk kata pertama, per sumber & jalur (#1384)",
       "dokumen": "docs/riset-aktivasi-hari-pertama-patokan.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1440)",
       "catatan": "Mockup: docs/mockup-1384.html (kartu Aktivasi di Keepo HQ). Tanpa data pribadi. Ubah cloud.js + dev/ (api/ deploy manual founder). Target usul: >=25% sekarang, >=40% setelah perbaikan. Naikkan C di sw.js bila file app berubah."
     },
     {
