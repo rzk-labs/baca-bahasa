@@ -1,5 +1,47 @@
 [
   {
+    "n": 1442,
+    "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
+    "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1440,
+    "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
+    "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1437,
+    "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
+    "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1435,
+    "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
+    "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1433,
+    "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
+    "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1430,
+    "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
+    "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1427,
+    "judul": "[peta 146] Pengaturan baca: mode 'Baca polos' tanpa garis bawah",
+    "poin": "Pengaturan baca punya saklar \"Baca polos\": halaman bersih tanpa garis bawah.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1425,
     "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
     "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
@@ -135,48 +177,6 @@
     "n": 1304,
     "judul": "Layar Tamat: satu set tombol + sembunyikan 'Lanjut dari' di buku tamat",
     "poin": "Buku yang sudah tamat kini punya lagi tombol Baca ulang dan Buku baru.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1346,
-    "judul": "Profil: lencana hampir tercapai di atas, sisanya dilipat",
-    "poin": "Profil sekarang menampilkan 3 lencana yang hampir tercapai di bagian atas.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1360,
-    "judul": "Home Minggu ini: beda 'hari baca' vs streak dijelaskan, tak bikin bingung",
-    "poin": "Kartu Minggu ini sekarang bilang \"5 dari 7 hari baca\", bukan \"7 hari\".",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1355,
-    "judul": "Sheet Tamat: tombol utama & 'Selesai' diberi jarak, kartu teks disembunyikan",
-    "poin": "Layar Tamat: tombol 'Selesai' sekarang ada jarak, tidak gampang salah ketuk.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1349,
-    "judul": "E-reader HP: tombol 'Selesai' di bar bawah tak mepet tepi kanan",
-    "poin": "Tombol \"Selesai\" di bar bawah reader sekarang punya jarak aman dari tepi layar.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1340,
-    "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
-    "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1335,
-    "judul": "Header e-reader HP: 'Bagian 12 dari 12' tak tabrak tombol Dengar",
-    "poin": "Di HP, posisi bacaan kini tampil \"12/12\", tidak menabrak tombol Dengar lagi.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1333,
-    "judul": "[peta 144] Kartu arti: semua arti & frasa tampil sebagai chip menonjol",
-    "poin": "Arti lain sekarang tampil sebagai tombol besar, langsung di kartu arti.",
     "tgl": "2026-11-20"
   }
 ]

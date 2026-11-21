@@ -194,7 +194,8 @@ const xpRinci = () => { const s = db.xpSrc || {}, g = [['Halaman', s.page], ['Ka
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 /* SATU sumber XP/level: Home, Profil, header, popup */
 const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
-const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>XP hari ini</span><span>target ${GOAL}</span>`}</div>`;
+const xpTodayText = (xt = xpToday()) => xt >= GOAL ? 'Target harian tercapai' : `${xt} XP hari ini`; /* satu teks utk sheet Tamat & kartu Target Home */
+const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>${xpTodayText(xt)}</span><span>target ${GOAL}</span>`}</div>`;
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
 function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) tc.innerHTML = goalCardHtml(xpToday()); }
@@ -347,7 +348,7 @@ function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent =
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
-function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
 $('#shade').onclick = e => {
   /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
   const d = RD.dt; RD.dt = null; let sx = null;
@@ -1338,6 +1339,39 @@ function sesiLoad(bid) {
   try { const a = JSON.parse(localStorage.getItem(sesiKey(bid)) || '[]'); return Array.isArray(a) ? a.filter(e => e && e.w && e.lang) : []; } catch (e) { return []; }
 }
 function sesiClear(bid) { try { localStorage.removeItem(sesiKey(bid)); } catch (e) { } }
+/* #1435: kata diketuk per halaman (kunci buku:bab:halaman -> Set kata huruf kecil); halaman dilewati tanpa ketuk = paham */
+const PGTAP = new Map(), SESSP = { t: 0, bid: '', set: new Set() };
+const pgKey = (b, pg) => b.id + ':' + b.pos + ':' + pg;
+function tapPaham(b, w) {
+  const k = pgKey(b, RD.page), set = PGTAP.get(k) || new Set(); set.add(String(w).trim().toLowerCase()); PGTAP.set(k, set);
+  if (isPaham(b.lang, w)) { setPaham([[b.lang, w]], false); SESSP.set.delete(vocabKey(b.lang, w)); if (db.vocab.some(v => sameVocab(v, b.lang, w))) paintSaved(b.lang, w, true); } /* diketuk lagi: garis kembali */
+}
+function pahamPage(b, pg) {
+  if (!b || !$('#cols')) return;
+  if (SESSP.t !== SESS.t || SESSP.bid !== b.id) { SESSP.t = SESS.t; SESSP.bid = b.id; SESSP.set = new Set(); }
+  const tapped = PGTAP.get(pgKey(b, pg)) || new Set(), cols = $('#cols'), seen = new Set(), items = [], cleared = [];
+  $$('.cols .w').forEach(el => {
+    const w = el.textContent.trim(), k = w.toLowerCase();
+    if (!w || seen.has(k) || tapped.has(k) || pageOf(el, cols) !== pg) return;
+    seen.add(k);
+    if (isKataSampah(b.lang, w, { b }) || isPaham(b.lang, w) || isKenal(b.lang, w)) return;
+    items.push([b.lang, w]);
+    if (db.vocab.some(v => sameVocab(v, b.lang, w))) cleared.push(k);
+  });
+  if (!items.length) return;
+  setPaham(items, true);
+  items.forEach(([l, w]) => SESSP.set.add(vocabKey(l, w)));
+  $$('.cols .w').forEach(x => { if (cleared.includes(x.textContent.trim().toLowerCase())) x.classList.remove('saved'); });
+  if (cleared.length) toast(`${cleared.length} kata dianggap paham, garis dihapus`, 6000, { label: 'Urungkan', fn: () => {
+    setPaham(items, false); items.forEach(([l, w]) => SESSP.set.delete(vocabKey(l, w)));
+    cleared.forEach(w => paintSaved(b.lang, w, true));
+  } });
+}
+/* pindah ke halaman berikut: halaman yang ditinggalkan dihitung bila dibuka >= 3 detik */
+function pahamLeave(b) {
+  if (b && RD.pgK === pgKey(b, RD.page) && Date.now() - RD.pgT >= 3000) pahamPage(b, RD.page);
+  RD.pgK = '';
+}
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim()) || isParticle(b.lang, w)) return;
   const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
@@ -1432,8 +1466,10 @@ function finishBook(b) {
   const xt = xpToday(); /* sama dgn kartu Target di Home */
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
-  const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xt >= GOAL ? `Target harian ${GOAL} XP tercapai` : `+${xt} XP hari ini`, mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
+  const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xpTodayText(xt), mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
+  const nPaham = SESSP.bid === b.id && SESSP.t === SESS.t ? SESSP.set.size : 0, nTap = ws.length + pend;
+  const pahamTxt = nTap ? `${nTap} kata ditambah ke Kata.${nPaham ? ` ${nPaham} kata dianggap paham.` : ''}` : nPaham ? 'Tidak ada kata yang kamu ketuk. Semuanya dianggap paham.' : '';
   const none = !ws.length && !pend; /* tak ada kata baru: Buku baru jadi tombol utama */
   const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
     : '';
@@ -1441,8 +1477,9 @@ function finishBook(b) {
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
-    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Selesai</button>` : '<button class="sec full" id="fbh">Selesai</button>'}</div>${nxHtml}
+    ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? '<p class="mut">Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Tutup</button>` : '<button class="sec full" id="fbh">Tutup</button>'}</div>${nxHtml}
     <div class="fb-sec">${none ? '' : '<button class="lnk" id="fbr">Baca ulang</button>'}${nx.length && !none ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
@@ -1569,7 +1606,7 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span class="w${(!part && savedSet.has(t.t.toLowerCase())) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
@@ -2019,7 +2056,9 @@ function minsLeft(b) {
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   closeInline();
+  if (b && p > RD.page) pahamLeave(b);
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
+  RD.pgK = b ? pgKey(b, RD.page) : ''; RD.pgT = Date.now();
   if (RD.page > 2) dismissTip(); /* buku sudah dibaca / loncat jauh: panduan tak perlu lagi (semua jalur pindah halaman lewat sini) */
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
@@ -2065,7 +2104,7 @@ function showPage(p, anim = true) {
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
   else if (last && b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Rekap'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Buka layar Tamat'); }
-  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Selesai'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Selesai membaca'); }
+  else if (last && !b.doneAt) { delete nx.dataset.ulang; nx.textContent = 'Tamatkan'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Tamatkan buku dan buka rekap'); }
   else { delete nx.dataset.ulang; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
   pfArm();
@@ -2078,7 +2117,7 @@ function endCard(b, last) {
   if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
-  c.innerHTML = `<button class="sec" id="ecr">Baca ulang</button><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button>`;
+  c.innerHTML = `<button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr">Baca ulang</button>`;
   c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };
@@ -2307,6 +2346,7 @@ function turn(d) {
   const np = RD.page + d;
   const resume = () => { if (!was) return; const id = ++LIS.id; LIS.on = true; setTimeout(() => { if (LIS.on && LIS.id === id && $('#cols')) startListenPage(); }, 400); };
   if (np >= 0 && np < RD.n) { vib(4); showPage(np); tipTurn(); if (!menuT) $('#reader').classList.remove('chrome'); else menuHold(); if (d > 0) award(2, 'page', b.id + ':' + b.pos, firstSent(np)); resume(); return; }
+  if (d > 0) pahamLeave(b);
   if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; const op = b.pos; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); setTimeout(() => marksReview(b, op), 150); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
   else if (d > 0) { if (b.doneAt) tamatSeen = null; finishBook(b); }
@@ -2409,7 +2449,7 @@ async function onWord(el, lastEl) {
     $('#wsug-b').onclick = () => { g.hidden = true; g.innerHTML = ''; $('#wsave').click(); };
   };
   const showTap = n => { const t = $('#wtap'); if (t) t.textContent = n >= 1 ? `Diketuk ${n}×` : ''; if (n >= 3 && !isParticle(b.lang, word) && !isUmum(b.lang, word)) $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === word.toLowerCase()) x.classList.add('often'); }); showSug(n); };
-  showTap(countTap(b.lang, word)); recSess(b, word, sent);
+  showTap(countTap(b.lang, word)); recSess(b, word, sent); tapPaham(b, word);
   keepVisible('.w.sel');
   $('#sw').onclick = () => speak(word, b.lang, 0.8);
   award(1, 'look');
@@ -3014,11 +3054,20 @@ const latihAct = nv => { deckExtra.push(nv); return db.vocab.length >= 3 ? { lab
 let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
 /* #1383 bar tonggak: pakai hitungan & lencana koleksi50/koleksi100 (#1325), tanpa hitungan sendiri; tersembunyi bila 0 kata */
+const mileClose = () => { db.mile50 = 1; save(); const e = document.getElementById('mileCard'); if (e) e.remove(); };
 const mileHtml = () => {
   const n = countedVocab(null).length, t = n < 50 ? 50 : n < 100 ? 100 : 0;
-  if (n < 1 || !t) return '';
-  const d = new Date().toDateString(); if (db.mstD !== d) { db.mstD = d; db.mst = (+db.mst || 0) + 1; save(); } /* hari bar dilihat, lokal (api/ tak diubah) */
-  return `<div class="mile" id="mileBar" role="group" aria-label="${n} dari ${t} kata tersimpan"><div class="mile-h"><b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><i style="width:${Math.round(n / t * 100)}%"></i></div></div>`;
+  if (!t) return '';
+  const d = new Date().toDateString();
+  let card = '';
+  /* db.mile50: kosong/0 = belum; teks tanggal = kartu tampil hari itu; 1 = selesai. Data lama yang sudah >=50 tanpa penanda dianggap selesai */
+  if (n < 50) { if (db.mile50 == null) { db.mile50 = 0; save(); } }
+  else if (db.mile50 == null) { db.mile50 = 1; save(); }
+  else if (db.mile50 === 0) { db.mile50 = d; save(); }
+  if (n >= 50 && typeof db.mile50 === 'string') { if (db.mile50 === d) card = `<div class="mile-card" id="mileCard" role="status"><b>Lencana 50 kata! Lanjut ke 100</b><button type="button" class="ghost" onclick="mileClose()">Tutup</button></div>`; else { db.mile50 = 1; save(); } }
+  if (n >= 1 && db.mstD !== d) { db.mstD = d; db.mst = (+db.mst || 0) + 1; save(); } /* hari bar dilihat dengan >=1 kata, lokal (api/ tak diubah) */
+  const head = n < 1 ? `<b>Satu kata, satu langkah. 0 dari 50 kata</b><span class="mile-tip">Ketuk kata di halaman baca, lalu Simpan</span>` : `<b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span>`;
+  return `${card}<div class="mile" id="mileBar" role="group" aria-label="${n} dari ${t} kata tersimpan"><div class="mile-h">${head}</div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><i style="width:${Math.round(n / t * 100)}%"></i></div></div>`;
 };
 /* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
 let quickPend = null, quickRun = null, quickLogged = false, quickExtra = false;
