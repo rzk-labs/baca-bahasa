@@ -1,5 +1,11 @@
 [
   {
+    "n": 1451,
+    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
+    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1449,
     "judul": "[peta 161] Keepo HQ: H2/H7 jadi rentang + jumlah sampel",
     "poin": "Angka kembali hari ke-2 dan ke-7 kini berupa rentang, plus jumlah sampel.",
@@ -171,12 +177,6 @@
     "n": 1365,
     "judul": "[peta 148] Penunjuk tingkat kesulitan bacaan di kartu buku saat impor",
     "poin": "Kartu buku di Home sekarang menampilkan tingkat bacaan: Ringan, Sedang, atau Berat.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1363,
-    "judul": "[peta 147] Baca tanpa putus: 'Tandai & lanjut' di kartu arti kata",
-    "poin": "Kartu arti kata sekarang punya tombol \"Tandai & lanjut\": simpan kata, langsung baca lagi.",
     "tgl": "2026-11-20"
   }
 ]
