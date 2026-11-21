@@ -1,5 +1,11 @@
 [
   {
+    "n": 1499,
+    "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
+    "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1495,
     "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
     "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
@@ -171,12 +177,6 @@
     "n": 1409,
     "judul": "Kartu Target Home: judul satu baris, cincin XP lega di HP",
     "poin": "Judul kartu target di Home sekarang cukup \"Target\", satu baris saja.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1403,
-    "judul": "Profil Rak: label 'Tamat' sekali saja + teks XP kartu Level lega",
-    "poin": "Label \"Tamat\" di Rak Profil tinggal satu, judul buku jadi lebih lega.",
     "tgl": "2026-11-21"
   }
 ]
