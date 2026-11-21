@@ -187,8 +187,8 @@
       "no": 26,
       "nama": "Android / Play Store",
       "fase": "Rilis Toko & Publik",
-      "status": "belum",
-      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md."
     },
     {
       "no": 27,
@@ -357,6 +357,15 @@
       "dokumen": "docs/riset-data-hitung-bersih.md",
       "status": "selesai (#1444)",
       "catatan": "Usaha S. Data kolom baca sudah ada di /hitung; hanya ubah dev/ (tanpa ubah api/). Mockup: docs/mockup-1419.html."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Android: manifest lengkap + halaman web Hapus akun (#1472)",
+      "dokumen": "docs/riset-android-play-store-26.md",
+      "status": "siap dikerjakan",
+      "catatan": "Peta 1-2 dari riset. Lengkapi manifest (id, description, lang, categories); buat halaman hapus akun yang tertaut dari privasi & bantuan. Naikkan C di sw.js. Jangan ubah api/. Mockup: docs/mockup-1472.html. Assetlinks & build AAB menunggu keputusan founder (akun, domain)."
     },
     {
       "no": 160,
