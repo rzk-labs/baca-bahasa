@@ -1,5 +1,29 @@
 [
   {
+    "n": 1388,
+    "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
+    "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1382,
+    "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
+    "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1381,
+    "judul": "Kartu Streak Home: angka hari jelas + huruf nama hari di bawah titik",
+    "poin": "Kartu Streak di Home sekarang menampilkan angka hari, mis. \"9 hari\".",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1379,
+    "judul": "[peta 149] Eksperimen retensi: kartu 'Lanjut dari halaman X' di Home",
+    "poin": "Home sekarang punya kartu kecil \"Lanjut dari halaman X · ±N menit\", sekali ketuk.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1377,
     "judul": "[peta 150] Eksperimen retensi: tombol 'Ulang 3 kata' satu ketuk di Home",
     "poin": "Home sekarang punya tombol \"Ulang 3 kata\", muncul kalau kata tersimpan 3 atau lebih.",
@@ -153,30 +177,6 @@
     "n": 1271,
     "judul": "[peta 129] Kartu ulang: nada pinyin pakai angka + palet aman buta warna",
     "poin": "Kartu ulang Mandarin kini pakai warna nada yang aman untuk buta warna.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1267,
-    "judul": "[peta 139] Home memuat: sisa perbaikan (IndexedDB macet, rak lokal dulu)",
-    "poin": "Kalau tab Keepo lain menahan, atau simpan gagal, kamu dapat pesan jelas.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1265,
-    "judul": "[peta 127] Keepo HQ: mockup mini di kartu Siap dicek di Home",
-    "poin": "Pratinjau HP di kartu Siap dicek sekarang lebih besar dan lebih jelas dibaca.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1285,
-    "judul": "E-reader: satu satuan nomor, 'halaman' saja (bukan Bagian + hal.)",
-    "poin": "Nomor di e-reader sekarang satu jenis saja: halaman.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1284,
-    "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
-    "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
     "tgl": "2026-11-17"
   }
 ]
