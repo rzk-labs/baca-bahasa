@@ -1,5 +1,11 @@
 [
   {
+    "n": 1461,
+    "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
+    "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1459,
     "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
     "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
@@ -171,12 +177,6 @@
     "n": 1375,
     "judul": "[peta 147] Pesan PDF scan/komik jelas: kartu + cerita contoh + saran",
     "poin": "Impor PDF gambar/komik kini tampil kartu ramah, bukan pesan singkat.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1371,
-    "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
-    "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
     "tgl": "2026-11-20"
   }
 ]

@@ -1667,7 +1667,7 @@ async function viewBaca() {
   };
   if (b.lang === 'zh-CN' && !db.rtSet && db.rtLang['zh-CN'] == null && rtAsked !== b.id) {
     rtAsked = b.id;
-    openSheet(`<h2>Mau pinyin di atas kata?</h2><p class="muted">Bisa diganti kapan saja lewat tombol Pinyin di atas.</p><div class="rtq"><button class="btn" data-q="2">Nyala</button><button class="btn ghost" data-q="0">Mati</button></div>`, 'Mau pinyin?');
+    openSheet(`<h2>Mau pinyin di atas kata?</h2><p class="muted">Bisa diganti kapan saja lewat tombol Pinyin di atas.</p><div class="rtq"><button class="btn" data-q="2">Nyala<small>Pinyin di semua kata. Paling gampang dibaca.</small></button><button class="btn ghost" data-q="1">Hanya kata baru<small>Pinyin hanya di kata yang kamu ketuk. Melatih mata baca hanzi.</small></button><button class="btn ghost" data-q="0">Mati<small>Hanzi saja, tanpa pinyin.</small></button></div>`, 'Mau pinyin?');
     $$('#sheetBody [data-q]').forEach(x => x.onclick = () => { setRt('zh-CN', +x.dataset.q); closeSheet(); viewBaca(); });
   }
   $('#rMore').onclick = () => openMore();
