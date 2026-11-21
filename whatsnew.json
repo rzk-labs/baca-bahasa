@@ -1,5 +1,11 @@
 [
   {
+    "n": 1537,
+    "judul": "Sheet Tamat: baris kecil di tombol 'Lanjut' terbaca jelas",
+    "poin": "Tulisan kecil di tombol \"Lanjut\" setelah tamat baca sekarang jelas terbaca.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1536,
     "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
     "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
@@ -171,12 +177,6 @@
     "n": 1453,
     "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
     "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1451,
-    "judul": "[peta 158] Pastikan /hitung mencatat ?ref=rd-1, th-bio, tt-bio",
-    "poin": "Tautan rd-1, th-bio, tt-bio sudah tercatat per sumber, pengguna baru ikut terhitung.",
     "tgl": "2026-11-21"
   }
 ]
