@@ -848,7 +848,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v538';
+const APP_VER = 'v546';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1163,7 +1163,7 @@ function viewRak() {
   $('#up').onclick = () => $('#file').click();
   const ct = $('#cta'); if (ct) ct.onclick = () => $('#file').click();
   const startSample = async l => {
-    const S = SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
+    const S = (!db.books.length && SAMPLES_SHORT[l]) || SAMPLES[l], ex = db.books.find(b => b.lang === l && b.title === S.title);
     if (ex) { ex.opened = Date.now(); db.cur = ex.id; save(); setTab('baca'); return; }
     try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); }
   };
@@ -1668,7 +1668,7 @@ async function viewBaca() {
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
-      ${tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
+      ${guideOn(b) ? `<div class="rtip gtip" id="gtip" role="note"><span>${ico('pointer')}<span class="rtt">Ketuk kata yang menyala</span></span><button id="gskip" type="button" aria-label="Lewati petunjuk">Lewati</button></div>` : tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar"><i id="pbar"></i></div></div>
         <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
@@ -1676,6 +1676,7 @@ async function viewBaca() {
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
   tipN = 0; tipDone = false; nudgePg = new Set();
+  if (guideOn(b)) { tipDone = true; guideMark(b); if ($('#gskip')) $('#gskip').onclick = () => guideEnd('skip'); }
   if (tipStepNow() > 0 && (!$('#toast').classList.contains('hide') || $('#nchip'))) { tipDone = true; const t = $('#tip'); if (t) t.remove(); } /* tak bareng toast/chip; dicoba lagi kunjungan berikut */
   if (tipOn()) setTimeout(dismissTip, 12000); /* hilang sendiri ±12 dtk, dianggap sudah dilihat */
   if ($('#tipx')) $('#tipx').onclick = () => dismissTip();
@@ -1775,7 +1776,7 @@ async function viewBaca() {
         RD.dt = { el: s1, t: now };
       } else RD.dt = null;
     }
-    if (w) { dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
+    if (w) { if (guideLive) guideEnd('tap'); dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else toggleMenu(false);
@@ -2096,6 +2097,7 @@ function showPage(p, anim = true) {
   if (b && p > RD.page) pahamLeave(b);
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   RD.pgK = b ? pgKey(b, RD.page) : ''; RD.pgT = Date.now();
+  if (guideLive && RD.page > 0) guideEnd('skip');
   if (RD.page > 2) dismissTip(); /* buku sudah dibaca / loncat jauh: panduan tak perlu lagi (semua jalur pindah halaman lewat sini) */
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
@@ -2356,6 +2358,28 @@ function toggleMenu(keep) {
   clearTimeout(menuT); menuT = 0;
   const on = r.classList.toggle('chrome');
   if (on && keep) menuHold();
+}
+/* #1507: pemandu kata pertama. Hanya cerita contoh pendek, sekali per perangkat (db.fwGuide: 'seen' → 'tap' | 'skip'; data lama tanpa field = belum pernah).
+   Satu kata berdenyut + bar petunjuk di luar teks. Hilang saat kata diketuk / Lewati / pindah halaman. */
+let guideLive = '';
+function guideOn(b) {
+  if (!b || !isShortSample(b)) return false;
+  if (guideLive === b.id) return true;
+  if (db.fwGuide || db.books.length !== 1 || (b.pos || 0) > 0 || (b.pg || 0) > 0) return false;
+  guideLive = b.id; db.fwGuide = 'seen'; save(); return true;
+}
+function guideMark(b) {
+  const S = SAMPLES_SHORT[b.lang], ws = $$('#cols .w').filter(x => !x.closest('h2') && !isParticle(b.lang, x.textContent));
+  const w = ws.find(x => S && x.textContent.includes(S.pick)) || ws[0];
+  if (w) w.classList.add('guide-w');
+}
+function guideEnd(how) {
+  if (!guideLive) return;
+  guideLive = ''; db.fwGuide = how; save();
+  try { window.kepoGuide = how === 'tap' ? 't' : 's'; } catch (e) { }
+  const g = $('#gtip'); if (g) g.remove();
+  $$('.guide-w').forEach(x => x.classList.remove('guide-w'));
+  if (typeof layout === 'function') { try { layout(); } catch (e) { } }
 }
 /* tips e-reader: satu pesan pendek per kunjungan, bergantian. db.tipStep: 0 kata, 1 kalimat, 2 menu, 3 selesai (data lama tanpa field = selesai bila seenTip) */
 const TIPS = ['<b>Ketuk kata</b> = artinya', '<b>Tahan kalimat</b> = arti kalimat', '<b>Ketuk tengah</b> = menu'];

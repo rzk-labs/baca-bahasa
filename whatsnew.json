@@ -1,5 +1,11 @@
 [
   {
+    "n": 1507,
+    "judul": "[peta 168] Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati",
+    "poin": "Pembaca baru kini dapat cerita contoh pendek, hanya 3 kalimat.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1505,
     "judul": "[peta 164] Banner Level: uji & perbaiki di iPhone dan layar 320px",
     "poin": "Banner Level sudah dicek: tab tetap bisa diketuk, hilang sendiri, muncul sekali per level.",
@@ -171,12 +177,6 @@
     "n": 1425,
     "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
     "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1407,
-    "judul": "Ulang 3 kata: satu tombol di Home, tahan sesi, hadiah & 'Ulang 3 lagi'",
-    "poin": "Home sekarang punya satu tombol \"Ulang 3 kata\", tidak ada kartu kembar lagi.",
     "tgl": "2026-11-21"
   }
 ]

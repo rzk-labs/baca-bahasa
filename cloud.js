@@ -862,6 +862,7 @@ window.kepoMark = function (m) {
     let jalur = 'x'; try { const bk = typeof book === 'function' ? book() : null; if (bk) jalur = /\(contoh\)\s*$/i.test(bk.title || '') ? 'c' : 'i'; } catch (e) { }
     let sfx = '-' + jalur;
     if (m === 'kata' && first === day) { const t0 = +localStorage.getItem('kepo.t0') || 0, d = t0 ? (Date.now() - t0) / 1000 : -1; if (d >= 0) sfx += '-t' + (d < 30 ? 1 : d < 60 ? 2 : d < 120 ? 3 : d < 300 ? 4 : 5); }
+    if (m === 'kata') sfx += '-g' + (window.kepoGuide || 'n'); /* #1507: pemandu kata pertama: t = diketuk, s = dilewati, n = tak ada pemandu */
     const base = (localStorage.getItem('kepo.src') || 'langsung').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 10) || 'langsung';
     const data = JSON.stringify({ day, first, src: base + sfx, mark: m, akt });
     localStorage.setItem('kepo.m.' + m, day);
