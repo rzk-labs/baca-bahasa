@@ -1128,7 +1128,7 @@ function viewRak() {
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
     ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, jadwal tidak berubah">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Jadwal tidak berubah</small></span><b>Mulai</b></button>`; const k = quickPick().length, read = Object.keys(db.pgDay || {}).some(d => (db.pgDay[d] || 0) > 0); if (k < 3 && (k > 0 || read)) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-disabled="true" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span></button>`; return ''; })()}
+    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, jadwal tidak berubah">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Jadwal tidak berubah</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<div class="mut sm" id="xtraDone" style="padding:6px 4px;text-align:center">Cukup hari ini, latihan ekstra lanjut besok.</div>`; const k = quickPick().length, read = Object.keys(db.pgDay || {}).some(d => (db.pgDay[d] || 0) > 0); if (k < 3 && (k > 0 || read)) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-disabled="true" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span></button>`; return ''; })()}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
@@ -3357,11 +3357,12 @@ function deck(kb) {
   const rdy = deckRetry.find(r => r.wait <= 0) || (!cards.length ? deckRetry[0] : null);
   if (rdy) cards.unshift(rdy.v);
   if (!cards.length) {
-    if (quickRun && deckDone >= 1 && !quickLogged) { quickLogged = true; db.q3s = (+db.q3s || 0) + 1; save(); }
+    let xtraXp = 0;
+    if (quickRun && deckDone >= 1 && !quickLogged) { quickLogged = true; db.q3s = (+db.q3s || 0) + 1; if (quickExtra) { xtraXp = 2; award(2, 'rem'); } save(); }
     if (quickRun) {
       quickRun = null;
       quickExtra = false;
-      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap sama.</div><button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
+      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap sama.</div>${xtraXp ? '<div class="mut sm"><b>+2 XP</b></div>' : ''}<button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
       if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
       return;
     }
