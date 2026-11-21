@@ -1278,3 +1278,14 @@ ol.steps3 b{min-width:0}
 @media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
 .stat3 .sbig{white-space:nowrap}
+/* #1411 sampul tanpa gambar: huruf awal + judul pendek (maks 3 baris; kecil 2 baris) */
+.cover{gap:6px;text-align:center}
+.cover .em{font-size:34px}.bk .cover .em{font-size:48px}
+.cover .ct{width:100%;font-size:max(var(--fs-min),11px);line-height:1.2;overflow-wrap:anywhere;color:inherit}
+.bk .cover .ct{font-size:15px}
+.bk .cover .ct.c1{font-size:13px}.bk .cover .ct.c2{font-size:12px}
+.cover .ct.c3,.cover .ct.c4{font-size:var(--fs-min)}
+.cover .ct.cjk{word-break:break-all}
+.hero .cover .em,.rk-bk .cover .em{font-size:26px}
+.hero .cover .ct,.rk-bk .cover .ct{-webkit-line-clamp:2;font-size:var(--fs-min)}
+@media (max-width:359px){.bk .cover .em{font-size:40px}}
