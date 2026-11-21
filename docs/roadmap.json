@@ -374,7 +374,7 @@
       "prioritas": "P0",
       "nama": "Pengaturan baca: mode 'Baca polos' tanpa garis bawah & tanda bantu (#1359)",
       "dokumen": "docs/spesifikasi-baca-polos-1359.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1427)",
       "catatan": "Mockup: docs/mockup-1359.html. Ubah ui.js, style.css, sw.js (C kepo-v478→v479); db.plain default false, ikut #rst, matikan prafetch #458. Jangan ubah api/, prepHtml/bindPrep. Uji 320px, tema Kertas & Malam."
     },
     {
