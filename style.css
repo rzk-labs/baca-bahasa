@@ -1291,3 +1291,10 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 @media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
 .stat3 .sbig{white-space:nowrap}
+/* #1409 Kartu Target: judul satu baris, cincin XP lega */
+#goalCard .eyebrow{white-space:nowrap;max-width:100%}
+#goalCard .goal-row .ring,#goalCard .goal-row .ring svg{width:72px;height:72px}
+#goalCard .goal-row .ring circle{stroke-width:6}
+#goalCard .goal-row .ring .score{padding:0;gap:1px}
+#goalCard .goal-row .ring .score .gn{font-size:19px;line-height:19px}
+@media(max-width:359px){#goalCard .goal-row .ring,#goalCard .goal-row .ring svg{width:66px;height:66px}#goalCard .goal-row .ring .score .gn{font-size:17px;line-height:17px}}
