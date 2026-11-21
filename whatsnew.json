@@ -1,5 +1,11 @@
 [
   {
+    "n": 1435,
+    "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
+    "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1433,
     "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
     "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
@@ -171,12 +177,6 @@
     "n": 1355,
     "judul": "Sheet Tamat: tombol utama & 'Selesai' diberi jarak, kartu teks disembunyikan",
     "poin": "Layar Tamat: tombol 'Selesai' sekarang ada jarak, tidak gampang salah ketuk.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1349,
-    "judul": "E-reader HP: tombol 'Selesai' di bar bawah tak mepet tepi kanan",
-    "poin": "Tombol \"Selesai\" di bar bawah reader sekarang punya jarak aman dari tepi layar.",
     "tgl": "2026-11-20"
   }
 ]
