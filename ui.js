@@ -302,7 +302,7 @@ function celebrate(title, msg, snd = 'win') {
     b.innerHTML = `<div class="card"><div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div><div class="lvl-tx"><b>${esc(title)}</b><span>${esc(msg)}</span></div><button type="button" class="lime">Lanjut</button></div>`;
     document.body.appendChild(b);
     const bye = () => { clearTimeout(t); b.remove(); document.removeEventListener('keydown', onKey); };
-    const onKey = e => { if (e.key === 'Escape') bye(); };
+    const onKey = e => { if (!b.isConnected) { clearTimeout(t); document.removeEventListener('keydown', onKey); return; } if (e.key === 'Escape') bye(); };
     const t = setTimeout(bye, 4000);
     b.querySelector('button').onclick = bye; document.addEventListener('keydown', onKey);
     return;
