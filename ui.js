@@ -2495,7 +2495,7 @@ async function onWord(el, lastEl) {
     h.hidden = false;
     $('#whb').onclick = () => grow(d);
   };
-  const wtrEl = $('#wtr'); let slowT = 0, trAc = null;
+  const wtrEl = $('#wtr'); let slowT = 0, trAc = null, repaintDict = null;
   /* 'Ini nama': tanpa terjemahan mesin, chip 'Nama', tak bisa disimpan sebagai kata belajar */
   const namaLbl = () => isNama(b, word) ? 'Bukan nama' : 'Ini nama';
   const updNama = () => { const n = $('#wnama'), sv = $('#wsave'); if (n) { n.hidden = isSaved(); n.textContent = namaLbl(); n.setAttribute('aria-pressed', isNama(b, word) ? 'true' : 'false'); } if (sv) sv.hidden = isNama(b, word); updKenal(); };
@@ -2518,25 +2518,58 @@ async function onWord(el, lastEl) {
     const alt = altFlat(altArti(d, r.text));
     if ($('#walt') && !$('#walt').dataset.open && !$('#walt').firstChild) altLink();
     /* #1333: semua arti lain = chip besar (ketuk = pilih, alur #1106); maks 8/jenis, tampil 6 + 'Lihat semua'; frasa (dt=ex) maks 3 */
-    const chipList = dd => altFlat(altArti(dd, curT() || r.text).map(g => ({ pos: g.pos, terms: g.terms.slice(0, 8) })));
-    const paintDict = (dd, al, ex) => {
-      if (!al.length) return '';
-      const flat = chipList(dd);
-      const chip = (t, i) => `<button class="wchip" type="button" data-i="${i}" dir="auto"${i >= 6 ? ' hidden' : ''}>${esc(t)}</button>`;
-      const exs = (Array.isArray(ex) ? ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('');
-      return `<div class="wchips-h">Arti lain · ketuk untuk pakai</div><div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">Terjemahan mesin, bisa keliru.</div>`;
+    /* #1459: bagian 'Arti lain' SELALU tampil: ada / memuat / gagal / kosong. Arti terpilih tetap di daftar (centang). */
+    const kind = { dd: d, ex: r.ex, st: alt.length ? 'ada' : 'muat', ph: [] };
+    const chipList = dd => altFlat(altArti(dd, '').map(g => ({ pos: g.pos, terms: g.terms.slice(0, 8) })));
+    const norm = t => String(t || '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
+    const paintDict = () => {
+      const el = $('#wdict'); if (!el) return;
+      const H = '<div class="wchips-h">Arti lain · ketuk untuk pakai</div>';
+      const cur = norm(curT() || r.text);
+      let flat = [], body = '';
+      const chip = (t, i) => { const on = norm(t) === cur; return `<button class="wchip${on ? ' on' : ''}" type="button" data-i="${i}" dir="auto"${on ? ' aria-pressed="true"' : ''}${i >= 6 && !on ? ' hidden' : ''}>${on ? '<span aria-hidden="true">✓ </span>' : ''}${esc(t)}</button>`; };
+      if (kind.st === 'muat') body = '<div class="wchips" role="status" aria-label="Lagi memuat arti lain"><span class="wchip wskel"></span><span class="wchip wskel"></span><span class="wchip wskel"></span></div>';
+      else if (kind.st === 'gagal') body = '<div class="wchips-msg"><span class="mut sm">Arti lain belum bisa dimuat</span> <button class="ghost wretry" type="button" id="wacoba">Coba lagi</button></div>';
+      else if (kind.st === 'kosong') body = '<div class="wchips-msg"><span class="mut sm">Belum ada arti lain untuk ini</span> <button class="ghost wretry" type="button" id="wakosong">Terjemahkan ulang</button></div>';
+      else {
+        flat = kind.ph.length ? kind.ph : chipList(kind.dd);
+        body = `<div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>`;
+      }
+      const exs = kind.st === 'ada' ? (Array.isArray(kind.ex) ? kind.ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('') : '';
+      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">Terjemahan mesin, bisa keliru.</div>`;
+      el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); });
+      const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); };
+      const rc = $('#wacoba'); if (rc) rc.onclick = () => fillAlt(false);
+      const rk = $('#wakosong'); if (rk) rk.onclick = () => fillAlt(true);
     };
-    const bindDict = dd => { const el = $('#wdict'); if (!el) return; const flat = chipList(dd); el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); }); const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); }; };
-    $('#wdict').innerHTML = paintDict(d, alt, r.ex); bindDict(d);
-    /* arti lain kosong: ambil ulang sekali di latar; tetap kosong = 'Belum ada arti lain' kecil */
-    if (!alt.length && !r.off && !(b.lang === 'ja' && db.my === 'id')) {
-      const q0 = qWord(), txt = r.text;
-      if (navigator.onLine === false) $('#wdict').innerHTML = '<div class="mut sm">Lagi offline, arti lain belum bisa dimuat.</div>';
-      else altFill(q0, b.lang, db.my, sig).then(more => {
-        if (my !== tok || !$('#wdict') || qWord() !== q0) return;
-        const al = altFlat(altArti(more, txt));
-        $('#wdict').innerHTML = al.length ? paintDict(more, al, r.ex) : '<div class="mut sm">Belum ada arti lain.</div>'; if (al.length) bindDict(more); keepVisible('.w.sel');
-      }).catch(() => { if (my === tok && $('#wdict') && !$('#wdict').firstChild) $('#wdict').innerHTML = '<div class="mut sm">Belum ada arti lain.</div>'; });
+    repaintDict = paintDict;
+    /* frasa 2+ kata tanpa daftar: arti per kata sebagai chip pengganti */
+    const perKata = async (q0, sig2) => {
+      const parts = [...new Set(q0.split(/\s+/).filter(Boolean))].slice(0, 4); if (parts.length < 2 || NOSPACE.has(b.lang)) return [];
+      const got = await Promise.all(parts.map(p => { const c = cachedTr(p, b.lang, db.my); return c ? Promise.resolve(c) : translate(p, b.lang, db.my, sig2).catch(() => null); }));
+      const out = [], seen = new Set();
+      got.forEach(g => { const t = g && typeof g.text === 'string' ? g.text.trim() : ''; if (t && !seen.has(norm(t))) { seen.add(norm(t)); out.push(t); } });
+      return out;
+    };
+    const fillAlt = async force => {
+      const q0 = qWord(), txt = r.text; kind.st = 'muat'; paintDict();
+      const ok = () => my === tok && $('#wdict') && qWord() === q0;
+      try {
+        if (navigator.onLine === false) throw new Error('offline');
+        let more;
+        if (force) { const r2 = await translate(q0, b.lang, db.my, sig, true); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length) more = await altFetch(q0, b.lang, db.my, sig); }
+        else more = await altFill(q0, b.lang, db.my, sig);
+        if (!ok()) return;
+        if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; }
+        else { const ph = await perKata(q0, sig); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
+      } catch (e) { if (!ok()) return; kind.st = 'gagal'; }
+      paintDict(); keepVisible('.w.sel');
+    };
+    paintDict();
+    /* arti lain kosong: ambil ulang sekali di latar; hasilnya selalu salah satu kondisi tetap */
+    if (!alt.length) {
+      if (r.off || (b.lang === 'ja' && db.my === 'id')) perKata(qWord(), sig).then(ph => { if (my !== tok || !$('#wdict')) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; paintDict(); }).catch(() => { if (my === tok && $('#wdict')) { kind.st = 'kosong'; paintDict(); } });
+      else fillAlt(false);
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
@@ -2548,7 +2581,7 @@ async function onWord(el, lastEl) {
   const pickArti = t => {
     const w = word, v = savedOf();
     if (v) { v.t = t; v.pick = 1; delete v.noTr; delete v.nyusul; save(); if (kataSeg && $('#klist')) viewKata(); } else pickT = t;
-    vib(8); setTx('#wtr', t); pickChip(); keepVisible('.w.sel');
+    vib(8); setTx('#wtr', t); pickChip(); if (repaintDict) repaintDict(); keepVisible('.w.sel');
     if (wAlt && word === w) { delete wAlt.dataset.open; wAlt.innerHTML = '<div class="mut sm" role="status">Oke, arti ini yang dipakai.</div>'; setTimeout(() => { if ($('#walt') === wAlt && word === w && !wAlt.dataset.open) altLink(); }, 2200); }
   };
   /* 'Terjemahkan ulang': lewati cache sekali; gagal = arti lama tetap, pesan ramah */
