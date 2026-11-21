@@ -173,7 +173,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
-.q3-lock{opacity:.7;cursor:default;font-weight:600}.q3-lock span.bar{display:block;height:6px;margin-top:8px}
+.q3-lock{font-weight:600}.q3-lock .q3-go{text-decoration:none;padding:8px 12px;min-height:36px;border-radius:999px;background:var(--ink);color:var(--ice);display:inline-flex;align-items:center;white-space:nowrap}@media(max-width:360px){.q3-lock .q3-go{margin-left:30px}}.q3-lock span.bar{display:block;height:6px;margin-top:8px}
 .soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
@@ -563,6 +563,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .pill.login{background:var(--ink);color:var(--cream);border:0;cursor:pointer}
 [data-theme=night] .pill.login{background:var(--lime);color:var(--ink)}
 @media (max-width:380px){#pStreak{padding:0 7px;gap:2px}#pXp{padding:0 7px}}
+/* #1489 Home: chip streak disembunyikan (kartu Streak sudah ada); chip XP tetap */
+#hdx.noStreak #pStreak{display:none}
 /* #1250 Home memuat: kerangka rak + chip streak/XP netral */
 .big.bk-h{font-size:clamp(26px,8vw,34px);line-height:1.1;margin-bottom:12px}
 .bk-skel{display:flex;gap:12px;overflow:hidden}
@@ -1309,6 +1311,11 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 .sdots .sd em{font:600 11px/12px var(--font-body,inherit);letter-spacing:0;white-space:nowrap;font-style:normal;color:#351E28;opacity:.75}
 .sdots .sd.td em{font-weight:800;opacity:1;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
+/* #1501 huruf hari satu huruf satu baris; info bawah diberi jarak, dipotong ellipsis */
+.sdots{margin:6px 0 8px;gap:0}
+.sdots .sd{overflow:hidden}
+.sdots .sd em{display:block;max-width:100%;overflow:hidden;white-space:nowrap;font-size:11px;line-height:13px}
+.stat3 .streak1 .lbl2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;margin-top:auto;position:relative}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
 .stat3 .sbig{white-space:nowrap}
 /* #1411 sampul tanpa gambar: huruf awal + judul pendek (maks 3 baris; kecil 2 baris) */
@@ -1331,6 +1338,12 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 @media(max-width:359px){#goalCard .goal-row .ring,#goalCard .goal-row .ring svg{width:66px;height:66px}#goalCard .goal-row .ring .score .gn{font-size:17px;line-height:17px}}
 /* #1437: kartu akhir halaman: satu aksi utama, Baca ulang tautan kecil */
 .endcard .sec{flex:1 1 100%}.endcard .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
+/* #1495 Home HP: rak 'Koleksi kamu' tak tertutup menu bawah. Jarak bawah = menu + safe-area + napas; judul maks 2 baris utuh */
+body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up):has(.hscroll>.bk){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 10px + 72px)}
+.hscroll:has(>.bk){padding-bottom:var(--space-4,16px);scroll-padding-bottom:calc(var(--tabbar-h) + 96px)}
+.bk{scroll-margin-bottom:calc(var(--tabbar-h) + 96px)}
+.bk .t{height:auto;min-height:40px;max-height:40px;line-height:20px;overflow:hidden}
+.bk .t .t-main,.bk .t:not(:has(.t-main)){max-height:40px;line-height:20px}
 /* #1477: rak Profil: judul satu kali di bawah sampul (maks 2 baris), tak dobel di sampul; aman dari menu bawah */
 .rk-bk .cover .ct{display:none}
 .rk-bk .cover{justify-content:center;align-items:center}

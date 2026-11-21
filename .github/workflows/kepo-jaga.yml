@@ -33,6 +33,11 @@ jobs:
           if [ "$TUNGGU" -ge 15 ]; then
             echo "::notice title=Tim menunggu kamu::$TUNGGU hasil menunggu dicek. Tim tidak diberi tugas baru dulu."; exit 0
           fi
+          # Penjaga macet: tugas "sedang-dikerjakan" tanpa kabar > 90 menit (agent mati/timeout) -> tandai gagal; dicoba ulang otomatis di bawah.
+          LIMIT=$(date -u -d '90 minutes ago' +%Y-%m-%dT%H:%M:%SZ)
+          for N in $(gh issue list --label kepo-dev --label sedang-dikerjakan --state open --json number,updatedAt --jq ".[]|select(.updatedAt<\"$LIMIT\")|.number"); do
+            gh issue edit "$N" --add-label gagal --remove-label sedang-dikerjakan && echo "#$N macet >90 menit → ditandai gagal (dicoba ulang)"
+          done
           # Kartu yang sudah live tapi masih terbuka: tutup.
           for N in $(gh issue list --label kepo-dev --label live --state open --json number --jq '.[].number'); do
             gh issue close "$N" && echo "#$N live → ditutup"
@@ -55,8 +60,8 @@ jobs:
           # Pekerjaan berstatus belum per peran (bukan selesai, bukan menunggu keputusan)
           belum() { jq --arg p "$1" '[.backlog[]|select(.peran==$p)|select(.status|test("^selesai";"i")|not)|select((.status|test("^(spesifikasi )?siap dikerjakan";"i")) or (.status|test("founder|menunggu keputusan|deploy server manual|draft siap dicek";"i")|not))]|length' /tmp/peta.json 2>/dev/null || echo 0; }
           SIAP=$(belum developer); SIAP=${SIAP:-0}; echo "Fitur developer siap dibangun: $SIAP"
-          for P in developer desain riset pm marketing; do
-            case "$P" in developer) KUOTA=100;; desain) KUOTA=8;; riset|pm) KUOTA=6;; *) KUOTA=4;; esac
+          for P in developer riset desain pm marketing ux kreatif interaksi sistem aksesibilitas; do
+            case "$P" in developer) KUOTA=100;; desain) KUOTA=8;; riset|pm) KUOTA=6;; ux|kreatif|interaksi) KUOTA=4;; sistem|aksesibilitas) KUOTA=3;; *) KUOTA=4;; esac
             PUNYA=$(belum "$P"); PUNYA=${PUNYA:-0}
             # Peran dokumen direm saat developer kebanjiran, KECUALI peran itu masih punya pekerjaan "belum" di peta.
             if [ "$P" != developer ] && [ "$P" != marketing ] && [ "$SIAP" -ge 5 ] && [ "$PUNYA" -eq 0 ]; then echo "$P: rem, $SIAP fitur menunggu developer"; continue; fi

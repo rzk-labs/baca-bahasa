@@ -160,7 +160,7 @@
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md. (bukti internet tipis, #1487) kata bahasa lain di buku & angka kata bentrok merusak kepercayaan; pencarian publik tak menemukan dokumentasi LingQ/Readlang/Language Reactor/Kindle soal teks campuran, sumber utama kode & masukan AI; status tetap draft, lihat docs/riset-kata-bahasa-lain-di-buku.md (backlog #162)."
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md. (bukti internet tipis, #1487) kata bahasa lain di buku & angka kata bentrok merusak kepercayaan; pencarian publik tak menemukan dokumentasi LingQ/Readlang/Language Reactor/Kindle soal teks campuran, sumber utama kode & masukan AI; status tetap draft, lihat docs/riset-kata-bahasa-lain-di-buku.md (backlog #162). (bukti internet, #1494) 54 butir dari 5 jenis sumber (riset UX, forum LingQ/Language Reactor, blog praktisi, studi baca bahasa kedua, ulasan app), lihat docs/riset-cerita-contoh-kata-pertama.md. Vonis: H1 cerita contoh lebih baik dari upload sendiri sebagian (condong benar, tak ada uji langsung); H2 satu ketukan kata dipandu naikkan ketuk kata hari pertama belum jelas (condong benar; angka naik hanya anekdot vendor); H3 panjang cerita ideal belum jelas (tak ada sumber kalimat/menit; usul uji 3 kalimat); H4 pemandu bisa dilewati tidak mengganggu sebagian. Status tetap draft (aturan_fase2). Backlog #168."
     },
     {
       "no": 23,
@@ -242,6 +242,23 @@
   ],
   "backlog": [
     {
+      "no": 169,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home: rak Koleksi kamu tak tertutup menu bawah di HP (#1495)",
+      "dokumen": "docs/desain-rak-koleksi-1495.md",
+      "status": "siap dikerjakan"
+    },
+    {
+      "no": 168,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati (#1494)",
+      "dokumen": "docs/riset-cerita-contoh-kata-pertama.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1494.html. Cerita contoh pertama 3 kalimat pendek (panjang bisa diubah untuk uji). Satu kata berdenyut + 1 baris 'Ketuk kata yang menyala' + tombol 'Lewati'; hilang setelah ketuk pertama atau Lewati; tak menutup teks; tampil sekali. Catat lewat /hitung: detik ke ketuk pertama, jalur (contoh vs impor), pemandu diketuk vs dilewati (gabung dengan #153). Naikkan C di sw.js. Uji 320px & 390px."
+    },
+    {
       "no": 161,
       "peran": "riset",
       "prioritas": "P1",
@@ -303,6 +320,15 @@
       "dokumen": "docs/riset-kata-bahasa-lain-di-buku.md",
       "status": "siap dikerjakan",
       "catatan": "Mockup: docs/mockup-1487.html. Ubah app.js (isKataSampah, himpunan aksara per bahasa), ui.js (recSess, sessRecap, finishBook), sw.js (naikkan C). Jangan ubah api/. Kasus uji di dokumen bagian 4."
+    },
+    {
+      "no": 167,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader: buku sudah Tamat, tombol bawah halaman terakhir jadi 'Baca ulang' (#1493)",
+      "dokumen": "docs/pm-reader-tamat-baca-ulang-1493.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1493.html. Ubah ui.js (cabang last && b.doneAt untuk #nx, sekitar baris 2120) + handler klik #nx (baris 1714) + sw.js (naikkan C). Pakai restartBook(b); viewBaca(). Jangan sentuh bar 'Tamat ·', kartu 'Buku baru', api/. Uji 320px & lebar."
     },
     {
       "no": 159,
@@ -442,7 +468,6 @@
     {
       "no": 161,
       "peran": "developer",
-      "prioritas": "P0",
       "prioritas": "P0",
       "nama": "Keepo HQ: tulis H2/H7 sebagai rentang + jumlah sampel; hitung per kelompok hari pertama (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
@@ -1609,6 +1634,15 @@
       "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
       "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
       "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Catatan sesi dan sheet Tamat: satu saringan bahasa buku (#1488)",
+      "dokumen": "docs/saringan-kata-sesi-1488.md",
+      "status": "selesai (kode sudah di cabang #1488, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1488.html. sw.js naik ke kepo-v534."
     },
     {
       "no": 162,
