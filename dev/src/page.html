@@ -511,6 +511,20 @@ let LASTH=null;
 const SUMBER={langsung:'Langsung',direct:'Langsung',ios:'iOS (TestFlight)',testflight:'iOS (TestFlight)',threads:'Threads'};
 const namaSumber=s=>{const k=String(s||'').trim().toLowerCase();return SUMBER[k]||(k?k.replace(/[^a-z0-9 _.-]/g,'').slice(0,24)||'Lainnya':'Langsung')};
 const pctB=(a,b)=>b>0?Math.round(a/b*100)+'%':'–';
+// #1449: rentang Wilson 95% (andal untuk sampel kecil). Sampel <100 = "belum cukup data", tanpa warna baik/buruk.
+const MINN=100;
+function wilson(k,n){if(!(n>0))return null;const z=1.96,p=k/n,d=1+z*z/n,c=p+z*z/(2*n),m=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n));return[Math.max(0,(c-m)/d)*100,Math.min(1,(c+m)/d)*100]}
+const fp=x=>x<10?(Math.round(x*10)/10).toString().replace('.',','):String(Math.round(x));
+const rentang=(k,n)=>{const w=wilson(k,n);return w?fp(w[0])+'–'+fp(w[1])+'%':'–'};
+// Kelompok hari pertama: pengguna baru hari D dibagi yang kembali TEPAT `off` hari kemudian dari kelompok yang sama.
+// Hanya kelompok yang hari ke-off-nya sudah lewat penuh (WIB) yang dihitung.
+function kohortN(hari,key,off){
+  const tgl=new Date(Date.now()+7*3600e3).toISOString().slice(0,10),baru={},bal={};
+  (hari||[]).forEach(r=>{baru[r.day]=+r.baru||0;bal[r.day]=+r[key]||0});
+  let n=0,k=0;
+  Object.keys(baru).forEach(d=>{const t=new Date(Date.parse(d+'T00:00:00Z')+off*864e5).toISOString().slice(0,10);if(t>=tgl)return;n+=baru[d];k+=bal[t]||0});
+  return{n,k};
+}
 async function betaNyata(){
   const v=VIEW;skel();let D;
   try{D=await call('/beta')}catch(e){if(v===VIEW&&cur==='beta')gagal(e.message,()=>go('beta'));return}
@@ -520,17 +534,26 @@ async function betaNyata(){
   const cap=`<div class="mut sm" style="margin-top:12px">Diambil ${esc(tgl)} WIB · sumber: hitungan anonim app (30 hari terakhir), tanpa ID atau data pribadi.</div>`;
   const head=`<div class="sec"><h1>Beta Nyata</h1><span class="mut sm">Fase 2 · tahap 21 · 30 hari terakhir</span></div>`;
   if(!rows.length){V.innerHTML=head+`<div class="tile c t-blue"><div class="eyebrow">Belum ada data</div><div class="sm" style="margin-top:6px">${D.data?'Belum ada pengguna baru tercatat.':'Data belum bisa diambil dari app. Coba lagi nanti.'} Angka muncul di sini begitu ada.</div></div>`+cap+`<div class="row" style="margin-top:12px"><button class="btn" id="ulang">Muat ulang</button></div>`;$('#ulang').onclick=()=>go('beta');return}
-  const sum=k=>rows.reduce((a,r)=>a+(+r[k]||0),0),baru=sum('baru'),akt=sum('aktivasi'),h2=sum('h2'),h7=sum('h7');
-  const ukurAkt=sum('baca')+sum('kata')+akt>0,ukurH7=h7>0;
-  const kartu=(l,x,ket)=>`<div class="tile c"><div class="eyebrow">${l}</div><div class="big" style="font-size:36px">${x}</div><div class="sm">${ket}</div></div>`;
+  const sum=k=>rows.reduce((a,r)=>a+(+r[k]||0),0),baru=sum('baru'),akt=sum('aktivasi');
+  const ukurAkt=sum('baca')+sum('kata')+akt>0;
+  const k2=kohortN(D.data.hari,'balik_h2',1),k7=kohortN(D.data.hari,'balik_h7',7);
+  const kartu=(l,x,ket,t)=>`<div class="tile c${t?' '+t:''}"><div class="eyebrow">${l}</div><div class="big" style="font-size:36px">${x}</div><div class="sm">${ket}</div></div>`;
+  // Retensi: rentang + n. n<100 = netral + 'belum cukup data'. n≥100: hijau bila batas bawah ≥ target, merah bila batas atas < target.
+  const kr=(l,c,tg)=>{
+    if(!(c.n>0))return kartu(l,'–','belum ada kelompok yang genap');
+    const w=wilson(c.k,c.n),r=rentang(c.k,c.n),n=`n=${c.n} · ${c.k} kembali`;
+    if(c.n<MINN)return kartu(l,r,`${n}<br><b>belum cukup data</b> (butuh ≥${MINN})`);
+    const lo=w[0]>=tg,hi=w[1]<tg;
+    return kartu(l,r,`${n}<br>${lo?'target tercapai':hi?'di bawah target':'belum jelas'} · target ≥${tg}%`,lo?'t-mint':hi?'t-coral':'t-sun');
+  };
   V.innerHTML=head+`<div class="bento">`
    +kartu('Pengguna baru',baru,'30 hari terakhir')
    +kartu('Aktivasi',ukurAkt?pctB(akt,baru):'–',ukurAkt?'target ≥60%':'belum diukur')
-   +kartu('Kembali hari ke-2',pctB(h2,baru),'target ≥25%')
-   +kartu('Kembali hari ke-7',ukurH7?pctB(h7,baru):'–',ukurH7?'target ≥10%':'belum ada yang genap 7 hari')
+   +kr('Kembali hari ke-2',k2,25)
+   +kr('Kembali hari ke-7',k7,10)
    +`</div><div class="sec"><h2>Per sumber</h2></div><div class="tile" style="padding:0;overflow-x:auto"><table class="bn"><tr><th>Sumber</th><th>Baru</th><th>Aktivasi</th><th>H2</th><th>H7</th></tr>`
-   +rows.map(r=>{const b=+r.baru;return `<tr><td>${esc(namaSumber(r.src))}</td><td>${b}</td><td>${ukurAkt?pctB(+r.aktivasi||0,b):'–'}</td><td>${pctB(+r.h2||0,b)}</td><td>${+r.h7>0?pctB(+r.h7,b):'–'}</td></tr>`}).join('')
-   +`</table></div><div class="tile" style="margin-top:12px"><span class="chip o">Catatan</span> <mark>Aktivasi</mark> = baca ≥1 halaman dan ketuk ≥1 kata di hari pertama. H2 / H7 = kembali di hari ke-2 / ke-7.</div>`+cap;
+   +rows.map(r=>{const b=+r.baru,c=k=>+r[k]>0?rentang(+r[k],b):'–';return `<tr><td>${esc(namaSumber(r.src))}</td><td>${b}${b<MINN?'<div class="mut sm">belum cukup data</div>':''}</td><td>${ukurAkt?pctB(+r.aktivasi||0,b):'–'}</td><td>${c('h2')}</td><td>${c('h7')}</td></tr>`}).join('')
+   +`</table></div><div class="tile" style="margin-top:12px"><span class="chip o">Catatan</span> <mark>Aktivasi</mark> = baca ≥1 halaman dan ketuk ≥1 kata di hari pertama. H2 / H7 = kembali <b>tepat</b> di hari ke-2 / ke-7, dibagi pengguna baru di hari pertama yang sama. Angka berupa rentang 95%; sampel &lt;100 = belum cukup data. Tabel sumber membagi dengan semua pengguna baru (kelompok yang belum genap ikut).</div>`+cap;
 }
 async function hasilKerja(again){
   if(again===true&&LASTH)return tampilHasil(LASTH);
