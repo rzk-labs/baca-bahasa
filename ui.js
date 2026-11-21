@@ -359,7 +359,7 @@ async function isiArti(lang, w) {
 function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { t.classList.add('hide'); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
-function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
+function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
 $('#shade').onclick = e => {
   /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
@@ -371,6 +371,37 @@ $('#shade').onclick = e => {
   closeSheet(); if (sx) { stopListenPage(); toggleInline(sx); }
 };
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+/* tarik pegangan/kepala sheet ke bawah untuk menutup (#1549); delegasi sekali di #sheet */
+function sheetReset() { const sh = $('#sheet'), sd = $('#shade'); sh.style.transform = ''; sh.style.transition = ''; sd.style.opacity = ''; sd.style.transition = ''; }
+{
+  let g = null;
+  const sh = $('#sheet');
+  sh.addEventListener('pointerdown', e => {
+    if (e.button || !e.target.closest('.grab,.sh-head') || e.target.closest('button,a,input,select,textarea')) return;
+    g = { id: e.pointerId, y: e.clientY, dy: 0, t: Date.now(), v: 0, py: e.clientY, pt: Date.now() };
+    try { sh.setPointerCapture(e.pointerId); } catch (x) { }
+  });
+  sh.addEventListener('pointermove', e => {
+    if (!g || e.pointerId !== g.id) return;
+    const now = Date.now(), dy = Math.max(0, e.clientY - g.y);
+    if (now > g.pt) g.v = (e.clientY - g.py) / (now - g.pt);
+    g.py = e.clientY; g.pt = now; g.dy = dy;
+    sh.style.transition = 'none'; sh.style.transform = `translateY(${dy}px)`;
+    $('#shade').style.transition = 'none'; $('#shade').style.opacity = String(Math.max(.4, 1 - dy / 400));
+  });
+  const end = e => {
+    if (!g || e.pointerId !== g.id) return;
+    const d = g; g = null;
+    try { sh.releasePointerCapture(e.pointerId); } catch (x) { }
+    if (!d.dy) return;
+    if (e.type !== 'pointercancel' && (d.dy > 80 || (d.dy > 20 && d.v > .5))) { closeSheet(); sheetReset(); return; }
+    const rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = $('#shade');
+    sh.style.transition = rm ? 'none' : 'transform .18s ease-out'; sd.style.transition = rm ? 'none' : 'opacity .18s ease-out';
+    sh.style.transform = ''; sd.style.opacity = '';
+    setTimeout(() => { if (!g) { sh.style.transition = ''; sd.style.transition = ''; } }, 200);
+  };
+  sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
+}
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
 const langOpts = sel => Object.keys(LANGS).map(k => `<option value="${k}"${k === sel ? ' selected' : ''}>${langName(k)}</option>`).join('');
 const book = () => db.books.find(b => b.id === db.cur);
