@@ -1,5 +1,11 @@
 [
   {
+    "n": 1534,
+    "judul": "Tab Kata: ringkasan 'X dari Y kata HSK' di baris chip level",
+    "poin": "Tab Kata kini punya ringkasan kecil, misalnya \"HSK 1: 12/150\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1523,
     "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
     "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
@@ -171,12 +177,6 @@
     "n": 1446,
     "judul": "[peta 160] Keepo HQ: pisahkan sumber 'uji' dari angka pengguna nyata",
     "poin": "Angka pengguna di Keepo HQ sekarang tidak lagi dicampur data tester.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1444,
-    "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
-    "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
     "tgl": "2026-11-21"
   }
 ]

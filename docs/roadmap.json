@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 170,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Tab Kata: ringkasan 'HSK n: X/Y' di bawah chip level (#1534)",
+      "dokumen": "docs/mockup-1534.html",
+      "status": "selesai (#1534)",
+      "catatan": "Ketuk ringkasan = filter level. Hanya zh-CN. Uji 320px."
+    },
+    {
       "no": 169,
       "peran": "developer",
       "prioritas": "P0",
