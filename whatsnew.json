@@ -1,5 +1,11 @@
 [
   {
+    "n": 1411,
+    "judul": "Sampul tanpa gambar: huruf awal + judul pendek, buku mudah dikenali",
+    "poin": "Sampul buku tanpa gambar kini menampilkan huruf awal dan judul pendek.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1409,
     "judul": "Kartu Target Home: judul satu baris, cincin XP lega di HP",
     "poin": "Judul kartu target di Home sekarang cukup \"Target\", satu baris saja.",
@@ -171,12 +177,6 @@
     "n": 1302,
     "judul": "[peta 141] Ukur beta nyata (2/2): halaman Beta Nyata di Keepo HQ",
     "poin": "Keepo HQ punya menu baru \"Beta Nyata\": angka baru, aktivasi, hari ke-2, hari ke-7.",
-    "tgl": "2026-11-18"
-  },
-  {
-    "n": 1300,
-    "judul": "[peta 140] Keepo HQ: detail tugas jadi pop up + loading saat pindah status",
-    "poin": "Di Keepo HQ, ketuk tugas sekarang membuka pop up, bukan pindah halaman.",
     "tgl": "2026-11-18"
   }
 ]
