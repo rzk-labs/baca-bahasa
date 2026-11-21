@@ -852,6 +852,9 @@ window.kepoMark = function (m) {
     if (m === 'lanjut_baca') { /* #1379: hitung klik kartu 'Lanjut dari halaman' di perangkat (angka saja); /hitung server belum punya kolom ini, jadi tidak dikirim agar hitungan buka tak membengkak */
       localStorage.setItem('kepo.m.lanjut_baca', String((+localStorage.getItem('kepo.m.lanjut_baca') || 0) + 1)); return;
     }
+    if (m === 'hsk_filter' || m === 'hsk_ulang') { /* #1511: hitung pemakaian filter level HSK di perangkat (angka saja). /hitung server belum punya kolom ini, jadi belum dikirim; butuh tambahan di Worker api/ (diminta terpisah) */
+      localStorage.setItem('kepo.m.' + m, String((+localStorage.getItem('kepo.m.' + m) || 0) + 1)); return;
+    }
     if ((m !== 'baca' && m !== 'kata') || localStorage.getItem('kepo.m.' + m)) return;
     if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
@@ -862,6 +865,7 @@ window.kepoMark = function (m) {
     let jalur = 'x'; try { const bk = typeof book === 'function' ? book() : null; if (bk) jalur = /\(contoh\)\s*$/i.test(bk.title || '') ? 'c' : 'i'; } catch (e) { }
     let sfx = '-' + jalur;
     if (m === 'kata' && first === day) { const t0 = +localStorage.getItem('kepo.t0') || 0, d = t0 ? (Date.now() - t0) / 1000 : -1; if (d >= 0) sfx += '-t' + (d < 30 ? 1 : d < 60 ? 2 : d < 120 ? 3 : d < 300 ? 4 : 5); }
+    if (m === 'kata') sfx += '-g' + (window.kepoGuide || 'n'); /* #1507: pemandu kata pertama: t = diketuk, s = dilewati, n = tak ada pemandu */
     const base = (localStorage.getItem('kepo.src') || 'langsung').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 10) || 'langsung';
     const data = JSON.stringify({ day, first, src: base + sfx, mark: m, akt });
     localStorage.setItem('kepo.m.' + m, day);
