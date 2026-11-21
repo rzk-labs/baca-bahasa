@@ -114,7 +114,7 @@ const altCount = gs => gs.reduce((n, g) => n + g.terms.length, 0);
 const altFlat = gs => gs.flatMap(g => g.terms);
 /* kelompok arti -> HTML: label jenis kata (tanpa label bila tak ada), chip bernomor data-i berurutan */
 const altHtml = gs => { let i = 0; return gs.map(g => `${g.pos ? `<div class="altpos">${esc((POS[g.pos] || g.pos).replace(/^./, c => c.toUpperCase()))}</div>` : ''}<div class="altch" role="group" aria-label="Arti lain">${g.terms.map(t => `<button class="altopt" type="button" data-i="${i++}" dir="auto">${esc(t)}</button>`).join('')}</div>`).join(''); };
-function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = splitTitle(b.title).main, ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}" role="img" aria-label="${esc(t)}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span>${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
+function cover(b) { const h = hue(b.title), c = CCOL[h % CCOL.length], t = splitTitle(b.title).main, ini = (t.match(/[\p{L}\p{N}]/u) || ['K'])[0].toLocaleUpperCase(); return `<div class="cover" style="background:${c[0]};color:${c[1]}" role="img" aria-label="${esc(t)}"><span class="em" style="color:${c[2]}" aria-hidden="true">${esc(ini)}</span>${COVERS[b.id] ? '' : `<span class="ct${coverSz(t)}" aria-hidden="true">${esc(t)}</span>`}${COVERS[b.id] ? `<img class="cimg" src="${COVERS[b.id]}" alt="" decoding="async" onerror="this.remove()">` : ''}</div>`; }
 // Ukuran judul sampul: kata terpanjang makin panjang → huruf makin kecil (kata tak dipenggal); CJK boleh patah per huruf
 function coverSz(t) { if (/[぀-ヿ㐀-鿿가-힯]/.test(t)) return ' cjk'; const n = Math.max(0, ...t.split(/\s+/).map(w => [...w].length)); return n > 13 ? ' c4' : n > 11 ? ' c3' : n > 9 ? ' c2' : n > 7 ? ' c1' : ''; }
 function applyTheme() {
@@ -194,7 +194,7 @@ const xpRinci = () => { const s = db.xpSrc || {}, g = [['Halaman', s.page], ['Ka
 const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 /* SATU sumber XP/level: Home, Profil, header, popup */
 const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
-const goalCardHtml = xt => `<div class="eyebrow">Target harian</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>XP hari ini</span><span>target ${GOAL}</span>`}</div>`;
+const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>XP hari ini</span><span>target ${GOAL}</span>`}</div>`;
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
 function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) tc.innerHTML = goalCardHtml(xpToday()); }
@@ -347,7 +347,7 @@ function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent =
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
-function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasTamat && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
 $('#shade').onclick = e => {
   /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
   const d = RD.dt; RD.dt = null; let sx = null;
@@ -2075,7 +2075,7 @@ function endCard(b, last) {
   const vp = $('#vp'); if (!vp) return;
   const old = $('#endcard'); if (old) old.remove();
   const cols = $('#cols'); if (!last || !cols) return;
-  if (!$('#sheet').classList.contains('hide') && $('#sheet .fb-acts')) return; /* #1355: sheet Tamat terbuka → kartu disembunyikan */
+  if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
   c.innerHTML = `<button class="sec" id="ecr">Baca ulang</button><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button>`;
@@ -2088,9 +2088,9 @@ function endCard(b, last) {
   const add = x => { if (x.width > 0 && x.height > 0 && x.right > vr.left && x.left < vr.right) bottom = Math.max(bottom, x.bottom); };
   try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(add); } catch (e) { }
   try { (RD.ss || []).forEach(x => { if (x.pg === RD.page && x.el && x.el.isConnected) [...x.el.getClientRects()].forEach(add); }); } catch (e) { }
-  if (!bottom || vr.bottom - bottom < c.offsetHeight + 32) { c.remove(); return; }
-  /* #994: kartu menempel dekat akhir teks, jarak min 16px */
-  c.style.top = Math.round(bottom - vr.top + 16) + 'px'; c.style.bottom = 'auto';
+  if (!bottom || vr.bottom - bottom < c.offsetHeight + 48) { c.remove(); return; }
+  /* #994/#1415: kartu di bawah teks, jarak 24px dari paragraf terakhir dan min 24px dari bar bawah */
+  c.style.top = Math.round(bottom - vr.top + 24) + 'px'; c.style.bottom = 'auto';
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
 let pfIdle = 0;
