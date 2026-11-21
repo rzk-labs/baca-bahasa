@@ -499,6 +499,7 @@ function setTab(t) {
   document.querySelectorAll('.lvlup').forEach(x => x.remove()); db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
   $('#ttl').innerHTML = BRAND_TTL; progress(null);
+  $('#hdx').className = t === 'rak' ? 'noStreak' : '';
   $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP seumur hidup"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Pengaturan</span><span class="hbl">Atur</span></button>`;
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';

@@ -562,6 +562,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .pill.login{background:var(--ink);color:var(--cream);border:0;cursor:pointer}
 [data-theme=night] .pill.login{background:var(--lime);color:var(--ink)}
 @media (max-width:380px){#pStreak{padding:0 7px;gap:2px}#pXp{padding:0 7px}}
+/* #1489 Home: chip streak disembunyikan (kartu Streak sudah ada); chip XP tetap */
+#hdx.noStreak #pStreak{display:none}
 /* #1250 Home memuat: kerangka rak + chip streak/XP netral */
 .big.bk-h{font-size:clamp(26px,8vw,34px);line-height:1.1;margin-bottom:12px}
 .bk-skel{display:flex;gap:12px;overflow:hidden}
