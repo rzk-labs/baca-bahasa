@@ -1,5 +1,11 @@
 [
   {
+    "n": 1459,
+    "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
+    "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1455,
     "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
     "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
@@ -171,12 +177,6 @@
     "n": 1371,
     "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
     "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1369,
-    "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
-    "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
     "tgl": "2026-11-20"
   }
 ]

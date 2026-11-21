@@ -1261,6 +1261,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .wchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
 .wchip{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border-radius:9999px;background:#D7EFFF;color:#351E28;border:1.5px solid #351E28;font-weight:800;font-size:15px;max-width:100%;overflow-wrap:anywhere;text-align:left}
 .wchip[hidden]{display:none}
+.wchip.on{background:#E9F056}
+.wchip.wskel{width:84px;min-width:84px;border-color:transparent;background:color-mix(in srgb,var(--color-text-muted,#777) 22%,transparent);animation:bkPulse 1.2s ease-in-out infinite}
+.wchips-msg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:44px;margin:6px 0 10px}
+@media (prefers-reduced-motion:reduce){.wchip.wskel{animation:none;opacity:.7}}
 .wchip.wmore{background:#351E28;color:#E9F056}
 #wdict .semua-ex b{background:#E9F056;color:#351E28;border-radius:4px;padding:0 2px}
 #wdict{max-height:40vh;overflow-y:auto}
