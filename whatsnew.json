@@ -1,5 +1,11 @@
 [
   {
+    "n": 1509,
+    "judul": "Reader: kartu akhir halaman tak menimpa teks cerita",
+    "poin": "Kartu \"Buku berikutnya / Baca ulang\" tak lagi menutupi kalimat di halaman terakhir.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1507,
     "judul": "[peta 168] Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati",
     "poin": "Pembaca baru kini dapat cerita contoh pendek, hanya 3 kalimat.",
@@ -171,12 +177,6 @@
     "n": 1427,
     "judul": "[peta 146] Pengaturan baca: mode 'Baca polos' tanpa garis bawah",
     "poin": "Pengaturan baca punya saklar \"Baca polos\": halaman bersih tanpa garis bawah.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1425,
-    "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
-    "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
     "tgl": "2026-11-21"
   }
 ]
