@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 159,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Arti lain selalu tampil, tak hilang-muncul (#1429)",
+      "dokumen": "docs/spesifikasi-arti-lain-tetap-1429.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1429.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. 4 kondisi: ada, memuat, gagal, kosong. Uji 320px & 390px."
+    },
+    {
       "no": 158,
       "peran": "developer",
       "prioritas": "P0",
