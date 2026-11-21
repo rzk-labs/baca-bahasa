@@ -242,6 +242,14 @@
   ],
   "backlog": [
     {
+      "no": 160,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home: rak Koleksi kamu tak tertutup menu bawah di HP (#1495)",
+      "dokumen": "docs/desain-rak-koleksi-1495.md",
+      "status": "siap dikerjakan"
+    },
+    {
       "no": 159,
       "peran": "developer",
       "prioritas": "P0",
