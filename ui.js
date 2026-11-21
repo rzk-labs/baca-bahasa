@@ -1112,6 +1112,7 @@ function viewRak() {
     </div>
     ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
+    ${quickPick().length >= 3 ? `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit">${ico('cards')}<span>Ulang 3 kata · ±1 menit</span><b>Mulai</b></button>` : ''}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
@@ -1123,6 +1124,7 @@ function viewRak() {
     const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
+    const q3 = $('#q3Btn'); if (q3) q3.onclick = () => { const p = quickPick(); if (p.length < 3) return; db.q3k = (+db.q3k || 0) + 1; save(); quickPend = p; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1377: hitungan klik disimpan lokal (api/ tak diubah) */
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
@@ -1278,6 +1280,7 @@ async function importFile(f, paksa) {
     if (err && err.batal) return toast('Impor dibatalin. Bisa coba lagi kapan aja.', 4000);
     if (err && err.telat) return toast('Gagal: kelamaan nyiapin file. Coba file .txt, atau sambungkan Wi-Fi lalu coba lagi.', 9000);
     if (err && err.simpan) return toast(MSG_SIMPAN_GAGAL, 6000);
+    if (err && err.kode === 'scan') return kartuScan();
     const m = err.message || '', isPdf = /\.pdf$/i.test(f.name), isEpub = /\.epub$/i.test(f.name);
     let msg;
     if (/EPUB tidak valid/.test(m)) msg = 'File EPUB ini rusak / nggak valid. Coba file lain ya.';
@@ -1289,6 +1292,13 @@ async function importFile(f, paksa) {
     toast(msg, 6000);
   }
   finally { if (imporBatal === me) imporBatal = null; }
+}
+function kartuScan() {
+  openSheet(`<div class="sh-head"><h2>Ini PDF scan: isinya gambar</h2>${closeBtn}</div>
+    <div class="scan-card"><p>Keepo belum bisa baca tulisan di dalam gambar. Komik biasanya begini.</p>
+    <ul><li>Cari versi <b>EPUB</b> atau <b>TXT</b>.</li><li>Atau ubah scan jadi teks lewat OCR gratis, lalu impor.</li><li>Contoh OCR gratis: Google Drive atau Adobe online.</li></ul></div>
+    <div class="row"><button class="pri" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
+  $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample'); if (x) x.click(); }, 150); } };
 }
 async function addBook(title, paras, lang, src, cov) {
   const id = 'b' + Date.now().toString(36);
@@ -2986,6 +2996,9 @@ let deckExtra = []; /* kata baru disimpan; ikut kartu walau belum jatuh tempo */
 const latihAct = nv => { deckExtra.push(nv); return db.vocab.length >= 3 ? { label: 'Latih sekarang', fn: () => { stopListenPage(); if (document.body.classList.contains('reading')) leaveBaca(); kataSeg = 'kartu'; setTab('kata'); } } : null; };
 let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
+/* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
+let quickPend = null, quickRun = null, quickLogged = false;
+const quickPick = () => (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);
 let deckDone = 0, deckHint = '';
 let deckRetry = [], deckAns = new Set(), deckRetryTot = 0; /* ulang di sesi sama: antrean di memori, hitungan di localStorage */
 const RETRY_KEY = 'kepo-deck-retry', RETRY_MAX = 2, RETRY_SESI = 8, RETRY_GAP = { lupa: 3, ragu: 5 };
@@ -3005,7 +3018,7 @@ function viewKata() {
   }
 }
 function viewKataIn() {
-  deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0;
+  deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; quickRun = quickPend; quickPend = null;
   if (!Array.isArray(db.vocab)) db.vocab = [];
   const weakAll = Object.values(db.weak || {}).filter(o => o && o.w && (+o.last || 0) < PASS).sort((a, b) => (+a.last || 0) - (+b.last || 0));
   const known = db.vocab.filter(v => v && v.known).length, learning = db.vocab.filter(isLearning).length;
@@ -3194,10 +3207,11 @@ function nadaLegendBind() {
 }
 function deck(kb) {
   if (db.vocab.some(needsArti)) refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); });
-  const cards = db.vocab.filter(v => v && v.w && !deckAns.has(v) && (isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
+  const cards = db.vocab.filter(v => v && v.w && !deckAns.has(v) && (quickRun ? quickRun.includes(v) && !v.known : isDue(v) || (deckExtra.includes(v) && !v.known))).sort((a, b) => (a.due || 0) - (b.due || 0)).slice(0, Math.max(0, DECK_MAX - deckDone));
   const rdy = deckRetry.find(r => r.wait <= 0) || (!cards.length ? deckRetry[0] : null);
   if (rdy) cards.unshift(rdy.v);
   if (!cards.length) {
+    if (quickRun && deckDone >= 1 && !quickLogged) { quickLogged = true; db.q3s = (+db.q3s || 0) + 1; save(); }
     const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = db.vocab.filter(isDue).length, left = nLeft > 0;
     kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false;

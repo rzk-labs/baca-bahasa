@@ -173,6 +173,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
+.q3-btn{margin:8px 0 0}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
@@ -1256,3 +1257,5 @@ ol.steps3 b{min-width:0}
 #wdict{max-height:40vh;overflow-y:auto}
 /* #1363 Tandai & lanjut */
 .wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
+/* #1375 Kartu PDF scan */
+.scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}

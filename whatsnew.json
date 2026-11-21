@@ -1,5 +1,17 @@
 [
   {
+    "n": 1377,
+    "judul": "[peta 150] Eksperimen retensi: tombol 'Ulang 3 kata' satu ketuk di Home",
+    "poin": "Home sekarang punya tombol \"Ulang 3 kata\", muncul kalau kata tersimpan 3 atau lebih.",
+    "tgl": "2026-11-20"
+  },
+  {
+    "n": 1375,
+    "judul": "[peta 147] Pesan PDF scan/komik jelas: kartu + cerita contoh + saran",
+    "poin": "Impor PDF gambar/komik kini tampil kartu ramah, bukan pesan singkat.",
+    "tgl": "2026-11-20"
+  },
+  {
     "n": 1371,
     "judul": "[peta 144] Aturan angka: Level-up sekali, hitungan kata & satuan sama",
     "poin": "Pop-up \"Level naik\" kini muncul sekali, tidak ikut pindah ke Profil.",
@@ -165,18 +177,6 @@
     "n": 1284,
     "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
     "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1277,
-    "judul": "Tips e-reader: pindah ke bawah bilah halaman, tak timpa teks",
-    "poin": "Tips awal baca kini di bawah halaman, tidak lagi menutup teks.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1275,
-    "judul": "Toast 'ikut akun' tak menimpa layar + sinkron punya batas waktu",
-    "poin": "Pesan \"Data kamu ikut akun\" kini singkat, muncul sekali, dan tidak menutup judul.",
     "tgl": "2026-11-17"
   }
 ]
