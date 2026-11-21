@@ -278,6 +278,15 @@
       "catatan": "Mockup: docs/mockup-1478.html. Ubah ui.js & sw.js (naikkan C). Jangan ubah api/. Jangan sentuh #1473. Maks 2 XP/putaran lewat award(...,'rem'). Uji 320px & 390px."
     },
     {
+      "no": 164,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Uji banner Level di iPhone & 320px (#1482)",
+      "dokumen": "docs/mockup-1482.html",
+      "status": "siap dikerjakan",
+      "catatan": "Banner sudah dibuat (ui.js celebrate, style.css .lvlbn). Uji: tab tetap bisa diketuk, safe-area atas, hilang ±4 dtk, sekali per level, angka Level Home sama."
+    },
+    {
       "no": 159,
       "peran": "developer",
       "prioritas": "P0",
