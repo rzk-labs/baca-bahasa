@@ -1,5 +1,11 @@
 [
   {
+    "n": 1469,
+    "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
+    "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1467,
     "judul": "Home: kartu 'Minggu ini' ringkas satu baris, angka punya satuan",
     "poin": "Kartu \"Minggu ini\" di Home sekarang pendek, satu baris.",
@@ -171,12 +177,6 @@
     "n": 1382,
     "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
     "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1381,
-    "judul": "Kartu Streak Home: angka hari jelas + huruf nama hari di bawah titik",
-    "poin": "Kartu Streak di Home sekarang menampilkan angka hari, mis. \"9 hari\".",
     "tgl": "2026-11-21"
   }
 ]
