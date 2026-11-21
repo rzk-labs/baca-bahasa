@@ -271,7 +271,11 @@ function award(n, stat, pk0, si) {
     if (!db.pgWeek || typeof db.pgWeek !== 'object' || Array.isArray(db.pgWeek)) db.pgWeek = {};
     const lim = dayKey(new Date(Date.now() - 8 * 864e5));
     for (const k in db.pgWeek) if (db.pgWeek[k] < lim) delete db.pgWeek[k];
-    if (!(rb2 && rb2.doneAt) && !(wk in db.pgWeek)) { db.pgWeek[wk] = pd; db.pgDay = db.pgDay || {}; db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; }
+    /* #1457: kunci kalimat bisa bergeser saat ganti huruf/tema; jadi tambah batas per bab per hari = jumlah halaman layar bab itu */
+    if (!db.pgCh || typeof db.pgCh !== 'object' || Array.isArray(db.pgCh)) db.pgCh = {};
+    for (const k in db.pgCh) if (k < lim) delete db.pgCh[k];
+    const chd = db.pgCh[pd] = db.pgCh[pd] || {}, ck = (pk0 || '?'), capCh = Math.max(1, (rb2 && rb2.pgN) || 1);
+    if (!(rb2 && rb2.doneAt) && !(wk in db.pgWeek) && (chd[ck] || 0) < capCh) { db.pgWeek[wk] = pd; chd[ck] = (chd[ck] || 0) + 1; db.pgDay = db.pgDay || {}; db.pgDay[pd] = (db.pgDay[pd] || 0) + 1; }
     const pk = Object.keys(db.pgDay || {}).sort(); if (pk.length > 60) delete db.pgDay[pk[0]];
     const sg = Object.keys(db.pgSeen).sort(); while (sg.length > 8) delete db.pgSeen[sg.shift()];
   }
@@ -1013,23 +1017,25 @@ function weekKey() { const d = new Date(); d.setDate(d.getDate() - (d.getDay() +
 /* SATU sumber 'halaman dibaca': halaman unik 7 hari terakhir (db.pgDay), batas atas = total halaman semua buku */
 function pagesWeek() {
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
-  const n = Object.keys(db.pgDay || {}).filter(d => d >= from).reduce((a, d) => a + (db.pgDay[d] || 0), 0);
-  /* #1371: batas atas = halaman unik yang mungkin (halaman per bab x bab, semua buku); lewat batas / tanpa buku = null -> tampil '–' */
+  /* #1457: batas wajar = halaman unik semua buku. Data berlebihan dikecilkan ke batas (dan dibersihkan), tak pernah jadi '–' */
   const cap = (db.books || []).reduce((a, b) => a + Math.max(1, b.pgN || 1) * Math.max(1, b.total || 1), 0);
-  return n > cap || !cap ? (n ? null : 0) : n;
+  if (!db.pgDay || typeof db.pgDay !== 'object') return 0;
+  if (cap) for (const d in db.pgDay) if ((+db.pgDay[d] || 0) > cap) db.pgDay[d] = cap;
+  const n = Object.keys(db.pgDay).filter(d => d >= from).reduce((a, d) => a + (+db.pgDay[d] || 0), 0);
+  return cap ? Math.min(n, cap) : n;
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
   const from = dayKey(new Date(Date.now() - 7 * 864e5));
   const from7 = dayKey(new Date(Date.now() - 6 * 864e5)); /* #1360: tepat 7 hari (hari ini + 6 sebelumnya), bukan 8 */
   const days = db.days.filter(d => d >= from7).length;
-  const pgW = pagesWeek(), pages = pgW === null ? '–' : pgW;
+  const pages = pagesWeek();
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
   if (!days && !pages && !words) return '';
   const it = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${[pages ? it(pages, 'halaman dibaca minggu ini') : '', words ? it(words, 'kata baru minggu ini') : ''].join('') || it(days, 'dari 7 hari baca')}</div>${!pages && !words ? `<div class="wk-n">Beruntun ${streak()} hari tanpa putus</div>` : ''}</div>`; /* #1095: 'hari aktif' tak diulang; streak cukup di pil atas */
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><b>Minggu ini</b><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div><div class="wk-g">${[pages ? it(pages, 'halaman dibaca minggu ini') : '', words ? it(words, 'kata baru minggu ini') : ''].join('') || it(days, 'hari baca dari 7 hari')}</div>${!pages && !words ? `<div class="wk-n">Beruntun ${streak()} hari tanpa putus</div>` : ''}</div>`; /* #1095: 'hari aktif' tak diulang; streak cukup di pil atas */
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
 function streakDots() {
@@ -1366,7 +1372,7 @@ async function isiArtiRekap(cand) {
 let rekapAktif = null;
 function sessRecap(b) {
   const all = [...SESSW.values()].filter(e => b && e.bid === b.id && e.lang === b.lang);
-  const pgs = b ? Math.min([...SESPG].filter(k => k.startsWith(b.id + ':')).length, pagesWeek() ?? 0) : 0; /* tak melebihi 'Minggu ini' */
+  const pgs = b ? Math.min([...SESPG].filter(k => k.startsWith(b.id + ':')).length, pagesWeek()) : 0; /* tak melebihi 'Minggu ini' */
   if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
   if (b) sesiClear(b.id);
