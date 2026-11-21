@@ -1034,7 +1034,8 @@ function streakDots() {
   return [6, 5, 4, 3, 2, 1, 0].map(k => {
     const act = db.days.includes(dayKey(new Date(Date.now() - k * 864e5)));
     const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
-    return `<i class="${cls}"></i>`;
+    const L = 'MSSRKJS'[new Date(Date.now() - k * 864e5).getDay()]; /* M=Minggu, S=Senin/Selasa/Sabtu, R=Rabu, K=Kamis, J=Jumat */
+    return `<span class="sd${k === 0 ? ' td' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
   }).join('');
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
@@ -1099,6 +1100,7 @@ function viewRak() {
       <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">`;
   } else {
     $('#view').innerHTML = `
+    ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
       <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Selesai · ${langName(cur.lang)}</div></div><button class="sec" id="hRead">Baca ulang</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
@@ -1106,13 +1108,14 @@ function viewRak() {
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
     ${weekCard()}
     <div class="stat3">
-      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sdots" role="img" aria-label="Streak ${streak()} hari, 7 hari terakhir">${ico('flame', 'numi')}${streakDots()}</div><div class="lbl2">${streakInfo()}</div></div>
+      <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sbig" role="img" aria-label="Beruntun ${streak()} hari. 7 hari terakhir, hari ini paling kanan">${ico('flame', 'numi')}${streak() ? `<b>${streak()}</b><small>hari</small>` : '<small>Mulai hari ini</small>'}</div><div class="sdots" aria-hidden="true">${streakDots()}</div><div class="lbl2">${streakInfo()}</div></div>
       <div class="t-lime" id="goalCard">${goalCardHtml(xt)}</div>
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
     ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>` : ''; })()}
     ${quickPick().length >= 3 ? `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit">${ico('cards')}<span>Ulang 3 kata · ±1 menit</span><b>Mulai</b></button>` : ''}
+    ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
@@ -1127,6 +1130,7 @@ function viewRak() {
     const q3 = $('#q3Btn'); if (q3) q3.onclick = () => { const p = quickPick(); if (p.length < 3) return; db.q3k = (+db.q3k || 0) + 1; save(); quickPend = p; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1377: hitungan klik disimpan lokal (api/ tak diubah) */
     const nn = $('#nextNudge'); if (nn) nn.onclick = () => { if (other) { db.cur = other.id; save(); setTab('baca'); } else $('#addBtn').click(); };
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
+    const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
     animRing($('#view'));
@@ -1948,6 +1952,14 @@ function fmtMins(m, part) {
   return n < 1 ? '—' : `≥${n} menit`;
 }
 const unseen = (b, secs) => !secs.length || (b.total || 1) > secs.length || (secs.length === 1 && secs[0].length === 1 && /^\((kosong|teks hilang)\)$/.test(secs[0][0]));
+/* #1379: kartu kecil 'Lanjut dari halaman X · ±N menit' di atas Home. Hanya buku belum tamat yang sudah mulai dibaca; halaman = satuan sama dgn chip & bilah baca (#1371) */
+function lanjutCard(b) {
+  if (!b || b.doneAt || pctOf(b) >= 100) return '';
+  const pg = b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === b.pos ? b.pg + 1 : 0;
+  if (!pg && !((b.pos || 0) > 0 || (b.si || 0) > 0)) return '';
+  const lbl = pg ? `Lanjut dari halaman ${pg}` : 'Lanjut dari terakhir kamu baca';
+  return `<button type="button" class="lanjut-card" id="lanjutCard" aria-label="${esc(lbl)}: ${esc(b.title)}"><span class="lj-t">${esc(b.title)}</span><span class="lj-s"><b>${lbl}</b><span id="ljMin"></span></span><span class="lj-go" aria-hidden="true">→</span></button>`;
+}
 async function heroMins(b) {
   try {
     const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
@@ -1960,6 +1972,7 @@ async function heroMins(b) {
     const part = unseen(b, secs), el = $('#heroPos');
     if (typeof b.mlb === 'number' && b.mlb >= 0 && !part && b.uv === 2) m = b.mlb; /* angka sama persis dgn bar baca */
     if (!el || db.cur !== b.id) return;
+    const lm = $('#ljMin'); if (lm && !part && (spdLoad()[spdKey(b.lang)] || []).length >= 3) { const t = fmtMins(m * spdFactor(b), false); if (t) lm.textContent = ' · ' + t; }
     el.innerHTML = heroPos(b, (spdLoad()[spdKey(b.lang)] || []).length < 3 ? '' : fmtMins(m * spdFactor(b), part), part); /* sisa buku tersembunyi sebelum 3 halaman sah */
   } catch (e) {}
 }
@@ -2998,6 +3011,13 @@ let deckExtra = []; /* kata baru disimpan; ikut kartu walau belum jatuh tempo */
 const latihAct = nv => { deckExtra.push(nv); return db.vocab.length >= 3 ? { label: 'Latih sekarang', fn: () => { stopListenPage(); if (document.body.classList.contains('reading')) leaveBaca(); kataSeg = 'kartu'; setTab('kata'); } } : null; };
 let kataSeg = 'kartu', kataQ = '', flipped = false, csvF = 'all', kataSort = 'baru', kataChipScroll = 0, oftenOpen = true;
 const REVIEW_DAYS = [1, 3, 7, 21], DAY_MS = 864e5, DECK_MAX = 20;
+/* #1383 bar tonggak: pakai hitungan & lencana koleksi50/koleksi100 (#1325), tanpa hitungan sendiri; tersembunyi bila 0 kata */
+const mileHtml = () => {
+  const n = countedVocab(null).length, t = n < 50 ? 50 : n < 100 ? 100 : 0;
+  if (n < 1 || !t) return '';
+  const d = new Date().toDateString(); if (db.mstD !== d) { db.mstD = d; db.mst = (+db.mst || 0) + 1; save(); } /* hari bar dilihat, lokal (api/ tak diubah) */
+  return `<div class="mile" id="mileBar" role="group" aria-label="${n} dari ${t} kata tersimpan"><div class="mile-h"><b>${n} dari ${t} kata</b><span>${t - n} lagi ke lencana</span></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><i style="width:${Math.round(n / t * 100)}%"></i></div></div>`;
+};
 /* #1377 Ulang 3 kata: 3 kata belum hafal, yang jatuh tempo / paling lama tak diulang; ulangan pakai deck() yang sama */
 let quickPend = null, quickRun = null, quickLogged = false;
 const quickPick = () => (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);

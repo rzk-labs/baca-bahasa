@@ -646,8 +646,8 @@ async function papan(again){
 
 // sumber "docs/xxx.md" di catatan jadi tautan yang bisa diketuk
 const namaDok=p=>p.slice(5,-3).replace(/[-_]/g,' ');
-const linkDok=s=>esc(s).replace(/docs\/[\w.-]+?\.md/g,p=>namaDok(p));
-const sumberDok=s=>[...new Set(String(s||'').match(/docs\/[\w.-]+?\.md/g)||[])];
+const linkDok=s=>esc(s).replace(/docs\/(?:hq\/)?[\w.-]+?\.md/g,p=>namaDok(p));
+const sumberDok=s=>[...new Set(String(s||'').match(/docs\/(?:hq\/)?[\w.-]+?\.md/g)||[])];
 async function peta(){
   if(!HQ){skel();try{await load()}catch(e){gagal(e.message,()=>go('peta'));return}}
   const R=HQ.roadmap;if(!R){V.innerHTML='<div class="empty">Roadmap belum ada (docs/roadmap.json).</div>';return}
@@ -747,7 +747,7 @@ function tampilDetail(t,n,mv){
   const peran=hq.peran||'developer', kerja=t.status==='antre'||t.status==='dikerjakan'||t.status==='menuju';
   const h=hasil(t.riwayat);
   const ref=t.pr&&!t.pr.merged?t.branch:'';
-  const docs=(t.files||[]).filter(f=>/^docs\/[\w.-]+\.md$/.test(f));
+  const docs=(t.files||[]).filter(f=>/^docs\/(?:hq\/)?[\w.-]+\.md$/.test(f));
   const kodeBerubah=(t.files||[]).some(f=>!f.startsWith('docs/'));
   const MOCK=(t.files||[]).includes('docs/mockup-'+n+'.html')&&t.preview&&!t.pr?.merged?t.preview+'docs/mockup-'+n+'.html':'';
   const LIM=4;
