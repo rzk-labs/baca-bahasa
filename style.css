@@ -176,7 +176,7 @@ body.reading::after{display:none}
 .q3-lock{font-weight:600}.q3-lock .q3-go{text-decoration:none;padding:8px 12px;min-height:36px;border-radius:999px;background:var(--ink);color:var(--ice);display:inline-flex;align-items:center;white-space:nowrap}@media(max-width:360px){.q3-lock .q3-go{margin-left:30px}}.q3-lock span.bar{display:block;height:6px;margin-top:8px}
 .soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
-.mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
+.mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:#351E28}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
@@ -555,6 +555,11 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 #bmList svg.i{width:18px;height:18px;margin-right:6px}
 .rtip .rtl{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1;font-size:14px;line-height:20px}
 .rtip .rtl>div{display:flex;gap:10px;align-items:flex-start}
+/* #1507 pemandu kata pertama: satu kata berdenyut (stabilo Wasabi), bar petunjuk di luar teks */
+.cols .w.guide-w{background:#E9F056;color:#351E28;border-radius:4px;box-shadow:0 0 0 3px rgba(233,240,86,.55);animation:gpulse 1.4s ease-in-out infinite}
+@keyframes gpulse{0%,100%{box-shadow:0 0 0 2px rgba(233,240,86,.55)}50%{box-shadow:0 0 0 6px rgba(233,240,86,.15)}}
+@media (prefers-reduced-motion:reduce){.cols .w.guide-w{animation:none}}
+.rtip.gtip button{background:transparent;color:var(--cream);border:1px solid var(--cream)}
 .rtip .rtl svg.i{width:18px;height:18px;margin-top:1px;stroke:var(--lime)}
 @media (prefers-reduced-motion:reduce){body.reading .xpfly.mini{animation-duration:.8s!important}*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
 /* ---------- akun, leaderboard, bagikan ---------- */
@@ -875,7 +880,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fb-next{padding:10px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;margin-top:6px;text-align:left}
 .fb-next .fbn-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;overflow-wrap:break-word;word-break:normal;line-height:1.3;text-align:start}
 .fb-next .fbn-m{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.endcard{box-sizing:border-box;max-height:40%;overflow:hidden;position:absolute;left:0;right:0;top:0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;border:1.5px solid var(--color-border);border-radius:16px;background:var(--color-surface);z-index:2}
+.endcard{box-sizing:border-box;max-height:40%;overflow:hidden;position:absolute;left:0;right:0;top:-9999px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;border:1.5px solid var(--color-border);border-radius:16px;background:var(--color-surface);z-index:2}
 .endcard .sec{flex:1 1 130px;min-height:44px;padding:0 12px;font-size:14px}
 /* #829 header baca: judul utuh (maks 2 baris), Bab + penanda + Offline di baris bawah */
 .rbar{height:calc(64px + env(safe-area-inset-top))}
@@ -1088,12 +1093,14 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
 /* #1482: banner Level ringan — tanpa overlay, hanya kartu yang menerima ketukan */
 .lvlup.lvlbn{inset:calc(env(safe-area-inset-top,0px) + 8px) 0 auto 0;padding:0 12px;background:none;justify-content:center;align-items:flex-start;pointer-events:none;animation:none}
-.lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
+.lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin:0;box-sizing:border-box;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
 .lvlup.lvlbn .lvl-ic{width:40px;height:40px;margin:0;flex:none}
 .lvlup.lvlbn .lvl-ic .i,.lvlup.lvlbn .lvl-ic svg{width:22px;height:22px}
 .lvlup.lvlbn .lvl-tx{flex:1;min-width:0;display:flex;flex-direction:column}
 .lvlup.lvlbn .lvl-tx b{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:20px;line-height:24px}
-.lvlup.lvlbn .lvl-tx span{font-size:13px;line-height:17px}
+.lvlup.lvlbn .lvl-tx b{overflow-wrap:anywhere}
+.lvlup.lvlbn .lvl-tx span{font-size:13px;line-height:17px;overflow-wrap:anywhere}
+@media (max-width:359px){.lvlup.lvlbn{padding:0 8px}.lvlup.lvlbn .card{gap:8px;padding:8px 10px}.lvlup.lvlbn .lvl-ic{width:34px;height:34px}.lvlup.lvlbn button.lime{padding:8px 10px}}
 .lvlup.lvlbn button.lime{width:auto;margin:0;flex:none;padding:8px 12px;min-height:40px}
 @media (prefers-reduced-motion:reduce){.lvlup.lvlbn .card{animation:none}}
 /* #1083: Home pasca-tamat ringkas */
@@ -1352,3 +1359,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1471 bar atas reader lega: pinggir >=12px + safe-area, jarak >=8px, sentuh >=44px; HP <=430px hanya Dengar + Lainnya (Ulang pindah ke Lainnya) */
 .rbar{gap:8px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
 @media (max-width:430px){.rbar{gap:8px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}#rDue{display:none}}
+/* #1511: baris chip level HSK, satu baris tanpa geser, muat di 320px */
+.hskrow{gap:6px;overflow:visible;margin:0 0 10px}
+.hskrow .fchip{flex:1 1 0;min-width:0;padding:0 6px;text-align:center;font-size:13px}

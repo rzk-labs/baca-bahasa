@@ -818,6 +818,19 @@ const FUNC_WORDS = {
 };
 const FUNC_SET = {};
 for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
+/* #1519: aksara buku per bahasa; kata tanpa satu pun huruf beraksara buku = bukan kandidat. Bahasa tak dikenal/kosong: aturan dilewati */
+const AKSARA_BUKU = {
+  ja: /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u,
+  ko: /\p{Script=Hangul}/u,
+  zh: /\p{Script=Han}/u,
+  ru: /\p{Script=Cyrillic}/u, ar: /\p{Script=Arabic}/u, th: /\p{Script=Thai}/u
+};
+for (const l of 'en fr de es id pt it nl tr vi ms sv da no nb fi pl cs ro hu ca jv su tl'.split(' ')) AKSARA_BUKU[l] = /\p{Script=Latin}/u;
+/* buku ja/ko/zh: huruf Latin (OK, nama merek) tetap sah */
+const punyaAksaraBuku = (lang, w) => {
+  const lg = String(lang || '').toLowerCase().split('-')[0], re = AKSARA_BUKU[lg], s = String(w || '');
+  return !re || re.test(s) || (/^(ja|ko|zh)$/.test(lg) && /\p{Script=Latin}/u.test(s));
+};
 /* SATU saringan 'kata baru': true = bukan kandidat. Dipakai Home, ringkasan, catatan sesi, Intip kata bab.
    ctx: { b: buku (untuk nama), kenal: true (buang kata sudah kenal), saved: Set kata tersimpan }. Hanya saat TAMPIL; data tak dihapus. */
 function isKataSampah(lang, w, ctx) {
@@ -825,6 +838,7 @@ function isKataSampah(lang, w, ctx) {
   if (!raw || /^[\p{N}\p{P}\p{S}\s]+$/u.test(raw)) return true;
   const lg = String(lang || '').toLowerCase().split('-')[0], k = raw.toLowerCase();
   if (isKataFungsi(lang, raw)) return true;
+  if (!punyaAksaraBuku(lang, raw)) return true; /* #1519: bukan aksara buku */
   if (!/^(ja|ko|zh)$/.test(lg) && [...raw].length === 1) return true; /* huruf tunggal */
   if (/^(ja|zh)$/.test(lg) && /[가-힣]/.test(raw)) return true; /* kata Korea di buku Jepang/Mandarin */
   if (lg === 'ko' && /[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(raw)) return true;
@@ -1179,3 +1193,13 @@ const SAMPLES = {
   ja: { title: '雨の日の小さな本屋 (contoh)', text: SAMPLE_JA },
   'zh-CN': { title: '雨天的小书店 (contoh)', text: SAMPLE_ZH },
 };
+/* #1507: cerita contoh PENDEK untuk pembaca baru (belum punya buku). Panjang = SHORT_N kalimat: ubah angka ini untuk uji (maks 4). SAMPLES di atas tak disentuh. */
+const SHORT_N = 3;
+const SHORT_BASE = {
+  en: { title: 'The Red Bird (contoh)', pick: 'bird', gap: ' ', s: ['The red bird sits on a tree.', 'It sings a small song.', 'The sun is warm today.', 'The bird is happy.'] },
+  ko: { title: '빨간 새 (contoh)', pick: '새', gap: ' ', s: ['빨간 새가 나무에 앉아요.', '새가 작은 노래를 불러요.', '오늘은 해가 따뜻해요.', '새는 행복해요.'] },
+  ja: { title: '赤い鳥 (contoh)', pick: '鳥', gap: '', s: ['赤い鳥が木にいます。', '鳥は小さい歌をうたいます。', '今日は太陽があたたかいです。', '鳥はうれしそうです。'] },
+  'zh-CN': { title: '红色的小鸟 (contoh)', pick: '小鸟', gap: '', s: ['红色的小鸟站在树上。', '它唱着一首小歌。', '今天太阳很暖和。', '小鸟很开心。'] },
+};
+const SAMPLES_SHORT = Object.fromEntries(Object.entries(SHORT_BASE).map(([l, x]) => [l, { title: x.title, pick: x.pick, text: x.title.replace(' (contoh)', '') + '\n\n' + x.s.slice(0, Math.max(1, Math.min(SHORT_N, x.s.length))).join(x.gap) }]));
+const isShortSample = b => !!b && Object.keys(SAMPLES_SHORT).some(l => b.lang === l && b.title === SAMPLES_SHORT[l].title);

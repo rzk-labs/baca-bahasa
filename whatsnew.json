@@ -1,5 +1,71 @@
 [
   {
+    "n": 1523,
+    "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
+    "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1521,
+    "judul": "[peta 160] Popup level sekali, jeda alami, satu angka level",
+    "poin": "Popup naik level sudah tampil sekali saja dan tidak menimpa pesan lain.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1519,
+    "judul": "[peta 166] Saringan kata menurut aksara buku (Latin, Kiril, Han di buku ko)",
+    "poin": "Kata dari tulisan lain (mis. Jepang di buku Inggris) tak ikut dihitung lagi.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1517,
+    "judul": "[peta 163] Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran",
+    "poin": "Setelah 2 putaran latihan ekstra, Home kini bilang \"Cukup hari ini, lanjut besok\".",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1515,
+    "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
+    "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1513,
+    "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
+    "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1511,
+    "judul": "[peta 157] Tab Kata: chip filter level HSK, satu baris",
+    "poin": "Tab Kata kini punya chip level HSK satu baris, hanya muncul bila ada kata HSK.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1509,
+    "judul": "Reader: kartu akhir halaman tak menimpa teks cerita",
+    "poin": "Kartu \"Buku berikutnya / Baca ulang\" tak lagi menutupi kalimat di halaman terakhir.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1507,
+    "judul": "[peta 168] Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati",
+    "poin": "Pembaca baru kini dapat cerita contoh pendek, hanya 3 kalimat.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1505,
+    "judul": "[peta 164] Banner Level: uji & perbaiki di iPhone dan layar 320px",
+    "poin": "Banner Level sudah dicek: tab tetap bisa diketuk, hilang sendiri, muncul sekali per level.",
+    "tgl": "2026-11-21"
+  },
+  {
+    "n": 1503,
+    "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
+    "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1501,
     "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
     "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
@@ -111,72 +177,6 @@
     "n": 1444,
     "judul": "[peta 159] Keepo HQ: tampilkan 'baru aktif' di samping 'baru'",
     "poin": "Keepo HQ sekarang menampilkan \"baru aktif\": pengguna baru yang membaca minimal satu halaman.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1442,
-    "judul": "[peta 156] Home: satu tombol Ulang, label 'Latihan ekstra' bila belum jatuh tempo",
-    "poin": "Home kini punya satu tombol ulang saja, tidak ada lagi dua tombol kembar.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1440,
-    "judul": "[peta 153] Ukur aktivasi hari pertama lewat /hitung (tahap 22)",
-    "poin": "Keepo kini mengukur: pengguna baru membaca, mengetuk kata, dan berapa lama.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1437,
-    "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
-    "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1435,
-    "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
-    "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1433,
-    "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
-    "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1430,
-    "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
-    "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1427,
-    "judul": "[peta 146] Pengaturan baca: mode 'Baca polos' tanpa garis bawah",
-    "poin": "Pengaturan baca punya saklar \"Baca polos\": halaman bersih tanpa garis bawah.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1425,
-    "judul": "[peta 155] Home HP: judul buku rak terlihat + 'Tamat · N/N'",
-    "poin": "Bar bawah buku tamat kini tulis \"Tamat · 12/12\", angkanya sama dengan layar Tamat.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1407,
-    "judul": "Ulang 3 kata: satu tombol di Home, tahan sesi, hadiah & 'Ulang 3 lagi'",
-    "poin": "Home sekarang punya satu tombol \"Ulang 3 kata\", tidak ada kartu kembar lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1415,
-    "judul": "Halaman terakhir: kartu 'Baca ulang / Buku baru' tak menutup teks",
-    "poin": "Kartu \"Baca ulang / Buku baru\" di halaman terakhir tak lagi menutupi cerita.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1411,
-    "judul": "Sampul tanpa gambar: huruf awal + judul pendek, buku mudah dikenali",
-    "poin": "Sampul buku tanpa gambar kini menampilkan huruf awal dan judul pendek.",
     "tgl": "2026-11-21"
   }
 ]

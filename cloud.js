@@ -110,7 +110,7 @@ function mergeSrv(d) {
   }
   // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
-  if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, Math.floor(db.xp / 100) + 1); } /* hasil sinkron: tanpa popup Level */
+  if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); } /* hasil sinkron: tanpa popup Level */
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
   if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -357,7 +357,7 @@ async function bkRestore(file) {
       if (!isObj(db.kenal)) db.kenal = {};
       for (const k in d.kenal) { const n = +d.kenal[k] || 0; if (n && Math.abs(n) > Math.abs(+db.kenal[k] || 0)) db.kenal[k] = n; }
     }
-    if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, Math.floor(db.xp / 100) + 1); }
+    if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); }
     if (isObj(d.xpDay)) { if (!isObj(db.xpDay)) db.xpDay = {}; for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } }
     if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } }
     if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -555,7 +555,7 @@ function profileData() {
     else o.pct = Math.max(o.pct, pct);
   });
   const reading = [...seen.values()].slice(0, 3);
-  return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: Math.floor((db.xp || 0) / 100) + 1, at: Date.now() };
+  return { reading, langs: [...new Set((db.books || []).map(b => b.lang).filter(Boolean))].slice(0, 6), kata7: kataBaruMinggu(), streak: typeof streak === 'function' ? streak() : 0, level: (typeof level === "function" ? level(db.xp || 0) : Math.floor((db.xp || 0) / 100) + 1), at: Date.now() };
 }
 const lalu = t => { if (!t) return ''; const m = Math.round((Date.now() - t) / 6e4); return m < 60 ? `${Math.max(1, m)} mnt lalu` : m < 1440 ? `${Math.round(m / 60)} jam lalu` : `${Math.round(m / 1440)} hari lalu`; };
 /* buang bagian judul yang dobel (mis. nama pengarang tertulis dua kali) */
@@ -852,6 +852,9 @@ window.kepoMark = function (m) {
     if (m === 'lanjut_baca') { /* #1379: hitung klik kartu 'Lanjut dari halaman' di perangkat (angka saja); /hitung server belum punya kolom ini, jadi tidak dikirim agar hitungan buka tak membengkak */
       localStorage.setItem('kepo.m.lanjut_baca', String((+localStorage.getItem('kepo.m.lanjut_baca') || 0) + 1)); return;
     }
+    if (m === 'hsk_filter' || m === 'hsk_ulang') { /* #1511: hitung pemakaian filter level HSK di perangkat (angka saja). /hitung server belum punya kolom ini, jadi belum dikirim; butuh tambahan di Worker api/ (diminta terpisah) */
+      localStorage.setItem('kepo.m.' + m, String((+localStorage.getItem('kepo.m.' + m) || 0) + 1)); return;
+    }
     if ((m !== 'baca' && m !== 'kata') || localStorage.getItem('kepo.m.' + m)) return;
     if (navigator.webdriver || /[?&](test|api)/.test(location.search) || localStorage.getItem('kepo.api')) return;
     const t = new Date(), pad = n => String(n).padStart(2, '0'), day = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
@@ -862,6 +865,7 @@ window.kepoMark = function (m) {
     let jalur = 'x'; try { const bk = typeof book === 'function' ? book() : null; if (bk) jalur = /\(contoh\)\s*$/i.test(bk.title || '') ? 'c' : 'i'; } catch (e) { }
     let sfx = '-' + jalur;
     if (m === 'kata' && first === day) { const t0 = +localStorage.getItem('kepo.t0') || 0, d = t0 ? (Date.now() - t0) / 1000 : -1; if (d >= 0) sfx += '-t' + (d < 30 ? 1 : d < 60 ? 2 : d < 120 ? 3 : d < 300 ? 4 : 5); }
+    if (m === 'kata') sfx += '-g' + (window.kepoGuide || 'n'); /* #1507: pemandu kata pertama: t = diketuk, s = dilewati, n = tak ada pemandu */
     const base = (localStorage.getItem('kepo.src') || 'langsung').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 10) || 'langsung';
     const data = JSON.stringify({ day, first, src: base + sfx, mark: m, akt });
     localStorage.setItem('kepo.m.' + m, day);
