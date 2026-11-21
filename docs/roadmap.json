@@ -346,7 +346,7 @@
       "prioritas": "P0",
       "nama": "Keepo HQ: tampilkan 'baru aktif' (baca >=1 halaman) di samping 'baru' (#1419)",
       "dokumen": "docs/riset-data-hitung-bersih.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1444)",
       "catatan": "Usaha S. Data kolom baca sudah ada di /hitung; hanya ubah dev/ (tanpa ubah api/). Mockup: docs/mockup-1419.html."
     },
     {
