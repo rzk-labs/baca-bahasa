@@ -167,7 +167,7 @@
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
     },
     {
       "no": 24,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 156,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Latihan ekstra: label & aturan ulang dini kata belum jatuh tempo di Home (#1412)",
+      "dokumen": "docs/riset-ulang-dini-belum-jatuh-tempo.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1412.html. 3+ kata jatuh tempo: tampil hanya 'N kata siap diulang'; 0: 'Latihan ekstra · 3 kata' + 'Belum waktunya. Jadwal tidak berubah'. Maks 3 kata, 1 ulang per kata, maks 2 putaran/hari, kecualikan kata dijawab <24 jam, Hafal tak ubah lv/due, Lupa turunkan lv. Ubah ui.js + style.css; naikkan C di sw.js."
+    },
+    {
+      "no": 155,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Bukti internet: ulang kata sebelum jatuh tempo, untung atau berlebihan? (#1412)",
+      "dokumen": "docs/riset-ulang-dini-belum-jatuh-tempo.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 47 butir. H1 ingatan terbukti sebagian; H2 kebiasaan balik belum jelas; H3 berlebihan/menekan terbukti sebagian (karena tumpukan); H4 label terpisah terbukti; H5 sesi 3 kata/1-2 menit belum jelas. Reddit/Threads/ulasan toko tak terbaca langsung. Usulan di #156."
+    },
     {
       "no": 153,
       "peran": "developer",
