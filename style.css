@@ -794,14 +794,13 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .badge{padding-right:14px}
 .hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
 .hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
-.wk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.wk-x{min-height:44px;min-width:44px;padding:0 4px;font-size:14px;white-space:nowrap;flex-shrink:0}
-.wk-h .icon{width:auto;min-width:44px;padding:0 12px;font-size:13px;font-weight:600}
-.wk-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
-.wk-g div{display:flex;flex-direction:column;min-width:0}
-.wk-g b{font-size:24px;line-height:28px}
-.wk-n{font-size:12px;line-height:16px;color:var(--color-text-muted)}
-.wk-g span{font-size:12px;line-height:16px;color:var(--color-text-muted)}
+.wk{padding:2px 6px 2px 14px}
+.wk-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wk-t{font-size:13px;font-weight:600;color:var(--color-text-muted)}
+.wk-g{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
+.wk-c{font-size:12px;line-height:16px;padding:4px 8px;border-radius:999px;background:rgba(127,127,127,.14);color:var(--color-text-muted);white-space:nowrap}
+.wk-c b{font-size:13px;color:var(--color-text)}
+.wk-x{min-height:44px;min-width:44px;padding:0 6px;font-size:12px;white-space:nowrap;flex-shrink:0;margin-left:auto;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 /* teks sistem besar (#740): tombol sheet boleh 2 baris, min 44px, tak keluar layar */
 #sheet button,.rfoot button{white-space:normal;min-width:44px;min-height:44px;max-width:100%;overflow-wrap:anywhere}
