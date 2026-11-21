@@ -273,7 +273,7 @@
       "prioritas": "P1",
       "nama": "Popup level sekali & jeda alami, satu angka level, label hari Sen/Sel (#1481)",
       "dokumen": "docs/riset-popup-level-huruf-hari.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1521)",
       "catatan": "Ikuti bagian 7 (aturan 1-9). Mockup: docs/mockup-1481.html. Ubah ui.js, style.css, sw.js (naikkan C). Jangan ubah api/. Uji 320px & 390px."
     },
     {
