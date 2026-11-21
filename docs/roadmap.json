@@ -1537,6 +1537,15 @@
       "dokumen": "docs/rencana-halaman-minggu-ini-1350.md",
       "status": "selesai (kode sudah di cabang #1350, tinggal digabung)",
       "catatan": "Mockup: docs/mockup-1350.html. award() di ui.js: buku tamat tak menambah pgDay; db.pgWeek (kunci→hari, buang >8 hari) jaga halaman sama hanya sekali per 7 hari. sw.js naik ke kepo-v489."
+    },
+    {
+      "no": 162,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Bar atas reader lega: hanya Dengar + Lainnya di HP (#1471)",
+      "dokumen": "docs/desain-bar-atas-reader-lega.md",
+      "status": "selesai (#1471, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1471.html. Pinggir >=12px + safe-area, jarak 8px, sentuh 44px; Ulang pindah ke Lainnya di <=430px. Naik ke kepo-v527."
     }
   ],
   "prioritas": [

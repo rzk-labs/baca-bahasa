@@ -1,5 +1,11 @@
 [
   {
+    "n": 1471,
+    "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
+    "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1469,
     "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
     "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
@@ -171,12 +177,6 @@
     "n": 1388,
     "judul": "Home HP: judul buku di bawah sampul terlihat, tak tertutup menu bawah",
     "poin": "Judul buku di Home sekarang punya ruang lebih, tidak tertutup menu bawah lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1382,
-    "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
-    "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
     "tgl": "2026-11-21"
   }
 ]
