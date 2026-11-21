@@ -146,3 +146,31 @@ Langkah berikutnya:
 - Developer memeriksa /hitung mencatat 3 ref ini (#153 di backlog).
 - Founder posting E1-E3 sesuai kalender, 2-4 jam/minggu.
 - Setelah 4 minggu: tulis angka asli di catatan tahap 27, baru naik status.
+
+## 6. Hasil cek /hitung untuk 3 ref (#1451)
+
+Intinya:
+- Ketiga ref sudah tercatat per sumber, termasuk pengguna baru.
+- Tidak perlu ubah kode aplikasi maupun server.
+- Tidak ada deploy manual yang dibutuhkan.
+
+Yang dicek:
+- Aplikasi (`cloud.js`) membaca `?ref=` saat pertama kali dibuka.
+- Ref disimpan sekali di perangkat, lalu dikirim ke /hitung tiap hari aktif.
+- Server (`api/`) menyaring ref: huruf kecil, angka, `_` dan `-`, maks 20 karakter.
+- Tanpa ref, sumber dicatat sebagai `langsung`.
+- Tanpa ID, tanpa IP, tanpa data pribadi.
+
+Kesimpulan:
+- `rd-1`, `th-bio`, `tt-bio` lolos saringan apa adanya.
+- Pengguna baru = baris dengan hari pertama sama dengan hari ini, dihitung per sumber.
+- Hanya kunjungan pertama seumur perangkat yang menyimpan sumber.
+
+Catatan batas:
+- Orang yang sudah pernah buka Keepo tidak dihitung sebagai baru dari ref.
+- Mode uji (`?test`, `?api`) dan bot tidak dicatat.
+
+Tautan untuk dipakai:
+- `https://rzk-labs.github.io/baca-bahasa/?ref=rd-1`
+- `https://rzk-labs.github.io/baca-bahasa/?ref=th-bio`
+- `https://rzk-labs.github.io/baca-bahasa/?ref=tt-bio`
