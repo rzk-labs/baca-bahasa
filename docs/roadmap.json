@@ -181,14 +181,14 @@
       "nama": "Rilis App Store iOS",
       "fase": "Rilis Toko & Publik",
       "status": "berjalan",
-      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md."
+      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 26,
       "nama": "Android / Play Store",
       "fase": "Rilis Toko & Publik",
       "status": "draft",
-      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md."
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 27,
