@@ -1,5 +1,11 @@
 [
   {
+    "n": 1517,
+    "judul": "[peta 163] Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran",
+    "poin": "Setelah 2 putaran latihan ekstra, Home kini bilang \"Cukup hari ini, lanjut besok\".",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1515,
     "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
     "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
@@ -171,12 +177,6 @@
     "n": 1437,
     "judul": "[peta 158] Rapikan UI: bar reader Tamat, kartu Tamat, Home, sampul",
     "poin": "Tombol halaman terakhir tak rancu lagi: sekarang \"Tamatkan\" dan \"Tutup\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1435,
-    "judul": "[peta 154] Logika ketuk vs paham: kata tak diketuk dihitung paham",
-    "poin": "Halaman yang dibaca tanpa ketuk kini dianggap paham, garis stabilonya hilang.",
     "tgl": "2026-11-21"
   }
 ]
