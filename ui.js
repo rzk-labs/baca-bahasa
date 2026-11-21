@@ -1,4 +1,6 @@
 'use strict';
+/* jeda sebelum 'Masih nyari artinya…' + Coba lagi (arti kata & kalimat); permintaan tetap jalan */
+const SLOW_MS = 3500;
 /* KEEPO v8— Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
 db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; if (db.spacing !== 'w') db.spacing = 'n'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; if (db.peekBaca !== 'langsung' && db.peekBaca !== 'ketuk') db.peekBaca = null; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0; db.rtSet = !!db.rtSet; if (!db.rtLang || typeof db.rtLang !== 'object') db.rtLang = {};
 const rtOf = lang => [0, 1, 2].includes(db.rtLang[lang]) ? db.rtLang[lang] : (!db.rtSet && lang === 'zh-CN') ? 2 : db.rt;
@@ -2572,8 +2574,8 @@ async function onWord(el, lastEl) {
     const d = $('#wdict'); if (d) d.innerHTML = ''; const h = $('#whint'); if (h) { h.hidden = true; h.innerHTML = ''; } const g = $('#wsug'); if (g) { g.hidden = true; g.innerHTML = ''; }
     updNama(); keepVisible('.w.sel');
   };
-  const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Arti belum ketemu, sinyal lemah?</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
-  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(qWord(), b.lang, db.my, sig).then(r => {
+  const slowMsg = (my, retry, off) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="wslow">Coba lagi</button>`; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT);
     tr = r; setTx('#wpart', partNote());
@@ -2864,8 +2866,9 @@ function showSentence(word, sent, sIdx, sEl) {
   keepVisible('.s.hl');
   const strEl = $('#str');
   const alive = () => $('#str') === strEl;
-  let sSlow = 0, sTok = 0;
-  const loadSent = () => { const my = ++sTok; { const m = $('#smt'); if (m) m.classList.add('hide'); } clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
+  let sSlow = 0, sTok = 0, sAc = null;
+  const sSlowMsg = (my, off) => { if (!alive() || my !== sTok) return; strEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="sslow">Coba lagi</button>`; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nerjemahin kalimat"><i></i><i></i><i></i></span>'; loadSent(); }; };
+  const loadSent = () => { const my = ++sTok; if (sAc) sAc.abort(); sAc = new AbortController(); const sSig = sAc.signal; { const m = $('#smt'); if (m) m.classList.add('hide'); } clearTimeout(sSlow); if (!navigator.onLine) sSlowMsg(my, true); else sSlow = setTimeout(() => sSlowMsg(my), SLOW_MS); return translate(sent, b.lang, db.my, sSig).then(r => {
     if (!alive() || my !== sTok) return;
     clearTimeout(sSlow);
     const trEl = $('#str'), lm = wMean.toLowerCase(), lt = r.text.toLowerCase(), at = lm && lt.length === r.text.length ? lt.indexOf(lm) : -1;
