@@ -1,5 +1,11 @@
 [
   {
+    "n": 1455,
+    "judul": "Home: hari Streak tak membingungkan + kartu Lanjut punya tombol 'Lanjut'",
+    "poin": "Huruf hari di Streak sekarang Min, Sen, Sel, Rab, Kam, Jum, Sab — tak membingungkan.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1453,
     "judul": "Profil 'Hampir tercapai': satu bar per jenis lencana, bukan 3 kembar",
     "poin": "Profil kini hanya menampilkan satu bar per jenis lencana, bukan tiga kembar.",
@@ -171,12 +177,6 @@
     "n": 1369,
     "judul": "[peta 149] Pengingat baca lokal + Bagikan di Profil (rencana B App Store)",
     "poin": "Pengaturan dan Akun kini punya Pengingat baca: pilih jam, bawaan mati.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1367,
-    "judul": "[peta 150] Tombol 'Siapkan offline': unduh arti kata bab ini",
-    "poin": "Menu ⋯ buku kini punya tombol \"Siapkan offline\": arti kata baru diunduh, maks 150.",
     "tgl": "2026-11-20"
   }
 ]
