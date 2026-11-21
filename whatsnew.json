@@ -1,5 +1,11 @@
 [
   {
+    "n": 1433,
+    "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
+    "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1430,
     "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
     "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
@@ -171,12 +177,6 @@
     "n": 1349,
     "judul": "E-reader HP: tombol 'Selesai' di bar bawah tak mepet tepi kanan",
     "poin": "Tombol \"Selesai\" di bar bawah reader sekarang punya jarak aman dari tepi layar.",
-    "tgl": "2026-11-20"
-  },
-  {
-    "n": 1340,
-    "judul": "Profil: bar lencana kosong terlihat kosong + Target harian pakai ✓",
-    "poin": "Bar lencana yang belum didapat sekarang terlihat kosong, tidak lagi gelap penuh.",
     "tgl": "2026-11-20"
   }
 ]
