@@ -1,5 +1,11 @@
 [
   {
+    "n": 1400,
+    "judul": "Kartu ulang: pilihan cara baca (pinyin) tampil langsung (masukan Sinta)",
+    "poin": "Di Pengaturan baca ada pilihan baru: cara baca di kartu ulang Langsung atau Ketuk dulu.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1396,
     "judul": "Home memuat: 'Lanjut tanpa menunggu' muncul dari awal + info offline",
     "poin": "Saat Home memuat, tombol \"Lanjut tanpa menunggu\" kini langsung muncul.",
@@ -171,12 +177,6 @@
     "n": 1298,
     "judul": "[peta 143] Keluar akun: pilihan 'Keluar saja' / 'Keluar & bersihkan HP'",
     "poin": "Tombol Keluar sekarang menawarkan dua pilihan: keluar saja, atau keluar dan bersihkan HP.",
-    "tgl": "2026-11-18"
-  },
-  {
-    "n": 1296,
-    "judul": "[peta 142] Logo Keepo tak kepotong di HP + Home mulai dari atas",
-    "poin": "Logo Keepo sekarang selalu utuh di HP, tidak kepotong lagi.",
     "tgl": "2026-11-18"
   }
 ]
