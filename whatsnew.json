@@ -1,5 +1,11 @@
 [
   {
+    "n": 1379,
+    "judul": "[peta 149] Eksperimen retensi: kartu 'Lanjut dari halaman X' di Home",
+    "poin": "Home sekarang punya kartu kecil \"Lanjut dari halaman X · ±N menit\", sekali ketuk.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1377,
     "judul": "[peta 150] Eksperimen retensi: tombol 'Ulang 3 kata' satu ketuk di Home",
     "poin": "Home sekarang punya tombol \"Ulang 3 kata\", muncul kalau kata tersimpan 3 atau lebih.",
@@ -171,12 +177,6 @@
     "n": 1285,
     "judul": "E-reader: satu satuan nomor, 'halaman' saja (bukan Bagian + hal.)",
     "poin": "Nomor di e-reader sekarang satu jenis saja: halaman.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1284,
-    "judul": "E-reader: satu satuan 'Bagian' (bukan halaman) + chip 44px",
-    "poin": "Tulisan \"Lanjut dari halaman 14\" jadi \"Lanjut dari Bagian 10\", sama dengan bilah baca.",
     "tgl": "2026-11-17"
   }
 ]

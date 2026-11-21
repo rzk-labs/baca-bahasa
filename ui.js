@@ -1099,6 +1099,7 @@ function viewRak() {
       <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">`;
   } else {
     $('#view').innerHTML = `
+    ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
       <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Selesai · ${langName(cur.lang)}</div></div><button class="sec" id="hRead">Baca ulang</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
@@ -1126,6 +1127,7 @@ function viewRak() {
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const q3 = $('#q3Btn'); if (q3) q3.onclick = () => { const p = quickPick(); if (p.length < 3) return; db.q3k = (+db.q3k || 0) + 1; save(); quickPend = p; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1377: hitungan klik disimpan lokal (api/ tak diubah) */
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
+    const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
     animRing($('#view'));
@@ -1946,6 +1948,14 @@ function fmtMins(m, part) {
   return n < 1 ? '—' : `≥${n} menit`;
 }
 const unseen = (b, secs) => !secs.length || (b.total || 1) > secs.length || (secs.length === 1 && secs[0].length === 1 && /^\((kosong|teks hilang)\)$/.test(secs[0][0]));
+/* #1379: kartu kecil 'Lanjut dari halaman X · ±N menit' di atas Home. Hanya buku belum tamat yang sudah mulai dibaca; halaman = satuan sama dgn chip & bilah baca (#1371) */
+function lanjutCard(b) {
+  if (!b || b.doneAt || pctOf(b) >= 100) return '';
+  const pg = b.pgN > 0 && Number.isInteger(b.pg) && b.pg >= 0 && b.pg < b.pgN && b.pgPos === b.pos ? b.pg + 1 : 0;
+  if (!pg && !((b.pos || 0) > 0 || (b.si || 0) > 0)) return '';
+  const lbl = pg ? `Lanjut dari halaman ${pg}` : 'Lanjut dari terakhir kamu baca';
+  return `<button type="button" class="lanjut-card" id="lanjutCard" aria-label="${esc(lbl)}: ${esc(b.title)}"><span class="lj-t">${esc(b.title)}</span><span class="lj-s"><b>${lbl}</b><span id="ljMin"></span></span><span class="lj-go" aria-hidden="true">→</span></button>`;
+}
 async function heroMins(b) {
   try {
     const secs = cache.id === b.id && cache.pages ? cache.pages : makeSections(await getText(b.id) || []);
@@ -1958,6 +1968,7 @@ async function heroMins(b) {
     const part = unseen(b, secs), el = $('#heroPos');
     if (typeof b.mlb === 'number' && b.mlb >= 0 && !part && b.uv === 2) m = b.mlb; /* angka sama persis dgn bar baca */
     if (!el || db.cur !== b.id) return;
+    const lm = $('#ljMin'); if (lm && !part && (spdLoad()[spdKey(b.lang)] || []).length >= 3) { const t = fmtMins(m * spdFactor(b), false); if (t) lm.textContent = ' · ' + t; }
     el.innerHTML = heroPos(b, (spdLoad()[spdKey(b.lang)] || []).length < 3 ? '' : fmtMins(m * spdFactor(b), part), part); /* sisa buku tersembunyi sebelum 3 halaman sah */
   } catch (e) {}
 }
