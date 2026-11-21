@@ -269,6 +269,33 @@
       "catatan": "(validasi bukti internet) 46 butir, 4 jenis sumber. H1 belum jelas (60% condong terlalu tinggi); H2 belum jelas; H3 terbukti sebagian; H4 terbukti sebagian; H5 belum jelas. Usul target dua tingkat 25%/40%; ukur lewat #153."
     },
     {
+      "no": 155,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Home HP: judul buku rak terlihat + label bar bawah buku tamat 'Tamat · N/N' (#1390)",
+      "dokumen": "docs/mockup-1390.html",
+      "status": "siap dikerjakan",
+      "catatan": "Kode sudah diubah (style.css akhir file, ui.js bar reader, sw.js kepo-v504). Tinggal uji 320/360/390/430px, tema Kertas & Malam."
+    },
+    {
+      "no": 156,
+      "peran": "riset",
+      "prioritas": "P1",
+      "nama": "Riset: filter level HSK di daftar Kata simpanan (#1395)",
+      "dokumen": "docs/riset-filter-level-kata-simpanan.md",
+      "status": "selesai",
+      "catatan": "(validasi bukti internet) 36 bukti dari 6 jenis sumber. Vonis: pelajar menyaring per level/set = terbukti; pakai tag/kategori/deck = terbukti; filter menambah ulang kata = belum jelas. Rekomendasi: ya, satu baris chip di tab Kata."
+    },
+    {
+      "no": 157,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Tab Kata: satu baris chip filter level HSK, hanya muncul bila ada kata HSK (#1395)",
+      "dokumen": "docs/riset-filter-level-kata-simpanan.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1395.html. Chip 'Semua · HSK n' hanya level yang ada isinya; tombol ulang ikut filter. Tambah penghitung /hitung 'filter dipakai' & 'ulang dari filter' (api/ diubah hanya bila diminta). Tanpa tag/folder buatan. Naikkan versi C di sw.js."
+    },
+    {
       "no": 146,
       "peran": "developer",
       "prioritas": "P0",

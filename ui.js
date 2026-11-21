@@ -488,7 +488,7 @@ function viewSosialAman() {
   try {
     if (typeof viewSosial === 'function') { viewSosial(); return; }
   } catch (e) { console.warn('viewSosial gagal', e); }
-  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm" style="margin-top:6px">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
   $('#sosRetry').onclick = () => setTab('sosial');
   $('#sosHome').onclick = () => setTab('rak');
 }
@@ -1082,7 +1082,7 @@ function viewRak() {
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
     refreshPills();
-    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.'}</div>${bkState === 'fail' ? '<div class="row"><button class="sec" id="bkRetry" type="button">Coba lagi</button><button class="ghost" id="bkSkip" type="button">Lanjut tanpa menunggu</button></div>' : ''}`;
+    $('#view').innerHTML = `<h1 class="big bk-h">Kepoin bahasa <span class="hl-txt">baru.</span></h1><div class="bk-skel${bkState === 'fail' ? ' still' : ''}" aria-hidden="true"><i></i><i></i><i></i></div><div class="mut sm" id="bkStatus" role="status" style="margin:14px 2px">${bkState === 'load' ? 'Memuat bukumu…' : 'Belum bisa terhubung ke akunmu. Cek internet, lalu coba lagi.'}</div><div class="mut sm" style="margin:-8px 2px 12px">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="flex-wrap:wrap">${bkState === 'fail' ? '<button class="sec" id="bkRetry" type="button">Coba lagi</button>' : ''}<button class="ghost" id="bkSkip" type="button">Lanjut tanpa menunggu</button></div>`;
     const sk = $('#bkSkip'); if (sk) sk.onclick = () => { bkSkip = true; bkState = ''; viewRak(); };
     const rt = $('#bkRetry'); if (rt) rt.onclick = () => {
       if (navigator.onLine === false || bkBusy) { toast(navigator.onLine === false ? 'Lagi offline. Sambungkan internet dulu, lalu coba lagi.' : 'Masih memuat, tunggu sebentar ya.', 4000); return; }
@@ -1112,8 +1112,8 @@ function viewRak() {
       <div class="t-lime" id="goalCard">${goalCardHtml(xt)}</div>
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
-    ${firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
+    ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
+    ${(() => { const n = db.vocab.filter(isDue).length; return n ? `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>` : ''; })()}
     ${quickPick().length >= 3 ? `<button type="button" class="fw-nudge due-nudge q3-btn" id="q3Btn" aria-label="Ulang 3 kata, satu ketuk, sekitar 1 menit">${ico('cards')}<span>Ulang 3 kata · ±1 menit</span><b>Mulai</b></button>` : ''}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -1128,6 +1128,7 @@ function viewRak() {
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const q3 = $('#q3Btn'); if (q3) q3.onclick = () => { const p = quickPick(); if (p.length < 3) return; db.q3k = (+db.q3k || 0) + 1; save(); quickPend = p; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1377: hitungan klik disimpan lokal (api/ tak diubah) */
+    const nn = $('#nextNudge'); if (nn) nn.onclick = () => { if (other) { db.cur = other.id; save(); setTab('baca'); } else $('#addBtn').click(); };
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
     const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
@@ -1431,17 +1432,18 @@ function finishBook(b) {
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
   const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xt >= GOAL ? `Target harian ${GOAL} XP tercapai` : `+${xt} XP hari ini`, mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
+  const none = !ws.length && !pend; /* tak ada kata baru: Buku baru jadi tombol utama */
   const nxHtml = nx.length ? `<div class="eyebrow" style="margin-top:14px">Berikutnya</div>${nx.map(x => `<button class="sec full fb-next" data-nb="${esc(x.id)}" ><span class="fbn-t" dir="auto" lang="${esc(x.lang)}">${esc(x.title)}</span><span class="fbn-m mut sm">${langName(x.lang)} · ${pctOf(x) > 0 ? pctOf(x) + '%' : 'Belum mulai'}</span></button>`).join('')}`
     : '';
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Kata lamamu bisa diulang di tab Kata.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
-    <div class="fb-acts">${total > 0 ? `<button class="pri full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Selesai</button>` : '<button class="pri full" id="fbh">Selesai</button>'}</div>${nxHtml}
-    <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button>${nx.length ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 ? '<p class="mut">Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.</p>' : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    <div class="fb-acts">${none ? '<button class="pri full" id="fbadd">Buku baru</button><button class="sec full" id="fbr">Baca ulang &amp; simpan kata</button>' : ''}${total > 0 ? `<button class="${none ? 'sec' : 'pri'} full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button><button class="sec full" id="fbh">Selesai</button>` : '<button class="sec full" id="fbh">Selesai</button>'}</div>${nxHtml}
+    <div class="fb-sec">${none ? '' : '<button class="lnk" id="fbr">Baca ulang</button>'}${nx.length && !none ? '<button class="lnk" id="fbadd">Buku baru</button>' : ''}</div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
-  $('#fbr').onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
+  const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
@@ -2047,7 +2049,7 @@ function showPage(p, anim = true) {
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
     const bs = statusPct(bp);
-    if (bs.done) fill([bs.txt]);
+    if (bs.done) { fill([`Tamat · ${RD.page + 1}/${RD.n}`]); if (pgn.scrollWidth > pgn.clientWidth + 1) fill(['Tamat']); } /* #1390: ringkas, muat di 320px; 'halaman' ada di aria-label */
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);

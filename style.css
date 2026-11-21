@@ -1148,7 +1148,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 .lang-hint{margin:6px 0 0}
 .try1{margin-top:0;margin-bottom:var(--space-3)}
 [data-theme=night] .hero-up{background:var(--hl);color:var(--ink)}
-body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 120px)}
+body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
 ol.steps3 b{flex:none;display:block;min-width:22px;background:none;color:var(--color-text);font:800 22px/1 var(--font-display);cursor:default}
@@ -1220,6 +1220,13 @@ ol.steps3 b{min-width:0}
 .fr-stats div{align-items:center;justify-content:flex-start;min-width:0}
 .fr-stats b{max-width:100%;white-space:nowrap}
 .fr-stats span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:break-word;text-wrap:balance;line-height:1.25}
+/* #1388 Home HP: judul buku di bawah sampul terbaca penuh (maks 2 baris + ellipsis), tak tertutup menu bawah */
+.bk{min-width:0;overflow:visible}
+.bk .cover{position:relative;z-index:0}
+.bk .t{position:relative;z-index:1;display:block;width:100%;min-height:38px;max-height:none;overflow:visible;word-break:normal;overflow-wrap:break-word;text-wrap:auto}
+.bk .t .t-main,.bk .t:not(:has(.t-main)){display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;max-height:38px;line-height:19px;text-overflow:ellipsis}
+.hscroll:has(>.bk){align-items:flex-start;padding-bottom:calc(var(--space-3) + 8px);scroll-padding-bottom:0}
+body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up):has(.hscroll>.bk){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 148px)}
 /* #1349 bar bawah reader HP: tombol Selesai/Buku baru tak mepet tepi, tinggi sentuh >=44px */
 .rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
 .rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -1267,6 +1274,12 @@ ol.steps3 b{min-width:0}
 .lanjut-card:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1375 Kartu PDF scan */
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
+/* #1390: judul rak terbaca penuh & bisa digulir melewati menu bawah */
+body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
+.hscroll:has(>.bk){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.bk .t{height:auto;min-height:38px;max-height:none;overflow:hidden}
+.bk .t .t-main{max-height:38px}
+.bk .au,.bk .m{position:relative;z-index:1}
 /* #1382 kartu Streak: angka + 'hari' di samping api; 7 titik dengan huruf hari (S S R K J S M), hari ini tebal + garis bawah */
 .streak1 .num b{font:800 28px/30px var(--font-display)}.streak1 .num small{font:700 12px/16px var(--font-body,inherit);align-self:flex-end;padding-bottom:3px}
 .stat3 .streak1 .num{gap:3px}
