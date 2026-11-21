@@ -453,7 +453,7 @@
       "prioritas": "P1",
       "nama": "Android: manifest lengkap + halaman web Hapus akun (#1472)",
       "dokumen": "docs/riset-android-play-store-26.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1513)",
       "catatan": "Peta 1-2 dari riset. Lengkapi manifest (id, description, lang, categories); buat halaman hapus akun yang tertaut dari privasi & bantuan. Naikkan C di sw.js. Jangan ubah api/. Mockup: docs/mockup-1472.html. Assetlinks & build AAB menunggu keputusan founder (akun, domain)."
     },
     {
