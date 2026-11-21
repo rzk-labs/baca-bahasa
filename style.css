@@ -1266,7 +1266,14 @@ ol.steps3 b{min-width:0}
 .lanjut-card:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1375 Kartu PDF scan */
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
-/* #1381: kartu Streak: angka hari + huruf nama hari di bawah titik */
-.stat3 .sbig{gap:3px;white-space:nowrap}.stat3 .sbig small{font:700 13px/17px var(--font-body,inherit)}
-.streak1 .sdots{display:flex;justify-content:center;gap:1px;margin:4px 0}.streak1 .sd{display:flex;flex-direction:column;align-items:center;gap:2px;width:10px}
-.streak1 .sd b{font:500 11px/13px var(--font-body,inherit);color:rgba(53,30,40,.6)}.streak1 .sd.now b{font-weight:800;color:#351E28}
+/* #1382 kartu Streak: angka + 'hari' di samping api; 7 titik dengan huruf hari (S S R K J S M), hari ini tebal + garis bawah */
+.streak1 .num b{font:800 28px/30px var(--font-display)}.streak1 .num small{font:700 12px/16px var(--font-body,inherit);align-self:flex-end;padding-bottom:3px}
+.stat3 .streak1 .num{gap:3px}
+.sdots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;margin:6px 0 4px;min-width:0}
+.sdots .sd{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.sdots .sd i{flex:none}
+.sdots .sd em{font:600 10px/12px var(--font-body,inherit);font-style:normal;color:#351E28;opacity:.75}
+.sdots .sd.td em{font-weight:800;opacity:1;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:340px){.stat3 .streak1{padding-left:8px;padding-right:8px}.sdots i{width:7px;height:7px}}
+/* #1381: teks 'Mulai hari ini' tidak patah baris */
+.stat3 .sbig{white-space:nowrap}

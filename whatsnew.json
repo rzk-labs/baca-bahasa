@@ -1,5 +1,11 @@
 [
   {
+    "n": 1382,
+    "judul": "[peta 146] Home Minggu ini & Streak: angka jelas, huruf hari, muat 320px",
+    "poin": "Kartu Streak di Home sekarang tampilkan angka hari beruntun di samping api.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1381,
     "judul": "Kartu Streak Home: angka hari jelas + huruf nama hari di bawah titik",
     "poin": "Kartu Streak di Home sekarang menampilkan angka hari, mis. \"9 hari\".",
@@ -171,12 +177,6 @@
     "n": 1267,
     "judul": "[peta 139] Home memuat: sisa perbaikan (IndexedDB macet, rak lokal dulu)",
     "poin": "Kalau tab Keepo lain menahan, atau simpan gagal, kamu dapat pesan jelas.",
-    "tgl": "2026-11-17"
-  },
-  {
-    "n": 1265,
-    "judul": "[peta 127] Keepo HQ: mockup mini di kartu Siap dicek di Home",
-    "poin": "Pratinjau HP di kartu Siap dicek sekarang lebih besar dan lebih jelas dibaca.",
     "tgl": "2026-11-17"
   }
 ]
