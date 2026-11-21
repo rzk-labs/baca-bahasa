@@ -1,5 +1,11 @@
 [
   {
+    "n": 1513,
+    "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
+    "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
+    "tgl": "2026-11-21"
+  },
+  {
     "n": 1511,
     "judul": "[peta 157] Tab Kata: chip filter level HSK, satu baris",
     "poin": "Tab Kata kini punya chip level HSK satu baris, hanya muncul bila ada kata HSK.",
@@ -171,12 +177,6 @@
     "n": 1433,
     "judul": "[peta 157] XP hari ini: sheet Tamat & Target Home selalu sama angkanya",
     "poin": "Angka XP hari ini di layar Tamat dan Home sekarang selalu sama.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1430,
-    "judul": "Bar tonggak Home: tampil '0 dari 50' + cara simpan, selamat di 50",
-    "poin": "Bar \"0 dari 50 kata\" sekarang tampil sejak awal, lengkap dengan petunjuk simpan kata.",
     "tgl": "2026-11-21"
   }
 ]
