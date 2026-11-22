@@ -1,5 +1,23 @@
 [
   {
+    "n": 1693,
+    "judul": "Tab Kata: saringan HSK + chip 'Belum hafal' & petunjuk ulang",
+    "poin": "Tab Kata: saringan HSK 1-3 selalu tampil bila kamu punya kata atau buku Mandarin.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1705,
+    "judul": "[peta 180] Simpan pengarang EPUB & tampilkan di kartu buku",
+    "poin": "Buku EPUB sekarang menampilkan nama pengarang kecil di bawah judul.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1701,
+    "judul": "Sheet Tamat: baris 'Besok' tak bentrok dengan kartu Home 'Simpan 3 kata'",
+    "poin": "Baris \"Besok\" di layar Tamat kini sebut angka 3 kata, sama dengan Home.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1691,
     "judul": "Home HP: kartu Level rata tengah, angka besar, tanpa ruang bolong",
     "poin": "Kartu Level di Home HP sekarang rata tengah, sejajar kartu Target.",
@@ -159,24 +177,6 @@
     "n": 1630,
     "judul": "[peta 175] Reader: label buku tamat cukup 'Tamat', tak terpotong '…'",
     "poin": "Label bawah buku yang sudah tamat sekarang tertulis \"Tamat\" utuh, tidak terpotong.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1627,
-    "judul": "[peta 173] Doodle state kosong: rapi di 320px & tema gelap",
-    "poin": "Gambar kosong di Kata, Ngomong, dan Lupa kini pas di layar kecil.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1622,
-    "judul": "[peta 174] Sampul Korea/Jepang: judul tak patah jadi satu huruf",
-    "poin": "Sampul buku Korea, Jepang, dan Mandarin dicek lewat kode: judul tak sisa satu huruf.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1620,
-    "judul": "[peta 172] Catatan sesi: label halaman jelas, kata Tamat cocok",
-    "poin": "Catatan sesi kini jelas: buka berapa halaman dan berhenti di halaman berapa.",
     "tgl": "2026-11-22"
   }
 ]
