@@ -1,5 +1,11 @@
 [
   {
+    "n": 1617,
+    "judul": "[peta 170] Sheet Tamat: baris kecil di tombol Lanjut terbaca jelas",
+    "poin": "Baris kecil di tombol Lanjut sheet Tamat sudah dicek: jelas dan tidak terpotong.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1610,
     "judul": "Ilustrasi doodle SVG: pencarian 'Nggak ada yang cocok' & Sosial offline",
     "poin": "Layar \"Nggak ada yang cocok\" dan Sosial offline sekarang punya gambar doodle.",
@@ -171,12 +177,6 @@
     "n": 1548,
     "judul": "Profil: label '7 hari' jelas di angka kata (bukan '/minggu')",
     "poin": "Kartu Profil kini bilang \"kata disimpan 7 hari\", bukan \"kata baru/minggu\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1547,
-    "judul": "Sheet: fokus keyboard/pembaca layar tak keluar ke halaman di belakang",
-    "poin": "Tombol Tab kini berputar di dalam panel arti kata dan panel Tamat.",
     "tgl": "2026-11-22"
   }
 ]
