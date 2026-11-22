@@ -374,8 +374,11 @@ async function isiArti(lang, w) {
 function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { t.classList.add('hide'); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
-function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
-function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
+function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
+/* #1609: animasi keluar — status tetap 'hide' seketika; class .closing hanya menampilkan sheet sebentar (tanpa interaksi) selagi meluncur turun */
+let sheetCloseT = 0;
+function sheetEndClosing() { clearTimeout(sheetCloseT); sheetCloseT = 0; const sh = $('#sheet'), sd = $('#shade'); if (sh) sh.classList.remove('closing'); if (sd) sd.classList.remove('closing'); }
+function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } const dragged = !!$('#sheet').style.transform; $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); sheetEndClosing(); if (wasOpen && !dragged && !matchMedia('(prefers-reduced-motion: reduce)').matches) { $('#sheet').classList.add('closing'); $('#shade').classList.add('closing'); $('#sheet').addEventListener('animationend', function f(e) { if (e.target !== this) return; this.removeEventListener('animationend', f); sheetEndClosing(); }); sheetCloseT = setTimeout(sheetEndClosing, 260); } if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
 /* #1547: jebakan fokus — Tab/Shift+Tab berputar di dalam sheet selagi terbuka */
 addEventListener('keydown', e => {
   if (e.key !== 'Tab' || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -558,7 +561,7 @@ function viewSosialAman() {
   try {
     if (typeof viewSosial === 'function') { viewSosial(); return; }
   } catch (e) { console.warn('viewSosial gagal', e); }
-  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm bk-off">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosOpen" type="button">Buka bacaanku</button><button class="ghost" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#view').innerHTML = `<div class="empty"><img class="empty-doodle" src="img/aset/sosial-offline.svg" width="96" height="72" alt="" decoding="async"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm bk-off">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosOpen" type="button">Buka bacaanku</button><button class="ghost" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
   $('#sosRetry').onclick = () => setTab('sosial');
   $('#sosOpen').onclick = () => { const b = book() || (db.books || []).find(x => x && x.id != null); if (b) { db.cur = b.id; save(); setTab('baca'); } else setTab('rak'); };
   $('#sosHome').onclick = () => setTab('rak');
@@ -909,7 +912,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v596';
+const APP_VER = 'v600';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1104,9 +1107,9 @@ function weekCard() {
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
-  const chips = [[pages, 'halaman'], [words, 'kata baru'], [days, 'hari baca']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('');
+  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c">Hari baca <b>${days}</b> dari 7 hari</span>` : '');
   if (!chips) return '';
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><div class="wk-n">Streak = beruntun. Hari baca = total 7 hari.</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
 function streakDots() {
@@ -1457,6 +1460,12 @@ function pahamLeave(b) {
 }
 /* SATU saringan kata sesi (Tamat + Kata sesi ini): hanya bahasa buku, bukan partikel/kata fungsi/nama, belum tersimpan */
 const kataSesiBaru = (b, arr) => arr.filter(e => e && e.lang === b.lang && !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true }));
+/* #1620: kata tersimpan cocok dgn buku lewat ISI teks (bukan judul saja); teks belum termuat = pakai judul saja (data lama tetap dihitung) */
+function kataDiBuku(b, v) {
+  if (!cache.pages || cache.id !== b.id) return true;
+  if (!cache._low) cache._low = cache.pages.map(s => s.join('\n')).join('\n').toLowerCase();
+  return [v.w, v.base].some(x => x && cache._low.includes(String(x).toLowerCase()));
+}
 const TXT_TAK_ADA_BARU = 'Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.';
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim()) || isKataSampah(b.lang, w)) return;
@@ -1494,9 +1503,11 @@ function sessRecap(b) {
   const cand = kataSesiBaru(b, all).sort((x, y) => y.n - x.n).slice(0, 8);
   if (!cand.length) return false;
   rekapAktif = cand;
+  const pos = b.pgN > 1 && b.pg != null ? `halaman ${Math.min(b.pg + 1, b.pgN)}/${b.pgN}` : '';
+  const pgTxt = pgs > 1 ? `Kamu buka ${pgs} halaman sesi ini${pos ? `, berhenti di ${pos}` : ''}. ` : pos ? `Berhenti di ${pos}. ` : '';
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
-    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgs > 1 ? `${pgs} halaman layar kamu buka. ` : ''}Simpan yang mau dihafal.</p>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}Simpan yang mau dihafal.</p>
     <div id="rsl">${cand.map(row).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
   isiArtiRekap(cand);
@@ -1545,7 +1556,7 @@ function finishBook(b) {
   if (tamatSeen === tk) return toast('Ini halaman terakhir.', 4000);
   tamatSeen = tk;
   setTimeout(() => flushLate(true), 2500);
-  const all = countedVocab(b.lang, 0, b.title);
+  const all = countedVocab(b.lang, 0, b.title).filter(v => kataDiBuku(b, v));
   const ws = all.filter(v => (v.at || 0) >= SESS.t);
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const pend = kataSesiBaru(b, [...SESSW.values()].filter(e => e.bid === b.id)).length; /* kata diketuk sesi ini, belum disimpan (sumber sama dgn sessRecap) */
@@ -3353,7 +3364,7 @@ function viewKataIn() {
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
       kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
-        : (q || csvF !== 'all' || hskF) && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
+        : (q || csvF !== 'all' || hskF) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
       if (db.vocab.length) {
         const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
@@ -3450,7 +3461,7 @@ function viewKataIn() {
       const weak = weakAll.filter(o => !q || String(o.w).toLowerCase().includes(q)).slice(0, 40);
       kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · dicoba ${+o.n || 1}×</div></div>${chip(+o.last || 0)}</div>`).join('')}
         <div class="row"><button class="pri" id="kRem">${ico('sword')}Lawan ${Math.min(weak.length, 10)} kata</button></div></div>`
-        : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
+        : q ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
       if ($('#kRem')) $('#kRem').onclick = () => {
         const lang = weak[0].lang, list = weak.filter(o => o.lang === lang).slice(0, 10);
         $('#kwl').remove();
