@@ -237,7 +237,9 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 #sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;max-width:640px;margin:0 auto;max-height:90dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--color-bg);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;box-shadow:var(--shadow-sheet);padding:10px 20px calc(env(safe-area-inset-bottom) + 14px);animation:up var(--dur-sheet) var(--ease-out)}
 @keyframes up{from{transform:translateY(50px);opacity:0}}
 @keyframes fade{from{opacity:0}}
-.grab{width:42px;height:5px;border-radius:var(--radius-full);background:var(--color-border);margin:0 auto 10px}
+.grab{width:42px;height:5px;border-radius:var(--radius-full);background:var(--color-border);margin:0 auto 10px;position:relative;touch-action:none}
+.grab::after{content:"";position:absolute;left:-30px;right:-30px;top:-10px;bottom:-12px}
+.sh-head{touch-action:none}
 .sh-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:var(--space-2)}
 .stepchip{display:inline-flex;gap:6px;align-items:center;height:30px;padding:0 12px;border-radius:var(--radius-full);background:var(--lime);color:var(--ink);font-size:12px;font-weight:800}
 .wd{display:flex;align-items:center;gap:var(--space-3);margin:var(--space-1) 0 2px}
@@ -342,6 +344,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .flash .fw{font:800 clamp(34px,13vw,56px)/1.05 var(--font-display);max-width:100%;overflow-wrap:anywhere;letter-spacing:-.01em}
 .flash .ft{font:800 28px/1.2 var(--font-display);background:var(--hl);color:var(--ink);border-radius:12px;padding:2px 12px;max-width:100%;overflow-wrap:anywhere}
 .flash .fs{font:500 15px/1.45 var(--font-reader);max-width:300px;opacity:.85}
+.flash .fs mark.fs-hit{background:var(--hl);color:var(--ink);font-weight:800;padding:0 .15em;border-radius:3px;overflow-wrap:anywhere;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .flash .fb{font:700 16px/1.3 var(--font-body,inherit);margin-top:8px;opacity:.8;overflow-wrap:anywhere;max-width:100%}
 .sbaca{font:700 15px/1.4 var(--font-body,inherit);opacity:.8;overflow-wrap:anywhere;max-width:100%;margin:0 2px var(--space-2)}
 .sbaca-peek{min-height:44px;font-size:14px;margin:0 0 var(--space-2)}
@@ -1113,6 +1116,11 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #hero.hero-done .hd-row .t{font:800 17px/20px var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #hero.hero-done .hd-row button{flex:none;min-height:44px;padding:0 14px;font-size:14px;background:rgba(255,255,255,.7);border:0;color:var(--ink)}
 #hero.hero-done .hero-act{margin-top:8px}
+/* #1562: kartu tamat = satu ajakan utama + tautan 'Baca ulang' */
+#hero.hero-done .hd-row .t{white-space:normal;overflow-wrap:anywhere}
+#hero.hero-done .hero-act button{width:100%;min-height:48px;background:var(--ink);color:var(--cream);white-space:normal}
+#hero.hero-done .hd-re{display:flex;justify-content:center;margin-top:2px}
+#hero.hero-done .hd-re .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 var(--font-body,inherit);min-height:44px;padding:0 12px;cursor:pointer}
 
 /* #1095 header jelas: avatar tanpa teks, tombol Pengaturan berbingkai + ikon; Home: titik 7 hari; Profil: rak pendek, progres lencana jelas */
 #hdx{gap:10px}
