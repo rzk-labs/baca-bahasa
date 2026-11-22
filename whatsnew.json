@@ -1,5 +1,11 @@
 [
   {
+    "n": 1581,
+    "judul": "Simpan kata: garis bawah kata di teks 'tergambar' + tombol berubah halus",
+    "poin": "Simpan kata kini terasa jelas: garis bawah kata tergambar pelan.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1580,
     "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
     "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
@@ -171,12 +177,6 @@
     "n": 1517,
     "judul": "[peta 163] Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran",
     "poin": "Setelah 2 putaran latihan ekstra, Home kini bilang \"Cukup hari ini, lanjut besok\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1515,
-    "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
-    "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
     "tgl": "2026-11-21"
   }
 ]
