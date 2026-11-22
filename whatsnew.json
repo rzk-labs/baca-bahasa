@@ -1,5 +1,11 @@
 [
   {
+    "n": 1652,
+    "judul": "Pengingat baca: tawaran sekali setelah Tamat pertama",
+    "poin": "Setelah tamat buku pertama, muncul tawaran sekali: \"Mau diingatkan baca besok?\"",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1651,
     "judul": "Toast: meluncur turun & pudar halus saat hilang, tak mendadak",
     "poin": "Pesan kecil di bawah layar sekarang turun dan pudar pelan, tidak lenyap mendadak.",
@@ -171,12 +177,6 @@
     "n": 1592,
     "judul": "Sampul polos: judul CJK/Korea tak patah jadi satu huruf sisa",
     "poin": "Judul Korea di sampul polos tak lagi patah jadi satu huruf sisa.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1591,
-    "judul": "Sampul buku Korea/Jepang: judul tak patah jadi satu huruf sisa",
-    "poin": "Judul sampul Korea tak lagi patah jadi satu huruf sisa.",
     "tgl": "2026-11-22"
   }
 ]
