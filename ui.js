@@ -1107,9 +1107,9 @@ function weekCard() {
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
-  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c">Hari baca <b>${days}</b> dari 7 hari</span>` : '');
+  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c" title="Jumlah hari kamu membaca dalam 7 hari terakhir" aria-label="${days} dari 7 hari baca"><b>${days}</b> dari 7 hari baca</span>` : '');
   if (!chips) return '';
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><div class="wk-n">Streak = beruntun. Hari baca = total 7 hari.</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
 function streakDots() {
