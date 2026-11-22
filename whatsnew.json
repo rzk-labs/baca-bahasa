@@ -1,5 +1,11 @@
 [
   {
+    "n": 1651,
+    "judul": "Toast: meluncur turun & pudar halus saat hilang, tak mendadak",
+    "poin": "Pesan kecil di bawah layar sekarang turun dan pudar pelan, tidak lenyap mendadak.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1650,
     "judul": "Ilustrasi doodle SVG: layar 'Sesi beres' & 'Cukup untuk sekarang'",
     "poin": "Layar selesai latihan di tab Kata sekarang punya gambar kartu bergaya coretan.",
@@ -171,12 +177,6 @@
     "n": 1591,
     "judul": "Sampul buku Korea/Jepang: judul tak patah jadi satu huruf sisa",
     "poin": "Judul sampul Korea tak lagi patah jadi satu huruf sisa.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1583,
-    "judul": "Tab Kata & form masukan: pilihan aktif terbaca pembaca layar",
-    "poin": "Tab Kata dan form masukan kini memberi tahu pembaca layar pilihan yang aktif.",
     "tgl": "2026-11-22"
   }
 ]

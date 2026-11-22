@@ -322,7 +322,7 @@ function award(n, stat, pk0, si) {
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
-  document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); } /* banner Level tak bertumpuk dengan toast */
+  document.querySelectorAll('.lvlup').forEach(x => x.remove()); toastHide(); /* banner Level tak bertumpuk dengan toast */
   if (snd === 'lvl') { /* #1482: banner ringan di atas layar, tak memblokir ketukan, hilang sendiri ~4 dtk */
     const b = document.createElement('div'); b.className = 'lvlup lvlbn'; b.setAttribute('role', 'status'); b.setAttribute('aria-live', 'polite');
     b.innerHTML = `<div class="card"><div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div><div class="lvl-tx"><b>${esc(title)}</b><span>${esc(msg)}</span></div><button type="button" class="lime">Lanjut</button></div>`;
@@ -380,7 +380,19 @@ async function isiArti(lang, w) {
   v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul;
   save(); toast(`${v.w}: ${v.t}`, 5000);
 }
-function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { t.classList.add('hide'); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
+/* #1651: keluar halus — 'hide' tetap status seketika; 'closing' menampilkan toast sebentar (tanpa interaksi) selagi meluncur turun */
+let toastEndT;
+function toastEnd(t) { clearTimeout(toastEndT); if (t) t.classList.remove('closing'); }
+function toastHide() {
+  const t = $('#toast'); if (!t) return; clearTimeout(toastT);
+  if (t.classList.contains('hide')) return;
+  t.classList.add('hide'); toastEnd(t);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  t.classList.add('closing');
+  t.onanimationend = e => { if (e.target === t && t.classList.contains('closing')) toastEnd(t); };
+  toastEndT = setTimeout(() => toastEnd(t), 250);
+}
+function toast(m, ms = 3200, act, act2) { const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -2462,7 +2474,7 @@ async function openMarks() {
 }
 let tipN = 0, tipDone = false, nudgePg = new Set(), nudgeT = 0;
 const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
-function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
+function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) toastHide(); }
 /* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
 function nudgeTap(b) {
   if (db.seenNudgeTap) return;
@@ -2638,7 +2650,7 @@ function nearWord(vp, x, y) {
 }
 async function onWord(el, lastEl) {
   const b = book();
-  document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); }
+  document.querySelectorAll('.lvlup').forEach(x => x.remove()); toastHide();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
   const sEl = el.closest('.s') || el.parentElement || el, sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;
