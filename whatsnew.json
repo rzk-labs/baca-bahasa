@@ -1,5 +1,11 @@
 [
   {
+    "n": 1715,
+    "judul": "Reader HP: label 'Tamat' di bar bawah jelas, tak pucat & tak bingungin",
+    "poin": "Label \"Tamat\" di bawah layar baca kini tebal, jelas, dan ada centang.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1713,
     "judul": "Sheet Tamat: tawaran pengingat dipindah ke bawah tombol aksi",
     "poin": "Layar Tamat kini tampilkan kata dan tombol lanjut dulu.",
@@ -171,12 +177,6 @@
     "n": 1644,
     "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
     "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1642,
-    "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
-    "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
     "tgl": "2026-11-22"
   }
 ]

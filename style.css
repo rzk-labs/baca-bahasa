@@ -544,6 +544,9 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rmid{min-width:0;margin:0 8px}
 .rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:359px){.rmid #pgn{font-size:.7rem}}
+.rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
+.rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
+.rmid #pgn.tamat .ck{width:14px;height:14px;stroke-width:3;flex:none}
 .reader.no-prog .rmid #pgn,.reader.no-prog .rmid .bar{display:none}
 .nw{white-space:nowrap}
 #sheet .hscroll{margin:0;padding:2px 2px 10px}
