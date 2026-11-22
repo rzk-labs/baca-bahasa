@@ -327,7 +327,7 @@
       "prioritas": "P0",
       "nama": "Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat (#1483)",
       "dokumen": "docs/spesifikasi-aksi-tunggal-halaman-akhir-1483.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1560)",
       "catatan": "Lapor Raka. Ubah ui.js (endCard, finishBook), style.css bila perlu, sw.js (naikkan C). Jangan ubah api/ dan XP. Mockup: docs/mockup-1483.html. Uji 360px & layar lebar."
     },
     {

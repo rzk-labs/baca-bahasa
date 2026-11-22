@@ -1,5 +1,11 @@
 [
   {
+    "n": 1560,
+    "judul": "[peta 165] Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat",
+    "poin": "Di halaman terakhir, 'Buku baru' kini muncul sekali saja, tidak dobel.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1557,
     "judul": "Kartu ulang: kata target di kalimat asal disorot stabilo Wasabi",
     "poin": "Di kartu ulang, kata yang dilatih kini disorot stabilo kuning-hijau.",
@@ -171,12 +177,6 @@
     "n": 1482,
     "judul": "Popup 'Level N!' jadi banner ringan, tak menutupi tab & layar lain",
     "poin": "Popup \"Level N!\" kini jadi banner kecil di atas, tidak menutupi tab lain.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1477,
-    "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
-    "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
     "tgl": "2026-11-21"
   }
 ]
