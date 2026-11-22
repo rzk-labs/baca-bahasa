@@ -201,8 +201,8 @@
       "no": 28,
       "nama": "Keandalan & Skala Teknis",
       "fase": "Rilis Toko & Publik",
-      "status": "belum",
-      "catatan": "Keluar bila: error dipantau otomatis, nol laporan data hilang 4 minggu, pemakaian kuota gratis Cloudflare <70%. Peran: developer. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Keluar bila: error dipantau otomatis, nol laporan data hilang 4 minggu, pemakaian kuota gratis Cloudflare <70%. Peran: developer. Lihat docs/pm-peta-fase-2.md. Riset kuota (validasi bukti internet): 70% permintaan harian tercapai di ±1.200 akun aktif; lihat docs/riset-kuota-cloudflare-28.md."
     },
     {
       "no": 29,
@@ -247,7 +247,7 @@
       "prioritas": "P1",
       "nama": "Catatan sesi: label halaman jelas & cocokkan kata Tamat tak lewat judul saja (#1589)",
       "dokumen": "docs/riset-kata-nyasar-catatan-sesi.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1620)",
       "catatan": "Mockup: docs/mockup-1589.html. Ubah ui.js (sessRecap teks halaman, finishBook countedVocab), sw.js naik C. Data lama tak dihapus. Kasus uji di dokumen bagian 5."
     },
     {
@@ -256,7 +256,7 @@
       "prioritas": "P1",
       "nama": "Uji visual doodle state kosong di 320px & tema gelap (#1580)",
       "dokumen": "docs/desain-ilustrasi-state-kosong-1580.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1627)",
       "catatan": "Ilustrasi sudah dipasang. Mockup: docs/mockup-1580.html."
     },
     {
@@ -265,7 +265,7 @@
       "prioritas": "P0",
       "nama": "Sampul Korea/Jepang: judul tak patah jadi satu huruf (#1591)",
       "dokumen": "docs/desain-sampul-judul.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1622)",
       "catatan": "CSS & coverSz sudah diubah; tinggal uji di 320px & 390px (Korea, Jepang). Mockup: docs/mockup-1591.html."
     },
     {
@@ -274,7 +274,7 @@
       "prioritas": "P0",
       "nama": "Reader: label buku tamat cukup 'Tamat', tak terpotong '…' (#1598)",
       "dokumen": "docs/pm-reader-label-tamat-1598.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1630)",
       "catatan": "Mockup: docs/mockup-1598.html. Hitung ulang label setelah layout/font siap & saat resize. Uji 320/360/390px. Naikkan C di sw.js."
     },
     {
@@ -285,6 +285,15 @@
       "dokumen": "docs/mockup-1606.html",
       "status": "selesai (#1606)",
       "catatan": "endCard() ukur ulang via ResizeObserver, resize, font, tema, akhir transisi. Belum diuji visual di 320/390px x 4 tema x 3 font: QA cek."
+    },
+    {
+      "no": 177,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Hemat kuota Cloudflare: sinkron lebih jarang + pantau kuota (#1611)",
+      "dokumen": "docs/riset-kuota-cloudflare-28.md",
+      "status": "siap dikerjakan",
+      "catatan": "Bagian 5 & 4 dokumen: sinkron tiap 5 menit/saat berubah, cek buku sekali per buka, cache leaderboard 60 dtk, peringatan kuota. Ubah api/ perlu deploy manual."
     },
     {
       "no": 171,
@@ -301,7 +310,7 @@
       "prioritas": "P0",
       "nama": "Sheet Tamat: baris kecil di tombol Lanjut terbaca jelas (#1537)",
       "dokumen": "docs/desain-kreatif-tamat-lanjut-1537.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1617)",
       "catatan": "Mockup: docs/mockup-1537.html. Perbaikan CSS sudah diterapkan di #1537; tinggal diuji di 320px & 390px."
     },
     {
