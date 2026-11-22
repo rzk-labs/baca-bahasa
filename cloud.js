@@ -167,7 +167,9 @@ function mergeTaps(srv) {
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
-let lastSync = '', syncCur = null;
+let lastSync = '', syncCur = null, lastRun = 0, lastBooksSig = '';
+const SYNC_GAP = 5 * 60 * 1000; // hemat kuota: sinkron rutin maks. sekali per 5 menit
+const booksSig = () => (db.books || []).map(bkKey).sort().join('\n');
 // status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
 var bkState = '', bkSkip = false; // bkSkip: pengguna pilih 'Lanjut tanpa menunggu'
 function bkSet(v) { if (bkSkip && v === 'fail') v = ''; if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
@@ -178,6 +180,9 @@ function syncRefresh(force) {
 }
 async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
+  // tab tersembunyi: diam, kecuali dorongan terakhir saat ditutup (hiddenOk)
+  if (document.visibilityState === 'hidden' && !opt.force && !opt.hiddenOk) return false;
+  lastRun = Date.now();
   const r = opt.pre || await api('/me');
   if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
   if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; db.acct.premium = !!r.user.premium; }
@@ -188,7 +193,8 @@ async function doSync(opt) {
     lastSync = sig;
   }
   if (changed && !opt.noRefresh) syncRefresh(opt.manual);
-  syncBooks().catch(() => { }); // teks buku: jalan di belakang, tidak menahan sinkron kata/XP
+  // teks buku: cukup sekali per buka app (atau bila daftar buku di HP ini berubah); jalan di belakang
+  if (!opt.hiddenOk && booksSig() !== lastBooksSig) syncBooks().catch(() => { });
   return changed;
 }
 
@@ -258,6 +264,7 @@ async function syncBooks() {
     if (failed && !added && !(db.books || []).length) bad = true;
     else if (failed) toast('Sebagian buku belum bisa dimuat.', 6000, { label: 'Coba lagi', fn: () => { syncBooks().catch(() => { }); } });
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
+    if (!bad) lastBooksSig = booksSig();
   } catch (e) { bad = true; } finally { clearTimeout(tmo); bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
@@ -269,7 +276,7 @@ async function runSync(opt = {}) {
 }
 const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
-  delete db.keluar;
+  delete db.keluar; lastBooksSig = '';
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
@@ -289,9 +296,10 @@ function noteAkunWhenReady(n) {
   toast(NOTE_AKUN.replace(/&amp;/g, '&'), 4000);
 }
 setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
-setInterval(() => { if (document.visibilityState === 'visible') runSync().catch(() => { }); }, 60000);
-addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') runSync().catch(() => { }); else pushSync().catch(() => { }); });
-addEventListener('online', () => { runSync().catch(() => { }); });
+const syncIfStale = () => { if (db.acct && Date.now() - lastRun >= SYNC_GAP) runSync().catch(() => { }); };
+setInterval(syncIfStale, SYNC_GAP);
+addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncIfStale(); else if (db.acct && dataSig() !== lastSync) runSync({ force: true, noRefresh: true, hiddenOk: true }).catch(() => { }); });
+addEventListener('online', syncIfStale);
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
 const NOTE_AKUN = 'Kata, XP, dan buku ikut akunmu.';
@@ -408,7 +416,7 @@ async function wipeLocal() {
 async function finishOut(wipe) {
   try { await api('/logout', { method: 'POST' }); } catch (e) { }
   if (wipe) await wipeLocal();
-  db.acct = null; db.keluar = 1; lastSync = ''; save(); closeSheet();
+  db.acct = null; db.keluar = 1; lastSync = ''; lastBooksSig = ''; lastRun = 0; save(); closeSheet();
   toast(wipe ? 'Kamu sudah keluar. HP ini sudah dibersihkan.' : 'Kamu sudah keluar. Progres tetap ada di HP ini.');
   setTab(db.tab || 'rak');
 }
