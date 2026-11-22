@@ -1,5 +1,11 @@
 [
   {
+    "n": 1642,
+    "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
+    "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1640,
     "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
     "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
@@ -171,12 +177,6 @@
     "n": 1568,
     "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
     "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1563,
-    "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
-    "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
     "tgl": "2026-11-22"
   }
 ]

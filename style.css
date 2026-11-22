@@ -1421,5 +1421,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .xp-eg{margin:var(--space-3) 0;font-size:14px;line-height:21px}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
+.hskhome{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:36px;margin:10px 0 0;padding:6px 12px;background:var(--ice);color:var(--ink);border:0;border-radius:var(--radius-full);font:inherit;font-size:13px;line-height:20px;text-align:left;cursor:pointer}
+.hskhome b{font-weight:700}
 /* #1640 Home: Streak satu baris penuh; Target & Level berdampingan, dua kolom sama lebar */
 .stat3{grid-template-columns:repeat(2,minmax(0,1fr))}
