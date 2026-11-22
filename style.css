@@ -1377,3 +1377,4 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hsksum .hs{flex:0 1 auto;min-width:0;background:none;border:0;padding:4px 6px;font:inherit;color:inherit;border-radius:var(--radius-full);cursor:pointer}
 .hsksum .hs b{font-weight:700}
 .hsksum .hs.on{background:var(--ice)}
+.tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
