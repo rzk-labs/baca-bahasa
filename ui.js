@@ -1,4 +1,6 @@
 'use strict';
+/* jeda sebelum 'Masih nyari artinya…' + Coba lagi (arti kata & kalimat); permintaan tetap jalan */
+const SLOW_MS = 3000;
 /* KEEPO v8— Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
 db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; if (db.spacing !== 'w') db.spacing = 'n'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; if (db.peekBaca !== 'langsung' && db.peekBaca !== 'ketuk') db.peekBaca = null; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0; db.rtSet = !!db.rtSet; if (!db.rtLang || typeof db.rtLang !== 'object') db.rtLang = {};
 const rtOf = lang => [0, 1, 2].includes(db.rtLang[lang]) ? db.rtLang[lang] : (!db.rtSet && lang === 'zh-CN') ? 2 : db.rt;
@@ -359,8 +361,19 @@ async function isiArti(lang, w) {
 function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { t.classList.add('hide'); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
-function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
+function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
+/* #1547: jebakan fokus — Tab/Shift+Tab berputar di dalam sheet selagi terbuka */
+addEventListener('keydown', e => {
+  if (e.key !== 'Tab' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const sh = $('#sheet'); if (!sh || sh.classList.contains('hide')) return;
+  const fs = $$('#sheet button, #sheet a[href], #sheet input, #sheet select, #sheet textarea, #sheet [tabindex]:not([tabindex="-1"])').filter(x => !x.disabled && x.type !== 'hidden' && (x.offsetWidth || x.offsetHeight || x.getClientRects().length));
+  if (!fs.length) { e.preventDefault(); sh.focus({ preventScroll: true }); return; }
+  const first = fs[0], last = fs[fs.length - 1], a = document.activeElement;
+  if (!sh.contains(a) || a === sh) { e.preventDefault(); (e.shiftKey ? last : first).focus({ preventScroll: true }); }
+  else if (e.shiftKey && a === first) { e.preventDefault(); last.focus({ preventScroll: true }); }
+  else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus({ preventScroll: true }); }
+});
 $('#shade').onclick = e => {
   /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
   const d = RD.dt; RD.dt = null; let sx = null;
@@ -371,6 +384,37 @@ $('#shade').onclick = e => {
   closeSheet(); if (sx) { stopListenPage(); toggleInline(sx); }
 };
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+/* tarik pegangan/kepala sheet ke bawah untuk menutup (#1549); delegasi sekali di #sheet */
+function sheetReset() { const sh = $('#sheet'), sd = $('#shade'); sh.style.transform = ''; sh.style.transition = ''; sd.style.opacity = ''; sd.style.transition = ''; }
+{
+  let g = null;
+  const sh = $('#sheet');
+  sh.addEventListener('pointerdown', e => {
+    if (e.button || !e.target.closest('.grab,.sh-head') || e.target.closest('button,a,input,select,textarea')) return;
+    g = { id: e.pointerId, y: e.clientY, dy: 0, t: Date.now(), v: 0, py: e.clientY, pt: Date.now() };
+    try { sh.setPointerCapture(e.pointerId); } catch (x) { }
+  });
+  sh.addEventListener('pointermove', e => {
+    if (!g || e.pointerId !== g.id) return;
+    const now = Date.now(), dy = Math.max(0, e.clientY - g.y);
+    if (now > g.pt) g.v = (e.clientY - g.py) / (now - g.pt);
+    g.py = e.clientY; g.pt = now; g.dy = dy;
+    sh.style.transition = 'none'; sh.style.transform = `translateY(${dy}px)`;
+    $('#shade').style.transition = 'none'; $('#shade').style.opacity = String(Math.max(.4, 1 - dy / 400));
+  });
+  const end = e => {
+    if (!g || e.pointerId !== g.id) return;
+    const d = g; g = null;
+    try { sh.releasePointerCapture(e.pointerId); } catch (x) { }
+    if (!d.dy) return;
+    if (e.type !== 'pointercancel' && (d.dy > 80 || (d.dy > 20 && d.v > .5))) { closeSheet(); sheetReset(); return; }
+    const rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = $('#shade');
+    sh.style.transition = rm ? 'none' : 'transform .18s ease-out'; sd.style.transition = rm ? 'none' : 'opacity .18s ease-out';
+    sh.style.transform = ''; sd.style.opacity = '';
+    setTimeout(() => { if (!g) { sh.style.transition = ''; sd.style.transition = ''; } }, 200);
+  };
+  sh.addEventListener('pointerup', end); sh.addEventListener('pointercancel', end);
+}
 const closeBtn = `<button class="icon" data-close aria-label="Tutup">${ico('x')}</button>`;
 const langOpts = sel => Object.keys(LANGS).map(k => `<option value="${k}"${k === sel ? ' selected' : ''}>${langName(k)}</option>`).join('');
 const book = () => db.books.find(b => b.id === db.cur);
@@ -507,6 +551,7 @@ function viewSosialAman() {
   $('#sosHome').onclick = () => setTab('rak');
 }
 function setTab(t) {
+  if (t !== 'kata') { quickPend = null; quickRun = null; quickExtra = false; quickLogged = false; } /* #1550: mode ekstra tak menempel */
   if (t !== 'baca') { rdLeave(); pfDisarm(); }
   document.querySelectorAll('.lvlup').forEach(x => x.remove()); db.tab = t; save(); closeSheet(); stopListen(); document.body.classList.remove('reading'); wakeSync();
   $$('#tabs button').forEach(b => { b.classList.toggle('on', b.dataset.t === t); b.setAttribute('aria-current', b.dataset.t === t ? 'page' : 'false'); });
@@ -850,7 +895,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v555';
+const APP_VER = 'v565';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1134,7 +1179,7 @@ function viewRak() {
       <div class="t-lav" id="lvCard">${lvCardHtml()}</div>
     </div>
     ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, jadwal tidak berubah">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Jadwal tidak berubah</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<div class="mut sm" id="xtraDone" style="padding:6px 4px;text-align:center">Cukup hari ini, latihan ekstra lanjut besok.</div>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
+    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>${pctOf(cur) >= 100 ? 'Ulang kata sulit' : 'Ulang sekarang'}</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya. Lupa menurunkan level, jadwal tetap">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Lupa menurunkan level, jadwal tetap</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<div class="mut sm" id="xtraDone" style="padding:6px 4px;text-align:center">Cukup hari ini, latihan ekstra lanjut besok.</div>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
@@ -2574,8 +2619,8 @@ async function onWord(el, lastEl) {
     const d = $('#wdict'); if (d) d.innerHTML = ''; const h = $('#whint'); if (h) { h.hidden = true; h.innerHTML = ''; } const g = $('#wsug'); if (g) { g.hidden = true; g.innerHTML = ''; }
     updNama(); keepVisible('.w.sel');
   };
-  const slowMsg = (my, retry) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = '<span class="loading">Arti belum ketemu, sinyal lemah?</span> <button class="ghost wretry" id="wslow">Coba lagi</button>'; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
-  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) slowT = setTimeout(() => slowMsg(my, load), 8000); return translate(qWord(), b.lang, db.my, sig).then(r => {
+  const slowMsg = (my, retry, off) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="wslow">Coba lagi</button>`; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT);
     tr = r; setTx('#wpart', partNote());
@@ -2866,8 +2911,9 @@ function showSentence(word, sent, sIdx, sEl) {
   keepVisible('.s.hl');
   const strEl = $('#str');
   const alive = () => $('#str') === strEl;
-  let sSlow = 0, sTok = 0;
-  const loadSent = () => { const my = ++sTok; { const m = $('#smt'); if (m) m.classList.add('hide'); } clearTimeout(sSlow); sSlow = setTimeout(() => { if (!alive() || my !== sTok) return; strEl.innerHTML = '<span class="loading">Sinyalnya lemah nih…</span> <button class="ghost wretry" id="sslow">Coba lagi</button>'; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading">Lagi nerjemahin kalimat…</span>'; loadSent(); }; }, 8000); return translate(sent, b.lang, db.my).then(r => {
+  let sSlow = 0, sTok = 0, sAc = null;
+  const sSlowMsg = (my, off) => { if (!alive() || my !== sTok) return; strEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="sslow">Coba lagi</button>`; $('#sslow').onclick = () => { strEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nerjemahin kalimat"><i></i><i></i><i></i></span>'; loadSent(); }; };
+  const loadSent = () => { const my = ++sTok; if (sAc) sAc.abort(); sAc = new AbortController(); const sSig = sAc.signal; { const m = $('#smt'); if (m) m.classList.add('hide'); } clearTimeout(sSlow); if (!navigator.onLine) sSlowMsg(my, true); else sSlow = setTimeout(() => sSlowMsg(my), SLOW_MS); return translate(sent, b.lang, db.my, sSig).then(r => {
     if (!alive() || my !== sTok) return;
     clearTimeout(sSlow);
     const trEl = $('#str'), lm = wMean.toLowerCase(), lt = r.text.toLowerCase(), at = lm && lt.length === r.text.length ? lt.indexOf(lm) : -1;
@@ -3243,9 +3289,12 @@ function viewKataIn() {
         const chipRow = filt ? `<div class="fchips" id="kChips" role="group" aria-label="Saring kata">${fchip('all', 'Semua')}${langs.length > 1 ? langs.map(l => fchip('l:' + l, langName(l))).join('') : ''}${books.length > 1 ? books.map(b => fchip('b:' + b, b)).join('') : ''}</div>` : '';
         const oldScroll = ($('#kChips') || {}).scrollLeft || kataChipScroll;
         const hskDue = hskF ? db.vocab.filter(v => isDue(v) && inF(v)).length : 0;
-        const hskRow = hskLv.length ? `<div class="fchips hskrow" id="kHsk" role="group" aria-label="Saring kata per level HSK"><button class="fchip${hskF ? '' : ' on'}" data-h="0" aria-pressed="${!hskF}">Semua</button>${hskLv.map(n => `<button class="fchip${hskF === n ? ' on' : ''}" data-h="${n}" aria-pressed="${hskF === n}">HSK ${n}</button>`).join('')}</div>${hskDue ? `<button type="button" class="fw-nudge due-nudge" id="kHskGo" style="margin:0 0 10px" aria-label="Ulang ${hskDue} kata HSK ${hskF} yang siap">${ico('cards')}<span>Ulang ${hskDue} kata HSK ${hskF}</span></button>` : ''}` : '';
+        const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
+        const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
+        const hskSum = hskLv.length ? `<div class="hsksum" id="kHskSum">${hskLv.map(n => { const x = hskUniq(n), y = hskTot(n); return y ? `<button type="button" class="hs${hskF === n ? ' on' : ''}" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk menyaring">HSK ${n}: <b>${x}</b>/${y}</button>` : ''; }).join('')}</div>` : '';
+        const hskRow = hskLv.length ? `<div class="fchips hskrow" id="kHsk" role="group" aria-label="Saring kata per level HSK"><button class="fchip${hskF ? '' : ' on'}" data-h="0" aria-pressed="${!hskF}">Semua</button>${hskLv.map(n => `<button class="fchip${hskF === n ? ' on' : ''}" data-h="${n}" aria-pressed="${hskF === n}">HSK ${n}</button>`).join('')}</div>${hskSum}${hskDue ? `<button type="button" class="fw-nudge due-nudge" id="kHskGo" style="margin:0 0 10px" aria-label="Ulang ${hskDue} kata HSK ${hskF} yang siap">${ico('cards')}<span>Ulang ${hskDue} kata HSK ${hskF}</span></button>` : ''}` : '';
         kl.insertAdjacentHTML('afterbegin', `${hskRow}${chipRow}<div class="csvbar">${sortSel}${filt}</div>`);
-        $$('#kHsk .fchip').forEach(b => b.onclick = () => { hskF = +b.dataset.h; if (hskF && window.kepoMark) kepoMark('hsk_filter'); sfx('pop'); renderList(); });
+        $$('#kHsk .fchip, #kHskSum .hs').forEach(b => b.onclick = () => { hskF = +b.dataset.h; if (hskF && window.kepoMark) kepoMark('hsk_filter'); sfx('pop'); renderList(); });
         if ($('#kHskGo')) $('#kHskGo').onclick = () => { deckLv = hskF; if (window.kepoMark) kepoMark('hsk_ulang'); kataSeg = 'kartu'; sfx('pop'); viewKata(); };
         if ($('#kChips')) {
           $('#kChips').scrollLeft = oldScroll;
@@ -3406,7 +3455,7 @@ function deck(kb) {
     if (quickRun) {
       quickRun = null;
       quickExtra = false;
-      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap sama.</div>${xtraXp ? '<div class="mut sm"><b>+2 XP</b></div>' : ''}<button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
+      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap, level bisa turun bila kamu lupa.</div>${xtraXp ? '<div class="mut sm"><b>+2 XP</b></div>' : ''}<button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
       if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
       return;
     }
@@ -3457,7 +3506,7 @@ function deck(kb) {
     if (!flipped) return;
     card.style.transform = `translateX(${ok ? 140 : -140}%) rotate(${ok ? 18 : -18}deg)`; card.style.opacity = '0';
     deckExtra = deckExtra.filter(x => x !== v);
-    if (quickExtra) { sched(0); v.la = Date.now(); if (ok) { deckHint = 'Mantap. Jadwal kata ini tidak berubah'; sfx('ding'); } else { v.lv = Math.max(0, (v.lv || 0) - 1); deckHint = 'Nggak apa-apa, levelnya turun satu. Jadwal tetap'; sfx('soft'); } save(); }
+    if (quickExtra) { sched(0); v.la = Date.now(); if (ok) { deckHint = 'Mantap. Jadwal kata ini tidak berubah'; sfx('ding'); } else { v.lv = Math.max(0, (v.lv || 0) - 1); deckHint = 'Levelnya turun satu. Jadwal ulang tetap'; sfx('soft'); } save(); }
     else if (ok && rt) { v.known = false; v.due = Math.max(+v.due || 0, Date.now() + DAY_MS); deckHint = 'Nah, ingat. Kata ini selesai untuk sesi ini'; sched(0); save(); sfx('ding'); }
     else if (ok) { sched(0); const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Mantap! Muncul lagi ${d} hari ke depan · ${REVIEW_DAYS.length - lv} tahap lagi jadi hafal`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = 'Lupa nggak apa-apa, kata ini muncul lagi'; if (!sched(2)) { v.due = Date.now() + DAY_MS; deckHint = 'Besok kita coba lagi'; } save(); sfx('soft'); }
     refreshHafal();
