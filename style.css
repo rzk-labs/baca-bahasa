@@ -344,6 +344,7 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .flash .fw{font:800 clamp(34px,13vw,56px)/1.05 var(--font-display);max-width:100%;overflow-wrap:anywhere;letter-spacing:-.01em}
 .flash .ft{font:800 28px/1.2 var(--font-display);background:var(--hl);color:var(--ink);border-radius:12px;padding:2px 12px;max-width:100%;overflow-wrap:anywhere}
 .flash .fs{font:500 15px/1.45 var(--font-reader);max-width:300px;opacity:.85}
+.flash .fs mark.fs-hit{background:var(--hl);color:var(--ink);font-weight:800;padding:0 .15em;border-radius:3px;overflow-wrap:anywhere;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .flash .fb{font:700 16px/1.3 var(--font-body,inherit);margin-top:8px;opacity:.8;overflow-wrap:anywhere;max-width:100%}
 .sbaca{font:700 15px/1.4 var(--font-body,inherit);opacity:.8;overflow-wrap:anywhere;max-width:100%;margin:0 2px var(--space-2)}
 .sbaca-peek{min-height:44px;font-size:14px;margin:0 0 var(--space-2)}
@@ -1115,6 +1116,11 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #hero.hero-done .hd-row .t{font:800 17px/20px var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #hero.hero-done .hd-row button{flex:none;min-height:44px;padding:0 14px;font-size:14px;background:rgba(255,255,255,.7);border:0;color:var(--ink)}
 #hero.hero-done .hero-act{margin-top:8px}
+/* #1562: kartu tamat = satu ajakan utama + tautan 'Baca ulang' */
+#hero.hero-done .hd-row .t{white-space:normal;overflow-wrap:anywhere}
+#hero.hero-done .hero-act button{width:100%;min-height:48px;background:var(--ink);color:var(--cream);white-space:normal}
+#hero.hero-done .hd-re{display:flex;justify-content:center;margin-top:2px}
+#hero.hero-done .hd-re .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 var(--font-body,inherit);min-height:44px;padding:0 12px;cursor:pointer}
 
 /* #1095 header jelas: avatar tanpa teks, tombol Pengaturan berbingkai + ikon; Home: titik 7 hari; Profil: rak pendek, progres lencana jelas */
 #hdx{gap:10px}
@@ -1168,7 +1174,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 /* #1104 Home pemula: Upload di atas, gambar kecil, langkah = daftar bernomor */
 .hero-up{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin:0 0 6px;border:0;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font:700 16px var(--font-ui)}
 .hero-up .em{display:flex}.hero-up .em svg.i{width:22px;height:22px}
-.hero-fmt{margin:0 0 var(--space-3);text-align:center}
+.hero-fmt{margin:0 0 var(--space-3);text-align:center;font-size:12px;text-wrap:balance}
 .hero-pic{height:auto;max-height:none;object-fit:contain;width:100%}
 @media (max-height:700px){.hero-pic{display:none}}
 .add-grid.two{grid-template-columns:repeat(2,1fr)}
@@ -1253,8 +1259,7 @@ ol.steps3 b{min-width:0}
 .bk .cover{position:relative;z-index:0}
 .bk .t{position:relative;z-index:1;display:block;width:100%;min-height:38px;max-height:none;overflow:visible;word-break:normal;overflow-wrap:break-word;text-wrap:auto}
 .bk .t .t-main,.bk .t:not(:has(.t-main)){display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;max-height:38px;line-height:19px;text-overflow:ellipsis}
-.hscroll:has(>.bk){align-items:flex-start;padding-bottom:calc(var(--space-3) + 8px);scroll-padding-bottom:0}
-body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up):has(.hscroll>.bk){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 148px)}
+.hscroll:has(>.bk){align-items:flex-start}
 /* #1349 bar bawah reader HP: tombol Selesai/Buku baru tak mepet tepi, tinggi sentuh >=44px */
 .rfoot{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));box-sizing:border-box}
 .rfoot .pg.fin{width:auto;min-width:44px;min-height:48px;padding:0 16px;font-weight:700;white-space:nowrap;overflow-wrap:normal;flex:0 1 auto;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -1309,7 +1314,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .scan-card p{margin:12px 0 0;font-size:15px;line-height:1.5}.scan-card ul{margin:10px 0 0;padding-left:20px;font-size:15px;line-height:1.6}
 /* #1390: judul rak terbaca penuh & bisa digulir melewati menu bawah */
 body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
-.hscroll:has(>.bk){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 .bk .t{height:auto;min-height:38px;max-height:none;overflow:hidden}
 .bk .t .t-main{max-height:38px}
 .bk .au,.bk .m{position:relative;z-index:1}
@@ -1327,6 +1331,10 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 .sdots .sd{overflow:hidden}
 .sdots .sd em{display:block;max-width:100%;overflow:hidden;white-space:nowrap;font-size:11px;line-height:13px}
 .stat3 .streak1 .lbl2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;margin-top:auto;position:relative}
+/* #1570 huruf hari 3 huruf (Min Sen Sel…): kartu Streak selebar satu baris supaya 7 hari muat di 320px */
+.stat3 .streak1{grid-column:1/-1;min-height:0}
+.sdots{width:100%;max-width:340px;margin-left:auto;margin-right:auto}
+.sdots .sd em{font-size:11px;letter-spacing:0}
 /* #1381: teks 'Mulai hari ini' tidak patah baris */
 .stat3 .sbig{white-space:nowrap}
 /* #1411 sampul tanpa gambar: huruf awal + judul pendek (maks 3 baris; kecil 2 baris) */
