@@ -1,5 +1,11 @@
 [
   {
+    "n": 1647,
+    "judul": "Kartu Target Home: jelaskan 30 XP itu kira-kira berapa kegiatan",
+    "poin": "Kartu Target di Home kini punya contoh kecil: \"5 hlm + 10 kata\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1672,
     "judul": "Rak Profil: kata 'Tamat' cukup sekali per buku, sampul tak terpotong",
     "poin": "Buku tamat di rak Profil kini cukup satu centang kuning di sampul.",
@@ -171,12 +177,6 @@
     "n": 1579,
     "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
     "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1578,
-    "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
-    "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
     "tgl": "2026-11-22"
   }
 ]

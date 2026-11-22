@@ -210,14 +210,15 @@ const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 /* SATU sumber XP/level: Home, Profil, header, popup */
 const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
 const xpTodayText = (xt = xpToday()) => xt >= GOAL ? 'Target harian tercapai' : `${xt} XP hari ini`; /* satu teks utk sheet Tamat & kartu Target Home */
-const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>${xpTodayText(xt)}</span><span>target ${GOAL}</span>`}</div>`;
+const GOAL_EG = '5 hlm + 10 kata', GOAL_EG_FULL = 'Contoh: baca 5 halaman (10 XP) dan simpan 10 kata (20 XP)'; /* 1 halaman = 2 XP (maks 10/hari), 1 kata disimpan = 2 XP */
+const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>${xpTodayText(xt)}</span><span>target ${GOAL}</span>`}</div>${xt >= GOAL ? '' : `<div class="goal-eg" title="${GOAL_EG_FULL}" aria-label="${GOAL_EG_FULL}">${GOAL_EG}</div>`}`;
+const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
 /* #1642: satu baris progres HSK di Home; kosong bila belum ada kata zh-CN / data HSK belum termuat */
 function hskHomeHtml() { if (!hskMap) return ''; for (const n of [3, 2, 1]) { const x = hskUniq(n), y = hskTot(n); if (x && y) return `<button type="button" class="hskhome" id="hskHome" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk lihat kata HSK ${n}">HSK ${n}: <b>${x}</b>/${y} kata<span aria-hidden="true">›</span></button>`; } return ''; }
 function bindHskHome() { const e = $('#hskHome'); if (e) e.onclick = () => { hskF = +e.dataset.h || 0; csvF = 'all'; kataSeg = 'simpan'; sfx('pop'); setTab('kata'); }; }
 function fillHskHome() { const c = $('#hskSlot'); if (!c) return; c.innerHTML = hskHomeHtml(); bindHskHome(); }
-const lvCardHtml =() => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
 function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) tc.innerHTML = goalCardHtml(xpToday()); }
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
@@ -920,7 +921,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v609';
+const APP_VER = 'v615';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
