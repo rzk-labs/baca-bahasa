@@ -1151,16 +1151,13 @@ function pagesWeek() {
 }
 function weekCard() {
   try { if (localStorage.getItem('kepo_wk') === weekKey()) return ''; } catch (e) { return ''; }
-  const from = dayKey(new Date(Date.now() - 7 * 864e5));
-  const from7 = dayKey(new Date(Date.now() - 6 * 864e5)); /* #1360: tepat 7 hari (hari ini + 6 sebelumnya), bukan 8 */
-  const days = db.days.filter(d => d >= from7).length;
   const pages = pagesWeek(); /* null (tak bisa dihitung) = chip halaman disembunyikan */
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
-  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c" title="Hari baca = total hari kamu baca dalam 7 hari. Streak = hari berturut-turut." aria-label="Hari baca ${days} dari 7 hari. Streak adalah hari berturut-turut; hari baca adalah total dalam 7 hari.">Hari baca <b>${days}/7</b></span>` : '');
-  if (!chips) return '';
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
+  const parts = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<b>${c[0]}</b> ${c[1]}`);
+  if (!parts.length) return '';
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-g"><span class="wk-t">Minggu ini:</span> ${parts.join(' · ')}</span><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
 function dayAgo(k) { const d = new Date(); d.setDate(d.getDate() - k); return d; } /* aman saat jam musim panas berganti, sama seperti streak() */
