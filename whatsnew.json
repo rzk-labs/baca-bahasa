@@ -1,5 +1,11 @@
 [
   {
+    "n": 1640,
+    "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
+    "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1638,
     "judul": "Sheet Tamat: satu target 'Besok' saja, tanpa 3 kata + 50 kata",
     "poin": "Layar Tamat sekarang cuma satu target: \"Besok: simpan 3 kata dulu\".",
@@ -171,12 +177,6 @@
     "n": 1563,
     "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
     "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1562,
-    "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
-    "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
     "tgl": "2026-11-22"
   }
 ]
