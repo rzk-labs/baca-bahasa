@@ -1,5 +1,11 @@
 [
   {
+    "n": 1610,
+    "judul": "Ilustrasi doodle SVG: pencarian 'Nggak ada yang cocok' & Sosial offline",
+    "poin": "Layar \"Nggak ada yang cocok\" dan Sosial offline sekarang punya gambar doodle.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1609,
     "judul": "Sheet arti kata & menu: meluncur turun halus saat ditutup",
     "poin": "Panel arti kata dan menu sekarang meluncur turun halus saat ditutup.",
@@ -171,12 +177,6 @@
     "n": 1547,
     "judul": "Sheet: fokus keyboard/pembaca layar tak keluar ke halaman di belakang",
     "poin": "Tombol Tab kini berputar di dalam panel arti kata dan panel Tamat.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1546,
-    "judul": "Seragamkan warna & bentuk tombol di style.css lewat token",
-    "poin": "Warna dan bentuk tombol kini seragam lewat satu sumber, tampilan tak berubah.",
     "tgl": "2026-11-22"
   }
 ]
