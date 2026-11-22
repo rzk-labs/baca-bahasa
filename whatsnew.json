@@ -1,5 +1,11 @@
 [
   {
+    "n": 1580,
+    "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
+    "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1579,
     "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
     "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
@@ -171,12 +177,6 @@
     "n": 1515,
     "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
     "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1513,
-    "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
-    "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
     "tgl": "2026-11-21"
   }
 ]

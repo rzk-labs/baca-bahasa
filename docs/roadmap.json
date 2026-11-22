@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 172,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Uji visual doodle state kosong di 320px & tema gelap (#1580)",
+      "dokumen": "docs/desain-ilustrasi-state-kosong-1580.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ilustrasi sudah dipasang. Mockup: docs/mockup-1580.html."
+    },
+    {
       "no": 171,
       "peran": "developer",
       "prioritas": "P1",
