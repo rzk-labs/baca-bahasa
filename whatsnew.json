@@ -1,5 +1,11 @@
 [
   {
+    "n": 1583,
+    "judul": "Tab Kata & form masukan: pilihan aktif terbaca pembaca layar",
+    "poin": "Tab Kata dan form masukan kini memberi tahu pembaca layar pilihan yang aktif.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1581,
     "judul": "Simpan kata: garis bawah kata di teks 'tergambar' + tombol berubah halus",
     "poin": "Simpan kata kini terasa jelas: garis bawah kata tergambar pelan.",
@@ -171,12 +177,6 @@
     "n": 1519,
     "judul": "[peta 166] Saringan kata menurut aksara buku (Latin, Kiril, Han di buku ko)",
     "poin": "Kata dari tulisan lain (mis. Jepang di buku Inggris) tak ikut dihitung lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1517,
-    "judul": "[peta 163] Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran",
-    "poin": "Setelah 2 putaran latihan ekstra, Home kini bilang \"Cukup hari ini, lanjut besok\".",
     "tgl": "2026-11-21"
   }
 ]
