@@ -1,5 +1,11 @@
 [
   {
+    "n": 1623,
+    "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
+    "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1644,
     "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
     "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
@@ -171,12 +177,6 @@
     "n": 1572,
     "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
     "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1570,
-    "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
-    "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
     "tgl": "2026-11-22"
   }
 ]
