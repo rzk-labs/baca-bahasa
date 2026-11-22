@@ -1,5 +1,113 @@
 [
   {
+    "n": 1652,
+    "judul": "Pengingat baca: tawaran sekali setelah Tamat pertama",
+    "poin": "Setelah tamat buku pertama, muncul tawaran sekali: \"Mau diingatkan baca besok?\"",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1651,
+    "judul": "Toast: meluncur turun & pudar halus saat hilang, tak mendadak",
+    "poin": "Pesan kecil di bawah layar sekarang turun dan pudar pelan, tidak lenyap mendadak.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1650,
+    "judul": "Ilustrasi doodle SVG: layar 'Sesi beres' & 'Cukup untuk sekarang'",
+    "poin": "Layar selesai latihan di tab Kata sekarang punya gambar kartu bergaya coretan.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1649,
+    "judul": "Home: ajakan sekali 'Pasang di Layar Utama' setelah baca pertama",
+    "poin": "Pengguna iPhone kini diajak sekali pasang Keepo di layar utama.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1648,
+    "judul": "Tawarkan pengingat baca sekali, di toast setelah selesai baca pertama",
+    "poin": "Setelah baca pertama, muncul tawaran pengingat sekali: \"Ingatkan aku\" atau \"Nanti aja\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1647,
+    "judul": "Kartu Target Home: jelaskan 30 XP itu kira-kira berapa kegiatan",
+    "poin": "Kartu Target di Home kini punya contoh kecil: \"5 hlm + 10 kata\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1672,
+    "judul": "Rak Profil: kata 'Tamat' cukup sekali per buku, sampul tak terpotong",
+    "poin": "Buku tamat di rak Profil kini cukup satu centang kuning di sampul.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1646,
+    "judul": "Sampul polos: huruf awal tak kembar, tiap buku mudah dibedakan",
+    "poin": "Sampul polos kini pakai huruf awal judul yang benar, bukan \"The\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1626,
+    "judul": "Reader: area ketuk kata lebih lega tanpa geser teks",
+    "poin": "Mengetuk kata di bacaan sekarang lebih mudah kena, tampilan teks tidak berubah.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1623,
+    "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
+    "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1644,
+    "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
+    "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1642,
+    "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
+    "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1640,
+    "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
+    "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1638,
+    "judul": "Sheet Tamat: satu target 'Besok' saja, tanpa 3 kata + 50 kata",
+    "poin": "Layar Tamat sekarang cuma satu target: \"Besok: simpan 3 kata dulu\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1636,
+    "judul": "Kartu Target Home: contoh kegiatan 30 XP, bukan angka XP saja",
+    "poin": "Ketuk kartu Target di Home, muncul contoh kegiatan untuk dapat 30 XP.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1632,
+    "judul": "Home buku tamat: satu tombol 'Pilih buku berikutnya', bukan dua",
+    "poin": "Di Home buku tamat, tombol \"Pilih buku berikutnya\" sekarang cuma satu.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1630,
+    "judul": "[peta 175] Reader: label buku tamat cukup 'Tamat', tak terpotong '…'",
+    "poin": "Label bawah buku yang sudah tamat sekarang tertulis \"Tamat\" utuh, tidak terpotong.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1627,
+    "judul": "[peta 173] Doodle state kosong: rapi di 320px & tema gelap",
+    "poin": "Gambar kosong di Kata, Ngomong, dan Lupa kini pas di layar kecil.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1622,
     "judul": "[peta 174] Sampul Korea/Jepang: judul tak patah jadi satu huruf",
     "poin": "Sampul buku Korea, Jepang, dan Mandarin dicek lewat kode: judul tak sisa satu huruf.",
@@ -69,114 +177,6 @@
     "n": 1592,
     "judul": "Sampul polos: judul CJK/Korea tak patah jadi satu huruf sisa",
     "poin": "Judul Korea di sampul polos tak lagi patah jadi satu huruf sisa.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1591,
-    "judul": "Sampul buku Korea/Jepang: judul tak patah jadi satu huruf sisa",
-    "poin": "Judul sampul Korea tak lagi patah jadi satu huruf sisa.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1583,
-    "judul": "Tab Kata & form masukan: pilihan aktif terbaca pembaca layar",
-    "poin": "Tab Kata dan form masukan kini memberi tahu pembaca layar pilihan yang aktif.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1581,
-    "judul": "Simpan kata: garis bawah kata di teks 'tergambar' + tombol berubah halus",
-    "poin": "Simpan kata kini terasa jelas: garis bawah kata tergambar pelan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1580,
-    "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
-    "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1579,
-    "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
-    "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1578,
-    "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
-    "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1576,
-    "judul": "Home pemula: format 'TXT · EPUB · PDF' cukup sekali + tombol Mandarin jelas",
-    "poin": "Layar pertama sekarang tidak lagi menampilkan format file dua kali.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1574,
-    "judul": "[peta 169] Home: rak Koleksi kamu tak tertutup menu bawah di HP",
-    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang bisa digulir penuh di atas menu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1572,
-    "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
-    "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1570,
-    "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
-    "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1568,
-    "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
-    "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1563,
-    "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
-    "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1562,
-    "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
-    "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1561,
-    "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
-    "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1560,
-    "judul": "[peta 165] Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat",
-    "poin": "Di halaman terakhir, 'Buku baru' kini muncul sekali saja, tidak dobel.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1557,
-    "judul": "Kartu ulang: kata target di kalimat asal disorot stabilo Wasabi",
-    "poin": "Di kartu ulang, kata yang dilatih kini disorot stabilo kuning-hijau.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1556,
-    "judul": "Pengaturan baca: pilihan aktif terbaca pembaca layar (aria-pressed)",
-    "poin": "Pilihan aktif di Pengaturan baca sekarang terbaca oleh pembaca layar.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1550,
-    "judul": "[peta 162] Latihan ekstra tak menempel saat pindah tab + pesan Lupa jujur",
-    "poin": "Latihan ekstra tak lagi menempel saat kamu pindah menu bawah.",
     "tgl": "2026-11-22"
   }
 ]
