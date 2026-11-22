@@ -1,5 +1,11 @@
 [
   {
+    "n": 1561,
+    "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
+    "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1560,
     "judul": "[peta 165] Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat",
     "poin": "Di halaman terakhir, 'Buku baru' kini muncul sekali saja, tidak dobel.",
@@ -171,12 +177,6 @@
     "n": 1489,
     "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
     "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1482,
-    "judul": "Popup 'Level N!' jadi banner ringan, tak menutupi tab & layar lain",
-    "poin": "Popup \"Level N!\" kini jadi banner kecil di atas, tidak menutupi tab lain.",
     "tgl": "2026-11-21"
   }
 ]
