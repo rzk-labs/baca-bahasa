@@ -14,6 +14,7 @@ permissions:
   contents: read
   issues: write
   actions: write
+  pull-requests: read
 
 concurrency:
   group: kepo-jaga
@@ -28,6 +29,18 @@ jobs:
     steps:
       - name: Cek & isi peran yang kosong
         run: |
+          # Auto-live DOKUMEN (usulan founder, 22 Nov 2026): kartu QA lolos yang SEMUA file PR-nya di docs/ langsung masuk antrean live.
+          # Kartu yang menyentuh kode/aplikasi TIDAK disentuh: tetap menunggu Setujui dari founder.
+          DOKUMEN=0
+          for N in $(gh issue list --label kepo-dev --label siap-dicek --label qa-lolos --state open --limit 40 --json number,labels --jq '.[]|select(.labels|map(.name)|index("qa-catatan")|not)|.number'); do
+            BUKAN=$(gh pr list --head "kepo/issue-$N" --state open --json files --jq '[.[0].files[].path|select(startswith("docs/")|not)]|length' 2>/dev/null || echo x)
+            if [ "$BUKAN" = "0" ]; then
+              gh label create antre-live --color 7DD3FC 2>/dev/null || true
+              gh issue edit "$N" --add-label antre-live --remove-label siap-dicek && echo "#$N hanya dokumen + QA lolos → antre live" && DOKUMEN=$((DOKUMEN+1))
+            fi
+          done
+          # Label dari GITHUB_TOKEN tidak memicu workflow lain: jalankan penggabung langsung.
+          if [ "$DOKUMEN" -gt 0 ]; then gh workflow run kepo-gabung.yml || true; fi
           TUNGGU=$(gh issue list --label kepo-dev --label siap-dicek --state open --json number --jq length)
           echo "Menunggu founder: $TUNGGU"
           if [ "$TUNGGU" -ge 15 ]; then
