@@ -1,5 +1,11 @@
 [
   {
+    "n": 1713,
+    "judul": "Sheet Tamat: tawaran pengingat dipindah ke bawah tombol aksi",
+    "poin": "Layar Tamat kini tampilkan kata dan tombol lanjut dulu.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1711,
     "judul": "[peta 182] Kartu Level Home HP: rata tengah + bar progres XP",
     "poin": "Kartu Level di Home HP rata tengah, angka besar, tanpa ruang kosong.",
@@ -171,12 +177,6 @@
     "n": 1642,
     "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
     "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1640,
-    "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
-    "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
     "tgl": "2026-11-22"
   }
 ]

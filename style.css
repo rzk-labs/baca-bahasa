@@ -924,7 +924,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #hero.hero-done{padding:14px}
 #hero.hero-done .hero-act{margin-top:10px}
 .fb-acts{display:flex;flex-direction:column;gap:12px}.fb-acts button{flex:0 0 auto;width:100%;min-height:44px;margin:0}
-.fb-rem{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:0 0 8px}
+.fb-rem{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 10px;margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line,rgba(127,127,127,.25))}
 .fb-rem .sec{min-height:44px;padding:0 14px}
 .fb-rem .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
 .fb-sec{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
