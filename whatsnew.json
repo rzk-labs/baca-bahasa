@@ -1,5 +1,41 @@
 [
   {
+    "n": 1685,
+    "judul": "Reader: kata tanpa arti diberi titik kecil, ketuk lagi isi arti",
+    "poin": "Kata yang artinya belum terisi sekarang diberi titik kecil di teks buku.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1681,
+    "judul": "[peta 178] Target Home dalam menit baca, awal 5 menit",
+    "poin": "Target harian di Home sekarang dalam menit baca, awal 5 menit.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1679,
+    "judul": "Tab Kata: saringan HSK tetap tampil, ada penjelasan saat belum ada ulang",
+    "poin": "Tab Kata: level HSK kosong tetap tampil, misalnya 0/600.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1676,
+    "judul": "Reader: koma/titik tak boleh nyasar di awal baris",
+    "poin": "Koma dan titik tidak lagi muncul sendirian di awal baris bacaan.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1674,
+    "judul": "Sheet Tamat & catatan sesi: satu istilah 'Bagian', tanpa angka halaman bentrok",
+    "poin": "Layar Tamat kini bilang \"12 bagian\", bukan \"12 halaman\" yang bikin bingung.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1698,
+    "judul": "[peta 177] Hemat kuota: sinkron lebih jarang di sisi aplikasi",
+    "poin": "Aplikasi sekarang menyinkron jauh lebih jarang, jadi kuota server lebih hemat.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1665,
     "judul": "Home: kartu 'Minggu ini' tanpa kotak penjelas Streak, lebih ringkas",
     "poin": "Kotak penjelas Streak di kartu 'Minggu ini' sudah dihapus.",
@@ -141,42 +177,6 @@
     "n": 1617,
     "judul": "[peta 170] Sheet Tamat: baris kecil di tombol Lanjut terbaca jelas",
     "poin": "Baris kecil di tombol Lanjut sheet Tamat sudah dicek: jelas dan tidak terpotong.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1610,
-    "judul": "Ilustrasi doodle SVG: pencarian 'Nggak ada yang cocok' & Sosial offline",
-    "poin": "Layar \"Nggak ada yang cocok\" dan Sosial offline sekarang punya gambar doodle.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1609,
-    "judul": "Sheet arti kata & menu: meluncur turun halus saat ditutup",
-    "poin": "Panel arti kata dan menu sekarang meluncur turun halus saat ditutup.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1607,
-    "judul": "Seragamkan angka hari: 'hari baca' vs Streak vs lencana 7 hari",
-    "poin": "Angka hari kini jelas: Streak itu beruntun, Hari baca itu \"X dari 7 hari\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1606,
-    "judul": "Reader: kotak 'Buku baru / Baca ulang' tak pernah menimpa teks",
-    "poin": "Kotak \"Buku baru\" di halaman terakhir kini menghitung ulang posisinya otomatis.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1603,
-    "judul": "Sheet arti kata: label 'Lagi offline' jelas, bukan cuma toast gagal",
-    "poin": "Ketuk kata tanpa internet: muncul label biru \"Lagi offline. Arti baru butuh internet.\"",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1597,
-    "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
-    "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
     "tgl": "2026-11-22"
   }
 ]
