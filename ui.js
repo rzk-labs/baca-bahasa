@@ -555,7 +555,7 @@ function viewSosialAman() {
   try {
     if (typeof viewSosial === 'function') { viewSosial(); return; }
   } catch (e) { console.warn('viewSosial gagal', e); }
-  $('#view').innerHTML = `<div class="empty"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm bk-off">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosOpen" type="button">Buka bacaanku</button><button class="ghost" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
+  $('#view').innerHTML = `<div class="empty"><img class="empty-doodle" src="img/aset/sosial-offline.svg" width="96" height="72" alt="" decoding="async"><h2>Sosial lagi dimuat</h2><div class="mut sm">Sambungannya belum siap. Coba lagi ya.</div><div class="mut sm bk-off">Bacaanmu tetap bisa dibuka offline.</div><div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="pri" id="sosRetry" type="button">Coba lagi</button><button class="sec" id="sosOpen" type="button">Buka bacaanku</button><button class="ghost" id="sosHome" type="button">Kembali ke Home</button></div></div>`;
   $('#sosRetry').onclick = () => setTab('sosial');
   $('#sosOpen').onclick = () => { const b = book() || (db.books || []).find(x => x && x.id != null); if (b) { db.cur = b.id; save(); setTab('baca'); } else setTab('rak'); };
   $('#sosHome').onclick = () => setTab('rak');
@@ -905,7 +905,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v576';
+const APP_VER = 'v578';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -3289,7 +3289,7 @@ function viewKataIn() {
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
       kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
-        : (q || csvF !== 'all' || hskF) && db.vocab.length ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
+        : (q || csvF !== 'all' || hskF) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
       if (db.vocab.length) {
         const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
@@ -3386,7 +3386,7 @@ function viewKataIn() {
       const weak = weakAll.filter(o => !q || String(o.w).toLowerCase().includes(q)).slice(0, 40);
       kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · dicoba ${+o.n || 1}×</div></div>${chip(+o.last || 0)}</div>`).join('')}
         <div class="row"><button class="pri" id="kRem">${ico('sword')}Lawan ${Math.min(weak.length, 10)} kata</button></div></div>`
-        : q ? `<div class="empty"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
+        : q ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
       if ($('#kRem')) $('#kRem').onclick = () => {
         const lang = weak[0].lang, list = weak.filter(o => o.lang === lang).slice(0, 10);
         $('#kwl').remove();

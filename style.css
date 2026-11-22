@@ -147,6 +147,9 @@ body.reading::after{display:none}
 /* ---------- home: bento ---------- */
 .hero-pic{display:block;width:100%;max-width:560px;height:auto;aspect-ratio:4/3;border-radius:var(--radius-lg);margin:0 0 var(--space-3);background:var(--ice)}
 .hero-sub{margin:0 0 var(--space-5);font-size:15px;line-height:22px;color:var(--color-text-muted);max-width:44ch}
+.empty .empty-doodle{display:block;width:96px;height:72px;margin:0 auto var(--space-2);border-radius:14px}
+[data-theme=dark] .empty-doodle,[data-theme=night] .empty-doodle{background:#FBF7EE}
+@media (prefers-color-scheme:dark){[data-theme=auto] .empty-doodle{background:#FBF7EE}}
 .empty .empty-pic{display:block;width:150px;height:150px;margin:0 auto var(--space-2)}
 .hello-sub{display:flex;align-items:center;gap:12px;margin-bottom:var(--space-5);font-size:15px;line-height:22px}
 .hello-sub .spot{width:48px;height:48px}
