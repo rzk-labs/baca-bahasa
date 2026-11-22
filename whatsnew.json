@@ -1,5 +1,11 @@
 [
   {
+    "n": 1572,
+    "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
+    "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1570,
     "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
     "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
@@ -171,12 +177,6 @@
     "n": 1505,
     "judul": "[peta 164] Banner Level: uji & perbaiki di iPhone dan layar 320px",
     "poin": "Banner Level sudah dicek: tab tetap bisa diketuk, hilang sendiri, muncul sekali per level.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1503,
-    "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
-    "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
     "tgl": "2026-11-21"
   }
 ]

@@ -354,7 +354,7 @@
       "prioritas": "P0",
       "nama": "Reader: buku sudah Tamat, tombol bawah halaman terakhir jadi 'Baca ulang' (#1493)",
       "dokumen": "docs/pm-reader-tamat-baca-ulang-1493.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1572)",
       "catatan": "Mockup: docs/mockup-1493.html. Ubah ui.js (cabang last && b.doneAt untuk #nx, sekitar baris 2120) + handler klik #nx (baris 1714) + sw.js (naikkan C). Pakai restartBook(b); viewBaca(). Jangan sentuh bar 'Tamat ·', kartu 'Buku baru', api/. Uji 320px & lebar."
     },
     {
