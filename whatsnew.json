@@ -1,5 +1,11 @@
 [
   {
+    "n": 1563,
+    "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
+    "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1562,
     "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
     "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
@@ -171,12 +177,6 @@
     "n": 1499,
     "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
     "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1495,
-    "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
-    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
     "tgl": "2026-11-21"
   }
 ]
