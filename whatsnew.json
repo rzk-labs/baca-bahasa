@@ -1,5 +1,11 @@
 [
   {
+    "n": 1701,
+    "judul": "Sheet Tamat: baris 'Besok' tak bentrok dengan kartu Home 'Simpan 3 kata'",
+    "poin": "Baris \"Besok\" di layar Tamat kini sebut angka 3 kata, sama dengan Home.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1691,
     "judul": "Home HP: kartu Level rata tengah, angka besar, tanpa ruang bolong",
     "poin": "Kartu Level di Home HP sekarang rata tengah, sejajar kartu Target.",
@@ -171,12 +177,6 @@
     "n": 1622,
     "judul": "[peta 174] Sampul Korea/Jepang: judul tak patah jadi satu huruf",
     "poin": "Sampul buku Korea, Jepang, dan Mandarin dicek lewat kode: judul tak sisa satu huruf.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1620,
-    "judul": "[peta 172] Catatan sesi: label halaman jelas, kata Tamat cocok",
-    "poin": "Catatan sesi kini jelas: buka berapa halaman dan berhenti di halaman berapa.",
     "tgl": "2026-11-22"
   }
 ]
