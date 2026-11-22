@@ -26,3 +26,10 @@
 ## 5. Cek
 - Layar 320px dan 390px: judul terpotong rapi dengan line-clamp.
 - Perlu dicoba manual di iPhone Safari.
+
+## 6. Perbaikan judul Korea/Jepang (#1591)
+- Korea: `word-break: keep-all`, patah di spasi, bukan di tengah kata.
+- Jepang/Mandarin: tetap boleh patah per huruf.
+- `text-wrap: balance` agar baris seimbang; tanpa dukungan, patah biasa.
+- Judul CJK >10 huruf turun satu tingkat (kelas `c2`, tetap >= 12px).
+- Sampul bergambar, huruf awal, palet `CCOL` tak berubah; `sw.js` naik ke `kepo-v575`.
