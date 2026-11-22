@@ -310,7 +310,7 @@
       "prioritas": "P1",
       "nama": "Hemat kuota Cloudflare: sinkron lebih jarang + pantau kuota (#1611)",
       "dokumen": "docs/riset-kuota-cloudflare-28.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1698)",
       "catatan": "Bagian 5 & 4 dokumen: sinkron tiap 5 menit/saat berubah, cek buku sekali per buka, cache leaderboard 60 dtk, peringatan kuota. Ubah api/ perlu deploy manual."
     },
     {
