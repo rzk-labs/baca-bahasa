@@ -855,11 +855,10 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .hscroll:has(>.badge){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
 .hscroll:has(>.badge)>.badge:last-child{margin-right:10px}
 .wk{padding:2px 6px 2px 14px}
-.wk-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.wk-t{font-size:13px;font-weight:600;color:var(--color-text-muted)}
-.wk-g{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
-.wk-c{font-size:12px;line-height:16px;padding:4px 8px;border-radius:var(--radius-full);background:rgba(127,127,127,.14);color:var(--color-text-muted);white-space:nowrap}
-.wk-c b{font-size:13px;color:var(--color-text)}
+.wk-h{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.wk-t{font-weight:600}
+.wk-g b{color:var(--color-text)}
+.wk-g{flex:1;min-width:0;font-size:13px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wk-x{min-height:44px;min-width:44px;padding:0 6px;font-size:12px;white-space:nowrap;flex-shrink:0;margin-left:auto;color:var(--color-text-muted)}
 .bk .t,.hero .t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 /* teks sistem besar (#740): tombol sheet boleh 2 baris, min 44px, tak keluar layar */

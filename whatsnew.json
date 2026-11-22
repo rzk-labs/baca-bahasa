@@ -1,5 +1,11 @@
 [
   {
+    "n": 1717,
+    "judul": "Home HP: kartu 'Minggu ini' jadi satu baris rapi, tanpa chip bertumpuk",
+    "poin": "Kartu \"Minggu ini\" di Home HP sekarang satu baris rapi, tanpa kotak bertumpuk.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1715,
     "judul": "Reader HP: label 'Tamat' di bar bawah jelas, tak pucat & tak bingungin",
     "poin": "Label \"Tamat\" di bawah layar baca kini tebal, jelas, dan ada centang.",
@@ -171,12 +177,6 @@
     "n": 1623,
     "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
     "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1644,
-    "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
-    "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
     "tgl": "2026-11-22"
   }
 ]
