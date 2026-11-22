@@ -251,6 +251,15 @@
       "catatan": "Bagian 8 dokumen: satuan menit aktif, pilihan 5/10/15, teks tanpa kata gagal, angka Home & sheet Tamat sama. Mockup: docs/mockup-1654.html. XP lama tidak dihapus."
     },
     {
+      "no": 179,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Kartu Target Home: uji visual baris contoh 30 XP di 320px & 4 tema (#1647)",
+      "dokumen": "docs/desain-ux-target-contoh-1647.md",
+      "status": "siap dikerjakan",
+      "catatan": "Baris contoh sudah dipasang (goal-eg di ui.js/style.css). Mockup: docs/mockup-1647.html."
+    },
+    {
       "no": 172,
       "peran": "developer",
       "prioritas": "P1",
@@ -283,7 +292,7 @@
       "prioritas": "P0",
       "nama": "Reader: label buku tamat cukup 'Tamat', tak terpotong '…' (#1598)",
       "dokumen": "docs/pm-reader-label-tamat-1598.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1630)",
       "catatan": "Mockup: docs/mockup-1598.html. Hitung ulang label setelah layout/font siap & saat resize. Uji 320/360/390px. Naikkan C di sw.js."
     },
     {
