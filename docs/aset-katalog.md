@@ -15,6 +15,7 @@
 | `img/aset/kosong-aman.svg` | Daftar Lupa, "Aman, belum ada!" | Doodle: centang stabilo + bintang kecil | referensi-visual.md bagian 3 |
 | `img/aset/cari-kosong.svg` | Tab Kata & Ngomong: hasil cari kosong | Doodle garis longgar Plum Noir, isi Biru Es, stabilo Wasabi di bawah | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
 | `img/aset/sosial-offline.svg` | Layar "Sosial lagi dimuat" / offline | Awan doodle, petir putus stabilo Wasabi, tanda silang | Sama |
+| `img/aset/beres-sesi.svg` (1 KB) | Tab Kata: "Sesi hari ini beres", "Semua beres", kotak "Cukup untuk sekarang" | Tiga kartu miring Biru Es, coretan stabilo Wasabi, centang kecil, bintang | Sama; beda dari kosong-aman (centang besar) |
 
 ## 2. Catatan teknis
 - Ukuran 0,6 KB per file. viewBox 160x160. Tanpa teks.

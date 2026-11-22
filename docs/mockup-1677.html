@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1677 — tanda baca di awal baris</title>
+<style>
+body{margin:0;background:#D7EFFF;font:16px/1.4 Inter,system-ui,sans-serif;color:#351E28}
+.note{max-width:390px;margin:0 auto;padding:12px 16px;font-weight:700;font-size:13px}
+.ph{width:390px;margin:0 auto 16px;background:#F7F1E6;border-radius:24px;padding:16px 0 24px;box-sizing:border-box}
+.lbl{display:inline-block;margin:0 24px 8px;padding:3px 10px;border-radius:999px;background:#351E28;color:#D7EFFF;font-size:12px;font-weight:800}
+.lbl.ok{background:#E9F056;color:#351E28}
+.rh{margin:0 24px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.pg{margin:8px 24px 0;font:20px/1.7 Georgia,serif;text-align:left}
+.bad{background:#FFD3D3;border-radius:4px;padding:0 2px;font-weight:700}
+.good{background:#E9F056;border-radius:4px}
+.cap{margin:10px 24px 0;font-size:13px}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Layar reader HP (390px), dua kondisi.</div>
+
+<div class="ph"><span class="lbl">Sebelum</span>
+<div class="rh">Alice's Adventures · 3/12</div>
+<div class="pg">She watched the little ball spin and fall<br>
+and listened for the clap of it<br>
+<span class="bad">, and see that queer little toss</span> of her<br>
+head, as if nothing were the matter.</div>
+<div class="cap">Koma sendirian di awal baris. Teks terasa rusak.</div></div>
+
+<div class="ph"><span class="lbl ok">Sesudah</span>
+<div class="rh">Alice's Adventures · 3/12</div>
+<div class="pg">She watched the little ball spin and fall<br>
+and listened for the clap of it<br>
+and see that queer little <span class="good">toss,</span> of her<br>
+head, as if nothing were the matter.</div>
+<div class="cap">Koma ikut kata di depannya. Ketuk kata tetap sama.</div></div>
+</body></html>

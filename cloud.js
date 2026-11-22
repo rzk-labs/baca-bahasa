@@ -167,9 +167,8 @@ function mergeTaps(srv) {
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
-let lastSync = '', syncCur = null, lastRun = 0, lastBooksSig = '';
-const SYNC_GAP = 5 * 60 * 1000; // hemat kuota: sinkron rutin maks. sekali per 5 menit
-const booksSig = () => (db.books || []).map(bkKey).sort().join('\n');
+let lastSync = '', syncCur = null, lastPull = 0, booksChecked = false;
+const SYNC_GAP = 5 * 60 * 1000; // sinkron otomatis maks tiap 5 menit (kecuali ada perubahan / tombol manual)
 // status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
 var bkState = '', bkSkip = false; // bkSkip: pengguna pilih 'Lanjut tanpa menunggu'
 function bkSet(v) { if (bkSkip && v === 'fail') v = ''; if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
@@ -182,19 +181,18 @@ async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
   // tab tersembunyi: diam, kecuali dorongan terakhir saat ditutup (hiddenOk)
   if (document.visibilityState === 'hidden' && !opt.force && !opt.hiddenOk) return false;
-  lastRun = Date.now();
   const r = opt.pre || await api('/me');
+  lastPull = Date.now();
   if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
   if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; db.acct.premium = !!r.user.premium; }
   const changed = mergeSrv(r.data); save();
   const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
-  if (opt.force || sig !== lastSync) {
+  if (opt.manual || sig !== lastSync) { // tanpa perubahan sejak sinkron terakhir: tidak kirim (kecuali tombol manual)
     await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick, profile: profileData() } });
     lastSync = sig;
   }
   if (changed && !opt.noRefresh) syncRefresh(opt.manual);
-  // teks buku: cukup sekali per buka app (atau bila daftar buku di HP ini berubah); jalan di belakang
-  if (!opt.hiddenOk && booksSig() !== lastBooksSig) syncBooks().catch(() => { });
+  if (opt.manual || !booksChecked) { booksChecked = true; syncBooks().catch(() => { booksChecked = false; }); } // daftar buku: sekali per buka app (atau tombol manual)
   return changed;
 }
 
@@ -264,7 +262,6 @@ async function syncBooks() {
     if (failed && !added && !(db.books || []).length) bad = true;
     else if (failed) toast('Sebagian buku belum bisa dimuat.', 6000, { label: 'Coba lagi', fn: () => { syncBooks().catch(() => { }); } });
     if (added) { mergeBooks({ ...(db.bkRemote || {}) }); save(); toast(`${added} buku dipulihkan dari akun.`); syncRefresh(true); }
-    if (!bad) lastBooksSig = booksSig();
   } catch (e) { bad = true; } finally { clearTimeout(tmo); bkBusy = false; bkSet(bad && !(db.books || []).length ? 'fail' : ''); }
 }
 // satu proses sinkron pada satu waktu (kunci sederhana): tarik → gabung → kirim
@@ -276,7 +273,7 @@ async function runSync(opt = {}) {
 }
 const pushSync = force => runSync({ force: !!force, noRefresh: true });
 async function afterLogin(res) {
-  delete db.keluar; lastBooksSig = '';
+  delete db.keluar; booksChecked = false;
   db.acct = { token: res.token, username: res.user.username, nick: res.user.nick, hidden: !!res.user.hidden, publik: !!res.user.publik, hideTitles: !!res.user.hideTitles, premium: !!res.user.premium };
   const had = !!(res.data && (res.data.xp || (res.data.vocab || []).length));
   save();
@@ -295,11 +292,24 @@ function noteAkunWhenReady(n) {
   noteShown = true; // sekali per sesi
   toast(NOTE_AKUN.replace(/&amp;/g, '&'), 4000);
 }
-setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
-const syncIfStale = () => { if (db.acct && Date.now() - lastRun >= SYNC_GAP) runSync().catch(() => { }); };
-setInterval(syncIfStale, SYNC_GAP);
-addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncIfStale(); else if (db.acct && dataSig() !== lastSync) runSync({ force: true, noRefresh: true, hiddenOk: true }).catch(() => { }); });
-addEventListener('online', syncIfStale);
+const syncDue = () => !lastPull || Date.now() - lastPull >= SYNC_GAP;
+const syncQuiet = () => { if (db.acct) runSync().catch(() => { }); };
+let sigAt = '', sigTm = 0;
+// ada perubahan data: tunggu tenang 8 detik (debounce) lalu kirim sekali. Cek sidik lokal gratis (tanpa jaringan).
+setInterval(() => {
+  if (!db.acct || document.visibilityState !== 'visible') return;
+  const s = dataSig();
+  if (s === lastSync) { sigAt = s; clearTimeout(sigTm); sigTm = 0; return; }
+  if (s !== sigAt) { sigAt = s; clearTimeout(sigTm); sigTm = setTimeout(() => { sigTm = 0; if (db.acct && dataSig() !== lastSync) syncQuiet(); }, 8000); }
+}, 4000);
+// tanpa perubahan: tarik dari server paling cepat tiap 5 menit
+setInterval(() => { if (db.acct && document.visibilityState === 'visible' && syncDue()) syncQuiet(); }, 60000);
+addEventListener('visibilitychange', () => {
+  if (!db.acct) return;
+  if (document.visibilityState === 'visible') { if (syncDue()) syncQuiet(); }
+  else if (dataSig() !== lastSync) pushSync().catch(() => { });
+});
+addEventListener('online', () => { if (db.acct && (syncDue() || dataSig() !== lastSync)) syncQuiet(); });
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
 const NOTE_AKUN = 'Kata, XP, dan buku ikut akunmu.';
@@ -416,7 +426,7 @@ async function wipeLocal() {
 async function finishOut(wipe) {
   try { await api('/logout', { method: 'POST' }); } catch (e) { }
   if (wipe) await wipeLocal();
-  db.acct = null; db.keluar = 1; lastSync = ''; lastBooksSig = ''; lastRun = 0; save(); closeSheet();
+  db.acct = null; db.keluar = 1; lastSync = ''; lastPull = 0; booksChecked = false; save(); closeSheet();
   toast(wipe ? 'Kamu sudah keluar. HP ini sudah dibersihkan.' : 'Kamu sudah keluar. Progres tetap ada di HP ini.');
   setTab(db.tab || 'rak');
 }
@@ -621,7 +631,7 @@ function rakHtml() {
   const show = rakSemua ? L : L.slice(0, RAK_MAX);
   const pp = b => (b.opened || b.pos > 0 || b.pct >= 100) ? pctOf(b) : 0; /* belum pernah dibuka = 0%, bukan 1% */
   const grp = [['Sedang dibaca', b => pp(b) > 0 && pp(b) < 100], ['Tamat', b => pp(b) >= 100], ['Belum dibuka', b => pp(b) <= 0]]; /* tiap buku hanya di satu rak */
-  const bk = b => { const p = pp(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p}%">${cover(b)}${p >= 100 ? '<span class="rk-tag">Tamat</span>' : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p >= 100 ? 'Tamat' : p > 0 ? p + '%' : 'Belum dibuka'}</span></button>`; };
+  const bk = b => { const p = pp(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p >= 100 ? 'Tamat' : p + '%'}">${cover(b)}${p >= 100 ? `<span class="rk-tag" role="img" aria-label="Tamat">${ico('check')}</span>` : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p >= 100 ? esc(LANG_ID[b.lang] || (LANGS[b.lang] || [b.lang || ''])[0]) : p > 0 ? p + '%' : 'Belum dibuka'}</span></button>`; }; /* #1672: tamat = lencana centang saja; baris bawah = bahasa */
   const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
   const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
   return `<div id="rakBox">${head}
