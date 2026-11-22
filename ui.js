@@ -1711,7 +1711,7 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
@@ -1832,6 +1832,7 @@ async function viewBaca() {
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; turn(dx < 0 ? 1 : -1); }
     if (moved) setTimeout(() => { moved = false; }, 400); // klik susulan tak datang -> jangan telan ketukan berikutnya
   });
+  vp.addEventListener('keydown', rovKey);
   vp.onclick = e => {
     if (moved) { moved = false; return; }
     setCur(e.target);
@@ -1846,7 +1847,7 @@ async function viewBaca() {
         RD.dt = { el: s1, t: now };
       } else RD.dt = null;
     }
-    if (w) { if (guideLive) guideEnd('tap'); dismissTip(); nudgeOff(); RD.tapX = e.clientX; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
+    if (w) { if (guideLive) guideEnd('tap'); dismissTip(); nudgeOff(); RD.tapX = e.detail ? e.clientX : null; stopListenPage(); vib(8); sfx('pop'); onWord(w).catch(() => toast('Arti kata belum bisa dibuka. Ketuk lagi ya.')); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const te = db.tapEdge !== false;
     if (te && x < 0.15) turn(-1); else if (te && x > 0.85) turn(1); else toggleMenu(false);
@@ -2161,6 +2162,26 @@ function minsLeft(b) {
   if ((b.total || 1) > 1) return { t: `bagian ini ${capMins(n)}`, part: false, bab: true, m: ok ? m : null, mpart };
   return { t: capMins(n), part: false, m: ok ? m : null, mpart };
 }
+/* #1597: roving tabindex — satu kata di halaman = tab-stop (tabindex=0); panah kiri/kanan pindah kata, Enter/Spasi buka arti */
+function rovSync() {
+  const cols = $('#cols'); if (!cols || !RD.ss) return;
+  const cur = cols.querySelector('.w[tabindex="0"]'); if (cur && pageOf(cur, cols) === RD.page) return;
+  if (cur) cur.tabIndex = -1;
+  const sx = RD.ss.find(x => x.pg === RD.page);
+  const w = sx && sx.el.querySelector('.w'); if (w) w.tabIndex = 0;
+}
+function rovKey(e) {
+  const w = e.target.closest && e.target.closest('.w'); if (!w || e.ctrlKey || e.metaKey || e.altKey) return;
+  const cols = $('#cols'); if (!cols) return;
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); w.click(); return; }
+  const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+  e.preventDefault();
+  const all = [...cols.querySelectorAll('.w')], n = all[all.indexOf(w) + d]; if (!n) return;
+  const pg = pageOf(n, cols); if (pg !== RD.page) { closeSheet(); showPage(pg); }
+  const old = cols.querySelector('.w[tabindex="0"]'); if (old) old.tabIndex = -1;
+  n.tabIndex = 0; try { n.focus({ preventScroll: true }); } catch (x) { }
+  const vp = $('#vp'); if (vp) { vp.scrollLeft = 0; vp.scrollTop = 0; }
+}
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   closeInline();
@@ -2171,6 +2192,7 @@ function showPage(p, anim = true) {
   if (RD.page > 2) dismissTip(); /* buku sudah dibaca / loncat jauh: panduan tak perlu lagi (semua jalur pindah halaman lewat sini) */
   cols.style.transition = anim ? '' : 'none';
   cols.style.transform = `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
+  rovSync();
   /* kalimat pertama yang mulai di halaman ini; bila tak ada (kalimat panjang menyambung / halaman akhir), pakai kalimat terakhir yang mulai sebelumnya */
   let sx = RD.ss.find(x => x.pg >= RD.page);
   if (!sx || sx.pg > RD.page) { for (let i = RD.ss.length - 1; i >= 0; i--) if (RD.ss[i].pg < RD.page) { sx = RD.ss[i]; break; } }
@@ -2488,7 +2510,7 @@ function turn(d) {
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));
-addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || (e.key === ' ' && /BUTTON|A/.test(e.target.tagName))) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
+addEventListener('keydown', e => { if (!document.body.classList.contains('reading') || !$('#sheet').classList.contains('hide') || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || (e.key === ' ' && /BUTTON|A/.test(e.target.tagName)) || (e.target.closest && e.target.closest('#cols .w'))) return; if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); } });
 
 /* ---------- sheet arti kata → kalimat ---------- */
 /* geser isi halaman ke atas (tanpa ganti halaman) supaya kata/kalimat terpilih tidak ketutup sheet */

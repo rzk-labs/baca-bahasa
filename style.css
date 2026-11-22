@@ -78,6 +78,8 @@ button,select,input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 button:focus-visible,[role=button]:focus-visible,select:focus-visible,input:focus-visible,.w:focus-visible,.chip:focus-visible,#tabs button:focus-visible,#sheet button:focus-visible{outline:2px solid var(--color-text);outline-offset:2px}
 [data-theme=night] :is(button,[role=button],select,input,.w,.chip):focus-visible{outline-color:var(--lime)}
+.cols .w:focus-visible{outline:3px solid var(--color-text);outline-offset:1px;border-radius:4px}
+[data-theme=night] .cols .w:focus-visible{outline-color:var(--lime)}
 #sheet:focus{outline:none}
 .hide{display:none!important}
 .mut{color:var(--color-text-muted)}.sm{font-size:14px;line-height:21px}.center{text-align:center}

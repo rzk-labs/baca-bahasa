@@ -1,5 +1,11 @@
 [
   {
+    "n": 1597,
+    "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
+    "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1595,
     "judul": "Kartu Level di Home: ketuk untuk lihat cara dapat XP",
     "poin": "Kartu Level di Home sekarang bisa diketuk.",
@@ -171,12 +177,6 @@
     "n": 1536,
     "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
     "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1535,
-    "judul": "Sheet Tamat: teks kecil di tombol 'Lanjut' kontras cukup (4.5:1)",
-    "poin": "Tulisan kecil di tombol 'Lanjut' setelah tamat buku sekarang jelas terbaca.",
     "tgl": "2026-11-21"
   }
 ]
