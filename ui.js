@@ -592,7 +592,7 @@ function guestBanner() {
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
 const EMPTY_PIC = { curious: 'kosong-kata', wow: 'kosong-ngomong', happy: 'kosong-aman' };
-const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? spot(mood) : EMPTY_PIC[mood] ? `<img class="empty-pic" src="img/aset/${EMPTY_PIC[mood]}.svg" alt="" width="150" height="150" decoding="async">` : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
+const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? '<img class="empty-pic" src="img/aset/beres-sesi.svg" alt="" width="150" height="150" decoding="async">' : EMPTY_PIC[mood] ? `<img class="empty-pic" src="img/aset/${EMPTY_PIC[mood]}.svg" alt="" width="150" height="150" decoding="async">` : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
 
 /* ---------- pengaman data (Safari tab biasa) ---------- */
 const isStandalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
@@ -3543,7 +3543,7 @@ function deck(kb) {
     if (quickRun) {
       quickRun = null;
       quickExtra = false;
-      kb.innerHTML = `<div class="empty">${spot('cheer')}<h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap, level bisa turun bila kamu lupa.</div>${xtraXp ? '<div class="mut sm"><b>+2 XP</b></div>' : ''}<button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
+      kb.innerHTML = `<div class="empty"><img class="empty-pic" src="img/aset/beres-sesi.svg" alt="" width="150" height="150" decoding="async"><h2>Cukup untuk sekarang</h2><div class="mut sm">Latihan ekstra beres. Jadwal ulang tetap, level bisa turun bila kamu lupa.</div>${xtraXp ? '<div class="mut sm"><b>+2 XP</b></div>' : ''}<button class="pri" id="q3Read" type="button">Lanjut baca</button></div>`;
       if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
       return;
     }
