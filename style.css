@@ -152,7 +152,10 @@ body.reading::after{display:none}
 .empty .empty-doodle{display:block;width:96px;height:72px;margin:0 auto var(--space-2);border-radius:14px}
 [data-theme=dark] .empty-doodle,[data-theme=night] .empty-doodle{background:#FBF7EE}
 @media (prefers-color-scheme:dark){[data-theme=auto] .empty-doodle{background:#FBF7EE}}
-.empty .empty-pic{display:block;width:150px;height:150px;margin:0 auto var(--space-2)}
+.empty .empty-pic{display:block;width:150px;max-width:min(150px,60vw);height:auto;aspect-ratio:1/1;margin:0 auto var(--space-2)}
+/* tema gelap: lingkaran Biru Es di belakang doodle supaya garis plum tak hilang */
+[data-theme=night] .empty .empty-pic,[data-theme=dark] .empty .empty-pic{background:#D7EFFF;border-radius:50%}
+@media (prefers-color-scheme:dark){[data-theme=auto] .empty .empty-pic{background:#D7EFFF;border-radius:50%}}
 .hello-sub{display:flex;align-items:center;gap:12px;margin-bottom:var(--space-5);font-size:15px;line-height:22px}
 .hello-sub .spot{width:48px;height:48px}
 .bento{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1415,6 +1418,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .lv-tap:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .xp-how{list-style:none;padding-left:0}.xp-how li{min-height:24px}
 .xp-mine{margin-top:var(--space-3)}
+.xp-eg{margin:var(--space-3) 0;font-size:14px;line-height:21px}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
 /* #1640 Home: Streak satu baris penuh; Target & Level berdampingan, dua kolom sama lebar */
