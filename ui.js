@@ -322,7 +322,7 @@ function award(n, stat, pk0, si) {
 }
 function celebrate(title, msg, snd = 'win') {
   sfx(snd); confetti(90); vib([20, 40, 20]);
-  document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); } /* banner Level tak bertumpuk dengan toast */
+  document.querySelectorAll('.lvlup').forEach(x => x.remove()); toastHide(); /* banner Level tak bertumpuk dengan toast */
   if (snd === 'lvl') { /* #1482: banner ringan di atas layar, tak memblokir ketukan, hilang sendiri ~4 dtk */
     const b = document.createElement('div'); b.className = 'lvlup lvlbn'; b.setAttribute('role', 'status'); b.setAttribute('aria-live', 'polite');
     b.innerHTML = `<div class="card"><div class="lvl-ic" aria-hidden="true">${ico('trophy')}</div><div class="lvl-tx"><b>${esc(title)}</b><span>${esc(msg)}</span></div><button type="button" class="lime">Lanjut</button></div>`;
@@ -380,7 +380,19 @@ async function isiArti(lang, w) {
   v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul;
   save(); toast(`${v.w}: ${v.t}`, 5000);
 }
-function toast(m, ms = 3200, act, act2) { const t = $('#toast'); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { t.classList.add('hide'); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { t.classList.add('hide'); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(() => t.classList.add('hide'), ms); }
+/* #1651: keluar halus — 'hide' tetap status seketika; 'closing' menampilkan toast sebentar (tanpa interaksi) selagi meluncur turun */
+let toastEndT;
+function toastEnd(t) { clearTimeout(toastEndT); if (t) t.classList.remove('closing'); }
+function toastHide() {
+  const t = $('#toast'); if (!t) return; clearTimeout(toastT);
+  if (t.classList.contains('hide')) return;
+  t.classList.add('hide'); toastEnd(t);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  t.classList.add('closing');
+  t.onanimationend = e => { if (e.target === t && t.classList.contains('closing')) toastEnd(t); };
+  toastEndT = setTimeout(() => toastEnd(t), 250);
+}
+function toast(m, ms = 3200, act, act2) { const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -932,7 +944,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v619';
+const APP_VER = 'v628';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1127,17 +1139,19 @@ function weekCard() {
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
-  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c">Hari baca <b>${days}</b> dari 7 hari</span>` : '');
+  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c" title="Hari baca = total hari kamu baca dalam 7 hari. Streak = hari berturut-turut." aria-label="Hari baca ${days} dari 7 hari. Streak adalah hari berturut-turut; hari baca adalah total dalam 7 hari.">Hari baca <b>${days}/7</b></span>` : '');
   if (!chips) return '';
-  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><div class="wk-n">Streak = beruntun. Hari baca = total 7 hari.</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
+  return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
+function dayAgo(k) { const d = new Date(); d.setDate(d.getDate() - k); return d; } /* aman saat jam musim panas berganti, sama seperti streak() */
 function streakDots() {
   const n = streak(), has = db.days.includes(today()), off = has ? 0 : 1;
+  const at = k => { const d = new Date(); d.setDate(d.getDate() - k); return d; }; /* sama dengan streak(): tanggal lokal, tahan DST */
   return [6, 5, 4, 3, 2, 1, 0].map(k => {
-    const act = db.days.includes(dayKey(new Date(Date.now() - k * 864e5)));
+    const act = db.days.includes(dayKey(at(k)));
     const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
-    const dw = new Date(Date.now() - k * 864e5).getDay(), L = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][dw], F = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][dw];
+    const dw = at(k).getDay(), L = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][dw], F = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][dw];
     return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
   }).join('');
 }
@@ -1216,8 +1230,8 @@ function viewRak() {
       <div class="t-lav lv-tap" id="lvCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Level ${xpInfo().lv}. Ketuk untuk lihat cara dapat XP">${lvCardHtml()}</div>
     </div>
     <div id="hskSlot">${hskHomeHtml()}</div>
-    ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya. Lupa menurunkan level, jadwal tetap">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Lupa menurunkan level, jadwal tetap</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
+    ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
+    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
     ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -1624,17 +1638,23 @@ function finishBook(b) {
     }
     if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
+  /* #1652: tawaran pengingat SEKALI seumur akun, hanya di Tamat pertama; menggantikan baris 'Besok' agar sheet tak memanjang */
+  const tawar = !ulang && !(db.remind && db.remind.on) && !db.remindOffer;
+  if (tawar) { db.remindOffer = true; save(); besok = ''; }
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
     <img class="tamat-art" src="img/aset/tamat-buku.svg" alt="" width="160" height="120" decoding="async">
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${besok}
+    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau diingatkan baca besok?</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<p class="mut sm" id="fbdue" style="margin:-4px 0 8px">${dueN} kata lama siap diulang</p>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
+  const rs = $('#fbrset'); if (rs) rs.onclick = () => { closeSheet(); setTimeout(() => { openSettings(); setTimeout(() => { const g = $('#remGrp'); if (g) g.scrollIntoView({ block: 'center' }); }, 60); }, 50); };
+  const rn = $('#fbrno'); if (rn) rn.onclick = () => { const r = $('#fbrem'); if (r) r.remove(); };
   const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
@@ -1781,7 +1801,7 @@ async function viewBaca() {
       <button class="icon rback" id="rBack" type="button" aria-label="Kembali ke Home">${ico('left')}</button>
       <div class="rbar"><button class="icon" id="rHome" aria-label="Kembali ke Home">${ico('left')}</button>
         <div class="rtitle"><b title="${esc(b.title)}" aria-label="${esc(b.title)}">${esc(splitTitle(b.title).main)}</b>${secs.length > 1 ? `<button class="rchap" id="rChap" aria-haspopup="dialog" aria-label="Daftar ${secWord(b, b.pos).toLowerCase()}, sekarang ${secWord(b, b.pos).toLowerCase()} ${b.pos + 1} dari ${secs.length}"><span class="rcf">${secWord(b, b.pos)} ${b.pos + 1} dari ${secs.length}</span><span class="rcs" aria-hidden="true">${b.pos + 1}/${secs.length}</span> ▾</button>` : ''}<span class="rmk" id="rMk" role="status"${marksOf(b).length ? '' : ' hidden'}>${ico('bm')}<span id="rMkN">${marksOf(b).length}</span><span class="rmkl"> penanda</span></span><span class="roff" id="roff" role="status"${navigator.onLine ? ' hidden' : ''}>Offline</span></div>
-        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${['mati', 'hanya kata baru', 'nyala'][rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
+        ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="icon rrt${rtOf(b.lang) ? ' on' : ''}" id="rRt" type="button" title="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}" aria-pressed="${rtOf(b.lang) ? 'true' : 'false'}" aria-label="${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}: ${(b.lang === 'zh-CN' ? ['mati, hanzi saja', 'hanya di kata yang kamu ketuk', 'nyala di semua kata'] : ['mati', 'hanya kata baru', 'nyala'])[rtOf(b.lang)]}. Ketuk untuk ganti">${ico('ruby')}<span class="rrtl">${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span></button>` : ''}${'speechSynthesis' in window ? `<button class="icon rlis" id="rLis" type="button" title="Dengar halaman" aria-pressed="false" aria-label="Dengar halaman">${ico('vol')}<span class="rrtl">Dengar</span></button>` : ''}${dueN ? `<button class="icon rrt rdueb" id="rDue" type="button" title="Ulang kata" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span class="rrtl">Ulang</span><i class="rdn" aria-hidden="true">${dueN > 9 ? '9+' : dueN}</i></button>` : ''}<button class="icon rrt" id="rMore" type="button" aria-haspopup="dialog" title="Menu lainnya" aria-label="Menu lainnya">${ico('more')}<span class="rrtl">Lainnya</span></button></div>
       ${nightChip ? `<div class="nchip" id="nchip" role="note"><span>${ico('moon')} Mata capek? Pakai tema malam</span><button data-t="night">Malam</button><button class="nx" data-t="" aria-label="Tutup saran tema">${ico('x')}</button></div>` : ''}
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? '<div class="lisnote" id="lisNote" role="note" hidden>Suara bisa meleset di kanji</div>' : ''}
       <div class="rhead" title="${esc(b.title)}">${esc(b.title)}</div>
@@ -1812,7 +1832,7 @@ async function viewBaca() {
       const urut = [2, 1, 0]; /* Nyala -> Baru -> Mati -> Nyala */
       const k = urut[(urut.indexOf(rtOf(b.lang)) + 1) % 3];
       setRt(b.lang, k); viewBaca();
-      toast(k === 0 ? 'Pinyin mati. Nyalakan lagi di tombol Pinyin.' : k === 1 ? 'Pinyin hanya untuk kata yang pernah kamu ketuk' : 'Pinyin nyala di atas kata');
+      toast(k === 0 ? 'Hanzi saja. Nyalakan lagi di tombol Pinyin' : k === 1 ? 'Pinyin hanya di kata yang kamu ketuk, sisanya hanzi polos' : 'Pinyin di semua kata: 你好 nǐ hǎo');
       return;
     }
     setRt(b.lang, rtOf(b.lang) ? 0 : 1); viewBaca();
@@ -2463,7 +2483,7 @@ async function openMarks() {
 }
 let tipN = 0, tipDone = false, nudgePg = new Set(), nudgeT = 0;
 const NUDGE_MSG = 'Ada kata yang bikin bingung? Ketuk aja, artinya muncul.';
-function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) t.classList.add('hide'); }
+function nudgeOff() { clearTimeout(nudgeT); nudgeT = 0; const t = $('#toast'); if (t && t.textContent === NUDGE_MSG) toastHide(); }
 /* colek lembut: 4 halaman dibalik tanpa ketuk kata sama sekali → satu pesan, sekali seumur hidup */
 function nudgeTap(b) {
   if (db.seenNudgeTap) return;
@@ -2639,7 +2659,7 @@ function nearWord(vp, x, y) {
 }
 async function onWord(el, lastEl) {
   const b = book();
-  document.querySelectorAll('.lvlup').forEach(x => x.remove()); { const t = $('#toast'); if (t) t.classList.add('hide'); }
+  document.querySelectorAll('.lvlup').forEach(x => x.remove()); toastHide();
   $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl'));
   el.classList.add('sel');
   const sEl = el.closest('.s') || el.parentElement || el, sent = sEl.textContent.trim(), sIdx = +sEl.dataset.s;

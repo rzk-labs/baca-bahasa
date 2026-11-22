@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1663 Toast tombol Pinyin</title>
+<style>
+body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.lbl{font:700 12px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:18px auto 6px;width:390px}
+.ph{width:390px;height:330px;margin:0 auto;background:#FBF6EE;border-radius:20px;position:relative;overflow:hidden;box-shadow:0 2px 10px #351E2822}
+.bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #351E2822}
+.bar b{flex:1;font-family:"Bricolage Grotesque",Inter,sans-serif;font-size:15px}
+.btn{min-width:44px;min-height:44px;border-radius:12px;background:#351E28;color:#FBF6EE;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;padding:0 10px}
+.txt{padding:18px;font-size:22px;line-height:1.8}
+.txt ruby rt{font-size:11px;color:#6b5560}
+.toast{position:absolute;left:12px;right:12px;bottom:16px;background:#351E28;color:#fff;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.35}
+.note{width:390px;margin:6px auto;font-size:13px}
+</style></head><body>
+<div class="note"><b>Gambaran perubahan teks toast tombol Pinyin (#1663)</b></div>
+
+<div class="lbl">Nyala</div>
+<div class="ph"><div class="bar"><b>Cerita Mandarin</b><div class="btn">Pinyin</div></div>
+<div class="txt"><ruby>你好<rt>nǐ hǎo</rt></ruby>，<ruby>谢谢<rt>xièxie</rt></ruby></div>
+<div class="toast">Pinyin di semua kata: 你好 nǐ hǎo</div></div>
+
+<div class="lbl">Hanya kata baru</div>
+<div class="ph"><div class="bar"><b>Cerita Mandarin</b><div class="btn">Pinyin</div></div>
+<div class="txt"><ruby>你好<rt>nǐ hǎo</rt></ruby>，谢谢</div>
+<div class="toast">Pinyin hanya di kata yang kamu ketuk, sisanya hanzi polos</div></div>
+
+<div class="lbl">Mati</div>
+<div class="ph"><div class="bar"><b>Cerita Mandarin</b><div class="btn">Pinyin</div></div>
+<div class="txt">你好，谢谢</div>
+<div class="toast">Hanzi saja. Nyalakan lagi di tombol Pinyin</div></div>
+</body></html>
