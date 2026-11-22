@@ -181,21 +181,21 @@
       "nama": "Rilis App Store iOS",
       "fase": "Rilis Toko & Publik",
       "status": "berjalan",
-      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md."
+      "catatan": "Build 12 di TestFlight; submit review 16 Nov 2026 (WAITING_FOR_REVIEW), rilis MANUAL. Keluar bila: Keepo live di App Store. Bila ditolak 4.2 (web wrapper): tambah fitur native (pengingat, offline). Founder: klik Release. Lihat docs/pm-peta-fase-2.md. (bukti internet) lihat docs/riset-app-store-42.md. Rancangan tes 3 kalimat pembuka Threads (2 minggu, ?ref=th-a/b/c) menunggu data nyata: docs/marketing-tes-kalimat-pembuka.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 26,
       "nama": "Android / Play Store",
       "fase": "Rilis Toko & Publik",
       "status": "draft",
-      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md."
+      "catatan": "Bungkus PWA jadi app Android (TWA). Butuh akun Play Console (keputusan founder). Keluar bila: live di Play Store. Mulai setelah tahap 25 live. Lihat docs/pm-peta-fase-2.md. Riset 21 Nov 2026 (bukti internet): TWA via Bubblewrap; akun pribadi baru wajib uji tertutup 12 penguji x 14 hari; celah: assetlinks.json, domain sendiri, halaman web hapus akun, manifest tipis. Lihat docs/riset-android-play-store-26.md. Teks toko siap: docs/marketing-teks-toko.md"
     },
     {
       "no": 27,
       "nama": "Akuisisi Organik",
       "fase": "Rilis Toko & Publik",
       "status": "draft",
-      "catatan": "Sudah ada: docs/LAUNCH-SEKARANG.md, kalender 4 minggu, link ?ref=. Keluar bila: >=300 pengguna baru/bulan, 1 sumber ref terbaik terbukti, biaya iklan Rp0. Peran: marketing (draf), founder (posting). Lihat docs/pm-peta-fase-2.md. Patokan corong & target kerja 100/bulan: docs/riset-corong-akuisisi-organik.md (bukti internet, belum data nyata)."
+      "catatan": "Sudah ada: docs/LAUNCH-SEKARANG.md, kalender 4 minggu, link ?ref=. Keluar bila: >=300 pengguna baru/bulan, 1 sumber ref terbaik terbukti, biaya iklan Rp0. Peran: marketing (draf), founder (posting). Lihat docs/pm-peta-fase-2.md. Patokan corong & target kerja 100/bulan: docs/riset-corong-akuisisi-organik.md (bukti internet, belum data nyata). Rancangan teks layar pertama pengunjung baru (3 judul, tombol, jawaban keberatan, 3 angka /hitung): docs/marketing-layar-pertama-pengunjung.md (draf, belum data nyata)."
     },
     {
       "no": 28,
@@ -241,6 +241,24 @@
     }
   ],
   "backlog": [
+    {
+      "no": 170,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sheet Tamat: baris kecil di tombol Lanjut terbaca jelas (#1537)",
+      "dokumen": "docs/desain-kreatif-tamat-lanjut-1537.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1537.html. Perbaikan CSS sudah diterapkan di #1537; tinggal diuji di 320px & 390px."
+    },
+    {
+      "no": 170,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Tab Kata: ringkasan 'HSK n: X/Y' di bawah chip level (#1534)",
+      "dokumen": "docs/mockup-1534.html",
+      "status": "selesai (#1534)",
+      "catatan": "Ketuk ringkasan = filter level. Hanya zh-CN. Uji 320px."
+    },
     {
       "no": 169,
       "peran": "developer",
