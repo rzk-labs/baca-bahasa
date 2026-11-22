@@ -260,6 +260,15 @@
       "catatan": "Baris contoh sudah dipasang (goal-eg di ui.js/style.css). Mockup: docs/mockup-1647.html."
     },
     {
+      "no": 180,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Satu definisi 'kata baru' = baru disimpan; ketukan = 'belum disimpan' (#1694)",
+      "dokumen": "docs/riset-kata-baru-satu-sumber.md",
+      "status": "siap dikerjakan",
+      "catatan": "Bagian 6 dokumen: finishBook hitung kata noTr, samakan teks Tamat & catatan sesi, perbaiki status skrip uji. Mockup: docs/mockup-1694.html."
+    },
+    {
       "no": 172,
       "peran": "developer",
       "prioritas": "P1",
