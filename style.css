@@ -1417,3 +1417,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .xp-mine{margin-top:var(--space-3)}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
+/* Variasi sampul polos (#1646): satu motif tipis dari hash judul, kontras rendah */
+.cover::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.1;border-radius:inherit}
+.cover.pat0::before{background-image:repeating-linear-gradient(135deg,currentColor 0 1px,transparent 1px 9px)}
+.cover.pat1::before{background-image:radial-gradient(currentColor 1.2px,transparent 1.6px);background-size:10px 10px}
+.cover.pat2::before{background-image:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 8px)}
+.cover .em,.cover .ct{position:relative}
