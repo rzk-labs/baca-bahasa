@@ -10,9 +10,11 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (33 tahap: 1-20 selesai, Fase 
 | Desain | `peran:desain` | UX/UI, alur, microcopy, brand | Dokumen `docs/desain-*.md` dan/atau perubahan CSS/UI kecil |
 | Developer | `peran:developer` | Mengubah kode aplikasi | Perubahan kode + PR |
 | UX Architect | `peran:ux` | Struktur & alur layar, titik gesekan pengguna | `docs/desain-ux-*.md` |
-| Creative UI Director | `peran:kreatif` | Arah visual & karakter tampilan (patuh BRAND.md) | `docs/desain-kreatif-*.md` |
+| Creative UI Director | `peran:kreatif` | Arah visual & gaya aset, rujukan tren (model: Opus; patuh BRAND.md) | `docs/desain-kreatif-*.md` |
 | Interaction Designer | `peran:interaksi` | Tombol, gesture, animasi, kenyamanan sentuh | `docs/desain-interaksi-*.md` |
-| Design System | `peran:sistem` | Konsistensi warna, tipografi, spacing, komponen | `docs/desain-sistem-*.md` |
+| Design System & Asset Manager | `peran:sistem` | Konsistensi komponen + merawat katalog aset | `docs/desain-sistem-*.md` |
+| Illustration & Asset Designer | `peran:ilustrasi` | Ilustrasi/ikon/dekor SVG berkarakter di `img/aset/` (model: Sonnet) | `img/aset/*.svg`, `docs/aset-katalog.md` |
+| Motion / Microinteraction | `peran:motion` | Gerak kecil CSS/SVG yang bikin app hidup (model: Sonnet) | `docs/desain-motion-*.md` |
 | Accessibility UX | `peran:aksesibilitas` | Keterbacaan, kontras, fokus, beban kognitif | `docs/desain-aksesibilitas-*.md` |
 | Tester AI (Tari, Bima) | otomatis | Tiap 2 jam & setelah update live: mencari bug: tampilan HP & keandalan | Komentar di issue "Masukan pengguna AI" |
 | Pengguna AI (Nadia, Raka, Sinta, Ilham, Dina) | otomatis | Tiap 2 jam & setelah update live: mencoba app (Dina: Keepo HQ) | Komentar di issue "Masukan pengguna AI"; dibaca PM |
@@ -25,8 +27,13 @@ Sumber kebenaran arah produk: `docs/roadmap.json` (33 tahap: 1-20 selesai, Fase 
 - Rem otomatis: 15 hasil menunggu founder, atau 5+ fitur menunggu developer (peran dokumen berhenti dulu).
 - Founder hanya menyetujui hasil di Keepo HQ.
 
+## Aset visual
+- Referensi selera pengguna: `docs/referensi-visual.md` (Pinterest butuh login, jadi dipakai web search + kata kunci Pinterest).
+- Aset = SVG tangan-tulis + animasi CSS, maks 8 KB/file, palet BRAND.md, tanpa maskot.
+- Model: Creative UI Director = Opus; peran lain = Sonnet.
+
 ## Aturan
-- Tidak ada yang menganggur: tiap 30 menit (dan tiap tugas selesai) peran yang kosong langsung diberi tugas oleh PM. Rem: berhenti bila 15 hasil menunggu founder; kuota harian: developer 100, desain 8, riset 6, pm 6, marketing 4, ux/kreatif/interaksi 4, sistem/aksesibilitas 3. Bila 5+ fitur siap dibangun, riset/desain/pm direm sampai developer mengejar.
+- Tidak ada yang menganggur: tiap 30 menit (dan tiap tugas selesai) peran yang kosong langsung diberi tugas oleh PM. Rem: berhenti bila 15 hasil menunggu founder; kuota harian: developer 100, desain 8, riset 6, pm 6, marketing 4, ux/kreatif/interaksi 4, sistem/aksesibilitas 3, ilustrasi/motion 4. Bila 5+ fitur siap dibangun, riset/desain/pm direm sampai developer mengejar.
 - Seimbang: minimal 1 dari tiap 3 tugas PM adalah upgrade aplikasi (developer, atau desain yang mengubah app), fokus P0: kenyamanan membaca & bantuan memahami kata.
 - Tugas yang butuh manusia (wawancara pengguna, rekrut beta) -> agent menyiapkan bahan (naskah, form, daftar pertanyaan), founder yang menjalankan.
 - Semua hasil lewat PR. QA lolos -> otomatis live (antrean, satu per satu). QA ada catatan -> menunggu founder klik Setujui/Revisi/Tolak.
