@@ -182,6 +182,12 @@ body.reading::after{display:none}
 .soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:var(--ink)}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
+.a2hs{display:flex;align-items:flex-start;gap:12px;margin:12px 0 -4px;padding:12px 14px;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}
+.a2hs-pic{flex:none;width:56px;height:56px;border-radius:50%;background:var(--cream)}
+.a2hs-tx{flex:1;min-width:0}.a2hs-tx b{display:block;font:800 16px/20px var(--font-display);overflow-wrap:anywhere}.a2hs-tx>span{display:block;margin-top:2px;font:500 14px/19px var(--font-body,inherit);overflow-wrap:anywhere;text-wrap:pretty}
+.a2hs-act{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:8px}.a2hs-act .pri{min-height:44px;padding:0 16px;background:var(--ink);color:var(--cream)}
+.a2hs-act .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;font:600 14px/1 var(--font-body,inherit);min-height:44px;padding:0 12px;cursor:pointer}
+@media(max-width:360px){.a2hs{gap:10px;padding:12px}.a2hs-pic{width:44px;height:44px}}
 .fw-nudge:active{transform:scale(.98)}
 .fw-nudge:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .stat3>div{border-radius:var(--radius-xl);padding:12px 6px;color:var(--ink);text-align:center;min-width:0}
