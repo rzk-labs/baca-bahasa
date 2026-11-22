@@ -209,7 +209,13 @@ const level = (xp = db.xp) => Math.floor(xp / 100) + 1;
 const xpInfo = () => ({ xp: db.xp, lv: level(), inLv: db.xp % 100 });
 const xpTodayText = (xt = xpToday()) => xt >= GOAL ? 'Target harian tercapai' : `${xt} XP hari ini`; /* satu teks utk sheet Tamat & kartu Target Home */
 const goalCardHtml = xt => `<div class="eyebrow">Target</div><div class="goal-row">${ringSmall(Math.min(xt, GOAL) / GOAL, `<span class="gn">${Math.min(xt, GOAL)}</span><small>XP</small>`)}</div><div class="lbl2">${xt >= GOAL ? `<span class="goal-ok">${ico('check', 'ck')}Tercapai</span>` : `<span>${xpTodayText(xt)}</span><span>target ${GOAL}</span>`}</div>`;
-const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
+const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
+const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
+/* #1642: satu baris progres HSK di Home; kosong bila belum ada kata zh-CN / data HSK belum termuat */
+function hskHomeHtml() { if (!hskMap) return ''; for (const n of [3, 2, 1]) { const x = hskUniq(n), y = hskTot(n); if (x && y) return `<button type="button" class="hskhome" id="hskHome" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk lihat kata HSK ${n}">HSK ${n}: <b>${x}</b>/${y} kata<span aria-hidden="true">›</span></button>`; } return ''; }
+function bindHskHome() { const e = $('#hskHome'); if (e) e.onclick = () => { hskF = +e.dataset.h || 0; csvF = 'all'; kataSeg = 'simpan'; sfx('pop'); setTab('kata'); }; }
+function fillHskHome() { const c = $('#hskSlot'); if (!c) return; c.innerHTML = hskHomeHtml(); bindHskHome(); }
+const lvCardHtml =() => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
 function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) tc.innerHTML = goalCardHtml(xpToday()); }
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
@@ -912,7 +918,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v600';
+const APP_VER = 'v609';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1192,10 +1198,11 @@ function viewRak() {
     ${weekCard()}
     <div class="stat3">
       <div class="t-sun streak1"><div class="eyebrow">Streak</div><div class="num sbig" role="img" aria-label="Beruntun ${streak()} hari. 7 hari terakhir, hari ini paling kanan">${ico('flame', 'numi')}${streak() ? `<b>${streak()}</b><small>hari</small>` : '<small>Mulai hari ini</small>'}</div><div class="sdots" aria-hidden="true">${streakDots()}</div><div class="lbl2">${streakInfo()}</div></div>
-      <div class="t-lime" id="goalCard">${goalCardHtml(xt)}</div>
+      <div class="t-lime lv-tap" id="goalCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Target harian ${GOAL} XP. Ketuk untuk lihat contoh kegiatannya">${goalCardHtml(xt)}</div>
       <div class="t-lav lv-tap" id="lvCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Level ${xpInfo().lv}. Ketuk untuk lihat cara dapat XP">${lvCardHtml()}</div>
     </div>
-    ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
+    <div id="hskSlot">${hskHomeHtml()}</div>
+    ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya. Lupa menurunkan level, jadwal tetap">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Lupa menurunkan level, jadwal tetap</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
@@ -1217,11 +1224,18 @@ function viewRak() {
     const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
     const lvc = $('#lvCard'); if (lvc) { /* #1595: kartu Level = tombol; ketuk buka sheet 'Cara dapat XP' */
-      const bukaXp = () => openSheet(`<div class="sh-head"><h2>Cara dapat XP</h2>${closeBtn}</div><ul class="rules xp-how"><li>Baca halaman: +2 XP (+5 saat pindah bab)</li><li>Simpan kata, atau ulang kata: +2 XP, +3 XP</li><li>Tamatkan buku: +10 XP</li><li>Latihan Ngomong: +2 sampai +15 XP</li></ul><div class="mut sm xp-mine">XP kamu: ${esc(xpRinci())}</div>`, 'Cara dapat XP');
+      /* #1636: kartu Target pakai sheet yang sama + contoh kegiatan. Halaman cuma dihitung PG_CAP (10) XP ke target, jadi sisanya dari kata/Ngomong */
+      const contohTarget = `<p class="xp-eg"><b>Target ${GOAL} XP hari ini bisa begini:</b> baca ${PG_CAP / 2} halaman (${PG_CAP} XP) + simpan atau ulang sekitar ${Math.ceil((GOAL - PG_CAP) / 3)}-${(GOAL - PG_CAP) / 2} kata (${GOAL - PG_CAP} XP). Latihan Ngomong juga ngitung.</p>`;
+      const bukaXp = (target) => openSheet(`<div class="sh-head"><h2>${target === true ? `Target ${GOAL} XP` : 'Cara dapat XP'}</h2>${closeBtn}</div>${target === true ? contohTarget : ''}<ul class="rules xp-how"><li>Baca halaman: +2 XP (+5 saat pindah bab)</li><li>Simpan kata, atau ulang kata: +2 XP, +3 XP</li><li>Tamatkan buku: +10 XP</li><li>Latihan Ngomong: +2 sampai +15 XP</li></ul><div class="mut sm xp-mine">XP kamu: ${esc(xpRinci())}</div>`, 'Cara dapat XP');
       lvc.onclick = bukaXp;
       lvc.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bukaXp(); } };
+      const gc = $('#goalCard'); if (gc) {
+        gc.onclick = () => bukaXp(true);
+        gc.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bukaXp(true); } };
+      }
     }
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
+    bindHskHome(); if (!hskMap && db.vocab.some(v => v && v.lang === 'zh-CN')) hskLoad().then(m => { if (m) fillHskHome(); });
     animRing($('#view'));
     heroMins(cur);
   }
@@ -1460,6 +1474,12 @@ function pahamLeave(b) {
 }
 /* SATU saringan kata sesi (Tamat + Kata sesi ini): hanya bahasa buku, bukan partikel/kata fungsi/nama, belum tersimpan */
 const kataSesiBaru = (b, arr) => arr.filter(e => e && e.lang === b.lang && !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true }));
+/* #1620: kata tersimpan cocok dgn buku lewat ISI teks (bukan judul saja); teks belum termuat = pakai judul saja (data lama tetap dihitung) */
+function kataDiBuku(b, v) {
+  if (!cache.pages || cache.id !== b.id) return true;
+  if (!cache._low) cache._low = cache.pages.map(s => s.join('\n')).join('\n').toLowerCase();
+  return [v.w, v.base].some(x => x && cache._low.includes(String(x).toLowerCase()));
+}
 const TXT_TAK_ADA_BARU = 'Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.';
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim()) || isKataSampah(b.lang, w)) return;
@@ -1497,9 +1517,11 @@ function sessRecap(b) {
   const cand = kataSesiBaru(b, all).sort((x, y) => y.n - x.n).slice(0, 8);
   if (!cand.length) return false;
   rekapAktif = cand;
+  const pos = b.pgN > 1 && b.pg != null ? `halaman ${Math.min(b.pg + 1, b.pgN)}/${b.pgN}` : '';
+  const pgTxt = pgs > 1 ? `Kamu buka ${pgs} halaman sesi ini${pos ? `, berhenti di ${pos}` : ''}. ` : pos ? `Berhenti di ${pos}. ` : '';
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
-    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgs > 1 ? `${pgs} halaman layar kamu buka. ` : ''}Simpan yang mau dihafal.</p>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}Simpan yang mau dihafal.</p>
     <div id="rsl">${cand.map(row).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
   isiArtiRekap(cand);
@@ -1548,7 +1570,7 @@ function finishBook(b) {
   if (tamatSeen === tk) return toast('Ini halaman terakhir.', 4000);
   tamatSeen = tk;
   setTimeout(() => flushLate(true), 2500);
-  const all = countedVocab(b.lang, 0, b.title);
+  const all = countedVocab(b.lang, 0, b.title).filter(v => kataDiBuku(b, v));
   const ws = all.filter(v => (v.at || 0) >= SESS.t);
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const pend = kataSesiBaru(b, [...SESSW.values()].filter(e => e.bid === b.id)).length; /* kata diketuk sesi ini, belum disimpan (sumber sama dgn sessRecap) */
@@ -1570,16 +1592,16 @@ function finishBook(b) {
   const actsHtml = acts.slice(0, 2).map((x, i) => x.replace('__C__', i ? 'sec' : 'pri')).join('');
   /* 'Besok': lencana berikutnya yang belum didapat (data BADGES yang sudah ada) */
   const nb = BADGES.find(x => !badgeShown(x[0]));
-  let besok = '', jalur = '';
+  let besok = '';
   if (nb) {
     const pr = nb[0] === 'kutubuku' ? badgeProgress('kutubuku') : null, rem = pr ? pr.need - pr.now : 0;
     let apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1), nama = nb[2];
     if (nb[0] in BADGE_VOCAB_MIN) { /* lencana kata: target & sisa sama persis dgn kartu Home */
       const n = countedVocab(null).length, t = wordMile(n), tb = wordMileBadge(t);
       if (t && tb && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
-      else if (t && tb) { apa = 'simpan 3 kata dulu'; nama = ''; jalur = `menuju lencana ${tb[2]}, simpan ${t} kata`; } else apa = '';
+      else if (t && tb) { apa = 'simpan 3 kata dulu'; nama = ''; } else apa = '';
     }
-    if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}${jalur ? `<br><span class="sm">${esc(jalur)}</span>` : ''}</p>`;
+    if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
   if (!ulang) { sfx('win'); confetti(60); }
   openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
@@ -2226,7 +2248,7 @@ function showPage(p, anim = true) {
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
     const bs = statusPct(bp);
-    if (bs.done) { const tn = b.total || 1; fill([`Tamat · ${tn}/${tn}`]); if (pgn.scrollWidth > pgn.clientWidth + 1) fill(['Tamat']); } /* #1390: ringkas, muat di 320px; 'halaman' ada di aria-label */
+    if (bs.done) fill(['Tamat']); /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);
@@ -3370,8 +3392,6 @@ function viewKataIn() {
         const chipRow = filt ? `<div class="fchips" id="kChips" role="group" aria-label="Saring kata">${fchip('all', 'Semua')}${langs.length > 1 ? langs.map(l => fchip('l:' + l, langName(l))).join('') : ''}${books.length > 1 ? books.map(b => fchip('b:' + b, b)).join('') : ''}</div>` : '';
         const oldScroll = ($('#kChips') || {}).scrollLeft || kataChipScroll;
         const hskDue = hskF ? db.vocab.filter(v => isDue(v) && inF(v)).length : 0;
-        const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
-        const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
         const hskSum = hskLv.length ? `<div class="hsksum" id="kHskSum">${hskLv.map(n => { const x = hskUniq(n), y = hskTot(n); return y ? `<button type="button" class="hs${hskF === n ? ' on' : ''}" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk menyaring">HSK ${n}: <b>${x}</b>/${y}</button>` : ''; }).join('')}</div>` : '';
         const hskRow = hskLv.length ? `<div class="fchips hskrow" id="kHsk" role="group" aria-label="Saring kata per level HSK"><button class="fchip${hskF ? '' : ' on'}" data-h="0" aria-pressed="${!hskF}">Semua</button>${hskLv.map(n => `<button class="fchip${hskF === n ? ' on' : ''}" data-h="${n}" aria-pressed="${hskF === n}">HSK ${n}</button>`).join('')}</div>${hskSum}${hskDue ? `<button type="button" class="fw-nudge due-nudge" id="kHskGo" style="margin:0 0 10px" aria-label="Ulang ${hskDue} kata HSK ${hskF} yang siap">${ico('cards')}<span>Ulang ${hskDue} kata HSK ${hskF}</span></button>` : ''}` : '';
         kl.insertAdjacentHTML('afterbegin', `${hskRow}${chipRow}<div class="csvbar">${sortSel}${filt}</div>`);
