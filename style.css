@@ -1417,3 +1417,5 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .xp-mine{margin-top:var(--space-3)}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
+/* #1640 Home: Streak satu baris penuh; Target & Level berdampingan, dua kolom sama lebar */
+.stat3{grid-template-columns:repeat(2,minmax(0,1fr))}
