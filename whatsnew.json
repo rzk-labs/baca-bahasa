@@ -1,5 +1,35 @@
 [
   {
+    "n": 1676,
+    "judul": "Reader: koma/titik tak boleh nyasar di awal baris",
+    "poin": "Koma dan titik tidak lagi muncul sendirian di awal baris bacaan.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1674,
+    "judul": "Sheet Tamat & catatan sesi: satu istilah 'Bagian', tanpa angka halaman bentrok",
+    "poin": "Layar Tamat kini bilang \"12 bagian\", bukan \"12 halaman\" yang bikin bingung.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1698,
+    "judul": "[peta 177] Hemat kuota: sinkron lebih jarang di sisi aplikasi",
+    "poin": "Aplikasi sekarang menyinkron jauh lebih jarang, jadi kuota server lebih hemat.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1665,
+    "judul": "Home: kartu 'Minggu ini' tanpa kotak penjelas Streak, lebih ringkas",
+    "poin": "Kotak penjelas Streak di kartu 'Minggu ini' sudah dihapus.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1664,
+    "judul": "Home: kartu Minggu ini tanpa kotak penjelas 'Streak = beruntun'",
+    "poin": "Kotak penjelas \"Streak = beruntun\" di kartu Minggu ini sudah dihapus.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1663,
     "judul": "Tombol Pinyin: toast tiap mode pakai contoh singkat, jelas",
     "poin": "Tombol Pinyin sekarang kasih pesan singkat dengan contoh di tiap mode.",
@@ -147,36 +177,6 @@
     "n": 1607,
     "judul": "Seragamkan angka hari: 'hari baca' vs Streak vs lencana 7 hari",
     "poin": "Angka hari kini jelas: Streak itu beruntun, Hari baca itu \"X dari 7 hari\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1606,
-    "judul": "Reader: kotak 'Buku baru / Baca ulang' tak pernah menimpa teks",
-    "poin": "Kotak \"Buku baru\" di halaman terakhir kini menghitung ulang posisinya otomatis.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1603,
-    "judul": "Sheet arti kata: label 'Lagi offline' jelas, bukan cuma toast gagal",
-    "poin": "Ketuk kata tanpa internet: muncul label biru \"Lagi offline. Arti baru butuh internet.\"",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1597,
-    "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
-    "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1595,
-    "judul": "Kartu Level di Home: ketuk untuk lihat cara dapat XP",
-    "poin": "Kartu Level di Home sekarang bisa diketuk.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1594,
-    "judul": "Ilustrasi doodle SVG untuk sheet Tamat (stabilo + buku tertutup)",
-    "poin": "Layar Tamat sekarang punya gambar buku bercoretan stabilo dan bintang kecil.",
     "tgl": "2026-11-22"
   }
 ]
