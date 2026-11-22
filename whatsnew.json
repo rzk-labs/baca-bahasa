@@ -1,5 +1,11 @@
 [
   {
+    "n": 1676,
+    "judul": "Reader: koma/titik tak boleh nyasar di awal baris",
+    "poin": "Koma dan titik tidak lagi muncul sendirian di awal baris bacaan.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1674,
     "judul": "Sheet Tamat & catatan sesi: satu istilah 'Bagian', tanpa angka halaman bentrok",
     "poin": "Layar Tamat kini bilang \"12 bagian\", bukan \"12 halaman\" yang bikin bingung.",
@@ -171,12 +177,6 @@
     "n": 1607,
     "judul": "Seragamkan angka hari: 'hari baca' vs Streak vs lencana 7 hari",
     "poin": "Angka hari kini jelas: Streak itu beruntun, Hari baca itu \"X dari 7 hari\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1606,
-    "judul": "Reader: kotak 'Buku baru / Baca ulang' tak pernah menimpa teks",
-    "poin": "Kotak \"Buku baru\" di halaman terakhir kini menghitung ulang posisinya otomatis.",
     "tgl": "2026-11-22"
   }
 ]
