@@ -90,7 +90,7 @@ Celah: tak ada keluhan "kata terlalu kecil" tertulis di LingQ.
 1. Beri label tiap sheet (Pengaturan, Daftar bab, Kata sesi, dll.); tak ada yang jatuh ke bawaan.
 2. Judul sheet di urutan pertama, tombol tutup sesudahnya; uji VoiceOver & TalkBack. **Butir 1-2 selesai (#734):** semua pemanggil `openSheet` kini punya label; tanpa label, nama diambil dari judul pertama (terakhir "Panel"). Nama sheet lewat `aria-label`, jadi tombol tutup tak jadi nama. Uji VoiceOver nyata masih perlu.
 3. Rata kiri jadi bawaan; justify pilihan. Tambah opsi "jarak huruf lega". **Butir 3 selesai (#603):** Pengaturan baca punya "Jarak huruf" Normal/Lega; teks RTL & CJK tak ikut.
-4. Longgarkan area ketuk kata (jarak baris, bantalan tak terlihat) mendekati 44px.
+4. Longgarkan area ketuk kata (jarak baris, bantalan tak terlihat) mendekati 44px. **Butir 4 selesai (#1626):** `.cols .w::after` tak terlihat, N = (line-height×1em − 1.2em)/2 − .5px (≈4px di 18px/1.7, tinggi total ≈39px; tak sampai 44px karena baris atas & bawah tak boleh saling menimpa). Kiri/kanan cuma 1px, tanpa padding nyata. Uji perangkat nyata masih perlu.
 5. Uji ukuran teks sistem besar di iPhone; bar atas & sheet jangan terpotong. **Butir 5 selesai (#740):** text-size-adjust 100%, bar/tab/sheet pakai rem & boleh 2 baris, tombol sheet min 44px. Uji iPhone nyata masih perlu.
 
 ## 9. Langkah berikutnya

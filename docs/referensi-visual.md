@@ -25,6 +25,13 @@ Dibuat 22 Nov 2026. Dibaca peran Kreatif, Ilustrasi, Motion, dan Design System. 
 - Ilustrasi = SVG tangan-tulis, goresan sedikit tidak sempurna, tekstur halus.
 - Prioritas tempat: state kosong, layar Tamat, onboarding, header Home.
 
+## 3b. Arahan founder: naikkan level aset (22 Nov 2026)
+- Aset sekarang rapi tapi datar: **belum cukup wah**.
+- Tambah **tekstur kertas halus** (grain ringan, tetap di bawah 8 KB).
+- Tambah **border putih tebal ala stiker** pada elemen utama.
+- Buat **satu adegan lebih ramai** (onboarding atau header Home), bukan hanya ikon tunggal.
+- Tetap: palet BRAND.md v9, tanpa maskot, tanpa neon, satu gaya konsisten dengan 6 aset yang sudah live.
+
 ## 4. Kata kunci Pinterest (untuk dicari founder / web search "site:pinterest.com ...")
 - `naive illustration app ui`
 - `sticker scrapbook ui design mobile`
