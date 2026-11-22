@@ -221,6 +221,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 - [kartu-latihan-konteks](riset-kartu-latihan-konteks.md)
 - [lencana-terkunci](riset-lencana-terkunci.md)
 - [skor-ucapan](riset-skor-ucapan.md)
+- [kuota-cloudflare-28](riset-kuota-cloudflare-28.md)
 - [ulang-kata-sesi-sama](riset-ulang-kata-sesi-sama.md)
 - [xp-baca-ulang](riset-xp-baca-ulang.md)
 - [xp-streak-lencana](riset-xp-streak-lencana.md)
