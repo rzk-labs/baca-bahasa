@@ -1,5 +1,11 @@
 [
   {
+    "n": 1626,
+    "judul": "Reader: area ketuk kata lebih lega tanpa geser teks",
+    "poin": "Mengetuk kata di bacaan sekarang lebih mudah kena, tampilan teks tidak berubah.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1623,
     "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
     "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
@@ -171,12 +177,6 @@
     "n": 1574,
     "judul": "[peta 169] Home: rak Koleksi kamu tak tertutup menu bawah di HP",
     "poin": "Rak \"Koleksi kamu\" di Home HP sekarang bisa digulir penuh di atas menu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1572,
-    "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
-    "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
     "tgl": "2026-11-22"
   }
 ]
