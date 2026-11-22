@@ -1,5 +1,11 @@
 [
   {
+    "n": 1638,
+    "judul": "Sheet Tamat: satu target 'Besok' saja, tanpa 3 kata + 50 kata",
+    "poin": "Layar Tamat sekarang cuma satu target: \"Besok: simpan 3 kata dulu\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1636,
     "judul": "Kartu Target Home: contoh kegiatan 30 XP, bukan angka XP saja",
     "poin": "Ketuk kartu Target di Home, muncul contoh kegiatan untuk dapat 30 XP.",
@@ -171,12 +177,6 @@
     "n": 1562,
     "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
     "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1561,
-    "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
-    "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
     "tgl": "2026-11-22"
   }
 ]
