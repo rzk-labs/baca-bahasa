@@ -1,5 +1,11 @@
 [
   {
+    "n": 1546,
+    "judul": "Seragamkan warna & bentuk tombol di style.css lewat token",
+    "poin": "Warna dan bentuk tombol kini seragam lewat satu sumber, tampilan tak berubah.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1539,
     "judul": "Arti kata: tombol 'Coba lagi' muncul di detik ke-3, bukan ke-8",
     "poin": "Pesan \"sinyal lemah\" sekarang muncul di detik ke-3, bukan ke-8.",
@@ -171,12 +177,6 @@
     "n": 1461,
     "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
     "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1459,
-    "judul": "[peta 159] Arti lain selalu tampil, tak hilang-muncul di sheet kata",
-    "poin": "Bagian \"Arti lain\" di kartu kata sekarang selalu tampil, tidak hilang-muncul lagi.",
     "tgl": "2026-11-21"
   }
 ]
