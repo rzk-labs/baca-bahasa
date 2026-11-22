@@ -1,5 +1,11 @@
 [
   {
+    "n": 1711,
+    "judul": "[peta 182] Kartu Level Home HP: rata tengah + bar progres XP",
+    "poin": "Kartu Level di Home HP rata tengah, angka besar, tanpa ruang kosong.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1709,
     "judul": "[peta 181] Reader: tanda baca (— , 。 ” ) tetap tak boleh di awal baris",
     "poin": "Tanda baca (koma, titik, kutip) tak lagi nyasar sendirian di awal baris.",
@@ -171,12 +177,6 @@
     "n": 1640,
     "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
     "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1638,
-    "judul": "Sheet Tamat: satu target 'Besok' saja, tanpa 3 kata + 50 kata",
-    "poin": "Layar Tamat sekarang cuma satu target: \"Besok: simpan 3 kata dulu\".",
     "tgl": "2026-11-22"
   }
 ]
