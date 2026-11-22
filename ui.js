@@ -1078,9 +1078,9 @@ function heroTitle(t) {
   return p.au ? `<span class="t-main">${esc(p.main)}</span> <span class="t-au">${esc(p.au)}</span>` : esc(p.main);
 }
 /* kartu rak: judul (maks 2 baris) & penulis di baris kecil terpisah */
-function shelfTitle(t) {
-  const p = splitTitle(t);
-  return `<div class="t" dir="auto" title="${esc(t)}">${esc(p.main)}</div>${p.au ? `<div class="au">${esc(p.au)}</div>` : ''}`;
+function shelfTitle(t, author) {
+  const p = splitTitle(t), au = p.au || String(author || '').trim();
+  return `<div class="t" dir="auto" title="${esc(t)}">${esc(p.main)}</div>${au ? `<div class="au" dir="auto" title="${esc(au)}">${esc(au)}</div>` : ''}`;
 }
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
@@ -1254,7 +1254,7 @@ function viewRak() {
     ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
-    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
+    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureKb);
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
@@ -1434,7 +1434,7 @@ async function importFile(f, paksa) {
         if (ps && ps.length === r.paras.length && ps.join('').length === len) return toast('Cerita ini sudah ada di rakmu', 8000, { label: 'Tetap tambah', fn: () => importFile(f, true) });
       }
     }
-    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }, r.cover))commitLang(lg);
+    const lg = autoLang(r.paras.join(' ')); if (await addBook(r.title, r.paras, lg, { name: f.name, size: f.size }, r.cover, r.author))commitLang(lg);
   }
   catch (err) {
     console.error(err);
@@ -1461,13 +1461,14 @@ function kartuScan() {
     <div class="row"><button class="pri" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
   $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample'); if (x) x.click(); }, 150); } };
 }
-async function addBook(title, paras, lang, src, cov) {
+async function addBook(title, paras, lang, src, cov, author) {
   const id = 'b' + Date.now().toString(36);
   try { await putText(id, paras); } catch (e) { e.simpan = true; throw e; }
   const bk = { id, title, lang, pos: 0, si: 0, total: 0, v: 2, cv: CH_VER, added: Date.now(), opened: Date.now() };
   const nw = perkiraanBaru(paras, lang); if (nw != null) bk.nw = nw;
   try { const kb = kesulitanBuku(makeSections(paras), lang); if (kb) bk.kb = kb; } catch (e) { }
   if (cov) { try { await putCover(id, cov); bk.cov = 1; COVERS[id] = cov; } catch (e) { } }
+  if (author) bk.author = author;
   if (src && src.name) bk.src = { name: src.name, size: src.size };
   db.books.push(bk);
   const prevCur = db.cur;

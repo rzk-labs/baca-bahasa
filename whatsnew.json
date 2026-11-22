@@ -1,5 +1,11 @@
 [
   {
+    "n": 1705,
+    "judul": "[peta 180] Simpan pengarang EPUB & tampilkan di kartu buku",
+    "poin": "Buku EPUB sekarang menampilkan nama pengarang kecil di bawah judul.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1701,
     "judul": "Sheet Tamat: baris 'Besok' tak bentrok dengan kartu Home 'Simpan 3 kata'",
     "poin": "Baris \"Besok\" di layar Tamat kini sebut angka 3 kata, sama dengan Home.",
@@ -171,12 +177,6 @@
     "n": 1627,
     "judul": "[peta 173] Doodle state kosong: rapi di 320px & tema gelap",
     "poin": "Gambar kosong di Kata, Ngomong, dan Lupa kini pas di layar kecil.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1622,
-    "judul": "[peta 174] Sampul Korea/Jepang: judul tak patah jadi satu huruf",
-    "poin": "Sampul buku Korea, Jepang, dan Mandarin dicek lewat kode: judul tak sisa satu huruf.",
     "tgl": "2026-11-22"
   }
 ]
