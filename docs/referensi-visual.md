@@ -17,6 +17,7 @@ Dibuat 22 Nov 2026. Dibaca peran Kreatif, Ilustrasi, Motion, dan Design System. 
 - Tombol melar lembut lalu mengendap; kartu masuk dengan halus.
 - Animasi untuk memberi kejelasan (centang, progres), bukan hiasan.
 - Durasi 120-400 ms; hormati `prefers-reduced-motion`.
+- Simpan kata: garis bawah di teks tergambar kiri ke kanan (380 ms) + tombol memantul 0.96 ke 1 dengan centang tergambar (250 ms); hanya saat baru disimpan (#1581).
 
 ## 3. Cara menerapkan di Keepo (patuh BRAND.md v9)
 - Palet tetap Plum Noir, Biru Es, Wasabi, Jade, Kertas. **Tanpa maskot, tanpa neon.**
