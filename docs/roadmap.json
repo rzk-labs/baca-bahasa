@@ -253,6 +253,15 @@
     {
       "no": 170,
       "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Sheet Tamat: baris kecil di tombol Lanjut terbaca jelas (#1537)",
+      "dokumen": "docs/desain-kreatif-tamat-lanjut-1537.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1537.html. Perbaikan CSS sudah diterapkan di #1537; tinggal diuji di 320px & 390px."
+    },
+    {
+      "no": 170,
+      "peran": "developer",
       "prioritas": "P1",
       "nama": "Tab Kata: ringkasan 'HSK n: X/Y' di bawah chip level (#1534)",
       "dokumen": "docs/mockup-1534.html",
@@ -300,7 +309,7 @@
       "prioritas": "P1",
       "nama": "Latihan ekstra: tak menempel saat keluar + pesan Lupa jujur (#1473)",
       "dokumen": "docs/spesifikasi-latihan-ekstra-1473.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1550)",
       "catatan": "Masukan Ilham. Mockup: docs/mockup-1473.html. Ubah ui.js (setTab reset quickExtra/quickRun/quickPend; teks Lupa & xtraBtn), sw.js (naikkan C). Jangan ubah api/, XP, lencana."
     },
     {
@@ -327,7 +336,7 @@
       "prioritas": "P0",
       "nama": "Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat (#1483)",
       "dokumen": "docs/spesifikasi-aksi-tunggal-halaman-akhir-1483.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1560)",
       "catatan": "Lapor Raka. Ubah ui.js (endCard, finishBook), style.css bila perlu, sw.js (naikkan C). Jangan ubah api/ dan XP. Mockup: docs/mockup-1483.html. Uji 360px & layar lebar."
     },
     {
