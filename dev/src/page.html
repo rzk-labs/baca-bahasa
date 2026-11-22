@@ -95,7 +95,7 @@ a{color:inherit}
 .pil{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:-6px 0 -6px -8px;cursor:pointer}.pil input{width:26px;height:26px;margin:0;accent-color:#351E28;cursor:pointer}
 .mbar{margin:0 0 10px}.mbar .mt,.mbar .ma{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}.mbar .btn{flex:1 1 auto}.mbar .ma{padding:10px;border:1.5px solid #351E28;border-radius:18px;background:var(--wasabi);color:#351E28;align-items:center}.mbar .ma b{flex:1 1 100%}.mbar .lap-m{flex:1 1 100%;font-size:14px;line-height:1.4;overflow-wrap:anywhere}.mbar .lap-m ul{margin:4px 0 0;padding-left:18px}
 .tk{min-width:0;overflow-wrap:anywhere}.tk .lap{margin:6px 0 0}.tk .row{gap:6px}.grid>.tk{margin-bottom:0}
-.p-developer,.p-riset,.p-desain,.p-pm,.p-qa,.p-marketing,.p-ux,.p-kreatif,.p-interaksi,.p-sistem,.p-aksesibilitas{background:var(--jade)}
+.p-developer,.p-riset,.p-desain,.p-pm,.p-qa,.p-marketing,.p-ux,.p-kreatif,.p-interaksi,.p-sistem,.p-aksesibilitas,.p-ilustrasi,.p-motion{background:var(--jade)}
 .chip.o{background:transparent;color:var(--ink);border-color:var(--ink)}
 .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1s infinite}
 /* board */
@@ -301,8 +301,10 @@ const TIM={
   ux:{n:'UX Architect',e:'🧩',c:'t-blue',d:'Struktur & alur layar'},
   kreatif:{n:'Creative UI',e:'✨',c:'t-sun',d:'Visual & kreativitas'},
   interaksi:{n:'Interaction',e:'👆',c:'t-pink',d:'Tombol, gesture, animasi'},
-  sistem:{n:'Design System',e:'🧱',c:'t-lav',d:'Konsistensi visual'},
+  sistem:{n:'Design System',e:'🧱',c:'t-lav',d:'Konsistensi & katalog aset'},
   aksesibilitas:{n:'Accessibility',e:'♿',c:'t-mint',d:'Keterbacaan & fokus'},
+  ilustrasi:{n:'Ilustrasi & Aset',e:'🖼️',c:'t-sun',d:'Ilustrasi SVG berkarakter'},
+  motion:{n:'Motion',e:'🎞️',c:'t-blue',d:'Gerak & microinteraction'},
   qa:{n:'QA',e:'🧪',c:'t-mint',d:'Memeriksa setiap hasil'}
 };
 const UJI=[
@@ -418,15 +420,15 @@ function login(){
 function nextPM(){const d=new Date();d.setUTCHours(1,0,0,0);if(d<=new Date())d.setUTCDate(d.getUTCDate()+1);return d}
 function progres(r){if(!r)return 0;return Math.round(r.tahap.reduce((a,t)=>a+(BOBOT[t.status]||0),0)/r.tahap.length*100)}
 
-// Kuota harian per peran: samakan dengan .github/workflows/kepo-jaga.yml (developer 100, desain 8, riset 6, pm 6, marketing 4).
-const KUOTAP={developer:100,desain:8,riset:6,pm:6,marketing:4},KUOTA=Object.values(KUOTAP).reduce((a,b)=>a+b,0);
+// Kuota harian per peran: samakan dengan .github/workflows/kepo-jaga.yml (developer 100, desain 8, riset 6, pm 6, marketing 4, ux/kreatif/interaksi/ilustrasi/motion 4, sistem/aksesibilitas 3).
+const KUOTAP={developer:100,desain:8,riset:6,pm:6,marketing:4,ux:4,kreatif:4,interaksi:4,sistem:3,aksesibilitas:3,ilustrasi:4,motion:4},KUOTA=Object.values(KUOTAP).reduce((a,b)=>a+b,0);
 function hariIni(t){const f=x=>new Date(x).toLocaleDateString('sv-SE',{timeZone:'Asia/Jakarta'});return f(t)===f(Date.now())}
 function kuotaPerforma(T){
   const selesai=t=>['siap','menuju','live'].includes(t.status), gagal=t=>t.status==='gagal'||t.status==='ditolak';
   const hari=T.filter(t=>selesai(t)&&hariIni(t.diubah)), mulai=T.filter(t=>hariIni(t.dibuat));
   const n=hari.length, pct=Math.min(100,Math.round(n/KUOTA*100)), sisa=Math.max(0,KUOTA-n);
   const qaAll=T.filter(t=>t.qa), qaOk=qaAll.filter(t=>t.qa==='lolos').length, qaCat=qaAll.length-qaOk;
-  const baris=['developer','riset','desain','pm','marketing','ux','kreatif','interaksi','sistem','aksesibilitas'].map(k=>{
+  const baris=['developer','riset','desain','pm','marketing','ux','kreatif','interaksi','sistem','aksesibilitas','ilustrasi','motion'].map(k=>{
     const a=T.filter(t=>t.peran===k), ok=a.filter(selesai).length, gg=a.filter(gagal).length, kerja=a.filter(t=>t.status==='dikerjakan'||t.status==='antre').length;
     const qa=a.filter(t=>t.qa), lolos=qa.filter(t=>t.qa==='lolos').length, cat=qa.length-lolos, hs=hari.filter(t=>t.peran===k).length;
     const rate=ok+gg?Math.round(ok/(ok+gg)*100):0;
@@ -476,7 +478,7 @@ async function markas(again){
   ${siap.length?`<div class="sec"><h2>Siap dicek</h2><span class="mut sm">menunggu kamu</span></div>${(setVis(urutT(siap).slice(0,3)),barHtml())}<div class="grid">${VISIAP.map(t=>kartuTugas(t,{pilih:true})).join('')}</div><button class="btn lime" style="width:100%;margin-top:10px" onclick="keSiap()">Lihat semua${siap.length>3?' ('+siap.length+')':''} →</button>`:''}
   ${kuotaPerforma(T)}
   <div class="sec"><h2>Tim agent</h2><span class="mut sm">Kerja terus · peran kosong langsung diberi tugas (cek tiap 30 mnt)</span></div>
-  <div class="agents">${['pm','riset','ux','kreatif','interaksi','sistem','aksesibilitas','desain','developer','marketing','qa'].map(agent).join('')}</div>
+  <div class="agents">${['pm','riset','ux','kreatif','ilustrasi','motion','interaksi','sistem','aksesibilitas','desain','developer','marketing','qa'].map(agent).join('')}</div>
   <div class="sec"><h2>Tester & pengguna AI</h2><span class="mut sm">Mencoba Keepo tiap 2 jam &amp; tiap ada update live${HQ.masukan_issue?` · <a href="https://github.com/rzk-labs/baca-bahasa/issues/${HQ.masukan_issue}" target="_blank">semua masukan</a>`:''}</span><span class="sp"></span><button class="btn ghost" id="ujinow" ${ujiRun?'disabled':''}>${ujiRun?'<i class="dot"></i> Tester sedang mencoba…':IC.play+' Jalankan tester sekarang'}</button></div>
   <div class="agents">${UJI.map(uji).join('')}</div>
   <div class="sec"><h2>Aktivitas</h2>${runs?'':'<span class="mut sm">Beri token izin Actions untuk log lengkap</span>'}</div>
@@ -601,7 +603,7 @@ function tampilHasil(L){
   const stK=t=>t.status==='ditolak'?'gagal':t.status;
   const item=L.filter(t=>t.status!=='gagal'||t.laporan).map(t=>({...t,h:t.laporan?hasil([{dari:'agent',teks:t.laporan.teks,waktu:t.laporan.waktu}]):null,w:t.laporan?t.laporan.waktu:t.diubah}));
   const mas=(HQ&&HQ.masukan||[]).map(m=>{const nm=(m.teks.match(/\*\*\S+\s+([^*]+)\*\*/)||[])[1]||'Tester';return{masukan:1,nama:nm.trim(),w:m.waktu,poin:m.teks.split('\n').filter(l=>/^\s*-\s/.test(l)).map(l=>l.replace(/^\s*-\s*/,''))}});
-  const per=['riset','desain','ux','kreatif','interaksi','sistem','aksesibilitas','developer','marketing','pm'];
+  const per=['riset','desain','ux','kreatif','ilustrasi','motion','interaksi','sistem','aksesibilitas','developer','marketing','pm'];
   const lv=item.filter(t=>t.status==='live').length, sp=item.filter(t=>t.status==='siap').length;
   let all=item.filter(x=>cocokP(x));
   if(Q)all=all.filter(x=>cocokQ(x,x.laporan?x.laporan.teks:''));
@@ -620,7 +622,7 @@ function tampilHasil(L){
   const gg=L.filter(t=>t.status==='gagal').length;
   const B=(HQ&&HQ.roadmap&&HQ.roadmap.backlog)||[];
   const siapBangun=B.filter(x=>x.peran==='developer'&&ember(x.status)==='belum').length;
-  const WR={developer:'#AEB8A0',riset:'#D7EFFF',desain:'#E9F056',pm:'#C9B8FF',marketing:'#F4C7C3',ux:'#BFD8E8',kreatif:'#F2E58A',interaksi:'#E8B7D4',sistem:'#D8CCF5',aksesibilitas:'#B9E3D0'};
+  const WR={developer:'#AEB8A0',riset:'#D7EFFF',desain:'#E9F056',pm:'#C9B8FF',marketing:'#F4C7C3',ux:'#BFD8E8',kreatif:'#F2E58A',interaksi:'#E8B7D4',sistem:'#D8CCF5',aksesibilitas:'#B9E3D0',ilustrasi:'#F6D9A8',motion:'#C3E3F2'};
   const nDev=L.filter(t=>t.peran==='developer').length;
   const saran=siapBangun>=3&&pr('developer')<40?`Developer cuma ${pr('developer')}% kartu. ${siapBangun} fitur sudah siap dibangun.`:gg?`${gg} kartu gagal, dicoba ulang otomatis.`:'Seimbang. Tim jalan sesuai peta.';
   const seg=(k,l)=>`<button class="chip ${HSEG===k?'on':''}" style="min-height:40px;padding:6px 14px;font-size:14px" onclick="HSEG='${k}';hasilKerja(true)">${l}</button>`;
@@ -655,7 +657,7 @@ const cocokP=t=>PF==='semua'||(PF==='kamu'?!t.otomatis:t.peran===PF);
 const urutT=(L,key,lama)=>{key=key||(t=>t.diubah);return [...L].sort(SORT==='lama'||(SORT==='bawaan'&&lama)?(a,b)=>new Date(key(a))-new Date(key(b)):SORT==='nomor'?(a,b)=>b.n-a.n:(a,b)=>new Date(key(b))-new Date(key(a)))};
 // Bar alat: cari + urutkan + chip peran. ulang() = render ulang halaman, fokus tetap di kotak cari.
 function alatTugas(ulang,denganSort){
-  const per=['riset','desain','ux','kreatif','interaksi','sistem','aksesibilitas','developer','marketing','pm'];
+  const per=['riset','desain','ux','kreatif','ilustrasi','motion','interaksi','sistem','aksesibilitas','developer','marketing','pm'];
   const ch=(k,l)=>`<button class="chip ${PF===k?'on':''}" data-pf="${k}">${l}</button>`;
   return `<div class="tb"><input id="qt" type="search" placeholder="Cari judul atau #nomor…" aria-label="Cari tugas" value="${esc(Q)}">${denganSort?`<select id="srt" aria-label="Urutkan"><option value="bawaan" ${SORT==='bawaan'?'selected':''}>Bawaan</option><option value="baru" ${SORT==='baru'?'selected':''}>Terbaru</option><option value="lama" ${SORT==='lama'?'selected':''}>Terlama</option><option value="nomor" ${SORT==='nomor'?'selected':''}>Nomor tugas</option></select>`:''}</div>
   <div class="row hf" style="margin:10px 0 14px;flex-wrap:wrap;gap:8px">${ch('semua','Semua')}${ch('kamu','✍️ Dari kamu')}${per.map(k=>ch(k,TIM[k].e+' '+TIM[k].n)).join('')}</div>
@@ -925,7 +927,7 @@ function perintah(){
   const v=$('#veil');v.classList.add('on');
   $('#sheet').innerHTML=`<div class="row"><h2>Perintah ke tim</h2><span class="sp"></span><button class="btn ghost" onclick="tutup()" aria-label="Tutup">${I.silang}</button></div>
   <p class="mut sm">Pilih siapa yang mengerjakan, lalu jelaskan seperti ngobrol.</p>
-  <div class="roles">${['developer','desain','ux','kreatif','interaksi','sistem','aksesibilitas','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
+  <div class="roles">${['developer','desain','ux','kreatif','ilustrasi','motion','interaksi','sistem','aksesibilitas','riset','marketing','pm'].map((k,i)=>`<label><input type="radio" name="peran" value="${k}" ${i?'':'checked'}><span><i>${TIM[k].e}</i>${TIM[k].n}</span></label>`).join('')}</div>
   <textarea id="isi" placeholder="Contoh: di tab Kata, tambahin tombol acak urutan kartu."></textarea>
   <div id="isig"></div>
   <div class="row kirim-bar" style="margin-top:12px"><button class="btn lime" id="kirim">Kirim ke tim</button><span id="e2" class="err"></span></div>`;
