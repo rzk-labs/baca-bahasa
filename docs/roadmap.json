@@ -201,8 +201,8 @@
       "no": 28,
       "nama": "Keandalan & Skala Teknis",
       "fase": "Rilis Toko & Publik",
-      "status": "belum",
-      "catatan": "Keluar bila: error dipantau otomatis, nol laporan data hilang 4 minggu, pemakaian kuota gratis Cloudflare <70%. Peran: developer. Lihat docs/pm-peta-fase-2.md."
+      "status": "draft",
+      "catatan": "Keluar bila: error dipantau otomatis, nol laporan data hilang 4 minggu, pemakaian kuota gratis Cloudflare <70%. Peran: developer. Lihat docs/pm-peta-fase-2.md. Riset kuota (validasi bukti internet): 70% permintaan harian tercapai di ±1.200 akun aktif; lihat docs/riset-kuota-cloudflare-28.md."
     },
     {
       "no": 29,
@@ -285,6 +285,15 @@
       "dokumen": "docs/mockup-1606.html",
       "status": "selesai (#1606)",
       "catatan": "endCard() ukur ulang via ResizeObserver, resize, font, tema, akhir transisi. Belum diuji visual di 320/390px x 4 tema x 3 font: QA cek."
+    },
+    {
+      "no": 177,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Hemat kuota Cloudflare: sinkron lebih jarang + pantau kuota (#1611)",
+      "dokumen": "docs/riset-kuota-cloudflare-28.md",
+      "status": "siap dikerjakan",
+      "catatan": "Bagian 5 & 4 dokumen: sinkron tiap 5 menit/saat berubah, cek buku sekali per buka, cache leaderboard 60 dtk, peringatan kuota. Ubah api/ perlu deploy manual."
     },
     {
       "no": 171,
