@@ -1,5 +1,11 @@
 [
   {
+    "n": 1632,
+    "judul": "Home buku tamat: satu tombol 'Pilih buku berikutnya', bukan dua",
+    "poin": "Di Home buku tamat, tombol \"Pilih buku berikutnya\" sekarang cuma satu.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1630,
     "judul": "[peta 175] Reader: label buku tamat cukup 'Tamat', tak terpotong '…'",
     "poin": "Label bawah buku yang sudah tamat sekarang tertulis \"Tamat\" utuh, tidak terpotong.",
@@ -171,12 +177,6 @@
     "n": 1560,
     "judul": "[peta 165] Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat",
     "poin": "Di halaman terakhir, 'Buku baru' kini muncul sekali saja, tidak dobel.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1557,
-    "judul": "Kartu ulang: kata target di kalimat asal disorot stabilo Wasabi",
-    "poin": "Di kartu ulang, kata yang dilatih kini disorot stabilo kuning-hijau.",
     "tgl": "2026-11-22"
   }
 ]
