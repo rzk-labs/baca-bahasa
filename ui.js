@@ -68,7 +68,8 @@ const ICONS = {
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   send:'<path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',
   eyeoff:'<path d="M10.7 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-2.2 3M6.6 6.6A17 17 0 0 0 2 12s4 7 10 7a9.7 9.7 0 0 0 5.4-1.6M2 2l20 20"/>',
-  slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>'
+  slow:'<path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/><circle cx="10" cy="13" r="8"/><path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"/><path d="M18 3 19.1 5.2M22 3 20.9 5.2"/>',
+  wifioff:'<path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.8"/><path d="M19 12.9a10 10 0 0 0-2.2-1.6"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8A15 15 0 0 0 10.7 5"/><path d="m2 2 20 20"/>'
 };
 const ico = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 
@@ -905,7 +906,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v576';
+const APP_VER = 'v577';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -2550,6 +2551,7 @@ async function onWord(el, lastEl) {
     <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span>${['ja', 'zh-CN', 'zh'].includes(b.lang) && [...word].length > 1 && !el.querySelector('ruby') ? '<button class="icon tint wexb" id="wsplit" aria-label="Pecah per huruf" title="Pecah per huruf">✂</button>' : ''}<button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
     <div class="wmeta"><span class="pos" id="wpos"></span><span class="hskc" id="whsk"></span><span id="wbaca"></span><span id="wbase"></span><span id="wpart"></span></div>
+    <div class="offnet" id="woff" role="status" hidden></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
     <div class="whint" id="whint" hidden></div>
@@ -2632,9 +2634,11 @@ async function onWord(el, lastEl) {
     updNama(); keepVisible('.w.sel');
   };
   const slowMsg = (my, retry, off) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="wslow">Coba lagi</button>`; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
-  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig).then(r => {
+  /* #1603: chip 'Lagi offline' di dalam sheet (bukan toast); hanya bila arti belum tersimpan */
+  const offChip = on => { const o = $('#woff'); if (!o) return; o.hidden = !on; o.innerHTML = on ? `${ico('wifioff')}<span>Lagi offline. Arti baru butuh internet.</span>` : ''; };
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (navigator.onLine !== false || savedOf()) offChip(false); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig).then(r => {
     if (my !== tok || !$('#wtr')) return;
-    clearTimeout(slowT);
+    clearTimeout(slowT); offChip(false);
     tr = r; setTx('#wpart', partNote());
     { const pk = savedOf(); if (pk && pk.pick) showSaved(pk); else if (pickT) { setTx('#wtr', pickT); pickChip(); } else setTx('#wtr', r.text); }
     setWBaca(bacaDisp(word, bacaShow(word, r.baca, b.lang)));
@@ -2699,7 +2703,7 @@ async function onWord(el, lastEl) {
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
-  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; $('#wtr').innerHTML = `<span class="loading">${off ? 'Lagi offline, arti kata baru belum bisa dimuat. Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; offChip(off); $('#wtr').innerHTML = `<span class="loading">${off ? 'Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
   /* 'Arti ini salah?': daftar maks 3 arti lain; pilihan disimpan ke kartu & tak tertimpa */
   const wAlt = $('#walt');
   const altLink = () => { if (!wAlt) return; delete wAlt.dataset.open; wAlt.innerHTML = '<button class="ghost walink" id="walink" type="button">Arti ini salah?</button>'; $('#walink').onclick = openAlt; };
@@ -3633,7 +3637,7 @@ if ('serviceWorker' in navigator && !TEST && location.protocol.startsWith('http'
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
 const syncOff = () => { const o = $('#roff'); if (o) o.hidden = navigator.onLine; };
 window.addEventListener('offline', syncOff);
-window.addEventListener('online', () => { syncOff(); const r = $('#sheet #wretry'); if (r) r.click(); const s = $('#sheet #sretry'); if (s) s.click(); });
+window.addEventListener('online', () => { syncOff(); const o = $('#sheet #woff'), oOn = o && !o.hidden; if (o) { o.hidden = true; o.innerHTML = ''; } const r = $('#sheet #wretry'); if (r) r.click(); else if (oOn) { const w = $('#sheet #wslow'); if (w) w.click(); } const s = $('#sheet #sretry'); if (s) s.click(); });
 window.addEventListener('online', () => { if (rekapAktif && $('#rsl')) isiArtiRekap(rekapAktif); });
 window.addEventListener('online', () => { refillVocab().then(ok => { if (ok) toast('Arti kata udah keisi'); }); });
 setTab(db.tab && db.tab !== 'sosial' && (db.tab === 'rak' || db.cur) ? db.tab : 'rak');
