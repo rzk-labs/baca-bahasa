@@ -160,14 +160,14 @@
       "nama": "Aktivasi Sesi Pertama",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md. (bukti internet tipis, #1487) kata bahasa lain di buku & angka kata bentrok merusak kepercayaan; pencarian publik tak menemukan dokumentasi LingQ/Readlang/Language Reactor/Kindle soal teks campuran, sumber utama kode & masukan AI; status tetap draft, lihat docs/riset-kata-bahasa-lain-di-buku.md (backlog #162). (bukti internet, #1494) 54 butir dari 5 jenis sumber (riset UX, forum LingQ/Language Reactor, blog praktisi, studi baca bahasa kedua, ulasan app), lihat docs/riset-cerita-contoh-kata-pertama.md. Vonis: H1 cerita contoh lebih baik dari upload sendiri sebagian (condong benar, tak ada uji langsung); H2 satu ketukan kata dipandu naikkan ketuk kata hari pertama belum jelas (condong benar; angka naik hanya anekdot vendor); H3 panjang cerita ideal belum jelas (tak ada sumber kalimat/menit; usul uji 3 kalimat); H4 pemandu bisa dilewati tidak mengganggu sebagian. Status tetap draft (aturan_fase2). Backlog #168. (kode & masukan AI, #1589) kata Korea di catatan sesi buku Jepang kemungkinan versi lama (saringan aksara baru masuk 21 Nov); angka halaman 5 vs 10/10 beda satuan; lihat docs/riset-kata-nyasar-catatan-sesi.md (backlog #172). (bukti internet, #1654) satuan target harian: menit lebih jelas daripada XP, awal 5 menit, lihat docs/riset-satuan-target-harian.md (backlog #178); status tetap draft."
+      "catatan": "(validasi bukti internet, sebagian) 40 bukti: layar memuat kosong/macet & chip 0 hari menahan aktivasi; 4 dari 5 klaim terbukti. Lihat docs/riset-layar-memuat-home.md. Tambahan 18 Nov: 39 bukti angka salah merusak kepercayaan (terbukti; efek retensi belum jelas), docs/riset-angka-statistik-dipercaya.md. Keluar bila: >=60% pengguna baru membaca >=1 halaman DAN ketuk >=1 kata di hari pertama, 2 minggu berturut. Bahan: docs/riset-sesi-pertama.md. (validasi bukti internet, #1384) 46 butir dari 4 jenis sumber (laporan industri, forum LingQ/Readlang/WaniKani/IndieHackers, studi & analisis, kasus produk Duolingo/Facebook), lihat docs/riset-aktivasi-hari-pertama-patokan.md. Vonis: H1 angka realistis app baca belum jelas, 60% condong terlalu tinggi (tak ada patokan kategori; SaaS rata-rata 37,5%); H2 ketuk kata lebih menentukan belum jelas (condong benar); H3 waktu ke aksi inti terbukti sebagian (ambang 2 menit tanpa sumber); H4 cerita contoh lebih baik terbukti sebagian; H5 sumber trafik belum jelas (condong benar). Usul target dua tingkat: sekarang >=25%, setelah perbaikan (cerita contoh 1 ketukan + kata pertama dipandu) >=40%, 60% jadi cita-cita; kunci ulang setelah 2 minggu data /hitung. Pengukuran: backlog #153. Status tetap draft (aturan_fase2). Reddit, Threads/X & ulasan toko tak terbaca. Peran: desain, developer. Lihat docs/pm-peta-fase-2.md. (bukti internet tipis, #1487) kata bahasa lain di buku & angka kata bentrok merusak kepercayaan; pencarian publik tak menemukan dokumentasi LingQ/Readlang/Language Reactor/Kindle soal teks campuran, sumber utama kode & masukan AI; status tetap draft, lihat docs/riset-kata-bahasa-lain-di-buku.md (backlog #162). (bukti internet, #1494) 54 butir dari 5 jenis sumber (riset UX, forum LingQ/Language Reactor, blog praktisi, studi baca bahasa kedua, ulasan app), lihat docs/riset-cerita-contoh-kata-pertama.md. Vonis: H1 cerita contoh lebih baik dari upload sendiri sebagian (condong benar, tak ada uji langsung); H2 satu ketukan kata dipandu naikkan ketuk kata hari pertama belum jelas (condong benar; angka naik hanya anekdot vendor); H3 panjang cerita ideal belum jelas (tak ada sumber kalimat/menit; usul uji 3 kalimat); H4 pemandu bisa dilewati tidak mengganggu sebagian. Status tetap draft (aturan_fase2). Backlog #168. (kode & masukan AI, #1589) kata Korea di catatan sesi buku Jepang kemungkinan versi lama (saringan aksara baru masuk 21 Nov); angka halaman 5 vs 10/10 beda satuan; lihat docs/riset-kata-nyasar-catatan-sesi.md (backlog #172). (bukti internet, #1654) satuan target harian: menit lebih jelas daripada XP, awal 5 menit, lihat docs/riset-satuan-target-harian.md (backlog #178); status tetap draft. (riset #1683) Pengarang & sampul buku impor: 24 butir, H1 sebagian, H2 belum jelas, H3 sebagian; usul tampilkan pengarang EPUB bila ada, kosong bila tidak. Lihat docs/riset-pengarang-sampul-buku.md."
     },
     {
       "no": 23,
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md. (#1677) Koma nyasar di awal baris reader: kata & tanda baca dirender terpisah, tersangka .w::after; opsi & aturan uji di docs/riset-tanda-baca-awal-baris.md."
     },
     {
       "no": 24,
@@ -242,6 +242,24 @@
   ],
   "backlog": [
     {
+      "no": 180,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader: kata yang artinya gagal dimuat diberi garis putus tipis, bisa diketuk ulang (#1684)",
+      "dokumen": "docs/pm-penanda-arti-gagal.md",
+      "status": "siap dikerjakan",
+      "catatan": "Penanda hanya di memori sesi, hilang saat ganti halaman/buku. Tanpa toast baru, tanpa warna baru, tanpa simpan ke IndexedDB. Mockup: docs/mockup-1684.html. Uji 320/390px, gelap, RTL. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 181,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader: koma/tanda baca tak boleh di awal baris (#1677)",
+      "dokumen": "docs/riset-tanda-baca-awal-baris.md",
+      "status": "siap dikerjakan",
+      "catatan": "Opsi B bagian 4: bungkus kata+tanda baca nowrap di wordsHtml (ui.js), jaga ketuk-kata; reproduksi dulu (tersangka .w::after #1626). Aturan uji bagian 5. Mockup: docs/mockup-1677.html. Naikkan C di sw.js."
+    },
+    {
       "no": 178,
       "peran": "developer",
       "prioritas": "P1",
@@ -258,6 +276,15 @@
       "dokumen": "docs/desain-ux-target-contoh-1647.md",
       "status": "siap dikerjakan",
       "catatan": "Baris contoh sudah dipasang (goal-eg di ui.js/style.css). Mockup: docs/mockup-1647.html."
+    },
+    {
+      "no": 180,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Satu definisi 'kata baru' = baru disimpan; ketukan = 'belum disimpan' (#1694)",
+      "dokumen": "docs/riset-kata-baru-satu-sumber.md",
+      "status": "siap dikerjakan",
+      "catatan": "Bagian 6 dokumen: finishBook hitung kata noTr, samakan teks Tamat & catatan sesi, perbaiki status skrip uji. Mockup: docs/mockup-1694.html."
     },
     {
       "no": 172,
@@ -1751,6 +1778,15 @@
       "dokumen": "docs/desain-bar-atas-reader-lega.md",
       "status": "selesai (#1471, tinggal digabung)",
       "catatan": "Mockup: docs/mockup-1471.html. Pinggir >=12px + safe-area, jarak 8px, sentuh 44px; Ulang pindah ke Lainnya di <=430px. Naik ke kepo-v527."
+    },
+    {
+      "no": 180,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Simpan pengarang EPUB (dc:creator) dan tampilkan di kartu buku bila ada (#1683)",
+      "dokumen": "docs/riset-pengarang-sampul-buku.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1683.html. Hanya EPUB; .txt/.pdf dikosongkan, tidak menebak. Data lama aman (field baru opsional)."
     }
   ],
   "prioritas": [
