@@ -1,5 +1,11 @@
 [
   {
+    "n": 1562,
+    "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
+    "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1561,
     "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
     "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
@@ -171,12 +177,6 @@
     "n": 1495,
     "judul": "Home: rak 'Koleksi kamu' tak tertutup menu bawah di HP",
     "poin": "Rak \"Koleksi kamu\" di Home HP sekarang tidak tertutup menu bawah lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1489,
-    "judul": "Home: chip Streak di header tak kembar dengan kartu Streak",
-    "poin": "Di Home, chip api \"10 hari\" di atas sudah disembunyikan, karena kartu Streak sudah ada.",
     "tgl": "2026-11-21"
   }
 ]
