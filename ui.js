@@ -612,8 +612,19 @@ function dataWarn() {
 }
 function dataWarnWire() {
   if ($('#dwSave')) $('#dwSave').onclick = () => { if (typeof bkSave === 'function') bkSave(); };
-  if ($('#dwHow')) $('#dwHow').onclick = () => openSheet(`<h2>Pasang ke Layar Utama</h2><ol class="rules"><li>Ketuk tombol Bagikan di Safari.</li><li>Pilih "Tambah ke Layar Utama".</li><li>Ketuk Tambah, lalu buka Kepo dari ikonnya.</li></ol><button class="pri full" data-close>Oke, paham</button>`, 'Cara pasang ke Layar Utama');
+  if ($('#dwHow')) $('#dwHow').onclick = pasangSheet;
 }
+const pasangSheet = () => openSheet(`<h2>Pasang ke Layar Utama</h2><ol class="rules"><li>Ketuk tombol Bagikan di Safari.</li><li>Pilih "Tambah ke Layar Utama".</li><li>Ketuk Tambah, lalu buka Kepo dari ikonnya.</li></ol><button class="pri full" data-close>Oke, paham</button>`, 'Cara pasang ke Layar Utama');
+/* #1649: ajakan sekali di Home 'Pasang di Layar Utama' (iPhone/iPad Safari, belum dipasang, sudah baca/simpan kata, belum ditutup) */
+const A2HS_K = 'kepo_a2hs';
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function a2hsShow() {
+  try { if (localStorage.getItem(A2HS_K)) return false; } catch (e) { return false; }
+  if (isStandalone() || !isIOS()) return false;
+  const st = db.stat || {};
+  return (+st.page || 0) >= 1 || (Array.isArray(db.vocab) && db.vocab.length >= 1);
+}
+const a2hsHtml = () => `<div class="a2hs" id="a2hs" role="region" aria-label="Pasang Keepo di Layar Utama"><img class="a2hs-pic" src="img/aset/kosong-aman.svg" alt="" width="56" height="56" decoding="async"><div class="a2hs-tx"><b>Biar nggak lupa balik</b><span>Pasang Keepo di Layar Utama, 3 ketukan.</span><div class="a2hs-act"><button type="button" class="pri" id="a2hsHow">Cara pasang</button><button type="button" class="lnk" id="a2hsX">Nanti</button></div></div></div>`;
 function cadNote() {
   try {
     if (!dataRisk() || isReading()) return;
@@ -921,7 +932,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v615';
+const APP_VER = 'v617';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1207,6 +1218,7 @@ function viewRak() {
     <div id="hskSlot">${hskHomeHtml()}</div>
     ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya. Lupa menurunkan level, jadwal tetap">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya. Lupa menurunkan level, jadwal tetap</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k < 3) return `<button type="button" class="fw-nudge due-nudge q3-btn q3-lock" id="q3Lock" aria-label="Ulang 3 kata masih terkunci. Simpan 3 kata dulu, baru ${k} dari 3. Ketuk untuk buka bacaan">${ico('cards')}<span>Simpan 3 kata dulu (${k}/3)<small>Ketuk kata di bacaan, lalu Simpan.</small><span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${k}"><i style="width:${Math.round(k / 3 * 100)}%"></i></span></span><b class="q3-go">Buka bacaan</b></button>`; return ''; })()}
+    ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
@@ -1236,6 +1248,11 @@ function viewRak() {
         gc.onclick = () => bukaXp(true);
         gc.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bukaXp(true); } };
       }
+    }
+    const a2 = $('#a2hs'); if (a2) { /* #1649: sekali saja; Cara pasang atau Nanti = tak muncul lagi */
+      const tutup = () => { try { localStorage.setItem(A2HS_K, '1'); } catch (e) { } a2.remove(); };
+      $('#a2hsHow').onclick = () => { tutup(); pasangSheet(); };
+      $('#a2hsX').onclick = () => { tutup(); toast(dataRisk() ? 'Oke. Petunjuknya tetap ada di Pengaturan.' : 'Oke, nanti saja.'); };
     }
     const wx = $('#wkX'); if (wx) wx.onclick = () => { try { localStorage.setItem('kepo_wk', weekKey()); } catch (e) { } $('#wkCard').remove(); toast('Disembunyikan sampai minggu depan'); };
     bindHskHome(); if (!hskMap && db.vocab.some(v => v && v.lang === 'zh-CN')) hskLoad().then(m => { if (m) fillHskHome(); });

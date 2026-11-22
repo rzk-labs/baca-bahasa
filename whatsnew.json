@@ -1,5 +1,11 @@
 [
   {
+    "n": 1649,
+    "judul": "Home: ajakan sekali 'Pasang di Layar Utama' setelah baca pertama",
+    "poin": "Pengguna iPhone kini diajak sekali pasang Keepo di layar utama.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1648,
     "judul": "Tawarkan pengingat baca sekali, di toast setelah selesai baca pertama",
     "poin": "Setelah baca pertama, muncul tawaran pengingat sekali: \"Ingatkan aku\" atau \"Nanti aja\".",
@@ -171,12 +177,6 @@
     "n": 1581,
     "judul": "Simpan kata: garis bawah kata di teks 'tergambar' + tombol berubah halus",
     "poin": "Simpan kata kini terasa jelas: garis bawah kata tergambar pelan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1580,
-    "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
-    "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
     "tgl": "2026-11-22"
   }
 ]
