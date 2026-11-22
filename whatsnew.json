@@ -1,5 +1,11 @@
 [
   {
+    "n": 1550,
+    "judul": "[peta 162] Latihan ekstra tak menempel saat pindah tab + pesan Lupa jujur",
+    "poin": "Latihan ekstra tak lagi menempel saat kamu pindah menu bawah.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1549,
     "judul": "Sheet: tarik pegangan ke bawah untuk menutup (arti kata, Tamat, menu)",
     "poin": "Panel bawah (arti kata, Tamat, menu) sekarang bisa ditarik ke bawah untuk menutup.",
@@ -171,12 +177,6 @@
     "n": 1469,
     "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
     "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1467,
-    "judul": "Home: kartu 'Minggu ini' ringkas satu baris, angka punya satuan",
-    "poin": "Kartu \"Minggu ini\" di Home sekarang pendek, satu baris.",
     "tgl": "2026-11-21"
   }
 ]
