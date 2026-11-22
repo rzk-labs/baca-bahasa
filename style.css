@@ -501,6 +501,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 /* #1626: area ketuk kata lebih tinggi, tak terlihat, tanpa geser tata letak. N = (lh - 1.2em)/2 - .5px agar baris atas & bawah tak saling menimpa; kiri/kanan cuma 1px agar kata di tepi tak mencuri ketukan balik halaman. */
 .cols .w{position:relative}
+.cols .nb{white-space:nowrap}
+.reader[lang^="ja"],.reader[lang^="zh"]{line-break:strict}
 .cols .w::after{content:"";position:absolute;left:-1px;right:-1px;top:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px));bottom:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px))}
 .cols{-webkit-touch-callout:none}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
@@ -542,6 +544,9 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .rmid{min-width:0;margin:0 8px}
 .rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:359px){.rmid #pgn{font-size:.7rem}}
+.rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
+.rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
+.rmid #pgn.tamat .ck{width:14px;height:14px;stroke-width:3;flex:none}
 .reader.no-prog .rmid #pgn,.reader.no-prog .rmid .bar{display:none}
 .nw{white-space:nowrap}
 #sheet .hscroll{margin:0;padding:2px 2px 10px}
@@ -921,7 +926,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 #hero.hero-done{padding:14px}
 #hero.hero-done .hero-act{margin-top:10px}
 .fb-acts{display:flex;flex-direction:column;gap:12px}.fb-acts button{flex:0 0 auto;width:100%;min-height:44px;margin:0}
-.fb-rem{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:0 0 8px}
+.fb-rem{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 10px;margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line,rgba(127,127,127,.25))}
 .fb-rem .sec{min-height:44px;padding:0 14px}
 .fb-rem .lnk{background:none;border:0;color:var(--ink);text-decoration:underline;font:600 14px/1 inherit;min-height:44px;padding:0 8px;cursor:pointer}
 .fb-sec{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
@@ -1430,6 +1435,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hsksum .hs{flex:0 1 auto;min-width:0;background:none;border:0;padding:4px 6px;font:inherit;color:inherit;border-radius:var(--radius-full);cursor:pointer}
 .hsksum .hs b{font-weight:700}
 .hsksum .hs.on{background:var(--ice)}
+/* #1693: chip 'Belum hafal' + petunjuk belum ada kata siap diulang */
+.hskrow .hskbl{flex:1.6 1 auto;white-space:nowrap}
+.hskidle{margin:-2px 0 10px;font-size:12px;line-height:1.35;color:var(--ink);opacity:.75}
 /* #1664: titik hari baca selalu terisi (selektor spesifik, tak tertimpa) */
 .sdots .sd i{display:block;width:8px;height:8px;border-radius:50%}
 .sdots .sd i.on{background:var(--ink)}
