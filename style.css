@@ -501,6 +501,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 /* #1626: area ketuk kata lebih tinggi, tak terlihat, tanpa geser tata letak. N = (lh - 1.2em)/2 - .5px agar baris atas & bawah tak saling menimpa; kiri/kanan cuma 1px agar kata di tepi tak mencuri ketukan balik halaman. */
 .cols .w{position:relative}
+.cols .nb{white-space:nowrap}
+.reader[lang^="ja"],.reader[lang^="zh"]{line-break:strict}
 .cols .w::after{content:"";position:absolute;left:-1px;right:-1px;top:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px));bottom:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px))}
 .cols{-webkit-touch-callout:none}
 .cols .s.press{background:var(--color-surface-soft);color:var(--color-text);border-radius:4px;transition:background var(--dur-color)}
