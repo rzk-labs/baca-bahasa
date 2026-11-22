@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1672 — Rak Profil</title>
+<style>
+body{margin:0;background:#E9E4EA;font:14px/1.4 Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:24px}
+.ph{width:390px;background:#FBF8F3;border-radius:28px;box-shadow:0 8px 30px rgba(53,30,40,.18);overflow:hidden}
+.ph.dark{background:#1C1418;color:#F6EFE6}
+.lbl{display:inline-block;margin:14px 16px 0;padding:3px 10px;border-radius:999px;background:#351E28;color:#E9F056;font:700 12px Inter,sans-serif}
+.dark .lbl{background:#E9F056;color:#351E28}
+.in{padding:8px 16px 20px}
+h2{font:700 18px 'Bricolage Grotesque',system-ui,sans-serif;margin:8px 0}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline}.mut{color:#6B5A63;font-size:12px}.dark .mut{color:#C9BDC3}
+.shelf{background:#2A1D24;color:#F6EFE6;border-radius:14px;padding:10px 10px 0;margin-bottom:8px;overflow:hidden}
+.g{font-size:12px;font-weight:700;margin:0 2px 8px}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.bk{position:relative;min-width:0}
+.cv{height:72px;border-radius:6px 12px 12px 6px;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(53,30,40,.15);box-shadow:inset 4px 0 0 rgba(53,30,40,.14);font:800 28px/1.2 'Bricolage Grotesque','Hiragino Sans','Noto Sans JP',sans-serif}
+.tag{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28;display:flex;align-items:center;justify-content:center}
+.tag svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.25;font-weight:600;margin-top:5px;min-height:2.5em}
+.p{display:block;font-size:12px;color:#C9BDC3;margin-bottom:6px}
+.board{height:8px;margin:0 -10px;background:#4A343E}
+.old .cv{font-size:26px}.old .cut{overflow:hidden;justify-content:flex-start;padding-left:44px}
+.oldtag{position:absolute;top:4px;left:4px;font-size:10px;font-weight:700;background:#351E28;color:#E9F056;padding:1px 6px;border-radius:999px}
+.note{font-size:12px;margin:10px 0 0;color:#6B5A63}.dark .note{color:#C9BDC3}
+</style></head><body>
+
+<div class="ph old"><span class="lbl">Sebelum</span><div class="in">
+<div class="sec-h"><h2>Rak</h2><span class="mut">5 buku</span></div>
+<div class="shelf"><div class="g">Tamat</div><div class="row">
+ <div class="bk"><div class="cv cut" style="background:#D7EFFF;color:#351E28">こ</div><span class="oldtag">Tamat</span><span class="t">こころ</span><span class="p">Tamat</span></div>
+ <div class="bk"><div class="cv" style="background:#E9F056;color:#351E28">S</div><span class="oldtag">Tamat</span><span class="t">Sherlock...</span><span class="p">Tamat</span></div>
+</div><div class="board"></div></div>
+<p class="note">"Tamat" muncul 3 kali; huruf こ terpotong; judul patah aneh.</p>
+</div></div>
+
+<div class="ph"><span class="lbl">Sesudah</span><div class="in">
+<div class="sec-h"><h2>Rak</h2><span class="mut">5 buku</span></div>
+<div class="shelf"><div class="g">Sedang dibaca</div><div class="row">
+ <div class="bk"><div class="cv" style="background:#F3E2C8;color:#351E28">L</div><span class="t">Le Petit Prince</span><span class="p">42%</span></div>
+ <div class="bk"><div class="cv" style="background:#D7EFFF;color:#351E28">하</div><span class="t">하늘과 바람과 별과 시</span><span class="p">8%</span></div>
+</div><div class="board"></div></div>
+<div class="shelf"><div class="g">Tamat</div><div class="row">
+ <div class="bk"><div class="cv" style="background:#D7EFFF;color:#351E28">こ</div><span class="tag" role="img" aria-label="Tamat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">こころ</span><span class="p">Jepang</span></div>
+ <div class="bk"><div class="cv" style="background:#E9F056;color:#351E28">S</div><span class="tag" role="img" aria-label="Tamat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Sherlock Holmes: A Study in Scarlet</span><span class="p">Inggris</span></div>
+ <div class="bk"><div class="cv" style="background:#F1ECE1;color:#351E28">T</div><span class="tag" role="img" aria-label="Tamat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">The Little Mermaid</span><span class="p">Inggris</span></div>
+</div><div class="board"></div></div>
+<p class="note">Satu centang Wasabi per buku. Huruf di tengah. Judul maks 2 baris.</p>
+</div></div>
+
+<div class="ph dark" style="width:320px"><span class="lbl">Sesudah · 320px · tema gelap</span><div class="in">
+<div class="sec-h"><h2>Rak</h2><span class="mut">3 buku</span></div>
+<div class="shelf"><div class="g">Tamat</div><div class="row">
+ <div class="bk"><div class="cv" style="background:#D7EFFF;color:#351E28;font-size:24px">こ</div><span class="tag"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">こころ</span><span class="p">Jepang</span></div>
+ <div class="bk"><div class="cv" style="background:#E9F056;color:#351E28;font-size:24px">S</div><span class="tag"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Sherlock Holmes: A Study in Scarlet</span><span class="p">Inggris</span></div>
+ <div class="bk"><div class="cv" style="background:#F3E2C8;color:#351E28;font-size:24px">吾</div><span class="tag"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">吾輩は猫である</span><span class="p">Jepang</span></div>
+</div><div class="board"></div></div>
+</div></div>
+
+</body></html>
