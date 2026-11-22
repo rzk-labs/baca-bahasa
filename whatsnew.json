@@ -1,5 +1,17 @@
 [
   {
+    "n": 1665,
+    "judul": "Home: kartu 'Minggu ini' tanpa kotak penjelas Streak, lebih ringkas",
+    "poin": "Kotak penjelas Streak di kartu 'Minggu ini' sudah dihapus.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1664,
+    "judul": "Home: kartu Minggu ini tanpa kotak penjelas 'Streak = beruntun'",
+    "poin": "Kotak penjelas \"Streak = beruntun\" di kartu Minggu ini sudah dihapus.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1663,
     "judul": "Tombol Pinyin: toast tiap mode pakai contoh singkat, jelas",
     "poin": "Tombol Pinyin sekarang kasih pesan singkat dengan contoh di tiap mode.",
@@ -165,18 +177,6 @@
     "n": 1597,
     "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
     "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1595,
-    "judul": "Kartu Level di Home: ketuk untuk lihat cara dapat XP",
-    "poin": "Kartu Level di Home sekarang bisa diketuk.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1594,
-    "judul": "Ilustrasi doodle SVG untuk sheet Tamat (stabilo + buku tertutup)",
-    "poin": "Layar Tamat sekarang punya gambar buku bercoretan stabilo dan bintang kecil.",
     "tgl": "2026-11-22"
   }
 ]
