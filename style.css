@@ -246,6 +246,10 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 #sheet.hide.closing,#shade.hide.closing{display:block!important;pointer-events:none}
 #sheet.closing{animation:sheet-out 200ms var(--ease-out) forwards}
 #shade.closing{animation:fade-out 200ms ease-out forwards}
+/* #1651: toast keluar */
+#toast.hide.closing{display:flex!important;pointer-events:none;animation:toast-out 180ms var(--ease-out) forwards}
+@keyframes toast-out{to{transform:translateX(-50%) translateY(12px);opacity:0}}
+@media (prefers-reduced-motion:reduce){#toast.hide.closing{display:none!important}}
 @keyframes sheet-out{to{transform:translateY(40px);opacity:0}}
 @keyframes fade-out{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){#sheet.hide.closing,#shade.hide.closing{display:none!important}}
