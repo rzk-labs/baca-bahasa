@@ -1,5 +1,11 @@
 [
   {
+    "n": 1648,
+    "judul": "Tawarkan pengingat baca sekali, di toast setelah selesai baca pertama",
+    "poin": "Setelah baca pertama, muncul tawaran pengingat sekali: \"Ingatkan aku\" atau \"Nanti aja\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1647,
     "judul": "Kartu Target Home: jelaskan 30 XP itu kira-kira berapa kegiatan",
     "poin": "Kartu Target di Home kini punya contoh kecil: \"5 hlm + 10 kata\".",
@@ -171,12 +177,6 @@
     "n": 1580,
     "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
     "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1579,
-    "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
-    "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
     "tgl": "2026-11-22"
   }
 ]

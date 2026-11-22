@@ -1545,7 +1545,7 @@ function sessRecap(b) {
   });
   return true;
 }
-function leaveBaca() { stopListenPage(); const b = book(); if (b && RD && RD.n && RD.page != null && b.total) { b.pct = readPct(b); save(); } setTab('rak'); if (b) sessRecap(b); }
+function leaveBaca() { stopListenPage(); const b = book(); const pg0 = b ? [...SESPG].filter(k => k.startsWith(b.id + ':')).length : 0; if (b && RD && RD.n && RD.page != null && b.total) { b.pct = readPct(b); save(); } setTab('rak'); if (b && !sessRecap(b) && pg0 >= 1) setTimeout(remOffer, 700); }
 /* Baca ulang: balik ke awal; tanda tamat (doneAt) dibiarkan supaya XP tamat tak dobel */
 let tamatSeen = ''; /* sheet Tamat sekali per sesi baca buku */
 function restartBook(b) {
@@ -3687,6 +3687,22 @@ function remWire() {
   const rt = $('#remRetry'); if (rt) rt.onclick = async () => { await remSet(true); redraw(); if (Notification.permission === 'denied') toast('Masih ditolak. Izinkan dulu di pengaturan HP.'); };
   const j = $('#remJam'); if (j) j.onchange = e => { if (/^\d\d:\d\d$/.test(e.target.value)) { db.remind.jam = e.target.value; db.remind.shown = ''; save(); remCheck(); toast('Jam pengingat: ' + e.target.value); } };
   const sp = $('#shProg'); if (sp) sp.onclick = shareProg;
+}
+/* Tawaran sekali (#1648): setelah sesi baca pertama, toast 2 tombol. db.remind.ditawar = true -> tak muncul lagi (opsional; data lama aman). */
+function remOffer() {
+  const r = db.remind || {};
+  if (r.ditawar || r.on || isReading() || sheetOpen()) return;
+  if (remSupport() && Notification.permission === 'denied') return;
+  db.remind = Object.assign(r, { ditawar: true }); save();
+  toast('Mau diingatkan baca besok? Cukup sekali, bisa dimatikan kapan aja.', 15000,
+    { label: 'Ingatkan aku', fn: remOfferYes }, { label: 'Nanti aja', fn: () => { } });
+}
+async function remOfferYes() {
+  if (remSupport()) { await remSet(true); if (!(db.remind && db.remind.on)) toast('Belum nyala. Izinkan notifikasi di pengaturan HP, atau coba lagi di Pengaturan.', 6000); return; }
+  openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Pengingat</span>${closeBtn}</div>
+    <h2>Pasang Keepo dulu</h2>
+    <ol class="sm" style="padding-left:20px;margin:8px 0 12px;line-height:1.6"><li>Di Safari, ketuk tombol <b>Bagikan</b>.</li><li>Pilih <b>Tambah ke Layar Utama</b>, lalu buka lewat ikonnya.</li></ol>
+    <div class="row"><button class="full" data-close style="min-height:44px">Oke</button></div>`, 'Pasang Keepo');
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) remCheck(); });
 setTimeout(remCheck, 1500);
