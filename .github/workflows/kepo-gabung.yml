@@ -78,7 +78,7 @@ jobs:
           for f in $(git diff --name-only origin/main -- '*.js'); do [ -f "$f" ] || continue; case "$f" in api/*|dev/*) node --input-type=module --check < "$f";; *) node --check "$f";; esac; done
           # catat di "Yang baru" (whatsnew.json, tampil di Beranda app) bila ini perubahan app
           P=$(gh issue view "$N" --json labels --jq '[.labels[].name|select(startswith("peran:"))][0] // ""')
-          if case "$P" in peran:developer|peran:desain|peran:ux|peran:kreatif|peran:interaksi|peran:sistem|peran:aksesibilitas) true;; *) false;; esac; then
+          if case "$P" in peran:developer|peran:desain|peran:ux|peran:kreatif|peran:interaksi|peran:sistem|peran:aksesibilitas|peran:ilustrasi|peran:motion) true;; *) false;; esac; then
             J=$(gh issue view "$N" --json title --jq .title)
             POIN=$(gh issue view "$N" --json comments --jq '[.comments[].body|select(test("Siap dicek"))][-1] // ""' | grep -m1 -E '^\s*- ' | sed -E 's/^\s*-\s*//' || true)
             [ -f whatsnew.json ] || echo '[]' > whatsnew.json
