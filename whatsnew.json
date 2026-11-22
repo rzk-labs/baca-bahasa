@@ -1,5 +1,11 @@
 [
   {
+    "n": 1719,
+    "judul": "Kata baru: buang kata beraksara lain (Korea di buku Jepang)",
+    "poin": "Kata Korea tak muncul lagi sebagai \"kata baru\" di buku Jepang.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1717,
     "judul": "Home HP: kartu 'Minggu ini' jadi satu baris rapi, tanpa chip bertumpuk",
     "poin": "Kartu \"Minggu ini\" di Home HP sekarang satu baris rapi, tanpa kotak bertumpuk.",
@@ -171,12 +177,6 @@
     "n": 1626,
     "judul": "Reader: area ketuk kata lebih lega tanpa geser teks",
     "poin": "Mengetuk kata di bacaan sekarang lebih mudah kena, tampilan teks tidak berubah.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1623,
-    "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
-    "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
     "tgl": "2026-11-22"
   }
 ]

@@ -822,7 +822,7 @@ for (const k in FUNC_WORDS) FUNC_SET[k] = new Set(FUNC_WORDS[k].split(' '));
 /* #1519: aksara buku per bahasa; kata tanpa satu pun huruf beraksara buku = bukan kandidat. Bahasa tak dikenal/kosong: aturan dilewati */
 const AKSARA_BUKU = {
   ja: /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u,
-  ko: /\p{Script=Hangul}/u,
+  ko: /[\p{Script=Hangul}\p{Script=Han}]/u,
   zh: /\p{Script=Han}/u,
   ru: /\p{Script=Cyrillic}/u, ar: /\p{Script=Arabic}/u, th: /\p{Script=Thai}/u
 };
@@ -851,7 +851,9 @@ function isKataSampah(lang, w, ctx) {
   return false;
 }
 /* satu penghitung 'kata disimpan' (kartu Home, ringkasan mingguan, catatan sesi): tanpa partikel, hanya bahasa yang diminta */
-const countedVocab = (langs, since = 0, book = null) => { const seen = new Set(); return (db.vocab || []).filter(v => { if (!v || !v.w || v.noTr || !String(v.t || '').trim() || isKataSampah(v.lang, v.w)) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; })
+/* #1719: SATU fungsi 'kata cocok aksara buku' (tampilan kata baru); kata asing tetap tersimpan, hanya tak dihitung. Buku/lang kosong: lolos */
+const kataCocokAksara = (b, w) => !b || punyaAksaraBuku(b.lang, w);
+const countedVocab = (langs, since = 0, book = null) => { const seen = new Set(); const bk = book != null ? (db.books || []).find(x => x && x.title === book) : null; return (db.vocab || []).filter(v => { if (!v || !v.w || v.noTr || !String(v.t || '').trim() || isKataSampah(v.lang, v.w) || !kataCocokAksara(bk, v.w)) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; })
   .filter(v => (!langs || (langs instanceof Set ? langs.has(v.lang) : langs === v.lang)) && (v.at || 0) >= since && (book == null || v.book === book)); };
 /* SATU hitungan 'kata baru minggu ini' = kata tersimpan di tab Kata (bukan ketukan/lookup) */
 const kataBaruMinggu = (langs = null) => countedVocab(langs, Date.now() - 7 * 864e5 + 1).length;

@@ -1551,9 +1551,10 @@ function pahamLeave(b) {
   RD.pgK = '';
 }
 /* SATU saringan kata sesi (Tamat + Kata sesi ini): hanya bahasa buku, bukan partikel/kata fungsi/nama, belum tersimpan */
-const kataSesiBaru = (b, arr) => arr.filter(e => e && e.lang === b.lang && !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true }));
+const kataSesiBaru = (b, arr) => arr.filter(e => e && e.lang === b.lang && kataCocokAksara(b, e.w) && !db.vocab.some(v => sameVocab(v, e.lang, e.w)) && !isKataSampah(e.lang, e.w, { b, kenal: true }));
 /* #1620: kata tersimpan cocok dgn buku lewat ISI teks (bukan judul saja); teks belum termuat = pakai judul saja (data lama tetap dihitung) */
 function kataDiBuku(b, v) {
+  if (!kataCocokAksara(b, v.w)) return false;
   if (!cache.pages || cache.id !== b.id) return true;
   if (!cache._low) cache._low = cache.pages.map(s => s.join('\n')).join('\n').toLowerCase();
   return [v.w, v.base].some(x => x && cache._low.includes(String(x).toLowerCase()));
