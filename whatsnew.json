@@ -1,5 +1,11 @@
 [
   {
+    "n": 1707,
+    "judul": "Reader: tombol 'Muat ulang arti' untuk semua kata bertitik di halaman",
+    "poin": "Reader kini punya \"Muat ulang arti\" di menu Lainnya, tak perlu ketuk satu-satu.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1703,
     "judul": "[peta 180] Satu arti 'kata baru' = baru disimpan; ketukan = 'belum disimpan'",
     "poin": "Angka \"kata baru\" sekarang sama di Home, layar Tamat, dan catatan sesi.",
@@ -171,12 +177,6 @@
     "n": 1636,
     "judul": "Kartu Target Home: contoh kegiatan 30 XP, bukan angka XP saja",
     "poin": "Ketuk kartu Target di Home, muncul contoh kegiatan untuk dapat 30 XP.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1632,
-    "judul": "Home buku tamat: satu tombol 'Pilih buku berikutnya', bukan dua",
-    "poin": "Di Home buku tamat, tombol \"Pilih buku berikutnya\" sekarang cuma satu.",
     "tgl": "2026-11-22"
   }
 ]
