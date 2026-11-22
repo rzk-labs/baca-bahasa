@@ -384,6 +384,33 @@ async function isiArti(lang, w) {
   v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul;
   save(); toast(`${v.w}: ${v.t}`, 5000);
 }
+/* #1707: muat ulang arti semua kata bertitik di halaman reader; maks 2 permintaan sekaligus, pakai translate() yang ada */
+let muatUlangJalan = false;
+async function muatUlangArti(b, words) {
+  if (muatUlangJalan) return;
+  if (navigator.onLine === false) return toast('Lagi offline. Sambung internet dulu ya.');
+  muatUlangJalan = true;
+  let ok = 0, gagal = 0, i = 0;
+  const kerja = async () => {
+    while (i < words.length) {
+      if (navigator.onLine === false) { gagal += words.length - i; i = words.length; break; }
+      const k = words[i++], ac = new AbortController(), tm = setTimeout(() => ac.abort(), 8000);
+      try {
+        const v = db.vocab.find(x => !String(x.t || '').trim() && sameVocab(x, b.lang, k));
+        if (!v) { ok++; continue; }
+        const r = await translate(v.w, v.lang, db.my, ac.signal);
+        if (!r || !String(r.text || '').trim()) { gagal++; continue; }
+        v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul;
+        $$('.cols .w.noarti').forEach(x => { if (x.textContent.trim().toLowerCase() === k) x.classList.remove('noarti'); });
+        ok++;
+      } catch (e) { gagal++; } finally { clearTimeout(tm); }
+    }
+  };
+  toast('Memuat ulang arti…', 20000);
+  try { await Promise.all([kerja(), kerja()]); } finally { muatUlangJalan = false; }
+  save(); if (kataSeg && $('#klist')) viewKata();
+  toast(`${ok} arti berhasil dimuat${gagal ? `. ${gagal} belum, coba lagi` : ''}`, 4500);
+}
 /* #1651: keluar halus — 'hide' tetap status seketika; 'closing' menampilkan toast sebentar (tanpa interaksi) selagi meluncur turun */
 let toastEndT;
 function toastEnd(t) { clearTimeout(toastEndT); if (t) t.classList.remove('closing'); }
@@ -1869,11 +1896,13 @@ async function viewBaca() {
   $('#rMore').onclick = () => openMore();
   const openMore = () => {
     const sl = () => db.ttsRate === 'slow' ? 'Lambat' : 'Normal';
+    const arti0 = [...new Set($$('.cols .w.noarti').map(x => x.textContent.trim().toLowerCase()).filter(Boolean))];
     openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Lainnya</span>${closeBtn}</div><div class="chlist rmore">
       <button class="chi" id="rmSet">${ico('sliders')}<span>Pengaturan baca</span></button>
       ${['ja', 'ko', 'zh-CN'].includes(b.lang) ? `<button class="chi rmob" id="rmRt">${ico('ruby')}<span>${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'}</span><b class="rst">${['Mati', 'Kata baru', 'Nyala'][rtOf(b.lang)]}</b></button>` : ''}${'speechSynthesis' in window ? `<button class="chi rmob" id="rmLis">${ico('vol')}<span>Dengar halaman</span><b class="rst">${LIS.on ? 'Nyala' : 'Mati'}</b></button>` : ''}
       ${db.aiJelas === false ? '' : `<button class="chi" id="rmAi">${ico('chat')}<span>Sederhanakan halaman (AI)</span></button>`}
       ${dueN ? `<button class="chi rmob" id="rmDue" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span>Ulang sekarang</span><b class="rst">${dueN > 9 ? '9+' : dueN}</b></button>` : ''}
+      ${arti0.length >= 2 && navigator.onLine !== false ? `<button class="chi" id="rmArti">${ico('cards')}<span>Muat ulang arti (${arti0.length})</span></button>` : ''}
       <button class="chi" id="rmFb">${ico('chat')}<span>Kirim masukan</span></button>
       ${'speechSynthesis' in window ? `<button class="chi" id="rmRate">${ico('slow')}<span>Laju suara: <b id="rmRateV">${sl()}</b></span></button>` : ''}</div>`, 'Menu lainnya');
     if ($('#rmRt')) $('#rmRt').onclick = () => { closeSheet(); $('#rRt').click(); };
@@ -1881,6 +1910,7 @@ async function viewBaca() {
     if ($('#rmLis')) $('#rmLis').onclick = () => { closeSheet(); $('#rLis').click(); };
     $('#rmSet').onclick = () => { closeSheet(); openSettings(); };
     $('#rmFb').onclick = () => { closeSheet(); openFeedback(); };
+    if ($('#rmArti')) $('#rmArti').onclick = () => { closeSheet(); muatUlangArti(b, arti0); };
     if ($('#rmAi')) $('#rmAi').onclick = () => openSimplify(b);
     if ($('#rmRate')) $('#rmRate').onclick = () => { db.ttsRate = db.ttsRate === 'slow' ? 'normal' : 'slow'; save(); $('#rmRateV').textContent = sl(); if (LIS.on && LIS.cur) startListenPage(true); };
   };
