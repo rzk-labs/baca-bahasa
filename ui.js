@@ -2242,10 +2242,37 @@ function showPage(p, anim = true) {
   pfArm();
 }
 /* kartu ajakan di halaman terakhir: isi ruang kosong di bawah teks supaya tak buntu */
+/* #1606: ukur ulang kartu saat ukuran/isi/tema berubah (RO + MO + resize + font + akhir transisi); satu frame, tanpa timer */
+const EC = { vp: null, cols: null, ro: null, mo: null, raf: 0, glob: false };
+function ecRefit() {
+  if (EC.raf) return;
+  EC.raf = requestAnimationFrame(() => {
+    EC.raf = 0;
+    const b = book(); if (!b || !document.body.classList.contains('reading') || !RD || !RD.n) return;
+    endCard(b, RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1);
+  });
+}
+function ecWatch(vp, cols) {
+  if (!EC.glob) {
+    EC.glob = true;
+    window.addEventListener('resize', ecRefit); window.addEventListener('orientationchange', ecRefit);
+    try { if (document.fonts) { document.fonts.ready.then(ecRefit); if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', ecRefit); } } catch (e) { }
+    try { const m = new MutationObserver(ecRefit); m.observe(document.documentElement, { attributes: true }); m.observe(document.body, { attributes: true }); } catch (e) { }
+  }
+  if (EC.vp === vp && EC.cols === cols) return;
+  if (EC.ro) EC.ro.disconnect();
+  if (EC.mo) EC.mo.disconnect();
+  EC.vp = vp; EC.cols = cols;
+  cols.addEventListener('transitionend', e => { if (e.target === cols) ecRefit(); });
+  try { EC.ro = new ResizeObserver(ecRefit); EC.ro.observe(vp); EC.ro.observe(cols); } catch (e) { }
+  try { EC.mo = new MutationObserver(ecRefit); EC.mo.observe(cols, { childList: true, subtree: true, attributes: true, characterData: true }); } catch (e) { }
+}
 function endCard(b, last) {
   const vp = $('#vp'); if (!vp) return;
   const old = $('#endcard'); if (old) old.remove();
-  const cols = $('#cols'); if (!last || !cols) return;
+  const cols = $('#cols'); if (!cols) return;
+  ecWatch(vp, cols);
+  if (!last) return;
   if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
@@ -2262,8 +2289,10 @@ function endCard(b, last) {
   try { const m = new DOMMatrixReadOnly(getComputedStyle(cols).transform); sx = -RD.page * RD.step - m.m41; sy = (RD.dy || 0) - m.m42; } catch (e) { }
   const add = x => { const l = x.left + sx, r = x.right + sx, bt = x.bottom + sy; if (x.width > 0 && x.height > 0 && r > vr.left && l < vr.right) bottom = Math.max(bottom, bt); };
   try { const r = document.createRange(); r.selectNodeContents(cols); [...r.getClientRects()].forEach(add); } catch (e) { }
+  try { cols.querySelectorAll('rt,ruby').forEach(x => [...x.getClientRects()].forEach(add)); } catch (e) { } /* furigana/pinyin */
   try { (RD.ss || []).forEach(x => { if (x.pg === RD.page && x.el && x.el.isConnected) [...x.el.getClientRects()].forEach(add); }); } catch (e) { }
   if (!bottom || vr.bottom - bottom < c.offsetHeight + 48) { c.remove(); return; }
+  if (bottom + 24 + c.offsetHeight > vr.bottom) { c.remove(); return; } /* #1606: cek ulang, jangan pernah menimpa teks */
   /* #994/#1415: kartu di bawah teks, jarak 24px dari paragraf terakhir dan min 24px dari bar bawah */
   c.style.top = Math.round(bottom - vr.top + 24) + 'px'; c.style.bottom = 'auto';
 }
