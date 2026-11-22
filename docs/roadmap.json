@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 180,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader: kata yang artinya gagal dimuat diberi garis putus tipis, bisa diketuk ulang (#1684)",
+      "dokumen": "docs/pm-penanda-arti-gagal.md",
+      "status": "siap dikerjakan",
+      "catatan": "Penanda hanya di memori sesi, hilang saat ganti halaman/buku. Tanpa toast baru, tanpa warna baru, tanpa simpan ke IndexedDB. Mockup: docs/mockup-1684.html. Uji 320/390px, gelap, RTL. Naikkan versi C di sw.js."
+    },
+    {
       "no": 178,
       "peran": "developer",
       "prioritas": "P1",
