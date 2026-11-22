@@ -2878,7 +2878,7 @@ function paintHafal(lang, w, on) {
 function paintSaved(lang, w, on) {
   const b = book(); if (!b || b.lang !== lang) return;
   const k = String(w || '').trim().toLowerCase();
-  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) { x.classList.toggle('saved', on); if (on) x.classList.remove('kenal'); else x.classList.remove('hafal'); } });
+  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) { const baru = on && !x.classList.contains('saved'); x.classList.toggle('saved', on); if (baru) { x.classList.remove('saved-new'); void x.offsetWidth; x.classList.add('saved-new'); x.addEventListener('animationend', () => x.classList.remove('saved-new'), { once: true }); } if (on) x.classList.remove('kenal'); else x.classList.remove('hafal'); } });
 }
 let lastSentLook = '';
 function showSentence(word, sent, sIdx, sEl) {
@@ -2986,11 +2986,11 @@ function showSentence(word, sent, sIdx, sEl) {
     let gTok = 0;
     const showGloss = async w => {
       const my = ++gTok, lang = b.lang, my2 = db.my, k = lang + '|' + my2 + '|' + w;
-      const paint = (txt, r) => {
+      const paint = (txt, r, fresh) => {
         if (my !== gTok || !gl.isConnected) return;
         const saved = db.vocab.some(v => sameVocab(v, lang, w));
         gl.hidden = false;
-        gl.innerHTML = `<span class="wg-w" dir="auto" lang="${esc(lang)}"></span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(my2)}"></span>` + (txt ? `<button class="pill-sm wg-save" type="button" aria-label="${saved ? 'Kata ' + esc(w) + ' sudah tersimpan' : 'Simpan kata ' + esc(w)}"${saved ? ' disabled' : ''}>${saved ? 'Tersimpan' : 'Simpan kata'}</button>` : '');
+        gl.innerHTML = `<span class="wg-w" dir="auto" lang="${esc(lang)}"></span><span class="wg-arr" aria-hidden="true">${ico('right')}</span><span class="wg-m" dir="auto" lang="${esc(my2)}"></span>` + (txt ? `<button class="pill-sm wg-save" type="button" aria-label="${saved ? 'Kata ' + esc(w) + ' sudah tersimpan' : 'Simpan kata ' + esc(w)}"${saved ? ' disabled' : ''}>${saved ? (fresh ? '<svg class="wg-ck" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 6.5l2.6 2.6L10 3.4"/></svg>' : '') + 'Tersimpan' : 'Simpan kata'}</button>` : '');
         gl.querySelector('.wg-w').textContent = w; gl.querySelector('.wg-m').textContent = txt || 'Lagi nyari artinya…';
         const sv = gl.querySelector('.wg-save');
         if (sv && !saved) sv.onclick = () => {
@@ -2999,7 +2999,7 @@ function showSentence(word, sent, sIdx, sEl) {
           if (isKenal(lang, w)) setKenal(lang, w, false);
           db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: txt, baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() });
           if (!save()) { db.vocab.shift(); return; } vib(10); sfx('ding'); paintSaved(lang, w, true); award(2, 'save'); toast('Masuk ke kartu kata kamu');
-          paint(txt, r);
+          paint(txt, r, true);
         };
       };
       /* tanda <mark> pindah ke kata yang diketuk */

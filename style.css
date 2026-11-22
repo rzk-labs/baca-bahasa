@@ -276,6 +276,12 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 .wgloss[hidden]{display:none}
 .wg-m{flex:1 1 auto;min-width:0}
 .wg-save{margin-left:auto;min-height:32px}
+.wg-save:disabled:has(.wg-ck){animation:wgpop .2s ease-out 1}
+.wg-ck{width:12px;height:12px;margin-right:4px;vertical-align:-1px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wg-ck path{stroke-dasharray:14;stroke-dashoffset:14;animation:wgck .25s ease-out .05s forwards}
+@keyframes wgpop{from{transform:scale(.96)}to{transform:scale(1)}}
+@keyframes wgck{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.cols .w.saved-new{background:none;animation:none}.wg-save:disabled:has(.wg-ck){animation:none}.wg-ck path{animation:none;stroke-dashoffset:0}}
 .src .sw{display:inline-block;min-height:32px;line-height:32px;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;color:inherit}
 .src .sw:hover{background:var(--color-surface-soft)}
 .src .sw:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
@@ -478,6 +484,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 /* penanda kata (tenang): disimpan = garis bawah solid tipis, sering diketuk = garis putus-putus, kenal = pudar, wasabi hanya kata aktif (.sel) */
 .cols .w{-webkit-box-decoration-break:clone;box-decoration-break:clone;text-decoration-skip-ink:auto}
 .cols .w.saved{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:var(--color-text);text-decoration-thickness:1.5px;text-underline-offset:.2em}
+.cols .w.saved-new{background:linear-gradient(#E9F056,#E9F056) no-repeat left calc(100% - .05em)/0 3px;animation:savedline .38s ease-out 1}
+@keyframes savedline{to{background-size:100% 3px}}
 .cols .w.often:not(.saved){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:2px;text-underline-offset:.22em}
 .cols .w.saved.hafal{text-decoration-thickness:1px;text-decoration-color:var(--color-text-muted)}
 .cols .w.hafal.often:not(.sel){text-decoration-style:solid;text-decoration-thickness:1px}
