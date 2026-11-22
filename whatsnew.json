@@ -1,5 +1,11 @@
 [
   {
+    "n": 1672,
+    "judul": "Rak Profil: kata 'Tamat' cukup sekali per buku, sampul tak terpotong",
+    "poin": "Buku tamat di rak Profil kini cukup satu centang kuning di sampul.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1646,
     "judul": "Sampul polos: huruf awal tak kembar, tiap buku mudah dibedakan",
     "poin": "Sampul polos kini pakai huruf awal judul yang benar, bukan \"The\".",
@@ -171,12 +177,6 @@
     "n": 1578,
     "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
     "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1576,
-    "judul": "Home pemula: format 'TXT · EPUB · PDF' cukup sekali + tombol Mandarin jelas",
-    "poin": "Layar pertama sekarang tidak lagi menampilkan format file dua kali.",
     "tgl": "2026-11-22"
   }
 ]

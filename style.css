@@ -1424,6 +1424,14 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .xp-eg{margin:var(--space-3) 0;font-size:14px;line-height:21px}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
+/* #1672 Rak Profil: tamat = satu lencana centang di pojok sampul; huruf awal (juga CJK) di tengah, ukuran ikut lebar kartu; judul maks 2 baris */
+.rk-bk{container-type:inline-size}
+.rk-bk .cover{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4px}
+.rk-bk .cover .em{display:block;width:100%;text-align:center;font-size:26px;font-size:clamp(18px,34cqi,30px);line-height:1.2;letter-spacing:0;font-family:var(--font-display),"Hiragino Sans","Noto Sans CJK JP","Noto Sans JP","Apple SD Gothic Neo","PingFang SC",sans-serif;white-space:nowrap}
+.rk-tag{display:flex;position:absolute;top:4px;right:4px;z-index:1;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28}
+.rk-tag .i{width:13px;height:13px;stroke-width:3.2}
+.rk-t{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:break-word;hyphens:manual}
+.rk-p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Variasi sampul polos (#1646): satu motif tipis dari hash judul, kontras rendah */
 .cover::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.1;border-radius:inherit}
 .cover.pat0::before{background-image:repeating-linear-gradient(135deg,currentColor 0 1px,transparent 1px 9px)}
