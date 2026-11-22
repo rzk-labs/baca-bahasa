@@ -1,5 +1,11 @@
 [
   {
+    "n": 1568,
+    "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
+    "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1563,
     "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
     "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
@@ -171,12 +177,6 @@
     "n": 1501,
     "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
     "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1499,
-    "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
-    "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
     "tgl": "2026-11-21"
   }
 ]
