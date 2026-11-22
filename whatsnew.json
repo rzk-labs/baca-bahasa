@@ -1,5 +1,11 @@
 [
   {
+    "n": 1579,
+    "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
+    "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1578,
     "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
     "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
@@ -171,12 +177,6 @@
     "n": 1513,
     "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
     "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1511,
-    "judul": "[peta 157] Tab Kata: chip filter level HSK, satu baris",
-    "poin": "Tab Kata kini punya chip level HSK satu baris, hanya muncul bila ada kata HSK.",
     "tgl": "2026-11-21"
   }
 ]
