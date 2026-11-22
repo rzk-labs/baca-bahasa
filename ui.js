@@ -1171,7 +1171,7 @@ const KB_TXT = { ringan: 'Ringan', sedang: 'Sedang', berat: 'Berat' };
 function kbHtml(b) {
   const k = b.kb;
   if (!k) return '<span class="kbslot" data-kb="' + b.id + '">' + (b.nw != null ? `<span class="m nw">Perkiraan kata baru ~${b.nw}%</span>` : '') + '</span>';
-  return `<div class="kb"><span class="kbt ${k.l}">${KB_TXT[k.l]}</span><span class="m nw">~${k.pg} kata baru/halaman</span>${k.l === 'berat' ? `<span class="m nw kbs">${k.m >= 0 ? `Mulai dari Bagian ${k.m + 1}` : 'Santai dulu, baca pelan-pelan'}</span>` : ''}</div>`;
+  return `<div class="kb"><span class="kbt ${k.l}">${KB_TXT[k.l]}</span><span class="m nw">~${k.pg} kata asing/halaman</span>${k.l === 'berat' ? `<span class="m nw kbs">${k.m >= 0 ? `Mulai dari Bagian ${k.m + 1}` : 'Santai dulu, baca pelan-pelan'}</span>` : ''}</div>`;
 }
 const kbBusy = {};
 async function ensureKb(b) {
@@ -1555,7 +1555,7 @@ function sessRecap(b) {
   const pgTxt = pgs > 1 ? `Kamu buka ${pgs} halaman sesi ini${pos ? `, berhenti di ${pos}` : ''}. ` : pos ? `Berhenti di ${pos}. ` : '';
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
-    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}Simpan yang mau dihafal.</p>
+    <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}${cand.length} kata belum disimpan. Simpan yang mau dihafal.</p>
     <div id="rsl">${cand.map(row).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="ghost" data-close style="min-height:44px">Lewati</button></div>`, 'Kata sesi ini');
   isiArtiRekap(cand);
@@ -1604,14 +1604,18 @@ function finishBook(b) {
   if (tamatSeen === tk) return toast('Ini halaman terakhir.', 4000);
   tamatSeen = tk;
   setTimeout(() => flushLate(true), 2500);
-  const all = countedVocab(b.lang, 0, b.title).filter(v => kataDiBuku(b, v));
-  const ws = all.filter(v => (v.at || 0) >= SESS.t);
+  /* #1703: 'kata baru' = baru disimpan sesi ini, termasuk yang belum punya arti (noTr) */
+  const seenWs = new Set();
+  const ws = (db.vocab || []).filter(v => {
+    if (!v || !v.w || v.lang !== b.lang || v.book !== b.title || (v.at || 0) < SESS.t || isKataSampah(v.lang, v.w) || !kataDiBuku(b, v)) return false;
+    const k = vocabKey(v.lang, v.w); if (seenWs.has(k)) return false; seenWs.add(k); return true;
+  });
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const pend = kataSesiBaru(b, [...SESSW.values()].filter(e => e.bid === b.id)).length; /* kata diketuk sesi ini, belum disimpan (sumber sama dgn sessRecap) */
   const xt = xpToday(); /* sama dgn kartu Target di Home */
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
-  const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xpTodayText(xt), mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
+  const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xpTodayText(xt), mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
   const nPaham = SESSP.bid === b.id && SESSP.t === SESS.t ? SESSP.set.size : 0, nTap = ws.length + pend;
   const pahamTxt = nTap ? `${nTap} kata ditambah ke Kata.${nPaham ? ` ${nPaham} kata dianggap paham.` : ''}` : nPaham ? 'Tidak ada kata yang kamu ketuk. Semuanya dianggap paham.' : '';
@@ -1648,7 +1652,7 @@ function finishBook(b) {
     ${besok}
     ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau diingatkan baca besok?</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<p class="mut sm" id="fbdue" style="margin:-4px 0 8px">${dueN} kata lama siap diulang</p>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<p class="mut sm" id="fbdue" style="margin:-4px 0 8px">${dueN} kata lama siap diulang</p>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
