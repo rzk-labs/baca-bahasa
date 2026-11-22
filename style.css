@@ -1411,7 +1411,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hsksum .hs{flex:0 1 auto;min-width:0;background:none;border:0;padding:4px 6px;font:inherit;color:inherit;border-radius:var(--radius-full);cursor:pointer}
 .hsksum .hs b{font-weight:700}
 .hsksum .hs.on{background:var(--ice)}
-.wk-n{flex-basis:100%;font-size:12px;line-height:16px;color:var(--color-text-muted)}
+/* #1664: titik hari baca selalu terisi (selektor spesifik, tak tertimpa) */
+.sdots .sd i{display:block;width:8px;height:8px;border-radius:50%}
+.sdots .sd i.on{background:var(--ink)}
+.sdots .sd i.old{background:rgba(53,30,40,.4)}
 /* #1595: kartu Level = tombol; tekan halus, hormati reduced-motion */
 .lv-tap{cursor:pointer;min-height:44px;transition:transform .12s ease,filter .12s ease;-webkit-tap-highlight-color:transparent}
 .lv-tap:active{transform:scale(.97);filter:brightness(.96)}
