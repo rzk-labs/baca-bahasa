@@ -27,6 +27,14 @@
 - Layar 320px dan 390px: judul terpotong rapi dengan line-clamp.
 - Perlu dicoba manual di iPhone Safari.
 
+## 7. Variasi sampul (#1646)
+- Huruf awal lewati kata sandang (The, A, Der, Le, L', El, Il...) dan tanda kutip.
+- Contoh: "The Little Prince" jadi **L**, bukan T.
+- Tiap sampul polos dapat satu motif tipis dari hash judul: garis miring, titik, atau garis tegak.
+- Motif pakai warna teks, opacity .1, tanpa gambar; judul tetap terbaca.
+- Sampul bergambar, `coverSz` dan aturan CJK tak berubah. `sw.js` naik ke `kepo-v603`.
+- Mockup: `docs/mockup-1646.html`.
+
 ## 6. Perbaikan judul Korea/Jepang (#1591)
 - Korea: `word-break: keep-all`, patah di spasi, bukan di tengah kata.
 - Jepang/Mandarin: tetap boleh patah per huruf.

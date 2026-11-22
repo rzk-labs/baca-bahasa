@@ -1,5 +1,53 @@
 [
   {
+    "n": 1672,
+    "judul": "Rak Profil: kata 'Tamat' cukup sekali per buku, sampul tak terpotong",
+    "poin": "Buku tamat di rak Profil kini cukup satu centang kuning di sampul.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1646,
+    "judul": "Sampul polos: huruf awal tak kembar, tiap buku mudah dibedakan",
+    "poin": "Sampul polos kini pakai huruf awal judul yang benar, bukan \"The\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1626,
+    "judul": "Reader: area ketuk kata lebih lega tanpa geser teks",
+    "poin": "Mengetuk kata di bacaan sekarang lebih mudah kena, tampilan teks tidak berubah.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1623,
+    "judul": "Toast 'Baca ulang': singkat, mudah dibaca, tombol Urungkan jelas",
+    "poin": "Pesan Baca ulang kini satu baris pendek: \"Mulai dari awal. Tanpa XP halaman.\"",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1644,
+    "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
+    "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1642,
+    "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
+    "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1640,
+    "judul": "Home HP: kartu Target & Level mengisi lebar penuh, tak separuh kosong",
+    "poin": "Di Home HP, kartu Target dan Level sekarang mengisi penuh lebar layar.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1638,
+    "judul": "Sheet Tamat: satu target 'Besok' saja, tanpa 3 kata + 50 kata",
+    "poin": "Layar Tamat sekarang cuma satu target: \"Besok: simpan 3 kata dulu\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1636,
     "judul": "Kartu Target Home: contoh kegiatan 30 XP, bukan angka XP saja",
     "poin": "Ketuk kartu Target di Home, muncul contoh kegiatan untuk dapat 30 XP.",
@@ -129,54 +177,6 @@
     "n": 1578,
     "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
     "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1576,
-    "judul": "Home pemula: format 'TXT · EPUB · PDF' cukup sekali + tombol Mandarin jelas",
-    "poin": "Layar pertama sekarang tidak lagi menampilkan format file dua kali.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1574,
-    "judul": "[peta 169] Home: rak Koleksi kamu tak tertutup menu bawah di HP",
-    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang bisa digulir penuh di atas menu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1572,
-    "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
-    "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1570,
-    "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
-    "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1568,
-    "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
-    "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1563,
-    "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
-    "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1562,
-    "judul": "Home buku tamat: satu kartu ajakan, bukan 'Baca ulang' + 'Pilih buku'",
-    "poin": "Home saat buku tamat sekarang cuma satu ajakan: \"Pilih buku berikutnya\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1561,
-    "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
-    "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
     "tgl": "2026-11-22"
   }
 ]
