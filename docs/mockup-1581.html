@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1581: Simpan kata bergerak halus</title>
+<style>
+body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.lbl{font:600 12px Inter,sans-serif;margin:16px auto 6px;max-width:390px}
+.note{max-width:390px;margin:0 auto 8px;font-size:12px}
+.ph{width:390px;max-width:100%;margin:0 auto;background:#FFFBF2;border-radius:20px;padding:20px;box-sizing:border-box;box-shadow:0 2px 12px rgba(53,30,40,.15)}
+.txt{font-size:18px;line-height:1.8;margin:0 0 16px}
+.s{text-decoration:underline;text-underline-offset:.2em;text-decoration-thickness:1.5px}
+.new{background:linear-gradient(#E9F056,#E9F056) no-repeat left calc(100% - .05em)/62% 3px}
+.sheet{background:#fff;border-radius:16px;padding:14px;display:flex;align-items:center;gap:8px;font-size:15px}
+.sheet b{font-family:"Bricolage Grotesque",Inter,sans-serif}
+.btn{margin-left:auto;min-height:32px;border:0;border-radius:999px;padding:0 14px;font:600 13px Inter,sans-serif;background:#351E28;color:#fff}
+.btn.done{background:#E9F056;color:#351E28;transform:scale(.98)}
+.btn svg{width:12px;height:12px;margin-right:4px;vertical-align:-1px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+</style></head><body>
+<div class="note"><b>Gambaran rencana, belum dibangun.</b> Garis bawah tergambar kiri ke kanan (380 ms), tombol memantul lalu centang tergambar (250 ms).</div>
+
+<div class="lbl">Sebelum: kata belum disimpan</div>
+<div class="ph"><p class="txt">Dia suka minum kopi setiap pagi.</p>
+<div class="sheet"><b>kopi</b> → <span>kopi</span><button class="btn">Simpan kata</button></div></div>
+
+<div class="lbl">Saat disimpan: garis tergambar di kata (±60% jalan)</div>
+<div class="ph"><p class="txt">Dia suka minum <span class="s new">kopi</span> setiap pagi.</p>
+<div class="sheet"><b>kopi</b> → <span>kopi</span><button class="btn done"><svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.4"/></svg>Tersimpan</button></div></div>
+
+<div class="lbl">Sesudah: garis tetap, tidak ada gerak lagi</div>
+<div class="ph"><p class="txt">Dia suka minum <span class="s">kopi</span> setiap pagi.</p>
+<div class="sheet"><b>kopi</b> → <span>kopi</span><button class="btn done" style="transform:none;opacity:.8"><svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.4"/></svg>Tersimpan</button></div></div>
+</body></html>

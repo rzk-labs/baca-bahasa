@@ -1,5 +1,101 @@
 [
   {
+    "n": 1603,
+    "judul": "Sheet arti kata: label 'Lagi offline' jelas, bukan cuma toast gagal",
+    "poin": "Ketuk kata tanpa internet: muncul label biru \"Lagi offline. Arti baru butuh internet.\"",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1597,
+    "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
+    "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1595,
+    "judul": "Kartu Level di Home: ketuk untuk lihat cara dapat XP",
+    "poin": "Kartu Level di Home sekarang bisa diketuk.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1594,
+    "judul": "Ilustrasi doodle SVG untuk sheet Tamat (stabilo + buku tertutup)",
+    "poin": "Layar Tamat sekarang punya gambar buku bercoretan stabilo dan bintang kecil.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1592,
+    "judul": "Sampul polos: judul CJK/Korea tak patah jadi satu huruf sisa",
+    "poin": "Judul Korea di sampul polos tak lagi patah jadi satu huruf sisa.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1591,
+    "judul": "Sampul buku Korea/Jepang: judul tak patah jadi satu huruf sisa",
+    "poin": "Judul sampul Korea tak lagi patah jadi satu huruf sisa.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1583,
+    "judul": "Tab Kata & form masukan: pilihan aktif terbaca pembaca layar",
+    "poin": "Tab Kata dan form masukan kini memberi tahu pembaca layar pilihan yang aktif.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1581,
+    "judul": "Simpan kata: garis bawah kata di teks 'tergambar' + tombol berubah halus",
+    "poin": "Simpan kata kini terasa jelas: garis bawah kata tergambar pelan.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1580,
+    "judul": "Ilustrasi doodle SVG untuk state kosong Kata & Ngomong",
+    "poin": "Layar kosong Kata, Ngomong, dan Lupa sekarang punya gambar coretan tangan.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1579,
+    "judul": "Satu istilah 'Tamat' + satu target kata Home = Profil",
+    "poin": "Target kata di Home sekarang sama dengan Profil, dan menyebut nama lencana.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1578,
+    "judul": "Bar progres 'Simpan 3 kata dulu (0/3)' tampak kosong, bukan penuh gelap",
+    "poin": "Bar \"Simpan 3 kata dulu\" sekarang kosong saat 0/3, bukan gelap penuh.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1576,
+    "judul": "Home pemula: format 'TXT · EPUB · PDF' cukup sekali + tombol Mandarin jelas",
+    "poin": "Layar pertama sekarang tidak lagi menampilkan format file dua kali.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1574,
+    "judul": "[peta 169] Home: rak Koleksi kamu tak tertutup menu bawah di HP",
+    "poin": "Rak \"Koleksi kamu\" di Home HP sekarang bisa digulir penuh di atas menu.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1572,
+    "judul": "[peta 167] Reader: buku sudah Tamat, tombol bawah jadi 'Baca ulang'",
+    "poin": "Buku yang sudah tamat: tombol bawah halaman terakhir jadi \"Baca ulang\".",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1570,
+    "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
+    "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
+    "tgl": "2026-11-22"
+  },
+  {
+    "n": 1568,
+    "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
+    "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1563,
     "judul": "Seragamkan istilah tombol ulang: 'Ulang sekarang', bukan 'kata sulit'",
     "poin": "Tombol di kartu \"kata siap diulang\" sekarang selalu bertulisan \"Ulang sekarang\".",
@@ -81,102 +177,6 @@
     "n": 1537,
     "judul": "Sheet Tamat: baris kecil di tombol 'Lanjut' terbaca jelas",
     "poin": "Tulisan kecil di tombol \"Lanjut\" setelah tamat baca sekarang jelas terbaca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1536,
-    "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
-    "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1535,
-    "judul": "Sheet Tamat: teks kecil di tombol 'Lanjut' kontras cukup (4.5:1)",
-    "poin": "Tulisan kecil di tombol 'Lanjut' setelah tamat buku sekarang jelas terbaca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1534,
-    "judul": "Tab Kata: ringkasan 'X dari Y kata HSK' di baris chip level",
-    "poin": "Tab Kata kini punya ringkasan kecil, misalnya \"HSK 1: 12/150\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1523,
-    "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
-    "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1521,
-    "judul": "[peta 160] Popup level sekali, jeda alami, satu angka level",
-    "poin": "Popup naik level sudah tampil sekali saja dan tidak menimpa pesan lain.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1519,
-    "judul": "[peta 166] Saringan kata menurut aksara buku (Latin, Kiril, Han di buku ko)",
-    "poin": "Kata dari tulisan lain (mis. Jepang di buku Inggris) tak ikut dihitung lagi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1517,
-    "judul": "[peta 163] Latihan ekstra: pesan 'Cukup hari ini' + XP kecil per putaran",
-    "poin": "Setelah 2 putaran latihan ekstra, Home kini bilang \"Cukup hari ini, lanjut besok\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1515,
-    "judul": "Home: kartu '0 dari 50 kata' tak kembar dengan 'Simpan 3 kata', bar kosong",
-    "poin": "Pemula baru kini melihat satu kartu saja: \"Simpan 3 kata dulu\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1513,
-    "judul": "[peta 162] Android: manifest lengkap + halaman web Hapus akun",
-    "poin": "Manifest app Android sudah lengkap, ikon dan nama tidak berubah.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1511,
-    "judul": "[peta 157] Tab Kata: chip filter level HSK, satu baris",
-    "poin": "Tab Kata kini punya chip level HSK satu baris, hanya muncul bila ada kata HSK.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1509,
-    "judul": "Reader: kartu akhir halaman tak menimpa teks cerita",
-    "poin": "Kartu \"Buku berikutnya / Baca ulang\" tak lagi menutupi kalimat di halaman terakhir.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1507,
-    "judul": "[peta 168] Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati",
-    "poin": "Pembaca baru kini dapat cerita contoh pendek, hanya 3 kalimat.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1505,
-    "judul": "[peta 164] Banner Level: uji & perbaiki di iPhone dan layar 320px",
-    "poin": "Banner Level sudah dicek: tab tetap bisa diketuk, hilang sendiri, muncul sekali per level.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1503,
-    "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
-    "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1501,
-    "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
-    "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1499,
-    "judul": "Home: kartu 'Simpan 3 kata dulu' bisa diketuk + petunjuk untuk pemula",
-    "poin": "Kartu \"Simpan 3 kata dulu\" sekarang selalu muncul untuk pemula, juga yang belum baca.",
     "tgl": "2026-11-21"
   }
 ]
