@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1603 · Sheet arti kata saat offline</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EDE8DF;font-family:Inter,system-ui,-apple-system,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:24px 8px}
+.col{width:390px;max-width:100%}
+.lbl{font:800 13px 'Bricolage Grotesque',Inter,sans-serif;margin:0 0 8px;padding:4px 12px;display:inline-block;border-radius:9999px;background:#351E28;color:#FAF7F0}
+.hp{width:100%;height:760px;border-radius:30px;overflow:hidden;background:#FAF7F0;border:1px solid #d9d2c6;position:relative}
+.page{padding:24px 22px;font:17px/1.7 Georgia,serif;color:#2b2326;opacity:.45}
+.sel{background:#E9F056;border-radius:4px;padding:0 2px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;padding:16px 18px 22px;box-shadow:0 -8px 30px rgba(53,30,40,.18)}
+.grab{width:40px;height:5px;border-radius:9px;background:#ddd;margin:0 auto 12px}
+.head{display:flex;justify-content:space-between;align-items:center}
+.stepchip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:9999px;background:#E9F056;color:#351E28;font-size:12px;font-weight:800}
+.x{width:36px;height:36px;border-radius:50%;border:1.5px solid #e6e0d6;display:grid;place-items:center;font-size:16px}
+.wd{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
+.wd b{font:800 26px 'Bricolage Grotesque',Inter,sans-serif}
+.ic{width:34px;height:34px;border-radius:50%;background:#D7EFFF;display:grid;place-items:center}
+.offnet{display:inline-flex;align-items:center;gap:6px;margin:6px 0 2px;padding:5px 12px;border-radius:9999px;background:#D7EFFF;color:#351E28;font-size:12px;font-weight:700}
+.offnet svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tr{margin:8px 0 6px;font-size:15px;color:#6b5d63}
+.retry{display:inline-block;margin-left:6px;padding:4px 12px;border-radius:9999px;border:1.5px solid #e6e0d6;font-size:13px;font-weight:700;color:#351E28}
+.act{display:flex;gap:8px;margin-top:14px}
+.pri{flex:1;height:46px;border-radius:9999px;background:#351E28;color:#FAF7F0;display:grid;place-items:center;font-weight:800;font-size:14px}
+.sec{flex:1;height:46px;border-radius:9999px;border:1.5px solid #351E28;display:grid;place-items:center;font-weight:700;font-size:14px}
+.toast{position:absolute;left:16px;right:16px;bottom:240px;background:#351E28;color:#FAF7F0;border-radius:16px;padding:12px 14px;font-size:13px}
+.note{font-size:12px;color:#6b5d63;margin-top:8px}
+</style></head><body>
+
+<div class="col">
+<span class="lbl">Sebelum</span>
+<div class="hp">
+<div class="page">It was a cold morning. Sherlock looked at the <span class="sel">footprints</span> near the gate and smiled.</div>
+<div class="toast">Belum dapat arti. Cek koneksi, coba lagi nanti ya</div>
+<div class="sheet"><div class="grab"></div>
+<div class="head"><span class="stepchip">Arti kata</span><span class="x">✕</span></div>
+<div class="wd"><b>footprints</b><span class="ic">🔊</span></div>
+<div class="tr">Lagi offline, arti kata baru belum bisa dimuat. Ketuk Simpan, artinya nyusul pas ada sinyal. <span class="retry">Coba lagi</span></div>
+<div class="act"><span class="pri">Simpan</span><span class="sec">Tandai &amp; lanjut</span></div>
+</div></div>
+<p class="note">Penyebab tidak jelas, info nyelip di teks panjang.</p>
+</div>
+
+<div class="col">
+<span class="lbl">Sesudah · offline, arti belum tersimpan</span>
+<div class="hp">
+<div class="page">It was a cold morning. Sherlock looked at the <span class="sel">footprints</span> near the gate and smiled.</div>
+<div class="sheet"><div class="grab"></div>
+<div class="head"><span class="stepchip">Arti kata</span><span class="x">✕</span></div>
+<div class="wd"><b>footprints</b><span class="ic">🔊</span></div>
+<div class="offnet" role="status"><svg viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.8"/><path d="M19 12.9a10 10 0 0 0-2.2-1.6"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8A15 15 0 0 0 10.7 5"/><path d="m2 2 20 20"/></svg><span>Lagi offline. Arti baru butuh internet.</span></div>
+<div class="tr">Ketuk Simpan, artinya nyusul pas ada sinyal. <span class="retry">Coba lagi</span></div>
+<div class="act"><span class="pri">Simpan</span><span class="sec">Tandai &amp; lanjut</span></div>
+</div></div>
+<p class="note">Sinyal balik: chip hilang, arti dimuat ulang sendiri.</p>
+</div>
+
+<div class="col">
+<span class="lbl">Sesudah · offline, arti sudah tersimpan</span>
+<div class="hp">
+<div class="page">It was a cold morning. Sherlock looked at the <span class="sel">footprints</span> near the gate and smiled.</div>
+<div class="sheet"><div class="grab"></div>
+<div class="head"><span class="stepchip">Arti kata</span><span class="x">✕</span></div>
+<div class="wd"><b>footprints</b><span class="ic">🔊</span></div>
+<div class="tr" style="color:#351E28;font-size:18px;font-weight:700">jejak kaki</div>
+<div class="note">Tersimpan, jalan tanpa internet</div>
+<div class="act"><span class="pri">Tersimpan</span><span class="sec">Tandai &amp; lanjut</span></div>
+</div></div>
+<p class="note">Tanpa chip offline: artinya sudah ada.</p>
+</div>
+</body></html>
