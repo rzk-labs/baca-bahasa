@@ -1,5 +1,11 @@
 [
   {
+    "n": 1609,
+    "judul": "Sheet arti kata & menu: meluncur turun halus saat ditutup",
+    "poin": "Panel arti kata dan menu sekarang meluncur turun halus saat ditutup.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1607,
     "judul": "Seragamkan angka hari: 'hari baca' vs Streak vs lencana 7 hari",
     "poin": "Angka hari kini jelas: Streak itu beruntun, Hari baca itu \"X dari 7 hari\".",
@@ -172,11 +178,5 @@
     "judul": "Seragamkan warna & bentuk tombol di style.css lewat token",
     "poin": "Warna dan bentuk tombol kini seragam lewat satu sumber, tampilan tak berubah.",
     "tgl": "2026-11-22"
-  },
-  {
-    "n": 1539,
-    "judul": "Arti kata: tombol 'Coba lagi' muncul di detik ke-3, bukan ke-8",
-    "poin": "Pesan \"sinyal lemah\" sekarang muncul di detik ke-3, bukan ke-8.",
-    "tgl": "2026-11-21"
   }
 ]

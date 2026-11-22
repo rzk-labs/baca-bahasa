@@ -239,6 +239,13 @@ select:focus,input:focus,textarea:focus{border-color:var(--color-text)}
 #shade{position:fixed;inset:0;z-index:9;background:var(--color-scrim);animation:fade .25s ease-out}
 #sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;max-width:640px;margin:0 auto;max-height:90dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--color-bg);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;box-shadow:var(--shadow-sheet);padding:10px 20px calc(env(safe-area-inset-bottom) + 14px);animation:up var(--dur-sheet) var(--ease-out)}
 @keyframes up{from{transform:translateY(50px);opacity:0}}
+/* #1609: keluar halus — .hide tetap berlaku untuk status; .closing menampilkan sebentar tanpa interaksi */
+#sheet.hide.closing,#shade.hide.closing{display:block!important;pointer-events:none}
+#sheet.closing{animation:sheet-out 200ms var(--ease-out) forwards}
+#shade.closing{animation:fade-out 200ms ease-out forwards}
+@keyframes sheet-out{to{transform:translateY(40px);opacity:0}}
+@keyframes fade-out{to{opacity:0}}
+@media (prefers-reduced-motion:reduce){#sheet.hide.closing,#shade.hide.closing{display:none!important}}
 @keyframes fade{from{opacity:0}}
 .grab{width:42px;height:5px;border-radius:var(--radius-full);background:var(--color-border);margin:0 auto 10px;position:relative;touch-action:none}
 .grab::after{content:"";position:absolute;left:-30px;right:-30px;top:-10px;bottom:-12px}
