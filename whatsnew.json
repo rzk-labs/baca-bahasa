@@ -1,5 +1,11 @@
 [
   {
+    "n": 1592,
+    "judul": "Sampul polos: judul CJK/Korea tak patah jadi satu huruf sisa",
+    "poin": "Judul Korea di sampul polos tak lagi patah jadi satu huruf sisa.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1591,
     "judul": "Sampul buku Korea/Jepang: judul tak patah jadi satu huruf sisa",
     "poin": "Judul sampul Korea tak lagi patah jadi satu huruf sisa.",
@@ -171,12 +177,6 @@
     "n": 1523,
     "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
     "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1521,
-    "judul": "[peta 160] Popup level sekali, jeda alami, satu angka level",
-    "poin": "Popup naik level sudah tampil sekali saja dan tidak menimpa pesan lain.",
     "tgl": "2026-11-21"
   }
 ]
