@@ -256,7 +256,7 @@
       "prioritas": "P1",
       "nama": "Uji visual doodle state kosong di 320px & tema gelap (#1580)",
       "dokumen": "docs/desain-ilustrasi-state-kosong-1580.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1627)",
       "catatan": "Ilustrasi sudah dipasang. Mockup: docs/mockup-1580.html."
     },
     {
@@ -274,7 +274,7 @@
       "prioritas": "P0",
       "nama": "Reader: label buku tamat cukup 'Tamat', tak terpotong '…' (#1598)",
       "dokumen": "docs/pm-reader-label-tamat-1598.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1630)",
       "catatan": "Mockup: docs/mockup-1598.html. Hitung ulang label setelah layout/font siap & saat resize. Uji 320/360/390px. Naikkan C di sw.js."
     },
     {
