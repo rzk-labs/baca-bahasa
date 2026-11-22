@@ -1785,7 +1785,7 @@
       "prioritas": "P1",
       "nama": "Simpan pengarang EPUB (dc:creator) dan tampilkan di kartu buku bila ada (#1683)",
       "dokumen": "docs/riset-pengarang-sampul-buku.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1705)",
       "catatan": "Mockup: docs/mockup-1683.html. Hanya EPUB; .txt/.pdf dikosongkan, tidak menebak. Data lama aman (field baru opsional)."
     }
   ],
