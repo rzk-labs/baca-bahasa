@@ -1,5 +1,11 @@
 [
   {
+    "n": 1594,
+    "judul": "Ilustrasi doodle SVG untuk sheet Tamat (stabilo + buku tertutup)",
+    "poin": "Layar Tamat sekarang punya gambar buku bercoretan stabilo dan bintang kecil.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1592,
     "judul": "Sampul polos: judul CJK/Korea tak patah jadi satu huruf sisa",
     "poin": "Judul Korea di sampul polos tak lagi patah jadi satu huruf sisa.",
@@ -171,12 +177,6 @@
     "n": 1534,
     "judul": "Tab Kata: ringkasan 'X dari Y kata HSK' di baris chip level",
     "poin": "Tab Kata kini punya ringkasan kecil, misalnya \"HSK 1: 12/150\".",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1523,
-    "judul": "Home 'Minggu ini': angka halaman dihitung dari halaman unik, tak membengkak",
-    "poin": "Angka halaman di kartu 'Minggu ini' sekarang menghitung halaman berbeda saja.",
     "tgl": "2026-11-21"
   }
 ]
