@@ -932,7 +932,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v617';
+const APP_VER = 'v619';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1537,8 +1537,9 @@ function sessRecap(b) {
   const cand = kataSesiBaru(b, all).sort((x, y) => y.n - x.n).slice(0, 8);
   if (!cand.length) return false;
   rekapAktif = cand;
-  const pos = b.pgN > 1 && b.pg != null ? `halaman ${Math.min(b.pg + 1, b.pgN)}/${b.pgN}` : '';
-  const pgTxt = pgs > 1 ? `Kamu buka ${pgs} halaman sesi ini${pos ? `, berhenti di ${pos}` : ''}. ` : pos ? `Berhenti di ${pos}. ` : '';
+  /* #1674: tanpa b.pgN (berubah menurut ukuran huruf); posisi pakai Bagian k dari n, satuan sama dgn reader & Tamat */
+  const pos = (b.total || 1) > 1 ? `${secWord(b, b.pos)} ${Math.min((b.pos || 0) + 1, b.total)} dari ${b.total}` : '';
+  const pgTxt = pgs > 1 ? `Kamu buka ${pgs} halaman sesi ini. ` : pos ? `Berhenti di ${pos}. ` : '';
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
     <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}Simpan yang mau dihafal.</p>
@@ -1597,7 +1598,7 @@ function finishBook(b) {
   const xt = xpToday(); /* sama dgn kartu Target di Home */
   const mnt = SESS.id === b.id && SESS.t ? Math.round((Date.now() - SESS.t) / 60000) : 0;
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
-  const ring = [b.total > 1 ? `${b.total} halaman` : '', ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xpTodayText(xt), mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
+  const ring = [b.total > 1 ? `${b.total} ${secWord(b, 0).toLowerCase()}` : '', /* #1674: b.total = jumlah Bagian, bukan halaman layar */ ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata baru, belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : xpTodayText(xt), mnt >= 1 && mnt < 600 ? `±${mnt} menit` : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
   const nPaham = SESSP.bid === b.id && SESSP.t === SESS.t ? SESSP.set.size : 0, nTap = ws.length + pend;
   const pahamTxt = nTap ? `${nTap} kata ditambah ke Kata.${nPaham ? ` ${nPaham} kata dianggap paham.` : ''}` : nPaham ? 'Tidak ada kata yang kamu ketuk. Semuanya dianggap paham.' : '';
