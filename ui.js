@@ -944,7 +944,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v625';
+const APP_VER = 'v626';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1139,11 +1139,12 @@ function weekCard() {
   if (db.days.length < 2) return ''; /* hari pertama pengguna: belum ada ringkasan */
   const langs = new Set(db.books.map(b => b.lang));
   const words = kataBaruMinggu(langs); /* hanya kata yang ada di koleksi Kata */
-  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c" title="Jumlah hari kamu membaca dalam 7 hari terakhir" aria-label="${days} dari 7 hari baca"><b>${days}</b> dari 7 hari baca</span>` : '');
+  const chips = [[pages, 'halaman'], [words, 'kata baru']].filter(c => c[0]).map(c => `<span class="wk-c"><b>${c[0]}</b> ${c[1]}</span>`).join('') + (days ? `<span class="wk-c" title="Hari baca = total hari kamu baca dalam 7 hari. Streak = hari berturut-turut." aria-label="Hari baca ${days} dari 7 hari. Streak adalah hari berturut-turut; hari baca adalah total dalam 7 hari.">Hari baca <b>${days}/7</b></span>` : '');
   if (!chips) return '';
   return `<div class="wk card" id="wkCard"><div class="wk-h"><span class="wk-t">Minggu ini</span><div class="wk-g">${chips}</div><button class="ghost wk-x" id="wkX" aria-label="Tutup ringkasan minggu ini (sementara, bukan hapus)">Sembunyikan</button></div></div>`;
 }
 /* 7 titik: terisi = hari dalam streak berturut sekarang; cincin = hari ini belum baca; pudar = aktif di luar streak */
+function dayAgo(k) { const d = new Date(); d.setDate(d.getDate() - k); return d; } /* aman saat jam musim panas berganti, sama seperti streak() */
 function streakDots() {
   const n = streak(), has = db.days.includes(today()), off = has ? 0 : 1;
   const at = k => { const d = new Date(); d.setDate(d.getDate() - k); return d; }; /* sama dengan streak(): tanggal lokal, tahan DST */
