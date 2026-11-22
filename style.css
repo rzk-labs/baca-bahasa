@@ -1428,6 +1428,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hsksum .hs{flex:0 1 auto;min-width:0;background:none;border:0;padding:4px 6px;font:inherit;color:inherit;border-radius:var(--radius-full);cursor:pointer}
 .hsksum .hs b{font-weight:700}
 .hsksum .hs.on{background:var(--ice)}
+/* #1693: chip 'Belum hafal' + petunjuk belum ada kata siap diulang */
+.hskrow .hskbl{flex:1.6 1 auto;white-space:nowrap}
+.hskidle{margin:-2px 0 10px;font-size:12px;line-height:1.35;color:var(--ink);opacity:.75}
 /* #1664: titik hari baca selalu terisi (selektor spesifik, tak tertimpa) */
 .sdots .sd i{display:block;width:8px;height:8px;border-radius:50%}
 .sdots .sd i.on{background:var(--ink)}
