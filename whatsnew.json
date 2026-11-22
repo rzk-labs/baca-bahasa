@@ -1,5 +1,11 @@
 [
   {
+    "n": 1644,
+    "judul": "Sheet Tamat: tombol ulang kata senada dengan angka di Home",
+    "poin": "Layar Tamat sekarang cocok dengan Home: tombolnya bilang \"Ulang N kata siap\".",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1642,
     "judul": "Home: satu baris progres HSK (mis. HSK 3: 12/600 kata)",
     "poin": "Home sekarang punya satu baris kecil progres HSK, mis. \"HSK 3: 12/600 kata\".",
@@ -171,12 +177,6 @@
     "n": 1570,
     "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
     "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1568,
-    "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
-    "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
     "tgl": "2026-11-22"
   }
 ]

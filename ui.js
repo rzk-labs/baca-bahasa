@@ -1586,7 +1586,8 @@ function finishBook(b) {
   const acts = [];
   if (nx1) acts.push(`<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t" dir="auto" lang="${esc(nx1.lang)}">Lanjut: ${esc(nx1.title)}</span><span class="fbn-m mut sm">${langName(nx1.lang)} · ${pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai'}</span></button>`);
   const aBaru = '<button class="__C__ full" id="fbadd">Buku baru</button>';
-  const aKata = total > 0 ? `<button class="__C__ full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : 'Ulang kata lama'}</button>` : '';
+  const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
+  const aKata = total > 0 ? `<button class="__C__ full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : dueN ? `Ulang ${dueN} kata siap` : 'Lihat kata'}</button>` : '';
   (none ? [aBaru, aKata] : [aKata, aBaru]).forEach(x => { if (x) acts.push(x); });
   const actsHtml = acts.slice(0, 2).map((x, i) => x.replace('__C__', i ? 'sec' : 'pri')).join('');
   /* 'Besok': lencana berikutnya yang belum didapat (data BADGES yang sudah ada) */
@@ -1609,7 +1610,7 @@ function finishBook(b) {
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${besok}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata baru, belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata baru</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<p class="mut sm" id="fbdue" style="margin:-4px 0 8px">${dueN} kata lama siap diulang</p>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
@@ -1617,7 +1618,7 @@ function finishBook(b) {
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
-  const fk = $('#fbk'); if (fk) fk.onclick = () => { closeSheet(); setTab('kata'); };
+  const fk = $('#fbk'); if (fk) fk.onclick = () => { closeSheet(); if (!ws.length && dueN) kataSeg = 'kartu'; setTab('kata'); };
 }
 /* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
 const INTIP_SKIP = ['th']; /* Thai: pemotongan kata belum andal. ja/ko/zh memakai pemotong kata Intl (#658) */
