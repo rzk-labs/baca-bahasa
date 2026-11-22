@@ -1,5 +1,11 @@
 [
   {
+    "n": 1703,
+    "judul": "[peta 180] Satu arti 'kata baru' = baru disimpan; ketukan = 'belum disimpan'",
+    "poin": "Angka \"kata baru\" sekarang sama di Home, layar Tamat, dan catatan sesi.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1693,
     "judul": "Tab Kata: saringan HSK + chip 'Belum hafal' & petunjuk ulang",
     "poin": "Tab Kata: saringan HSK 1-3 selalu tampil bila kamu punya kata atau buku Mandarin.",
@@ -171,12 +177,6 @@
     "n": 1632,
     "judul": "Home buku tamat: satu tombol 'Pilih buku berikutnya', bukan dua",
     "poin": "Di Home buku tamat, tombol \"Pilih buku berikutnya\" sekarang cuma satu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1630,
-    "judul": "[peta 175] Reader: label buku tamat cukup 'Tamat', tak terpotong '…'",
-    "poin": "Label bawah buku yang sudah tamat sekarang tertulis \"Tamat\" utuh, tidak terpotong.",
     "tgl": "2026-11-22"
   }
 ]
