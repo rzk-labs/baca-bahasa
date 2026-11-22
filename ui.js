@@ -1748,6 +1748,7 @@ async function viewBaca() {
   const head = sp.find(P => P.h);
   const chTitle = head ? head.sents.map(x => x.s).join('').trim() : b.title;
   const savedSet = new Set(db.vocab.filter(v => v.lang === b.lang && v.w).map(v => String(v.w).trim().toLowerCase()));
+  const kosongSet = new Set(db.vocab.filter(v => v && v.lang === b.lang && v.w && (v.noTr || !String(v.t || '').trim())).map(v => String(v.w).trim().toLowerCase()));
   const hafalSet = new Set(db.vocab.filter(v => v.lang === b.lang && v.w && v.known).map(v => String(v.w).trim().toLowerCase()));
   const kenalOk = w => isKenal(b.lang, w) && !savedSet.has(w.toLowerCase());
   const rtMap = new Map();
@@ -1778,7 +1779,7 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
@@ -2712,6 +2713,9 @@ async function onWord(el, lastEl) {
   const setTx = (sel, t) => { const e = $(sel); if (e) e.textContent = t; };
   const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
+  const kosongOf = () => db.vocab.find(v => !String(v.t || '').trim() && sameVocab(v, b.lang, word));
+  /* #1685: kata tersimpan tanpa arti terisi otomatis saat diketuk ulang; titik penanda hilang */
+  const isiKosong = r => { const v = kosongOf(); if (!v || !r || !String(r.text || '').trim()) return; v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul; save(); const k = String(word).trim().toLowerCase(); $$('.cols .w.noarti').forEach(x => { if (x.textContent.trim().toLowerCase() === k) x.classList.remove('noarti'); }); if (kataSeg && $('#klist')) viewKata(); };
   if (b.lang === 'zh-CN') hskLoad().then(() => { const lv = hskOf(word), e = $('#whsk'); if (e && lv) { e.textContent = 'HSK ' + lv; e.setAttribute('aria-label', 'Level HSK ' + lv); } });
   let pickT = '';
   const pickChip = () => { const t = $('#wtr'); if (t && !t.querySelector('.pickchip')) t.insertAdjacentHTML('beforeend', ' <span class="stepchip pickchip">pilihanmu</span>'); };
@@ -2767,6 +2771,7 @@ async function onWord(el, lastEl) {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT); offChip(false);
     tr = r; setTx('#wpart', partNote());
+    isiKosong(r);
     { const pk = savedOf(); if (pk && pk.pick) showSaved(pk); else if (pickT) { setTx('#wtr', pickT); pickChip(); } else setTx('#wtr', r.text); }
     setWBaca(bacaDisp(word, bacaShow(word, r.baca, b.lang)));
     setTx('#wbase', baseLabel(word, b.lang, r.base));
@@ -2830,7 +2835,7 @@ async function onWord(el, lastEl) {
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
     keepVisible('.w.sel'); showHint();
-  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; offChip(off); $('#wtr').innerHTML = `<span class="loading">${off ? 'Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
+  }).catch(() => { if (my === tok) clearTimeout(slowT); if (my === tok && $('#wtr') && !sv) { const off = !navigator.onLine; offChip(off); $('#wtr').innerHTML = `<span class="loading">${kosongOf() ? 'Arti kata ini masih kosong. Coba lagi kalau sinyal sudah ada.' : off ? 'Ketuk Simpan, artinya nyusul pas ada sinyal.' : 'Arti belum ketemu, sinyal lemah?'}</span> <button class="ghost wretry" id="wretry">Coba lagi</button>`; $('#wretry').onclick = () => { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; load(); }; } }); };
   /* 'Arti ini salah?': daftar maks 3 arti lain; pilihan disimpan ke kartu & tak tertimpa */
   const wAlt = $('#walt');
   const altLink = () => { if (!wAlt) return; delete wAlt.dataset.open; wAlt.innerHTML = '<button class="ghost walink" id="walink" type="button">Arti ini salah?</button>'; $('#walink').onclick = openAlt; };
