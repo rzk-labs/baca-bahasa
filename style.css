@@ -194,7 +194,8 @@ body.reading::after{display:none}
 .cover .em{font:800 26px/1 var(--font-display);letter-spacing:-.02em}
 .cover .ct{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
 .cover .ct.c1{font-size:.88em}.cover .ct.c2{font-size:.78em}.cover .ct.c3{font-size:.68em}.cover .ct.c4{font-size:.6em;overflow-wrap:normal;text-overflow:ellipsis}
-.cover .ct.cjk{word-break:break-all;overflow-wrap:anywhere}
+.cover .ct.cjk{word-break:break-all;overflow-wrap:anywhere;text-wrap:balance}
+.cover .ct.cjk.sp{word-break:keep-all;overflow-wrap:anywhere}
 .cover .cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
 .hscroll{display:flex;gap:var(--space-3);overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:2px 18px 10px;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
@@ -1337,7 +1338,8 @@ body:not(.reading) #view:has(.hscroll){padding-bottom:calc(env(safe-area-inset-b
 .bk .cover .ct{font-size:15px}
 .bk .cover .ct.c1{font-size:13px}.bk .cover .ct.c2{font-size:12px}
 .cover .ct.c3,.cover .ct.c4{font-size:var(--fs-min)}
-.cover .ct.cjk{word-break:break-all}
+.cover .ct.cjk{word-break:break-all;text-wrap:balance}
+.cover .ct.cjk.sp{word-break:keep-all}
 .hero .cover .em,.rk-bk .cover .em{font-size:26px}
 .hero .cover .ct,.rk-bk .cover .ct{-webkit-line-clamp:2;font-size:var(--fs-min)}
 @media (max-width:359px){.bk .cover .em{font-size:40px}}
