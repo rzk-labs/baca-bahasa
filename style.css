@@ -1418,5 +1418,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .lv-tap:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .xp-how{list-style:none;padding-left:0}.xp-how li{min-height:24px}
 .xp-mine{margin-top:var(--space-3)}
+.xp-eg{margin:var(--space-3) 0;font-size:14px;line-height:21px}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}

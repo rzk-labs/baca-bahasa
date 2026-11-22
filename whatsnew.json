@@ -1,5 +1,11 @@
 [
   {
+    "n": 1636,
+    "judul": "Kartu Target Home: contoh kegiatan 30 XP, bukan angka XP saja",
+    "poin": "Ketuk kartu Target di Home, muncul contoh kegiatan untuk dapat 30 XP.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1632,
     "judul": "Home buku tamat: satu tombol 'Pilih buku berikutnya', bukan dua",
     "poin": "Di Home buku tamat, tombol \"Pilih buku berikutnya\" sekarang cuma satu.",
@@ -171,12 +177,6 @@
     "n": 1561,
     "judul": "Home: 'Cukup hari ini' jadi tombol 'Baca lanjut', tak buntu",
     "poin": "Pesan \"Cukup hari ini\" di Home sekarang jadi tombol \"Baca lanjut\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1560,
-    "judul": "[peta 165] Halaman terakhir: 'Buku baru' tak dobel di kartu & sheet Tamat",
-    "poin": "Di halaman terakhir, 'Buku baru' kini muncul sekali saja, tidak dobel.",
     "tgl": "2026-11-22"
   }
 ]
