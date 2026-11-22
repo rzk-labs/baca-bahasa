@@ -260,12 +260,21 @@
       "catatan": "Opsi B bagian 4: bungkus kata+tanda baca nowrap di wordsHtml (ui.js), jaga ketuk-kata; reproduksi dulu (tersangka .w::after #1626). Aturan uji bagian 5. Mockup: docs/mockup-1677.html. Naikkan C di sw.js."
     },
     {
+      "no": 182,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Kartu Level Home HP: uji visual rata tengah di 320px, 390px & 4 tema (#1691)",
+      "dokumen": "docs/mockup-1691.html",
+      "status": "siap dikerjakan",
+      "catatan": "CSS sudah dipasang (#lvCard di style.css). Cek di HP: tengah, angka 32px, tanpa ruang bolong, ketuk buka sheet XP."
+    },
+    {
       "no": 178,
       "peran": "developer",
       "prioritas": "P1",
       "nama": "Target Home dalam menit baca, awal 5 menit (#1654)",
       "dokumen": "docs/riset-satuan-target-harian.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1681)",
       "catatan": "Bagian 8 dokumen: satuan menit aktif, pilihan 5/10/15, teks tanpa kata gagal, angka Home & sheet Tamat sama. Mockup: docs/mockup-1654.html. XP lama tidak dihapus."
     },
     {
@@ -274,7 +283,7 @@
       "prioritas": "P1",
       "nama": "Kartu Target Home: uji visual baris contoh 30 XP di 320px & 4 tema (#1647)",
       "dokumen": "docs/desain-ux-target-contoh-1647.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1689)",
       "catatan": "Baris contoh sudah dipasang (goal-eg di ui.js/style.css). Mockup: docs/mockup-1647.html."
     },
     {
@@ -337,7 +346,7 @@
       "prioritas": "P1",
       "nama": "Hemat kuota Cloudflare: sinkron lebih jarang + pantau kuota (#1611)",
       "dokumen": "docs/riset-kuota-cloudflare-28.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1698)",
       "catatan": "Bagian 5 & 4 dokumen: sinkron tiap 5 menit/saat berubah, cek buku sekali per buka, cache leaderboard 60 dtk, peringatan kuota. Ubah api/ perlu deploy manual."
     },
     {
@@ -1785,7 +1794,7 @@
       "prioritas": "P1",
       "nama": "Simpan pengarang EPUB (dc:creator) dan tampilkan di kartu buku bila ada (#1683)",
       "dokumen": "docs/riset-pengarang-sampul-buku.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1705)",
       "catatan": "Mockup: docs/mockup-1683.html. Hanya EPUB; .txt/.pdf dikosongkan, tidak menebak. Data lama aman (field baru opsional)."
     }
   ],

@@ -457,6 +457,7 @@ async function parseEpub(buf, fallback) {
   const opfFile = zf(opfPath); if (!opfFile) throw new Error('File EPUB tidak valid');
   const opf = new DOMParser().parseFromString(await opfFile.async('string'), 'application/xml');
   const title = opf.getElementsByTagNameNS('*', 'title')[0]?.textContent?.trim() || fallback;
+  const author = (opf.getElementsByTagNameNS('*', 'creator')[0]?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80);
   const man = {}; for (const it of opf.getElementsByTagNameNS('*', 'item')) man[it.getAttribute('id')] = it.getAttribute('href');
   const resolve = h => { let raw = h.split('#')[0]; try { raw = decodeURIComponent(raw); } catch (e) { } const parts = (base + raw).split('/'); const o = []; for (const p of parts) { if (p === '..') o.pop(); else if (p !== '.') o.push(p); } return o.join('/'); };
   const paras = [];
@@ -482,7 +483,7 @@ async function parseEpub(buf, fallback) {
   }
   for (let i = 0; i < paras.length; i++) paras[i] = normJa(paras[i]);
   let cover = null; try { cover = await epubCover(opf, zf, resolve); } catch (e) { }
-  return { title, paras: splitLong(paras), cover };
+  return { title, paras: splitLong(paras), cover, author };
 }
 // Ambil gambar cover EPUB, kecilkan (maks 300px, JPEG). Gagal = null (impor tetap jalan).
 async function epubCover(opf, zf, resolve) {
