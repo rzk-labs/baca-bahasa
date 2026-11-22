@@ -1,5 +1,11 @@
 [
   {
+    "n": 1603,
+    "judul": "Sheet arti kata: label 'Lagi offline' jelas, bukan cuma toast gagal",
+    "poin": "Ketuk kata tanpa internet: muncul label biru \"Lagi offline. Arti baru butuh internet.\"",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1597,
     "judul": "Reader: kata bisa dipilih lewat keyboard & pembaca layar",
     "poin": "Kata di halaman baca kini bisa dipilih pakai keyboard dan pembaca layar.",
@@ -171,12 +177,6 @@
     "n": 1537,
     "judul": "Sheet Tamat: baris kecil di tombol 'Lanjut' terbaca jelas",
     "poin": "Tulisan kecil di tombol \"Lanjut\" setelah tamat baca sekarang jelas terbaca.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1536,
-    "judul": "Sheet Tamat: teks 'Belum mulai' di tombol Lanjut terbaca jelas",
-    "poin": "Teks kecil \"Belum mulai\" di tombol Lanjut sekarang jelas terbaca.",
     "tgl": "2026-11-21"
   }
 ]
