@@ -1,5 +1,11 @@
 [
   {
+    "n": 1556,
+    "judul": "Pengaturan baca: pilihan aktif terbaca pembaca layar (aria-pressed)",
+    "poin": "Pilihan aktif di Pengaturan baca sekarang terbaca oleh pembaca layar.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1550,
     "judul": "[peta 162] Latihan ekstra tak menempel saat pindah tab + pesan Lupa jujur",
     "poin": "Latihan ekstra tak lagi menempel saat kamu pindah menu bawah.",
@@ -171,12 +177,6 @@
     "n": 1471,
     "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
     "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1469,
-    "judul": "Home: 'Ulang 3 kata' terkunci 'Simpan 3 kata dulu (N/3)' untuk pemula",
-    "poin": "Pemula yang baru simpan 1-2 kata kini lihat kartu redup \"Simpan 3 kata dulu\".",
     "tgl": "2026-11-21"
   }
 ]
