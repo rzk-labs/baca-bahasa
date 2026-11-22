@@ -1462,6 +1462,11 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hskhome b{font-weight:700}
 /* #1640 Home: Streak satu baris penuh; Target & Level berdampingan, dua kolom sama lebar */
 .stat3{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* #1691 kartu Level Home: rata tengah seperti Target, angka besar, isi rapat tanpa ruang bolong */
+.stat3 #lvCard{justify-content:center;align-items:center;gap:6px;text-align:center}
+.stat3 #lvCard .num{font:800 32px/34px var(--font-display);margin:0}
+.stat3 #lvCard .lvbar{width:100%;max-width:100%;margin:2px 0 0}
+.stat3 #lvCard .lbl2.lvl-line{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:6px;row-gap:0;width:100%;padding:0;margin:0;white-space:normal;text-wrap:balance}
 /* #1689: baris contoh Target: kontras penuh, ruang bawah cukup di atas menu HP */
 .stat3 .goal-eg{color:var(--ink);font-weight:700;padding:0 2px;box-sizing:border-box}
 @media(max-width:389px){body:not(.reading) #view:has(.stat3){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}

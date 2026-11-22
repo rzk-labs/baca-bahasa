@@ -260,6 +260,15 @@
       "catatan": "Opsi B bagian 4: bungkus kata+tanda baca nowrap di wordsHtml (ui.js), jaga ketuk-kata; reproduksi dulu (tersangka .w::after #1626). Aturan uji bagian 5. Mockup: docs/mockup-1677.html. Naikkan C di sw.js."
     },
     {
+      "no": 182,
+      "peran": "developer",
+      "prioritas": "P1",
+      "nama": "Kartu Level Home HP: uji visual rata tengah di 320px, 390px & 4 tema (#1691)",
+      "dokumen": "docs/mockup-1691.html",
+      "status": "siap dikerjakan",
+      "catatan": "CSS sudah dipasang (#lvCard di style.css). Cek di HP: tengah, angka 32px, tanpa ruang bolong, ketuk buka sheet XP."
+    },
+    {
       "no": 178,
       "peran": "developer",
       "prioritas": "P1",
