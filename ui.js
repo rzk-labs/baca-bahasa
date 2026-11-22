@@ -1764,6 +1764,8 @@ async function viewBaca() {
     if (!phraseIdx.has(pw[0])) phraseIdx.set(pw[0], []);
     phraseIdx.get(pw[0]).push(pw);
   }
+  /* tanda baca penutup tak boleh jadi karakter pertama baris: sisipkan U+2060 (lebar nol) di depannya; dilewati untuk RTL */
+  const noOrphan = RTL_LANGS.includes(b.lang) ? x => x : x => x.replace(/^[,.;:!?)\]}”’»…、。，！？）]/, '⁠$&');
   const wordsHtml = s => {
     const tk = tokens(s, b.lang), inPhrase = new Set();
     if (phraseIdx.size) {
@@ -1776,7 +1778,7 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(t.t); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    return tk.map((t, i) => { if (!t.w) return esc(noOrphan(t.t)); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
