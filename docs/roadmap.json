@@ -269,6 +269,15 @@
       "catatan": "CSS & coverSz sudah diubah; tinggal uji di 320px & 390px (Korea, Jepang). Mockup: docs/mockup-1591.html."
     },
     {
+      "no": 175,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader: label buku tamat cukup 'Tamat', tak terpotong '…' (#1598)",
+      "dokumen": "docs/pm-reader-label-tamat-1598.md",
+      "status": "siap dikerjakan",
+      "catatan": "Mockup: docs/mockup-1598.html. Hitung ulang label setelah layout/font siap & saat resize. Uji 320/360/390px. Naikkan C di sw.js."
+    },
+    {
       "no": 171,
       "peran": "developer",
       "prioritas": "P1",
