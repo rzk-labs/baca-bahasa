@@ -963,7 +963,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v633';
+const APP_VER = 'v635';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -3440,7 +3440,7 @@ function viewKataIn() {
       const langs = [...new Set(db.vocab.map(v => v && v.lang).filter(Boolean))], books = [...new Set(db.vocab.map(v => v && v.book).filter(Boolean))];
       if (csvF !== 'all' && !langs.some(l => csvF === 'l:' + l) && !books.some(b => csvF === 'b:' + b)) csvF = 'all';
       const hskN = { 1: 0, 2: 0, 3: 0 }; db.vocab.forEach(v => { const h = v && v.lang === 'zh-CN' ? hskOf(v.w) : 0; if (h) hskN[h]++; });
-      const hskLv = [1, 2, 3].some(n => hskN[n]) ? [1, 2, 3] : []; if (!hskLv.length) { hskF = 0; hskUnk = false; }
+      const hasZh = db.vocab.some(v => v && v.lang === 'zh-CN') || (db.books || []).some(b => b && b.lang === 'zh-CN'), hskLv = hasZh ? [1, 2, 3] : []; if (!hskLv.length) { hskF = 0; hskUnk = false; }
       const inF = v => !!v && (csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2))) && (!hskF || (v.lang === 'zh-CN' && hskOf(v.w) === hskF)) && (!hskUnk || !v.known);
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => v.w && inF(v) && (!q || (v.w + ' ' + (v.t || '')).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
@@ -3460,7 +3460,7 @@ function viewKataIn() {
         const oldScroll = ($('#kChips') || {}).scrollLeft || kataChipScroll;
         const hskDue = hskF ? db.vocab.filter(v => isDue(v) && inF(v)).length : 0;
         const hskSum = hskLv.length ? `<div class="hsksum" id="kHskSum">${hskLv.map(n => { const x = hskUniq(n), y = hskTot(n); return y ? `<button type="button" class="hs${hskF === n ? ' on' : ''}" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk menyaring">HSK ${n}: <b>${x}</b>/${y}</button>` : ''; }).join('')}</div>` : '';
-        const hskRow = hskLv.length ? `<div class="fchips hskrow" id="kHsk" role="group" aria-label="Saring kata per level HSK"><button class="fchip${!hskF && !hskUnk ? ' on' : ''}" data-h="0" aria-pressed="${!hskF && !hskUnk}">Semua</button>${hskLv.map(n => `<button class="fchip${hskF === n ? ' on' : ''}" data-h="${n}" aria-pressed="${hskF === n}">HSK ${n}</button>`).join('')}<button class="fchip unk${hskUnk ? ' on' : ''}" data-u="1" aria-pressed="${hskUnk}">Belum hafal</button></div>${hskSum}${hskF && !hskDue ? '<div class="mut sm hskwait" id="kHskWait">Belum ada kata untuk diulang. Cek lagi nanti.</div>' : ''}${hskDue ? `<button type="button" class="fw-nudge due-nudge" id="kHskGo" style="margin:0 0 10px" aria-label="Ulang ${hskDue} kata HSK ${hskF} yang siap">${ico('cards')}<span>Ulang ${hskDue} kata HSK ${hskF}</span></button>` : ''}` : '';
+        const hskRow = hskLv.length ? `<div class="fchips hskrow" id="kHsk" role="group" aria-label="Saring kata per level HSK"><button class="fchip${!hskF && !hskUnk ? ' on' : ''}" data-h="0" aria-pressed="${!hskF && !hskUnk}">Semua</button>${hskLv.map(n => `<button class="fchip${hskF === n ? ' on' : ''}" data-h="${n}" aria-pressed="${hskF === n}">HSK ${n}</button>`).join('')}<button class="fchip unk${hskUnk ? ' on' : ''}" data-u="1" aria-pressed="${hskUnk}">Belum hafal</button></div>${hskSum}${hskF && !hskDue ? `<div class="hskidle" id="kHskIdle">Belum ada kata HSK ${hskF} yang siap diulang. Simpan lebih banyak atau tunggu jadwalnya.</div>` : ''}${hskDue ? `<button type="button" class="fw-nudge due-nudge" id="kHskGo" style="margin:0 0 10px" aria-label="Ulang ${hskDue} kata HSK ${hskF} yang siap">${ico('cards')}<span>Ulang ${hskDue} kata HSK ${hskF}</span></button>` : ''}` : '';
         kl.insertAdjacentHTML('afterbegin', `${hskRow}${chipRow}<div class="csvbar">${sortSel}${filt}</div>`);
         $$('#kHsk .fchip, #kHskSum .hs').forEach(b => b.onclick = () => { if (b.dataset.u) hskUnk = !hskUnk; else { hskF = +b.dataset.h; if (!hskF) hskUnk = false; } if (hskF && !b.dataset.u && window.kepoMark) kepoMark('hsk_filter'); sfx('pop'); renderList(); });
         if ($('#kHskGo')) $('#kHskGo').onclick = () => { deckLv = hskF; if (window.kepoMark) kepoMark('hsk_ulang'); kataSeg = 'kartu'; sfx('pop'); viewKata(); };
