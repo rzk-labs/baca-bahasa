@@ -167,7 +167,8 @@ function mergeTaps(srv) {
   if (!db.taps || typeof db.taps !== 'object') db.taps = {};
   for (const k in srv) { const n = +srv[k] || 0; if (n > (+db.taps[k] || 0)) db.taps[k] = n; }
 }
-let lastSync = '', syncCur = null;
+let lastSync = '', syncCur = null, lastPull = 0, booksChecked = false;
+const SYNC_GAP = 5 * 60 * 1000; // sinkron otomatis maks tiap 5 menit (kecuali ada perubahan / tombol manual)
 // status tarik buku dari akun: '' | 'load' | 'fail' (dibaca ui.js untuk baris status)
 var bkState = '', bkSkip = false; // bkSkip: pengguna pilih 'Lanjut tanpa menunggu'
 function bkSet(v) { if (bkSkip && v === 'fail') v = ''; if (bkState === v) return; bkState = v; if (typeof refreshPills === 'function') refreshPills(); if (db.tab === 'rak' && !document.body.classList.contains('reading')) syncRefresh(true); }
@@ -179,16 +180,17 @@ function syncRefresh(force) {
 async function doSync(opt) {
   if (navigator.onLine === false) { if (opt.manual) throw new Error('Lagi offline. Coba lagi pas ada internet ya.'); return false; }
   const r = opt.pre || await api('/me');
+  lastPull = Date.now();
   if (opt.profile && r.user) { db.acct.nick = r.user.nick; db.acct.hidden = r.user.hidden; renderAcct(); }
   if (r.user && 'publik' in r.user) { db.acct.publik = !!r.user.publik; db.acct.hideTitles = !!r.user.hideTitles; db.acct.premium = !!r.user.premium; }
   const changed = mergeSrv(r.data); save();
   const data = progressData(), sig = JSON.stringify(data) + db.acct.hidden + db.acct.nick;
-  if (opt.force || sig !== lastSync) {
+  if (opt.manual || sig !== lastSync) { // tanpa perubahan sejak sinkron terakhir: tidak kirim (kecuali tombol manual)
     await api('/sync', { method: 'PUT', body: { data, xp: db.xp, weekXp: weekXp(), hidden: !!db.acct.hidden, nick: db.acct.nick, profile: profileData() } });
     lastSync = sig;
   }
   if (changed && !opt.noRefresh) syncRefresh(opt.manual);
-  syncBooks().catch(() => { }); // teks buku: jalan di belakang, tidak menahan sinkron kata/XP
+  if (opt.manual || !booksChecked) { booksChecked = true; syncBooks().catch(() => { booksChecked = false; }); } // daftar buku: sekali per buka app (atau tombol manual)
   return changed;
 }
 
@@ -288,10 +290,24 @@ function noteAkunWhenReady(n) {
   noteShown = true; // sekali per sesi
   toast(NOTE_AKUN.replace(/&amp;/g, '&'), 4000);
 }
-setInterval(() => { if (db.acct && document.visibilityState === 'visible' && dataSig() !== lastSync) runSync().catch(() => { }); }, 20000);
-setInterval(() => { if (document.visibilityState === 'visible') runSync().catch(() => { }); }, 60000);
-addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') runSync().catch(() => { }); else pushSync().catch(() => { }); });
-addEventListener('online', () => { runSync().catch(() => { }); });
+const syncDue = () => !lastPull || Date.now() - lastPull >= SYNC_GAP;
+const syncQuiet = () => { if (db.acct) runSync().catch(() => { }); };
+let sigAt = '', sigTm = 0;
+// ada perubahan data: tunggu tenang 8 detik (debounce) lalu kirim sekali. Cek sidik lokal gratis (tanpa jaringan).
+setInterval(() => {
+  if (!db.acct || document.visibilityState !== 'visible') return;
+  const s = dataSig();
+  if (s === lastSync) { sigAt = s; clearTimeout(sigTm); sigTm = 0; return; }
+  if (s !== sigAt) { sigAt = s; clearTimeout(sigTm); sigTm = setTimeout(() => { sigTm = 0; if (db.acct && dataSig() !== lastSync) syncQuiet(); }, 8000); }
+}, 4000);
+// tanpa perubahan: tarik dari server paling cepat tiap 5 menit
+setInterval(() => { if (db.acct && document.visibilityState === 'visible' && syncDue()) syncQuiet(); }, 60000);
+addEventListener('visibilitychange', () => {
+  if (!db.acct) return;
+  if (document.visibilityState === 'visible') { if (syncDue()) syncQuiet(); }
+  else if (dataSig() !== lastSync) pushSync().catch(() => { });
+});
+addEventListener('online', () => { if (db.acct && (syncDue() || dataSig() !== lastSync)) syncQuiet(); });
 
 /* ---------- Catatan jujur & cadangan penanda (tanpa teks buku) ---------- */
 const NOTE_AKUN = 'Kata, XP, dan buku ikut akunmu.';
@@ -408,7 +424,7 @@ async function wipeLocal() {
 async function finishOut(wipe) {
   try { await api('/logout', { method: 'POST' }); } catch (e) { }
   if (wipe) await wipeLocal();
-  db.acct = null; db.keluar = 1; lastSync = ''; save(); closeSheet();
+  db.acct = null; db.keluar = 1; lastSync = ''; lastPull = 0; booksChecked = false; save(); closeSheet();
   toast(wipe ? 'Kamu sudah keluar. HP ini sudah dibersihkan.' : 'Kamu sudah keluar. Progres tetap ada di HP ini.');
   setTab(db.tab || 'rak');
 }

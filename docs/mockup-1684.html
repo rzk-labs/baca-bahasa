@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1684: penanda arti gagal</title>
+<style>
+:root{--ink:#351E28;--cream:#FAF7F0;--ice:#D7EFFF;--hl:#E9F056;--muted:#5F5059;--border:#B2CFE2}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#e9e4da;font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+.note{max-width:390px;margin:0 auto 12px;font-size:12px;font-weight:600;background:var(--hl);padding:6px 10px;border-radius:9999px;text-align:center}
+.lbl{max-width:390px;margin:16px auto 6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.phone{width:390px;max-width:100%;margin:0 auto;background:var(--cream);border-radius:26px;overflow:hidden;border:1.5px solid var(--border)}
+.bar{padding:14px 18px;font-family:"Bricolage Grotesque",Inter,sans-serif;font-weight:700;font-size:16px;border-bottom:1.5px solid var(--border)}
+.page{padding:20px 18px;font-family:Literata,Georgia,serif;font-size:19px;line-height:1.7}
+.w.saved{text-decoration:underline solid var(--ink) 1.5px;text-underline-offset:.2em}
+.w.noarti{text-decoration:underline dashed var(--muted) 1px;text-underline-offset:.22em}
+.w.sel{background:var(--hl);border-radius:4px}
+.sheet{background:#fff;border-top:1.5px solid var(--border);padding:16px 18px;border-radius:20px 20px 0 0}
+.sheet h2{margin:0 0 4px;font-family:"Bricolage Grotesque",Inter,sans-serif;font-size:22px}
+.mut{font-size:13px;color:var(--muted)}
+.btn{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:9999px;background:var(--ink);color:var(--cream);font-size:13px;font-weight:600}
+.toast{margin:12px 18px;padding:10px 14px;border-radius:14px;background:var(--ink);color:var(--cream);font-size:13px}
+.leg{padding:0 18px 16px;font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun</div>
+
+<div class="lbl">Sebelum</div>
+<div class="phone">
+<div class="bar">Little Prince · hal. 12</div>
+<div class="page">Pangeran kecil itu <span class="w">melihat</span> sebuah <span class="w">bunga</span> yang <span class="w">aneh</span> di <span class="w saved">padang</span> pasir.</div>
+<div class="toast">Belum dapat arti. Cek koneksi, coba lagi nanti ya &nbsp;<b>Coba lagi</b></div>
+<div class="leg">Toast hilang 6 detik. Kata "aneh" tampak biasa lagi.</div>
+</div>
+
+<div class="lbl">Sesudah: kata gagal bertanda</div>
+<div class="phone">
+<div class="bar">Little Prince · hal. 12</div>
+<div class="page">Pangeran kecil itu <span class="w">melihat</span> sebuah <span class="w">bunga</span> yang <span class="w noarti">aneh</span> di <span class="w saved">padang</span> pasir.</div>
+<div class="leg">Garis putus-putus tipis di "aneh" = arti belum ada. Tata letak teks tetap.</div>
+</div>
+
+<div class="lbl">Sesudah: ketuk kata bertanda</div>
+<div class="phone">
+<div class="bar">Little Prince · hal. 12</div>
+<div class="page">Pangeran kecil itu <span class="w">melihat</span> sebuah <span class="w">bunga</span> yang <span class="w noarti sel">aneh</span> di <span class="w saved">padang</span> pasir.</div>
+<div class="sheet"><h2>aneh</h2><div class="mut">Lagi nyari artinya…</div><span class="btn">Coba lagi</span></div>
+</div>
+
+<div class="lbl">Sesudah: arti berhasil dimuat</div>
+<div class="phone">
+<div class="bar">Little Prince · hal. 12</div>
+<div class="page">Pangeran kecil itu <span class="w">melihat</span> sebuah <span class="w">bunga</span> yang <span class="w sel">aneh</span> di <span class="w saved">padang</span> pasir.</div>
+<div class="sheet"><h2>aneh</h2><div class="mut">strange, odd</div><span class="btn">Simpan</span></div>
+<div class="leg">Penanda hilang. Tidak ada toast baru.</div>
+</div>
+</body></html>
