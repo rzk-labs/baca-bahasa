@@ -363,6 +363,17 @@ let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
 function closeSheet() { const wasOpen = !$('#sheet').classList.contains('hide'); const wasTamat = wasOpen && !!$('#sheet .fb-acts'); const ret = sheetRet; sheetRet = null; if (RD.dy) { RD.dy = 0; const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step}px, 0px)`; } $('#sheet').classList.add('hide'); $('#shade').classList.add('hide'); if (wasOpen) refreshHomeStats(); if (wasOpen && (lvlPending || sheetQ.length)) setTimeout(() => { if (sheetOpen()) return; if (lvlPending) notifyLater(showLevelUp); const q = sheetQ; sheetQ = []; q.forEach((f, i) => setTimeout(() => afterSheet(f), 600 + i * 1800)); }, 400); $$('.w.sel,.s.hl').forEach(x => x.classList.remove('sel', 'hl')); if (wasOpen && ret && ret.isConnected) try { ret.focus({ preventScroll: true }); } catch (e) { } if (wasOpen && document.body.classList.contains('reading') && pfOk()) pfResume(1000); if (wasOpen && document.body.classList.contains('reading') && RD.n) { const bk = book(); if (bk) endCard(bk, RD.page === RD.n - 1 && bk.pos >= (bk.total || 1) - 1); } }
+/* #1547: jebakan fokus — Tab/Shift+Tab berputar di dalam sheet selagi terbuka */
+addEventListener('keydown', e => {
+  if (e.key !== 'Tab' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const sh = $('#sheet'); if (!sh || sh.classList.contains('hide')) return;
+  const fs = $$('#sheet button, #sheet a[href], #sheet input, #sheet select, #sheet textarea, #sheet [tabindex]:not([tabindex="-1"])').filter(x => !x.disabled && x.type !== 'hidden' && (x.offsetWidth || x.offsetHeight || x.getClientRects().length));
+  if (!fs.length) { e.preventDefault(); sh.focus({ preventScroll: true }); return; }
+  const first = fs[0], last = fs[fs.length - 1], a = document.activeElement;
+  if (!sh.contains(a) || a === sh) { e.preventDefault(); (e.shiftKey ? last : first).focus({ preventScroll: true }); }
+  else if (e.shiftKey && a === first) { e.preventDefault(); last.focus({ preventScroll: true }); }
+  else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus({ preventScroll: true }); }
+});
 $('#shade').onclick = e => {
   /* ketuk dua kali kalimat (#907): ketukan pertama membuka sheet kata & tirai menutup halaman; ketukan kedua jatuh di tirai -> cek kalimat di bawahnya */
   const d = RD.dt; RD.dt = null; let sx = null;

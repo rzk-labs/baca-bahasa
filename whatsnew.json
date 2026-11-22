@@ -1,5 +1,11 @@
 [
   {
+    "n": 1547,
+    "judul": "Sheet: fokus keyboard/pembaca layar tak keluar ke halaman di belakang",
+    "poin": "Tombol Tab kini berputar di dalam panel arti kata dan panel Tamat.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1546,
     "judul": "Seragamkan warna & bentuk tombol di style.css lewat token",
     "poin": "Warna dan bentuk tombol kini seragam lewat satu sumber, tampilan tak berubah.",
@@ -171,12 +177,6 @@
     "n": 1463,
     "judul": "Sheet Tamat: ringkas jadi 2 pilihan + 'Besok' target lencana",
     "poin": "Layar Tamat sekarang cuma 2 tombol, sisanya tautan kecil.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1461,
-    "judul": "Sheet tanya pinyin: tambah pilihan 'Hanya kata baru' + penjelasan",
-    "poin": "Tanya pinyin buku Mandarin sekarang punya tiga pilihan: Nyala, Hanya kata baru, Mati.",
     "tgl": "2026-11-21"
   }
 ]
