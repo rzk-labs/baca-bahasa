@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1709 — tanda baca tak nyasar di awal baris</title>
+<style>
+body{margin:0;background:#D7EFFF;font:16px/1.4 Inter,system-ui,sans-serif;color:#351E28}
+.ph{width:390px;margin:0 auto 16px;background:#F7F1E6;border-radius:24px;padding:16px 0 24px;box-sizing:border-box}
+.lbl{display:inline-block;margin:0 24px 8px;padding:3px 10px;border-radius:999px;background:#351E28;color:#D7EFFF;font-size:12px;font-weight:800}
+.lbl.ok{background:#E9F056;color:#351E28}
+.rh{margin:0 24px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.pg{margin:8px 24px 0;font:20px/1.7 Georgia,serif}
+.bad{background:#FFD3D3;border-radius:4px;font-weight:700}
+.good{background:#E9F056;border-radius:4px}
+.cap{margin:10px 24px 0;font-size:13px}
+</style></head><body>
+<div class="ph"><span class="lbl">Sebelum</span>
+<div class="rh">Alice's Adventures · 3/12</div>
+<div class="pg">She watched the ball spin and fall<br>and listened for the clap of it<br><span class="bad">, and</span> see that queer little toss<br><span class="bad">. ”</span> Then nothing more.</div>
+<div class="cap">Koma dan titik nyasar di awal baris.</div></div>
+<div class="ph"><span class="lbl ok">Sesudah</span>
+<div class="rh">Alice's Adventures · 3/12</div>
+<div class="pg">She watched the ball spin and fall<br>and listened for the <span class="good">clap—,</span><br>and see that queer little <span class="good">toss.”</span><br>Then nothing more.</div>
+<div class="cap">Tanda baca ikut kata di depannya, juga setelah “—”.</div></div>
+<div class="ph"><span class="lbl">Sebelum</span>
+<div class="rh">雨の日の小さな本屋 · 11/11</div>
+<div class="pg"><span class="bad">。</span>店の灯りが静かに消えた</div>
+<div class="cap">“。” sendirian di pojok kiri atas halaman.</div></div>
+<div class="ph"><span class="lbl ok">Sesudah</span>
+<div class="rh">雨の日の小さな本屋 · 11/11</div>
+<div class="pg">店の灯りが静かに消えた。</div>
+<div class="cap">“。” ikut kalimat sebelumnya, tidak sendirian.</div></div>
+</body></html>

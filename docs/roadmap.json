@@ -256,7 +256,7 @@
       "prioritas": "P0",
       "nama": "Reader: koma/tanda baca tak boleh di awal baris (#1677)",
       "dokumen": "docs/riset-tanda-baca-awal-baris.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1709)",
       "catatan": "Opsi B bagian 4: bungkus kata+tanda baca nowrap di wordsHtml (ui.js), jaga ketuk-kata; reproduksi dulu (tersangka .w::after #1626). Aturan uji bagian 5. Mockup: docs/mockup-1677.html. Naikkan C di sw.js."
     },
     {

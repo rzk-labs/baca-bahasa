@@ -1789,6 +1789,7 @@ async function viewBaca() {
   }
   /* tanda baca penutup tak boleh jadi karakter pertama baris: sisipkan U+2060 (lebar nol) di depannya; dilewati untuk RTL */
   const noOrphan = RTL_LANGS.includes(b.lang) ? x => x : x => x.replace(/^[,.;:!?)\]}”’»…、。，！？）]/, '⁠$&');
+  const NB_LEAD = /^[,.;:!?)\]}”’»…、。，！？）」』】〕〉》—―–·"']+/, NB_TAIL = /[“‘(\[{«「『【〔〈《¿¡]+$/;
   const wordsHtml = s => {
     const tk = tokens(s, b.lang), inPhrase = new Set();
     if (phraseIdx.size) {
@@ -1801,7 +1802,25 @@ async function viewBaca() {
         }
       });
     }
-    return tk.map((t, i) => { if (!t.w) return esc(noOrphan(t.t)); const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; }).join('');
+    /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
+    const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
+    const rtl = RTL_LANGS.includes(b.lang);
+    let out = '', buf = '';
+    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; };
+    tk.forEach((t, i) => {
+      if (t.w) { buf += wHtml(t, i); return; }
+      const nextW = !!(tk[i + 1] && tk[i + 1].w);
+      if (rtl) { flush(); out += esc(t.t); return; }
+      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
+      const lead = (t.t.match(NB_LEAD) || [''])[0];
+      if (lead) { if (buf) buf += esc(lead); else out += esc(lead); }
+      flush();
+      let rest = t.t.slice(lead.length), tail = '';
+      if (nextW) { const m = rest.match(NB_TAIL); if (m) { tail = m[0]; rest = rest.slice(0, rest.length - tail.length); } }
+      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : '';
+    });
+    flush();
+    return out;
   };
   const firstSi = (sp.flatMap(P => P.sents).find(x => x.i >= 0) || { i: 0 }).i; /* kalimat pertama bab = awal bab */
   let intip = '', intipC = [];
@@ -1812,7 +1831,8 @@ async function viewBaca() {
   }
   const rtlA = RTL_LANGS.includes(b.lang) ? ` dir="rtl" lang="${esc(b.lang)}"` : '';
   const html = sp.map(P => {
-    const inner = P.sents.map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
+    const ss = []; for (const x of P.sents) { const m = ss.length && x.i >= 0 && !RTL_LANGS.includes(b.lang) && x.s.match(NB_LEAD); if (m) { ss[ss.length - 1] = { ...ss[ss.length - 1], s: ss[ss.length - 1].s.replace(/(\s*)$/, m[0] + '$1') }; ss.push({ ...x, s: x.s.slice(m[0].length) }); } else ss.push(x); }
+    const inner = ss.filter(x => x.s).map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
   }).join('');
   const dueN = db.vocab.filter(isDue).length; /* titik pengingat di tombol menu; isDue sama dengan Home */
