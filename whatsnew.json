@@ -1,5 +1,11 @@
 [
   {
+    "n": 1570,
+    "judul": "Kartu Streak: huruf hari jelas (Sen Sel Rab), bukan M S S R K J S",
+    "poin": "Huruf hari di kartu Streak sekarang jelas: Min, Sen, Sel, Rab, Kam, Jum, Sab.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1568,
     "judul": "Sheet Tamat: baris 'Besok' pakai target kecil, bukan 'simpan 49 kata'",
     "poin": "Layar Tamat sekarang kasih target kecil: \"Besok: simpan 3 kata dulu\".",
@@ -171,12 +177,6 @@
     "n": 1503,
     "judul": "Sheet Tamat: target 'Besok' sama dengan target kata di Home",
     "poin": "Sheet Tamat dan Home sekarang memakai angka target kata yang sama.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1501,
-    "judul": "Home: kartu Streak, huruf hari satu baris & terbaca di HP",
-    "poin": "Kartu Streak di Home sekarang pakai satu huruf per hari, satu baris, rapi.",
     "tgl": "2026-11-21"
   }
 ]
