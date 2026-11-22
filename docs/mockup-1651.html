@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1651 · Toast keluar halus</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EDE8DF;font-family:Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:24px 8px}
+.col{width:390px;max-width:100%}
+.lbl{font:800 13px 'Bricolage Grotesque',Inter,sans-serif;margin:0 0 8px;padding:4px 12px;display:inline-block;border-radius:9999px;background:#351E28;color:#FAF7F0}
+.hp{height:640px;border-radius:30px;overflow:hidden;background:#FAF7F0;border:1px solid #d9d2c6;position:relative}
+.page{padding:28px 22px;font:17px/1.7 Georgia,serif;color:#2b2326}
+.hl{background:#E9F056;border-radius:4px;padding:0 3px}
+.toast{position:absolute;left:50%;bottom:90px;display:flex;align-items:center;gap:10px;width:max-content;max-width:88%;padding:8px 14px;min-height:40px;border-radius:14px;background:#351E28;color:#FAF7F0;font-size:13px;line-height:18px;font-weight:700}
+.toast u{font-weight:800}
+.t1{transform:translateX(-50%) translateY(0)}
+.t2{transform:translateX(-50%) translateY(6px);opacity:.55}
+.t3{transform:translateX(-50%) translateY(12px);opacity:.2;outline:2px dashed #351E28;outline-offset:3px}
+.note{font-size:13px;margin:8px 4px 0;color:#6b5d63}
+</style></head><body>
+<div class="col"><span class="lbl">Sebelum: hilang mendadak</span>
+<div class="hp"><div class="page">Tadi pagi aku <span class="hl">berangkat</span> ke sekolah naik bus. Di jalan, hujan turun deras sekali.</div><div class="toast t1">Masuk ke kartu kata kamu <u>Urungkan</u></div></div>
+<p class="note">Toast langsung lenyap, tanpa gerak.</p></div>
+<div class="col"><span class="lbl">Sesudah: meluncur turun 12px + pudar (180 ms)</span>
+<div class="hp"><div class="page">Tadi pagi aku <span class="hl">berangkat</span> ke sekolah naik bus. Di jalan, hujan turun deras sekali.</div>
+<div class="toast t1" style="bottom:200px">1. Tampil</div>
+<div class="toast t2" style="bottom:140px">2. Mulai turun &amp; pudar</div>
+<div class="toast t3" style="bottom:90px">3. Hilang</div></div>
+<p class="note">Bila gerak dimatikan di HP: langsung hilang. Toast baru langsung menggantikan.</p></div>
+</body></html>
