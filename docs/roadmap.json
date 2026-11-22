@@ -265,7 +265,7 @@
       "prioritas": "P0",
       "nama": "Sampul Korea/Jepang: judul tak patah jadi satu huruf (#1591)",
       "dokumen": "docs/desain-sampul-judul.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1622)",
       "catatan": "CSS & coverSz sudah diubah; tinggal uji di 320px & 390px (Korea, Jepang). Mockup: docs/mockup-1591.html."
     },
     {
