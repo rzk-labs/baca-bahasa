@@ -1,5 +1,11 @@
 [
   {
+    "n": 1627,
+    "judul": "[peta 173] Doodle state kosong: rapi di 320px & tema gelap",
+    "poin": "Gambar kosong di Kata, Ngomong, dan Lupa kini pas di layar kecil.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1622,
     "judul": "[peta 174] Sampul Korea/Jepang: judul tak patah jadi satu huruf",
     "poin": "Sampul buku Korea, Jepang, dan Mandarin dicek lewat kode: judul tak sisa satu huruf.",
@@ -171,12 +177,6 @@
     "n": 1556,
     "judul": "Pengaturan baca: pilihan aktif terbaca pembaca layar (aria-pressed)",
     "poin": "Pilihan aktif di Pengaturan baca sekarang terbaca oleh pembaca layar.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1550,
-    "judul": "[peta 162] Latihan ekstra tak menempel saat pindah tab + pesan Lupa jujur",
-    "poin": "Latihan ekstra tak lagi menempel saat kamu pindah menu bawah.",
     "tgl": "2026-11-22"
   }
 ]
