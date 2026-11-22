@@ -247,7 +247,7 @@
       "prioritas": "P1",
       "nama": "Catatan sesi: label halaman jelas & cocokkan kata Tamat tak lewat judul saja (#1589)",
       "dokumen": "docs/riset-kata-nyasar-catatan-sesi.md",
-      "status": "siap dikerjakan",
+      "status": "selesai (#1620)",
       "catatan": "Mockup: docs/mockup-1589.html. Ubah ui.js (sessRecap teks halaman, finishBook countedVocab), sw.js naik C. Data lama tak dihapus. Kasus uji di dokumen bagian 5."
     },
     {
