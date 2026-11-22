@@ -1,5 +1,11 @@
 [
   {
+    "n": 1576,
+    "judul": "Home pemula: format 'TXT · EPUB · PDF' cukup sekali + tombol Mandarin jelas",
+    "poin": "Layar pertama sekarang tidak lagi menampilkan format file dua kali.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1574,
     "judul": "[peta 169] Home: rak Koleksi kamu tak tertutup menu bawah di HP",
     "poin": "Rak \"Koleksi kamu\" di Home HP sekarang bisa digulir penuh di atas menu.",
@@ -171,12 +177,6 @@
     "n": 1509,
     "judul": "Reader: kartu akhir halaman tak menimpa teks cerita",
     "poin": "Kartu \"Buku berikutnya / Baca ulang\" tak lagi menutupi kalimat di halaman terakhir.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1507,
-    "judul": "[peta 168] Cerita contoh 3 kalimat + kata pertama dipandu, bisa dilewati",
-    "poin": "Pembaca baru kini dapat cerita contoh pendek, hanya 3 kalimat.",
     "tgl": "2026-11-21"
   }
 ]

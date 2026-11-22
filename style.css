@@ -1174,7 +1174,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 /* #1104 Home pemula: Upload di atas, gambar kecil, langkah = daftar bernomor */
 .hero-up{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin:0 0 6px;border:0;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font:700 16px var(--font-ui)}
 .hero-up .em{display:flex}.hero-up .em svg.i{width:22px;height:22px}
-.hero-fmt{margin:0 0 var(--space-3);text-align:center}
+.hero-fmt{margin:0 0 var(--space-3);text-align:center;font-size:12px;text-wrap:balance}
 .hero-pic{height:auto;max-height:none;object-fit:contain;width:100%}
 @media (max-height:700px){.hero-pic{display:none}}
 .add-grid.two{grid-template-columns:repeat(2,1fr)}
