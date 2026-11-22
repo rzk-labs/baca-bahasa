@@ -519,6 +519,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 /* penanda kata (tenang): disimpan = garis bawah solid tipis, sering diketuk = garis putus-putus, kenal = pudar, wasabi hanya kata aktif (.sel) */
 .cols .w{-webkit-box-decoration-break:clone;box-decoration-break:clone;text-decoration-skip-ink:auto}
 .cols .w.saved{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:var(--color-text);text-decoration-thickness:1.5px;text-underline-offset:.2em}
+.cols .w.noarti:not(.sel){background:radial-gradient(circle at 50% calc(100% - .06em),var(--color-saved-line) 0 1.6px,transparent 2px) no-repeat center bottom/100% .3em}
 .cols .w.saved-new{background:linear-gradient(#E9F056,#E9F056) no-repeat left calc(100% - .05em)/0 3px;animation:savedline .38s ease-out 1}
 @keyframes savedline{to{background-size:100% 3px}}
 .cols .w.often:not(.saved){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:2px;text-underline-offset:.22em}
@@ -1423,6 +1424,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1511: baris chip level HSK, satu baris tanpa geser, muat di 320px */
 .hskrow{gap:6px;overflow:visible;margin:0 0 10px}
 .hskrow .fchip{flex:1 1 0;min-width:0;padding:0 6px;text-align:center;font-size:13px}
+.hskrow .fchip.unk{flex:0 0 auto;padding:0 12px}
+.hskwait{margin:0 2px 10px}
 /* #1534: ringkasan 'HSK n: X/Y', satu baris, ketuk = saring level */
 .hsksum{display:flex;gap:2px;margin:-4px 0 10px;font-size:12px;line-height:18px;color:var(--ink);white-space:nowrap;overflow:hidden}
 .hsksum .hs{flex:0 1 auto;min-width:0;background:none;border:0;padding:4px 6px;font:inherit;color:inherit;border-radius:var(--radius-full);cursor:pointer}
