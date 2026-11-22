@@ -1,5 +1,11 @@
 [
   {
+    "n": 1557,
+    "judul": "Kartu ulang: kata target di kalimat asal disorot stabilo Wasabi",
+    "poin": "Di kartu ulang, kata yang dilatih kini disorot stabilo kuning-hijau.",
+    "tgl": "2026-11-22"
+  },
+  {
     "n": 1556,
     "judul": "Pengaturan baca: pilihan aktif terbaca pembaca layar (aria-pressed)",
     "poin": "Pilihan aktif di Pengaturan baca sekarang terbaca oleh pembaca layar.",
@@ -171,12 +177,6 @@
     "n": 1477,
     "judul": "Profil: rak buku Tamat, judul penuh dua baris, tak dobel di sampul",
     "poin": "Rak Tamat di Profil sekarang menampilkan judul buku satu kali saja.",
-    "tgl": "2026-11-21"
-  },
-  {
-    "n": 1471,
-    "judul": "Bar atas reader: lega, 'Bagikan' tak nempel tepi, sisanya ke Lainnya",
-    "poin": "Bar atas saat membaca sekarang lebih lega dan tidak mepet tepi layar.",
     "tgl": "2026-11-21"
   }
 ]
