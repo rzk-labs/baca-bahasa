@@ -1477,3 +1477,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1689: baris contoh Target: kontras penuh, ruang bawah cukup di atas menu HP */
 .stat3 .goal-eg{color:var(--ink);font-weight:700;padding:0 2px;box-sizing:border-box}
 @media(max-width:389px){body:not(.reading) #view:has(.stat3){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
+/* #1730: bar progres mengisi halus saat tab dibuka (bukan bar reader) */
+@keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
+@media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
