@@ -314,7 +314,10 @@ function award(n, stat, pk0, si) {
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP` + (XP_WHY[stat] ? ` · ${XP_WHY[stat]}` : ''); document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
   }
-  markDay(); save(); refreshPills(); refreshHomeStats();
+  /* #1743: hari aktif hanya bila ada aktivitas nyata; baca ulang buku tamat (XP 0) tak menaikkan streak */
+  const rbd = book(), reread = !!(rbd && rbd.doneAt);
+  if (n > 0 || (stat === 'page' && !reread) || (stat && stat !== 'page' && stat !== 'look')) markDay();
+  save(); refreshPills(); refreshHomeStats();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
   if (!(db.lvlSeen >= 1)) { db.lvlSeen = before; save(); } // migrasi: level saat ini dianggap sudah dirayakan
