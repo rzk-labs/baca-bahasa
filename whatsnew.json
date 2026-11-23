@@ -1,5 +1,11 @@
 [
   {
+    "n": 1758,
+    "judul": "Sheet Tamat: tombol buku contoh jelas 'Coba buku contoh', bukan 'Lanjut'",
+    "poin": "Tombol di layar Tamat kini bertuliskan \"Coba buku contoh\", bukan \"Lanjut\".",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1757,
     "judul": "[peta 183] Reader: '✓ Tamat' hanya bila sudah Tamat (label ikut doneAt)",
     "poin": "Bar bawah buku hanya menulis \"✓ Tamat\" kalau bukunya memang sudah Tamat.",
@@ -171,12 +177,6 @@
     "n": 1691,
     "judul": "Home HP: kartu Level rata tengah, angka besar, tanpa ruang bolong",
     "poin": "Kartu Level di Home HP sekarang rata tengah, sejajar kartu Target.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1685,
-    "judul": "Reader: kata tanpa arti diberi titik kecil, ketuk lagi isi arti",
-    "poin": "Kata yang artinya belum terisi sekarang diberi titik kecil di teks buku.",
     "tgl": "2026-11-22"
   }
 ]
