@@ -995,7 +995,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v664';
+const APP_VER = 'v666';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1671,8 +1671,8 @@ function finishBook(b) {
   const none = !ws.length && !pend; /* tak ada kata baru: Buku baru jadi tombol utama */
   const nx1 = nx[0];
   const acts = [];
-  if (nx1) {
-    const nxEx = /\(contoh\)/i.test(nx1.title || ''); /* #1758: buku contoh bukan buku milik sendiri */
+  if (nx1) { /* #1762 + #1758: buku contoh bawaan diberi label jelas, buku pengguna tetap 'Lanjut' */
+    const nxEx = /\(contoh\)/i.test(nx1.title || '') || Object.values(SAMPLES).some(x => x.title === nx1.title) || isShortSample(nx1);
     const nxProg = pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai';
     const nxTitle = nxEx ? (nx1.title.replace(/\s*\(contoh\)\s*/ig, ' ').trim() || nx1.title) : nx1.title;
     acts.push(nxEx

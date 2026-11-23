@@ -241,6 +241,7 @@
     }
   ],
   "backlog": [
+    {"no":185,"peran":"developer","prioritas":"P1","nama":"Sheet Tamat: buku contoh diberi label 'Coba buku contoh' (#1762)","dokumen":"docs/desain-tamat-buku-contoh-1762.md","status":"selesai (#1762)","catatan":"Mockup: docs/mockup-1762.html. Buku pengguna tetap 'Lanjut: judul'. Klik & gaya tombol tak berubah."},
     {
       "no": 183,
       "peran": "developer",
