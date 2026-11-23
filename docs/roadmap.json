@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 183,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader Jepang/Mandarin: teks tak lagi terpotong & menumpuk, satu kata per .nb (#1722)",
+      "dokumen": "docs/pm-reader-ja-zh-nb.md",
+      "status": "selesai (#1722, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1722.html. wordsHtml flush tiap kata baru; .nb + overflow-wrap:anywhere. Naik ke kepo-v646."
+    },
+    {
       "no": 184,
       "peran": "developer",
       "prioritas": "P0",
