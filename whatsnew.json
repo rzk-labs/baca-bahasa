@@ -1,5 +1,11 @@
 [
   {
+    "n": 1730,
+    "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
+    "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1729,
     "judul": "Doodle SVG: 'Belum ada kata HSK' & 'Belum ada kartu' tak polos lagi",
     "poin": "Layar kosong HSK sekarang punya gambar tangga kecil bersorot stabilo.",
@@ -171,12 +177,6 @@
     "n": 1663,
     "judul": "Tombol Pinyin: toast tiap mode pakai contoh singkat, jelas",
     "poin": "Tombol Pinyin sekarang kasih pesan singkat dengan contoh di tiap mode.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1652,
-    "judul": "Pengingat baca: tawaran sekali setelah Tamat pertama",
-    "poin": "Setelah tamat buku pertama, muncul tawaran sekali: \"Mau diingatkan baca besok?\"",
     "tgl": "2026-11-22"
   }
 ]

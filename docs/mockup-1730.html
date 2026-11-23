@@ -1,0 +1,24 @@
+<!doctype html><html lang="id"><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Mockup #1730 — bar XP mengisi</title>
+<style>
+body{margin:0;background:#D7EFFF;font:14px Inter,system-ui,sans-serif;color:#351E28}
+.ph{width:390px;margin:0 auto;padding:16px 18px;box-sizing:border-box}
+.lb{display:inline-block;font:700 11px Inter,sans-serif;background:#351E28;color:#D7EFFF;border-radius:99px;padding:3px 10px;margin:14px 0 6px}
+.card{background:#fff;border-radius:20px;padding:16px;text-align:center}
+.eb{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.num{font:800 44px "Bricolage Grotesque",system-ui,sans-serif}
+.bar{height:8px;border-radius:99px;background:#351E28;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:#E9F056}
+.l2{display:flex;justify-content:space-between;margin-top:8px;font-weight:600}
+.note{font-size:12px;margin-top:6px}
+</style>
+<div class="ph">
+<div class="note"><b>Gambaran perubahan.</b> Bar mengisi dari kiri ±0,55 detik saat tab dibuka.</div>
+<span class="lb">Sebelum — bar langsung penuh</span>
+<div class="card"><div class="eb">Level</div><div class="num">3</div><div class="bar"><i style="width:62%"></i></div><div class="l2"><span>62/100 XP</span><span>→ Lv 4</span></div></div>
+<span class="lb">Sesudah — detik 0,2 (sedang mengisi)</span>
+<div class="card"><div class="eb">Level</div><div class="num">3</div><div class="bar"><i style="width:62%;transform:scaleX(.55);transform-origin:left"></i></div><div class="l2"><span>62/100 XP</span><span>→ Lv 4</span></div></div>
+<span class="lb">Sesudah — selesai</span>
+<div class="card"><div class="eb">Level</div><div class="num">3</div><div class="bar"><i style="width:62%"></i></div><div class="l2"><span>62/100 XP</span><span>→ Lv 4</span></div></div>
+<div class="note">Reduced-motion: bar langsung penuh. Bar reader tidak berubah.</div>
+</div>
