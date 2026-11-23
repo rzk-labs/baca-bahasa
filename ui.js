@@ -314,7 +314,10 @@ function award(n, stat, pk0, si) {
     const keys = Object.keys(db.xpDay).sort(); if (keys.length > 60) delete db.xpDay[keys[0]];
     const f = document.createElement('div'); f.className = 'xpfly' + (isReading() ? ' mini' : ''); f.textContent = `+${n} XP` + (XP_WHY[stat] ? ` · ${XP_WHY[stat]}` : ''); document.body.appendChild(f); setTimeout(() => f.remove(), isReading() ? 800 : 1200);
   }
-  markDay(); save(); refreshPills(); refreshHomeStats();
+  /* #1743: hari aktif hanya bila ada aktivitas nyata; baca ulang buku tamat (XP 0) tak menaikkan streak */
+  const rbd = book(), reread = !!(rbd && rbd.doneAt);
+  if (n > 0 || (stat === 'page' && !reread) || (stat && stat !== 'page' && stat !== 'look')) markDay();
+  save(); refreshPills(); refreshHomeStats();
   const newB = BADGES.filter(([id, , , , ok]) => !db.badges.includes(id) && ok());
   newB.forEach(([id]) => db.badges.push(id)); if (newB.length) save();
   if (!(db.lvlSeen >= 1)) { db.lvlSeen = before; save(); } // migrasi: level saat ini dianggap sudah dirayakan
@@ -423,7 +426,8 @@ function toastHide() {
   t.onanimationend = e => { if (e.target === t && t.classList.contains('closing')) toastEnd(t); };
   toastEndT = setTimeout(() => toastEnd(t), 250);
 }
-function toast(m, ms = 3200, act, act2) { const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
+const toastMs = (m, ms) => { const long = String(m).length > 40; if (ms == null) return long ? 4500 : 3200; return long && ms < 4000 ? 4000 : ms; };
+function toast(m, ms, act, act2) { ms = toastMs(m, ms); const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -608,7 +612,7 @@ setInterval(() => {
   db.readSec[d] = (+db.readSec[d] || 0) + 1; rdUnsaved++;
   const ks = Object.keys(db.readSec).sort(); if (ks.length > 60) delete db.readSec[ks[0]];
   if (rdUnsaved >= 15) { rdUnsaved = 0; save(); }
-  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 2500); sfx('win'); confetti(50); }); }), 300); }
+  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 4500); sfx('win'); confetti(50); }); }), 300); }
 }, 1000);
 /* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
 let rdHist = false, rdSkip = 0;
@@ -639,6 +643,7 @@ function setTab(t) {
   $('#hdx').innerHTML = `<span class="pill fire" id="pStreak" title="Streak hari"></span><span class="pill xp" id="pXp" title="Total XP seumur hidup"></span><span id="acctSlot"></span><button class="icon hfb" id="hFb" type="button" aria-label="Kirim masukan">${ico('chat')}<span class="hfbl">Masukan</span></button><button class="icon" id="set" aria-label="Pengaturan">${ico('sliders')}<span class="hsl">Pengaturan</span><span class="hbl">Atur</span></button>`;
   refreshPills(); $('#set').onclick = openSettings; $('#hFb').onclick = () => openFeedback();
   $('#view').style.animation = 'none'; void $('#view').offsetWidth; $('#view').style.animation = '';
+  { const v = $('#view'); v.classList.add('enter'); clearTimeout(setTab._en); setTab._en = setTimeout(() => v.classList.remove('enter'), 800); } /* #1730: bar mengisi hanya saat tab dibuka */
   try { history.scrollRestoration = 'manual'; } catch (e) {}
   window.scrollTo(0, 0);
   ({ rak: viewRak, baca: viewBaca, bicara: viewBicara, kata: viewKata, sosial: viewSosialAman })[t]();
@@ -654,7 +659,7 @@ function guestBanner() {
   v.insertBefore(d, v.firstChild); $('#gMasuk').onclick = () => openAccount('masuk');
 }
 $$('#tabs button').forEach(b => b.onclick = () => { vib(5); sfx('pop'); setTab(b.dataset.t); });
-const EMPTY_PIC = { curious: 'kosong-kata', wow: 'kosong-ngomong', happy: 'kosong-aman' };
+const EMPTY_PIC = { curious: 'kosong-kata', wow: 'kosong-ngomong', happy: 'kosong-aman', cards: 'kosong-kartu' };
 const emptyState = (mood, title, msg, btn, act) => `<div class="empty">${mood === 'cheer' ? '<img class="empty-pic" src="img/aset/beres-sesi.svg" alt="" width="150" height="150" decoding="async">' : EMPTY_PIC[mood] ? `<img class="empty-pic" src="img/aset/${EMPTY_PIC[mood]}.svg" alt="" width="150" height="150" decoding="async">` : '<img class="empty-pic" src="img/kosong-rak.webp" width="320" height="320" alt="" decoding="async">'}<h2>${title}</h2><div class="mut sm">${msg}</div>${btn ? `<button class="pri" onclick="${act}">${btn}</button>` : ''}</div>`;
 
 /* ---------- pengaman data (Safari tab biasa) ---------- */
@@ -687,7 +692,7 @@ function cadNote() {
     if (Date.now() - last < 14 * 864e5) return;
     if (!$('#sheet').classList.contains('hide') || !$('#toast').classList.contains('hide') || !db.seenTip || db.tab !== 'rak') return;
     localStorage.setItem('kepo.noteCad', String(Date.now()));
-    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 8000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
+    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 5000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
   } catch (e) { }
 }
 
@@ -990,7 +995,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v638';
+const APP_VER = 'v658';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1834,19 +1839,23 @@ async function viewBaca() {
     /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
     const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
     const rtl = RTL_LANGS.includes(b.lang);
-    let out = '', buf = '';
-    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; };
+    /* #1727: ja/zh/th: kata beruntun tak digabung ke satu .nb; .nb hanya kata + tanda baca yang menempel (tercakup logika di bawah) */
+    let out = '', buf = '', bufW = false, bufN = 0, join = false;
+    /* #1725: tanpa spasi, nowrap hanya satu kata + tanda baca (kalau tidak, satu kalimat jadi blok tak bisa putus) */
+    /* #1721: bahasa tanpa spasi (ja/zh/th): dua kata berurutan tanpa pemisah tak boleh jadi satu .nb; isi .nb > 12 karakter tidak di-nowrap */
+    const flush = () => { if (buf) out += bufN > 12 ? buf : `<span class="nb">${buf}</span>`; buf = ''; bufW = false; bufN = 0; join = false; };
     tk.forEach((t, i) => {
-      if (t.w) { buf += wHtml(t, i); return; }
+      /* #1722: ja/zh: tiap kata .nb sendiri supaya bebas putus baris antar kata */
+      if (t.w) { if (bufW && !join) flush(); buf += wHtml(t, i); bufW = true; bufN += t.t.length; join = false; return; }
       const nextW = !!(tk[i + 1] && tk[i + 1].w);
       if (rtl) { flush(); out += esc(t.t); return; }
-      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
+      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); bufN++; join = true; return; }
       const lead = (t.t.match(NB_LEAD) || [''])[0];
-      if (lead) { if (buf) buf += esc(lead); else out += esc(lead); }
+      if (lead) { if (buf) { buf += esc(lead); bufN += lead.length; } else out += esc(lead); }
       flush();
       let rest = t.t.slice(lead.length), tail = '';
       if (nextW) { const m = rest.match(NB_TAIL); if (m) { tail = m[0]; rest = rest.slice(0, rest.length - tail.length); } }
-      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : '';
+      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : ''; bufN = tail.length;
     });
     flush();
     return out;
@@ -2180,7 +2189,7 @@ function layout() {
   const resumed = !RD.toEnd && RD.flash == null && cols._chip !== true && ((b.pos || 0) > 0 || (b.si || 0) > 0 || p > 0);
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
-  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100)) resumeChip(b); } /* buku tamat: tanpa chip 'Lanjut' (#1304) */
+  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100 || p >= RD.n - 1 || (b.pos || 0) >= (b.total || 1) - 1)) resumeChip(b); } /* #1742: bukan di akhir buku */ /* buku tamat: tanpa chip 'Lanjut' (#1304) */
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 /* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
@@ -2327,6 +2336,7 @@ function rovKey(e) {
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   closeInline();
+  if (anim) { const rc = $('#rchip'); if (rc) { clearTimeout(chipT); rc.remove(); } } /* chip 'Lanjut' hilang begitu pengguna membalik halaman (#1742) */
   if (b && p > RD.page) pahamLeave(b);
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   RD.pgK = b ? pgKey(b, RD.page) : ''; RD.pgT = Date.now();
@@ -3499,7 +3509,7 @@ function viewKataIn() {
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
       kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
-        : hskF && !q && csvF === 'all' && !hskUnk && !hskN[hskF] && db.vocab.length ? `<div class="empty"><div class="mut sm">Belum ada kata HSK ${hskF}. Ketuk kata saat baca.</div></div>` : (q || csvF !== 'all' || hskF || hskUnk) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
+        : hskF && !q && csvF === 'all' && !hskUnk && !hskN[hskF] && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/kosong-hsk.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada kata HSK ${hskF}. Ketuk kata saat baca.</div></div>` : (q || csvF !== 'all' || hskF || hskUnk) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
       if (db.vocab.length) {
         const readyN = () => db.vocab.filter(v => inF(v) && !v.noTr && (v.t || '').trim()).length;
@@ -3681,7 +3691,7 @@ function deck(kb) {
       return;
     }
     const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = db.vocab.filter(isDue).length, left = nLeft > 0;
-    kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('curious', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
+    kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('cards', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false;
   const nCards = cards.length + deckRetry.filter(r => r !== rt && r !== rdy).length;
   kb.innerHTML = `${db.autoSpeakAsked ? '' : `<div class="asp-ban" id="aspBan" role="group" aria-label="Bunyi otomatis"><span>Mau kata dibunyikan otomatis?</span><button class="yes" id="aspOn" type="button">Nyalakan</button><button class="ghost" id="aspOff" type="button">Nanti</button></div>`}<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
