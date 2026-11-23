@@ -1,5 +1,11 @@
 [
   {
+    "n": 1745,
+    "judul": "Home HP: kartu 'Simpan 3 kata dulu' rapi, tak terpotong, tanpa patah",
+    "poin": "Kartu \"Simpan 3 kata dulu\" di Home kini rapi, judul satu baris.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1744,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
     "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
@@ -171,12 +177,6 @@
     "n": 1674,
     "judul": "Sheet Tamat & catatan sesi: satu istilah 'Bagian', tanpa angka halaman bentrok",
     "poin": "Layar Tamat kini bilang \"12 bagian\", bukan \"12 halaman\" yang bikin bingung.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1698,
-    "judul": "[peta 177] Hemat kuota: sinkron lebih jarang di sisi aplikasi",
-    "poin": "Aplikasi sekarang menyinkron jauh lebih jarang, jadi kuota server lebih hemat.",
     "tgl": "2026-11-22"
   }
 ]
