@@ -1834,13 +1834,14 @@ async function viewBaca() {
     /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
     const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
     const rtl = RTL_LANGS.includes(b.lang);
-    let out = '', buf = '';
-    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; };
+    let out = '', buf = '', hasW = false, join = false;
+    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; hasW = false; join = false; };
     tk.forEach((t, i) => {
-      if (t.w) { buf += wHtml(t, i); return; }
+      /* #1722: bahasa tanpa spasi (ja/zh): tiap kata .nb sendiri supaya bebas putus baris antar kata */
+      if (t.w) { if (hasW && !join) flush(); buf += wHtml(t, i); hasW = true; join = false; return; }
       const nextW = !!(tk[i + 1] && tk[i + 1].w);
       if (rtl) { flush(); out += esc(t.t); return; }
-      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
+      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); join = true; return; }
       const lead = (t.t.match(NB_LEAD) || [''])[0];
       if (lead) { if (buf) buf += esc(lead); else out += esc(lead); }
       flush();
