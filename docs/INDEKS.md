@@ -188,6 +188,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 - [furigana-ruby-epub](riset-furigana-ruby-epub.md)
 - [jepang-tulisan-tegak](riset-jepang-tulisan-tegak.md)
 - [pemotongan-kata-jp-kr](riset-pemotongan-kata-jp-kr.md)
+- [teks-jepang-menumpuk-nb](riset-teks-jepang-menumpuk-nb.md)
 - [warna-nada-pinyin](riset-warna-nada-pinyin.md)
 ### Tampilan & kenyamanan baca
 - [aksesibilitas-baca](riset-aksesibilitas-baca.md)

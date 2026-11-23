@@ -251,6 +251,15 @@
       "catatan": "Pecah jadi tugas [peta N] per bagian 2.1-2.5. Mockup: docs/mockup-1728.html. Uji 320/390px, 4 tema. Naikkan versi C di sw.js."
     },
     {
+      "no": 184,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong, nowrap hanya satu kata + tanda baca (#1724)",
+      "dokumen": "docs/riset-teks-jepang-menumpuk-nb.md",
+      "status": "siap dikerjakan",
+      "catatan": "Opsi B bagian 3: di bahasa tanpa spasi, flush buffer .nb setelah tiap kata (maks 1 kata per .nb). Spesifikasi bagian 5. Mockup: docs/mockup-1724.html. Uji こころ hal 12, 坊っちゃん hal 11, 320px, 4 tema, EN/ID/AR tak berubah. Naikkan C di sw.js."
+    },
+    {
       "no": 180,
       "peran": "developer",
       "prioritas": "P0",
