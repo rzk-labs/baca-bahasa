@@ -19,6 +19,8 @@
 | `img/aset/langkah-tambah.svg` (<1 KB, 48x48) | Home kosong, langkah 1 "Tambah cerita favoritmu" | Doodle stiker: halaman + stabilo Wasabi + tombol plus, border Kertas | referensi-visual.md: onboarding, tempel-stiker |
 | `img/aset/langkah-ketuk.svg` (<1 KB, 48x48) | Home kosong, langkah 2 "Ketuk kata..." | Doodle stiker: satu kata disorot stabilo + jari mengetuk | Sama |
 | `img/aset/langkah-ngomong.svg` (<1 KB, 48x48) | Home kosong, langkah 3 "Ucapkan kalimatnya" | Doodle stiker: gelembung ucapan + gelombang suara, aksen stabilo | Sama |
+| `img/aset/kosong-hsk.svg` (1 KB) | Tab Kata: saringan HSK kosong ("Belum ada kata HSK N") | Doodle tangga kecil, satu anak tangga stabilo Wasabi, latar Biru Es | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
+| `img/aset/kosong-kartu.svg` (1 KB) | Tab Kata, Kartu: "Belum ada kartu" | Tumpukan kartu kosong, satu miring garis putus-putus, coretan stabilo Wasabi | Sama; beda dari kosong-kata (satu kartu) |
 
 ## 2. Catatan teknis
 - Ukuran 0,6 KB per file. viewBox 160x160. Tanpa teks.
