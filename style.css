@@ -1502,3 +1502,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 @keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 #view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
 @media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
+/* #1779: tautan Tamat & Baca ulang, area ketuk min 44x44, jarak lega, fokus jelas */
+.fb-sec .lnk,.fb-rem .lnk,#hero.hero-done .hd-re .lnk{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 12px;box-sizing:border-box}
+.fb-sec{gap:8px 20px}
+.fb-rem{gap:8px 16px}
+.fb-sec .lnk:focus-visible,.fb-rem .lnk:focus-visible,#hero.hero-done .hd-re .lnk:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+[data-theme=night] .fb-sec .lnk:focus-visible,[data-theme=night] .fb-rem .lnk:focus-visible,[data-theme=night] #hero.hero-done .hd-re .lnk:focus-visible{outline-color:var(--lime)}
