@@ -1,5 +1,11 @@
 [
   {
+    "n": 1727,
+    "judul": "Reader HP: teks Jepang tak lagi terpotong/menumpuk (nowrap .nb)",
+    "poin": "Teks buku Jepang di HP kini tak terpotong atau menumpuk lagi.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1726,
     "judul": "Reader Jepang/Mandarin HP: teks tak terpotong & tak menumpuk",
     "poin": "Teks buku Jepang dan Mandarin di HP sekarang patah baris rapi.",
@@ -171,12 +177,6 @@
     "n": 1651,
     "judul": "Toast: meluncur turun & pudar halus saat hilang, tak mendadak",
     "poin": "Pesan kecil di bawah layar sekarang turun dan pudar pelan, tidak lenyap mendadak.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1650,
-    "judul": "Ilustrasi doodle SVG: layar 'Sesi beres' & 'Cukup untuk sekarang'",
-    "poin": "Layar selesai latihan di tab Kata sekarang punya gambar kartu bergaya coretan.",
     "tgl": "2026-11-22"
   }
 ]
