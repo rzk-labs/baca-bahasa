@@ -167,7 +167,7 @@
       "nama": "Retensi Minggu Pertama",
       "fase": "Beta Nyata",
       "status": "awal",
-      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md. (#1677) Koma nyasar di awal baris reader: kata & tanda baca dirender terpisah, tersangka .w::after; opsi & aturan uji di docs/riset-tanda-baca-awal-baris.md."
+      "catatan": "Data /hitung 14-16 Nov 2026: 42 pengguna baru, balik_h2 total 3 (±7%). Keluar bila: H2 >=25% dan H7 >=10% selama 2 minggu, dengan >=30 pengguna baru/minggu. Bahan: docs/pm-beta-rencana-ukur.md, docs/marketing-pesan-balik-hari-2-4.md. Peran: pm, developer. Lihat docs/pm-peta-fase-2.md. (draft bukti internet: docs/riset-retensi-h2-h7-patokan.md) Target lebih jujur usulan riset: H2 >=12% / H7 >=4% sekarang, >=18% / >=7% setelah 3 eksperimen; 25%/10% jadi cita-cita bila ada jalur pengingat. (draft bukti internet) lihat docs/riset-data-hitung-bersih.md: 3 dari 42 = rentang ±2,5-19% (95%), jadi H2 belum bisa dinilai; sampel <100 wajib ditulis rentang; kunci H2/H7 hanya setelah 'baru aktif' & sumber 'uji' terpisah. (bukti internet, #1481) 39 butir: popup naik level menutup layar & beda angka level antar layar terbukti sebagian (mengganggu; efek ke kembali belum terukur), huruf hari kembar sebagian; aturan pendek di docs/riset-popup-level-huruf-hari.md; status tetap awal (fase 2 butuh data nyata). (bukti internet, #1412) 47 butir: ulang dini kata belum jatuh tempo terbukti sebagian untuk ingatan, belum jelas untuk kebiasaan balik; beri label sendiri ('Latihan ekstra') tanpa mengubah jadwal, lihat docs/riset-ulang-dini-belum-jatuh-tempo.md. (#1677) Koma nyasar di awal baris reader: kata & tanda baca dirender terpisah, tersangka .w::after; opsi & aturan uji di docs/riset-tanda-baca-awal-baris.md. (bukti internet, #1747) Nama 'Susah diucap' menyesatkan (isinya skor ucapan, dikira kata susah-ingat) dan Ulang tak perlu terkunci sampai 3 kata; 42 butir dari 5 jenis sumber, H1 sebagian, H2 belum jelas (condong benar), H3 sebagian. Usul: ganti nama 'Ucapan' & Ulang mulai 1 kata (backlog #184), lihat docs/riset-susah-diucap-ulang-mulai-1-kata.md; status tetap awal."
     },
     {
       "no": 24,
@@ -242,6 +242,33 @@
   ],
   "backlog": [
     {"no":185,"peran":"developer","prioritas":"P1","nama":"Sheet Tamat: buku contoh diberi label 'Coba buku contoh' (#1762)","dokumen":"docs/desain-tamat-buku-contoh-1762.md","status":"selesai (#1762)","catatan":"Mockup: docs/mockup-1762.html. Buku pengguna tetap 'Lanjut: judul'. Klik & gaya tombol tak berubah."},
+    {
+      "no": 183,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Reader Jepang/Mandarin: teks tak lagi terpotong & menumpuk, satu kata per .nb (#1722)",
+      "dokumen": "docs/pm-reader-ja-zh-nb.md",
+      "status": "selesai (#1722, tinggal digabung)",
+      "catatan": "Mockup: docs/mockup-1722.html. wordsHtml flush tiap kata baru; .nb + overflow-wrap:anywhere. Naik ke kepo-v646."
+    },
+    {
+      "no": 184,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Kata: segmen 'Susah diucap' jadi 'Ucapan' + Ulang mulai dari 1 kata (#1747)",
+      "dokumen": "docs/riset-susah-diucap-ulang-mulai-1-kata.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ganti label segmen & pesan setelah 3x gagal (ui.js ~3482, ~3415) jadi 'Ucapan' + subjudul 'Kata dengan skor ucapan di bawah 85%'. Kunci Ulang hanya bila 0 kata; label 'Ulang 1/2/3 kata' (q3Lock ~1277, teks lencana ~1683, quickPick ~3452). Kriteria uji di bagian 6 dokumen. Mockup: docs/mockup-1747.html. Naikkan C di sw.js."
+    },
+    {
+      "no": 185,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tab Kata: segmen 'Susah diucap' jadi 'Latih ucap' + teks bantu; Ulang kata bisa mulai dari 1 kata (#1751)",
+      "dokumen": "docs/rancangan-tab-kata-nama-susah-1kata.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ganti label di ui.js ~3482, ~3479, ~3415. Konstanta Q_MIN=1 menggantikan angka 3 di #q3Lock (~1277) dan baris Besok (~1683). Teks 0/1/2 kata di bagian 2. Mockup: docs/mockup-1751.html. Uji 320px. Naikkan C di sw.js. Satu topik dengan #1747 (tugas di atas): kerjakan bersama."
+    },
     {
       "no": 183,
       "peran": "developer",
