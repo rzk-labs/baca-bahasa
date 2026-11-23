@@ -1835,19 +1835,21 @@ async function viewBaca() {
     /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
     const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
     const rtl = RTL_LANGS.includes(b.lang);
-    let out = '', buf = '';
-    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; };
+    let out = '', buf = '', bufW = false, bufN = 0, join = false;
+    /* #1721: bahasa tanpa spasi (ja/zh/th): dua kata berurutan tanpa pemisah tak boleh jadi satu .nb; isi .nb > 12 karakter tidak di-nowrap */
+    const flush = () => { if (buf) out += bufN > 12 ? buf : `<span class="nb">${buf}</span>`; buf = ''; bufW = false; bufN = 0; join = false; };
     tk.forEach((t, i) => {
-      if (t.w) { buf += wHtml(t, i); return; }
+      /* #1722: ja/zh: tiap kata .nb sendiri supaya bebas putus baris antar kata */
+      if (t.w) { if (bufW && !join) flush(); buf += wHtml(t, i); bufW = true; bufN += t.t.length; join = false; return; }
       const nextW = !!(tk[i + 1] && tk[i + 1].w);
       if (rtl) { flush(); out += esc(t.t); return; }
-      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
+      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); bufN++; join = true; return; }
       const lead = (t.t.match(NB_LEAD) || [''])[0];
-      if (lead) { if (buf) buf += esc(lead); else out += esc(lead); }
+      if (lead) { if (buf) { buf += esc(lead); bufN += lead.length; } else out += esc(lead); }
       flush();
       let rest = t.t.slice(lead.length), tail = '';
       if (nextW) { const m = rest.match(NB_TAIL); if (m) { tail = m[0]; rest = rest.slice(0, rest.length - tail.length); } }
-      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : '';
+      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : ''; bufN = tail.length;
     });
     flush();
     return out;
