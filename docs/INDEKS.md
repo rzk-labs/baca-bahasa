@@ -69,6 +69,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 ## 4. Desain
 - [arah-brand-baru](desain-arah-brand-baru.md)
 - [arti-lain-terpotong](desain-arti-lain-terpotong.md)
+- [rancangan-tab-kata-nama-susah-1kata](rancangan-tab-kata-nama-susah-1kata.md) — ganti "Susah diucap" jadi "Latih ucap"; Ulang kata mulai 1 kata (#1751)
 - [bar-lencana-target](desain-bar-lencana-target.md)
 - [evaluasi-e2e-983](desain-evaluasi-e2e-983.md)
 - [evaluasi-ui-ux-932](desain-evaluasi-ui-ux-932.md)
@@ -188,6 +189,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 - [furigana-ruby-epub](riset-furigana-ruby-epub.md)
 - [jepang-tulisan-tegak](riset-jepang-tulisan-tegak.md)
 - [pemotongan-kata-jp-kr](riset-pemotongan-kata-jp-kr.md)
+- [teks-jepang-menumpuk-nb](riset-teks-jepang-menumpuk-nb.md)
 - [warna-nada-pinyin](riset-warna-nada-pinyin.md)
 ### Tampilan & kenyamanan baca
 - [aksesibilitas-baca](riset-aksesibilitas-baca.md)
