@@ -2186,7 +2186,7 @@ function layout() {
   const resumed = !RD.toEnd && RD.flash == null && cols._chip !== true && ((b.pos || 0) > 0 || (b.si || 0) > 0 || p > 0);
   RD.toEnd = false; RD.dy = 0;
   showPage(p, false);
-  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100)) resumeChip(b); } /* buku tamat: tanpa chip 'Lanjut' (#1304) */
+  if (resumed) { cols._chip = true; if (!(b.doneAt || pctOf(b) >= 100 || p >= RD.n - 1 || (b.pos || 0) >= (b.total || 1) - 1)) resumeChip(b); } /* #1742: bukan di akhir buku */ /* buku tamat: tanpa chip 'Lanjut' (#1304) */
   if (RD.flash != null) { const fx = RD.ss.find(y => +y.el.dataset.s === RD.flash); RD.flash = null; if (fx) { fx.el.classList.add('hl'); setTimeout(() => fx.el.classList.remove('hl'), 2500); } }
 }
 /* chip 'Lanjut dari Bagian N' (satuan sama dgn bilah baca) ±4 dtk setelah posisi dipulihkan; ketuk = tawarkan penanda terakhir (bila ada) */
@@ -2333,6 +2333,7 @@ function rovKey(e) {
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   closeInline();
+  if (anim) { const rc = $('#rchip'); if (rc) { clearTimeout(chipT); rc.remove(); } } /* chip 'Lanjut' hilang begitu pengguna membalik halaman (#1742) */
   if (b && p > RD.page) pahamLeave(b);
   RD.page = Math.max(0, Math.min(RD.n - 1, p));
   RD.pgK = b ? pgKey(b, RD.page) : ''; RD.pgT = Date.now();
