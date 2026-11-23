@@ -423,7 +423,8 @@ function toastHide() {
   t.onanimationend = e => { if (e.target === t && t.classList.contains('closing')) toastEnd(t); };
   toastEndT = setTimeout(() => toastEnd(t), 250);
 }
-function toast(m, ms = 3200, act, act2) { const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
+const toastMs = (m, ms) => { const long = String(m).length > 40; if (ms == null) return long ? 4500 : 3200; return long && ms < 4000 ? 4000 : ms; };
+function toast(m, ms, act, act2) { ms = toastMs(m, ms); const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -608,7 +609,7 @@ setInterval(() => {
   db.readSec[d] = (+db.readSec[d] || 0) + 1; rdUnsaved++;
   const ks = Object.keys(db.readSec).sort(); if (ks.length > 60) delete db.readSec[ks[0]];
   if (rdUnsaved >= 15) { rdUnsaved = 0; save(); }
-  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 2500); sfx('win'); confetti(50); }); }), 300); }
+  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 4500); sfx('win'); confetti(50); }); }), 300); }
 }, 1000);
 /* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
 let rdHist = false, rdSkip = 0;
@@ -687,7 +688,7 @@ function cadNote() {
     if (Date.now() - last < 14 * 864e5) return;
     if (!$('#sheet').classList.contains('hide') || !$('#toast').classList.contains('hide') || !db.seenTip || db.tab !== 'rak') return;
     localStorage.setItem('kepo.noteCad', String(Date.now()));
-    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 8000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
+    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 5000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
   } catch (e) { }
 }
 

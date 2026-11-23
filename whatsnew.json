@@ -1,5 +1,11 @@
 [
   {
+    "n": 1723,
+    "judul": "Toast: lama tampil sesuai isi, 'Beres!' dan cadangan tak nagih",
+    "poin": "Toast \"Beres!\" sekarang tampil 4,5 detik, cukup waktu untuk dibaca.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1721,
     "judul": "Reader Jepang/Mandarin: teks tak lagi menumpuk & terpotong di tepi",
     "poin": "Teks Jepang dan Mandarin di HP tidak lagi menumpuk atau terpotong.",
@@ -171,12 +177,6 @@
     "n": 1648,
     "judul": "Tawarkan pengingat baca sekali, di toast setelah selesai baca pertama",
     "poin": "Setelah baca pertama, muncul tawaran pengingat sekali: \"Ingatkan aku\" atau \"Nanti aja\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1647,
-    "judul": "Kartu Target Home: jelaskan 30 XP itu kira-kira berapa kegiatan",
-    "poin": "Kartu Target di Home kini punya contoh kecil: \"5 hlm + 10 kata\".",
     "tgl": "2026-11-22"
   }
 ]
