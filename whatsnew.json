@@ -1,5 +1,11 @@
 [
   {
+    "n": 1726,
+    "judul": "Reader Jepang/Mandarin HP: teks tak terpotong & tak menumpuk",
+    "poin": "Teks buku Jepang dan Mandarin di HP sekarang patah baris rapi.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1725,
     "judul": "Reader Jepang/Mandarin: baris teks tak boleh terpotong atau menumpuk",
     "poin": "Teks Jepang dan Mandarin di reader kini turun baris rapi, tak terpotong.",
@@ -171,12 +177,6 @@
     "n": 1650,
     "judul": "Ilustrasi doodle SVG: layar 'Sesi beres' & 'Cukup untuk sekarang'",
     "poin": "Layar selesai latihan di tab Kata sekarang punya gambar kartu bergaya coretan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1649,
-    "judul": "Home: ajakan sekali 'Pasang di Layar Utama' setelah baca pertama",
-    "poin": "Pengguna iPhone kini diajak sekali pasang Keepo di layar utama.",
     "tgl": "2026-11-22"
   }
 ]
