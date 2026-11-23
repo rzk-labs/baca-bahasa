@@ -990,7 +990,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v638';
+const APP_VER = 'v646';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1834,10 +1834,12 @@ async function viewBaca() {
     /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
     const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
     const rtl = RTL_LANGS.includes(b.lang);
-    let out = '', buf = '';
-    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; };
+    /* #1727: bahasa tanpa spasi (ja/zh/th): kata beruntun TIDAK digabung ke satu .nb (kalimat jadi blok tak terpatah & terpotong); .nb hanya kata terakhir + tanda baca yang menempel */
+    const noSp = ['ja', 'zh-CN', 'zh-TW', 'th'].includes(b.lang);
+    let out = '', buf = '', bufW = false;
+    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; bufW = false; };
     tk.forEach((t, i) => {
-      if (t.w) { buf += wHtml(t, i); return; }
+      if (t.w) { if (noSp && bufW) { out += buf; buf = ''; } buf += wHtml(t, i); bufW = true; return; }
       const nextW = !!(tk[i + 1] && tk[i + 1].w);
       if (rtl) { flush(); out += esc(t.t); return; }
       if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
