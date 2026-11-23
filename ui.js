@@ -1255,7 +1255,7 @@ function viewRak() {
       <p class="hero-sub">Baca buku atau cerita sendiri. Ketuk kata yang bikin kepo, artinya langsung muncul.</p>
       <button class="main hero-up" id="up"><span class="em">${ico('upload')}</span>Tambah cerita</button>
       <div class="mut sm hero-fmt">TXT · EPUB · PDF. Kata yang sering kamu ketuk otomatis masuk ulangan.</div>
-      <ol class="steps3"><li><b>1</b>Tambah cerita favoritmu</li><li><b>2</b>Ketuk kata yang bikin bingung</li><li><b>3</b>Ucapkan kalimatnya, dapat skor & XP</li></ol>
+      <ol class="steps3"><li><img src="img/aset/langkah-tambah.svg" alt="" width="48" height="48" decoding="async"><b>1</b>Tambah cerita favoritmu</li><li><img src="img/aset/langkah-ketuk.svg" alt="" width="48" height="48" decoding="async"><b>2</b>Ketuk kata yang bikin bingung</li><li><img src="img/aset/langkah-ngomong.svg" alt="" width="48" height="48" decoding="async"><b>3</b>Ucapkan kalimatnya, dapat skor & XP</li></ol>
       <div class="sec-h"><h2>Atau mulai dengan</h2></div>${addCard(true)}
       <img class="hero-pic" src="img/hero-home.webp" srcset="img/hero-home-640.webp 640w, img/hero-home.webp 960w" sizes="(max-width:600px) 92vw, 560px" width="960" height="720" alt="Buku terbuka dengan satu kata disorot stabilo dan kartu arti muncul di halaman" decoding="async">`;
   } else {
