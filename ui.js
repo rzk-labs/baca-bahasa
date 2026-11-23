@@ -1666,7 +1666,12 @@ function finishBook(b) {
   const none = !ws.length && !pend; /* tak ada kata baru: Buku baru jadi tombol utama */
   const nx1 = nx[0];
   const acts = [];
-  if (nx1) acts.push(`<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t" dir="auto" lang="${esc(nx1.lang)}">Lanjut: ${esc(nx1.title)}</span><span class="fbn-m mut sm">${langName(nx1.lang)} · ${pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai'}</span></button>`);
+  if (nx1) { /* #1762: buku contoh bawaan diberi label jelas, buku pengguna tetap 'Lanjut' */
+    const nxEx = /\s*\(contoh\)\s*$/i.test(nx1.title || '') || Object.values(SAMPLES).some(x => x.title === nx1.title) || isShortSample(nx1);
+    const nxT = nxEx ? 'Coba buku contoh: ' + (nx1.title || '').replace(/\s*\(contoh\)\s*$/i, '') : 'Lanjut: ' + nx1.title;
+    const nxM = nxEx ? `${langName(nx1.lang)} · Buku contoh dari Keepo` : `${langName(nx1.lang)} · ${pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai'}`;
+    acts.push(`<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t" dir="auto" lang="${esc(nx1.lang)}">${esc(nxT)}</span><span class="fbn-m mut sm">${esc(nxM)}</span></button>`);
+  }
   const aBaru = '<button class="__C__ full" id="fbadd">Buku baru</button>';
   const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
   const aKata = total > 0 ? `<button class="__C__ full" id="fbk">${ws.length ? `Lihat ${ws.length} kata` : dueN ? `Ulang ${dueN} kata siap` : 'Lihat kata'}</button>` : '';
