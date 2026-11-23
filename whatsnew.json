@@ -1,5 +1,11 @@
 [
   {
+    "n": 1740,
+    "judul": "Home HP: kartu 'Simpan 3 kata dulu' utuh, tak terpotong menu",
+    "poin": "Kartu \"Kata disimpan 0/3\" di HP sekarang rapi: judul satu baris, tombol di bawah.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1730,
     "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
     "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
@@ -171,12 +177,6 @@
     "n": 1664,
     "judul": "Home: kartu Minggu ini tanpa kotak penjelas 'Streak = beruntun'",
     "poin": "Kotak penjelas \"Streak = beruntun\" di kartu Minggu ini sudah dihapus.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1663,
-    "judul": "Tombol Pinyin: toast tiap mode pakai contoh singkat, jelas",
-    "poin": "Tombol Pinyin sekarang kasih pesan singkat dengan contoh di tiap mode.",
     "tgl": "2026-11-22"
   }
 ]
