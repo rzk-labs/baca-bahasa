@@ -16,6 +16,9 @@
 | `img/aset/cari-kosong.svg` | Tab Kata & Ngomong: hasil cari kosong | Doodle garis longgar Plum Noir, isi Biru Es, stabilo Wasabi di bawah | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
 | `img/aset/sosial-offline.svg` | Layar "Sosial lagi dimuat" / offline | Awan doodle, petir putus stabilo Wasabi, tanda silang | Sama |
 | `img/aset/beres-sesi.svg` (1 KB) | Tab Kata: "Sesi hari ini beres", "Semua beres", kotak "Cukup untuk sekarang" | Tiga kartu miring Biru Es, coretan stabilo Wasabi, centang kecil, bintang | Sama; beda dari kosong-aman (centang besar) |
+| `img/aset/langkah-tambah.svg` (<1 KB, 48x48) | Home kosong, langkah 1 "Tambah cerita favoritmu" | Doodle stiker: halaman + stabilo Wasabi + tombol plus, border Kertas | referensi-visual.md: onboarding, tempel-stiker |
+| `img/aset/langkah-ketuk.svg` (<1 KB, 48x48) | Home kosong, langkah 2 "Ketuk kata..." | Doodle stiker: satu kata disorot stabilo + jari mengetuk | Sama |
+| `img/aset/langkah-ngomong.svg` (<1 KB, 48x48) | Home kosong, langkah 3 "Ucapkan kalimatnya" | Doodle stiker: gelembung ucapan + gelombang suara, aksen stabilo | Sama |
 | `img/aset/kosong-hsk.svg` (1 KB) | Tab Kata: saringan HSK kosong ("Belum ada kata HSK N") | Doodle tangga kecil, satu anak tangga stabilo Wasabi, latar Biru Es | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
 | `img/aset/kosong-kartu.svg` (1 KB) | Tab Kata, Kartu: "Belum ada kartu" | Tumpukan kartu kosong, satu miring garis putus-putus, coretan stabilo Wasabi | Sama; beda dari kosong-kata (satu kartu) |
 

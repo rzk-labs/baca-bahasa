@@ -1,5 +1,11 @@
 [
   {
+    "n": 1748,
+    "judul": "Doodle SVG: 3 langkah di Home pertama tak cuma angka polos",
+    "poin": "Tiga langkah di Home pertama sekarang punya gambar doodle kecil.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1746,
     "judul": "Bar progres buku, reader & unduhan: dibacakan pembaca layar",
     "poin": "Bar progres buku, bacaan, dan unduhan kini dibacakan pembaca layar.",
@@ -171,12 +177,6 @@
     "n": 1679,
     "judul": "Tab Kata: saringan HSK tetap tampil, ada penjelasan saat belum ada ulang",
     "poin": "Tab Kata: level HSK kosong tetap tampil, misalnya 0/600.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1676,
-    "judul": "Reader: koma/titik tak boleh nyasar di awal baris",
-    "poin": "Koma dan titik tidak lagi muncul sendirian di awal baris bacaan.",
     "tgl": "2026-11-22"
   }
 ]

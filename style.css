@@ -1285,6 +1285,8 @@ ol.steps3 li{cursor:default}
 .stat3 .t-lav .lvbar i{background:var(--hl)}
 ol.steps3 li{gap:8px}
 ol.steps3 b{min-width:0}
+ol.steps3 li>img{flex:none;width:48px;height:48px}
+@media (max-width:360px){ol.steps3 li{font-size:14px;line-height:19px}}
 .mut.sm{overflow-wrap:anywhere}
 .asp-ban{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#D7EFFF;color:var(--ink);font-size:14px}
 .asp-ban span{flex:1 1 100%}
