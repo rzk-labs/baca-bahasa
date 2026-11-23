@@ -1,0 +1,43 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockup #1728 Buka ulang buku Tamat</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.plan{font:600 12px Inter,sans-serif;background:#E9F056;display:inline-block;padding:4px 10px;border-radius:999px;margin-bottom:4px}
+.lbl{font:600 12px Inter,sans-serif;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.ph{width:390px;max-width:100%;background:#FBF8F2;border:1px solid #B2CFE2;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;height:380px;position:relative}
+.top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #DDD6C8}
+.top b{font:600 15px "Bricolage Grotesque",Inter,sans-serif}
+.txt{flex:1;padding:16px;font-size:17px;line-height:1.6;color:#2B2228}
+.foot{display:flex;align-items:center;padding:10px 12px;border-top:1px solid #DDD6C8;gap:8px}
+.pg{width:40px;height:40px;border-radius:12px;border:1px solid #DDD6C8;background:#fff;display:grid;place-items:center;font-size:18px;flex:none}
+.pg.s{font-size:14px}
+.mid{flex:1;min-width:0;text-align:center;font-size:12px;color:#5C5258}
+.bar{height:3px;background:#DDD6C8;border-radius:2px;margin-top:4px}.bar i{display:block;height:100%;width:100%;background:#351E28;border-radius:2px}
+.new{font-size:14px;font-weight:600;color:#2B2228;display:flex;align-items:center;justify-content:center;gap:4px}
+.new svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.btn{background:#351E28;color:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:14px;flex:none}
+.bad{outline:2px dashed #B3261E;outline-offset:-2px}
+.chip{position:absolute;left:50%;transform:translateX(-50%);bottom:70px;background:#351E28;color:#fff;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:800}
+.note{font-size:12px;margin:6px 0 0;max-width:390px}
+</style></head><body>
+<span class="plan">Gambaran rencana, belum dibangun</span>
+
+<div class="lbl">Sebelum: halaman terakhir, belum Tamat</div>
+<div class="ph"><div class="top"><span class="pg">‹</span><b>Judul buku</b></div><div class="txt">…dan mereka pun hidup bahagia.</div>
+<div class="foot"><span class="pg">‹</span><div class="mid"><span class="new bad"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Tamat</span><div class="bar"><i></i></div></div><span class="btn bad">Tamatkan</span></div></div>
+<p class="note">Bar bilang Tamat, tombol bilang Tamatkan.</p>
+
+<div class="lbl">Sesudah: halaman terakhir, belum Tamat</div>
+<div class="ph"><div class="top"><span class="pg">←</span><b>Judul buku</b></div><div class="txt">…dan mereka pun hidup bahagia.</div>
+<div class="foot"><span class="pg s">‹</span><div class="mid"><span>Hal. 9/9 · 100%</span><div class="bar"><i></i></div></div><span class="btn">Tamatkan</span></div></div>
+
+<div class="lbl">Sebelum: Tamat, dibuka ulang</div>
+<div class="ph"><div class="top"><span class="pg">‹</span><b>Judul buku</b></div><div class="txt">…dan mereka pun hidup bahagia.</div>
+<div class="chip bad">Lanjut dari Bagian 10</div>
+<div class="foot"><span class="pg">‹</span><div class="mid"><span class="new"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Tamat</span><div class="bar"><i></i></div></div><span class="btn">Baca ulang</span></div></div>
+<p class="note">Tombol melayang menutupi teks. Streak naik tanpa membaca.</p>
+
+<div class="lbl">Sesudah: Tamat, dibuka ulang</div>
+<div class="ph"><div class="top"><span class="pg">←</span><b>Judul buku</b></div><div class="txt">…dan mereka pun hidup bahagia.</div>
+<div class="foot"><span class="pg s">‹</span><div class="mid"><span class="new"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Tamat</span><div class="bar"><i></i></div></div><span class="btn">Baca ulang</span></div></div>
+<p class="note">Tanpa tombol melayang. Streak tetap. Satu ikon ← di atas, ‹ kecil di bawah.</p>
+</body></html>

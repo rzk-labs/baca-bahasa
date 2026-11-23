@@ -504,7 +504,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 /* #1626: area ketuk kata lebih tinggi, tak terlihat, tanpa geser tata letak. N = (lh - 1.2em)/2 - .5px agar baris atas & bawah tak saling menimpa; kiri/kanan cuma 1px agar kata di tepi tak mencuri ketukan balik halaman. */
 .cols .w{position:relative}
-.cols .nb{white-space:nowrap}
+.cols .nb{white-space:nowrap;overflow-wrap:anywhere}
 .reader[lang^="ja"],.reader[lang^="zh"]{line-break:strict}
 .cols .w::after{content:"";position:absolute;left:-1px;right:-1px;top:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px));bottom:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px))}
 .cols{-webkit-touch-callout:none}
@@ -1480,3 +1480,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1689: baris contoh Target: kontras penuh, ruang bawah cukup di atas menu HP */
 .stat3 .goal-eg{color:var(--ink);font-weight:700;padding:0 2px;box-sizing:border-box}
 @media(max-width:389px){body:not(.reading) #view:has(.stat3){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
+/* #1730: bar progres mengisi halus saat tab dibuka (bukan bar reader) */
+@keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
+@media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
