@@ -2363,8 +2363,15 @@ function showPage(p, anim = true) {
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
     const bs = statusPct(bp);
-    pgn.classList.toggle('tamat', !!bs.done);
-    if (bs.done) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
+    /* #1760: 'Tamat' + centang HANYA bila buku benar-benar ditandai tamat (b.doneAt, sama dengan tombol 'Baca ulang'); persen 100% tanpa doneAt = 'Halaman terakhir' netral + tombol 'Tamatkan' */
+    const tamat = !!(bs.done && b.doneAt), akhir = bs.done && !b.doneAt;
+    pgn.classList.toggle('tamat', tamat);
+    if (akhir) {
+      pgn.title = `Halaman terakhir buku. Tekan Tamatkan untuk menandai tamat. ${secFull}`;
+      pgn.setAttribute('aria-label', `Halaman terakhir buku, belum ditandai tamat, ${secFull}`);
+    }
+    if (tamat) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
+    else if (akhir) { pgn.innerHTML = nw('Halaman terakhir'); }
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);
