@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1799 — Pengaturan dengan Lanjutan</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#D7EFFF;font:16px/1.4 Inter,system-ui,sans-serif;color:#2B2228;padding:16px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.note{max-width:390px;background:#E9F056;color:#351E28;font-weight:700;font-size:13px;padding:8px 12px;border-radius:10px}
+.lab{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#351E28}
+.phone{width:390px;background:#FAF7F0;border-radius:24px;padding:16px;border:1.5px solid #B2CFE2}
+h2{font:800 22px/28px "Bricolage Grotesque",Inter,sans-serif;color:#351E28}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.x{min-height:44px;min-width:44px;border:0;border-radius:999px;background:#fff;font-size:18px}
+.prev{background:#fff;border:1.5px solid #DDD6C8;border-radius:12px;padding:12px;font:17px/1.6 Georgia,serif;margin-bottom:8px}
+.row{margin:16px 0}
+.eb{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5C5258;margin-bottom:8px}
+.seg{display:flex;gap:4px;padding:4px;border-radius:999px;background:#fff}
+.seg b{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#5C5258;border-radius:999px;font-weight:700}
+.seg b.on{background:#2B2228;color:#FAF7F0}
+.sw{display:flex;gap:8px}.sw b{flex:1;min-height:56px;border-radius:12px;border:1.5px solid #DDD6C8;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px}
+.sw b.on{border-color:#2B2228;border-width:2.5px}
+.step{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:999px;padding:4px}
+.step span{min-width:56px;min-height:44px;display:flex;align-items:center;justify-content:center;font-weight:800;border-radius:999px;background:#F3EFE6}
+.grp{border-top:1.5px solid #DDD6C8;margin-top:20px;padding-top:12px}
+.gt{font:800 18px/24px "Bricolage Grotesque",Inter,sans-serif;text-transform:uppercase;color:#351E28}
+.more{width:100%;min-height:52px;margin-top:20px;border:1.5px solid #351E28;border-radius:14px;background:#D7EFFF;color:#351E28;font-weight:800;font-size:15px;display:flex;justify-content:space-between;align-items:center;padding:0 16px}
+.hint{font-size:13px;line-height:18px;color:#5C5258;margin-top:6px}
+.sub{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#5C5258;margin-top:16px}
+.ghost{margin-top:20px;min-height:44px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#5C5258;border-radius:999px}
+.rule{height:1px;background:#DDD6C8;margin:4px 0}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Sheet Pengaturan baca (#1799).</div>
+
+<div class="lab">Sesudah — Lanjutan tertutup (tampilan awal)</div>
+<div class="phone">
+ <div class="head"><h2>Pengaturan</h2><button class="x" aria-label="Tutup">✕</button></div>
+ <div class="prev">The rain stopped, and the street smelled like warm bread.</div>
+ <div class="row"><div class="eb">Tema</div><div class="sw"><b class="on" style="background:#FAF7F0">Aa<small>Kertas</small></b><b style="background:#F3E9D7">Aa<small>Sepia</small></b><b style="background:#E3EEDC">Aa<small>Hijau</small></b><b style="background:#1E1A1D;color:#E8E2DA">Aa<small>Malam</small></b></div></div>
+ <div class="row"><div class="eb">Ukuran huruf baca</div><div class="step"><span>A−</span><b>17 px</b><span>A+</span></div></div>
+ <div class="row"><div class="eb">Artiin ke</div><div class="seg"><b class="on" style="border-radius:12px;justify-content:space-between;padding:0 14px;background:#fff;color:#2B2228">Indonesia<span>▾</span></b></div></div>
+ <div class="row"><div class="eb">Bahasa cerita ini</div><div class="seg"><b class="on" style="border-radius:12px;justify-content:space-between;padding:0 14px;background:#fff;color:#2B2228">English<span>▾</span></b></div></div>
+ <div class="grp"><div class="gt">Target baca harian</div>
+  <div class="seg" style="margin-top:12px"><b>3 menit</b><b class="on">5 menit</b><b>10 menit</b></div></div>
+ <button class="more" type="button" aria-expanded="false"><span>Lanjutan · 17 opsi</span><span>▾</span></button>
+ <div class="hint">Huruf, suara, kartu ulang, layar, dan lainnya. Bawaan sudah pas untuk kebanyakan orang.</div>
+ <div class="ghost">Versi app 1.0 · Muat ulang</div>
+</div>
+
+<div class="lab">Sesudah — Lanjutan dibuka</div>
+<div class="phone">
+ <div class="head"><h2>Pengaturan</h2><button class="x" aria-label="Tutup">✕</button></div>
+ <button class="more" style="margin-top:0" type="button" aria-expanded="true"><span>Lanjutan · 17 opsi</span><span>▴</span></button>
+ <div class="sub">Tampilan</div>
+ <div class="row"><div class="eb">Huruf baca</div><div class="seg"><b class="on">Klasik</b><b>Modern</b></div></div>
+ <div class="row"><div class="eb">Jarak baris</div><div class="seg"><b>1.5</b><b class="on">1.7</b><b>1.9</b></div></div>
+ <div class="row"><div class="eb">Margin halaman</div><div class="seg"><b>Sempit</b><b class="on">Sedang</b><b>Lebar</b></div></div>
+ <div class="sub">Bantuan kata</div>
+ <div class="row"><div class="eb">Intip kata bab</div><div class="seg"><b class="on">Nyala</b><b>Mati</b></div><div class="hint">Kartu kecil berisi 3-5 kata baru di awal bab. Bisa dilewati.</div></div>
+ <div class="row"><div class="eb">Cara baca (satu pilihan)</div><div class="seg"><b>Mati</b><b class="on">Ketuk dulu</b><b>Langsung</b></div><div class="hint">Berlaku di teks dan di kartu ulang.</div></div>
+ <div class="sub">Suara &amp; kartu ulang</div>
+ <div class="row"><div class="eb">Bunyikan kata otomatis di kartu ulang</div><div class="seg"><b>Nyala</b><b class="on">Mati</b></div></div>
+ <div class="rule"></div>
+ <div class="ghost">…dan 10 opsi lain, tiap opsi satu baris</div>
+ <div class="ghost" style="border:1.5px solid #DDD6C8">Balikin setelan awal</div>
+</div>
+</body></html>
