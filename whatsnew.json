@@ -1,5 +1,11 @@
 [
   {
+    "n": 1721,
+    "judul": "Reader Jepang/Mandarin: teks tak lagi menumpuk & terpotong di tepi",
+    "poin": "Teks Jepang dan Mandarin di HP tidak lagi menumpuk atau terpotong.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1751,
     "judul": "Rancangan: tab Kata 'Susah diucap' salah nama & ulang mulai 1 kata",
     "poin": "Rancangan siap: tab \"Susah diucap\" diganti nama jadi \"Latih ucap\" biar tidak membingungkan.",
@@ -171,12 +177,6 @@
     "n": 1647,
     "judul": "Kartu Target Home: jelaskan 30 XP itu kira-kira berapa kegiatan",
     "poin": "Kartu Target di Home kini punya contoh kecil: \"5 hlm + 10 kata\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1672,
-    "judul": "Rak Profil: kata 'Tamat' cukup sekali per buku, sampul tak terpotong",
-    "poin": "Buku tamat di rak Profil kini cukup satu centang kuning di sampul.",
     "tgl": "2026-11-22"
   }
 ]
