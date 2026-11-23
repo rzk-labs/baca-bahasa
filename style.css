@@ -1451,6 +1451,13 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .xp-eg{margin:var(--space-3) 0;font-size:14px;line-height:21px}
 @media (prefers-reduced-motion:reduce){.lv-tap,.lv-tap:active{transition:none;transform:none}}
 .tamat-art{display:block;margin:0 auto 4px;width:auto;height:96px;max-width:100%}
+/* #1754: sheet Tamat — gambar masuk skala .92→1 + fade, lalu judul & aksi menyusul (jeda 60 ms); sekali, transform/opacity saja */
+@keyframes tamatIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+@keyframes tamatRow{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#sheet[aria-label="Tamat"] .tamat-art{animation:tamatIn .3s var(--ease-pop) both}
+#sheet[aria-label="Tamat"] .tamat-art~h2{animation:tamatRow .24s var(--ease-out) 60ms both}
+#sheet[aria-label="Tamat"] .tamat-art~.fb-acts{animation:tamatRow .24s var(--ease-out) 120ms both}
+@media (prefers-reduced-motion:reduce){#sheet[aria-label="Tamat"] .tamat-art,#sheet[aria-label="Tamat"] .tamat-art~h2,#sheet[aria-label="Tamat"] .tamat-art~.fb-acts{animation:none}}
 /* #1672 Rak Profil: tamat = satu lencana centang di pojok sampul; huruf awal (juga CJK) di tengah, ukuran ikut lebar kartu; judul maks 2 baris */
 .rk-bk{container-type:inline-size}
 .rk-bk .cover{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4px}
