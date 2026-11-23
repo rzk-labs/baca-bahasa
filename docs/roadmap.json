@@ -241,6 +241,7 @@
     }
   ],
   "backlog": [
+    {"no":186,"peran":"developer","prioritas":"P1","nama":"Home: kartu Streak jelaskan 'hari dihitung bila baca atau ulang kata' (#1809)","dokumen":"docs/desain-streak-dihitung-dari-apa.md","status":"siap dikerjakan","catatan":"Sudah dibangun agent desain (baris .sdn di kartu Streak, C=kepo-v670); tinggal diperiksa di 320px & 390px lalu digabung. Mockup: docs/mockup-1809.html. Hitungan streak tak berubah."},
     {"no":185,"peran":"developer","prioritas":"P1","nama":"Sheet Tamat: buku contoh diberi label 'Coba buku contoh' (#1762)","dokumen":"docs/desain-tamat-buku-contoh-1762.md","status":"selesai (#1762)","catatan":"Mockup: docs/mockup-1762.html. Buku pengguna tetap 'Lanjut: judul'. Klik & gaya tombol tak berubah."},
     {
       "no": 183,
