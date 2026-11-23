@@ -1,5 +1,11 @@
 [
   {
+    "n": 1757,
+    "judul": "[peta 183] Reader: '✓ Tamat' hanya bila sudah Tamat (label ikut doneAt)",
+    "poin": "Bar bawah buku hanya menulis \"✓ Tamat\" kalau bukunya memang sudah Tamat.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1754,
     "judul": "Sheet Tamat: gambar buku & ringkasan masuk dengan gerak halus",
     "poin": "Layar Tamat sekarang muncul halus: gambar buku membesar, lalu judul dan tombol menyusul.",
@@ -171,12 +177,6 @@
     "n": 1685,
     "judul": "Reader: kata tanpa arti diberi titik kecil, ketuk lagi isi arti",
     "poin": "Kata yang artinya belum terisi sekarang diberi titik kecil di teks buku.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1681,
-    "judul": "[peta 178] Target Home dalam menit baca, awal 5 menit",
-    "poin": "Target harian di Home sekarang dalam menit baca, awal 5 menit.",
     "tgl": "2026-11-22"
   }
 ]
