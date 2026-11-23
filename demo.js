@@ -2,22 +2,32 @@
 /* Mode demo (untuk App Review & coba-coba): "server" palsu di dalam app.
    Hanya menjawab fitur akun & sosial dengan data contoh. Tidak ada data ke server, tanpa password.
    Aktif bila db.acct.token === 'demo'. Fitur lain (arti kata, dll.) tetap jalan normal. */
+/* Akun demo untuk App Review: login username+password ini membuka mode demo lokal (bukan akun server, bukan rahasia). */
+const DEMO_USER = 'appreview', DEMO_PASS = 'keepo-demo-2026';
+const isDemoLogin = (u, p) => String(u || '').trim().toLowerCase().replace(/^@/, '') === DEMO_USER && p === DEMO_PASS;
 const DEMO_RE = /^\/(me|sync|books|social|leaderboard|teman|cari|fyp|posts|blokir|ikuti|u\/|share|logout)/;
 const demoUsers = [
   { username: 'dina', nick: 'Dina', level: 7, streak: 12, kata7: 38, pengikut: 21, mengikuti: 9, reading: [{ t: 'Alice in Wonderland', lang: 'en', pct: 42 }] },
   { username: 'raka', nick: 'Raka', level: 4, streak: 5, kata7: 15, pengikut: 8, mengikuti: 14, reading: [{ t: 'The Little Prince', lang: 'en', pct: 100 }] },
-  { username: 'sari', nick: 'Sari', level: 9, streak: 30, kata7: 52, pengikut: 40, mengikuti: 11, reading: [{ t: 'Momotaro', lang: 'ja', pct: 18 }] }
+  { username: 'sari', nick: 'Sari', level: 9, streak: 30, kata7: 52, pengikut: 40, mengikuti: 11, reading: [{ t: 'Momotaro', lang: 'ja', pct: 18 }] },
+  { username: 'bima', nick: 'Bima', level: 3, streak: 2, kata7: 9, pengikut: 5, mengikuti: 6, reading: [{ t: 'Le Petit Chaperon Rouge', lang: 'fr', pct: 60 }] },
+  { username: 'nadia', nick: 'Nadia', level: 6, streak: 9, kata7: 27, pengikut: 17, mengikuti: 20, reading: [{ t: '토끼와 거북이', lang: 'ko', pct: 75 }] },
+  { username: 'yoga', nick: 'Yoga', level: 5, streak: 4, kata7: 19, pengikut: 12, mengikuti: 7, reading: [{ t: 'Peter Rabbit', lang: 'en', pct: 33 }] }
 ];
 let demoS = null;
 function demoState() {
   if (demoS) return demoS;
   const now = Date.now();
   demoS = {
-    follow: new Set(['dina']), blocked: new Set(), gone: new Set(), likes: new Set(), extra: [],
+    follow: new Set(['dina', 'nadia']), blocked: new Set(), gone: new Set(), likes: new Set(), extra: [],
     posts: [
       { id: 'd1', username: 'dina', nick: 'Dina', at: now - 36e5, text: 'Kata favorit hari ini: "wonderland". Artinya negeri ajaib!', book: 'Alice in Wonderland', lang: 'en', suka: 3 },
       { id: 'd2', username: 'raka', nick: 'Raka', at: now - 5 * 36e5, text: 'Akhirnya tamat baca The Little Prince.', book: 'The Little Prince', lang: 'en', suka: 5 },
-      { id: 'd3', username: 'sari', nick: 'Sari', at: now - 26 * 36e5, text: 'Latihan ngomong 10 menit, skor ucapan naik.', book: null, lang: null, suka: 1 }
+      { id: 'd3', username: 'sari', nick: 'Sari', at: now - 26 * 36e5, text: 'Latihan ngomong 10 menit, skor ucapan naik.', book: null, lang: null, suka: 1 },
+      { id: 'd4', username: 'nadia', nick: 'Nadia', at: now - 2 * 36e5, text: 'Aku bagikan cerita pendek bahasa Inggris, coba baca dan ketuk kata yang belum kamu tahu!', book: 'Cerita contoh (demo)', lang: 'en', suka: 7, share: 'DEMO' },
+      { id: 'd5', username: 'bima', nick: 'Bima', at: now - 8 * 36e5, text: 'Baru tahu "loup" artinya serigala. Seru juga baca dongeng Prancis.', book: 'Le Petit Chaperon Rouge', lang: 'fr', suka: 2 },
+      { id: 'd6', username: 'yoga', nick: 'Yoga', at: now - 30 * 36e5, text: 'Streak 4 hari! Target minggu ini 50 kata baru.', book: 'Peter Rabbit', lang: 'en', suka: 4 },
+      { id: 'd7', username: 'dina', nick: 'Dina', at: now - 50 * 36e5, text: 'Ada yang mau baca bareng Alice in Wonderland? Follow aku ya.', book: 'Alice in Wonderland', lang: 'en', suka: 6 }
     ]
   };
   return demoS;
@@ -39,7 +49,7 @@ async function demoApi(path, opt = {}) {
   if (path === '/books') return { books: [] };
   if (path === '/leaderboard') {
     const mine = typeof weekXp === 'function' ? weekXp() : 0;
-    const top = [{ username: 'sari', nick: 'Sari', week_xp: 640 }, { username: 'dina', nick: 'Dina', week_xp: 410 }, { username: 'raka', nick: 'Raka', week_xp: 220 }]
+    const top = [{ username: 'sari', nick: 'Sari', week_xp: 640 }, { username: 'dina', nick: 'Dina', week_xp: 410 }, { username: 'nadia', nick: 'Nadia', week_xp: 330 }, { username: 'raka', nick: 'Raka', week_xp: 220 }, { username: 'yoga', nick: 'Yoga', week_xp: 150 }, { username: 'bima', nick: 'Bima', week_xp: 90 }]
       .concat(db.acct.hidden ? [] : [{ username: me.username, nick: db.acct.nick, week_xp: mine }])
       .sort((a, b) => b.week_xp - a.week_xp).map((r, i) => ({ ...r, rank: i + 1 }));
     return { week: typeof isoWeekKey === 'function' ? isoWeekKey() : '', top, me: { ...(top.find(t => t.username === me.username) || { rank: 4, week_xp: mine }), username: me.username, nick: db.acct.nick, hidden: !!db.acct.hidden } };
@@ -67,7 +77,7 @@ async function demoApi(path, opt = {}) {
     return { ...demoUserOut(f, s), aktif: Date.now() - 36e5, publik: true };
   }
   if (path === '/share' && m === 'POST') return { id: 'DEMO' };
-  if (path.startsWith('/share/')) return { id: 'DEMO', by: 'Dina', title: 'Cerita contoh (demo)', lang: 'en', paras: ['This is a short demo story.', 'Tap any word to see its meaning.'] };
+  if (path.startsWith('/share/')) return { id: 'DEMO', by: 'Dina', title: 'Cerita contoh (demo)', lang: 'en', paras: ['Mia found a small red book in the old library.', 'Every word she touched began to glow, and she could understand a new language.', 'Tap any word to see its meaning.'] };
   throw new Error('Fitur ini tidak tersedia di mode demo.');
 }
 /* masuk mode demo: akun palsu lokal, tanpa server */
