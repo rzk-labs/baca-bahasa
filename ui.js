@@ -3350,7 +3350,7 @@ async function viewBicara() {
     if (!cands.length) { micState(btn, lbl, 'idle', 'Coba lagi'); $('#rech').textContent = ''; $('#heard').textContent = 'Suaranya belum kedengeran. Coba lebih deket ke mic ya.'; return; }
     $('#heard').textContent = 'Kedengeran: “' + cands[0] + '”';
     const sc = scoreSentence(words.map(norm), cands, b.lang);
-    $$('#target .t').forEach((el, i) => setTimeout(() => { el.dataset.p = sc[i]; el.className = 't ' + cls(sc[i]); }, i * 60));
+    $$('#target .t').forEach((el, i) => setTimeout(() => { el.dataset.p = sc[i]; el.className = 't ' + cls(sc[i]); }, 450 + Math.min(i, 7) * 40));
     const avg = Math.round(sc.reduce((a, c) => a + c, 0) / (sc.length || 1));
     db.scores.push(avg); db.scores = db.scores.slice(-100); save();
     words.forEach((w, i) => recordWeak(w, b.lang, sc[i]));

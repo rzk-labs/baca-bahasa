@@ -1504,3 +1504,12 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 @keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 #view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
 @media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
+/* #1797: hasil Ngomong muncul bertahap (cincin → skor → label → chip → ajakan) */
+@keyframes resRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#res .result .ring .score{animation:resRise .2s var(--ease-out) 200ms both}
+#res .result h2{animation:resRise .2s var(--ease-out) 400ms both}
+#res .result .sm{animation:resRise .2s var(--ease-out) 460ms both}
+#res .result .chips .chip{animation:resRise .2s var(--ease-out) 540ms both}
+#res .result .chips .chip+.chip{animation-delay:600ms}
+#remed>.card{animation:resRise .24s var(--ease-out) 700ms both}
+@media (prefers-reduced-motion:reduce){#res .result .ring .score,#res .result h2,#res .result .sm,#res .result .chips .chip,#remed>.card{animation:none}}
