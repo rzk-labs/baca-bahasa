@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="420" viewBox="0 0 780 420" font-family="Inter, system-ui, sans-serif">
+  <title>#1745 Kartu Simpan 3 kata dulu: sebelum dan sesudah (HP 320px, tema gelap)</title>
+  <rect width="780" height="420" fill="#1E1519"/>
+  <!-- SEBELUM -->
+  <text x="40" y="34" fill="#C9BDC3" font-size="13" font-weight="700">SEBELUM · 320px</text>
+  <rect x="40" y="52" width="320" height="260" rx="18" fill="#D7EFFF"/>
+  <rect x="40" y="52" width="4" height="260" fill="#E9F056"/>
+  <rect x="58" y="70" width="18" height="18" rx="3" fill="none" stroke="#351E28" stroke-width="2"/>
+  <g fill="#351E28" font-size="14" font-weight="700">
+    <text x="86" y="84">Simpan 3 kata</text>
+    <text x="86" y="102">dulu (0/3)</text>
+  </g>
+  <g fill="#351E28" font-size="12" opacity=".75">
+    <text x="86" y="122">Ketuk kata di</text>
+    <text x="86" y="138">bacaan, lalu</text>
+    <text x="86" y="154">Simpan.</text>
+  </g>
+  <rect x="86" y="164" width="140" height="8" fill="#FAF7F0" stroke="#351E28" stroke-width="1.5"/>
+  <rect x="236" y="70" width="108" height="36" rx="18" fill="#351E28"/>
+  <text x="290" y="93" fill="#D7EFFF" font-size="13" font-weight="700" text-anchor="middle">Buka bacaan</text>
+  <rect x="40" y="250" width="320" height="62" fill="#1E1519"/>
+  <rect x="54" y="258" width="292" height="50" rx="25" fill="#351E28" stroke="#4A343E"/>
+  <text x="200" y="240" fill="#FF9A92" font-size="12" text-anchor="middle">bawah kartu tertutup bar menu</text>
+
+  <!-- SESUDAH -->
+  <text x="420" y="34" fill="#C9BDC3" font-size="13" font-weight="700">SESUDAH · 320px</text>
+  <rect x="420" y="52" width="320" height="132" rx="18" fill="#D7EFFF"/>
+  <rect x="420" y="52" width="4" height="132" fill="#E9F056"/>
+  <rect x="438" y="66" width="18" height="18" rx="3" fill="none" stroke="#351E28" stroke-width="2"/>
+  <text x="466" y="81" fill="#351E28" font-size="15" font-weight="700" font-family="'Bricolage Grotesque', Inter, sans-serif">Simpan 3 kata dulu</text>
+  <rect x="686" y="66" width="40" height="20" rx="10" fill="#351E28"/>
+  <text x="706" y="80" fill="#E9F056" font-size="12" font-weight="700" text-anchor="middle">1/3</text>
+  <text x="466" y="104" fill="#351E28" font-size="12" opacity=".8">Ketuk kata di bacaan, lalu Simpan.</text>
+  <rect x="466" y="116" width="84" height="8" rx="4" fill="#351E28"/>
+  <rect x="554" y="116" width="84" height="8" rx="4" fill="#351E28" fill-opacity=".12" stroke="#351E28" stroke-opacity=".45" stroke-width="1.5"/>
+  <rect x="642" y="116" width="84" height="8" rx="4" fill="#351E28" fill-opacity=".12" stroke="#351E28" stroke-opacity=".45" stroke-width="1.5"/>
+  <text x="466" y="152" fill="#351E28" font-size="13" font-weight="700" text-decoration="underline">Buka bacaan →</text>
+  <text x="580" y="226" fill="#8FDDAA" font-size="12" text-anchor="middle">ruang lega di atas bar menu</text>
+  <rect x="434" y="258" width="292" height="50" rx="25" fill="#351E28" stroke="#4A343E"/>
+  <text x="390" y="370" fill="#C9BDC3" font-size="12" text-anchor="middle">Judul 1 baris · angka di kanan · bar 3 segmen · tombol pindah ke bawah</text>
+</svg>
