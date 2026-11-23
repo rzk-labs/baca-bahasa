@@ -1,5 +1,11 @@
 [
   {
+    "n": 1754,
+    "judul": "Sheet Tamat: gambar buku & ringkasan masuk dengan gerak halus",
+    "poin": "Layar Tamat sekarang muncul halus: gambar buku membesar, lalu judul dan tombol menyusul.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1748,
     "judul": "Doodle SVG: 3 langkah di Home pertama tak cuma angka polos",
     "poin": "Tiga langkah di Home pertama sekarang punya gambar doodle kecil.",
@@ -171,12 +177,6 @@
     "n": 1681,
     "judul": "[peta 178] Target Home dalam menit baca, awal 5 menit",
     "poin": "Target harian di Home sekarang dalam menit baca, awal 5 menit.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1679,
-    "judul": "Tab Kata: saringan HSK tetap tampil, ada penjelasan saat belum ada ulang",
-    "poin": "Tab Kata: level HSK kosong tetap tampil, misalnya 0/600.",
     "tgl": "2026-11-22"
   }
 ]
