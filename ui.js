@@ -995,7 +995,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v658';
+const APP_VER = 'v664';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -2379,11 +2379,18 @@ function showPage(p, anim = true) {
     pgn.setAttribute('aria-label', [secFull, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
     /* satu baris: hanya bagian tak kosong, digabung ' · '; layar sempit buang sisa waktu dulu, lalu bab; persen tetap */
     const fill = parts => { pgn.innerHTML = parts.filter(Boolean).map(t => t === sec && secFull ? `<span class="nw" title="${esc(secFull)}" aria-label="${esc(secFull)}">${esc(t)}</span>` : nw(t)).join(' · '); };
-    const bs = statusPct(bp), isDone = !!b.doneAt; /* #1757: '✓ Tamat' milik doneAt, bukan persen */
-    if (!isDone && bs.done) bs.txt = '100%';
-    pgn.classList.toggle('tamat', isDone);
-    if (isDone) { pgn.setAttribute('aria-label', 'Tamat. ' + secFull); pgn.title = 'Buku sudah Tamat. ' + secFull; }
-    if (isDone) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
+    const bs = statusPct(bp);
+    /* #1757 + #1760: 'Tamat' + centang HANYA bila b.doneAt (sama dengan tombol 'Baca ulang'); persen 100% tanpa doneAt = 'Halaman terakhir' netral + tombol 'Tamatkan' */
+    const tamat = !!b.doneAt, akhir = bs.done && !b.doneAt;
+    if (akhir) bs.txt = '100%';
+    pgn.classList.toggle('tamat', tamat);
+    if (akhir) {
+      pgn.title = `Halaman terakhir buku. Tekan Tamatkan untuk menandai tamat. ${secFull}`;
+      pgn.setAttribute('aria-label', `Halaman terakhir buku, belum ditandai tamat, ${secFull}`);
+    }
+    if (tamat) { pgn.setAttribute('aria-label', 'Tamat. ' + secFull); pgn.title = 'Buku sudah Tamat. ' + secFull; }
+    if (tamat) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
+    else if (akhir) { pgn.innerHTML = nw('Halaman terakhir'); }
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);

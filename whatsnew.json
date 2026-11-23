@@ -1,5 +1,11 @@
 [
   {
+    "n": 1760,
+    "judul": "Reader: bar bawah tak lagi '✓ Tamat' + 'Tamatkan' bersamaan",
+    "poin": "Bar bawah reader tak lagi bilang \"Tamat\" sekaligus tombol \"Tamatkan\".",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1758,
     "judul": "Sheet Tamat: tombol buku contoh jelas 'Coba buku contoh', bukan 'Lanjut'",
     "poin": "Tombol di layar Tamat kini bertuliskan \"Coba buku contoh\", bukan \"Lanjut\".",
@@ -171,12 +177,6 @@
     "n": 1701,
     "judul": "Sheet Tamat: baris 'Besok' tak bentrok dengan kartu Home 'Simpan 3 kata'",
     "poin": "Baris \"Besok\" di layar Tamat kini sebut angka 3 kata, sama dengan Home.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1691,
-    "judul": "Home HP: kartu Level rata tengah, angka besar, tanpa ruang bolong",
-    "poin": "Kartu Level di Home HP sekarang rata tengah, sejajar kartu Target.",
     "tgl": "2026-11-22"
   }
 ]
