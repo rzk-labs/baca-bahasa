@@ -181,7 +181,10 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
-.q3-lock{font-weight:600}.q3-lock .q3-go{text-decoration:none;padding:8px 12px;min-height:36px;border-radius:var(--radius-full);background:var(--ink);color:var(--ice);display:inline-flex;align-items:center;white-space:nowrap}.q3-lock span.bar{display:block;height:8px;margin-top:8px;background:var(--cream);box-shadow:inset 0 0 0 1.5px var(--ink)}.q3-lock span.bar i{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.q3-lock{font-weight:600}.q3-lock .q3-go{text-decoration:none;padding:8px 12px;min-height:36px;border-radius:var(--radius-full);background:var(--ink);color:var(--ice);display:inline-flex;align-items:center;white-space:nowrap}@media(max-width:360px){.q3-lock .q3-go{margin-left:30px}}.q3-lock span.bar{display:block;height:8px;margin-top:8px;background:var(--cream);box-shadow:inset 0 0 0 1.5px var(--ink)}.q3-lock span.bar i{box-shadow:inset 0 0 0 1.5px var(--ink)}
+/* #1740: kartu 'Kata disimpan 0/3' HP: susun vertikal, tombol di bawah lebar penuh, tak tertutup bar menu */
+@media(max-width:420px){.due-nudge.q3-lock{display:grid;grid-template-columns:20px minmax(0,1fr);column-gap:10px;row-gap:12px;align-items:start;flex-wrap:nowrap}.due-nudge.q3-lock>span{overflow-wrap:normal}.q3-lock .q3-go{grid-column:1/-1;margin-left:0;justify-content:center;width:100%;min-height:44px;box-sizing:border-box}.q3-lock span.bar{margin-top:10px}}
+body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 .soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:var(--ink)}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
@@ -501,7 +504,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w{cursor:pointer;border-radius:4px;transition:background var(--dur-color)}
 /* #1626: area ketuk kata lebih tinggi, tak terlihat, tanpa geser tata letak. N = (lh - 1.2em)/2 - .5px agar baris atas & bawah tak saling menimpa; kiri/kanan cuma 1px agar kata di tepi tak mencuri ketukan balik halaman. */
 .cols .w{position:relative}
-.cols .nb{white-space:nowrap}
+.cols .nb{white-space:nowrap;overflow-wrap:anywhere}
 .reader[lang^="ja"],.reader[lang^="zh"]{line-break:strict}
 .cols .w::after{content:"";position:absolute;left:-1px;right:-1px;top:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px));bottom:calc(-1 * max(0px,(var(--reader-lh,1.7) * 1em - 1.2em) / 2 - .5px))}
 .cols{-webkit-touch-callout:none}
@@ -1479,3 +1482,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 @media(max-width:389px){body:not(.reading) #view:has(.stat3){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
 /* #1744 Home HP: kartu 'Simpan 3 kata dulu' vertikal di layar sempit; judul utuh, tombol di bawah, ruang bawah cukup */
 @media(max-width:430px){.q3-lock{flex-wrap:wrap}.q3-lock>span:not(.bar){flex:1 1 calc(100% - 30px)}.q3-lock .q3-go{flex:1 1 100%;margin-left:0;justify-content:center}body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
+/* #1730: bar progres mengisi halus saat tab dibuka (bukan bar reader) */
+@keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
+@media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
