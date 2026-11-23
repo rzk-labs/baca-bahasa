@@ -1,5 +1,11 @@
 [
   {
+    "n": 1771,
+    "judul": "[peta 185] Tab Kata: 'Susah diucap' jadi 'Latih ucap' + Ulang mulai 1 kata",
+    "poin": "Tab Kata: \"Susah diucap\" kini bernama \"Latih ucap\", plus teks bantu.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1761,
     "judul": "Reader: ikon 'Kembali ke Home' beda dari 'Halaman sebelumnya'",
     "poin": "Tombol kembali ke Home di layar baca sekarang berikon rumah.",
@@ -171,12 +177,6 @@
     "n": 1693,
     "judul": "Tab Kata: saringan HSK + chip 'Belum hafal' & petunjuk ulang",
     "poin": "Tab Kata: saringan HSK 1-3 selalu tampil bila kamu punya kata atau buku Mandarin.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1705,
-    "judul": "[peta 180] Simpan pengarang EPUB & tampilkan di kartu buku",
-    "poin": "Buku EPUB sekarang menampilkan nama pengarang kecil di bawah judul.",
     "tgl": "2026-11-22"
   }
 ]
