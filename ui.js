@@ -423,7 +423,8 @@ function toastHide() {
   t.onanimationend = e => { if (e.target === t && t.classList.contains('closing')) toastEnd(t); };
   toastEndT = setTimeout(() => toastEnd(t), 250);
 }
-function toast(m, ms = 3200, act, act2) { const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
+const toastMs = (m, ms) => { const long = String(m).length > 40; if (ms == null) return long ? 4500 : 3200; return long && ms < 4000 ? 4000 : ms; };
+function toast(m, ms, act, act2) { ms = toastMs(m, ms); const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function openSheet(html, label) { sheetEndClosing(); if ($('#sheet').classList.contains('hide')) { const a = document.activeElement; sheetRet = a && a !== document.body ? a : null; } $('#sheetBody').innerHTML = html; sheetReset(); $('#sheet').classList.remove('hide'); $('#shade').classList.remove('hide'); $('#sheet').scrollTop = 0; $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); { const hd = $('#sheetBody h2, #sheetBody .stepchip'); $('#sheet').setAttribute('aria-label', label || (hd && hd.textContent.trim()) || 'Panel'); } try { $('#sheet').focus({ preventScroll: true }); } catch (e) { } }
@@ -608,7 +609,7 @@ setInterval(() => {
   db.readSec[d] = (+db.readSec[d] || 0) + 1; rdUnsaved++;
   const ks = Object.keys(db.readSec).sort(); if (ks.length > 60) delete db.readSec[ks[0]];
   if (rdUnsaved >= 15) { rdUnsaved = 0; save(); }
-  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 2500); sfx('win'); confetti(50); }); }), 300); }
+  if (!before && goalDone()) { rdUnsaved = 0; save(); setTimeout(() => notifyLater(() => { afterSheet(() => { toast(`Beres! ${goalMin()} menit hari ini. Besok santai aja.`, 4500); sfx('win'); confetti(50); }); }), 300); }
 }, 1000);
 /* Back HP / geser-balik: e-reader punya satu entri riwayat; Back menutup sheet dulu, lalu balik ke Home */
 let rdHist = false, rdSkip = 0;
@@ -687,7 +688,7 @@ function cadNote() {
     if (Date.now() - last < 14 * 864e5) return;
     if (!$('#sheet').classList.contains('hide') || !$('#toast').classList.contains('hide') || !db.seenTip || db.tab !== 'rak') return;
     localStorage.setItem('kepo.noteCad', String(Date.now()));
-    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 8000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
+    toast('Katamu belum dicadangkan. Simpan cadangan biar aman.', 5000, { label: 'Simpan', fn: () => { if (typeof bkSave === 'function') bkSave(); } });
   } catch (e) { }
 }
 
@@ -990,7 +991,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v646';
+const APP_VER = 'v651';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1834,21 +1835,23 @@ async function viewBaca() {
     /* #1709: kata + tanda baca penutup/pemisah (termasuk "—," dan ".”") dibungkus .nb nowrap; pembuka ikut kata berikutnya; "-" antar kata menyatukan keduanya */
     const wHtml = (t, i) => { const r = rtMap.get(t.t.toLowerCase()), part = isParticle(b.lang, t.t); return `<span role="button" tabindex="-1" class="w${(!part && savedSet.has(t.t.toLowerCase()) && !isPaham(b.lang, t.t)) || inPhrase.has(i) ? ' saved' : ''}${hafalSet.has(t.t.toLowerCase()) ? ' hafal' : ''}${!part && kosongSet.has(t.t.toLowerCase()) ? ' noarti' : ''}${isOften(t.t) ? ' often' : ''}${!part && kenalOk(t.t) ? ' kenal' : ''}">${r ? `<ruby>${esc(t.t)}<rt data-r="${esc(r)}"></rt></ruby>` : esc(t.t)}</span>`; };
     const rtl = RTL_LANGS.includes(b.lang);
-    /* #1727: bahasa tanpa spasi (ja/zh/th): kata beruntun TIDAK digabung ke satu .nb (kalimat jadi blok tak terpatah & terpotong); .nb hanya kata terakhir + tanda baca yang menempel */
-    const noSp = ['ja', 'zh-CN', 'zh-TW', 'th'].includes(b.lang);
-    let out = '', buf = '', bufW = false;
-    const flush = () => { if (buf) out += `<span class="nb">${buf}</span>`; buf = ''; bufW = false; };
+    /* #1727: ja/zh/th: kata beruntun tak digabung ke satu .nb; .nb hanya kata + tanda baca yang menempel (tercakup logika di bawah) */
+    let out = '', buf = '', bufW = false, bufN = 0, join = false;
+    /* #1725: tanpa spasi, nowrap hanya satu kata + tanda baca (kalau tidak, satu kalimat jadi blok tak bisa putus) */
+    /* #1721: bahasa tanpa spasi (ja/zh/th): dua kata berurutan tanpa pemisah tak boleh jadi satu .nb; isi .nb > 12 karakter tidak di-nowrap */
+    const flush = () => { if (buf) out += bufN > 12 ? buf : `<span class="nb">${buf}</span>`; buf = ''; bufW = false; bufN = 0; join = false; };
     tk.forEach((t, i) => {
-      if (t.w) { if (noSp && bufW) { out += buf; buf = ''; } buf += wHtml(t, i); bufW = true; return; }
+      /* #1722: ja/zh: tiap kata .nb sendiri supaya bebas putus baris antar kata */
+      if (t.w) { if (bufW && !join) flush(); buf += wHtml(t, i); bufW = true; bufN += t.t.length; join = false; return; }
       const nextW = !!(tk[i + 1] && tk[i + 1].w);
       if (rtl) { flush(); out += esc(t.t); return; }
-      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); return; }
+      if (buf && nextW && /^[-‐‑]$/.test(t.t)) { buf += esc(t.t); bufN++; join = true; return; }
       const lead = (t.t.match(NB_LEAD) || [''])[0];
-      if (lead) { if (buf) buf += esc(lead); else out += esc(lead); }
+      if (lead) { if (buf) { buf += esc(lead); bufN += lead.length; } else out += esc(lead); }
       flush();
       let rest = t.t.slice(lead.length), tail = '';
       if (nextW) { const m = rest.match(NB_TAIL); if (m) { tail = m[0]; rest = rest.slice(0, rest.length - tail.length); } }
-      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : '';
+      out += esc(noOrphan(rest)); buf = tail ? esc(tail) : ''; bufN = tail.length;
     });
     flush();
     return out;
