@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1727 — Reader HP: teks Jepang tak terpotong</title>
+<style>
+  body{margin:0;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;padding:24px}
+  h1{width:100%;text-align:center;font:800 20px/1.2 'Bricolage Grotesque',Inter,sans-serif;margin:0}
+  .wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .tag{font:700 12px Inter,sans-serif;padding:4px 10px;border-radius:99px;background:#351E28;color:#fff}
+  .tag.ok{background:#E9F056;color:#351E28}
+  .phone{width:390px;height:700px;border-radius:28px;overflow:hidden;box-shadow:0 10px 30px rgba(53,30,40,.25);display:flex;flex-direction:column;position:relative}
+  .paper{background:#FAF7F0;color:#2B2228}
+  .night{background:#1E1A1D;color:#E8E2DA}
+  .rhead{font:600 12px Inter,sans-serif;opacity:.6;text-align:center;padding:14px 0 6px}
+  .page{flex:1;padding:8px 24px;font:400 19px/2 "Hiragino Mincho ProN","Noto Serif JP",serif;overflow:hidden}
+  .page p{margin:0 0 12px;text-align:justify}
+  .bad .page p{white-space:nowrap;overflow:visible}
+  .bad .page{overflow:visible}
+  .clip{position:absolute;top:40px;bottom:50px;width:24px;background:repeating-linear-gradient(45deg,rgba(255,80,80,.35) 0 6px,transparent 6px 12px)}
+  .clip.l{left:0}.clip.r{right:0}
+  .foot{font:600 12px Inter,sans-serif;opacity:.6;text-align:center;padding:10px 0 16px}
+  .note{max-width:390px;font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<h1>Reader HP — buku Jepang (こころ), halaman terakhir</h1>
+
+<div class="wrap">
+  <span class="tag">Sebelum</span>
+  <div class="phone paper bad">
+    <div class="rhead">こころ</div>
+    <div class="page">
+      <p>私はその人を常に先生と呼んでいた。</p>
+      <p>だからここでもただ先生と書くだけで本名は打ち明けない。</p>
+      <p>これは世間を憚かる遠慮というよりも、その方が私にとって自然だからである。</p>
+    </div>
+    <span class="clip l"></span><span class="clip r"></span>
+    <div class="foot">Tamat · 100%</div>
+  </div>
+  <p class="note">Kalimat panjang jadi satu blok, keluar tepi dan terpotong.</p>
+</div>
+
+<div class="wrap">
+  <span class="tag ok">Sesudah · tema Kertas</span>
+  <div class="phone paper">
+    <div class="rhead">こころ</div>
+    <div class="page">
+      <p>私はその人を常に先生と呼んでいた。</p>
+      <p>だからここでもただ先生と書くだけで本名は打ち明けない。</p>
+      <p>これは世間を憚かる遠慮というよりも、その方が私にとって自然だからである。</p>
+    </div>
+    <div class="foot">Tamat · 100%</div>
+  </div>
+  <p class="note">Baris patah rapi di dalam kolom; 「。」「、」 tetap tak di awal baris.</p>
+</div>
+
+<div class="wrap">
+  <span class="tag ok">Sesudah · tema Malam</span>
+  <div class="phone night">
+    <div class="rhead">こころ</div>
+    <div class="page">
+      <p>私はその人を常に先生と呼んでいた。</p>
+      <p>だからここでもただ先生と書くだけで本名は打ち明けない。</p>
+      <p>これは世間を憚かる遠慮というよりも、その方が私にとって自然だからである。</p>
+    </div>
+    <div class="foot">Tamat · 100%</div>
+  </div>
+  <p class="note">Sama rapi di semua tema.</p>
+</div>
+</body>
+</html>
