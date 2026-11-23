@@ -1,5 +1,11 @@
 [
   {
+    "n": 1744,
+    "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
+    "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1742,
     "judul": "Reader: chip 'Lanjut dari Bagian N' tak muncul di buku tamat/akhir",
     "poin": "Chip \"Lanjut dari Bagian\" tak muncul lagi di buku tamat atau halaman terakhir.",
@@ -171,12 +177,6 @@
     "n": 1698,
     "judul": "[peta 177] Hemat kuota: sinkron lebih jarang di sisi aplikasi",
     "poin": "Aplikasi sekarang menyinkron jauh lebih jarang, jadi kuota server lebih hemat.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1665,
-    "judul": "Home: kartu 'Minggu ini' tanpa kotak penjelas Streak, lebih ringkas",
-    "poin": "Kotak penjelas Streak di kartu 'Minggu ini' sudah dihapus.",
     "tgl": "2026-11-22"
   }
 ]

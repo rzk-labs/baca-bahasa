@@ -1480,6 +1480,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1689: baris contoh Target: kontras penuh, ruang bawah cukup di atas menu HP */
 .stat3 .goal-eg{color:var(--ink);font-weight:700;padding:0 2px;box-sizing:border-box}
 @media(max-width:389px){body:not(.reading) #view:has(.stat3){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
+/* #1744 Home HP: kartu 'Simpan 3 kata dulu' vertikal di layar sempit; judul utuh, tombol di bawah, ruang bawah cukup */
+@media(max-width:430px){.q3-lock{flex-wrap:wrap}.q3-lock>span:not(.bar){flex:1 1 calc(100% - 30px)}.q3-lock .q3-go{flex:1 1 100%;margin-left:0;justify-content:center}body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 152px)}}
 /* #1730: bar progres mengisi halus saat tab dibuka (bukan bar reader) */
 @keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 #view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
