@@ -1,5 +1,11 @@
 [
   {
+    "n": 1746,
+    "judul": "Bar progres buku, reader & unduhan: dibacakan pembaca layar",
+    "poin": "Bar progres buku, bacaan, dan unduhan kini dibacakan pembaca layar.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1745,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' rapi, tak terpotong, tanpa patah",
     "poin": "Kartu \"Simpan 3 kata dulu\" di Home kini rapi, judul satu baris.",
@@ -171,12 +177,6 @@
     "n": 1676,
     "judul": "Reader: koma/titik tak boleh nyasar di awal baris",
     "poin": "Koma dan titik tidak lagi muncul sendirian di awal baris bacaan.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1674,
-    "judul": "Sheet Tamat & catatan sesi: satu istilah 'Bagian', tanpa angka halaman bentrok",
-    "poin": "Layar Tamat kini bilang \"12 bagian\", bukan \"12 halaman\" yang bikin bingung.",
     "tgl": "2026-11-22"
   }
 ]

@@ -83,6 +83,7 @@ Celah: tak ada keluhan "kata terlalu kecil" tertulis di LingQ.
 
 ## 7. Kesimpulan
 - H1 kuat: sheet & VoiceOver rawan salah. Label per sheet wajib, uji di iPhone nyata.
+- H1 #1746: bar progres diberi role+label: kartu buku Home, posisi reader, unduhan arti (bab & offline), kata tersimpan; bar 3 kata disembunyikan.
 - H2/H3/H4 sebagian: arah jelas, tapi tak ada data khusus teks bahasa asing.
 - H5 aman: app sudah patuh; cukup dipertahankan.
 
