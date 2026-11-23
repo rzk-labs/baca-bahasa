@@ -242,6 +242,15 @@
   ],
   "backlog": [
     {
+      "no": 184,
+      "peran": "developer",
+      "prioritas": "P0",
+      "nama": "Tab Kata: segmen 'Susah diucap' jadi 'Latih ucap' + teks bantu; Ulang kata bisa mulai dari 1 kata (#1751)",
+      "dokumen": "docs/rancangan-tab-kata-nama-susah-1kata.md",
+      "status": "siap dikerjakan",
+      "catatan": "Ganti label di ui.js ~3482, ~3479, ~3415. Konstanta Q_MIN=1 menggantikan angka 3 di #q3Lock (~1277) dan baris Besok (~1683). Teks 0/1/2 kata di bagian 2. Mockup: docs/mockup-1751.html. Uji 320px. Naikkan C di sw.js."
+    },
+    {
       "no": 183,
       "peran": "developer",
       "prioritas": "P0",
