@@ -1,5 +1,11 @@
 [
   {
+    "n": 1728,
+    "judul": "Rancangan: alur buka ulang halaman terakhir buku yang sudah Tamat",
+    "poin": "Rancangan buka ulang buku Tamat selesai: 5 masalah dicek, 4 masih salah.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1719,
     "judul": "Kata baru: buang kata beraksara lain (Korea di buku Jepang)",
     "poin": "Kata Korea tak muncul lagi sebagai \"kata baru\" di buku Jepang.",
@@ -171,12 +177,6 @@
     "n": 1646,
     "judul": "Sampul polos: huruf awal tak kembar, tiap buku mudah dibedakan",
     "poin": "Sampul polos kini pakai huruf awal judul yang benar, bukan \"The\".",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1626,
-    "judul": "Reader: area ketuk kata lebih lega tanpa geser teks",
-    "poin": "Mengetuk kata di bacaan sekarang lebih mudah kena, tampilan teks tidak berubah.",
     "tgl": "2026-11-22"
   }
 ]

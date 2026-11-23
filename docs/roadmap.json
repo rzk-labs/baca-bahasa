@@ -245,6 +245,15 @@
       "no": 183,
       "peran": "developer",
       "prioritas": "P0",
+      "nama": "Reader: alur buka ulang buku Tamat (label Tamat sesuai doneAt, streak tak naik tanpa baca, tanpa tombol melayang, satu ikon <) (#1728)",
+      "dokumen": "docs/ux-alur-buka-ulang-buku-tamat.md",
+      "status": "spesifikasi siap dikerjakan",
+      "catatan": "Pecah jadi tugas [peta N] per bagian 2.1-2.5. Mockup: docs/mockup-1728.html. Uji 320/390px, 4 tema. Naikkan versi C di sw.js."
+    },
+    {
+      "no": 184,
+      "peran": "developer",
+      "prioritas": "P0",
       "nama": "Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong, nowrap hanya satu kata + tanda baca (#1724)",
       "dokumen": "docs/riset-teks-jepang-menumpuk-nb.md",
       "status": "siap dikerjakan",
