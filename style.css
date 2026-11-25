@@ -1050,7 +1050,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 /* #917 header Baca: maks 3 tombol kanan (Cara baca, Dengar, Lainnya); jarak >=8px; Bab N utuh, ketuk >=44px */
 .rbar{gap:8px;padding-left:8px;padding-right:8px}
 .rtitle .rchap{flex:none;white-space:nowrap;font-size:13px;min-height:44px;min-width:44px;padding:0 10px}
-.rtitle b{max-width:100%;-webkit-line-clamp:1;line-clamp:1}
+.rtitle b{max-width:100%;-webkit-line-clamp:2;line-clamp:2;font-size:14px;line-height:1.15}
 .rrt,.rlis{flex:none}
 /* #935 HP <=430px: bar atas hanya Kembali, Bab utuh, Lainnya; Cara baca & Dengar pindah ke menu Lainnya; judul min ±8 huruf CJK */
 .rtitle b{min-width:8em}.rmore .rmob{display:none}
