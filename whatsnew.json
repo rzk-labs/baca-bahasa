@@ -1,5 +1,11 @@
 [
   {
+    "n": 1827,
+    "judul": "Home: teks kecil 11px (contoh target & nama hari) jadi min 12px",
+    "poin": "Teks kecil di Home (contoh target, nama hari) sekarang lebih besar dan jelas.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1824,
     "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
     "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
@@ -171,12 +177,6 @@
     "n": 1745,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' rapi, tak terpotong, tanpa patah",
     "poin": "Kartu \"Simpan 3 kata dulu\" di Home kini rapi, judul satu baris.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1744,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
-    "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
     "tgl": "2026-11-23"
   }
 ]
