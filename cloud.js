@@ -546,7 +546,7 @@ async function homeLeaderboard() {
     await pushSync(true).catch(() => { });
     const r = await api('/leaderboard');
     const top = r.top.slice(0, 5), meIn = r.me && top.some(t => t.username === r.me.username);
-    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada yang dapet XP minggu ini. Jadi yang pertama!</div>')
+    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="empty"><img class="empty-doodle" src="img/aset/kosong-peringkat.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada yang dapet XP minggu ini. Jadi yang pertama!</div></div>')
       + (r.me && !meIn ? (r.me.hidden ? '<div class="mut sm" style="margin-top:8px">Kamu disembunyikan dari leaderboard.</div>' : lbRow({ ...r.me, rank: r.me.rank }, true)) : '');
   } catch (e) { $('#lbList').textContent = e.message; }
 }
@@ -555,7 +555,7 @@ async function openLeaderboard() {
   try {
     const r = await api('/leaderboard');
     $('#lbWeek').textContent = `XP minggu ${r.week} · reset tiap Senin`;
-    $('#lbFull').innerHTML = (r.top.length ? r.top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada peserta minggu ini.</div>')
+    $('#lbFull').innerHTML = (r.top.length ? r.top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="empty"><img class="empty-doodle" src="img/aset/kosong-peringkat.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada peserta minggu ini.</div></div>')
       + (r.me && !r.me.hidden && !r.top.some(t => t.username === r.me.username) ? '<div class="lb-gap">···</div>' + lbRow(r.me, true) : '');
   } catch (e) { $('#lbFull').textContent = e.message; }
 }
@@ -587,7 +587,7 @@ async function homeFriends() {
   $('#frFind').onclick = openFriends;
   try {
     const r = await api('/teman');
-    $('#frList').innerHTML = r.users.length ? r.users.map(frRow).join('') : `<div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div>`;
+    $('#frList').innerHTML = r.users.length ? r.users.map(frRow).join('') : `<div class="empty"><img class="empty-doodle" src="img/aset/kosong-teman.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div></div>`;
     wireRows($('#frList'));
   } catch (e) { $('#frList').textContent = e.message; }
 }
@@ -632,7 +632,7 @@ function rakHtml() {
   const pp = b => (b.opened || b.pos > 0 || b.pct >= 100) ? pctOf(b) : 0; /* belum pernah dibuka = 0%, bukan 1% */
   const grp = [['Sedang dibaca', b => pp(b) > 0 && pp(b) < 100], ['Tamat', b => pp(b) >= 100], ['Belum dibuka', b => pp(b) <= 0]]; /* tiap buku hanya di satu rak */
   const bk = b => { const p = pp(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p >= 100 ? 'Tamat' : p + '%'}">${cover(b)}${p >= 100 ? `<span class="rk-tag" role="img" aria-label="Tamat">${ico('check')}</span>` : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p >= 100 ? esc(LANG_ID[b.lang] || (LANGS[b.lang] || [b.lang || ''])[0]) : p > 0 ? p + '%' : 'Belum dibuka'}</span></button>`; }; /* #1672: tamat = lencana centang saja; baris bawah = bahasa */
-  const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
+  const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row${x.length < 3 ? ' rk-few n' + x.length : ''}">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
   const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
   return `<div id="rakBox">${head}
     <button class="rk-atur" id="rkAtur" aria-expanded="${rakAtur}" aria-controls="rkOpts">${ico('sliders')}<span>Atur rak</span></button>
@@ -665,7 +665,7 @@ async function openProfile(username) {
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} Total XP seumur hidup</div>` : ''}</div></div>
-      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span>kata disimpan 7 hari</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
+      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span><i class="nw">kata</i> <i class="nw">7 hari</i></span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Tamat</div>${rdDone.map(bacaBaris).join('')}` : ''}
