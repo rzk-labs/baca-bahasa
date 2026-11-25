@@ -1628,7 +1628,7 @@ function sessRecap(b) {
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1, nyusul: true }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
     db.vocab.unshift(nv); if (!save()) { db.vocab.shift(); return; } award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
-    toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
+    toast('Masuk ke kartu kata kamu', 3500, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
       tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
@@ -1777,7 +1777,7 @@ function intipBind(b, cand) {
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1, nyusul: true }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
     db.vocab.unshift(nv); if (!save()) { db.vocab.shift(); return; } award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.classList.add('done'); btn.querySelector('.ia').innerHTML = ico('check'); btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
-    toast('Masuk ke kartu kata kamu', 6000, { label: 'Urungkan', fn: () => {
+    toast('Masuk ke kartu kata kamu', 3500, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
       tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.classList.remove('done'); btn.querySelector('.ia').innerHTML = ico('plus'); btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
