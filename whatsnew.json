@@ -1,5 +1,11 @@
 [
   {
+    "n": 1842,
+    "judul": "Toast 'Masuk ke kartu kata' lebih singkat (3,5 dtk), Urungkan tetap ada",
+    "poin": "Pesan \"Masuk ke kartu kata\" kini hilang dalam 3,5 detik, bukan 6.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1841,
     "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
     "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
@@ -171,12 +177,6 @@
     "n": 1760,
     "judul": "Reader: bar bawah tak lagi '✓ Tamat' + 'Tamatkan' bersamaan",
     "poin": "Bar bawah reader tak lagi bilang \"Tamat\" sekaligus tombol \"Tamatkan\".",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1758,
-    "judul": "Sheet Tamat: tombol buku contoh jelas 'Coba buku contoh', bukan 'Lanjut'",
-    "poin": "Tombol di layar Tamat kini bertuliskan \"Coba buku contoh\", bukan \"Lanjut\".",
     "tgl": "2026-11-23"
   }
 ]
