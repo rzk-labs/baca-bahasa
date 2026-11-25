@@ -1,5 +1,11 @@
 [
   {
+    "n": 1809,
+    "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
+    "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1798,
     "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
     "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
@@ -171,12 +177,6 @@
     "n": 1729,
     "judul": "Doodle SVG: 'Belum ada kata HSK' & 'Belum ada kartu' tak polos lagi",
     "poin": "Layar kosong HSK sekarang punya gambar tangga kecil bersorot stabilo.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1727,
-    "judul": "Reader HP: teks Jepang tak lagi terpotong/menumpuk (nowrap .nb)",
-    "poin": "Teks buku Jepang di HP kini tak terpotong atau menumpuk lagi.",
     "tgl": "2026-11-23"
   }
 ]
