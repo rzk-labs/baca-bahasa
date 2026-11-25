@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1836 — Arti kata muncul halus</title>
+<style>
+body{margin:0;padding:16px;background:#eee;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.lab{max-width:390px;margin:14px auto 6px;font:700 12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.phone{width:390px;max-width:100%;margin:0 auto;background:#D7EFFF;border-radius:24px 24px 0 0;padding:20px;box-sizing:border-box}
+.w{font:800 30px/36px "Bricolage Grotesque",Inter,sans-serif;letter-spacing:-.01em}
+.tr{font:800 30px/36px "Bricolage Grotesque",Inter,sans-serif;min-height:30px;margin:4px 0 8px}
+.dots{display:inline-flex;gap:6px;height:22px;align-items:center}.dots i{width:8px;height:8px;border-radius:50%;background:#351E28;opacity:.4}
+.mut{font:600 14px Inter;opacity:.7}
+.btn{display:inline-block;margin-top:12px;background:#351E28;color:#fff;border-radius:999px;padding:12px 20px;font:700 15px Inter}
+.note{font:600 12px Inter;background:#E9F056;display:inline-block;padding:4px 8px;border-radius:8px;margin-top:10px}
+</style></head><body>
+<div class="lab">Sebelum: titik langsung diganti arti (kasar, tinggi bisa loncat)</div>
+<div class="phone"><div class="w">promise</div><div class="tr"><span class="dots"><i></i><i></i><i></i></span></div><div class="mut">Lagi nyari artinya</div><span class="btn">Simpan</span></div>
+<div class="lab">Sesudah, 0–180 ms: tinggi tetap, arti memudar naik 4px</div>
+<div class="phone"><div class="w">promise</div><div class="tr" style="opacity:.5;transform:translateY(2px)">janji</div><div class="mut">Arti memudar masuk</div><span class="btn">Simpan</span></div>
+<div class="lab">Sesudah, selesai</div>
+<div class="phone"><div class="w">promise</div><div class="tr">janji</div><div class="mut">Tinggi sheet sama dari awal</div><span class="btn">Simpan</span></div>
+<div class="lab">Sinyal lemah: pesan juga memudar masuk</div>
+<div class="phone"><div class="w">promise</div><div class="tr"><span class="mut">Masih nyari artinya…</span> <span class="btn" style="margin:0;padding:6px 12px;font-size:13px">Coba lagi</span></div><span class="note">Animasi mati bila Kurangi gerak aktif</span></div>
+</body></html>
