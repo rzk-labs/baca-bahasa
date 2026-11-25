@@ -1,5 +1,11 @@
 [
   {
+    "n": 1834,
+    "judul": "Sheet arti kata: tombol kecil 32px dilegakan jadi area ketuk 44px",
+    "poin": "Tombol kecil di sheet arti kata ternyata sudah punya area ketuk 44px.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1832,
     "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
     "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
@@ -171,12 +177,6 @@
     "n": 1754,
     "judul": "Sheet Tamat: gambar buku & ringkasan masuk dengan gerak halus",
     "poin": "Layar Tamat sekarang muncul halus: gambar buku membesar, lalu judul dan tombol menyusul.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1748,
-    "judul": "Doodle SVG: 3 langkah di Home pertama tak cuma angka polos",
-    "poin": "Tiga langkah di Home pertama sekarang punya gambar doodle kecil.",
     "tgl": "2026-11-23"
   }
 ]

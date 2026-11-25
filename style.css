@@ -693,7 +693,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2
 .fb-stars button.on{color:var(--color-text)}
 .fb-chk{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 0 8px;font-size:14px;font-weight:600}
 .fb-chk input{width:24px;min-height:24px;height:24px;margin:0;flex:none}
-.wsug{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);box-shadow:none;padding:8px 12px;margin:0 0 8px}.wsug[hidden]{display:none}
+.wsug{display:flex;align-items:center;gap:12px 8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--color-text-muted);background:var(--color-surface);border-radius:var(--radius-md);box-shadow:none;padding:8px 12px;margin:0 0 8px}.wsug[hidden]{display:none}
 .whint{margin:0 0 8px}.whint[hidden]{display:none}
 .hintchip{min-height:32px;padding:4px 12px;border-radius:var(--radius-full);border:1.5px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font:inherit;font-size:12px;font-weight:700;cursor:pointer;position:relative;max-width:100%}
 .hintchip::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
