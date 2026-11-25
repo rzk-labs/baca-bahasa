@@ -1504,3 +1504,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 @keyframes barfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 #view.enter .bar:not(.rmid .bar) i{transform-origin:left center;animation:barfill .55s var(--ease-out) both}
 @media (prefers-reduced-motion:reduce){#view.enter .bar i{animation:none}}
+/* #1777 Streak: jarak angka-satuan; Profil: label statistik maks 2 baris, tak patah di tengah */
+.stat3 .streak1 .num{gap:5px}.streak1 .num small{margin-left:1px}
+.fr-stats .nw{display:block;white-space:nowrap;font-style:normal}

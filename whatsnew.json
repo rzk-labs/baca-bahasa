@@ -1,5 +1,11 @@
 [
   {
+    "n": 1777,
+    "judul": "Home & Profil: '7 hari' ada jarak, kotak statistik tak patah baris",
+    "poin": "Kartu streak di Home sekarang ada jarak: \"7 hari\", bukan \"7hari\".",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1775,
     "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
     "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
@@ -171,12 +177,6 @@
     "n": 1709,
     "judul": "[peta 181] Reader: tanda baca (— , 。 ” ) tetap tak boleh di awal baris",
     "poin": "Tanda baca (koma, titik, kutip) tak lagi nyasar sendirian di awal baris.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1707,
-    "judul": "Reader: tombol 'Muat ulang arti' untuk semua kata bertitik di halaman",
-    "poin": "Reader kini punya \"Muat ulang arti\" di menu Lainnya, tak perlu ketuk satu-satu.",
     "tgl": "2026-11-22"
   }
 ]
