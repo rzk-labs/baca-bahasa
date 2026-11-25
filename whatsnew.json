@@ -1,5 +1,11 @@
 [
   {
+    "n": 1793,
+    "judul": "Sheet terbuka: isi layar di belakangnya tak ikut dibaca pembaca layar",
+    "poin": "Saat panel kata terbuka, layar di belakangnya kini disembunyikan dari pembaca layar.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1792,
     "judul": "Home: 'Pilih buku berikutnya' cukup satu, tak dobel saat buku Tamat",
     "poin": "Di Home, tombol \"Pilih buku berikutnya\" kini muncul sekali saja saat buku tamat.",
@@ -171,12 +177,6 @@
     "n": 1721,
     "judul": "Reader Jepang/Mandarin: teks tak lagi menumpuk & terpotong di tepi",
     "poin": "Teks Jepang dan Mandarin di HP tidak lagi menumpuk atau terpotong.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1751,
-    "judul": "Rancangan: tab Kata 'Susah diucap' salah nama & ulang mulai 1 kata",
-    "poin": "Rancangan siap: tab \"Susah diucap\" diganti nama jadi \"Latih ucap\" biar tidak membingungkan.",
     "tgl": "2026-11-23"
   }
 ]
