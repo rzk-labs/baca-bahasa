@@ -1,5 +1,11 @@
 [
   {
+    "n": 1787,
+    "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
+    "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1785,
     "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
     "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
@@ -171,12 +177,6 @@
     "n": 1719,
     "judul": "Kata baru: buang kata beraksara lain (Korea di buku Jepang)",
     "poin": "Kata Korea tak muncul lagi sebagai \"kata baru\" di buku Jepang.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1717,
-    "judul": "Home HP: kartu 'Minggu ini' jadi satu baris rapi, tanpa chip bertumpuk",
-    "poin": "Kartu \"Minggu ini\" di Home HP sekarang satu baris rapi, tanpa kotak bertumpuk.",
     "tgl": "2026-11-22"
   }
 ]
