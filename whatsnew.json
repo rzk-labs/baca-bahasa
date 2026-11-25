@@ -1,5 +1,11 @@
 [
   {
+    "n": 1841,
+    "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
+    "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1836,
     "judul": "Sheet arti kata: arti muncul halus, tak loncat dari titik loading",
     "poin": "Arti kata kini muncul halus, tidak loncat dari titik loading.",
@@ -171,12 +177,6 @@
     "n": 1758,
     "judul": "Sheet Tamat: tombol buku contoh jelas 'Coba buku contoh', bukan 'Lanjut'",
     "poin": "Tombol di layar Tamat kini bertuliskan \"Coba buku contoh\", bukan \"Lanjut\".",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1757,
-    "judul": "[peta 183] Reader: '✓ Tamat' hanya bila sudah Tamat (label ikut doneAt)",
-    "poin": "Bar bawah buku hanya menulis \"✓ Tamat\" kalau bukunya memang sudah Tamat.",
     "tgl": "2026-11-23"
   }
 ]
