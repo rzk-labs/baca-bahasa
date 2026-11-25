@@ -1,5 +1,65 @@
 [
   {
+    "n": 1789,
+    "judul": "Reader Mandarin/Jepang: petunjuk sekali 'Pinyin' / 'Cara baca' di tombol",
+    "poin": "Buku Mandarin/Jepang/Korea kini memberi petunjuk singkat soal tombol Pinyin/Cara baca.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1787,
+    "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
+    "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1785,
+    "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
+    "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1783,
+    "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
+    "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1781,
+    "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
+    "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1779,
+    "judul": "Sheet Tamat: 'Baca ulang', 'Ke Home', 'Nanti saja' mudah diketuk jempol",
+    "poin": "Tautan \"Baca ulang\", \"Ke Home\", \"Nanti saja\" kini lebih mudah diketuk jempol.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1777,
+    "judul": "Home & Profil: '7 hari' ada jarak, kotak statistik tak patah baris",
+    "poin": "Kartu streak di Home sekarang ada jarak: \"7 hari\", bukan \"7hari\".",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1775,
+    "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
+    "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1773,
+    "judul": "[peta 180] Reader: kata yang artinya gagal dimuat diberi garis putus tipis",
+    "poin": "Kata yang artinya gagal dimuat sekarang diberi garis putus tipis di bacaan.",
+    "tgl": "2026-11-23"
+  },
+  {
+    "n": 1771,
+    "judul": "[peta 185] Tab Kata: 'Susah diucap' jadi 'Latih ucap' + Ulang mulai 1 kata",
+    "poin": "Tab Kata: \"Susah diucap\" kini bernama \"Latih ucap\", plus teks bantu.",
+    "tgl": "2026-11-23"
+  },
+  {
     "n": 1761,
     "judul": "Reader: ikon 'Kembali ke Home' beda dari 'Halaman sebelumnya'",
     "poin": "Tombol kembali ke Home di layar baca sekarang berikon rumah.",
@@ -118,65 +178,5 @@
     "judul": "Rancangan: alur buka ulang halaman terakhir buku yang sudah Tamat",
     "poin": "Rancangan buka ulang buku Tamat selesai: 5 masalah dicek, 4 masih salah.",
     "tgl": "2026-11-23"
-  },
-  {
-    "n": 1719,
-    "judul": "Kata baru: buang kata beraksara lain (Korea di buku Jepang)",
-    "poin": "Kata Korea tak muncul lagi sebagai \"kata baru\" di buku Jepang.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1717,
-    "judul": "Home HP: kartu 'Minggu ini' jadi satu baris rapi, tanpa chip bertumpuk",
-    "poin": "Kartu \"Minggu ini\" di Home HP sekarang satu baris rapi, tanpa kotak bertumpuk.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1715,
-    "judul": "Reader HP: label 'Tamat' di bar bawah jelas, tak pucat & tak bingungin",
-    "poin": "Label \"Tamat\" di bawah layar baca kini tebal, jelas, dan ada centang.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1713,
-    "judul": "Sheet Tamat: tawaran pengingat dipindah ke bawah tombol aksi",
-    "poin": "Layar Tamat kini tampilkan kata dan tombol lanjut dulu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1711,
-    "judul": "[peta 182] Kartu Level Home HP: rata tengah + bar progres XP",
-    "poin": "Kartu Level di Home HP rata tengah, angka besar, tanpa ruang kosong.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1709,
-    "judul": "[peta 181] Reader: tanda baca (— , 。 ” ) tetap tak boleh di awal baris",
-    "poin": "Tanda baca (koma, titik, kutip) tak lagi nyasar sendirian di awal baris.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1707,
-    "judul": "Reader: tombol 'Muat ulang arti' untuk semua kata bertitik di halaman",
-    "poin": "Reader kini punya \"Muat ulang arti\" di menu Lainnya, tak perlu ketuk satu-satu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1703,
-    "judul": "[peta 180] Satu arti 'kata baru' = baru disimpan; ketukan = 'belum disimpan'",
-    "poin": "Angka \"kata baru\" sekarang sama di Home, layar Tamat, dan catatan sesi.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1693,
-    "judul": "Tab Kata: saringan HSK + chip 'Belum hafal' & petunjuk ulang",
-    "poin": "Tab Kata: saringan HSK 1-3 selalu tampil bila kamu punya kata atau buku Mandarin.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1705,
-    "judul": "[peta 180] Simpan pengarang EPUB & tampilkan di kartu buku",
-    "poin": "Buku EPUB sekarang menampilkan nama pengarang kecil di bawah judul.",
-    "tgl": "2026-11-22"
   }
 ]
