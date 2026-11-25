@@ -222,7 +222,7 @@ const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="ey
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
 /* #1642: satu baris progres HSK di Home; kosong bila belum ada kata zh-CN / data HSK belum termuat */
-function hskHomeHtml() { if (!hskMap) return ''; for (const n of [3, 2, 1]) { const x = hskUniq(n), y = hskTot(n); if (x && y) return `<button type="button" class="hskhome" id="hskHome" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk lihat kata HSK ${n}">HSK ${n}: <b>${x}</b>/${y} kata<span aria-hidden="true">›</span></button>`; } return ''; }
+function hskHomeHtml() { if (!hskMap) return ''; for (const n of [3, 2, 1]) { const x = hskUniq(n), y = hskTot(n); if (x && y) return `<button type="button" class="hskhome" id="hskHome" data-h="${n}" aria-label="HSK ${n}: ${x} dari ${y} kata. Ketuk untuk lihat kata HSK ${n}"><span class="hskt">HSK ${n}: <b>${x}</b>/${y} kata</span><span class="hskgo" aria-hidden="true">›</span><span class="hskbar" aria-hidden="true"><i style="width:${Math.min(100, Math.round(x / y * 100))}%"></i></span></button>`; /* #1832: baris progres netral + bar tipis */ } return ''; }
 function bindHskHome() { const e = $('#hskHome'); if (e) e.onclick = () => { hskF = +e.dataset.h || 0; csvF = 'all'; kataSeg = 'simpan'; sfx('pop'); setTab('kata'); }; }
 function fillHskHome() { const c = $('#hskSlot'); if (!c) return; c.innerHTML = hskHomeHtml(); bindHskHome(); }
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
@@ -1003,7 +1003,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v682';
+const APP_VER = 'v683';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');

@@ -180,6 +180,8 @@ body.reading::after{display:none}
 .fw-nudge svg.i{flex:none;width:20px;height:20px}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+/* #1832: 'siap diulang' di Home = kartu aksi utama, tombol jelas (pil Plum Noir di atas Biru Es) */
+#dueNudge{min-height:56px;padding:10px 10px 10px 14px}#dueNudge b{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);text-decoration:none}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 /* #1745: kartu 'Simpan 3 kata dulu' — grid: ikon | judul 1 baris | angka; subteks, bar 3 segmen, 'Buka bacaan →' di bawah. Warna tetap (kartu selalu Biru Es) supaya kontras sama di 4 tema */
 .fw-nudge.q3-lock{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:10px;row-gap:6px;align-items:center;margin:12px 0 16px;padding:12px 14px 14px;scroll-margin-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 40px)}
@@ -1491,8 +1493,14 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .cover.pat1::before{background-image:radial-gradient(currentColor 1.2px,transparent 1.6px);background-size:10px 10px}
 .cover.pat2::before{background-image:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 8px)}
 .cover .em,.cover .ct{position:relative}
-.hskhome{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:36px;margin:10px 0 0;padding:6px 12px;background:var(--ice);color:var(--ink);border:0;border-radius:var(--radius-full);font:inherit;font-size:13px;line-height:20px;text-align:left;cursor:pointer}
-.hskhome b{font-weight:700}
+/* #1832: HSK = baris progres netral (tanpa latar biru, teks redup, bar tipis), beda dari kartu aksi 'siap diulang' */
+.hskhome{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:8px;row-gap:6px;width:100%;min-height:44px;margin:8px 0 0;padding:6px 2px;background:none;color:var(--color-text-muted);border:0;border-radius:var(--radius-sm);font:500 13px/18px var(--font-ui);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hskhome .hskt{min-width:0;overflow-wrap:anywhere}
+.hskhome b{font-weight:700;color:var(--color-text)}
+.hskhome .hskgo{font-size:16px;line-height:1}
+.hskhome .hskbar{grid-column:1/-1;display:block;height:3px;border-radius:var(--radius-full);background:var(--color-border);overflow:hidden}
+.hskhome .hskbar i{display:block;height:100%;border-radius:inherit;background:var(--color-text-muted)}
+.hskhome:focus-visible{outline:2px solid var(--color-text);outline-offset:2px}
 /* #1640 Home: Streak satu baris penuh; Target & Level berdampingan, dua kolom sama lebar */
 .stat3{grid-template-columns:repeat(2,minmax(0,1fr))}
 /* #1691 kartu Level Home: rata tengah seperti Target, angka besar, isi rapat tanpa ruang bolong */
