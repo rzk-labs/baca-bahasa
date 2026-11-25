@@ -241,6 +241,7 @@
     }
   ],
   "backlog": [
+    {"no":188,"peran":"developer","prioritas":"P0","nama":"Baca ulang Tamat: subteks 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit' (#1817)","dokumen":"docs/desain-ux-baca-ulang-tanpa-xp-1817.md","status":"siap dikerjakan","catatan":"Sudah dibangun di ui.js/style.css, sw.js kepo-v676. Mockup: docs/mockup-1817.html."},
     {"no":186,"peran":"developer","prioritas":"P1","nama":"Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + hapus blok Aplikasi ganda + perbaiki Reset (#1799)","dokumen":"docs/riset-pengaturan-banyak-lipat-lanjutan.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1799.html. Daftar opsi atas/lipat/gabung & aturan uji ada di bagian 4 dokumen. Nilai default & data lama tidak berubah."},
     {"no":187,"peran":"developer","prioritas":"P1","nama":"Home: cincin 'Target baca' diisi dari menit utuh, 0 mnt = kosong (#1800)","dokumen":"docs/desain-cincin-target-1800.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1800.html. Ubah goalCardHtml di ui.js: Math.min(minToday(), g)/g. Streak/XP, sheet Tamat, reader jangan disentuh. Naikkan C di sw.js."},
     {"no":185,"peran":"developer","prioritas":"P1","nama":"Sheet Tamat: buku contoh diberi label 'Coba buku contoh' (#1762)","dokumen":"docs/desain-tamat-buku-contoh-1762.md","status":"selesai (#1762)","catatan":"Mockup: docs/mockup-1762.html. Buku pengguna tetap 'Lanjut: judul'. Klik & gaya tombol tak berubah."},
