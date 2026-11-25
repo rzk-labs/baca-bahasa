@@ -448,7 +448,7 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 #toast .ttx{min-width:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #toast .tact{flex:none;background:none;border:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;padding:10px 4px;min-height:44px;cursor:pointer}
 /* ---------- toast, XP, konfeti, level up ---------- */
-#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h,64px) + 26px);transform:translateX(-50%);z-index:20;min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:10px;width:max-content;max-width:min(88vw,420px);padding:8px 14px;text-align:left;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font-size:13px;line-height:18px;font-weight:700;animation:up var(--dur-sheet) var(--ease-out)}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 10px + var(--tabbar-h,64px) + var(--space-4));transform:translateX(-50%);z-index:20;box-shadow:0 0 0 1.5px var(--ice),0 6px 18px rgba(53,30,40,.28);min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:10px;width:max-content;max-width:min(calc(100vw - 2 * var(--space-4)),420px);padding:8px 14px;text-align:left;border-radius:var(--radius-lg);background:var(--ink);color:var(--cream);font-size:13px;line-height:18px;font-weight:700;animation:up var(--dur-sheet) var(--ease-out)}
 .xpfly{position:fixed;z-index:30;left:50%;top:40%;transform:translateX(-50%);padding:8px 16px;border-radius:var(--radius-full);background:var(--lime);color:var(--ink);font:800 22px var(--font-display);pointer-events:none;animation:xpfly 1.1s var(--ease-out) forwards}
 body.reading .xpfly.mini{top:calc(env(safe-area-inset-top,0px) + 8px);left:auto;right:12px;transform:none;padding:2px 8px;font-size:12px;background:transparent;color:var(--ink);opacity:0;animation:xpmini .8s ease-out forwards}
 @keyframes xpmini{0%{opacity:0}20%{opacity:.55}100%{opacity:0}}
@@ -465,7 +465,7 @@ body.reading .xpfly.mini{top:calc(env(safe-area-inset-top,0px) + 8px);left:auto;
 body.reading{overflow:hidden}
 body.reading #top,body.reading #tabs{display:none}
 body.reading #view{padding:0;margin:0;max-width:none;animation:none!important;transform:none}
-body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
+body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2)}
 .reader{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;background:var(--color-surface);color:var(--color-text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 .reader{background:var(--color-bg)}
 .roff{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}.roff[hidden]{display:none}

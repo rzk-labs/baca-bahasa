@@ -1,5 +1,11 @@
 [
   {
+    "n": 1816,
+    "judul": "Toast di Home: beri jarak dari tab bar & tak menutupi kartu buku",
+    "poin": "Pesan kecil (mis. \"Level 9!\") sekarang punya jarak pas dari bar bawah.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1825,
     "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
     "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
@@ -171,12 +177,6 @@
     "n": 1740,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' utuh, tak terpotong menu",
     "poin": "Kartu \"Kata disimpan 0/3\" di HP sekarang rapi: judul satu baris, tombol di bawah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1730,
-    "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
-    "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
     "tgl": "2026-11-23"
   }
 ]
