@@ -1,5 +1,11 @@
 [
   {
+    "n": 1824,
+    "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
+    "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1817,
     "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
     "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
@@ -171,12 +177,6 @@
     "n": 1744,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
     "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1742,
-    "judul": "Reader: chip 'Lanjut dari Bagian N' tak muncul di buku tamat/akhir",
-    "poin": "Chip \"Lanjut dari Bagian\" tak muncul lagi di buku tamat atau halaman terakhir.",
     "tgl": "2026-11-23"
   }
 ]

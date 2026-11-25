@@ -336,6 +336,12 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .set-grp{margin-top:var(--space-5);padding-top:var(--space-3);border-top:1.5px solid var(--color-border)}
 .set-gt{font:800 20px/24px var(--font-display);letter-spacing:-.01em;text-transform:uppercase}
 .set-grp .set-row:first-of-type{margin-top:var(--space-3)}
+.lan-btn{width:100%;min-height:52px;border:1.5px solid var(--color-text);border-radius:14px;background:var(--color-surface);color:var(--color-text);font:800 15px/20px var(--font-ui);display:flex;justify-content:space-between;align-items:center;padding:0 16px;cursor:pointer}
+.lan-btn:focus-visible{outline:3px solid var(--color-text);outline-offset:2px}
+.lan-hint{margin-top:6px}
+.lan-sub{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-muted);margin-top:var(--space-5)}
+#lanPanel[hidden]{display:none}
+#lanGrp{border-top:0}
 .swatch{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .swatch button{flex-direction:column;gap:2px;min-height:72px;border:2.5px solid var(--color-border);border-radius:var(--radius-md);font-size:12px}
 .swatch button span{font:800 22px/1 var(--font-display)}.swatch button small{font-size:12px}
