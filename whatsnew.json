@@ -1,5 +1,11 @@
 [
   {
+    "n": 1783,
+    "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
+    "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1781,
     "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
     "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
@@ -171,12 +177,6 @@
     "n": 1715,
     "judul": "Reader HP: label 'Tamat' di bar bawah jelas, tak pucat & tak bingungin",
     "poin": "Label \"Tamat\" di bawah layar baca kini tebal, jelas, dan ada centang.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1713,
-    "judul": "Sheet Tamat: tawaran pengingat dipindah ke bawah tombol aksi",
-    "poin": "Layar Tamat kini tampilkan kata dan tombol lanjut dulu.",
     "tgl": "2026-11-22"
   }
 ]
