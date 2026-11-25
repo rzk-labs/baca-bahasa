@@ -2712,7 +2712,7 @@ function turn(d) {
   if (d > 0) pahamLeave(b);
   if (d > 0 && b.pos < b.total - 1) { if (was) LIS.chain = true; const op = b.pos; b.pos++; b.si = 0; RD.quiet = true; save(); award(5, 'page', b.id + ':' + b.pos, 0); viewBaca(); setTimeout(() => marksReview(b, op), 150); }
   else if (d < 0 && b.pos > 0) { if (was) LIS.chain = true; b.pos--; b.si = 0; RD.toEnd = true; RD.quiet = true; save(); viewBaca(); }
-  else if (d > 0) { if (b.doneAt) tamatSeen = null; finishBook(b); }
+  else if (d > 0) { if (b.doneAt) toast('Ini halaman terakhir.', 4000); else finishBook(b); } /* #1775: buku Tamat dibuka ulang: sheet Tamat tak muncul sendiri (swipe/tombol keyboard) */
   else toast('Ini halaman pertama.');
 }
 let rsT; ['resize', 'orientationchange'].forEach(ev => addEventListener(ev, () => { clearTimeout(rsT); rsT = setTimeout(() => { if (document.body.classList.contains('reading')) { const r = $('#reader'); if (r) r.dataset.align = effAlign(); layout(); } }, 150); }));

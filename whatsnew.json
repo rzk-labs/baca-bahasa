@@ -1,5 +1,11 @@
 [
   {
+    "n": 1775,
+    "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
+    "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1773,
     "judul": "[peta 180] Reader: kata yang artinya gagal dimuat diberi garis putus tipis",
     "poin": "Kata yang artinya gagal dimuat sekarang diberi garis putus tipis di bacaan.",
@@ -171,12 +177,6 @@
     "n": 1707,
     "judul": "Reader: tombol 'Muat ulang arti' untuk semua kata bertitik di halaman",
     "poin": "Reader kini punya \"Muat ulang arti\" di menu Lainnya, tak perlu ketuk satu-satu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1703,
-    "judul": "[peta 180] Satu arti 'kata baru' = baru disimpan; ketukan = 'belum disimpan'",
-    "poin": "Angka \"kata baru\" sekarang sama di Home, layar Tamat, dan catatan sesi.",
     "tgl": "2026-11-22"
   }
 ]
