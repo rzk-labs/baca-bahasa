@@ -241,6 +241,7 @@
     }
   ],
   "backlog": [
+    {"no":188,"peran":"developer","prioritas":"P0","nama":"Reader HP: bar bawah 'Terakhir' tak terpotong, fallback angka N/N (#1820)","dokumen":"docs/rencana-bar-bawah-1820.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1820.html. Ubah cabang akhir di ui.js (~2402) + fallback angka. Logika tamat/XP jangan disentuh. Naikkan C di sw.js."},
     {"no":188,"peran":"developer","prioritas":"P0","nama":"Toast 'Urungkan': simpan kata 4 dtk, aksi lain 5 dtk, jeda saat disentuh (#1818)","dokumen":"docs/riset-toast-simpan-kata-saat-baca.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1818.html. Bagian 4 dokumen: ui.js baris 1628 & 1776 jadi 4000; sisa 6000 jadi 5000; 1421 tetap. Naikkan C di sw.js."},
     {"no":188,"peran":"developer","prioritas":"P0","nama":"Login Google: tombol 'Lanjut dengan Google' di sheet Masuk/Daftar (#1814)","dokumen":"docs/pm-login-google-1814.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1814.html. Butuh Client ID Google dari founder + deploy Worker/migrasi D1 manual (api/ hanya diubah untuk tugas ini). Login username lama & mode demo tak berubah. Naikkan C di sw.js."},
     {"no":186,"peran":"developer","prioritas":"P1","nama":"Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + hapus blok Aplikasi ganda + perbaiki Reset (#1799)","dokumen":"docs/riset-pengaturan-banyak-lipat-lanjutan.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1799.html. Daftar opsi atas/lipat/gabung & aturan uji ada di bagian 4 dokumen. Nilai default & data lama tidak berubah."},
