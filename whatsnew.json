@@ -1,5 +1,11 @@
 [
   {
+    "n": 1797,
+    "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
+    "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1796,
     "judul": "Home: cincin Target baca kosong bila 0 menit, isi ikut angka menit",
     "poin": "Cincin Target baca di Home kini kosong kalau belum baca semenit pun.",
@@ -171,12 +177,6 @@
     "n": 1726,
     "judul": "Reader Jepang/Mandarin HP: teks tak terpotong & tak menumpuk",
     "poin": "Teks buku Jepang dan Mandarin di HP sekarang patah baris rapi.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1725,
-    "judul": "Reader Jepang/Mandarin: baris teks tak boleh terpotong atau menumpuk",
-    "poin": "Teks Jepang dan Mandarin di reader kini turun baris rapi, tak terpotong.",
     "tgl": "2026-11-23"
   }
 ]
