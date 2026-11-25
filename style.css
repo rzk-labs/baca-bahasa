@@ -441,9 +441,9 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .vitem .vgo:active{color:var(--color-text)}
 .vitem .icon{color:var(--color-text-muted);flex:none;min-width:44px;min-height:44px}
 .vitem .icon+.icon{margin-left:var(--space-3)}
-.vitem .icon.vdel{margin-left:20px;opacity:.55}
+.vitem .icon.vdel{margin-left:20px}
 .vitem .icon.vdel svg{width:18px;height:18px}
-.vitem .icon.vdel:active{opacity:1}
+.vitem .icon.vdel:active{color:var(--color-text)}
 @media (max-width:359px){.vitem{padding:var(--space-3)}.vitem .icon.vdel{margin-left:16px}}
 #toast .ttx{min-width:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #toast .tact{flex:none;background:none;border:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;padding:10px 4px;min-height:44px;cursor:pointer}
@@ -698,7 +698,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .often-sec summary::after{content:"";margin-left:auto;width:8px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .15s}
 .often-sec[open] summary::after{transform:rotate(-135deg)}
 .often-sec .vitem .pill-sm{flex:none;min-height:44px;min-width:44px;padding:4px 16px;border-radius:var(--radius-full);border:0;background:var(--ink);color:var(--cream);font:inherit;font-weight:700;cursor:pointer}
-.often-sec .vitem .pill-sm:disabled{opacity:.6}
+.often-sec .vitem .pill-sm:disabled{opacity:1;background:var(--color-surface-soft);color:var(--color-text-muted)}
 .wfreq{overflow-wrap:anywhere}
 /* Kata Tersimpan: bar ekspor CSV di atas daftar */
 .csvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
@@ -854,7 +854,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .intip .im{flex:1 1 0;min-width:0;color:var(--color-text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .intip .ia{flex:none;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}
 .intip .ia svg.i{width:16px;height:16px}
-.intip .irow.done{opacity:.6}
+.intip .irow.done{opacity:1}.intip .irow.done .iw{color:var(--color-text-muted)}
 /* 5 tab: label tetap muat di HP kecil */
 @media (max-width:389px){#tabs{gap:4px;padding:5px}#tabs button{font-size:var(--fs-min);font-weight:700;gap:3px}#tabs button svg{width:20px;height:20px}}
 /* #700: lencana tak mepet, statistik 1 baris, judul buku maks 2 baris */
