@@ -2,7 +2,7 @@
 /* jeda sebelum 'Masih nyari artinya…' + Coba lagi (arti kata & kalimat); permintaan tetap jalan */
 const SLOW_MS = 3000;
 /* KEEPO v8— Perpustakaan santai (krem, hijau tua, oranye bata; tanpa maskot). XP/level, lencana, konfeti, kartu swipe. Logika teks/suara/skor ada di app.js. */
-db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; if (db.spacing !== 'w') db.spacing = 'n'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; if (db.peekBaca !== 'langsung' && db.peekBaca !== 'ketuk') db.peekBaca = null; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0; db.rtSet = !!db.rtSet; if (!db.rtLang || typeof db.rtLang !== 'object') db.rtLang = {};
+db.font = db.font || 'serif'; db.days = db.days || []; db.scores = db.scores || []; db.lh = db.lh || 1.7; if (db.align !== 'l' && db.align !== 'j') db.align = null; db.mg = db.mg || 'm'; if (db.spacing !== 'w') db.spacing = 'n'; db.focus = !!db.focus; if (db.showBaca == null) db.showBaca = true; if (db.peekBaca !== 'langsung' && db.peekBaca !== 'ketuk') db.peekBaca = null; db.rt = [0, 1, 2].includes(db.rt) ? db.rt : 0; db.rtSet = !!db.rtSet; if (!db.rtHint || typeof db.rtHint !== 'object') db.rtHint = {}; if (!db.rtLang || typeof db.rtLang !== 'object') db.rtLang = {};
 const rtOf = lang => [0, 1, 2].includes(db.rtLang[lang]) ? db.rtLang[lang] : (!db.rtSet && lang === 'zh-CN') ? 2 : db.rt;
 const isUmum = (lang, w) => { const g = FUNC_SET[String(lang || '').toLowerCase().split('-')[0]]; return !!(g && g.has(String(w).toLowerCase())); };
 const setRt = (lang, v) => { db.rt = v; db.rtSet = true; db.rtLang[lang] = v; save(); };
@@ -1000,7 +1000,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v672';
+const APP_VER = 'v677';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1283,7 +1283,7 @@ function viewRak() {
       <div class="t-lav lv-tap" id="lvCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Level ${xpInfo().lv}. Ketuk untuk lihat cara dapat XP">${lvCardHtml()}</div>
     </div>
     <div id="hskSlot">${hskHomeHtml()}</div>
-    ${firstWordNudge() && pctOf(cur) >= 100 ? `<button type="button" class="fw-nudge" id="nextNudge" aria-label="Pilih buku berikutnya">${ico('book')}<span>Pilih buku berikutnya</span></button>` : firstWordNudge() ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
+    ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. Ketuk untuk buka bacaan">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">Ketuk kata di bacaan, lalu Simpan.</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span><span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span></button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
     ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
     ${mileHtml()}
@@ -1938,6 +1938,10 @@ async function viewBaca() {
     rtAsked = b.id;
     openSheet(`<h2>Mau pinyin di atas kata?</h2><p class="muted">Bisa diganti kapan saja lewat tombol Pinyin di atas.</p><div class="rtq"><button class="btn" data-q="2">Nyala<small>Pinyin di semua kata. Paling gampang dibaca.</small></button><button class="btn ghost" data-q="1">Hanya kata baru<small>Pinyin hanya di kata yang kamu ketuk. Melatih mata baca hanzi.</small></button><button class="btn ghost" data-q="0">Mati<small>Hanzi saja, tanpa pinyin.</small></button></div>`, 'Mau pinyin?');
     $$('#sheetBody [data-q]').forEach(x => x.onclick = () => { setRt('zh-CN', +x.dataset.q); closeSheet(); viewBaca(); });
+  }
+  if (['ja', 'ko', 'zh-CN'].includes(b.lang) && !rtOf(b.lang) && !b.doneAt && !db.rtHint[b.lang]) { /* #1789: petunjuk sekali per bahasa */
+    db.rtHint[b.lang] = 1; save();
+    toast(`Mau ${b.lang === 'zh-CN' ? 'pinyin' : 'cara baca'}? Ketuk tombol ${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'} di atas.`, 4000);
   }
   $('#rMore').onclick = () => openMore();
   const openMore = () => {
