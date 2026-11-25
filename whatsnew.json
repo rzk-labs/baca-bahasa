@@ -1,5 +1,83 @@
 [
   {
+    "n": 1844,
+    "judul": "Rekap 'Kata sesi ini': hapus hitungan layar yang beda dari reader",
+    "poin": "Catatan sesi kini selalu bilang \"Berhenti di Bagian k dari n\", tanpa hitungan layar.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1843,
+    "judul": "Teks & ikon pudar (opacity) di Kata/Intip dibuat cukup kontras",
+    "poin": "Teks selesai, ikon hapus, dan tombol Simpan mati sekarang jelas terbaca.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1842,
+    "judul": "Toast 'Masuk ke kartu kata' lebih singkat (3,5 dtk), Urungkan tetap ada",
+    "poin": "Pesan \"Masuk ke kartu kata\" kini hilang dalam 3,5 detik, bukan 6.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1841,
+    "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
+    "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1836,
+    "judul": "Sheet arti kata: arti muncul halus, tak loncat dari titik loading",
+    "poin": "Arti kata kini muncul halus, tidak loncat dari titik loading.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1834,
+    "judul": "Sheet arti kata: tombol kecil 32px dilegakan jadi area ketuk 44px",
+    "poin": "Tombol kecil di sheet arti kata ternyata sudah punya area ketuk 44px.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1832,
+    "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
+    "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1830,
+    "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
+    "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1827,
+    "judul": "Home: teks kecil 11px (contoh target & nama hari) jadi min 12px",
+    "poin": "Teks kecil di Home (contoh target, nama hari) sekarang lebih besar dan jelas.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1824,
+    "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
+    "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1817,
+    "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
+    "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1816,
+    "judul": "Toast di Home: beri jarak dari tab bar & tak menutupi kartu buku",
+    "poin": "Pesan kecil (mis. \"Level 9!\") sekarang punya jarak pas dari bar bawah.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1825,
+    "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
+    "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1809,
     "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
     "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
@@ -99,84 +177,6 @@
     "n": 1771,
     "judul": "[peta 185] Tab Kata: 'Susah diucap' jadi 'Latih ucap' + Ulang mulai 1 kata",
     "poin": "Tab Kata: \"Susah diucap\" kini bernama \"Latih ucap\", plus teks bantu.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1761,
-    "judul": "Reader: ikon 'Kembali ke Home' beda dari 'Halaman sebelumnya'",
-    "poin": "Tombol kembali ke Home di layar baca sekarang berikon rumah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1760,
-    "judul": "Reader: bar bawah tak lagi '✓ Tamat' + 'Tamatkan' bersamaan",
-    "poin": "Bar bawah reader tak lagi bilang \"Tamat\" sekaligus tombol \"Tamatkan\".",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1758,
-    "judul": "Sheet Tamat: tombol buku contoh jelas 'Coba buku contoh', bukan 'Lanjut'",
-    "poin": "Tombol di layar Tamat kini bertuliskan \"Coba buku contoh\", bukan \"Lanjut\".",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1757,
-    "judul": "[peta 183] Reader: '✓ Tamat' hanya bila sudah Tamat (label ikut doneAt)",
-    "poin": "Bar bawah buku hanya menulis \"✓ Tamat\" kalau bukunya memang sudah Tamat.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1754,
-    "judul": "Sheet Tamat: gambar buku & ringkasan masuk dengan gerak halus",
-    "poin": "Layar Tamat sekarang muncul halus: gambar buku membesar, lalu judul dan tombol menyusul.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1748,
-    "judul": "Doodle SVG: 3 langkah di Home pertama tak cuma angka polos",
-    "poin": "Tiga langkah di Home pertama sekarang punya gambar doodle kecil.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1746,
-    "judul": "Bar progres buku, reader & unduhan: dibacakan pembaca layar",
-    "poin": "Bar progres buku, bacaan, dan unduhan kini dibacakan pembaca layar.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1745,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' rapi, tak terpotong, tanpa patah",
-    "poin": "Kartu \"Simpan 3 kata dulu\" di Home kini rapi, judul satu baris.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1744,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
-    "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1742,
-    "judul": "Reader: chip 'Lanjut dari Bagian N' tak muncul di buku tamat/akhir",
-    "poin": "Chip \"Lanjut dari Bagian\" tak muncul lagi di buku tamat atau halaman terakhir.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1740,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' utuh, tak terpotong menu",
-    "poin": "Kartu \"Kata disimpan 0/3\" di HP sekarang rapi: judul satu baris, tombol di bawah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1730,
-    "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
-    "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1729,
-    "judul": "Doodle SVG: 'Belum ada kata HSK' & 'Belum ada kartu' tak polos lagi",
-    "poin": "Layar kosong HSK sekarang punya gambar tangga kecil bersorot stabilo.",
     "tgl": "2026-11-23"
   }
 ]
