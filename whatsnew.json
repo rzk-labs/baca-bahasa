@@ -1,5 +1,11 @@
 [
   {
+    "n": 1843,
+    "judul": "Teks & ikon pudar (opacity) di Kata/Intip dibuat cukup kontras",
+    "poin": "Teks selesai, ikon hapus, dan tombol Simpan mati sekarang jelas terbaca.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1842,
     "judul": "Toast 'Masuk ke kartu kata' lebih singkat (3,5 dtk), Urungkan tetap ada",
     "poin": "Pesan \"Masuk ke kartu kata\" kini hilang dalam 3,5 detik, bukan 6.",
@@ -171,12 +177,6 @@
     "n": 1761,
     "judul": "Reader: ikon 'Kembali ke Home' beda dari 'Halaman sebelumnya'",
     "poin": "Tombol kembali ke Home di layar baca sekarang berikon rumah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1760,
-    "judul": "Reader: bar bawah tak lagi '✓ Tamat' + 'Tamatkan' bersamaan",
-    "poin": "Bar bawah reader tak lagi bilang \"Tamat\" sekaligus tombol \"Tamatkan\".",
     "tgl": "2026-11-23"
   }
 ]
