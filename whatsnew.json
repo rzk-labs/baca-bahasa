@@ -1,5 +1,11 @@
 [
   {
+    "n": 1798,
+    "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
+    "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1797,
     "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
     "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
@@ -171,12 +177,6 @@
     "n": 1727,
     "judul": "Reader HP: teks Jepang tak lagi terpotong/menumpuk (nowrap .nb)",
     "poin": "Teks buku Jepang di HP kini tak terpotong atau menumpuk lagi.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1726,
-    "judul": "Reader Jepang/Mandarin HP: teks tak terpotong & tak menumpuk",
-    "poin": "Teks buku Jepang dan Mandarin di HP sekarang patah baris rapi.",
     "tgl": "2026-11-23"
   }
 ]
