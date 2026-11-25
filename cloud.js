@@ -111,7 +111,10 @@ function mergeSrv(d) {
   }
   // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
-  if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); } /* hasil sinkron: tanpa popup Level */
+  if ((+d.xp || 0) > (db.xp || 0)) {
+    const gainXp = Math.round(+d.xp - (db.xp || 0)); db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); /* hasil sinkron: tanpa popup Level */
+    try { toast(`+${gainXp} XP · dari akunmu di perangkat lain`, 4000); } catch (e) { } /* alasan XP naik tanpa aksi (#1867) */
+  }
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
   if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
