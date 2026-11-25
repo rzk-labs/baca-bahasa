@@ -216,7 +216,8 @@ const minToday = () => Math.floor(readSecToday() / 60);
 const goalDone = () => readSecToday() >= goalMin() * 60;
 const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : `${Math.min(minToday(), goalMin())} dari ${goalMin()} menit`;
 const goalHint = () => minToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : `Sisa ${goalMin() - minToday()} menit, yuk`;
-const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(); return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(Math.min(readSecToday() / (g * 60), 1), `<span class="gn">${m}</span><small>mnt</small>`)}</div><div class="lbl2">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${m} dari ${g} menit</span>`}</div>${ok ? '' : `<div class="goal-eg" title="${goalHint()}" aria-label="${goalHint()}">Sisa ${g - m} menit</div>`}`; };
+/* #1796: cincin diisi per menit penuh (m/g), sama dengan angka di tengah; 0 mnt = kosong. Target/XP tetap per detik */
+const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(); return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(ok ? 1 : m / g,`<span class="gn">${m}</span><small>mnt</small>`)}</div><div class="lbl2">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${m} dari ${g} menit</span>`}</div>${ok ? '' : `<div class="goal-eg" title="${goalHint()}" aria-label="${goalHint()}">Sisa ${g - m} menit</div>`}`; };
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
@@ -225,7 +226,7 @@ function hskHomeHtml() { if (!hskMap) return ''; for (const n of [3, 2, 1]) { co
 function bindHskHome() { const e = $('#hskHome'); if (e) e.onclick = () => { hskF = +e.dataset.h || 0; csvF = 'all'; kataSeg = 'simpan'; sfx('pop'); setTab('kata'); }; }
 function fillHskHome() { const c = $('#hskSlot'); if (!c) return; c.innerHTML = hskHomeHtml(); bindHskHome(); }
 /* segarkan kartu Level & Target di Home dari sumber yang sama (tanpa render ulang seluruh layar) */
-function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) tc.innerHTML = goalCardHtml(); }
+function refreshHomeStats() { const lc = $('#lvCard'); if (lc) lc.innerHTML = lvCardHtml(); const tc = $('#goalCard'); if (tc) { tc.innerHTML = goalCardHtml(); animRing(tc); } }
 const PG_CAP = 10; // XP halaman/bab yang dihitung ke target harian per hari
 const xpToday = () => { const d = today(); return Math.max(0, (db.xpDay[d] || 0) - Math.max(0, ((db.pgXpDay || {})[d] || 0) - PG_CAP)); };
 /* tampilan lencana jujur: lencana berbasis kata tersimpan hanya tampil terbuka bila syaratnya masih terpenuhi (db.badges tak diubah) */
@@ -1002,7 +1003,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v677';
+const APP_VER = 'v681';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -1123,7 +1124,7 @@ function shelfTitle(t, author) {
 }
 function ringSmall(p, label) {
   const C = 2 * Math.PI * 24;
-  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
+  return `<div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg${p > 0 ? '' : ' z'}" cx="28" cy="28" r="24" stroke="#22362B" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C * (1 - Math.min(1, p))}"/><defs><linearGradient id="gl"><stop offset="0" stop-color="#C6FF3D"/><stop offset="1" stop-color="#3DDCFF"/></linearGradient></defs></svg><div class="score">${label}</div></div>`;
 }
 let blManual = false; // true bila pengguna sendiri mengubah pilihan bahasa cerita
 /* Tebak bahasa dari teks; ganti pilihan #bl otomatis kecuali sudah diubah manual. Return kode bahasa yang dipakai. */
