@@ -1,5 +1,11 @@
 [
   {
+    "n": 1825,
+    "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
+    "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1809,
     "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
     "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
@@ -171,12 +177,6 @@
     "n": 1730,
     "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
     "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1729,
-    "judul": "Doodle SVG: 'Belum ada kata HSK' & 'Belum ada kartu' tak polos lagi",
-    "poin": "Layar kosong HSK sekarang punya gambar tangga kecil bersorot stabilo.",
     "tgl": "2026-11-23"
   }
 ]
