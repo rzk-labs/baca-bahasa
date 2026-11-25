@@ -506,6 +506,8 @@ function openAccount(mode) {
       e.preventDefault(); const bt = $('#aGo'); bt.disabled = true; clearErr();
       try {
         const body = { username: $('#aU').value.trim(), password: $('#aP').value };
+        if (typeof isDemoLogin === 'function' && isDemoLogin(body.username, body.password)) { await startDemo(); return; }
+        if (m === 'daftar' && typeof DEMO_USER === 'string' && body.username.toLowerCase() === DEMO_USER) throw new Error('Username sudah dipakai.');
         if (m === 'daftar') body.nick = ($('#aN').value || '').trim();
         await afterLogin(await api(m === 'masuk' ? '/login' : '/signup', { method: 'POST', body }));
         if (m === 'daftar') { sfx('win'); confetti(50); }
@@ -630,7 +632,7 @@ function rakHtml() {
   const pp = b => (b.opened || b.pos > 0 || b.pct >= 100) ? pctOf(b) : 0; /* belum pernah dibuka = 0%, bukan 1% */
   const grp = [['Sedang dibaca', b => pp(b) > 0 && pp(b) < 100], ['Tamat', b => pp(b) >= 100], ['Belum dibuka', b => pp(b) <= 0]]; /* tiap buku hanya di satu rak */
   const bk = b => { const p = pp(b), t = splitTitle(b.title).main; return `<button class="rk-bk" data-rb="${esc(b.id)}" aria-label="${esc(t)}, ${p >= 100 ? 'Tamat' : p + '%'}">${cover(b)}${p >= 100 ? `<span class="rk-tag" role="img" aria-label="Tamat">${ico('check')}</span>` : ''}<span class="rk-t">${esc(t)}</span><span class="rk-p">${p >= 100 ? esc(LANG_ID[b.lang] || (LANGS[b.lang] || [b.lang || ''])[0]) : p > 0 ? p + '%' : 'Belum dibuka'}</span></button>`; }; /* #1672: tamat = lencana centang saja; baris bawah = bahasa */
-  const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
+  const shelves = grp.map(([n, f]) => { const x = show.filter(f); return x.length ? `<div class="rk-shelf"><div class="rk-g">${n}</div><div class="rk-row${x.length < 3 ? ' rk-few n' + x.length : ''}">${x.map(bk).join('')}</div><div class="rk-board"></div></div>` : ''; }).join('');
   const susun = r.urut === 'susun' ? `<div class="eyebrow" style="margin:12px 0 4px">Atur urutan</div>${L.map((b, i) => { const t = esc(splitTitle(b.title).main); return `<div class="rk-up"><span class="rk-n">${i + 1}</span><span class="rk-ut">${t}</span><button class="sec" data-rn="${esc(b.id)}" data-d="-1" ${i ? '' : 'disabled'} aria-label="Naikkan ${t}">Naik</button><button class="sec" data-rn="${esc(b.id)}" data-d="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="Turunkan ${t}">Turun</button></div>`; }).join('')}` : '';
   return `<div id="rakBox">${head}
     <button class="rk-atur" id="rkAtur" aria-expanded="${rakAtur}" aria-controls="rkOpts">${ico('sliders')}<span>Atur rak</span></button>
@@ -663,7 +665,7 @@ async function openProfile(username) {
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
     $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} Total XP seumur hidup</div>` : ''}</div></div>
-      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span>kata disimpan 7 hari</span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
+      <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span><i class="nw">kata</i> <i class="nw">7 hari</i></span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
       ${rdDone.length && !p.self ? `<div class="eyebrow" style="margin:14px 0 6px">Tamat</div>${rdDone.map(bacaBaris).join('')}` : ''}
