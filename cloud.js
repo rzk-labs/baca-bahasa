@@ -506,6 +506,8 @@ function openAccount(mode) {
       e.preventDefault(); const bt = $('#aGo'); bt.disabled = true; clearErr();
       try {
         const body = { username: $('#aU').value.trim(), password: $('#aP').value };
+        if (typeof isDemoLogin === 'function' && isDemoLogin(body.username, body.password)) { await startDemo(); return; }
+        if (m === 'daftar' && typeof DEMO_USER === 'string' && body.username.toLowerCase() === DEMO_USER) throw new Error('Username sudah dipakai.');
         if (m === 'daftar') body.nick = ($('#aN').value || '').trim();
         await afterLogin(await api(m === 'masuk' ? '/login' : '/signup', { method: 'POST', body }));
         if (m === 'daftar') { sfx('win'); confetti(50); }
