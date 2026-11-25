@@ -1,5 +1,11 @@
 [
   {
+    "n": 1830,
+    "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
+    "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1827,
     "judul": "Home: teks kecil 11px (contoh target & nama hari) jadi min 12px",
     "poin": "Teks kecil di Home (contoh target, nama hari) sekarang lebih besar dan jelas.",
@@ -171,12 +177,6 @@
     "n": 1746,
     "judul": "Bar progres buku, reader & unduhan: dibacakan pembaca layar",
     "poin": "Bar progres buku, bacaan, dan unduhan kini dibacakan pembaca layar.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1745,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' rapi, tak terpotong, tanpa patah",
-    "poin": "Kartu \"Simpan 3 kata dulu\" di Home kini rapi, judul satu baris.",
     "tgl": "2026-11-23"
   }
 ]
