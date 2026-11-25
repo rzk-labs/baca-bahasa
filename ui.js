@@ -1915,8 +1915,8 @@ async function viewBaca() {
       ${guideOn(b) ? `<div class="rtip gtip" id="gtip" role="note"><span>${ico('pointer')}<span class="rtt">Ketuk kata yang menyala</span></span><button id="gskip" type="button" aria-label="Lewati petunjuk">Lewati</button></div>` : tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya" title="Halaman sebelumnya">${ico('left')}</button>
         <div class="rmid"><span id="pgn"></span><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Posisi baca"><i id="pbar"></i></div></div>
-        <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
-        <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
+        <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}<span class="rml" aria-hidden="true">Tandai</span></button>
+        <button class="rmenu" id="rMenuBtn" type="button" aria-label="${RD.quiet ? 'Tampilkan bar atas' : 'Sembunyikan bar atas'}" title="${RD.quiet ? 'Tampilkan bar atas' : 'Sembunyikan bar atas'}"><span class="rbs" aria-hidden="true">Bar</span><span class="rbl rbl-show" aria-hidden="true">Tampilkan bar</span><span class="rbl rbl-hide" aria-hidden="true">Sembunyikan bar</span></button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
     </div>`;
   tipN = 0; tipDone = false; nudgePg = new Set();
@@ -2675,6 +2675,7 @@ function toggleMenu(keep) {
   const r = $('#reader'); if (!r) return;
   clearTimeout(menuT); menuT = 0;
   const on = r.classList.toggle('chrome');
+  const mb = $('#rMenuBtn'); if (mb) { const l = on ? 'Sembunyikan bar atas' : 'Tampilkan bar atas'; mb.setAttribute('aria-label', l); mb.title = l; }
   if (on && keep) menuHold();
 }
 /* #1507: pemandu kata pertama. Hanya cerita contoh pendek, sekali per perangkat (db.fwGuide: 'seen' → 'tap' | 'skip'; data lama tanpa field = belum pernah).
