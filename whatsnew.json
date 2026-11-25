@@ -1,5 +1,11 @@
 [
   {
+    "n": 1781,
+    "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
+    "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1779,
     "judul": "Sheet Tamat: 'Baca ulang', 'Ke Home', 'Nanti saja' mudah diketuk jempol",
     "poin": "Tautan \"Baca ulang\", \"Ke Home\", \"Nanti saja\" kini lebih mudah diketuk jempol.",
@@ -171,12 +177,6 @@
     "n": 1713,
     "judul": "Sheet Tamat: tawaran pengingat dipindah ke bawah tombol aksi",
     "poin": "Layar Tamat kini tampilkan kata dan tombol lanjut dulu.",
-    "tgl": "2026-11-22"
-  },
-  {
-    "n": 1711,
-    "judul": "[peta 182] Kartu Level Home HP: rata tengah + bar progres XP",
-    "poin": "Kartu Level di Home HP rata tengah, angka besar, tanpa ruang kosong.",
     "tgl": "2026-11-22"
   }
 ]
