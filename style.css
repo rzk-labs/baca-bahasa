@@ -1558,6 +1558,12 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1777 Streak: jarak angka-satuan; Profil: label statistik maks 2 baris, tak patah di tengah */
 .stat3 .streak1 .num{gap:5px}.streak1 .num small{margin-left:1px}
 .fr-stats .nw{display:block;white-space:nowrap;font-style:normal}
+/* #1845 Tab bar: ganti tab halus, ikon aktif memantul kecil (hanya transform/warna) */
+#tabs button{transition:background-color 180ms var(--ease-out),color 180ms var(--ease-out),transform var(--dur-tap) ease-out}
+#tabs button:active{transform:scale(.96)}
+#tabs button.on svg{animation:tabpop 220ms var(--ease-out) 1}
+@keyframes tabpop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){#tabs button{transition:none}#tabs button:active{transform:none}#tabs button.on svg{animation:none}}
 /* #1841 stempel lencana terbuka */
 .badge .em-stamp{display:block;width:40px;height:40px;margin:0 0 -2px;transform:rotate(-6deg)}
 .badge:nth-child(even) .em-stamp{transform:rotate(5deg)}
