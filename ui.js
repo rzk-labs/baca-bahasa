@@ -1275,7 +1275,7 @@ function viewRak() {
     $('#view').innerHTML = `
     ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act"><button class="pri" id="hNext">Pilih buku berikutnya</button></div><div class="hd-re"><button type="button" class="lnk" id="hRead">Baca ulang</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act"><button class="pri" id="hNext">Pilih buku berikutnya</button></div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
@@ -1292,7 +1292,7 @@ function viewRak() {
     ${mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
-      <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang: ${esc(b.title)}">Baca ulang</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
+      <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang, tanpa XP: ${esc(b.title)}">Baca ulang<small class="re-xp">tanpa XP</small></button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureKb);
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
     const open = t => { db.cur = cur.id; save(); setTab(t); };
@@ -1673,7 +1673,7 @@ function finishBook(b) {
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
   const pend = kataSesiBaru(b, [...SESSW.values()].filter(e => e.bid === b.id)).length; /* kata diketuk sesi ini, belum disimpan (sumber sama dgn sessRecap) */
   const total = countedVocab(null).length; /* untuk tombol Lihat kata saja; jumlah kata di sheet = ws (sumber catatan sesi) */
-  const ring = [b.total > 1 ? `${b.total} ${secWord(b, 0).toLowerCase()}` : '', /* #1674: b.total = jumlah Bagian, bukan halaman layar */ ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : goalTodayText()].filter(Boolean).join(' · ');
+  const ring = [b.total > 1 ? `${b.total} ${secWord(b, 0).toLowerCase()}` : '', /* #1674: b.total = jumlah Bagian, bukan halaman layar */ ws.length ? `${ws.length} kata baru` : (pend ? `${pend} kata belum disimpan` : ''), ulang ? 'Baca ulang: tanpa XP halaman' : ''].filter(Boolean).join(' · ');
   const nx = nextBooks(b);
   const nPaham = SESSP.bid === b.id && SESSP.t === SESS.t ? SESSP.set.size : 0, nTap = ws.length + pend;
   const pahamTxt = nTap ? `${nTap} kata ditambah ke Kata.${nPaham ? ` ${nPaham} kata dianggap paham.` : ''}` : nPaham ? 'Tidak ada kata yang kamu ketuk. Semuanya dianggap paham.' : '';
@@ -1719,7 +1719,7 @@ function finishBook(b) {
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<button type="button" class="fw-nudge due-nudge" id="fbdue" style="margin:-4px 0 8px" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${dueN} kata lama siap diulang</span><b>Ulang sekarang</b></button>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
-    <div class="fb-sec"><button class="lnk" id="fbr">Baca ulang</button><button class="lnk" id="fbh">Ke Home</button></div>
+    <div class="fb-sec"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button><button class="lnk" id="fbh">Ke Home</button></div>
     ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau diingatkan baca besok?</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const rs = $('#fbrset'); if (rs) rs.onclick = () => { closeSheet(); setTimeout(() => { openSettings(); setTimeout(() => { const g = $('#remGrp'); if (g) g.scrollIntoView({ block: 'center' }); }, 60); }, 50); };
@@ -2420,7 +2420,7 @@ function showPage(p, anim = true) {
   const nx = $('#nx'), last = RD.page === RD.n - 1 && b.pos >= (b.total || 1) - 1;
   if (nx) { nx.disabled = false; nx.classList.remove('fin'); }
   if (!nx) { /* reader sudah ditutup */ }
-  else if (last && b.doneAt) { delete nx.dataset.ulang; nx.dataset.baca = '1'; nx.textContent = 'Baca ulang'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Baca ulang buku dari halaman 1'); }
+  else if (last && b.doneAt) { delete nx.dataset.ulang; nx.dataset.baca = '1'; nx.textContent = 'Baca ulang'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Baca ulang buku dari halaman 1, tanpa XP'); }
   else if (last && !b.doneAt) { delete nx.dataset.ulang; delete nx.dataset.baca; nx.textContent = 'Tamatkan'; nx.classList.add('fin'); nx.style.cssText = '';nx.setAttribute('aria-label', 'Tamatkan buku dan buka rekap'); }
   else { delete nx.dataset.ulang; delete nx.dataset.baca; nx.innerHTML = ico('right'); nx.style.cssText = ''; nx.setAttribute('aria-label', 'Halaman berikutnya'); }
   endCard(b, last);
@@ -2462,7 +2462,7 @@ function endCard(b, last) {
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
-  c.innerHTML = `<button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr">Baca ulang</button>`;
+  c.innerHTML = `<button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button>`;
   c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };

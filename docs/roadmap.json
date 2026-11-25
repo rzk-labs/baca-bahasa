@@ -241,6 +241,7 @@
     }
   ],
   "backlog": [
+    {"no":188,"peran":"developer","prioritas":"P0","nama":"Baca ulang Tamat: subteks 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit' (#1817)","dokumen":"docs/desain-ux-baca-ulang-tanpa-xp-1817.md","status":"siap dikerjakan","catatan":"Sudah dibangun di ui.js/style.css, sw.js kepo-v676. Mockup: docs/mockup-1817.html."},
     {"no":188,"peran":"developer","prioritas":"P0","nama":"Home kosong: 'Coba 1 cerita' jadi tombol utama, 'Tambah cerita' turun (#1825)","dokumen":"docs/ux-langkah-pertama-ketuk-kata.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-1825.html. Ubah urutan di viewRak cabang !cur (ui.js) + style.css. Uji 320px & 390px. Naikkan C di sw.js."},
     {"no":189,"peran":"developer","prioritas":"P0","nama":"Home kosong: hapus tombol 'Cerita contoh' kembar, sisakan 'Tempel teks' (#1825)","dokumen":"docs/ux-langkah-pertama-ketuk-kata.md","status":"siap dikerjakan","catatan":"Hanya saat belum ada buku; addCard di ui.js. Setelah ada buku tombol tampil seperti biasa. Naikkan C di sw.js."},
     {"no":190,"peran":"developer","prioritas":"P0","nama":"Buku contoh pertama: arti kata menyala diambil lebih dulu agar sheet langsung berisi (#1825)","dokumen":"docs/ux-langkah-pertama-ketuk-kata.md","status":"siap dikerjakan","catatan":"guideMark di ui.js; gagal = pesan lama. Uji offline & sinyal lemah. Ukur lewat /hitung aktivasi. Naikkan C di sw.js."},
