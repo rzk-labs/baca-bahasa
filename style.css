@@ -536,6 +536,8 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 64px)}
 .cols .w.often:not(.saved){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:2px;text-underline-offset:.22em}
 .cols .w.saved.hafal{text-decoration-thickness:1px;text-decoration-color:var(--color-text-muted)}
 .cols .w.hafal.often:not(.sel){text-decoration-style:solid;text-decoration-thickness:1px}
+.cols .w.gagal:not(.saved):not(.sel){text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--color-text-muted);text-decoration-thickness:1px;text-underline-offset:.22em}
+.reader.plain .cols .w.gagal:not(.saved):not(.sel){text-decoration:none}
 .wact>#whafal{flex:1 1 96px}.wact>#whafal[hidden]{display:none}
 .wact>#whafal svg.i{width:16px;height:16px;vertical-align:-3px}
 .reader.no-often .cols .w.often:not(.saved):not(.sel){text-decoration:none}
@@ -1508,3 +1510,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .fb-rem{gap:8px 16px}
 .fb-sec .lnk:focus-visible,.fb-rem .lnk:focus-visible,#hero.hero-done .hd-re .lnk:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
 [data-theme=night] .fb-sec .lnk:focus-visible,[data-theme=night] .fb-rem .lnk:focus-visible,[data-theme=night] #hero.hero-done .hd-re .lnk:focus-visible{outline-color:var(--lime)}
+/* #1777 Streak: jarak angka-satuan; Profil: label statistik maks 2 baris, tak patah di tengah */
+.stat3 .streak1 .num{gap:5px}.streak1 .num small{margin-left:1px}
+.fr-stats .nw{display:block;white-space:nowrap;font-style:normal}
