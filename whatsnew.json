@@ -1,5 +1,11 @@
 [
   {
+    "n": 1844,
+    "judul": "Rekap 'Kata sesi ini': hapus hitungan layar yang beda dari reader",
+    "poin": "Catatan sesi kini selalu bilang \"Berhenti di Bagian k dari n\", tanpa hitungan layar.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1843,
     "judul": "Teks & ikon pudar (opacity) di Kata/Intip dibuat cukup kontras",
     "poin": "Teks selesai, ikon hapus, dan tombol Simpan mati sekarang jelas terbaca.",
@@ -171,12 +177,6 @@
     "n": 1771,
     "judul": "[peta 185] Tab Kata: 'Susah diucap' jadi 'Latih ucap' + Ulang mulai 1 kata",
     "poin": "Tab Kata: \"Susah diucap\" kini bernama \"Latih ucap\", plus teks bantu.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1761,
-    "judul": "Reader: ikon 'Kembali ke Home' beda dari 'Halaman sebelumnya'",
-    "poin": "Tombol kembali ke Home di layar baca sekarang berikon rumah.",
     "tgl": "2026-11-23"
   }
 ]
