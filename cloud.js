@@ -546,7 +546,7 @@ async function homeLeaderboard() {
     await pushSync(true).catch(() => { });
     const r = await api('/leaderboard');
     const top = r.top.slice(0, 5), meIn = r.me && top.some(t => t.username === r.me.username);
-    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada yang dapet XP minggu ini. Jadi yang pertama!</div>')
+    $('#lbList').innerHTML = (top.length ? top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="empty"><img class="empty-doodle" src="img/aset/kosong-peringkat.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada yang dapet XP minggu ini. Jadi yang pertama!</div></div>')
       + (r.me && !meIn ? (r.me.hidden ? '<div class="mut sm" style="margin-top:8px">Kamu disembunyikan dari leaderboard.</div>' : lbRow({ ...r.me, rank: r.me.rank }, true)) : '');
   } catch (e) { $('#lbList').textContent = e.message; }
 }
@@ -555,7 +555,7 @@ async function openLeaderboard() {
   try {
     const r = await api('/leaderboard');
     $('#lbWeek').textContent = `XP minggu ${r.week} · reset tiap Senin`;
-    $('#lbFull').innerHTML = (r.top.length ? r.top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="mut sm">Belum ada peserta minggu ini.</div>')
+    $('#lbFull').innerHTML = (r.top.length ? r.top.map(t => lbRow(t, r.me && t.username === r.me.username)).join('') : '<div class="empty"><img class="empty-doodle" src="img/aset/kosong-peringkat.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada peserta minggu ini.</div></div>')
       + (r.me && !r.me.hidden && !r.top.some(t => t.username === r.me.username) ? '<div class="lb-gap">···</div>' + lbRow(r.me, true) : '');
   } catch (e) { $('#lbFull').textContent = e.message; }
 }
@@ -587,7 +587,7 @@ async function homeFriends() {
   $('#frFind').onclick = openFriends;
   try {
     const r = await api('/teman');
-    $('#frList').innerHTML = r.users.length ? r.users.map(frRow).join('') : `<div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div>`;
+    $('#frList').innerHTML = r.users.length ? r.users.map(frRow).join('') : `<div class="empty"><img class="empty-doodle" src="img/aset/kosong-teman.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum mengikuti siapa pun. Cari teman untuk lihat apa yang mereka baca.${db.acct.publik ? '' : ' Profilmu masih privat; ubah di Akun bila ingin ditemukan.'}</div></div>`;
     wireRows($('#frList'));
   } catch (e) { $('#frList').textContent = e.message; }
 }

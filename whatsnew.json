@@ -1,5 +1,65 @@
 [
   {
+    "n": 1824,
+    "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
+    "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1817,
+    "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
+    "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1816,
+    "judul": "Toast di Home: beri jarak dari tab bar & tak menutupi kartu buku",
+    "poin": "Pesan kecil (mis. \"Level 9!\") sekarang punya jarak pas dari bar bawah.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1825,
+    "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
+    "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1809,
+    "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
+    "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1798,
+    "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
+    "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1797,
+    "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
+    "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1796,
+    "judul": "Home: cincin Target baca kosong bila 0 menit, isi ikut angka menit",
+    "poin": "Cincin Target baca di Home kini kosong kalau belum baca semenit pun.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1795,
+    "judul": "Sheet Tamat: '5 kata lama siap diulang' jadi tombol Ulang sekarang",
+    "poin": "Di layar Tamat, \"5 kata lama siap diulang\" sekarang bisa diketuk.",
+    "tgl": "2026-11-25"
+  },
+  {
+    "n": 1793,
+    "judul": "Sheet terbuka: isi layar di belakangnya tak ikut dibaca pembaca layar",
+    "poin": "Saat panel kata terbuka, layar di belakangnya kini disembunyikan dari pembaca layar.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1792,
     "judul": "Home: 'Pilih buku berikutnya' cukup satu, tak dobel saat buku Tamat",
     "poin": "Di Home, tombol \"Pilih buku berikutnya\" kini muncul sekali saja saat buku tamat.",
@@ -117,66 +177,6 @@
     "n": 1744,
     "judul": "Home HP: kartu 'Simpan 3 kata dulu' tak patah & tak terpotong",
     "poin": "Kartu 'Simpan 3 kata dulu' di Home HP sekarang rapi, judul tidak patah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1742,
-    "judul": "Reader: chip 'Lanjut dari Bagian N' tak muncul di buku tamat/akhir",
-    "poin": "Chip \"Lanjut dari Bagian\" tak muncul lagi di buku tamat atau halaman terakhir.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1740,
-    "judul": "Home HP: kartu 'Simpan 3 kata dulu' utuh, tak terpotong menu",
-    "poin": "Kartu \"Kata disimpan 0/3\" di HP sekarang rapi: judul satu baris, tombol di bawah.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1730,
-    "judul": "Home: bar progres XP & buku mengisi halus saat layar dibuka",
-    "poin": "Bar XP dan progres buku sekarang terisi halus saat tab dibuka.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1729,
-    "judul": "Doodle SVG: 'Belum ada kata HSK' & 'Belum ada kartu' tak polos lagi",
-    "poin": "Layar kosong HSK sekarang punya gambar tangga kecil bersorot stabilo.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1727,
-    "judul": "Reader HP: teks Jepang tak lagi terpotong/menumpuk (nowrap .nb)",
-    "poin": "Teks buku Jepang di HP kini tak terpotong atau menumpuk lagi.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1726,
-    "judul": "Reader Jepang/Mandarin HP: teks tak terpotong & tak menumpuk",
-    "poin": "Teks buku Jepang dan Mandarin di HP sekarang patah baris rapi.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1725,
-    "judul": "Reader Jepang/Mandarin: baris teks tak boleh terpotong atau menumpuk",
-    "poin": "Teks Jepang dan Mandarin di reader kini turun baris rapi, tak terpotong.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1723,
-    "judul": "Toast: lama tampil sesuai isi, 'Beres!' dan cadangan tak nagih",
-    "poin": "Toast \"Beres!\" sekarang tampil 4,5 detik, cukup waktu untuk dibaca.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1721,
-    "judul": "Reader Jepang/Mandarin: teks tak lagi menumpuk & terpotong di tepi",
-    "poin": "Teks Jepang dan Mandarin di HP tidak lagi menumpuk atau terpotong.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1751,
-    "judul": "Rancangan: tab Kata 'Susah diucap' salah nama & ulang mulai 1 kata",
-    "poin": "Rancangan siap: tab \"Susah diucap\" diganti nama jadi \"Latih ucap\" biar tidak membingungkan.",
     "tgl": "2026-11-23"
   }
 ]
