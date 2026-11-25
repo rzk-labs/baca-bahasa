@@ -1,5 +1,11 @@
 [
   {
+    "n": 1832,
+    "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
+    "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1830,
     "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
     "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
@@ -171,12 +177,6 @@
     "n": 1748,
     "judul": "Doodle SVG: 3 langkah di Home pertama tak cuma angka polos",
     "poin": "Tiga langkah di Home pertama sekarang punya gambar doodle kecil.",
-    "tgl": "2026-11-23"
-  },
-  {
-    "n": 1746,
-    "judul": "Bar progres buku, reader & unduhan: dibacakan pembaca layar",
-    "poin": "Bar progres buku, bacaan, dan unduhan kini dibacakan pembaca layar.",
     "tgl": "2026-11-23"
   }
 ]
