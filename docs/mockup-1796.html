@@ -1,0 +1,39 @@
+<!doctype html><html lang="id"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockup #1796 · Cincin Target baca</title>
+<style>
+body{margin:0;padding:16px;background:#FAF7F0;font:14px/1.4 Inter,system-ui,sans-serif;color:#351E28}
+.f{width:390px;max-width:100%;margin:0 auto 22px}
+.lb{font:700 12px/16px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px}
+.note{font-size:12px;margin:0 0 10px;color:rgba(53,30,40,.75)}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.row.two{grid-template-columns:1fr 1fr}
+.c{background:#D7EFFF;border-radius:20px;padding:12px 6px;text-align:center;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+.ey{font:700 10px/12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:rgba(53,30,40,.75)}
+.ring{position:relative;width:64px;height:64px;margin:2px 0}
+.ring svg{width:64px;height:64px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:rgba(53,30,40,.14)}.ring .fg{stroke:#22362B}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.sc b{font:800 20px/20px "Bricolage Grotesque",Inter,sans-serif}
+.sc small{font:700 9px/9px Inter,sans-serif;letter-spacing:.04em;color:rgba(53,30,40,.75)}
+.l2{font:700 12px/15px Inter,sans-serif}
+.eg{font:600 11px/14px Inter,sans-serif;color:rgba(53,30,40,.82);margin-top:2px}
+.ok{display:inline-flex;align-items:center;gap:3px}
+.bad{outline:2px dashed #351E28;outline-offset:3px}
+.tag{display:inline-block;background:#E9F056;color:#351E28;font:700 11px/1 Inter,sans-serif;padding:4px 8px;border-radius:9999px;margin-bottom:6px}
+</style>
+<!-- keliling lingkaran r=24 = 150.8 -->
+<div class="f"><p class="lb">Sebelum · baca 45 detik</p><p class="note">Cincin sudah terisi sedikit, tapi tulisannya 0 menit. Menyesatkan.</p>
+<div class="row two">
+<div class="c bad"><div class="ey">Target baca</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="128.2"/></svg><div class="sc"><b>0</b><small>mnt</small></div></div><div class="l2">0 dari 5 menit</div><div class="eg">Sisa 5 menit</div></div>
+<div class="c"><div class="ey">Sesudah</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/></svg><div class="sc"><b>0</b><small>mnt</small></div></div><div class="l2">0 dari 5 menit</div><div class="eg">Sisa 5 menit</div></div>
+</div></div>
+
+<div class="f"><span class="tag">Sesudah</span><p class="lb">Target 5 menit · 0, 1, 4, 5 menit</p><p class="note">Cincin naik per menit penuh, sama persis dengan angkanya.</p>
+<div class="row">
+<div class="c"><div class="ey">0 mnt</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/></svg><div class="sc"><b>0</b><small>mnt</small></div></div><div class="l2">0 dari 5</div><div class="eg">Sisa 5 menit</div></div>
+<div class="c"><div class="ey">1 mnt</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="120.6"/></svg><div class="sc"><b>1</b><small>mnt</small></div></div><div class="l2">1 dari 5</div><div class="eg">Sisa 4 menit</div></div>
+<div class="c"><div class="ey">4 mnt</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="30.2"/></svg><div class="sc"><b>4</b><small>mnt</small></div></div><div class="l2">4 dari 5</div><div class="eg">Sisa 1 menit</div></div>
+<div class="c"><div class="ey">5 mnt</div><div class="ring"><svg viewBox="0 0 56 56"><circle class="bg" cx="28" cy="28" r="24"/><circle class="fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="0"/></svg><div class="sc"><b>5</b><small>mnt</small></div></div><div class="l2"><span class="ok">✓ Beres!</span></div><div class="eg">&nbsp;</div></div>
+</div>
+<p class="note" style="margin-top:10px">Label "0 mnt" dst. di atas hanya penanda kondisi; di app tertulis "Target baca".</p></div>
+</html>
