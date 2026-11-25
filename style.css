@@ -1538,3 +1538,6 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1777 Streak: jarak angka-satuan; Profil: label statistik maks 2 baris, tak patah di tengah */
 .stat3 .streak1 .num{gap:5px}.streak1 .num small{margin-left:1px}
 .fr-stats .nw{display:block;white-space:nowrap;font-style:normal}
+/* #1841 stempel lencana terbuka */
+.badge .em-stamp{display:block;width:40px;height:40px;margin:0 0 -2px;transform:rotate(-6deg)}
+.badge:nth-child(even) .em-stamp{transform:rotate(5deg)}
