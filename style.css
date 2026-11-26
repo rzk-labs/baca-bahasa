@@ -1600,3 +1600,5 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .fb-sec.fb-end .lnk{padding:0 8px;white-space:nowrap}
 .fb-sec .fb-dot{color:var(--color-text-muted);font-size:14px}
 .fb-sec.fb-more{margin-top:4px}
+/* #1894: centang Tamat di pojok sampul (kiri) pada tata letak sampul+judul, tak menimpa judul */
+.rk-row.rk-few .rk-tag{right:auto;left:4px;top:4px}
