@@ -1601,3 +1601,4 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .fb-sec.fb-end .lnk{padding:0 8px;white-space:nowrap}
 .fb-sec .fb-dot{color:var(--color-text-muted);font-size:14px}
 .fb-sec.fb-more{margin-top:4px}
+@media(max-width:360px){#kseg button{padding:0 4px;font-size:13px;min-width:0;white-space:nowrap}#kseg button svg.i{display:none}}
