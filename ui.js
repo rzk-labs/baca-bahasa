@@ -1441,8 +1441,9 @@ function hapusBuku(id) {
   } });
   viewRak();
 }
-$('#file').onchange = async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+$('#file').onchange = e => { const f = e.target.files[0]; e.target.value = ''; bukaBerkas(f); };
+async function bukaBerkas(f) {
+  if (!f) return;
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
   if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
@@ -1452,7 +1453,24 @@ $('#file').onchange = async e => {
   const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
   if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
   lanjut();
-};
+}
+/* buka dengan Keepo: berkas dari launchQueue (komputer) atau titipan Bagikan Android (sw.js) */
+if ('launchQueue' in window) launchQueue.setConsumer(async lp => {
+  for (const h of lp.files || []) { try { await bukaBerkas(await h.getFile()); } catch (e) { toast('Berkasnya gagal dibuka. Coba pilih lewat tombol tambah.', 5000); } }
+});
+(async () => {
+  if (!/[?&]buka=1/.test(location.search)) return;
+  try { history.replaceState(null, '', location.pathname); } catch (e) { }
+  if (!('caches' in window)) return;
+  try {
+    const c = await caches.open('kepo-titip'), ks = await c.keys();
+    for (const k of ks) {
+      const r = await c.match(k); await c.delete(k); if (!r) continue;
+      let nama = ''; try { nama = decodeURIComponent(r.headers.get('x-nama') || ''); } catch (e) { }
+      await bukaBerkas(new File([await r.blob()], nama || 'buku', { type: r.headers.get('content-type') || '' }));
+    }
+  } catch (e) { toast('Berkasnya gagal dibuka. Coba pilih lewat tombol tambah.', 5000); }
+})();
 /* file kembar: nama + ukuran sama dengan buku yang ada (buku lama tanpa src dilewati) */
 function cekKembar(f) {
   const ada = db.books.find(b => b && b.src && b.src.name === f.name && b.src.size === f.size);
