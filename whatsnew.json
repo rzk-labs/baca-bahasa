@@ -1,5 +1,59 @@
 [
   {
+    "n": 1877,
+    "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
+    "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1875,
+    "judul": "Reader HP: petunjuk 'Cara baca' tunjuk tombol yang memang kelihatan",
+    "poin": "Petunjuk cara baca di HP sekarang menyuruh buka menu Lainnya.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1873,
+    "judul": "Profil sendiri: angka 'hari berturut' sama dengan streak di Home",
+    "poin": "Angka hari berturut di Profil kamu sekarang sama dengan di Home.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1871,
+    "judul": "Sheet Tamat: buang lencana 'Tamat' ganda, judul tetap satu",
+    "poin": "Layar Tamat tidak lagi menulis kata \"Tamat\" dua kali.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1869,
+    "judul": "Pengingat baca: teks jujur, hanya muncul saat Keepo terbuka",
+    "poin": "Teks pengingat baca kini jujur: hanya muncul saat Keepo terbuka.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1867,
+    "judul": "XP naik sendiri antar layar: telusuri sumbernya & tampilkan alasan",
+    "poin": "Penyebab XP loncat: sinkron akun dari HP lain, tanpa kabar. Sekarang ada pemberitahuan.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1865,
+    "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
+    "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1861,
+    "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
+    "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1859,
+    "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
+    "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1857,
     "judul": "Home buku Tamat: kartu 'Simpan kata' tak lagi suruh buka bacaan tamat",
     "poin": "Buku yang sudah Tamat tak lagi disuruh dibuka ulang dari kartu kata.",
@@ -123,60 +177,6 @@
     "n": 1797,
     "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
     "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1796,
-    "judul": "Home: cincin Target baca kosong bila 0 menit, isi ikut angka menit",
-    "poin": "Cincin Target baca di Home kini kosong kalau belum baca semenit pun.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1795,
-    "judul": "Sheet Tamat: '5 kata lama siap diulang' jadi tombol Ulang sekarang",
-    "poin": "Di layar Tamat, \"5 kata lama siap diulang\" sekarang bisa diketuk.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1793,
-    "judul": "Sheet terbuka: isi layar di belakangnya tak ikut dibaca pembaca layar",
-    "poin": "Saat panel kata terbuka, layar di belakangnya kini disembunyikan dari pembaca layar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1792,
-    "judul": "Home: 'Pilih buku berikutnya' cukup satu, tak dobel saat buku Tamat",
-    "poin": "Di Home, tombol \"Pilih buku berikutnya\" kini muncul sekali saja saat buku tamat.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1789,
-    "judul": "Reader Mandarin/Jepang: petunjuk sekali 'Pinyin' / 'Cara baca' di tombol",
-    "poin": "Buku Mandarin/Jepang/Korea kini memberi petunjuk singkat soal tombol Pinyin/Cara baca.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1787,
-    "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
-    "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1785,
-    "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
-    "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1783,
-    "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
-    "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1781,
-    "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
-    "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
     "tgl": "2026-11-25"
   }
 ]
