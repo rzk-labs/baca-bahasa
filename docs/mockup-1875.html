@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1875: petunjuk Cara baca di HP</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.lbl{font:600 12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:16px auto 6px;width:390px}
+.ph{width:390px;height:620px;margin:0 auto;background:#FAF7F0;border:1px solid #B2CFE2;border-radius:20px;position:relative;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #DDD6C8;font-weight:600}
+.top span{font-family:'Bricolage Grotesque',Inter,sans-serif}
+.txt{padding:20px 22px;font-size:22px;line-height:1.9}
+.toast{position:absolute;left:16px;right:16px;bottom:24px;background:#351E28;color:#FAF7F0;padding:12px 16px;border-radius:14px;font-size:14px}
+.toast b{background:#E9F056;color:#351E28;padding:0 4px;border-radius:4px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#FAF7F0;border-top:1px solid #B2CFE2;border-radius:20px 20px 0 0;padding:18px 20px;box-shadow:0 -8px 24px rgba(53,30,40,.15)}
+.sheet h2{margin:0 0 6px;font:700 20px 'Bricolage Grotesque',Inter,sans-serif}
+.sheet p{margin:0 0 12px;color:#5F5059;font-size:14px}
+.o{border:1px solid #B2CFE2;border-radius:12px;padding:10px 12px;margin-top:8px;font-size:14px}
+.o.on{background:#351E28;color:#FAF7F0}
+.btn{border:1px solid #351E28;border-radius:999px;padding:4px 12px;font-size:13px}
+</style></head><body>
+
+<div class="lbl">Sebelum (HP): toast salah</div>
+<div class="ph"><div class="top"><span>Mandarin · Bab 1</span><span>Aa</span></div>
+<div class="txt">你好，我叫小明。我今天去学校。</div>
+<div class="toast">Mau pinyin? Ketuk tombol Pinyin di atas.</div></div>
+
+<div class="lbl">Sesudah (HP ≤430px): toast tunjuk Lainnya</div>
+<div class="ph"><div class="top"><span>Mandarin · Bab 1</span><span>Aa</span></div>
+<div class="txt">你好，我叫小明。我今天去学校。</div>
+<div class="toast">Mau pinyin? Buka <b>Lainnya</b>, lalu pilih Pinyin.</div></div>
+
+<div class="lbl">Sesudah (HP): sheet pertanyaan Mandarin</div>
+<div class="ph"><div class="top"><span>Mandarin · Bab 1</span><span>Aa</span></div>
+<div class="txt">你好，我叫小明。我今天去学校。</div>
+<div class="sheet"><h2>Mau pinyin di atas kata?</h2><p>Bisa diganti kapan saja lewat Lainnya, lalu pilih Pinyin.</p>
+<div class="o on">Nyala — Pinyin di semua kata. Paling gampang dibaca.</div>
+<div class="o">Hanya kata baru — Pinyin hanya di kata yang kamu ketuk.</div>
+<div class="o">Mati — Hanzi saja, tanpa pinyin.</div></div></div>
+
+<div class="lbl">Layar lebar: tetap "di atas"</div>
+<div class="ph" style="width:390px"><div class="top"><span>Mandarin · Bab 1</span><span class="btn">Pinyin</span></div>
+<div class="txt">你好，我叫小明。我今天去学校。</div>
+<div class="toast">Mau pinyin? Ketuk tombol Pinyin di atas.</div></div>
+</body></html>

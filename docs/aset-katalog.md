@@ -21,6 +21,11 @@
 | `img/aset/langkah-ngomong.svg` (<1 KB, 48x48) | Home kosong, langkah 3 "Ucapkan kalimatnya" | Doodle stiker: gelembung ucapan + gelombang suara, aksen stabilo | Sama |
 | `img/aset/kosong-hsk.svg` (1 KB) | Tab Kata: saringan HSK kosong ("Belum ada kata HSK N") | Doodle tangga kecil, satu anak tangga stabilo Wasabi, latar Biru Es | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
 | `img/aset/kosong-kartu.svg` (1 KB) | Tab Kata, Kartu: "Belum ada kartu" | Tumpukan kartu kosong, satu miring garis putus-putus, coretan stabilo Wasabi | Sama; beda dari kosong-kata (satu kartu) |
+| `img/aset/kosong-peringkat.svg` (0,6 KB) | Home & sheet Leaderboard: "Belum ada yang dapet XP / peserta minggu ini" | Podium tiga balok Biru Es, bintang putus-putus di atas, stabilo Wasabi di dasar | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
+| `img/aset/kosong-teman.svg` (0,6 KB) | Home, Teman membaca: "Belum mengikuti siapa pun" | Dua buku saling condong berdekatan, hati kecil putus-putus di antaranya | Prinsip buatan tangan & tempel-stiker di docs/referensi-visual.md |
+| `img/aset/stempel-kata.svg` (1,1 KB) | Profil, lencana terbuka: Keepo Pertama, Kolektor, Koleksi 50/100 | Cap tinta bulat, cincin putus-putus, kartu kata + stabilo Wasabi, tekstur kertas halus | referensi-visual.md: tempel-stiker, cap tinta |
+| `img/aset/stempel-baca.svg` (1,2 KB) | Profil, lencana terbuka: Kutu Buku, Level 5 | Cap tinta bulat, buku terbuka + stabilo Wasabi | Sama |
+| `img/aset/stempel-streak.svg` (1,1 KB) | Profil, lencana terbuka: On Fire, Seminggu Nonstop | Cap tinta bulat, api kecil, inti Wasabi | Sama |
 
 ## 2. Catatan teknis
 - Ukuran 0,6 KB per file. viewBox 160x160. Tanpa teks.
