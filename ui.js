@@ -1217,7 +1217,7 @@ function streakDots() {
     const act = db.days.includes(dayKey(at(k)));
     const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
     const dw = at(k).getDay(), L = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][dw], F = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][dw];
-    return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
+    return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}, ${act ? 'sudah baca' : 'belum baca'}"><i class="${cls}"></i><em>${L}</em></span>`;
   }).join('');
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
