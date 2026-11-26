@@ -1,5 +1,11 @@
 [
   {
+    "n": 1855,
+    "judul": "Home: Target baca tampil '<1 mnt' & cincin terisi sedikit bila sudah baca",
+    "poin": "Kartu Target baca sekarang menampilkan \"<1 mnt\" kalau baru baca sebentar.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1853,
     "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
     "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
@@ -171,12 +177,6 @@
     "n": 1779,
     "judul": "Sheet Tamat: 'Baca ulang', 'Ke Home', 'Nanti saja' mudah diketuk jempol",
     "poin": "Tautan \"Baca ulang\", \"Ke Home\", \"Nanti saja\" kini lebih mudah diketuk jempol.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1777,
-    "judul": "Home & Profil: '7 hari' ada jarak, kotak statistik tak patah baris",
-    "poin": "Kartu streak di Home sekarang ada jarak: \"7 hari\", bukan \"7hari\".",
     "tgl": "2026-11-25"
   }
 ]
