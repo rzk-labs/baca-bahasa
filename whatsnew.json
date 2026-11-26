@@ -1,5 +1,11 @@
 [
   {
+    "n": 1867,
+    "judul": "XP naik sendiri antar layar: telusuri sumbernya & tampilkan alasan",
+    "poin": "Penyebab XP loncat: sinkron akun dari HP lain, tanpa kabar. Sekarang ada pemberitahuan.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1865,
     "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
     "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
@@ -171,12 +177,6 @@
     "n": 1789,
     "judul": "Reader Mandarin/Jepang: petunjuk sekali 'Pinyin' / 'Cara baca' di tombol",
     "poin": "Buku Mandarin/Jepang/Korea kini memberi petunjuk singkat soal tombol Pinyin/Cara baca.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1787,
-    "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
-    "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
     "tgl": "2026-11-25"
   }
 ]
