@@ -474,6 +474,7 @@ body.reading{overflow:hidden}
 body.reading #top,body.reading #tabs{display:none}
 body.reading #view{padding:0;margin:0;max-width:none;animation:none!important;transform:none}
 body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2)}
+body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2)}
 .reader{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;background:var(--color-surface);color:var(--color-text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 .reader{background:var(--color-bg)}
 .roff{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}.roff[hidden]{display:none}
@@ -566,7 +567,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2
 .rmid{flex:1;text-align:center;font-size:.75rem;line-height:1.5;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0;margin:0 8px}
-.rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
 @media (max-width:359px){.rmid #pgn{font-size:.7rem}}
 .rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
 .rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
@@ -1179,7 +1180,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .lvlup .lvl-ic{width:88px;height:88px;margin:0 auto 8px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center}
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
 /* #1482: banner Level ringan — tanpa overlay, hanya kartu yang menerima ketukan */
-.lvlup.lvlbn{inset:calc(env(safe-area-inset-top,0px) + 8px) 0 auto 0;padding:0 12px;background:none;justify-content:center;align-items:flex-start;pointer-events:none;animation:none}
+.lvlup.lvlbn{inset:auto 0 calc(env(safe-area-inset-bottom) + 10px + var(--tabbar-h,64px) + var(--space-4)) 0;padding:0 12px;background:none;justify-content:center;align-items:flex-end;pointer-events:none;animation:none}
 .lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin:0;box-sizing:border-box;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
 .lvlup.lvlbn .lvl-ic{width:40px;height:40px;margin:0;flex:none}
 .lvlup.lvlbn .lvl-ic .i,.lvlup.lvlbn .lvl-ic svg{width:22px;height:22px}
@@ -1605,3 +1606,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hardcnt svg.i{flex:none;width:14px;height:14px}
 .hardcnt span{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .hardcnt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* #1894: centang Tamat di pojok sampul (kiri) pada tata letak sampul+judul, tak menimpa judul */
+.rk-row.rk-few .rk-tag{right:auto;left:4px;top:4px}
+/* #1890: tombol Home Tamat memuat judul buku berikutnya, 1 baris */
+#hero.hero-done .hero-act button.nx-bk{display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-width:0}
+#hero.hero-done .nx-bk .nx-v{flex:none}
+#hero.hero-done .nx-bk .nx-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:360px){#kseg button{padding:0 4px;font-size:13px;min-width:0;white-space:nowrap}#kseg button svg.i{display:none}}

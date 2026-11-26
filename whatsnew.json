@@ -1,5 +1,59 @@
 [
   {
+    "n": 1896,
+    "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
+    "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1894,
+    "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
+    "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1892,
+    "judul": "Home Target baca: satu baris sisa, tak dobel '0 dari 5' + 'Sisa 5'",
+    "poin": "Kartu Target baca di Home sekarang cuma satu baris, tidak dobel lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1890,
+    "judul": "Home buku Tamat: tombol langsung 'Mulai buku <judul>' bila ada",
+    "poin": "Home buku tamat kini langsung bilang \"Mulai: judul buku\" bila ada buku lain.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1888,
+    "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
+    "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1794,
+    "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
+    "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1886,
+    "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
+    "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1884,
+    "judul": "Banner 'Level N!' tak lagi menutupi kartu buku & tombol di Home",
+    "poin": "Banner \"Level N!\" sekarang muncul di bawah, tepat di atas tab bar.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1882,
+    "judul": "Tab Kata 'Latih ucap': teks bantu jujur untuk kata ditandai sulit",
+    "poin": "Teks bantu Latih ucap sekarang jujur: kata yang kamu tandai sulit ikut disebut.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1877,
     "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
     "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
@@ -123,60 +177,6 @@
     "n": 1832,
     "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
     "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1830,
-    "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
-    "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1827,
-    "judul": "Home: teks kecil 11px (contoh target & nama hari) jadi min 12px",
-    "poin": "Teks kecil di Home (contoh target, nama hari) sekarang lebih besar dan jelas.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1824,
-    "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
-    "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1817,
-    "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
-    "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1816,
-    "judul": "Toast di Home: beri jarak dari tab bar & tak menutupi kartu buku",
-    "poin": "Pesan kecil (mis. \"Level 9!\") sekarang punya jarak pas dari bar bawah.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1825,
-    "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
-    "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1809,
-    "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
-    "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1798,
-    "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
-    "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1797,
-    "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
-    "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
     "tgl": "2026-11-25"
   }
 ]
