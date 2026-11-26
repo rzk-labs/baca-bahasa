@@ -1,5 +1,11 @@
 [
   {
+    "n": 1871,
+    "judul": "Sheet Tamat: buang lencana 'Tamat' ganda, judul tetap satu",
+    "poin": "Layar Tamat tidak lagi menulis kata \"Tamat\" dua kali.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1869,
     "judul": "Pengingat baca: teks jujur, hanya muncul saat Keepo terbuka",
     "poin": "Teks pengingat baca kini jujur: hanya muncul saat Keepo terbuka.",
@@ -171,12 +177,6 @@
     "n": 1793,
     "judul": "Sheet terbuka: isi layar di belakangnya tak ikut dibaca pembaca layar",
     "poin": "Saat panel kata terbuka, layar di belakangnya kini disembunyikan dari pembaca layar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1792,
-    "judul": "Home: 'Pilih buku berikutnya' cukup satu, tak dobel saat buku Tamat",
-    "poin": "Di Home, tombol \"Pilih buku berikutnya\" kini muncul sekali saja saat buku tamat.",
     "tgl": "2026-11-25"
   }
 ]

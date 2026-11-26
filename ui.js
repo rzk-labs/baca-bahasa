@@ -1719,7 +1719,7 @@ function finishBook(b) {
   const tawar = !ulang && !(db.remind && db.remind.on) && !db.remindOffer;
   if (tawar) { db.remindOffer = true; save(); besok = ''; }
   if (!ulang) { sfx('win'); confetti(60); }
-  openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
+  openSheet(`<div class="sh-head" style="justify-content:flex-end">${closeBtn}</div>
     <img class="tamat-art" src="img/aset/tamat-buku.svg" alt="" width="160" height="120" decoding="async">
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
