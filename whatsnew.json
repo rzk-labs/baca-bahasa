@@ -1,5 +1,11 @@
 [
   {
+    "n": 1882,
+    "judul": "Tab Kata 'Latih ucap': teks bantu jujur untuk kata ditandai sulit",
+    "poin": "Teks bantu Latih ucap sekarang jujur: kata yang kamu tandai sulit ikut disebut.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1877,
     "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
     "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
@@ -171,12 +177,6 @@
     "n": 1798,
     "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
     "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1797,
-    "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
-    "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
     "tgl": "2026-11-25"
   }
 ]
