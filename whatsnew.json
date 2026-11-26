@@ -1,5 +1,11 @@
 [
   {
+    "n": 1886,
+    "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
+    "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1884,
     "judul": "Banner 'Level N!' tak lagi menutupi kartu buku & tombol di Home",
     "poin": "Banner \"Level N!\" sekarang muncul di bawah, tepat di atas tab bar.",
@@ -171,12 +177,6 @@
     "n": 1825,
     "judul": "Rancangan: peta langkah pengguna baru ke 'ketuk kata pertama'",
     "poin": "Peta langkah pengguna baru sudah ditulis: 3 ketukan sampai kata pertama tersimpan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1809,
-    "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
-    "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
     "tgl": "2026-11-25"
   }
 ]
