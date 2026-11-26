@@ -1585,6 +1585,8 @@ function kataDiBuku(b, v) {
   return [v.w, v.base].some(x => x && cache._low.includes(String(x).toLowerCase()));
 }
 const TXT_TAK_ADA_BARU = 'Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.';
+/* #1918: jujur soal sesi vs kata siap ulang; tak berdiri sendiri bila ada kata jatuh tempo */
+const txtBelumBaru = dueN => dueN ? `Sesi ini belum ada kata baru. ${dueN} kata dari buku ini siap diulang.` : TXT_TAK_ADA_BARU;
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim()) || isKataSampah(b.lang, w)) return;
   const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
@@ -1727,13 +1729,14 @@ function finishBook(b) {
   const tawar = !ulang && !(db.remind && db.remind.on) && !db.remindOffer;
   if (tawar) { db.remindOffer = true; save(); besok = ''; }
   if (!ulang) { sfx('win'); confetti(60); }
+  { const ec = $('#endcard'); if (ec) ec.remove(); } /* #1918: kartu di latar tak dobel dgn sheet Tamat */
   openSheet(`<div class="sh-head" style="justify-content:flex-end">${closeBtn}</div>
     <img class="tamat-art" src="img/aset/tamat-buku.svg" alt="" width="160" height="120" decoding="async">
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${besok}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     ${moreHtml ? `<div class="fb-sec fb-more">${moreHtml}</div>` : ''}
     <div class="fb-sec fb-end"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button><span aria-hidden="true" class="fb-dot">·</span><button class="lnk" id="fbh">Ke Home</button></div>
@@ -2482,7 +2485,7 @@ function endCard(b, last) {
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
-  c.innerHTML = `<button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button>`;
+  c.innerHTML = `<p class="ec-end" id="ecend" hidden>Tamat. Sampai sini dulu.</p><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button>`;
   c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };
@@ -2500,6 +2503,7 @@ function endCard(b, last) {
   if (bottom + 24 + c.offsetHeight > vr.bottom) { c.remove(); return; } /* #1606: cek ulang, jangan pernah menimpa teks */
   /* #994/#1415: kartu di bawah teks, jarak 24px dari paragraf terakhir dan min 24px dari bar bawah */
   c.style.top = Math.round(bottom - vr.top + 24) + 'px'; c.style.bottom = 'auto';
+  if (bottom - vr.top < 80) { const e = $('#ecend'); if (e) { e.hidden = false; if (vr.bottom - bottom < c.offsetHeight + 48) e.hidden = true; } } /* #1918: bagian akhir hampir kosong teks → satu baris penutup */
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
 let pfIdle = 0;
