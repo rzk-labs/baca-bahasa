@@ -1,5 +1,11 @@
 [
   {
+    "n": 1894,
+    "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
+    "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1892,
     "judul": "Home Target baca: satu baris sisa, tak dobel '0 dari 5' + 'Sisa 5'",
     "poin": "Kartu Target baca di Home sekarang cuma satu baris, tidak dobel lagi.",
@@ -171,12 +177,6 @@
     "n": 1830,
     "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
     "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1827,
-    "judul": "Home: teks kecil 11px (contoh target & nama hari) jadi min 12px",
-    "poin": "Teks kecil di Home (contoh target, nama hari) sekarang lebih besar dan jelas.",
     "tgl": "2026-11-25"
   }
 ]
