@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1896 — Tab Kata: hitungan kata sulit</title>
+<style>
+body{margin:0;background:#e9e6ea;font:14px/20px Inter,system-ui,sans-serif;color:#351E28;padding:16px}
+.lbl{font:700 12px/16px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:16px auto 6px;width:390px;color:#351E28}
+.ph{width:390px;margin:0 auto;background:#fff;border-radius:20px;padding:16px;box-sizing:border-box;overflow:hidden}
+h1{font:800 28px/32px "Bricolage Grotesque",Inter,sans-serif;margin:6px 2px 12px}
+h1 span{background:#E9F056;padding:0 4px}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.sum div{background:#D7EFFF;border-radius:14px;padding:8px;text-align:center}
+.sum b{display:block;font-size:20px}.sum span{font-size:11px}
+.seg{display:flex;background:#f2eef0;border-radius:999px;padding:3px}
+.seg button{flex:1;min-height:44px;border:0;background:none;border-radius:999px;font:600 14px Inter,sans-serif;color:#351E28}
+.seg .on{background:#351E28;color:#fff}
+.hardcnt{display:flex;align-items:center;gap:8px;min-height:44px;margin:2px 0 6px;padding:0 6px;background:none;border:0;color:#6b5a62;font:600 13px/18px Inter,sans-serif}
+.hardcnt span{text-decoration:underline;text-underline-offset:3px}
+.hardcnt svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.flash{border:1.5px solid #351E28;border-radius:20px;padding:24px 16px;text-align:center;margin-top:8px}
+.flash .fw{font:800 32px/36px "Bricolage Grotesque",sans-serif}
+.eyebrow{font-size:12px;color:#6b5a62;margin-bottom:8px}
+.yes{display:block;width:100%;min-height:48px;margin-top:12px;border:0;border-radius:999px;background:#351E28;color:#fff;font:700 15px Inter,sans-serif}
+.center{text-align:center;margin-top:8px}
+.hardbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;background:#fff;border:1.5px solid #351E28;border-radius:999px;color:#351E28;font:600 14px Inter,sans-serif}
+.hardbtn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+.hardbtn.on svg{fill:currentColor}
+.mut{color:#6b5a62;font-size:13px;text-align:center;margin-top:6px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><symbol id="f" viewBox="0 0 24 24"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 3.6-1.2A1 1 0 0 1 21 3.6v9.8a1 1 0 0 1-.4.8A6 6 0 0 1 17 15c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/></symbol></svg>
+
+<div class="lbl">Sebelum — tanda sulit tak terlihat</div>
+<div class="ph"><h1>Kata <span>kamu</span></h1>
+<div class="sum"><div><b>24</b><span>Tersimpan</span></div><div><b>9</b><span>Dihafal</span></div><div><b>6</b><span>Hafal</span></div><div><b>5</b><span>Ucap</span></div></div>
+<div class="seg"><button class="on">Kartu</button><button>Tersimpan</button><button>Latih ucap</button></div>
+<div class="flash"><div class="eyebrow">Mandarin · 8 kartu</div><div class="fw">谢谢</div></div>
+<button class="yes">Lihat arti</button>
+<div class="center"><button class="hardbtn"><svg><use href="#f"/></svg><span>Tandai sulit</span></button></div>
+</div>
+
+<div class="lbl">Sesudah — ada hitungan, bisa diketuk</div>
+<div class="ph"><h1>Kata <span>kamu</span></h1>
+<div class="sum"><div><b>24</b><span>Tersimpan</span></div><div><b>9</b><span>Dihafal</span></div><div><b>6</b><span>Hafal</span></div><div><b>5</b><span>Ucap</span></div></div>
+<div class="seg"><button class="on">Kartu</button><button>Tersimpan</button><button>Latih ucap</button></div>
+<button class="hardcnt"><svg><use href="#f"/></svg><span>3 kata ditandai sulit</span></button>
+<div class="flash"><div class="eyebrow">Mandarin · 8 kartu</div><div class="fw">谢谢</div></div>
+<button class="yes">Lihat arti</button>
+<div class="center"><button class="hardbtn on"><svg><use href="#f"/></svg><span>Batal tandai sulit</span></button></div>
+<div class="mut">Ditandai sulit, bakal muncul lebih sering</div>
+</div>
+</body></html>
