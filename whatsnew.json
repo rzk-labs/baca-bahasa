@@ -1,5 +1,11 @@
 [
   {
+    "n": 1853,
+    "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
+    "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1846,
     "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
     "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
@@ -171,12 +177,6 @@
     "n": 1777,
     "judul": "Home & Profil: '7 hari' ada jarak, kotak statistik tak patah baris",
     "poin": "Kartu streak di Home sekarang ada jarak: \"7 hari\", bukan \"7hari\".",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1775,
-    "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
-    "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
     "tgl": "2026-11-25"
   }
 ]
