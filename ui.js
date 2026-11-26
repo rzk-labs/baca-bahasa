@@ -1939,21 +1939,23 @@ async function viewBaca() {
       const urut = [2, 1, 0]; /* Nyala -> Baru -> Mati -> Nyala */
       const k = urut[(urut.indexOf(rtOf(b.lang)) + 1) % 3];
       setRt(b.lang, k); viewBaca();
-      toast(k === 0 ? 'Hanzi saja. Nyalakan lagi di tombol Pinyin' : k === 1 ? 'Pinyin hanya di kata yang kamu ketuk, sisanya hanzi polos' : 'Pinyin di semua kata: 你好 nǐ hǎo');
+      toast(k === 0 ? 'Hanzi saja. Nyalakan lagi ' + (window.matchMedia && matchMedia('(max-width:430px)').matches ? 'lewat Lainnya > Pinyin' : 'di tombol Pinyin') : k === 1 ? 'Pinyin hanya di kata yang kamu ketuk, sisanya hanzi polos' : 'Pinyin di semua kata: 你好 nǐ hǎo');
       return;
     }
     setRt(b.lang, rtOf(b.lang) ? 0 : 1); viewBaca();
     const any = db.vocab.some(v => v.lang === b.lang && bacaOf(v.w, v.baca) && (+v.tap >= 1 || ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) >= 1));
     toast(!db.rt ? 'Cara baca mati' : any ? 'Cara baca nyala' : 'Cara baca muncul untuk kata yang sudah kamu ketuk');
   };
+  const hpKecil = window.matchMedia && matchMedia('(max-width:430px)').matches; /* #1875: tombol #rRt tersembunyi di HP, ada di sheet Lainnya */
   if (b.lang === 'zh-CN' && !db.rtSet && db.rtLang['zh-CN'] == null && rtAsked !== b.id) {
     rtAsked = b.id;
-    openSheet(`<h2>Mau pinyin di atas kata?</h2><p class="muted">Bisa diganti kapan saja lewat tombol Pinyin di atas.</p><div class="rtq"><button class="btn" data-q="2">Nyala<small>Pinyin di semua kata. Paling gampang dibaca.</small></button><button class="btn ghost" data-q="1">Hanya kata baru<small>Pinyin hanya di kata yang kamu ketuk. Melatih mata baca hanzi.</small></button><button class="btn ghost" data-q="0">Mati<small>Hanzi saja, tanpa pinyin.</small></button></div>`, 'Mau pinyin?');
+    openSheet(`<h2>Mau pinyin di atas kata?</h2><p class="muted">Bisa diganti kapan saja ${hpKecil ? 'lewat Lainnya, lalu pilih Pinyin.' : 'lewat tombol Pinyin di atas.'}</p><div class="rtq"><button class="btn" data-q="2">Nyala<small>Pinyin di semua kata. Paling gampang dibaca.</small></button><button class="btn ghost" data-q="1">Hanya kata baru<small>Pinyin hanya di kata yang kamu ketuk. Melatih mata baca hanzi.</small></button><button class="btn ghost" data-q="0">Mati<small>Hanzi saja, tanpa pinyin.</small></button></div>`, 'Mau pinyin?');
     $$('#sheetBody [data-q]').forEach(x => x.onclick = () => { setRt('zh-CN', +x.dataset.q); closeSheet(); viewBaca(); });
   }
   if (['ja', 'ko', 'zh-CN'].includes(b.lang) && !rtOf(b.lang) && !b.doneAt && !db.rtHint[b.lang]) { /* #1789: petunjuk sekali per bahasa */
     db.rtHint[b.lang] = 1; save();
-    toast(`Mau ${b.lang === 'zh-CN' ? 'pinyin' : 'cara baca'}? Ketuk tombol ${b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca'} di atas.`, 4000);
+    const nm = b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca';
+    toast(`Mau ${nm.toLowerCase()}? ` + (hpKecil ? `Buka Lainnya, lalu pilih ${nm}.` : `Ketuk tombol ${nm} di atas.`), 4000);
   }
   $('#rMore').onclick = () => openMore();
   const openMore = () => {

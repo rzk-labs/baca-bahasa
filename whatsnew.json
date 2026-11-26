@@ -1,5 +1,11 @@
 [
   {
+    "n": 1875,
+    "judul": "Reader HP: petunjuk 'Cara baca' tunjuk tombol yang memang kelihatan",
+    "poin": "Petunjuk cara baca di HP sekarang menyuruh buka menu Lainnya.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1873,
     "judul": "Profil sendiri: angka 'hari berturut' sama dengan streak di Home",
     "poin": "Angka hari berturut di Profil kamu sekarang sama dengan di Home.",
@@ -171,12 +177,6 @@
     "n": 1796,
     "judul": "Home: cincin Target baca kosong bila 0 menit, isi ikut angka menit",
     "poin": "Cincin Target baca di Home kini kosong kalau belum baca semenit pun.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1795,
-    "judul": "Sheet Tamat: '5 kata lama siap diulang' jadi tombol Ulang sekarang",
-    "poin": "Di layar Tamat, \"5 kata lama siap diulang\" sekarang bisa diketuk.",
     "tgl": "2026-11-25"
   }
 ]
