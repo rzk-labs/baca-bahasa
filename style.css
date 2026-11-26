@@ -1558,6 +1558,18 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1777 Streak: jarak angka-satuan; Profil: label statistik maks 2 baris, tak patah di tengah */
 .stat3 .streak1 .num{gap:5px}.streak1 .num small{margin-left:1px}
 .fr-stats .nw{display:block;white-space:nowrap;font-style:normal}
+/* #1846: rak 'Tamat' Profil ringan: terang netral, 1-2 buku sejajar kiri (cover + judul + persen), tanpa papan bawah */
+.rk-wrap{--rk-bg:#F1ECE1;--rk-tx:#2B2228;--rk-mu:#5C5258;--rk-bd:#DDD6C8}
+.rk-shelf{padding:10px;margin-bottom:8px}
+.rk-board{display:none}
+.rk-row.rk-few{display:flex;gap:12px;align-items:flex-start}
+.rk-row.rk-few .rk-bk{flex:1 1 0;min-width:0;display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:8px;align-items:start;align-content:start}
+.rk-row.rk-few .rk-bk .cover,.rk-row.rk-few.n1 .rk-bk .cover,.rk-row.rk-few.n2 .rk-bk .cover{grid-row:1/3;width:52px;height:72px}
+.rk-row.rk-few .rk-t,.rk-row.rk-few.n1 .rk-t{margin-top:0;min-height:0;align-self:end;font-size:var(--fs-min);-webkit-line-clamp:3;line-clamp:3}
+.rk-row.rk-few .rk-p,.rk-row.rk-few.n1 .rk-p{align-self:start;margin:4px 0 0}
+.rk-row.rk-few.n1 .rk-bk{flex:0 1 auto;width:100%;grid-template-columns:56px minmax(0,1fr)}
+.rk-row.rk-few.n1 .rk-bk .cover{width:56px;height:78px}
+@media (max-width:340px){.rk-row.rk-few{gap:8px}.rk-row.rk-few .rk-bk{grid-template-columns:44px minmax(0,1fr);column-gap:6px}.rk-row.rk-few .rk-bk .cover,.rk-row.rk-few.n2 .rk-bk .cover{width:44px;height:62px}}
 /* #1845 Tab bar: ganti tab halus, ikon aktif memantul kecil (hanya transform/warna) */
 #tabs button{transition:background-color 180ms var(--ease-out),color 180ms var(--ease-out),transform var(--dur-tap) ease-out}
 #tabs button:active{transform:scale(.96)}

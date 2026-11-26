@@ -1,5 +1,11 @@
 [
   {
+    "n": 1846,
+    "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
+    "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
+    "tgl": "2026-11-25"
+  },
+  {
     "n": 1845,
     "judul": "Tab bar bawah: pindah tab terasa halus, ikon aktif memantul kecil",
     "poin": "Pindah tab di bawah sekarang berganti warna halus, tidak mendadak.",
@@ -172,11 +178,5 @@
     "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
     "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
     "tgl": "2026-11-25"
-  },
-  {
-    "n": 1773,
-    "judul": "[peta 180] Reader: kata yang artinya gagal dimuat diberi garis putus tipis",
-    "poin": "Kata yang artinya gagal dimuat sekarang diberi garis putus tipis di bacaan.",
-    "tgl": "2026-11-23"
   }
 ]
