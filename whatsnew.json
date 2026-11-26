@@ -1,5 +1,11 @@
 [
   {
+    "n": 1890,
+    "judul": "Home buku Tamat: tombol langsung 'Mulai buku <judul>' bila ada",
+    "poin": "Home buku tamat kini langsung bilang \"Mulai: judul buku\" bila ada buku lain.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1888,
     "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
     "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
@@ -171,12 +177,6 @@
     "n": 1824,
     "judul": "[peta 186] Pengaturan: 7 opsi di atas + lipat 'Lanjutan' + Reset beres",
     "poin": "Pengaturan kini singkat: opsi utama di atas, sisanya terlipat di \"Lanjutan\".",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1817,
-    "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
-    "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
     "tgl": "2026-11-25"
   }
 ]
