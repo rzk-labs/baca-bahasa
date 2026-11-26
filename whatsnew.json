@@ -1,5 +1,11 @@
 [
   {
+    "n": 1888,
+    "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
+    "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1794,
     "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
     "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
@@ -171,12 +177,6 @@
     "n": 1817,
     "judul": "Baca ulang Tamat: jelaskan 'tanpa XP' di tombol; sheet Tamat tanpa '0 dari 5 menit'",
     "poin": "Tombol \"Baca ulang\" sekarang bilang \"tanpa XP\" sebelum ditekan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1816,
-    "judul": "Toast di Home: beri jarak dari tab bar & tak menutupi kartu buku",
-    "poin": "Pesan kecil (mis. \"Level 9!\") sekarang punya jarak pas dari bar bawah.",
     "tgl": "2026-11-25"
   }
 ]
