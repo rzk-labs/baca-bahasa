@@ -1588,3 +1588,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hardbtn.on{background:var(--color-surface);border-color:var(--brick)}
 .hardbtn.on svg.i{fill:currentColor}
 .vitem .vhard{display:inline-flex;vertical-align:-2px;color:var(--brick)}.vitem .vhard svg.i{width:14px;height:14px;fill:currentColor}
+/* #1853: titik hari beda jelas (bentuk, bukan hanya warna): baca = isi penuh + centang; bolong = cincin tipis; hari ini belum = cincin tebal */
+.sdots .sd i{box-sizing:border-box;position:relative;width:11px;height:11px;border-radius:50%;background:transparent;box-shadow:none;border:1px solid var(--ink)}
+.sdots .sd i.on,.sdots .sd i.old{background:var(--ink);border-color:var(--ink)}
+.sdots .sd i.on::after{content:"";position:absolute;left:3px;top:1.5px;width:3px;height:5px;border:solid var(--cream);border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.sdots .sd i.ring{background:transparent;border:2px solid var(--ink)}
+@media(max-width:340px){.sdots .sd i{width:10px;height:10px}.sdots .sd i.on::after{left:2.5px;top:1px}}
