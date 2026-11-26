@@ -1,5 +1,11 @@
 [
   {
+    "n": 1884,
+    "judul": "Banner 'Level N!' tak lagi menutupi kartu buku & tombol di Home",
+    "poin": "Banner \"Level N!\" sekarang muncul di bawah, tepat di atas tab bar.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1882,
     "judul": "Tab Kata 'Latih ucap': teks bantu jujur untuk kata ditandai sulit",
     "poin": "Teks bantu Latih ucap sekarang jujur: kata yang kamu tandai sulit ikut disebut.",
@@ -171,12 +177,6 @@
     "n": 1809,
     "judul": "Home: kartu Streak jelaskan 'hari dihitung bila baca', bukan target",
     "poin": "Kartu Streak di Home sekarang menjelaskan: hari dihitung bila baca atau ulang kata.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1798,
-    "judul": "Doodle SVG: Peringkat & Teman kosong tak cuma teks polos",
-    "poin": "Layar Peringkat dan Teman yang kosong sekarang punya gambar doodle kecil.",
     "tgl": "2026-11-25"
   }
 ]
