@@ -1,5 +1,11 @@
 [
   {
+    "n": 1859,
+    "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
+    "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1857,
     "judul": "Home buku Tamat: kartu 'Simpan kata' tak lagi suruh buka bacaan tamat",
     "poin": "Buku yang sudah Tamat tak lagi disuruh dibuka ulang dari kartu kata.",
@@ -171,12 +177,6 @@
     "n": 1783,
     "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
     "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1781,
-    "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
-    "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
     "tgl": "2026-11-25"
   }
 ]
