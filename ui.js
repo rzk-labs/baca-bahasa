@@ -2958,18 +2958,27 @@ async function onWord(el, lastEl) {
       got.forEach(g => { const t = g && typeof g.text === 'string' ? g.text.trim() : ''; if (t && !seen.has(norm(t))) { seen.add(norm(t)); out.push(t); } });
       return out;
     };
+    /* #1906: tiap jalur berakhir ada/gagal/kosong; batas keras 8 detik untuk seluruh isian (termasuk perKata); isian baru membatalkan yang lama */
+    let altAc = null;
     const fillAlt = async force => {
       const q0 = qWord(), txt = r.text; kind.st = 'muat'; paintDict();
+      if (altAc) altAc.abort();
+      const ac = altAc = new AbortController(), onAb = () => ac.abort();
+      if (sig.aborted) ac.abort(); else sig.addEventListener('abort', onAb);
+      const tm = setTimeout(() => ac.abort(), 8000);
       const ok = () => my === tok && $('#wdict') && qWord() === q0;
+      const lim = p => Promise.race([p, new Promise((_, rej) => { if (ac.signal.aborted) rej(new Error('batal')); else ac.signal.addEventListener('abort', () => rej(new Error('batal'))); })]);
       try {
         if (navigator.onLine === false) throw new Error('offline');
         let more;
-        if (force) { const r2 = await translate(q0, b.lang, db.my, sig, true); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length) more = await altFetch(q0, b.lang, db.my, sig); }
-        else more = await altFill(q0, b.lang, db.my, sig);
+        if (force) { const r2 = await lim(translate(q0, b.lang, db.my, ac.signal, true)); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length && r2 && Array.isArray(r2.alt)) more = r2.alt; if (!more.length) more = await lim(altFetch(q0, b.lang, db.my, ac.signal)); }
+        else if (Array.isArray(r.alt) && r.alt.length) more = r.alt;
+        else more = await lim(altFill(q0, b.lang, db.my, ac.signal));
         if (!ok()) return;
         if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; }
-        else { const ph = await perKata(q0, sig); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
+        else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
       } catch (e) { if (!ok()) return; kind.st = 'gagal'; }
+      finally { clearTimeout(tm); sig.removeEventListener('abort', onAb); if (altAc === ac) altAc = null; }
       paintDict(); keepVisible('.w.sel');
     };
     paintDict();
@@ -3006,8 +3015,10 @@ async function onWord(el, lastEl) {
     }
     openAlt();
   };
+  let openAc = null;
   const openAlt = async () => {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
+    if (openAc) openAc.abort(); const oac = openAc = new AbortController(), otm = setTimeout(() => oac.abort(), 8000);
     const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
     wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
     let groups = [];
@@ -3015,10 +3026,11 @@ async function onWord(el, lastEl) {
       const cur = curT(), base = (tr && tr.dict) || [];
       groups = altArti(base, cur);
       if (altCount(groups) < 3 && !(b.lang === 'ja' && db.my === 'id')) {
-        const more = await altFetch(qWord(), b.lang, db.my);
+        const more = await altFetch(qWord(), b.lang, db.my, oac.signal);
         groups = altArti([...base, ...more], cur);
       }
-    } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    } catch (e) { clearTimeout(otm); if (openAc !== oac) return; return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    clearTimeout(otm);
     if (word !== w || $('#walt') !== wAlt) return;
     const list = altFlat(groups);
     if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba terjemahkan ulang.</div><div class="altrow"><button class="ghost wretry" id="warefresh" type="button">Terjemahkan ulang</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; $('#warefresh').onclick = reAlt; return; }
