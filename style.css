@@ -474,6 +474,7 @@ body.reading{overflow:hidden}
 body.reading #top,body.reading #tabs{display:none}
 body.reading #view{padding:0;margin:0;max-width:none;animation:none!important;transform:none}
 body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2)}
+body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2)}
 .reader{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;background:var(--color-surface);color:var(--color-text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 .reader{background:var(--color-bg)}
 .roff{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:var(--radius-full);background:var(--color-border);color:var(--color-text-muted);font-size:12px;font-weight:700}.roff[hidden]{display:none}
@@ -1179,7 +1180,7 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .lvlup .lvl-ic{width:88px;height:88px;margin:0 auto 8px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center}
 .lvlup .lvl-ic .i,.lvlup .lvl-ic svg{width:48px;height:48px}
 /* #1482: banner Level ringan — tanpa overlay, hanya kartu yang menerima ketukan */
-.lvlup.lvlbn{inset:calc(env(safe-area-inset-top,0px) + 8px) 0 auto 0;padding:0 12px;background:none;justify-content:center;align-items:flex-start;pointer-events:none;animation:none}
+.lvlup.lvlbn{inset:auto 0 calc(env(safe-area-inset-bottom) + 10px + var(--tabbar-h,64px) + var(--space-4)) 0;padding:0 12px;background:none;justify-content:center;align-items:flex-end;pointer-events:none;animation:none}
 .lvlup.lvlbn .card{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;max-width:360px;margin:0;box-sizing:border-box;padding:10px 12px;text-align:left;border-radius:16px;box-shadow:0 8px 24px rgba(53,30,40,.25);animation:up .3s var(--ease-pop)}
 .lvlup.lvlbn .lvl-ic{width:40px;height:40px;margin:0;flex:none}
 .lvlup.lvlbn .lvl-ic .i,.lvlup.lvlbn .lvl-ic svg{width:22px;height:22px}
@@ -1600,3 +1601,4 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .fb-sec.fb-end .lnk{padding:0 8px;white-space:nowrap}
 .fb-sec .fb-dot{color:var(--color-text-muted);font-size:14px}
 .fb-sec.fb-more{margin-top:4px}
+@media(max-width:360px){#kseg button{padding:0 4px;font-size:13px;min-width:0;white-space:nowrap}#kseg button svg.i{display:none}}
