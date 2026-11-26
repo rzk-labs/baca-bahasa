@@ -1,5 +1,11 @@
 [
   {
+    "n": 1873,
+    "judul": "Profil sendiri: angka 'hari berturut' sama dengan streak di Home",
+    "poin": "Angka hari berturut di Profil kamu sekarang sama dengan di Home.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1871,
     "judul": "Sheet Tamat: buang lencana 'Tamat' ganda, judul tetap satu",
     "poin": "Layar Tamat tidak lagi menulis kata \"Tamat\" dua kali.",
@@ -171,12 +177,6 @@
     "n": 1795,
     "judul": "Sheet Tamat: '5 kata lama siap diulang' jadi tombol Ulang sekarang",
     "poin": "Di layar Tamat, \"5 kata lama siap diulang\" sekarang bisa diketuk.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1793,
-    "judul": "Sheet terbuka: isi layar di belakangnya tak ikut dibaca pembaca layar",
-    "poin": "Saat panel kata terbuka, layar di belakangnya kini disembunyikan dari pembaca layar.",
     "tgl": "2026-11-25"
   }
 ]

@@ -662,6 +662,7 @@ async function openProfile(username) {
   openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
   try {
     const p = await api('/u/' + encodeURIComponent(username));
+    if (p.self) p.streak = streak(); /* streak dari data lokal, sama dengan Home */
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
     if (p.self) p.reading = rakList().map(b => ({ t: b.title, lang: b.lang, pct: pctOf(b) })).filter(r => r.pct > 0); /* sumber sama dengan rak: tak pernah bertentangan */
     const zero = !(+p.kata7 > 0);
