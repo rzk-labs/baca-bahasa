@@ -1321,7 +1321,7 @@ function viewRak() {
     const lvc = $('#lvCard'); if (lvc) { /* #1595: kartu Level = tombol; ketuk buka sheet 'Cara dapat XP' */
       /* #1636: kartu Target pakai sheet yang sama + contoh kegiatan. Halaman cuma dihitung PG_CAP (10) XP ke target, jadi sisanya dari kata/Ngomong */
       const contohTarget = `<p class="xp-eg"><b>Target ${goalMin()} menit baca hari ini.</b> ${goalTodayText()}. Waktu dihitung saat halaman terbuka dan kamu aktif. Kira-kira ${Math.max(1, Math.round(goalMin() / 2.5))} halaman. Ubah target di Pengaturan.</p>`;
-      const bukaXp = (target) => openSheet(`<div class="sh-head"><h2>${target === true ? `Target ${goalMin()} menit baca` : 'Cara dapat XP'}</h2>${closeBtn}</div>${target === true ? contohTarget : ''}<ul class="rules xp-how"><li>Baca halaman: +2 XP (+5 saat pindah bab)</li><li>Simpan kata, atau ulang kata: +2 XP, +3 XP</li><li>Tamatkan buku: +10 XP</li><li>Latihan Ngomong: +2 sampai +15 XP</li></ul><div class="mut sm xp-mine">XP kamu: ${esc(xpRinci())}</div>`, 'Cara dapat XP');
+      const bukaXp = (target) => openSheet(`<div class="sh-head"><h2>${target === true ? `Target ${goalMin()} menit baca` : 'Cara dapat XP'}</h2>${closeBtn}</div>${target === true ? contohTarget : ''}<ul class="rules xp-how"><li>Baca halaman: +2 XP (+5 saat pindah bab)</li><li>Simpan kata, atau ulang kata: +2 XP, +3 XP</li><li>Tamatkan buku: +10 XP</li><li>Latihan Ngomong: +2 sampai +15 XP</li><li>Login di HP lain: XP ikut disamakan</li></ul><div class="mut sm xp-mine">XP kamu: ${esc(xpRinci())}</div>`, 'Cara dapat XP');
       lvc.onclick = bukaXp;
       lvc.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bukaXp(); } };
       const gc = $('#goalCard'); if (gc) {
@@ -1719,7 +1719,7 @@ function finishBook(b) {
   const tawar = !ulang && !(db.remind && db.remind.on) && !db.remindOffer;
   if (tawar) { db.remindOffer = true; save(); besok = ''; }
   if (!ulang) { sfx('win'); confetti(60); }
-  openSheet(`<div class="sh-head"><span class="stepchip">Tamat</span>${closeBtn}</div>
+  openSheet(`<div class="sh-head" style="justify-content:flex-end">${closeBtn}</div>
     <img class="tamat-art" src="img/aset/tamat-buku.svg" alt="" width="160" height="120" decoding="async">
     ${ring ? `<p class="mut sm" style="margin:0 0 6px">${esc(ring)}</p>` : ''}
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
@@ -1728,7 +1728,7 @@ function finishBook(b) {
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<button type="button" class="fw-nudge due-nudge" id="fbdue" style="margin:-4px 0 8px" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${dueN} kata lama siap diulang</span><b>Ulang sekarang</b></button>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button><button class="lnk" id="fbh">Ke Home</button></div>
-    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau diingatkan baca besok?</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
+    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau pengingat baca? Muncul saat Keepo terbuka.</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const rs = $('#fbrset'); if (rs) rs.onclick = () => { closeSheet(); setTimeout(() => { openSettings(); setTimeout(() => { const g = $('#remGrp'); if (g) g.scrollIntoView({ block: 'center' }); }, 60); }, 50); };
   const rn = $('#fbrno'); if (rn) rn.onclick = () => { const r = $('#fbrem'); if (r) r.remove(); };
@@ -3526,6 +3526,8 @@ function viewKataIn() {
   else if (!quickRun) { deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; } /* sesi 3 kata bertahan saat pindah sub-tab */
   if (!Array.isArray(db.vocab)) db.vocab = [];
   const weakAll = Object.values(db.weak || {}).filter(o => o && o.w && (+o.last || 0) < PASS).sort((a, b) => (+a.last || 0) - (+b.last || 0));
+  /* #1859: kata yang ditandai sulit di kartu ulang ikut hitungan kata sulit */
+  db.vocab.forEach(v => { if (v && v.hard && v.w && !weakAll.some(o => o.lang === v.lang && norm(o.w) === norm(v.w))) weakAll.unshift({ w: v.w, lang: v.lang, n: 0, last: 0, hard: true }); });
   const known = db.vocab.filter(v => v && v.known).length, learning = db.vocab.filter(isLearning).length;
   $('#view').innerHTML = `
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
@@ -3550,7 +3552,7 @@ function viewKataIn() {
       const inF = v => !!v && (csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2))) && (!hskF || (v.lang === 'zh-CN' && hskOf(v.w) === hskF)) && (!hskUnk || !v.known);
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => v.w && inF(v) && (!q || (v.w + ' ' + (v.t || '')).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}${v.hard ? ` <span class="vhard" title="Kamu tandai sulit" role="img" aria-label="Ditandai sulit">${ico('flag')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : hskF && !q && csvF === 'all' && !hskUnk && !hskN[hskF] && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/kosong-hsk.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada kata HSK ${hskF}. Ketuk kata saat baca.</div></div>` : (q || csvF !== 'all' || hskF || hskUnk) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
@@ -3654,7 +3656,7 @@ function viewKataIn() {
       });
     } else {
       const weak = weakAll.filter(o => !q || String(o.w).toLowerCase().includes(q)).slice(0, 40);
-      kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · dicoba ${+o.n || 1}×</div></div>${chip(+o.last || 0)}</div>`).join('')}
+      kl.innerHTML = weak.length ? `<div id="kbox"></div><div id="kwl">${weak.map(o => `<div class="vitem"><div class="inf"><div class="w1" lang="${esc(o.lang)}">${esc(o.w)}</div><div class="s1">${langName(o.lang)} · ${o.hard && !o.n ? 'kamu tandai sulit' : 'dicoba ' + (+o.n || 1) + '×'}</div></div>${o.hard && !o.n ? `<span class="chip">${ico('flag')}Sulit</span>` : chip(+o.last || 0)}</div>`).join('')}
         <div class="row"><button class="pri" id="kRem">${ico('sword')}Lawan ${Math.min(weak.length, 10)} kata</button></div></div>`
         : q ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : emptyState('happy', 'Aman, belum ada!', 'Kata yang skornya di bawah 85% pas tantangan bakal muncul di sini.', 'Mulai tantangan', "setTab('bicara')");
       if ($('#kRem')) $('#kRem').onclick = () => {
@@ -3753,7 +3755,8 @@ function deck(kb) {
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">sebentar lagi</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
-    <div class="mut sm center" style="margin-top:12px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? '<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">Tutup latihan ekstra</button></div>' : ''}${deckLv ? `<div class="center" style="margin-top:6px"><span class="mut sm">Hanya HSK ${deckLv}</span> <button class="ghost" id="hskAll" type="button">Semua level</button></div>` : ''}`;
+    <div class="center" style="margin-top:6px"><button class="hardbtn${v.hard ? ' on' : ''}" id="fHard" type="button" aria-pressed="${!!v.hard}">${ico('flag')}<span>${v.hard ? 'Batal tandai sulit' : 'Tandai sulit'}</span></button></div>
+    <div class="mut sm center" style="margin-top:6px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? '<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">Tutup latihan ekstra</button></div>' : ''}${deckLv ? `<div class="center" style="margin-top:6px"><span class="mut sm">Hanya HSK ${deckLv}</span> <button class="ghost" id="hskAll" type="button">Semua level</button></div>` : ''}`;
   if ($('#hskAll')) $('#hskAll').onclick = () => { deckLv = 0; viewKata(); };
   if ($('#q3Close')) $('#q3Close').onclick = () => { quickRun = null; quickExtra = false; viewKata(); };
   const card = $('#card'); let spoken = false;
@@ -3763,6 +3766,21 @@ function deck(kb) {
     $('#aspOn').onclick = () => done(true); $('#aspOff').onclick = () => done(false);
   }
   autoSay();
+  if ($('#fHard')) $('#fHard').onclick = () => {
+    const now = Date.now();
+    if (!v.hard) {
+      v.hard = true; v.hd = { due: v.due, known: !!v.known };
+      if (v.known) { v.known = false; v.due = now + DAY_MS; }
+      else { const left = (+v.due || 0) - now; if (left > DAY_MS) v.due = now + Math.max(DAY_MS, Math.round(left / 2)); }
+      deckHint = 'Ditandai sulit, bakal muncul lebih sering';
+    } else {
+      delete v.hard; if (v.hd && !(+v.due <= now)) { v.due = v.hd.due; v.known = v.hd.known; } delete v.hd;
+      deckHint = 'Tanda sulit dibatalkan';
+    }
+    save(); sfx('pop');
+    const b = $('#fHard'); b.classList.toggle('on', !!v.hard); b.setAttribute('aria-pressed', String(!!v.hard)); b.lastElementChild.textContent = v.hard ? 'Batal tandai sulit' : 'Tandai sulit';
+    const h = b.parentElement.nextElementSibling; if (h) h.textContent = deckHint;
+  };
   const flip = () => { if (flipped) return; flipped = true; $('#back').classList.remove('hide'); $('#tapl').classList.add('hide'); $('#actFront').classList.add('hide'); $('#actBack').classList.remove('hide'); sfx('pop'); autoSay(); };
   /* catat jawaban; mode 0 = tutup kata, 1 = Ragu (ulang 1x), 2 = Lupa (maks 2x). true bila dijadwalkan ulang */
   const sched = mode => {
@@ -3840,8 +3858,9 @@ function remHtml() {
   if (!sup) body = `<div class="mut sm">Pasang Keepo ke layar utama dulu. Di Safari: ketuk Bagikan, lalu <b>Tambah ke Layar Utama</b>. Buka lewat ikonnya, pengingat muncul di sini.</div>`;
   else if (perm === 'denied') body = `<div class="sm" role="alert" style="font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px">Izin notifikasi ditolak. Pengingat belum nyala.<div class="mut sm" style="margin-top:4px;font-weight:400">Izinkan di pengaturan HP atau browser, lalu coba lagi.</div><div class="row" style="margin-top:8px"><button class="sec" type="button" id="remRetry">Coba lagi</button></div></div>`;
   else body = `<div class="row" style="justify-content:space-between;align-items:center;gap:10px"><span class="eyebrow" style="margin:0">Ingatkan aku baca</span><div class="seg" id="remSw" role="group" aria-label="Pengingat baca"><button data-v="0" aria-pressed="${r.on ? 'false' : 'true'}" class="${r.on ? '' : 'on'}">Mati</button><button data-v="1" aria-pressed="${r.on ? 'true' : 'false'}" class="${r.on ? 'on' : ''}">Nyala</button></div></div>
+      <div class="mut sm" style="margin-top:6px">Pengingat muncul kalau Keepo lagi terbuka/di latar. Belum bisa bunyi saat app ditutup.</div>
       ${r.on ? `<label class="row" style="gap:10px;margin-top:10px;align-items:center"><span class="sm">Jam</span><input type="time" id="remJam" value="${remJam()}" style="width:auto;min-height:44px"></label>` : ''}
-      <div class="mut sm" style="margin-top:6px">Muncul saat Keepo terbuka lewat jam itu dan kamu belum baca hari ini. Tanpa server.</div>`;
+      ${isStandalone() ? '' : `<div class="row" style="margin-top:8px"><button class="lnk" type="button" id="remPasang" style="min-height:44px">Pasang ke layar utama</button></div>`}`;
   return `<div class="set-grp" id="remGrp"><div class="set-gt">Pengingat baca</div><div class="set-row">${body}</div>
     <div class="set-row"><div class="eyebrow">Bagikan progres</div><div class="mut sm" style="margin-bottom:8px">Isinya streak, jumlah kata, dan tautan app. Tanpa data pribadi.</div><button class="sec full" id="shProg" type="button" style="min-height:44px">Bagikan progres</button></div></div>`;
 }
@@ -3850,7 +3869,7 @@ async function remSet(on) {
   let p = Notification.permission;
   if (p !== 'granted') { try { p = await Notification.requestPermission(); } catch (e) { p = 'denied'; } }
   db.remind = Object.assign(db.remind || {}, { on: p === 'granted', jam: remJam() });
-  save(); if (p === 'granted') { remCheck(); toast('Pengingat nyala, jam ' + remJam()); }
+  save(); if (p === 'granted') { remCheck(); toast('Pengingat nyala, jam ' + remJam() + ', selagi Keepo terbuka'); }
 }
 async function shareProg() {
   const n = streak(), w = countedVocab(null).length;
@@ -3865,6 +3884,7 @@ function remWire() {
   const sw = $('#remSw'); if (sw) $$('#remSw button').forEach(b => b.onclick = async () => { await remSet(b.dataset.v === '1'); redraw(); });
   const rt = $('#remRetry'); if (rt) rt.onclick = async () => { await remSet(true); redraw(); if (Notification.permission === 'denied') toast('Masih ditolak. Izinkan dulu di pengaturan HP.'); };
   const j = $('#remJam'); if (j) j.onchange = e => { if (/^\d\d:\d\d$/.test(e.target.value)) { db.remind.jam = e.target.value; db.remind.shown = ''; save(); remCheck(); toast('Jam pengingat: ' + e.target.value); } };
+  const ps = $('#remPasang'); if (ps) ps.onclick = pasangSheet;
   const sp = $('#shProg'); if (sp) sp.onclick = shareProg;
 }
 /* Tawaran sekali (#1648): setelah sesi baca pertama, toast 2 tombol. db.remind.ditawar = true -> tak muncul lagi (opsional; data lama aman). */
@@ -3873,7 +3893,7 @@ function remOffer() {
   if (r.ditawar || r.on || isReading() || sheetOpen()) return;
   if (remSupport() && Notification.permission === 'denied') return;
   db.remind = Object.assign(r, { ditawar: true }); save();
-  toast('Mau diingatkan baca besok? Cukup sekali, bisa dimatikan kapan aja.', 15000,
+  toast('Mau pengingat baca? Muncul saat Keepo terbuka.', 15000,
     { label: 'Ingatkan aku', fn: remOfferYes }, { label: 'Nanti aja', fn: () => { } });
 }
 async function remOfferYes() {
