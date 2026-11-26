@@ -1600,3 +1600,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .fb-sec.fb-end .lnk{padding:0 8px;white-space:nowrap}
 .fb-sec .fb-dot{color:var(--color-text-muted);font-size:14px}
 .fb-sec.fb-more{margin-top:4px}
+/* #1890: tombol Home Tamat memuat judul buku berikutnya, 1 baris */
+#hero.hero-done .hero-act button.nx-bk{display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-width:0}
+#hero.hero-done .nx-bk .nx-v{flex:none}
+#hero.hero-done .nx-bk .nx-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
