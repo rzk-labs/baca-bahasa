@@ -2474,7 +2474,7 @@ function endCard(b, last) {
   const old = $('#endcard'); if (old) old.remove();
   const cols = $('#cols'); if (!cols) return;
   ecWatch(vp, cols);
-  if (!last) return;
+  if (!last || b.doneAt) return; /* #1899: buku Tamat sudah punya 'Baca ulang' di bar bawah */
   if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
