@@ -1594,3 +1594,9 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .sdots .sd i.on::after{content:"";position:absolute;left:3px;top:1.5px;width:3px;height:5px;border:solid var(--cream);border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
 .sdots .sd i.ring{background:transparent;border:2px solid var(--ink)}
 @media(max-width:340px){.sdots .sd i{width:10px;height:10px}.sdots .sd i.on::after{left:2.5px;top:1px}}
+/* #1877: sheet Tamat, tautan bawah satu baris rata */
+.fb-sec #fbr{flex-direction:row;line-height:1}
+.fb-sec.fb-end{flex-wrap:nowrap;align-items:center;gap:0 4px}
+.fb-sec.fb-end .lnk{padding:0 8px;white-space:nowrap}
+.fb-sec .fb-dot{color:var(--color-text-muted);font-size:14px}
+.fb-sec.fb-more{margin-top:4px}

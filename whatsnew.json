@@ -1,5 +1,11 @@
 [
   {
+    "n": 1877,
+    "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
+    "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1875,
     "judul": "Reader HP: petunjuk 'Cara baca' tunjuk tombol yang memang kelihatan",
     "poin": "Petunjuk cara baca di HP sekarang menyuruh buka menu Lainnya.",
@@ -171,12 +177,6 @@
     "n": 1797,
     "judul": "Ngomong: hasil skor & kata per kata muncul bertahap, halus",
     "poin": "Hasil Ngomong sekarang muncul bertahap: cincin, skor, lalu kata satu-satu.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1796,
-    "judul": "Home: cincin Target baca kosong bila 0 menit, isi ikut angka menit",
-    "poin": "Cincin Target baca di Home kini kosong kalau belum baca semenit pun.",
     "tgl": "2026-11-25"
   }
 ]
