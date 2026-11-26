@@ -3540,6 +3540,7 @@ function viewKata() {
     const b = $('#kReload'); if (b) b.onclick = () => location.reload();
   }
 }
+const cariFail = new Set();
 function viewKataIn() {
   if (quickPend) { quickRun = quickPend; quickPend = null; quickLogged = false; quickXpGot = false; deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; }
   else if (!quickRun) { deckDone = 0; deckHint = ''; deckRetry = []; deckAns = new Set(); deckRetryTot = 0; } /* sesi 3 kata bertahan saat pindah sub-tab */
@@ -3572,7 +3573,7 @@ function viewKataIn() {
       const inF = v => !!v && (csvF === 'all' || (csvF.startsWith('l:') ? v.lang === csvF.slice(2) : v.book === csvF.slice(2))) && (!hskF || (v.lang === 'zh-CN' && hskOf(v.w) === hskF)) && (!hskUnk || !v.known);
       const vocab = db.vocab.map((v, i) => ({ ...v, i })).filter(v => v.w && inF(v) && (!q || (v.w + ' ' + (v.t || '')).toLowerCase().includes(q)));
       if (kataSort === 'tap') vocab.sort((a, c) => (+c.tap || 0) - (+a.tap || 0) || a.i - c.i);
-      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}${v.hard ? ` <span class="vhard" title="Kamu tandai sulit" role="img" aria-label="Ditandai sulit">${ico('flag')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
+      kl.innerHTML = vocab.length ? vocab.map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}${v.known ? ` <span class="vok" title="Udah hafal" role="img" aria-label="Udah hafal">${ico('check')}</span>` : ''}${v.hard ? ` <span class="vhard" title="Kamu tandai sulit" role="img" aria-label="Ditandai sulit">${ico('flag')}</span>` : ''}</div><div class="t1${v.t ? '' : ' noarti'}">${v.t ? esc(v.t) : cariFail.has(v.lang + '|' + v.w) ? 'Butuh internet. Coba lagi nanti' : 'Menunggu arti'}${v.pick && v.t ? ' <span class="stepchip pickchip">pilihanmu</span>' : ''}</div>${v.t ? '' : `<button class="vgo vcari" data-cari="${v.i}" aria-label="Cari arti ${esc(v.w)}">${cariFail.has(v.lang + '|' + v.w) ? 'Coba lagi' : 'Cari arti'}</button>`}${(() => { const m = [bacaDisp(v.w, bacaShow(v.w, v.baca, v.lang)), +v.tap >= 1 ? `Diketuk ${+v.tap}×` : '', ((db.looks || {})[v.lang + '|' + v.w.toLowerCase()] || 0) > 1 ? `Dicek ${db.looks[v.lang + '|' + v.w.toLowerCase()]}×` : ''].filter(Boolean).join(' · '); const h = v.lang === 'zh-CN' ? hskOf(v.w) : 0; return m || h ? `<div class="vmeta">${h ? `<span class="hskc" aria-label="Level HSK ${h}">HSK ${h}</span>${m ? ' ' : ''}` : ''}${esc(m)}</div>` : ''; })()}<div class="s1">${esc(ctxOf(v))}</div>${v.book && (db.books || []).some(b => b && b.title === v.book) ? `<button class="vgo" data-go="${v.i}" aria-label="Lihat ${esc(v.w)} di buku">${ico('book')}Lihat di buku</button>` : ''}</div>
         <button class="icon" data-sp="${v.i}" aria-label="Dengerin">${ico('vol')}</button><button class="icon vdel" data-dv="${v.i}" aria-label="Hapus kata">${ico('trash')}</button></div>`).join('')
         : hskF && !q && csvF === 'all' && !hskUnk && !hskN[hskF] && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/kosong-hsk.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Belum ada kata HSK ${hskF}. Ketuk kata saat baca.</div></div>` : (q || csvF !== 'all' || hskF || hskUnk) && db.vocab.length ? `<div class="empty"><img class="empty-doodle" src="img/aset/cari-kosong.svg" width="96" height="72" alt="" decoding="async"><div class="mut sm">Nggak ada yang cocok.</div></div>` : (db.seenKataHint ? '' : '<div class="rtip ktip" id="ktip" role="note"><span><span class="rtt">Ketuk kata di halaman baca, lalu <b>Simpan</b>. Katamu muncul di sini.</span></span><button id="ktipx" type="button" aria-label="Paham, tutup petunjuk">Paham</button></div>') + emptyState('curious', 'Belum ada kata', 'Ketuk kata di halaman baca, lalu Simpan.', 'Mulai baca', "setTab('baca')");
       { const kx = $('#ktipx'); if (kx) kx.onclick = () => { db.seenKataHint = true; save(); $('#ktip').remove(); }; }
@@ -3668,6 +3669,18 @@ function viewKataIn() {
           toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya', r ? 3200 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(o.lang, o.w) });
         });
       }
+      $$('[data-cari]').forEach(el => el.onclick = async () => {
+        const v = db.vocab[+el.dataset.cari]; if (!v || !v.w || el.disabled) return;
+        const key = v.lang + '|' + v.w, y = window.scrollY; el.disabled = true; el.textContent = 'Mencari…';
+        const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 10000);
+        try {
+          const r = await translate(v.w, v.lang, db.my, ac.signal);
+          if (!r || !String(r.text || '').trim()) throw new Error('kosong');
+          v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; v.pos = r.dict && r.dict[0] ? r.dict[0].pos : ''; delete v.noTr; delete v.nyusul; save(); cariFail.delete(key);
+        } catch (e) { cariFail.add(key); }
+        clearTimeout(tm);
+        if (kataSeg === 'simpan' && $('#klist')) { renderList(); window.scrollTo(0, y); }
+      });
       $$('[data-go]').forEach(el => el.onclick = () => lihatDiBuku(db.vocab[+el.dataset.go]));
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
