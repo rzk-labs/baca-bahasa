@@ -111,7 +111,10 @@ function mergeSrv(d) {
   }
   // kata baru dari perangkat lain: urut sesuai waktu tambah (terbaru di atas)
   db.vocab = only.length ? out.concat(only).sort((a, b) => (b.at || 0) - (a.at || 0)) : out;
-  if ((+d.xp || 0) > (db.xp || 0)) { db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); } /* hasil sinkron: tanpa popup Level */
+  if ((+d.xp || 0) > (db.xp || 0)) {
+    const gainXp = Math.round(+d.xp - (db.xp || 0)); db.xp = +d.xp; db.lvlSeen = Math.max(db.lvlSeen || 0, level(db.xp)); /* hasil sinkron: tanpa popup Level */
+    try { toast(`+${gainXp} XP · dari akunmu di perangkat lain`, 4000); } catch (e) { } /* alasan XP naik tanpa aksi (#1867) */
+  }
   if (isObj(d.xpDay)) { for (const k in d.xpDay) { const n = +d.xpDay[k] || 0; if (n > (+db.xpDay[k] || 0)) db.xpDay[k] = n; } const ks = Object.keys(db.xpDay).sort(); while (ks.length > 60) delete db.xpDay[ks.shift()]; }
   if (isObj(d.pgDay)) { if (!isObj(db.pgDay)) db.pgDay = {}; for (const k in d.pgDay) { const n = +d.pgDay[k] || 0; if (n > (+db.pgDay[k] || 0)) db.pgDay[k] = n; } const pk = Object.keys(db.pgDay).sort(); while (pk.length > 60) delete db.pgDay[pk.shift()]; }
   if (Array.isArray(d.badges)) db.badges = [...new Set([...(db.badges || []), ...d.badges])];
@@ -659,13 +662,14 @@ async function openProfile(username) {
   openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
   try {
     const p = await api('/u/' + encodeURIComponent(username));
+    if (p.self) p.streak = streak(); /* streak dari data lokal, sama dengan Home */
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
     if (p.self) p.reading = rakList().map(b => ({ t: b.title, lang: b.lang, pct: pctOf(b) })).filter(r => r.pct > 0); /* sumber sama dengan rak: tak pernah bertentangan */
     const zero = !(+p.kata7 > 0);
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${db.xp} Total XP seumur hidup</div>` : ''}</div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${(db.vocab || []).length} kata tersimpan${rdDone.length ? ` · ${rdDone.length} buku tamat` : ''}</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span><i class="nw">kata</i> <i class="nw">7 hari</i></span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
@@ -675,7 +679,7 @@ async function openProfile(username) {
       <details class="all-badges"><summary>Semua lencana (${BADGES.length})</summary>
       <div class="bgrid">${BADGES.map(([id, em, name, desc], i) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id), how = BADGE_HOW[id] || desc, multi = pr && pr.need > 1; return `<div class="badge ${['t-lime', 't-lav', 't-pink', 't-sun', 't-mint', 't-coral', 't-blue', 't-cream', 't-lav', 't-lime'][i % 10]}${on ? '' : ' off'}" ${on ? '' : `role="button" tabindex="0" data-how="${esc(how)}"`} title="${esc(on ? desc : 'Terkunci: ' + how)}" aria-label="${esc('Lencana ' + name + ', ' + (on ? 'Sudah dapat' : 'Belum didapat'))}">${on ? `<span class="bst on" aria-hidden="true">${ico('check')}</span>` : ''}<span class="em">${on && BADGE_STAMP[id] ? `<img class="em-stamp" src="img/aset/stempel-${BADGE_STAMP[id]}.svg" alt="" width="40" height="40" decoding="async">` : ico(em)}</span><b>${name}</b><span class="d">${on ? desc : `${ico('lock', 'lk')} ${multi ? desc : how}`}</span>${on ? `<span class="got">${ico('check', 'ck')} Didapat</span>` : ''}${multi ? `<span class="bp">${/^fire/.test(id) ? 'Streak ' : ''}${pr.now}/${pr.need}</span><div class="bar"><i style="width:${Math.round(pr.now / pr.need * 100)}%"></i></div>` : ''}</div>`; }).join('')}</div></details>` : ''}
       ${p.self ? rakHtml() : ''}
-      ${p.aktif ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
+      ${p.aktif && !p.self ? `<div class="mut sm" style="margin-top:8px">Aktif ${lalu(p.aktif)}</div>` : ''}
       ${p.self ? '' : `<div class="row" style="margin-top:14px"><button class="${p.diikuti ? 'sec' : 'pri'}" id="pfFol">${p.diikuti ? 'Berhenti ikuti' : 'Ikuti'}</button></div>`}`;
     if (p.self) wireRak();
     if (p.self) $$('#pfBody .badge.off, #pfBody .near-row').forEach(b => { const go = () => toast('🔒 ' + b.querySelector('b').textContent + ': ' + b.dataset.how, 4200); b.onclick = go; b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }; });
