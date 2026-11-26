@@ -1728,7 +1728,7 @@ function finishBook(b) {
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${TXT_TAK_ADA_BARU}</p>${dueN ? `<button type="button" class="fw-nudge due-nudge" id="fbdue" style="margin:-4px 0 8px" aria-label="${dueN} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${dueN} kata lama siap diulang</span><b>Ulang sekarang</b></button>` : ''}` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button><button class="lnk" id="fbh">Ke Home</button></div>
-    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau diingatkan baca besok?</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
+    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau pengingat baca? Muncul saat Keepo terbuka.</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
   const rs = $('#fbrset'); if (rs) rs.onclick = () => { closeSheet(); setTimeout(() => { openSettings(); setTimeout(() => { const g = $('#remGrp'); if (g) g.scrollIntoView({ block: 'center' }); }, 60); }, 50); };
   const rn = $('#fbrno'); if (rn) rn.onclick = () => { const r = $('#fbrem'); if (r) r.remove(); };
@@ -3858,8 +3858,9 @@ function remHtml() {
   if (!sup) body = `<div class="mut sm">Pasang Keepo ke layar utama dulu. Di Safari: ketuk Bagikan, lalu <b>Tambah ke Layar Utama</b>. Buka lewat ikonnya, pengingat muncul di sini.</div>`;
   else if (perm === 'denied') body = `<div class="sm" role="alert" style="font-weight:600;background:var(--hl);border-radius:10px;padding:10px 12px">Izin notifikasi ditolak. Pengingat belum nyala.<div class="mut sm" style="margin-top:4px;font-weight:400">Izinkan di pengaturan HP atau browser, lalu coba lagi.</div><div class="row" style="margin-top:8px"><button class="sec" type="button" id="remRetry">Coba lagi</button></div></div>`;
   else body = `<div class="row" style="justify-content:space-between;align-items:center;gap:10px"><span class="eyebrow" style="margin:0">Ingatkan aku baca</span><div class="seg" id="remSw" role="group" aria-label="Pengingat baca"><button data-v="0" aria-pressed="${r.on ? 'false' : 'true'}" class="${r.on ? '' : 'on'}">Mati</button><button data-v="1" aria-pressed="${r.on ? 'true' : 'false'}" class="${r.on ? 'on' : ''}">Nyala</button></div></div>
+      <div class="mut sm" style="margin-top:6px">Pengingat muncul kalau Keepo lagi terbuka/di latar. Belum bisa bunyi saat app ditutup.</div>
       ${r.on ? `<label class="row" style="gap:10px;margin-top:10px;align-items:center"><span class="sm">Jam</span><input type="time" id="remJam" value="${remJam()}" style="width:auto;min-height:44px"></label>` : ''}
-      <div class="mut sm" style="margin-top:6px">Muncul saat Keepo terbuka lewat jam itu dan kamu belum baca hari ini. Tanpa server.</div>`;
+      ${isStandalone() ? '' : `<div class="row" style="margin-top:8px"><button class="lnk" type="button" id="remPasang" style="min-height:44px">Pasang ke layar utama</button></div>`}`;
   return `<div class="set-grp" id="remGrp"><div class="set-gt">Pengingat baca</div><div class="set-row">${body}</div>
     <div class="set-row"><div class="eyebrow">Bagikan progres</div><div class="mut sm" style="margin-bottom:8px">Isinya streak, jumlah kata, dan tautan app. Tanpa data pribadi.</div><button class="sec full" id="shProg" type="button" style="min-height:44px">Bagikan progres</button></div></div>`;
 }
@@ -3868,7 +3869,7 @@ async function remSet(on) {
   let p = Notification.permission;
   if (p !== 'granted') { try { p = await Notification.requestPermission(); } catch (e) { p = 'denied'; } }
   db.remind = Object.assign(db.remind || {}, { on: p === 'granted', jam: remJam() });
-  save(); if (p === 'granted') { remCheck(); toast('Pengingat nyala, jam ' + remJam()); }
+  save(); if (p === 'granted') { remCheck(); toast('Pengingat nyala, jam ' + remJam() + ', selagi Keepo terbuka'); }
 }
 async function shareProg() {
   const n = streak(), w = countedVocab(null).length;
@@ -3883,6 +3884,7 @@ function remWire() {
   const sw = $('#remSw'); if (sw) $$('#remSw button').forEach(b => b.onclick = async () => { await remSet(b.dataset.v === '1'); redraw(); });
   const rt = $('#remRetry'); if (rt) rt.onclick = async () => { await remSet(true); redraw(); if (Notification.permission === 'denied') toast('Masih ditolak. Izinkan dulu di pengaturan HP.'); };
   const j = $('#remJam'); if (j) j.onchange = e => { if (/^\d\d:\d\d$/.test(e.target.value)) { db.remind.jam = e.target.value; db.remind.shown = ''; save(); remCheck(); toast('Jam pengingat: ' + e.target.value); } };
+  const ps = $('#remPasang'); if (ps) ps.onclick = pasangSheet;
   const sp = $('#shProg'); if (sp) sp.onclick = shareProg;
 }
 /* Tawaran sekali (#1648): setelah sesi baca pertama, toast 2 tombol. db.remind.ditawar = true -> tak muncul lagi (opsional; data lama aman). */
@@ -3891,7 +3893,7 @@ function remOffer() {
   if (r.ditawar || r.on || isReading() || sheetOpen()) return;
   if (remSupport() && Notification.permission === 'denied') return;
   db.remind = Object.assign(r, { ditawar: true }); save();
-  toast('Mau diingatkan baca besok? Cukup sekali, bisa dimatikan kapan aja.', 15000,
+  toast('Mau pengingat baca? Muncul saat Keepo terbuka.', 15000,
     { label: 'Ingatkan aku', fn: remOfferYes }, { label: 'Nanti aja', fn: () => { } });
 }
 async function remOfferYes() {

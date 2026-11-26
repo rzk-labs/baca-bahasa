@@ -1,5 +1,11 @@
 [
   {
+    "n": 1869,
+    "judul": "Pengingat baca: teks jujur, hanya muncul saat Keepo terbuka",
+    "poin": "Teks pengingat baca kini jujur: hanya muncul saat Keepo terbuka.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1867,
     "judul": "XP naik sendiri antar layar: telusuri sumbernya & tampilkan alasan",
     "poin": "Penyebab XP loncat: sinkron akun dari HP lain, tanpa kabar. Sekarang ada pemberitahuan.",
@@ -171,12 +177,6 @@
     "n": 1792,
     "judul": "Home: 'Pilih buku berikutnya' cukup satu, tak dobel saat buku Tamat",
     "poin": "Di Home, tombol \"Pilih buku berikutnya\" kini muncul sekali saja saat buku tamat.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1789,
-    "judul": "Reader Mandarin/Jepang: petunjuk sekali 'Pinyin' / 'Cara baca' di tombol",
-    "poin": "Buku Mandarin/Jepang/Korea kini memberi petunjuk singkat soal tombol Pinyin/Cara baca.",
     "tgl": "2026-11-25"
   }
 ]
