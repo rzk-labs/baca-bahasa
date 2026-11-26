@@ -1,5 +1,11 @@
 [
   {
+    "n": 1861,
+    "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
+    "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1859,
     "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
     "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
@@ -171,12 +177,6 @@
     "n": 1785,
     "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
     "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1783,
-    "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
-    "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
     "tgl": "2026-11-25"
   }
 ]
