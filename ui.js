@@ -2699,7 +2699,14 @@ function guideOn(b) {
 function guideMark(b) {
   const S = SAMPLES_SHORT[b.lang], ws = $$('#cols .w').filter(x => !x.closest('h2') && !isParticle(b.lang, x.textContent));
   const w = ws.find(x => S && x.textContent.includes(S.pick)) || ws[0];
-  if (w) w.classList.add('guide-w');
+  if (w) {
+    w.classList.add('guide-w');
+    /* #1888: ambil arti kata menyala lebih dulu (hasil masuk cache translate), sheet langsung berisi. Gagal/offline = diam, pesan lama tetap jalan. */
+    try {
+      const k = b.lang === 'ko' ? koSplit(w.textContent) : null, q = k ? k.stem : w.textContent;
+      if (navigator.onLine !== false) Promise.resolve(translate(q, b.lang, db.my)).catch(() => { });
+    } catch (e) { }
+  }
 }
 function guideEnd(how) {
   if (!guideLive) return;
