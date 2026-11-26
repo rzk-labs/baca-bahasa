@@ -1,5 +1,11 @@
 [
   {
+    "n": 1865,
+    "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
+    "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1861,
     "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
     "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
@@ -171,12 +177,6 @@
     "n": 1787,
     "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
     "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1785,
-    "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
-    "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
     "tgl": "2026-11-25"
   }
 ]
