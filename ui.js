@@ -216,10 +216,11 @@ const goalMin = () => GOAL_MINS.includes(db.goalMin) ? db.goalMin : 5; /* data l
 const readSecToday = () => Math.max(0, +((db.readSec || {})[today()]) || 0);
 const minToday = () => Math.floor(readSecToday() / 60);
 const goalDone = () => readSecToday() >= goalMin() * 60;
-const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : `${Math.min(minToday(), goalMin())} dari ${goalMin()} menit`;
-const goalHint = () => minToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : `Sisa ${goalMin() - minToday()} menit, yuk`;
-/* #1796: cincin diisi per menit penuh (m/g), sama dengan angka di tengah; 0 mnt = kosong. Target/XP tetap per detik */
-const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(); return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(ok ? 1 : m / g,`<span class="gn">${m}</span><small>mnt</small>`)}</div><div class="lbl2">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${m} dari ${g} menit</span>`}</div>${ok ? '' : `<div class="goal-eg" title="${goalHint()}" aria-label="${goalHint()}">Sisa ${g - m} menit</div>`}`; };
+const subMin = () => readSecToday() > 0 && minToday() < 1;
+const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : subMin() ? `Kurang dari 1 dari ${goalMin()} menit` : `${Math.min(minToday(), goalMin())} dari ${goalMin()} menit`;
+const goalHint = () => readSecToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : subMin() ? 'Sudah kehitung, lanjut dikit lagi' : `Sisa ${goalMin() - minToday()} menit, yuk`;
+/* #1855: cincin diisi halus per detik (detik/(g*60)); <60 dtk tampil '<1'. 0 dtk = kosong. Target/XP tetap per detik */
+const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : Math.min(1, readSecToday() / (g * 60)), n = subMin() ? '&lt;1' : m; return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${subMin() ? 'Kurang dari 1' : m} dari ${g} menit</span>`}</div>${ok ? '' : `<div class="goal-eg" title="${goalHint()}" aria-label="${goalHint()}">Sisa ${g - m} menit</div>`}`; };
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
@@ -1216,7 +1217,7 @@ function streakDots() {
     const act = db.days.includes(dayKey(at(k)));
     const cls = k >= off && k < n + off ? 'on' : k === 0 && !has ? 'ring' : act ? 'old' : '';
     const dw = at(k).getDay(), L = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][dw], F = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][dw];
-    return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}"><i class="${cls}"></i><em>${L}</em></span>`;
+    return `<span class="sd${k === 0 ? ' td' : ''}" aria-label="${F}${k === 0 ? ', hari ini' : ''}, ${act ? 'sudah baca' : 'belum baca'}"><i class="${cls}"></i><em>${L}</em></span>`;
   }).join('');
 }
 /* info satu baris di kartu Streak: ajakan lembut atau rekor; tanpa hukuman */
