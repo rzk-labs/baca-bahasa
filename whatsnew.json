@@ -1,5 +1,47 @@
 [
   {
+    "n": 1867,
+    "judul": "XP naik sendiri antar layar: telusuri sumbernya & tampilkan alasan",
+    "poin": "Penyebab XP loncat: sinkron akun dari HP lain, tanpa kabar. Sekarang ada pemberitahuan.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1865,
+    "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
+    "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1861,
+    "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
+    "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1859,
+    "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
+    "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1857,
+    "judul": "Home buku Tamat: kartu 'Simpan kata' tak lagi suruh buka bacaan tamat",
+    "poin": "Buku yang sudah Tamat tak lagi disuruh dibuka ulang dari kartu kata.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1855,
+    "judul": "Home: Target baca tampil '<1 mnt' & cincin terisi sedikit bila sudah baca",
+    "poin": "Kartu Target baca sekarang menampilkan \"<1 mnt\" kalau baru baca sebentar.",
+    "tgl": "2026-11-26"
+  },
+  {
+    "n": 1853,
+    "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
+    "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1846,
     "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
     "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
@@ -135,48 +177,6 @@
     "n": 1789,
     "judul": "Reader Mandarin/Jepang: petunjuk sekali 'Pinyin' / 'Cara baca' di tombol",
     "poin": "Buku Mandarin/Jepang/Korea kini memberi petunjuk singkat soal tombol Pinyin/Cara baca.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1787,
-    "judul": "Sheet Tamat: layar reader di belakangnya tak tampak kosong abu-abu",
-    "poin": "Saat layar Tamat muncul, teks halaman terakhir kini tetap terlihat redup di belakangnya.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1785,
-    "judul": "Reader: satu istilah 'Bagian' di header, bar bawah & rekap sesi",
-    "poin": "Header baca sekarang menulis \"Bagian 3/12\", satuannya sama dengan layar Tamat.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1783,
-    "judul": "Profil: rak 'Tamat' berisi 1-2 buku tak lagi gelap & kosong lebar",
-    "poin": "Rak 'Tamat' di Profil dengan 1-2 buku kini rapat, tidak kosong lebar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1781,
-    "judul": "[peta 184] Reader HP: teks Jepang/Mandarin tak menumpuk & terpotong",
-    "poin": "Teks Jepang dan Mandarin di HP sekarang patah baris rapi, tidak menumpuk.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1779,
-    "judul": "Sheet Tamat: 'Baca ulang', 'Ke Home', 'Nanti saja' mudah diketuk jempol",
-    "poin": "Tautan \"Baca ulang\", \"Ke Home\", \"Nanti saja\" kini lebih mudah diketuk jempol.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1777,
-    "judul": "Home & Profil: '7 hari' ada jarak, kotak statistik tak patah baris",
-    "poin": "Kartu streak di Home sekarang ada jarak: \"7 hari\", bukan \"7hari\".",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1775,
-    "judul": "Buka ulang buku Tamat: tak ada XP & sheet Tamat tak muncul lagi",
-    "poin": "Buku yang sudah Tamat tak lagi memunculkan lembar Tamat saat dibuka ulang.",
     "tgl": "2026-11-25"
   }
 ]
