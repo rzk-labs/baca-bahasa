@@ -566,7 +566,7 @@ body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + var(--space-8) * 2
 .rmid{flex:1;text-align:center;font-size:.75rem;line-height:1.5;font-weight:500;color:var(--color-text-muted);font-variant-numeric:tabular-nums}
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0;margin:0 8px}
-.rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
 @media (max-width:359px){.rmid #pgn{font-size:.7rem}}
 .rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
 .rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
