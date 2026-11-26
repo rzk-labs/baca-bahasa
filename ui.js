@@ -3553,9 +3553,10 @@ function viewKataIn() {
     <div class="sum"><div class="s1"><b id="sumSaved">${countedVocab(null).length}</b><span>Tersimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Ucap</span></div></div>
     ${(() => { const n = db.vocab.filter(isDue).length; return n && kataSeg !== 'kartu' ? `<button type="button" class="fw-nudge due-nudge" id="kdue" style="margin:-2px 0 10px" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
-    <div class="seg" id="kseg" role="group" aria-label="Tampilan kata"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}" aria-pressed="${kataSeg === 'kartu'}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}" aria-pressed="${kataSeg === 'simpan'}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}" aria-pressed="${kataSeg === 'sulit'}"${weakAll.length ? ` aria-label="Latih ucap, ${weakAll.length} kata"` : ''}>Latih ucap${weakAll.length ? ' · ' + weakAll.length : ''}</button></div>${kataSeg === 'sulit' ? '<p class="mut sm" id="khelp" style="margin:6px 2px 10px">Kata yang kamu tandai sulit + kata yang ucapannya di bawah 85%. Latih lewat tab Ngomong.</p>' : ''}
+    <div class="seg" id="kseg" role="group" aria-label="Tampilan kata"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}" aria-pressed="${kataSeg === 'kartu'}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}" aria-pressed="${kataSeg === 'simpan'}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}" aria-pressed="${kataSeg === 'sulit'}"${weakAll.length ? ` aria-label="Latih ucap, ${weakAll.length} kata"` : ''}>Latih ucap${weakAll.length ? ' · ' + weakAll.length : ''}</button></div>${(() => { const n = db.vocab.filter(v => v && v.hard).length; return kataSeg === 'kartu' && n ? `<button type="button" class="hardcnt" id="khard">${ico('flag')}<span>${n} kata ditandai sulit</span></button>` : ''; })()}${kataSeg === 'sulit' ? '<p class="mut sm" id="khelp" style="margin:6px 2px 10px">Kata yang kamu tandai sulit + kata yang ucapannya di bawah 85%. Latih lewat tab Ngomong.</p>' : ''}
     <div id="kbody"></div>`;
   if ($('#kdue')) $('#kdue').onclick = () => { deckLv = 0; kataSeg = 'kartu'; sfx('pop'); viewKata(); };
+  if ($('#khard')) $('#khard').onclick = () => { deckLv = 0; kataSeg = 'sulit'; sfx('pop'); viewKata(); };
   $$('#kseg button').forEach(x => x.onclick = () => { deckLv = 0; kataSeg = x.dataset.v; sfx('pop'); viewKata(); });
   const kb = $('#kbody');
   if (kataSeg === 'kartu') return deck(kb);
@@ -3799,6 +3800,9 @@ function deck(kb) {
     save(); sfx('pop');
     const b = $('#fHard'); b.classList.toggle('on', !!v.hard); b.setAttribute('aria-pressed', String(!!v.hard)); b.lastElementChild.textContent = v.hard ? 'Batal tandai sulit' : 'Tandai sulit';
     const h = b.parentElement.nextElementSibling; if (h) h.textContent = deckHint;
+    const nh = db.vocab.filter(x => x && x.hard).length, kh = $('#khard');
+    if (kh) { kh.hidden = !nh; kh.lastElementChild.textContent = nh + ' kata ditandai sulit'; }
+    else if (nh && $('#kseg')) { $('#kseg').insertAdjacentHTML('afterend', `<button type="button" class="hardcnt" id="khard">${ico('flag')}<span>${nh} kata ditandai sulit</span></button>`); $('#khard').onclick = () => { deckLv = 0; kataSeg = 'sulit'; sfx('pop'); viewKata(); }; }
   };
   const flip = () => { if (flipped) return; flipped = true; $('#back').classList.remove('hide'); $('#tapl').classList.add('hide'); $('#actFront').classList.add('hide'); $('#actBack').classList.remove('hide'); sfx('pop'); autoSay(); };
   /* catat jawaban; mode 0 = tutup kata, 1 = Ragu (ulang 1x), 2 = Lupa (maks 2x). true bila dijadwalkan ulang */

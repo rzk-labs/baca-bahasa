@@ -1,5 +1,11 @@
 [
   {
+    "n": 1896,
+    "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
+    "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
+    "tgl": "2026-11-26"
+  },
+  {
     "n": 1894,
     "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
     "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
@@ -171,12 +177,6 @@
     "n": 1832,
     "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
     "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1830,
-    "judul": "Tab Kata: filter HSK kosong tampilkan kapan kata siap diulang",
-    "poin": "Filter HSK yang kosong sekarang bilang kapan kata berikutnya siap diulang.",
     "tgl": "2026-11-25"
   }
 ]
