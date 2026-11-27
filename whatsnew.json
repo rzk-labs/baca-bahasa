@@ -1,5 +1,11 @@
 [
   {
+    "n": 1908,
+    "judul": "[peta 195] Buka file buku langsung dengan Keepo (Android & komputer)",
+    "poin": "Buku .epub, .pdf, .txt sekarang bisa dibuka langsung lewat Keepo di Android dan komputer.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1906,
     "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
     "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
@@ -171,12 +177,6 @@
     "n": 1842,
     "judul": "Toast 'Masuk ke kartu kata' lebih singkat (3,5 dtk), Urungkan tetap ada",
     "poin": "Pesan \"Masuk ke kartu kata\" kini hilang dalam 3,5 detik, bukan 6.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1841,
-    "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
-    "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
     "tgl": "2026-11-25"
   }
 ]
