@@ -1,5 +1,11 @@
 [
   {
+    "n": 1914,
+    "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
+    "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1912,
     "judul": "Tab Kata Tersimpan: filter 'Sulit saja' untuk kata bertanda sulit",
     "poin": "Tab Kata > Tersimpan kini punya tombol \"Sulit 3\" untuk lihat kata bertanda sulit saja.",
@@ -171,12 +177,6 @@
     "n": 1845,
     "judul": "Tab bar bawah: pindah tab terasa halus, ikon aktif memantul kecil",
     "poin": "Pindah tab di bawah sekarang berganti warna halus, tidak mendadak.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1844,
-    "judul": "Rekap 'Kata sesi ini': hapus hitungan layar yang beda dari reader",
-    "poin": "Catatan sesi kini selalu bilang \"Berhenti di Bagian k dari n\", tanpa hitungan layar.",
     "tgl": "2026-11-25"
   }
 ]

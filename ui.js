@@ -438,7 +438,12 @@ function toastHide() {
   toastEndT = setTimeout(() => toastEnd(t), 250);
 }
 const toastMs = (m, ms) => { const long = String(m).length > 40; if (ms == null) return long ? 4500 : 3200; return long && ms < 4000 ? 4000 : ms; };
-function toast(m, ms, act, act2) { ms = toastMs(m, ms); const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
+function toast(m, ms, act, act2) { ms = toastMs(m, ms); const t = $('#toast'); toastEnd(t); t.textContent = ''; const tx = document.createElement('span'); tx.className = 'ttx'; tx.textContent = m; t.append(tx); if (act) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = act.label; b.onclick = () => { toastHide(); act.fn(); }; t.append(b); } if (act2) { const b2 = document.createElement('button'); b2.className = 'tact'; b2.textContent = act2.label; b2.onclick = () => { toastHide(); act2.fn(); }; t.append(b2); } t.classList.remove('hide'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = ''; clearTimeout(toastT); toastHeld = false; toastLeft = ms; toastAt = Date.now(); if (isFinite(ms)) toastT = setTimeout(toastHide, ms); }
+/* #1914: hitung mundur berhenti selagi toast disentuh/ditahan, lanjut saat dilepas */
+let toastLeft = 0, toastAt = 0, toastHeld = false;
+function toastHold() { const t = $("#toast"); if (toastHeld || !t || t.classList.contains("hide") || !isFinite(toastLeft)) return; toastHeld = true; clearTimeout(toastT); toastLeft = Math.max(1500, toastLeft - (Date.now() - toastAt)); }
+function toastRelease() { if (!toastHeld) return; toastHeld = false; toastAt = Date.now(); clearTimeout(toastT); toastT = setTimeout(toastHide, toastLeft); }
+{ const tt = $("#toast"); if (tt) { tt.addEventListener("pointerdown", toastHold); ["pointerup", "pointercancel", "pointerleave"].forEach(ev => tt.addEventListener(ev, toastRelease)); } }
 let sheetRet = null;
 const RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 /* #1793: latar (header, isi, tab) disembunyikan dari pembaca layar & Tab selagi sheet terbuka */
@@ -1583,7 +1588,7 @@ function pahamPage(b, pg) {
   setPaham(items, true);
   items.forEach(([l, w]) => SESSP.set.add(vocabKey(l, w)));
   $$('.cols .w').forEach(x => { if (cleared.includes(x.textContent.trim().toLowerCase())) x.classList.remove('saved'); });
-  if (cleared.length) toast(`${cleared.length} kata dianggap paham, garis dihapus`, 6000, { label: 'Urungkan', fn: () => {
+  if (cleared.length) toast(`${cleared.length} kata dianggap paham, garis dihapus`, 5000, { label: 'Urungkan', fn: () => {
     setPaham(items, false); items.forEach(([l, w]) => SESSP.set.delete(vocabKey(l, w)));
     cleared.forEach(w => paintSaved(b.lang, w, true));
   } });
@@ -1656,7 +1661,7 @@ function sessRecap(b) {
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1, nyusul: true }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
     db.vocab.unshift(nv); if (!save()) { db.vocab.shift(); return; } award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.textContent = 'Tersimpan'; btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
-    toast('Masuk ke kartu kata kamu', 3500, { label: 'Urungkan', fn: () => {
+    toast('Masuk ke kartu kata kamu', 4000, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
       tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.textContent = 'Simpan'; btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
@@ -1672,7 +1677,7 @@ function restartBook(b) {
   const ts = tamatSeen;
   tamatSeen = ''; b.pos = 0; b.si = 0; b.pct = 1; b.frac = 0; b.fracPos = 0; RD.quiet = true; save();
   /* doneAt tidak disentuh: XP tamat tak dobel, Urungkan pun tak mengubahnya */
-  toast('Mulai dari awal. Tanpa XP halaman.', 6000, { label: 'Urungkan', fn: () => { Object.assign(b, prev); tamatSeen = ts; RD.quiet = true; save(); db.cur = b.id; setTab('baca'); viewBaca(); } });
+  toast('Mulai dari awal. Tanpa XP halaman.', 5000, { label: 'Urungkan', fn: () => { Object.assign(b, prev); tamatSeen = ts; RD.quiet = true; save(); db.cur = b.id; setTab('baca'); viewBaca(); } });
 }
 /* saran berikutnya: buku belum selesai, bahasa sama, panjang mirip/sedikit lebih panjang (belum ada data level buku) */
 function nextBooks(b) {
@@ -1812,7 +1817,7 @@ function intipBind(b, cand) {
     const nv = { ...(tp > 0 ? { tap: tp } : {}), w: e.w, t: c ? c.text : '', baca: c ? bacaOf(e.w, c.baca) : '', ...(c && c.base ? { base: c.base } : {}), ...(c ? {} : { noTr: 1, nyusul: true }), pos: c && c.dict && c.dict[0] ? c.dict[0].pos : '', lang: e.lang, s: e.s, ctx: ctxOf({ s: e.s }), book: b.title, at: Date.now() };
     db.vocab.unshift(nv); if (!save()) { db.vocab.shift(); return; } award(2, 'save'); vib(10); sfx('ding'); paintSaved(e.lang, e.w, true);
     btn.disabled = true; btn.classList.add('done'); btn.querySelector('.ia').innerHTML = ico('check'); btn.setAttribute('aria-label', 'Kata ' + e.w + ' tersimpan');
-    toast('Masuk ke kartu kata kamu', 3500, { label: 'Urungkan', fn: () => {
+    toast('Masuk ke kartu kata kamu', 4000, { label: 'Urungkan', fn: () => {
       const i = db.vocab.indexOf(nv); if (i >= 0) db.vocab.splice(i, 1);
       tombVocab(e.lang, e.w); save(); paintSaved(e.lang, e.w, false);
       if (btn.isConnected) { btn.disabled = false; btn.classList.remove('done'); btn.querySelector('.ia').innerHTML = ico('plus'); btn.setAttribute('aria-label', 'Simpan kata ' + e.w); }
@@ -2555,14 +2560,14 @@ function restoreMarks(b, gone, old) { const cur = marksOf(b); b.marks = old.filt
 function toggleMark() {
   const b = book(); if (!b) return;
   const hit = markHere(b);
-  if (hit.length) { const old = marksOf(b); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, hit, old) }); }
+  if (hit.length) { const old = marksOf(b); b.marks = old.filter(m => !hit.includes(m)); save(); syncMarks(); vib(6); return toast('Penanda dihapus', 5000, { label: 'Urungkan', fn: () => restoreMarks(b, hit, old) }); }
   const x = RD.ss.find(y => y.pg === RD.page && !y.el.closest('h2')) || RD.ss.find(y => y.pg === RD.page);
   const t = x ? x.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : '';
   const old = marksOf(b); let cur = old, gone = null;
   if (old.length >= MARK_MAX) { gone = old.reduce((a, m) => !a || (m && (m.at || 0) < (a.at || 0)) ? m : a, null); cur = old.filter(m => m !== gone); }
   b.marks = cur.concat({ p: b.pos, s: x ? +x.el.dataset.s : b.si || 0, t, at: Date.now() });
   save(); syncMarks(); vib(10); sfx('pop');
-  if (gone) toast('Penanda terlama diganti', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
+  if (gone) toast('Penanda terlama diganti', 5000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   else toast('Halaman ditandai', 1800);
 }
 /* Kata > Tersimpan: loncat ke kalimat asal kata di e-reader (cari lewat teks; data lama tetap aman) */
@@ -2634,7 +2639,7 @@ async function openMarks() {
   $$('#sheet .mkdel').forEach(x => x.onclick = () => {
     const gone = list[+x.dataset.i], old = marksOf(b); b.marks = old.filter(m => m !== gone); save(); syncMarks();
     if (b.marks.length) openMarks(); else closeSheet();
-    toast('Penanda dihapus', 6000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
+    toast('Penanda dihapus', 5000, { label: 'Urungkan', fn: () => restoreMarks(b, [gone], old) });
   });
 }
 let tipN = 0, tipDone = false, nudgePg = new Set(), nudgeT = 0;
@@ -3086,7 +3091,7 @@ async function onWord(el, lastEl) {
   $('#wkenal').onclick = () => {
     const w = word, lang = b.lang, was = isKenal(lang, w), apply = on => { setKenal(lang, w, on); paintKenal(w, on); const k = $('#wkenal'); if (k && word === w) k.innerHTML = kenalLbl(); };
     apply(!was); vib(8);
-    toast(was ? 'Dibatalkan, kata ini muncul lagi' : 'Ditandai sudah kenal', 6000, { label: 'Urungkan', fn: () => apply(was) });
+    toast(was ? 'Dibatalkan, kata ini muncul lagi' : 'Ditandai sudah kenal', 5000, { label: 'Urungkan', fn: () => apply(was) });
   };
   updNama();
   $('#whafal').onclick = () => {
@@ -3094,7 +3099,7 @@ async function onWord(el, lastEl) {
     const was = !!vs[0].known, prev = vs.map(v => ({ v, known: v.known, due: v.due }));
     const sync = () => { updHafal(); refreshHafal(); if (kataSeg && $('#klist')) viewKata(); };
     vs.forEach(v => { v.known = !was; if (!was) v.due = 0; }); save(); paintHafal(lang, w, !was); sync(); vib(8); sfx('pop');
-    toast(was ? 'Balik ke lagi dihafal' : 'Ditandai udah hafal', 6000, { label: 'Urungkan', fn: () => { prev.forEach(p => { p.v.known = p.known; p.v.due = p.due; }); save(); paintHafal(lang, w, was); sync(); } });
+    toast(was ? 'Balik ke lagi dihafal' : 'Ditandai udah hafal', 5000, { label: 'Urungkan', fn: () => { prev.forEach(p => { p.v.known = p.known; p.v.due = p.due; }); save(); paintHafal(lang, w, was); sync(); } });
   };
   $('#wnama').onclick = () => {
     const w = word, was = isNama(b, w);
@@ -3104,7 +3109,7 @@ async function onWord(el, lastEl) {
       if ($('#wtr') && word === w) { if (on) { tok++; if (trAc) trAc.abort(); clearTimeout(slowT); showNama(); } else { $('#wtr').innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; updNama(); load(); } }
     };
     apply(!was); vib(8);
-    toast(was ? 'Dibatalkan, kata ini diartiin lagi' : 'Ditandai sebagai nama', 6000, { label: 'Urungkan', fn: () => apply(was) });
+    toast(was ? 'Dibatalkan, kata ini diartiin lagi' : 'Ditandai sebagai nama', 5000, { label: 'Urungkan', fn: () => apply(was) });
   };
   $('#wsave').onclick = async () => {
     const mark = (w, on) => paintSaved(b.lang, w, on);
@@ -3113,7 +3118,7 @@ async function onWord(el, lastEl) {
       const w = word, lang = b.lang, gone = db.vocab.filter(v => sameVocab(v, lang, w)), at = db.vocab.indexOf(gone[0]);
       db.vocab = db.vocab.filter(v => !gone.includes(v)); tombVocab(lang, w); save(); vib(8); mark(w, false);
       const sb = $('#wsave'); if (sb) sb.innerHTML = saveLbl(); updKenal();
-      toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => {
+      toast('Kata dihapus', 5000, { label: 'Urungkan', fn: () => {
         if (!db.vocab.some(v => sameVocab(v, lang, w))) db.vocab.splice(Math.min(at, db.vocab.length), 0, ...gone);
         untombVocab(lang, w); save(); mark(w, true);
         const s2 = $('#wsave'); if (s2 && sameVocab({ lang: b.lang, w: word }, lang, w)) s2.innerHTML = saveLbl();
@@ -3130,7 +3135,7 @@ async function onWord(el, lastEl) {
     if (!save()) { db.vocab.shift(); return; } /* gagal simpan: tak ada toast 'masuk' (pesan gagal tampil dari save()) */
     vib(10); sfx('ding');
     mark(w, true);
-    $('#wsave').innerHTML = saveLbl(); updNama(); award(2, 'save'); toast(r ? 'Tersimpan di tab Kata' : 'Lagi offline, arti nyusul ya', r ? 3200 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(b.lang, w) });
+    $('#wsave').innerHTML = saveLbl(); updNama(); award(2, 'save'); toast(r ? 'Tersimpan di tab Kata' : 'Lagi offline, arti nyusul ya', r ? 4000 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(b.lang, w) });
   };
   /* #1363 Tandai & lanjut: pakai alur Simpan yang sama (XP & hitungan kata tak dobel), kartu tertutup, posisi baca tetap */
   const updTanda = () => { const t = $('#wtanda'); if (t) t.hidden = isSaved() || isNama(b, word); };
@@ -3174,7 +3179,7 @@ function kenalAllPage() {
     const done = ws.map(w => { const gone = db.vocab.filter(v => sameVocab(v, lang, w)); return { w, gone, at: db.vocab.indexOf(gone[0]) }; });
     done.forEach(d => { db.vocab = db.vocab.filter(v => !d.gone.includes(v)); tombVocab(lang, d.w); setKenal(lang, d.w, true); paintSaved(lang, d.w, false); paintKenalW(lang, d.w, true); });
     save(); vib(8); closeSheet();
-    toast(`${n} kata ditandai sudah kenal`, 6000, { label: 'Urungkan', fn: () => {
+    toast(`${n} kata ditandai sudah kenal`, 5000, { label: 'Urungkan', fn: () => {
       done.slice().reverse().forEach(d => {
         if (!db.vocab.some(v => sameVocab(v, lang, d.w))) db.vocab.splice(Math.min(d.at, db.vocab.length), 0, ...d.gone);
         untombVocab(lang, d.w); setKenal(lang, d.w, false); paintKenalW(lang, d.w, false); paintSaved(lang, d.w, true);
@@ -3312,7 +3317,7 @@ function showSentence(word, sent, sIdx, sEl) {
           const tp = takeTaps(lang, w);
           if (isKenal(lang, w)) setKenal(lang, w, false);
           db.vocab.unshift({ ...(tp > 0 ? { tap: tp } : {}), w, t: txt, baca: r ? bacaOf(w, r.baca) : '', ...(r && r.base ? { base: r.base } : {}), pos: r && r.dict && r.dict[0] ? r.dict[0].pos : '', lang, s: sent, ctx: ctxOf({ s: sent }), book: b.title, at: Date.now() });
-          if (!save()) { db.vocab.shift(); return; } vib(10); sfx('ding'); paintSaved(lang, w, true); award(2, 'save'); toast('Masuk ke kartu kata kamu');
+          if (!save()) { db.vocab.shift(); return; } vib(10); sfx('ding'); paintSaved(lang, w, true); award(2, 'save'); toast('Masuk ke kartu kata kamu', 4000);
           paint(txt, r, true);
         };
       };
@@ -3699,7 +3704,7 @@ function viewKataIn() {
           if (!save()) { db.vocab.shift(); return; }
           award(2, 'save'); vib(10); sfx('ding');
           if (kataSeg === 'simpan' && $('#klist')) renderList();
-          toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya', r ? 3200 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(o.lang, o.w) });
+          toast(r ? 'Masuk ke kartu kata kamu' : 'Tersimpan, arti nyusul ya', r ? 4000 : 6000, r ? null : { label: 'Isi arti', fn: () => isiArti(o.lang, o.w) });
         });
       }
       $$('[data-cari]').forEach(el => el.onclick = async () => {
@@ -3718,7 +3723,7 @@ function viewKataIn() {
       $$('[data-sp]').forEach(el => el.onclick = () => { const v = db.vocab[+el.dataset.sp]; speak(v.w, v.lang, 0.8); });
       $$('[data-dv]').forEach(el => el.onclick = () => {
         const i = +el.dataset.dv, [gone] = db.vocab.splice(i, 1); if (gone) tombVocab(gone.lang, gone.w); save(); renderList(); refreshHafal(); refreshPills();
-        toast('Kata dihapus', 6000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); if (gone) untombVocab(gone.lang, gone.w); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
+        toast('Kata dihapus', 5000, { label: 'Urungkan', fn: () => { if (!db.vocab.includes(gone)) db.vocab.splice(Math.min(i, db.vocab.length), 0, gone); if (gone) untombVocab(gone.lang, gone.w); save(); if (kataSeg === 'simpan' && $('#klist')) viewKata(); } });
       });
     } else {
       const weak = weakAll.filter(o => !q || String(o.w).toLowerCase().includes(q)).slice(0, 40);
