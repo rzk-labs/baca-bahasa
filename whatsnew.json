@@ -1,5 +1,11 @@
 [
   {
+    "n": 1955,
+    "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
+    "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1953,
     "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
     "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
@@ -171,12 +177,6 @@
     "n": 1888,
     "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
     "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1794,
-    "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
-    "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
     "tgl": "2026-11-26"
   }
 ]
