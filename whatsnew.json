@@ -1,5 +1,23 @@
 [
   {
+    "n": 1906,
+    "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
+    "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1904,
+    "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
+    "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1899,
+    "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
+    "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1896,
     "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
     "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
@@ -159,24 +177,6 @@
     "n": 1841,
     "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
     "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1836,
-    "judul": "Sheet arti kata: arti muncul halus, tak loncat dari titik loading",
-    "poin": "Arti kata kini muncul halus, tidak loncat dari titik loading.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1834,
-    "judul": "Sheet arti kata: tombol kecil 32px dilegakan jadi area ketuk 44px",
-    "poin": "Tombol kecil di sheet arti kata ternyata sudah punya area ketuk 44px.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1832,
-    "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
-    "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
     "tgl": "2026-11-25"
   }
 ]
