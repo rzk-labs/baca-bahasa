@@ -1512,8 +1512,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .rk-bk{container-type:inline-size}
 .rk-bk .cover{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4px}
 .rk-bk .cover .em{display:block;width:100%;text-align:center;font-size:26px;font-size:clamp(18px,34cqi,30px);line-height:1.2;letter-spacing:0;font-family:var(--font-display),"Hiragino Sans","Noto Sans CJK JP","Noto Sans JP","Apple SD Gothic Neo","PingFang SC",sans-serif;white-space:nowrap}
-.rk-tag{display:flex;position:absolute;top:4px;right:4px;z-index:1;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28}
-.rk-tag .i{width:13px;height:13px;stroke-width:3.2}
+.rk-tag{display:flex;position:absolute;top:-4px;right:-4px;z-index:1;width:16px;height:16px;align-items:center;justify-content:center;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28}
+.rk-tag .i{width:10px;height:10px;stroke-width:3.4}
 .rk-t{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:break-word;hyphens:manual}
 .rk-p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Variasi sampul polos (#1646): satu motif tipis dari hash judul, kontras rendah */
@@ -1619,7 +1619,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hardcnt span{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .hardcnt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1894: centang Tamat di pojok sampul (kiri) pada tata letak sampul+judul, tak menimpa judul */
-.rk-row.rk-few .rk-tag{right:auto;left:4px;top:4px}
+.rk-row.rk-few .rk-tag{right:auto;left:-4px;top:-4px}
 /* #1890: tombol Home Tamat memuat judul buku berikutnya, 1 baris */
 #hero.hero-done .hero-act button.nx-bk{display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-width:0}
 #hero.hero-done .nx-bk .nx-v{flex:none}
@@ -1629,6 +1629,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 #view[inert] .endcard{opacity:0;pointer-events:none}
 .endcard .ec-end{flex:1 1 100%;margin:0;text-align:center;font-size:14px;color:var(--color-text-muted)}
 .endcard .ec-end[hidden]{display:none}
+/* #1953: tombol kartu akhir reader tegas (bukan pucat), tetap sekunder; aman di 4 tema */
+#endcard #ecn{opacity:1;color:var(--color-text);background:var(--color-surface);border:2px solid var(--color-text);font-weight:700;min-height:44px}
 
 /* #1947: rak Profil, judul CJK pendek (<=6 huruf) tampil utuh 1-2 baris di tengah; huruf awal disembunyikan. Sampul bergambar tak berubah (tanpa .ct) */
 .rk-bk .cover:has(.ct.cjk.short) .em{display:none}
