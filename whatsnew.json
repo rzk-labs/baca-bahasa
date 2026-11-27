@@ -1,5 +1,11 @@
 [
   {
+    "n": 1912,
+    "judul": "Tab Kata Tersimpan: filter 'Sulit saja' untuk kata bertanda sulit",
+    "poin": "Tab Kata > Tersimpan kini punya tombol \"Sulit 3\" untuk lihat kata bertanda sulit saja.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1910,
     "judul": "Tab Kata Tersimpan: kata 'Menunggu arti' dapat tombol 'Cari arti'",
     "poin": "Kata \"Menunggu arti\" sekarang punya tombol \"Cari arti\" di daftar Tersimpan.",
@@ -171,12 +177,6 @@
     "n": 1844,
     "judul": "Rekap 'Kata sesi ini': hapus hitungan layar yang beda dari reader",
     "poin": "Catatan sesi kini selalu bilang \"Berhenti di Bagian k dari n\", tanpa hitungan layar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1843,
-    "judul": "Teks & ikon pudar (opacity) di Kata/Intip dibuat cukup kontras",
-    "poin": "Teks selesai, ikon hapus, dan tombol Simpan mati sekarang jelas terbaca.",
     "tgl": "2026-11-25"
   }
 ]

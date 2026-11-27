@@ -733,6 +733,7 @@ body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-
 .fchips{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 0 8px;padding:2px 0;max-width:100%}
 .fchips::-webkit-scrollbar{display:none}
 .fchip{flex:0 0 auto;min-height:44px;max-width:60vw;padding:0 16px;border:0;border-radius:var(--radius-full);background:var(--color-surface);color:var(--color-text);font:700 14px/1 var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.hardchip{display:inline-flex;align-items:center;gap:6px}.hardchip svg{width:16px;height:16px;flex:0 0 auto}
 .fchip.on{background:var(--ink);color:var(--cream)}
 [data-theme=night] .fchip.on{background:var(--lime);color:var(--ink)}
 .csvgo{width:100%;margin:8px 0 12px}
