@@ -1,5 +1,11 @@
 [
   {
+    "n": 1931,
+    "judul": "[peta 187] Home: cincin Target baca diisi dari menit utuh, 0 mnt = kosong",
+    "poin": "Cincin Target baca di Home sekarang kosong kalau belum genap 1 menit.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1929,
     "judul": "Home buku Tamat: tombol buku berikutnya sebut bahasanya bila beda",
     "poin": "Tombol buku berikutnya di Home kini menyebut bahasanya kalau beda.",
@@ -171,12 +177,6 @@
     "n": 1867,
     "judul": "XP naik sendiri antar layar: telusuri sumbernya & tampilkan alasan",
     "poin": "Penyebab XP loncat: sinkron akun dari HP lain, tanpa kabar. Sekarang ada pemberitahuan.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1865,
-    "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
-    "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
     "tgl": "2026-11-26"
   }
 ]
