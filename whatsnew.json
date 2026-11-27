@@ -1,5 +1,11 @@
 [
   {
+    "n": 1904,
+    "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
+    "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1899,
     "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
     "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
@@ -171,12 +177,6 @@
     "n": 1836,
     "judul": "Sheet arti kata: arti muncul halus, tak loncat dari titik loading",
     "poin": "Arti kata kini muncul halus, tidak loncat dari titik loading.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1834,
-    "judul": "Sheet arti kata: tombol kecil 32px dilegakan jadi area ketuk 44px",
-    "poin": "Tombol kecil di sheet arti kata ternyata sudah punya area ketuk 44px.",
     "tgl": "2026-11-25"
   }
 ]
