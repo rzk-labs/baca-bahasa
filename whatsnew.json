@@ -1,5 +1,41 @@
 [
   {
+    "n": 1953,
+    "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
+    "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1949,
+    "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
+    "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1947,
+    "judul": "Sampul Profil rak: judul Jepang/Mandarin pendek tak terpotong",
+    "poin": "Sampul buku Jepang/Mandarin pendek di rak Profil kini menampilkan judul utuh.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1943,
+    "judul": "Tab Kata: tombol 'Cari arti semua' untuk kata Menunggu arti",
+    "poin": "Tab Kata punya tombol \"Cari arti semua\" untuk kata yang belum ada artinya.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1941,
+    "judul": "Reader: bagian terakhir tak lagi kosong, hitungan bagian cocok",
+    "poin": "Layar terakhir buku tak lagi kosong; kolom kosong di ujung tidak dihitung.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1939,
+    "judul": "Home buku Tamat: kartu 'Simpan 1 kata dulu' tak kembar tombol buku",
+    "poin": "Home buku Tamat: tombol \"Pilih buku berikutnya\" tidak muncul dua kali lagi.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1937,
     "judul": "Kartu ulang: kata 1-2 huruf tampilkan kalimat asal di depan kartu",
     "poin": "Kartu ulang kata pendek (1-2 huruf) kini menampilkan kalimat asalnya di depan.",
@@ -141,42 +177,6 @@
     "n": 1794,
     "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
     "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1886,
-    "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
-    "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1884,
-    "judul": "Banner 'Level N!' tak lagi menutupi kartu buku & tombol di Home",
-    "poin": "Banner \"Level N!\" sekarang muncul di bawah, tepat di atas tab bar.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1882,
-    "judul": "Tab Kata 'Latih ucap': teks bantu jujur untuk kata ditandai sulit",
-    "poin": "Teks bantu Latih ucap sekarang jujur: kata yang kamu tandai sulit ikut disebut.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1877,
-    "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
-    "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1875,
-    "judul": "Reader HP: petunjuk 'Cara baca' tunjuk tombol yang memang kelihatan",
-    "poin": "Petunjuk cara baca di HP sekarang menyuruh buka menu Lainnya.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1873,
-    "judul": "Profil sendiri: angka 'hari berturut' sama dengan streak di Home",
-    "poin": "Angka hari berturut di Profil kamu sekarang sama dengan di Home.",
     "tgl": "2026-11-26"
   }
 ]

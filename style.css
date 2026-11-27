@@ -1631,3 +1631,11 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .endcard .ec-end[hidden]{display:none}
 /* #1953: tombol kartu akhir reader tegas (bukan pucat), tetap sekunder; aman di 4 tema */
 #endcard #ecn{opacity:1;color:var(--color-text);background:var(--color-surface);border:2px solid var(--color-text);font-weight:700;min-height:44px}
+
+/* #1947: rak Profil, judul CJK pendek (<=6 huruf) tampil utuh 1-2 baris di tengah; huruf awal disembunyikan. Sampul bergambar tak berubah (tanpa .ct) */
+.rk-bk .cover:has(.ct.cjk.short) .em{display:none}
+.rk-bk .cover .ct.cjk.short{display:block;width:100%;max-height:none;font-size:max(var(--fs-min),12px);line-height:1.25;text-align:center;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;overflow:visible}
+.cariall{margin:0 0 8px}
+.cariall .vcariall{margin:0;padding:0 4px;text-decoration:underline;color:var(--color-text)}
+.cariall .vcariall:disabled{opacity:.7;text-decoration:none}
+.cariall .mut{margin:0 4px}
