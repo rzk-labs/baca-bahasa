@@ -1533,8 +1533,9 @@ async function importFile(f, paksa) {
 function kartuScan() {
   openSheet(`<div class="sh-head"><h2>Ini PDF scan: isinya gambar</h2>${closeBtn}</div>
     <div class="scan-card"><p>Keepo belum bisa baca tulisan di dalam gambar. Komik biasanya begini.</p>
-    <ul><li>Cari versi <b>EPUB</b> atau <b>TXT</b>.</li><li>Atau ubah scan jadi teks lewat OCR gratis, lalu impor.</li><li>Contoh OCR gratis: Google Drive atau Adobe online.</li></ul></div>
-    <div class="row"><button class="pri" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
+    <ul><li>Cari versi <b>EPUB</b> atau <b>TXT</b>.</li><li>Atau ubah scan jadi teks lewat OCR gratis, lalu impor.</li><li>Contoh OCR gratis: Google Drive atau Adobe online.</li><li>Atau ketik/tempel dialognya sendiri.</li></ul></div>
+    <div class="row"><button class="pri" id="scTempel">${ico('clip')}Tempel teks</button><button class="sec" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
+  $('#scTempel').onclick = () => { closeSheet(); const b = $('#paste'); if (b) b.click(); else { setTab('baca'); setTimeout(() => { const x = $('#paste'); if (x) x.click(); }, 150); } };
   $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample'); if (x) x.click(); }, 150); } };
 }
 async function addBook(title, paras, lang, src, cov, author) {
