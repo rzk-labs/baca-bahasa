@@ -1235,7 +1235,7 @@ function streakInfo() {
   let best = 0, run = 0, prev = null, before = 0; /* before = rekor sebelum rangkaian terakhir */
   for (const d of ds) { const nx = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1; if (!nx && run > before) before = run; run = nx ? run + 1 : 1; if (run > best) best = run; prev = d; }
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
-  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? (before > 0 ? `Rekor baru: ${cur} hari (dulu ${before})` : `Rekor baru: ${cur} hari`) : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? 'Terus lanjut, mantap' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
+  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? (before > 0 ? `Rekor baru: ${cur} hari, naik dari ${before} hari` : `Rekor baru: ${cur} hari`) : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? 'Terus lanjut, mantap' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
 const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
@@ -1750,7 +1750,7 @@ function finishBook(b) {
       const n = countedVocab(null).length, t = wordMile(n), tb = wordMileBadge(t);
       if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata, buka Ulang kata`; nama = ''; } /* #1701/#1771: sama dgn kartu Home q3Lock */
       else if (t && tb && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
-      else if (t && tb) { apa = 'simpan 3 kata dulu'; nama = ''; } else apa = '';
+      else if (t && tb) { apa = n >= 3 ? '' : ws.length ? 'simpan 3 kata dulu' : 'coba simpan 3 kata dari bacaan baru'; nama = ''; } else apa = '';
     }
     if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
@@ -1762,7 +1762,7 @@ function finishBook(b) {
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${besok}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     ${moreHtml ? `<div class="fb-sec fb-more">${moreHtml}</div>` : ''}
     <div class="fb-sec fb-end"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button><span aria-hidden="true" class="fb-dot">·</span><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
