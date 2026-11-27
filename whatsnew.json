@@ -1,5 +1,11 @@
 [
   {
+    "n": 1957,
+    "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
+    "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1955,
     "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
     "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
@@ -171,12 +177,6 @@
     "n": 1890,
     "judul": "Home buku Tamat: tombol langsung 'Mulai buku <judul>' bila ada",
     "poin": "Home buku tamat kini langsung bilang \"Mulai: judul buku\" bila ada buku lain.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1888,
-    "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
-    "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
     "tgl": "2026-11-26"
   }
 ]
