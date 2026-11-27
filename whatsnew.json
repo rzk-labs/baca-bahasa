@@ -1,5 +1,11 @@
 [
   {
+    "n": 1963,
+    "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
+    "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1961,
     "judul": "Reader: tombol Ulang tulis jelas 'Ulang 5 kata', bukan ikon + angka",
     "poin": "Tombol Ulang di halaman baca kini jelas: \"Ulang 5 kata\".",
@@ -171,12 +177,6 @@
     "n": 1896,
     "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
     "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1894,
-    "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
-    "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
     "tgl": "2026-11-26"
   }
 ]
