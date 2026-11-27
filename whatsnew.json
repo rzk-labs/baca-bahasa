@@ -1,5 +1,11 @@
 [
   {
+    "n": 1927,
+    "judul": "Sheet Tamat: buang tawaran pengingat, momen selesai buku tenang",
+    "poin": "Sheet Tamat sekarang tenang: tawaran pengingat dibuang, sisa satu tombol utama.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1925,
     "judul": "Tab Kata: tombol 'Ulang kata sulit' satu ketuk langsung mulai",
     "poin": "Tab Kata kini punya tombol \"Ulang N kata sulit\" di bagian atas.",
@@ -171,12 +177,6 @@
     "n": 1861,
     "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
     "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1859,
-    "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
-    "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
     "tgl": "2026-11-26"
   }
 ]
