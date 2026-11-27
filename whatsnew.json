@@ -1,5 +1,41 @@
 [
   {
+    "n": 1967,
+    "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
+    "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1965,
+    "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
+    "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1963,
+    "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
+    "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1961,
+    "judul": "Reader: tombol Ulang tulis jelas 'Ulang 5 kata', bukan ikon + angka",
+    "poin": "Tombol Ulang di halaman baca kini jelas: \"Ulang 5 kata\".",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1959,
+    "judul": "Sheet Tamat: baris 'Besok' tak lagi salah 'simpan 3 kata dulu'",
+    "poin": "Layar Tamat tak lagi bilang \"simpan 3 kata dulu\" yang salah.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1957,
+    "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
+    "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1955,
     "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
     "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
@@ -142,41 +178,5 @@
     "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
     "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
     "tgl": "2026-11-27"
-  },
-  {
-    "n": 1899,
-    "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
-    "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1896,
-    "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
-    "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1894,
-    "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
-    "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1892,
-    "judul": "Home Target baca: satu baris sisa, tak dobel '0 dari 5' + 'Sisa 5'",
-    "poin": "Kartu Target baca di Home sekarang cuma satu baris, tidak dobel lagi.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1890,
-    "judul": "Home buku Tamat: tombol langsung 'Mulai buku <judul>' bila ada",
-    "poin": "Home buku tamat kini langsung bilang \"Mulai: judul buku\" bila ada buku lain.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1888,
-    "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
-    "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
-    "tgl": "2026-11-26"
   }
 ]

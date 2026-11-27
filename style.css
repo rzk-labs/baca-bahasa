@@ -193,7 +193,7 @@ body.reading::after{display:none}
 .q3-lock .q3-seg i.on{background:#351E28;box-shadow:none}
 .q3-lock .q3-go{grid-column:2/-1;justify-self:start;margin-top:2px;font:700 13px/18px var(--font-body,inherit);color:#351E28;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
-.soft-nudge{margin:12px 0 0}.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
+.soft-nudge{margin:12px 0 0}.due-nudge small,.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:var(--ink)}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
 .a2hs{display:flex;align-items:flex-start;gap:12px;margin:12px 0 -4px;padding:12px 14px;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}
@@ -1146,9 +1146,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fr-read .bar{margin-top:6px}
 /* #1003 titik pengingat kata siap diulang di tombol menu Baca: kecil, diam, tanpa angka */
 /* #1031 tombol Ulang di header Baca: ikon + tulisan + lencana angka Wasabi; Lainnya tanpa titik */
-.rdueb{position:relative}
-.rdueb .rdn{position:absolute;top:2px;right:0;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:var(--hl,#E9F056);color:var(--ink);box-shadow:0 0 0 1.5px var(--ink);font:800 10px/16px var(--font-ui,Inter,sans-serif);font-style:normal;text-align:center;pointer-events:none}
-@media (max-width:359px){.rdueb .rrtl{display:none}}
+.rdueb{position:relative;padding:0 6px}
+.rdueb .rrtl{white-space:nowrap}
 .due-sheet{display:flex;flex-direction:column;gap:12px;padding:4px 2px 8px}
 .due-sheet .btn{min-height:48px}
 .rdue{position:relative}.rdue .rdot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px var(--ink);pointer-events:none}
@@ -1397,10 +1396,10 @@ ol.steps3 li>img{flex:none;width:48px;height:48px}
 #wdict{max-height:40vh;overflow-y:auto}
 /* #1363 Tandai & lanjut */
 /* #1923 tombol 'Tandai sulit' (ikon) di sheet arti kata, sejajar Simpan */
-.wact>#wsave{flex:1 1 0;min-width:0}
-.wact>#whard{flex:0 0 52px;min-width:52px;min-height:52px;padding:0;border-radius:var(--radius-full)}
-.wact>#whard[hidden]{display:none}
-.wact>#wtanda{flex:1 1 100%;min-height:48px}.wact>#wtanda[hidden]{display:none}
+.wact>#wsave{flex:1 1 0;min-width:96px;white-space:nowrap}
+.wact>button#whard:not(#x){flex:0 0 52px;min-width:52px;min-height:52px;padding:0;border-radius:var(--radius-full)}
+.wact>button#whard[hidden]{display:none}
+.wact>button#wtanda:not(#x){flex:1 1 100%;min-height:48px}.wact>button#wtanda[hidden]{display:none}
 /* #1379 kartu 'Lanjut dari halaman X' di atas Home */
 .lanjut-card{display:grid;grid-template-columns:1fr auto;column-gap:10px;align-items:center;width:100%;min-height:56px;margin:4px 0 12px;padding:10px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;font:600 13px/18px var(--font-ui)}
 .lanjut-card .lj-t{grid-column:1;font:700 15px/20px var(--font-display);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -1512,8 +1511,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .rk-bk{container-type:inline-size}
 .rk-bk .cover{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4px}
 .rk-bk .cover .em{display:block;width:100%;text-align:center;font-size:26px;font-size:clamp(18px,34cqi,30px);line-height:1.2;letter-spacing:0;font-family:var(--font-display),"Hiragino Sans","Noto Sans CJK JP","Noto Sans JP","Apple SD Gothic Neo","PingFang SC",sans-serif;white-space:nowrap}
-.rk-tag{display:flex;position:absolute;top:4px;right:4px;z-index:1;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28}
-.rk-tag .i{width:13px;height:13px;stroke-width:3.2}
+.rk-tag{display:flex;position:absolute;top:-4px;right:-4px;z-index:1;width:16px;height:16px;align-items:center;justify-content:center;border-radius:50%;background:#E9F056;color:#351E28;box-shadow:0 0 0 1.5px #351E28}
+.rk-tag .i{width:10px;height:10px;stroke-width:3.4}
 .rk-t{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:break-word;hyphens:manual}
 .rk-p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Variasi sampul polos (#1646): satu motif tipis dari hash judul, kontras rendah */
@@ -1619,7 +1618,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .hardcnt span{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .hardcnt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* #1894: centang Tamat di pojok sampul (kiri) pada tata letak sampul+judul, tak menimpa judul */
-.rk-row.rk-few .rk-tag{right:auto;left:4px;top:4px}
+.rk-row.rk-few .rk-tag{right:auto;left:-4px;top:-4px}
 /* #1890: tombol Home Tamat memuat judul buku berikutnya, 1 baris */
 #hero.hero-done .hero-act button.nx-bk{display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-width:0}
 #hero.hero-done .nx-bk .nx-v{flex:none}
