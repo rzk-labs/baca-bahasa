@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1925: Ulang kata sulit satu ketuk</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#e8e4da;font:400 15px/22px Inter,system-ui,sans-serif;color:#351E28}
+.lbl{max-width:390px;margin:18px auto 6px;font:700 12px/16px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#5F5059}
+.ph{width:390px;max-width:100%;margin:0 auto;background:#FAF7F0;padding:16px 16px 20px;border-radius:20px}
+h1{font:800 28px/32px "Bricolage Grotesque",Inter,sans-serif;margin:6px 2px 12px}
+h1 span{background:#E9F056;padding:0 6px;border-radius:6px}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.sum div{background:#fff;border:1px solid #B2CFE2;border-radius:14px;padding:8px 4px;text-align:center}
+.sum b{display:block;font:800 18px/22px "Bricolage Grotesque",Inter,sans-serif}.sum span{font-size:11px;color:#5F5059}
+.nudge{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;margin:0 0 6px;padding:10px 10px 10px 14px;border:0;border-left:4px solid #E9F056;border-radius:20px;background:#D7EFFF;color:#351E28;font:700 14px/18px Inter,sans-serif;text-align:left}
+.nudge svg{flex:none;width:20px;height:20px}.nudge span{flex:1}
+.nudge b{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:999px;background:#351E28;color:#FAF7F0;font-size:13px}
+.seg{display:flex;gap:4px;background:#fff;border:1px solid #B2CFE2;border-radius:999px;padding:4px;margin:8px 0}
+.seg button{flex:1;min-height:36px;border:0;border-radius:999px;background:none;font:600 13px Inter,sans-serif;color:#351E28}
+.seg .on{background:#351E28;color:#FAF7F0}
+.link{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 6px;color:#5F5059;font:600 13px/18px Inter,sans-serif}
+.link span{text-decoration:underline;text-underline-offset:3px}
+.flash{background:#fff;border:1px solid #B2CFE2;border-radius:24px;padding:28px 18px;text-align:center;margin-top:8px}
+.eb{font-size:12px;color:#5F5059}.fw{font:800 40px/44px "Bricolage Grotesque",Inter,sans-serif;margin:10px 0}
+.tap{color:#5F5059;font-size:13px}
+.pri{display:block;width:100%;min-height:48px;margin-top:10px;border:0;border-radius:999px;background:#351E28;color:#FAF7F0;font:700 15px Inter,sans-serif}
+.ghost{display:block;margin:8px auto 0;border:0;background:none;color:#5F5059;font:600 13px Inter,sans-serif;text-decoration:underline;min-height:44px}
+.empty{text-align:center;padding:26px 8px}.empty h2{font:800 22px/26px "Bricolage Grotesque",Inter,sans-serif;margin:8px 0}.empty p{margin:0 0 10px;color:#5F5059;font-size:14px}
+.pic{width:110px;height:110px;margin:0 auto;border-radius:50%;background:#D7EFFF}
+</style></head><body>
+
+<div class="lbl">1. Tab Kata, ada 3 kata sulit (kartu hafalan)</div>
+<div class="ph">
+<h1>Kata <span>kamu</span></h1>
+<div class="sum"><div><b>24</b><span>Tersimpan</span></div><div><b>9</b><span>Dihafal</span></div><div><b>5</b><span>Hafal</span></div><div><b>2</b><span>Ucap</span></div></div>
+<div class="nudge"><svg viewBox="0 0 24 24" fill="none" stroke="#351E28" stroke-width="2"><path d="M5 21V4h11l-2 4 2 4H5"/></svg><span>Ulang 3 kata sulit</span><b>Mulai</b></div>
+<div class="seg"><button class="on">Kartu</button><button>Tersimpan</button><button>Latih ucap · 2</button></div>
+<div class="link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5F5059" stroke-width="2"><path d="M5 21V4h11l-2 4 2 4H5"/></svg><span>Lihat daftar kata sulit (3)</span></div>
+<div class="flash"><div class="eb">Mandarin · 4 kartu</div><div class="fw">谢谢</div><div class="tap">Ingat dulu artinya</div></div>
+</div>
+
+<div class="lbl">2. Sesudah ketuk 'Mulai': langsung kartu kata sulit saja</div>
+<div class="ph">
+<h1>Kata <span>kamu</span></h1>
+<div class="seg"><button class="on">Kartu</button><button>Tersimpan</button><button>Latih ucap · 2</button></div>
+<div class="flash"><div class="eb">Mandarin · 3 kartu</div><div class="fw">麻烦</div><div class="tap">Ingat dulu artinya</div></div>
+<button class="pri">Lihat arti</button>
+<button class="ghost">Tutup ulang kata sulit</button>
+</div>
+
+<div class="lbl">3. Sesi selesai: kembali ke tab Kata</div>
+<div class="ph">
+<h1>Kata <span>kamu</span></h1>
+<div class="empty"><div class="pic"></div><h2>Ulang kata sulit beres</h2><p>Kata yang masih sulit tetap bertanda, bisa diulang lagi kapan saja.</p><button class="pri">Kembali ke Kata</button></div>
+</div>
+
+<div class="lbl">4. Tanpa kata sulit (0): tombol tidak tampil</div>
+<div class="ph">
+<h1>Kata <span>kamu</span></h1>
+<div class="sum"><div><b>24</b><span>Tersimpan</span></div><div><b>9</b><span>Dihafal</span></div><div><b>5</b><span>Hafal</span></div><div><b>2</b><span>Ucap</span></div></div>
+<div class="seg"><button class="on">Kartu</button><button>Tersimpan</button><button>Latih ucap · 2</button></div>
+</div>
+</body></html>
