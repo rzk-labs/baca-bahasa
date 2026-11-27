@@ -2238,6 +2238,8 @@ function layout() {
   /* cache halaman tiap kalimat/judul + sisa unit baca per halaman: dihitung sekali per layout, geser halaman cukup membaca array */
   RD.ss = [...cols.querySelectorAll('.s')].map(el => ({ el, pg: pageOf(el, cols) }));
   RD.hs = [...cols.querySelectorAll('h2.ch')].map(el => ({ el, pg: pageOf(el, cols) }));
+  /* #1941: kolom kosong di ujung (sisa margin) bukan halaman: N = halaman terakhir yang berisi teks */
+  { const lp = Math.max(-1, ...RD.ss.map(y => y.pg), ...RD.hs.map(y => y.pg)); if (lp >= 0 && lp + 1 < RD.n) RD.n = lp + 1; }
   const suf = new Array(RD.ss.length + 1).fill(0);
   for (let i = RD.ss.length - 1; i >= 0; i--) suf[i] = suf[i + 1] + unitsOf(RD.ss[i].el.textContent, b.lang);
   RD.left = []; let j = RD.ss.length;
