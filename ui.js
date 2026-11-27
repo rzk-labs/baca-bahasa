@@ -1441,8 +1441,9 @@ function hapusBuku(id) {
   } });
   viewRak();
 }
-$('#file').onchange = async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+$('#file').onchange = e => { const f = e.target.files[0]; e.target.value = ''; bukaBerkas(f); };
+async function bukaBerkas(f) {
+  if (!f) return;
   if (!/\.(txt|epub|pdf)$/i.test(f.name)) return toast('Format ini belum bisa. Pakai TXT, EPUB, atau PDF ya.', 5000);
   const isDoc = /\.(epub|pdf)$/i.test(f.name), MB = 1024 * 1024;
   if (isDoc && f.size > 30 * MB) return toast('File-nya kegedean (maks 30 MB untuk EPUB/PDF).', 5000);
@@ -1452,7 +1453,24 @@ $('#file').onchange = async e => {
   const hp = /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches);
   if (isDoc && hp && f.size > 15 * MB) return toast('File besar, bisa lama. Lanjut?', 10000, { label: 'Lanjut', fn: lanjut });
   lanjut();
-};
+}
+/* buka dengan Keepo: berkas dari launchQueue (komputer) atau titipan Bagikan Android (sw.js) */
+if ('launchQueue' in window) launchQueue.setConsumer(async lp => {
+  for (const h of lp.files || []) { try { await bukaBerkas(await h.getFile()); } catch (e) { toast('Berkasnya gagal dibuka. Coba pilih lewat tombol tambah.', 5000); } }
+});
+(async () => {
+  if (!/[?&]buka=1/.test(location.search)) return;
+  try { history.replaceState(null, '', location.pathname); } catch (e) { }
+  if (!('caches' in window)) return;
+  try {
+    const c = await caches.open('kepo-titip'), ks = await c.keys();
+    for (const k of ks) {
+      const r = await c.match(k); await c.delete(k); if (!r) continue;
+      let nama = ''; try { nama = decodeURIComponent(r.headers.get('x-nama') || ''); } catch (e) { }
+      await bukaBerkas(new File([await r.blob()], nama || 'buku', { type: r.headers.get('content-type') || '' }));
+    }
+  } catch (e) { toast('Berkasnya gagal dibuka. Coba pilih lewat tombol tambah.', 5000); }
+})();
 /* file kembar: nama + ukuran sama dengan buku yang ada (buku lama tanpa src dilewati) */
 function cekKembar(f) {
   const ada = db.books.find(b => b && b.src && b.src.name === f.name && b.src.size === f.size);
@@ -2477,7 +2495,7 @@ function endCard(b, last) {
   const old = $('#endcard'); if (old) old.remove();
   const cols = $('#cols'); if (!cols) return;
   ecWatch(vp, cols);
-  if (!last) return;
+  if (!last || b.doneAt) return; /* #1899: buku Tamat sudah punya 'Baca ulang' di bar bawah */
   if (!$('#sheet').classList.contains('hide')) return; /* #1355 + #1415: sheet (Tamat / arti kata) terbuka → kartu disembunyikan, tak menutup teks */
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
@@ -2958,18 +2976,27 @@ async function onWord(el, lastEl) {
       got.forEach(g => { const t = g && typeof g.text === 'string' ? g.text.trim() : ''; if (t && !seen.has(norm(t))) { seen.add(norm(t)); out.push(t); } });
       return out;
     };
+    /* #1906: tiap jalur berakhir ada/gagal/kosong; batas keras 8 detik untuk seluruh isian (termasuk perKata); isian baru membatalkan yang lama */
+    let altAc = null;
     const fillAlt = async force => {
       const q0 = qWord(), txt = r.text; kind.st = 'muat'; paintDict();
+      if (altAc) altAc.abort();
+      const ac = altAc = new AbortController(), onAb = () => ac.abort();
+      if (sig.aborted) ac.abort(); else sig.addEventListener('abort', onAb);
+      const tm = setTimeout(() => ac.abort(), 8000);
       const ok = () => my === tok && $('#wdict') && qWord() === q0;
+      const lim = p => Promise.race([p, new Promise((_, rej) => { if (ac.signal.aborted) rej(new Error('batal')); else ac.signal.addEventListener('abort', () => rej(new Error('batal'))); })]);
       try {
         if (navigator.onLine === false) throw new Error('offline');
         let more;
-        if (force) { const r2 = await translate(q0, b.lang, db.my, sig, true); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length) more = await altFetch(q0, b.lang, db.my, sig); }
-        else more = await altFill(q0, b.lang, db.my, sig);
+        if (force) { const r2 = await lim(translate(q0, b.lang, db.my, ac.signal, true)); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length && r2 && Array.isArray(r2.alt)) more = r2.alt; if (!more.length) more = await lim(altFetch(q0, b.lang, db.my, ac.signal)); }
+        else if (Array.isArray(r.alt) && r.alt.length) more = r.alt;
+        else more = await lim(altFill(q0, b.lang, db.my, ac.signal));
         if (!ok()) return;
         if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; }
-        else { const ph = await perKata(q0, sig); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
+        else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
       } catch (e) { if (!ok()) return; kind.st = 'gagal'; }
+      finally { clearTimeout(tm); sig.removeEventListener('abort', onAb); if (altAc === ac) altAc = null; }
       paintDict(); keepVisible('.w.sel');
     };
     paintDict();
@@ -3006,8 +3033,10 @@ async function onWord(el, lastEl) {
     }
     openAlt();
   };
+  let openAc = null;
   const openAlt = async () => {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
+    if (openAc) openAc.abort(); const oac = openAc = new AbortController(), otm = setTimeout(() => oac.abort(), 8000);
     const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
     wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
     let groups = [];
@@ -3015,10 +3044,11 @@ async function onWord(el, lastEl) {
       const cur = curT(), base = (tr && tr.dict) || [];
       groups = altArti(base, cur);
       if (altCount(groups) < 3 && !(b.lang === 'ja' && db.my === 'id')) {
-        const more = await altFetch(qWord(), b.lang, db.my);
+        const more = await altFetch(qWord(), b.lang, db.my, oac.signal);
         groups = altArti([...base, ...more], cur);
       }
-    } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    } catch (e) { clearTimeout(otm); if (openAc !== oac) return; return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    clearTimeout(otm);
     if (word !== w || $('#walt') !== wAlt) return;
     const list = altFlat(groups);
     if (!list.length) { wAlt.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain. Coba terjemahkan ulang.</div><div class="altrow"><button class="ghost wretry" id="warefresh" type="button">Terjemahkan ulang</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>'; $('#waclose').onclick = altLink; $('#warefresh').onclick = reAlt; return; }
