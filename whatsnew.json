@@ -1,5 +1,11 @@
 [
   {
+    "n": 1937,
+    "judul": "Kartu ulang: kata 1-2 huruf tampilkan kalimat asal di depan kartu",
+    "poin": "Kartu ulang kata pendek (1-2 huruf) kini menampilkan kalimat asalnya di depan.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1935,
     "judul": "Ulang kata: tampilkan bahasa kata bila beda dari buku yang dibuka",
     "poin": "Kartu ulang sekarang punya label bahasa kecil di dekat kata.",
@@ -171,12 +177,6 @@
     "n": 1873,
     "judul": "Profil sendiri: angka 'hari berturut' sama dengan streak di Home",
     "poin": "Angka hari berturut di Profil kamu sekarang sama dengan di Home.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1871,
-    "judul": "Sheet Tamat: buang lencana 'Tamat' ganda, judul tetap satu",
-    "poin": "Layar Tamat tidak lagi menulis kata \"Tamat\" dua kali.",
     "tgl": "2026-11-26"
   }
 ]
