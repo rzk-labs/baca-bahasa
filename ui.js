@@ -219,8 +219,10 @@ const goalDone = () => readSecToday() >= goalMin() * 60;
 const subMin = () => readSecToday() > 0 && minToday() < 1;
 const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : subMin() ? `Kurang dari 1 dari ${goalMin()} menit` : `${Math.min(minToday(), goalMin())} dari ${goalMin()} menit`;
 const goalHint = () => readSecToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : subMin() ? 'Sudah kehitung, lanjut dikit lagi' : `Sisa ${goalMin() - minToday()} menit, yuk`;
+/* #1892: satu baris sisa jujur: 0 dtk = 'Target N menit'; <1 mnt = 'Sisa hampir N menit'; 1+ = 'Sisa N menit' (dibulatkan ke atas dari detik nyata) */
+const goalLeft = () => { const g = goalMin(), s = readSecToday(); return s < 1 ? `Target ${g} menit` : s < 60 ? `Sisa hampir ${g} menit` : `Sisa ${Math.ceil((g * 60 - s) / 60)} menit`; };
 /* #1855: cincin diisi halus per detik (detik/(g*60)); <60 dtk tampil '<1'. 0 dtk = kosong. Target/XP tetap per detik */
-const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : Math.min(1, readSecToday() / (g * 60)), n = subMin() ? '&lt;1' : m; return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${subMin() ? 'Kurang dari 1' : m} dari ${g} menit</span>`}</div>${ok ? '' : `<div class="goal-eg" title="${goalHint()}" aria-label="${goalHint()}">Sisa ${g - m} menit</div>`}`; };
+const goalCardHtml = () => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : Math.min(1, readSecToday() / (g * 60)), n = subMin() ? '&lt;1' : m; return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2" title="${goalHint()}" aria-label="${goalHint()}">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${goalLeft()}</span>`}</div>`; };
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
@@ -1284,7 +1286,7 @@ function viewRak() {
     $('#view').innerHTML = `
     ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act"><button class="pri" id="hNext">Pilih buku berikutnya</button></div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; return `<button class="pri nx-bk" id="hNext" aria-label="${v} buku ${esc(other.title)}"><span class="nx-v">${v}:</span> <span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang<small class="re-xp">tanpa XP</small></button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
@@ -2424,11 +2426,12 @@ function showPage(p, anim = true) {
     }
     if (tamat) { pgn.setAttribute('aria-label', 'Tamat. ' + secFull); pgn.title = 'Buku sudah Tamat. ' + secFull; }
     if (tamat) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
-    else if (akhir) { pgn.innerHTML = nw('Halaman terakhir'); }
+    else if (akhir) { pgn.innerHTML = nw('Terakhir'); if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(`${RD.page + 1}/${RD.n}`); } /* #1886: label pendek, cadangan N/N; teks lengkap di title & aria-label */
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([bs.txt]);
+      if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(`${RD.page + 1}/${RD.n}`);
     }
   }
   if (pb) { const bp = bookPct(b); pb.style.width = bp + '%'; if (pb.parentElement) pb.parentElement.setAttribute('aria-valuenow', bp); if (pb.parentElement) pb.parentElement.title = `${bp}% dari seluruh buku`; }
@@ -2699,7 +2702,14 @@ function guideOn(b) {
 function guideMark(b) {
   const S = SAMPLES_SHORT[b.lang], ws = $$('#cols .w').filter(x => !x.closest('h2') && !isParticle(b.lang, x.textContent));
   const w = ws.find(x => S && x.textContent.includes(S.pick)) || ws[0];
-  if (w) w.classList.add('guide-w');
+  if (w) {
+    w.classList.add('guide-w');
+    /* #1888: ambil arti kata menyala lebih dulu (hasil masuk cache translate), sheet langsung berisi. Gagal/offline = diam, pesan lama tetap jalan. */
+    try {
+      const k = b.lang === 'ko' ? koSplit(w.textContent) : null, q = k ? k.stem : w.textContent;
+      if (navigator.onLine !== false) Promise.resolve(translate(q, b.lang, db.my)).catch(() => { });
+    } catch (e) { }
+  }
 }
 function guideEnd(how) {
   if (!guideLive) return;
@@ -3543,9 +3553,10 @@ function viewKataIn() {
     <div class="sum"><div class="s1"><b id="sumSaved">${countedVocab(null).length}</b><span>Tersimpan</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Ucap</span></div></div>
     ${(() => { const n = db.vocab.filter(isDue).length; return n && kataSeg !== 'kartu' ? `<button type="button" class="fw-nudge due-nudge" id="kdue" style="margin:-2px 0 10px" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang</span><b>Ulang sekarang</b></button>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
-    <div class="seg" id="kseg" role="group" aria-label="Tampilan kata"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}" aria-pressed="${kataSeg === 'kartu'}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}" aria-pressed="${kataSeg === 'simpan'}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}" aria-pressed="${kataSeg === 'sulit'}"${weakAll.length ? ` aria-label="Latih ucap, ${weakAll.length} kata"` : ''}>Latih ucap${weakAll.length ? ' · ' + weakAll.length : ''}</button></div>${kataSeg === 'sulit' ? '<p class="mut sm" id="khelp" style="margin:6px 2px 10px">Kata yang kamu tandai sulit + kata yang ucapannya di bawah 85%. Latih lewat tab Ngomong.</p>' : ''}
+    <div class="seg" id="kseg" role="group" aria-label="Tampilan kata"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}" aria-pressed="${kataSeg === 'kartu'}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}" aria-pressed="${kataSeg === 'simpan'}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}" aria-pressed="${kataSeg === 'sulit'}"${weakAll.length ? ` aria-label="Latih ucap, ${weakAll.length} kata"` : ''}>Latih ucap${weakAll.length ? ' · ' + weakAll.length : ''}</button></div>${(() => { const n = db.vocab.filter(v => v && v.hard).length; return kataSeg === 'kartu' && n ? `<button type="button" class="hardcnt" id="khard">${ico('flag')}<span>${n} kata ditandai sulit</span></button>` : ''; })()}${kataSeg === 'sulit' ? '<p class="mut sm" id="khelp" style="margin:6px 2px 10px">Kata yang kamu tandai sulit + kata yang ucapannya di bawah 85%. Latih lewat tab Ngomong.</p>' : ''}
     <div id="kbody"></div>`;
   if ($('#kdue')) $('#kdue').onclick = () => { deckLv = 0; kataSeg = 'kartu'; sfx('pop'); viewKata(); };
+  if ($('#khard')) $('#khard').onclick = () => { deckLv = 0; kataSeg = 'sulit'; sfx('pop'); viewKata(); };
   $$('#kseg button').forEach(x => x.onclick = () => { deckLv = 0; kataSeg = x.dataset.v; sfx('pop'); viewKata(); });
   const kb = $('#kbody');
   if (kataSeg === 'kartu') return deck(kb);
@@ -3789,6 +3800,9 @@ function deck(kb) {
     save(); sfx('pop');
     const b = $('#fHard'); b.classList.toggle('on', !!v.hard); b.setAttribute('aria-pressed', String(!!v.hard)); b.lastElementChild.textContent = v.hard ? 'Batal tandai sulit' : 'Tandai sulit';
     const h = b.parentElement.nextElementSibling; if (h) h.textContent = deckHint;
+    const nh = db.vocab.filter(x => x && x.hard).length, kh = $('#khard');
+    if (kh) { kh.hidden = !nh; kh.lastElementChild.textContent = nh + ' kata ditandai sulit'; }
+    else if (nh && $('#kseg')) { $('#kseg').insertAdjacentHTML('afterend', `<button type="button" class="hardcnt" id="khard">${ico('flag')}<span>${nh} kata ditandai sulit</span></button>`); $('#khard').onclick = () => { deckLv = 0; kataSeg = 'sulit'; sfx('pop'); viewKata(); }; }
   };
   const flip = () => { if (flipped) return; flipped = true; $('#back').classList.remove('hide'); $('#tapl').classList.add('hide'); $('#actFront').classList.add('hide'); $('#actBack').classList.remove('hide'); sfx('pop'); autoSay(); };
   /* catat jawaban; mode 0 = tutup kata, 1 = Ragu (ulang 1x), 2 = Lupa (maks 2x). true bila dijadwalkan ulang */
