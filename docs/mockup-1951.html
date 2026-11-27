@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1951 — Tombol sheet arti kata</title>
+<style>
+:root{--ink:#351E28;--cream:#FAF7F0;--hl:#E9F056;--ice:#D7EFFF;--sand:#EFEBDD}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#ddd;font:14px/1.4 Inter,system-ui,sans-serif;color:var(--ink)}
+.note{max-width:390px;margin:0 auto 12px;font-size:12px;font-weight:700}
+.lbl{max-width:390px;margin:16px auto 6px;font:800 12px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.ph{width:390px;margin:0 auto;background:var(--cream);border-radius:24px 24px 0 0;padding:16px 18px 20px;border:1px solid #bbb}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pill{background:#AEB8A0;border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px}
+h2{font:800 30px/1.1 "Bricolage Grotesque",Inter,sans-serif;margin:8px 0 4px}
+.sub{font-size:13px;color:#5b4a52;margin:0 0 10px}
+.card{background:var(--sand);border-radius:16px;padding:12px;font-size:14px;margin-bottom:12px}
+.wact{display:flex;flex-wrap:wrap;gap:8px}
+.b{display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;border:1.5px solid var(--ink);color:var(--ink);background:var(--sand);border-radius:999px}
+.save{background:var(--ink);color:var(--cream)}
+.good .save{flex:1 1 0;min-width:96px;min-height:52px;white-space:nowrap}
+.good .hard{flex:0 0 52px;min-height:52px;width:52px;background:var(--cream)}
+.good .tanda{flex:1 1 100%;min-height:48px}
+.bad .save{width:85px;height:214px;flex-direction:column;writing-mode:horizontal-tb;word-break:break-all;font-size:13px;line-height:1.3;padding:0 6px}
+.bad .hard{width:214px;height:214px;background:var(--cream)}
+.bad .tanda{width:214px;height:214px}
+.row2{display:flex;gap:8px;margin-top:8px}
+.row2 .b{flex:1;min-height:44px}
+.links{display:flex;justify-content:space-between;margin-top:12px;font-weight:700;font-size:13px;text-decoration:underline}
+</style></head><body>
+<div class="note">Gambaran rencana, belum dibangun. Layar: sheet arti kata di reader (HP 390px).</div>
+
+<div class="lbl">Sebelum (rusak)</div>
+<div class="ph bad">
+<div class="top"><span class="pill">Arti kata</span><b>✕</b></div>
+<h2>others</h2><p class="sub">~o-tèrs (perkiraan) · Bentuk dasar: other (tebakan)</p>
+<div class="card"><b>Arti lain · ketuk untuk pakai</b><br>Arti lain belum bisa dimuat · <u>Coba lagi</u></div>
+<div class="wact"><span class="b save">Simpan</span><span class="b hard">⚑</span><span class="b tanda">Tandai &amp; lanjut</span></div>
+<div class="row2"><span class="b">Sudah kenal</span><span class="b">Ini nama</span></div>
+</div>
+
+<div class="lbl">Sesudah (rapi)</div>
+<div class="ph good">
+<div class="top"><span class="pill">Arti kata</span><b>✕</b></div>
+<h2>others</h2><p class="sub">~o-tèrs (perkiraan) · Bentuk dasar: other (tebakan)</p>
+<div class="card"><b>Arti lain · ketuk untuk pakai</b><br>Arti lain belum bisa dimuat · <u>Coba lagi</u></div>
+<div class="wact"><span class="b save">Simpan</span><span class="b hard">⚑</span><span class="b tanda">Tandai &amp; lanjut</span></div>
+<div class="row2"><span class="b">Sudah kenal</span><span class="b">Ini nama</span></div>
+<div class="links"><span>Selesai</span><span>Masih bingung? Lihat kalimatnya</span></div>
+</div>
+</body></html>
