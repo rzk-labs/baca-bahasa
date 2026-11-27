@@ -1,5 +1,11 @@
 [
   {
+    "n": 1967,
+    "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
+    "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1965,
     "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
     "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
@@ -171,12 +177,6 @@
     "n": 1904,
     "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
     "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1899,
-    "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
-    "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
     "tgl": "2026-11-27"
   }
 ]
