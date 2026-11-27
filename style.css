@@ -445,6 +445,7 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .vitem .t1.noarti{display:inline-block;max-width:100%;font-size:12px;line-height:18px;font-weight:600;font-style:italic;color:var(--color-text-muted);border:1px dashed currentColor;border-radius:var(--radius-full);padding:0 8px}
 .vitem .s1{font-size:13px;line-height:19px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vitem .vgo{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:2px 0 -6px -4px;padding:0 4px;background:none;border:0;color:var(--color-text-muted);font:600 13px/1 var(--font-body,inherit);cursor:pointer}
+.vitem .vcari{min-width:44px;margin:0 0 -6px -4px;text-decoration:underline}
 .vitem .vgo svg.i{width:16px;height:16px}
 .vitem .vgo:active{color:var(--color-text)}
 .vitem .icon{color:var(--color-text-muted);flex:none;min-width:44px;min-height:44px}
@@ -732,6 +733,7 @@ body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-
 .fchips{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 0 8px;padding:2px 0;max-width:100%}
 .fchips::-webkit-scrollbar{display:none}
 .fchip{flex:0 0 auto;min-height:44px;max-width:60vw;padding:0 16px;border:0;border-radius:var(--radius-full);background:var(--color-surface);color:var(--color-text);font:700 14px/1 var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.hardchip{display:inline-flex;align-items:center;gap:6px}.hardchip svg{width:16px;height:16px;flex:0 0 auto}
 .fchip.on{background:var(--ink);color:var(--cream)}
 [data-theme=night] .fchip.on{background:var(--lime);color:var(--ink)}
 .csvgo{width:100%;margin:8px 0 12px}
@@ -1581,8 +1583,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .badge .em-stamp{display:block;width:40px;height:40px;margin:0 0 -2px;transform:rotate(-6deg)}
 .badge:nth-child(even) .em-stamp{transform:rotate(5deg)}
 /* #1817: subteks 'tanpa XP' di tombol Baca ulang (sebelum ditekan) */
-.re-xp{display:block;font-size:11px;font-weight:500;line-height:1.2;margin-top:2px;opacity:.75;text-decoration:none}
-.bk .bk-re,.fb-sec #fbr,#hero.hero-done #hRead,#endcard #ecr{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.bk .bk-re,.fb-sec #fbr,#hero.hero-done #hRead,#endcard #ecr{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;white-space:nowrap}
 /* #1859: tombol Tandai sulit di kartu ulang + penanda di daftar */
 .hardbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:0 14px;background:none;border:1.5px solid currentColor;border-radius:var(--radius-full);color:var(--color-text);font:600 14px/1 var(--font-body,inherit);cursor:pointer}
 .hardbtn svg.i{width:16px;height:16px}

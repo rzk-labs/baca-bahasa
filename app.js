@@ -675,7 +675,7 @@ async function fetchTimeout(url, ms = 8000, ext) {
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
 async function gtxFetch(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
@@ -690,6 +690,7 @@ async function gtxFetch(q, sl, tl, signal) {
     const bs = bd.map(d => baseOf(q, d[3])).find(Boolean); if (bs) out.base = bs;
   } catch (e) { }
   out.ex = exOf(j);
+  out.alt = altOf(j); /* arti lain ikut permintaan yang sama (#1906); field tambahan, format lama tak berubah */
   return out;
 }
 /* contoh kalimat (dt=ex): maks 3, teks polos, kata kunci diapit ‹…›; balasan aneh = daftar kosong */
@@ -722,9 +723,13 @@ function simpanSemua(v, d) {
 async function altFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
-  const j = await r.json().catch(() => null), out = [];
+  const j = await r.json().catch(() => null);
+  return altOf(j);
+}
+/* arti lain dari balasan gtx (dt=bd + dt=at): [{pos, terms}] maks 15 per jenis; item aneh dilewati, balasan aneh = kosong */
+function altOf(j) {
+  const out = [];
   if (!Array.isArray(j)) return out;
-  /* hasil: [{pos, terms}] (maks 6 arti per jenis kata); item kosong/aneh dilewati, bukan galat */
   try {
     if (Array.isArray(j[1])) j[1].forEach(d => {
       if (!Array.isArray(d) || !Array.isArray(d[1])) return;

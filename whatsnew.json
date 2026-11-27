@@ -1,5 +1,59 @@
 [
   {
+    "n": 1918,
+    "judul": "Sheet Tamat: 'Tidak ada kata baru' tak bertentangan dengan 'Ulang N kata'",
+    "poin": "Sheet Tamat sekarang jujur: \"Sesi ini belum ada kata baru. 5 kata siap diulang.\"",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1916,
+    "judul": "Home & Baca: tombol Tamat satu label 'Baca ulang (tanpa XP)'",
+    "poin": "Tombol Tamat sekarang satu baris: \"Baca ulang (tanpa XP)\".",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1914,
+    "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
+    "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1912,
+    "judul": "Tab Kata Tersimpan: filter 'Sulit saja' untuk kata bertanda sulit",
+    "poin": "Tab Kata > Tersimpan kini punya tombol \"Sulit 3\" untuk lihat kata bertanda sulit saja.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1910,
+    "judul": "Tab Kata Tersimpan: kata 'Menunggu arti' dapat tombol 'Cari arti'",
+    "poin": "Kata \"Menunggu arti\" sekarang punya tombol \"Cari arti\" di daftar Tersimpan.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1908,
+    "judul": "[peta 195] Buka file buku langsung dengan Keepo (Android & komputer)",
+    "poin": "Buku .epub, .pdf, .txt sekarang bisa dibuka langsung lewat Keepo di Android dan komputer.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1906,
+    "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
+    "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1904,
+    "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
+    "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1899,
+    "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
+    "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1896,
     "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
     "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
@@ -124,59 +178,5 @@
     "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
     "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
     "tgl": "2026-11-26"
-  },
-  {
-    "n": 1846,
-    "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
-    "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1845,
-    "judul": "Tab bar bawah: pindah tab terasa halus, ikon aktif memantul kecil",
-    "poin": "Pindah tab di bawah sekarang berganti warna halus, tidak mendadak.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1844,
-    "judul": "Rekap 'Kata sesi ini': hapus hitungan layar yang beda dari reader",
-    "poin": "Catatan sesi kini selalu bilang \"Berhenti di Bagian k dari n\", tanpa hitungan layar.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1843,
-    "judul": "Teks & ikon pudar (opacity) di Kata/Intip dibuat cukup kontras",
-    "poin": "Teks selesai, ikon hapus, dan tombol Simpan mati sekarang jelas terbaca.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1842,
-    "judul": "Toast 'Masuk ke kartu kata' lebih singkat (3,5 dtk), Urungkan tetap ada",
-    "poin": "Pesan \"Masuk ke kartu kata\" kini hilang dalam 3,5 detik, bukan 6.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1841,
-    "judul": "Doodle SVG: stempel lencana di Profil tak cuma ikon polos",
-    "poin": "Lencana yang sudah didapat di Profil kini berstempel gambar tangan.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1836,
-    "judul": "Sheet arti kata: arti muncul halus, tak loncat dari titik loading",
-    "poin": "Arti kata kini muncul halus, tidak loncat dari titik loading.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1834,
-    "judul": "Sheet arti kata: tombol kecil 32px dilegakan jadi area ketuk 44px",
-    "poin": "Tombol kecil di sheet arti kata ternyata sudah punya area ketuk 44px.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1832,
-    "judul": "Home: kartu 'siap diulang' & 'HSK x dari y' beda rupa, tak mirip",
-    "poin": "Kartu \"kata siap diulang\" tetap biru, kini punya tombol gelap yang jelas.",
-    "tgl": "2026-11-25"
   }
 ]
