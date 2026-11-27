@@ -1268,6 +1268,14 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 .lang-hint{margin:6px 0 0}
 .try1{margin-top:0;margin-bottom:var(--space-3)}
 [data-theme=night] .hero-up{background:var(--hl);color:var(--ink)}
+/* #1933 Home kosong: Coba 1 cerita = tombol utama; Tambah cerita = sekunder */
+.try1-row button.pri{background:var(--ink);color:var(--cream);min-height:84px}
+.try1-row button.pri .em{font-size:30px}
+[data-theme=night] .try1-row button.pri{background:var(--hl);color:var(--ink)}
+.hero-own{margin:var(--space-3) 0 8px}
+.hero-up.sec{background:transparent;color:var(--ink);border:2px solid var(--ink);min-height:48px}
+[data-theme=night] .hero-up.sec{background:transparent;color:var(--cream);border-color:var(--cream)}
+@media (max-width:360px){.try1-row{gap:8px}.try1-row button.pri{min-height:76px}}
 body:not(.reading) #view:has(.hero-up){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
 ol.steps3{list-style:none;margin:var(--space-4) 0 0;padding:0;display:grid;gap:12px}
 ol.steps3 li{display:flex;gap:12px;align-items:center;padding:0;background:none;border-radius:0;box-shadow:none;font-size:15px;line-height:21px;font-weight:600;color:var(--ink)}
