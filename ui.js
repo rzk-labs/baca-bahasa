@@ -1748,9 +1748,9 @@ function finishBook(b) {
     let apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1), nama = nb[2];
     if (nb[0] in BADGE_VOCAB_MIN) { /* lencana kata: target & sisa sama persis dgn kartu Home */
       const n = countedVocab(null).length, t = wordMile(n), tb = wordMileBadge(t);
-      if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata, buka Ulang kata`; nama = ''; } /* #1701/#1771: sama dgn kartu Home q3Lock */
-      else if (t && tb && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
-      else if (t && tb) { apa = 'simpan 3 kata dulu'; nama = ''; } else apa = '';
+      /* #1959: tanpa kata disimpan sesi ini = tanpa ajakan simpan kata; angka hanya dari data nyata (sisa ke target) */
+      if (ws.length && t && tb && t - n > 0 && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
+      else apa = '';
     }
     if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
