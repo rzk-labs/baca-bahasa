@@ -1629,3 +1629,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 #view[inert] .endcard{opacity:0;pointer-events:none}
 .endcard .ec-end{flex:1 1 100%;margin:0;text-align:center;font-size:14px;color:var(--color-text-muted)}
 .endcard .ec-end[hidden]{display:none}
+
+/* #1947: rak Profil, judul CJK pendek (<=6 huruf) tampil utuh 1-2 baris di tengah; huruf awal disembunyikan. Sampul bergambar tak berubah (tanpa .ct) */
+.rk-bk .cover:has(.ct.cjk.short) .em{display:none}
+.rk-bk .cover .ct.cjk.short{display:block;width:100%;max-height:none;font-size:max(var(--fs-min),12px);line-height:1.25;text-align:center;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;overflow:visible}
