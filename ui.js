@@ -1233,7 +1233,7 @@ function streakInfo() {
   let best = 0, run = 0, prev = null, before = 0; /* before = rekor sebelum rangkaian terakhir */
   for (const d of ds) { const nx = prev && Math.round((Date.parse(d) - Date.parse(prev)) / 864e5) === 1; if (!nx && run > before) before = run; run = nx ? run + 1 : 1; if (run > best) best = run; prev = d; }
   if (!db.days.includes(today()) && cur > 0) return 'Baca hari ini biar lanjut';
-  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? 'Rekor barumu!' : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? 'Terus lanjut, mantap' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
+  return best > cur ? `Rekor ${best} hari` : cur >= 3 && cur > before ? (before > 0 ? `Rekor baru: ${cur} hari (dulu ${before})` : `Rekor baru: ${cur} hari`) : cur === 2 ? 'Dua hari berturut, mantap' : cur > 2 ? 'Terus lanjut, mantap' : cur === 1 ? 'Hari pertama, lanjut besok ya' : 'Mulai hari ini yuk';
 }
 const NUDGE_TXT = 'Ketuk satu kata untuk mulai';
 /* ajakan kata pertama: belum ada kata tersimpan, tapi sudah baca >=1 halaman */
@@ -2829,6 +2829,14 @@ function nearWord(vp, x, y) {
   }
   return best;
 }
+/* #1923: logika tandai sulit dipakai bersama kartu ulang & sheet arti kata (tanpa XP) */
+function setHardVocab(v, now) {
+  if (!v.hard) {
+    v.hard = true; v.hd = { due: v.due, known: !!v.known };
+    if (v.known) { v.known = false; v.due = now + DAY_MS; }
+    else { const left = (+v.due || 0) - now; if (left > DAY_MS) v.due = now + Math.max(DAY_MS, Math.round(left / 2)); }
+  } else { delete v.hard; if (v.hd && !(+v.due <= now)) { v.due = v.hd.due; v.known = v.hd.known; } delete v.hd; }
+}
 async function onWord(el, lastEl) {
   const b = book();
   document.querySelectorAll('.lvlup').forEach(x => x.remove()); toastHide();
@@ -2859,10 +2867,11 @@ async function onWord(el, lastEl) {
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="walt" id="walt"></div>
-    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="sec" id="wtanda" type="button">Tandai &amp; lanjut</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
+    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="hardbtn hardic" id="whard" type="button" aria-pressed="false" aria-label="Tandai sulit" title="Tandai sulit">${ico('flag')}</button><button class="sec" id="wtanda" type="button">Tandai &amp; lanjut</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
     <div class="wact2"><button class="ghost" data-close id="wdone">Selesai</button><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`, 'Arti kata');
   const kenalLbl = () => isKenal(b.lang, word) ? `${ico('bmcheck')} Belum kenal` : 'Sudah kenal';
-  const updKenal = () => { const k = $('#wkenal'); if (!k) return; k.hidden = isSaved() || isNama(b, word); k.innerHTML = kenalLbl(); updHafal(); };
+  const updHard = () => { const h = $('#whard'); if (!h) return; h.hidden = isNama(b, word); const on = db.vocab.some(v => v.hard && sameVocab(v, b.lang, word)), t = on ? 'Batal tandai sulit' : 'Tandai sulit'; h.classList.toggle('on', on); h.setAttribute('aria-pressed', String(on)); h.setAttribute('aria-label', t); h.title = t; };
+  const updKenal = () => { updHard(); const k = $('#wkenal'); if (!k) return; k.hidden = isSaved() || isNama(b, word); k.innerHTML = kenalLbl(); updHafal(); };
   const hafalOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const updHafal = () => { const h = $('#whafal'); if (!h) return; const v = hafalOf(); h.hidden = !v || isNama(b, word); if (v) { h.innerHTML = v.known ? `${ico('check')} Udah hafal` : 'Udah hafal'; h.setAttribute('aria-pressed', v.known ? 'true' : 'false'); } };
   const paintKenal = (w, on) => $$('.cols .w').forEach(x => { if (x.textContent.toLowerCase() === w.toLowerCase() && !x.classList.contains('saved')) x.classList.toggle('kenal', on); });
@@ -3104,6 +3113,17 @@ async function onWord(el, lastEl) {
     const sync = () => { updHafal(); refreshHafal(); if (kataSeg && $('#klist')) viewKata(); };
     vs.forEach(v => { v.known = !was; if (!was) v.due = 0; }); save(); paintHafal(lang, w, !was); sync(); vib(8); sfx('pop');
     toast(was ? 'Balik ke lagi dihafal' : 'Ditandai udah hafal', 5000, { label: 'Urungkan', fn: () => { prev.forEach(p => { p.v.known = p.known; p.v.due = p.due; }); save(); paintHafal(lang, w, was); sync(); } });
+  };
+  $('#whard').onclick = async () => {
+    const h = $('#whard'); if (h.disabled) return; h.disabled = true;
+    try {
+      if (!isSaved()) await $('#wsave').onclick(); /* alur Simpan yang sama; tanda sulit tidak menambah XP */
+      const w = word, lang = b.lang, vs = db.vocab.filter(v => sameVocab(v, lang, w)); if (!vs.length) return;
+      const was = !!vs[0].hard, now = Date.now(), prev = vs.map(v => ({ v, hard: v.hard, hd: v.hd, due: v.due, known: v.known }));
+      vs.forEach(v => { if (!!v.hard === was) setHardVocab(v, now); }); save(); vib(8); sfx('pop'); updHard();
+      const sync = () => { updHard(); if (kataSeg && $('#klist')) viewKata(); };
+      toast(was ? 'Tanda sulit dibatalkan' : 'Ditandai sulit, bakal muncul lebih sering', 5000, { label: 'Urungkan', fn: () => { prev.forEach(p => { const x = p.v; if (p.hard) x.hard = p.hard; else delete x.hard; if (p.hd) x.hd = p.hd; else delete x.hd; x.due = p.due; x.known = p.known; }); save(); sync(); } });
+    } finally { if (h.isConnected) h.disabled = false; }
   };
   $('#wnama').onclick = () => {
     const w = word, was = isNama(b, w);

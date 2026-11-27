@@ -1,5 +1,23 @@
 [
   {
+    "n": 1925,
+    "judul": "Tab Kata: tombol 'Ulang kata sulit' satu ketuk langsung mulai",
+    "poin": "Tab Kata kini punya tombol \"Ulang N kata sulit\" di bagian atas.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1923,
+    "judul": "Popup kata di reader: tombol 'Tandai sulit' sekali ketuk",
+    "poin": "Di popup arti kata saat membaca, ada tombol bendera kecil di samping Simpan.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1921,
+    "judul": "Home Streak: 'Rekor barumu!' tampilkan rekor lama (naik dari N hari)",
+    "poin": "Kartu Streak kini menyebut angka rekor baru, mis. \"Rekor baru: 5 hari (dulu 4)\".",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1918,
     "judul": "Sheet Tamat: 'Tidak ada kata baru' tak bertentangan dengan 'Ulang N kata'",
     "poin": "Sheet Tamat sekarang jujur: \"Sesi ini belum ada kata baru. 5 kata siap diulang.\"",
@@ -159,24 +177,6 @@
     "n": 1859,
     "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
     "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1857,
-    "judul": "Home buku Tamat: kartu 'Simpan kata' tak lagi suruh buka bacaan tamat",
-    "poin": "Buku yang sudah Tamat tak lagi disuruh dibuka ulang dari kartu kata.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1855,
-    "judul": "Home: Target baca tampil '<1 mnt' & cincin terisi sedikit bila sudah baca",
-    "poin": "Kartu Target baca sekarang menampilkan \"<1 mnt\" kalau baru baca sebentar.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1853,
-    "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
-    "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
     "tgl": "2026-11-26"
   }
 ]
