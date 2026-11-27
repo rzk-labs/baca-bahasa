@@ -445,6 +445,7 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .vitem .t1.noarti{display:inline-block;max-width:100%;font-size:12px;line-height:18px;font-weight:600;font-style:italic;color:var(--color-text-muted);border:1px dashed currentColor;border-radius:var(--radius-full);padding:0 8px}
 .vitem .s1{font-size:13px;line-height:19px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vitem .vgo{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin:2px 0 -6px -4px;padding:0 4px;background:none;border:0;color:var(--color-text-muted);font:600 13px/1 var(--font-body,inherit);cursor:pointer}
+.vitem .vcari{min-width:44px;margin:0 0 -6px -4px;text-decoration:underline}
 .vitem .vgo svg.i{width:16px;height:16px}
 .vitem .vgo:active{color:var(--color-text)}
 .vitem .icon{color:var(--color-text-muted);flex:none;min-width:44px;min-height:44px}
