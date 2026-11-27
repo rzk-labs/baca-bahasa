@@ -1146,9 +1146,8 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .fr-read .bar{margin-top:6px}
 /* #1003 titik pengingat kata siap diulang di tombol menu Baca: kecil, diam, tanpa angka */
 /* #1031 tombol Ulang di header Baca: ikon + tulisan + lencana angka Wasabi; Lainnya tanpa titik */
-.rdueb{position:relative}
-.rdueb .rdn{position:absolute;top:2px;right:0;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:var(--hl,#E9F056);color:var(--ink);box-shadow:0 0 0 1.5px var(--ink);font:800 10px/16px var(--font-ui,Inter,sans-serif);font-style:normal;text-align:center;pointer-events:none}
-@media (max-width:359px){.rdueb .rrtl{display:none}}
+.rdueb{position:relative;padding:0 6px}
+.rdueb .rrtl{white-space:nowrap}
 .due-sheet{display:flex;flex-direction:column;gap:12px;padding:4px 2px 8px}
 .due-sheet .btn{min-height:48px}
 .rdue{position:relative}.rdue .rdot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#E9F056;box-shadow:0 0 0 1.5px var(--ink);pointer-events:none}

@@ -1,5 +1,11 @@
 [
   {
+    "n": 1961,
+    "judul": "Reader: tombol Ulang tulis jelas 'Ulang 5 kata', bukan ikon + angka",
+    "poin": "Tombol Ulang di halaman baca kini jelas: \"Ulang 5 kata\".",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1959,
     "judul": "Sheet Tamat: baris 'Besok' tak lagi salah 'simpan 3 kata dulu'",
     "poin": "Layar Tamat tak lagi bilang \"simpan 3 kata dulu\" yang salah.",
@@ -171,12 +177,6 @@
     "n": 1894,
     "judul": "Profil rak: centang Tamat tak timpa judul, 'Belum dibuka' sekali",
     "poin": "Rak Tamat di Profil: centang pindah ke pojok sampul, judul tak terpotong lagi.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1892,
-    "judul": "Home Target baca: satu baris sisa, tak dobel '0 dari 5' + 'Sisa 5'",
-    "poin": "Kartu Target baca di Home sekarang cuma satu baris, tidak dobel lagi.",
     "tgl": "2026-11-26"
   }
 ]
