@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1923: Tandai sulit di sheet arti kata</title>
+<style>
+body{margin:0;padding:16px;background:#ddd;font:15px/1.4 Inter,system-ui,sans-serif;color:#351E28;display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.col small.lbl{display:block;text-align:center;font-weight:700;margin-bottom:6px}
+.ph{width:390px;height:700px;background:#FAF7F0;border-radius:24px;position:relative;overflow:hidden;box-shadow:0 2px 12px #0003}
+.page{padding:28px 24px;font-size:19px;line-height:1.7;opacity:.55}
+.page mark{background:#E9F056;color:#351E28;border-radius:4px;padding:0 3px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:16px 18px 22px;box-shadow:0 -4px 20px #0003}
+.chip{display:inline-block;background:#D7EFFF;border-radius:99px;padding:3px 12px;font-weight:700;font-size:13px}
+.wd{font:800 26px/1.2 "Bricolage Grotesque",Inter,sans-serif;margin:12px 0 4px}
+.tr{font:700 28px/1.2 "Bricolage Grotesque",Inter,sans-serif;margin:6px 0 10px}
+.mut{color:#351E28;opacity:.7;font-size:13px}
+.wact{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pri{flex:1 1 0;min-width:0;min-height:52px;border:0;border-radius:99px;background:#351E28;color:#FAF7F0;font:700 16px Inter,sans-serif}
+.hardbtn{flex:0 0 52px;height:52px;border:1.5px solid #351E28;border-radius:99px;background:none;display:flex;align-items:center;justify-content:center}
+.hardbtn.on{background:#E9F056}
+.hardbtn svg{width:20px;height:20px;fill:none;stroke:#351E28;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hardbtn.on svg{fill:#351E28}
+.sec{flex:1 1 100%;min-height:48px;border:1.5px solid #351E28;border-radius:99px;background:none;color:#351E28;font:700 15px Inter,sans-serif}
+.toast{position:absolute;left:16px;right:16px;top:20px;background:#351E28;color:#FAF7F0;border-radius:14px;padding:12px 14px;font-weight:600;display:flex;justify-content:space-between}
+.toast b{color:#E9F056}
+.note{width:390px;font-size:13px;margin-top:8px;text-align:center}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><symbol id="fl" viewBox="0 0 24 24"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 3.6-1.2A1 1 0 0 1 21 3.6v9.8a1 1 0 0 1-.4.8A6 6 0 0 1 17 15c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/></symbol></svg>
+
+<div class="col"><small class="lbl">Sebelum</small>
+<div class="ph"><div class="page">She walked slowly toward the <mark>reluctant</mark> crowd, and nobody spoke.</div>
+<div class="sheet"><span class="chip">Arti kata</span><div class="wd">reluctant</div><div class="tr">enggan</div><div class="mut">Terjemahan mesin, bisa keliru.</div>
+<div class="wact"><button class="pri">Simpan</button><button class="sec">Tandai &amp; lanjut</button></div></div></div></div>
+
+<div class="col"><small class="lbl">Sesudah: kata belum tersimpan</small>
+<div class="ph"><div class="page">She walked slowly toward the <mark>reluctant</mark> crowd, and nobody spoke.</div>
+<div class="sheet"><span class="chip">Arti kata</span><div class="wd">reluctant</div><div class="tr">enggan</div><div class="mut">Terjemahan mesin, bisa keliru.</div>
+<div class="wact"><button class="pri">Simpan</button><button class="hardbtn" aria-label="Tandai sulit" aria-pressed="false"><svg><use href="#fl"/></svg></button><button class="sec">Tandai &amp; lanjut</button></div></div></div>
+<div class="note">Ketuk flag: kata tersimpan lalu langsung ditandai sulit.</div></div>
+
+<div class="col"><small class="lbl">Sesudah: sudah ditandai sulit</small>
+<div class="ph"><div class="page">She walked slowly toward the <mark>reluctant</mark> crowd, and nobody spoke.</div>
+<div class="toast"><span>Ditandai sulit, bakal muncul lebih sering</span><b>Urungkan</b></div>
+<div class="sheet"><span class="chip">Arti kata</span><div class="wd">reluctant</div><div class="tr">enggan</div><div class="mut">Terjemahan mesin, bisa keliru.</div>
+<div class="wact"><button class="pri">Tersimpan</button><button class="hardbtn on" aria-label="Batal tandai sulit" aria-pressed="true"><svg><use href="#fl"/></svg></button></div></div></div>
+<div class="note">Ketuk lagi untuk batal. Tanpa XP tambahan.</div></div>
+</body></html>
