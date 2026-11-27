@@ -1,5 +1,11 @@
 [
   {
+    "n": 1953,
+    "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
+    "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1949,
     "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
     "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
@@ -171,12 +177,6 @@
     "n": 1794,
     "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
     "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1886,
-    "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
-    "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
     "tgl": "2026-11-26"
   }
 ]
