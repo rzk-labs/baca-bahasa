@@ -1629,3 +1629,5 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 #view[inert] .endcard{opacity:0;pointer-events:none}
 .endcard .ec-end{flex:1 1 100%;margin:0;text-align:center;font-size:14px;color:var(--color-text-muted)}
 .endcard .ec-end[hidden]{display:none}
+/* #1953: tombol kartu akhir reader tegas (bukan pucat), tetap sekunder; aman di 4 tema */
+#endcard #ecn{opacity:1;color:var(--color-text);background:var(--color-surface);border:2px solid var(--color-text);font-weight:700;min-height:44px}
