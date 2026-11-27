@@ -1,5 +1,11 @@
 [
   {
+    "n": 1935,
+    "judul": "Ulang kata: tampilkan bahasa kata bila beda dari buku yang dibuka",
+    "poin": "Kartu ulang sekarang punya label bahasa kecil di dekat kata.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1933,
     "judul": "[peta 188] Home kosong: 'Coba 1 cerita' jadi tombol utama",
     "poin": "Layar awal kosong: 4 tombol \"Coba 1 cerita\" kini langsung terlihat di atas.",
@@ -171,12 +177,6 @@
     "n": 1871,
     "judul": "Sheet Tamat: buang lencana 'Tamat' ganda, judul tetap satu",
     "poin": "Layar Tamat tidak lagi menulis kata \"Tamat\" dua kali.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1869,
-    "judul": "Pengingat baca: teks jujur, hanya muncul saat Keepo terbuka",
-    "poin": "Teks pengingat baca kini jujur: hanya muncul saat Keepo terbuka.",
     "tgl": "2026-11-26"
   }
 ]

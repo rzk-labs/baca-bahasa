@@ -418,6 +418,7 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .semua-h{font:800 18px/1.2 var(--font-display,inherit);margin:16px 0 4px}
 .semua-ex{border-inline-start:3px solid var(--ink);padding:2px 10px;margin:8px 0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}.semua-ex small{display:block;opacity:.7;font-size:12px}.semua-ex mark{background:#E9F056;color:var(--ink);border-radius:4px;padding:0 2px}
 .flash .eyebrow{color:var(--color-text-muted)}
+.flash .lchip{display:inline-block;padding:1px 8px;border-radius:999px;background:rgba(53,30,40,.08);color:var(--ink,#351E28);white-space:nowrap}
 .flash .tap{display:inline-flex;align-items:center;gap:6px}.flash .tap svg.i{width:16px;height:16px}
 .recheck{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:var(--radius-full);background:var(--color-text);color:var(--cream);font-size:12px;letter-spacing:.04em;vertical-align:1px}
 .flash .stamp{position:absolute;top:22px;padding:4px 12px;border:3px solid;border-radius:10px;font:800 20px var(--font-display);opacity:0;transform:rotate(-10deg);background:var(--color-surface)}
