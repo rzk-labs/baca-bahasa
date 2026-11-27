@@ -1,5 +1,11 @@
 [
   {
+    "n": 1949,
+    "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
+    "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1947,
     "judul": "Sampul Profil rak: judul Jepang/Mandarin pendek tak terpotong",
     "poin": "Sampul buku Jepang/Mandarin pendek di rak Profil kini menampilkan judul utuh.",
@@ -171,12 +177,6 @@
     "n": 1886,
     "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
     "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1884,
-    "judul": "Banner 'Level N!' tak lagi menutupi kartu buku & tombol di Home",
-    "poin": "Banner \"Level N!\" sekarang muncul di bawah, tepat di atas tab bar.",
     "tgl": "2026-11-26"
   }
 ]

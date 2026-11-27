@@ -1705,8 +1705,10 @@ function finishBook(b) {
   setTimeout(() => flushLate(true), 2500);
   /* #1703: 'kata baru' = baru disimpan sesi ini, termasuk yang belum punya arti (noTr) */
   const seenWs = new Set();
+  /* #1949: kata baru hanya dari buku yang sedang dibuka sesi ini (id sama) dan judul+bahasanya unik; buku lain/belum dibuka = tanpa kata baru */
+  const sesiIni = SESS.id === b.id && db.books.filter(x => x.title === b.title && x.lang === b.lang).length === 1;
   const ws = (db.vocab || []).filter(v => {
-    if (!v || !v.w || v.lang !== b.lang || v.book !== b.title || (v.at || 0) < SESS.t || isKataSampah(v.lang, v.w) || !kataDiBuku(b, v)) return false;
+    if (!sesiIni || !v || !v.w || v.lang !== b.lang || v.book !== b.title || (v.at || 0) < SESS.t || isKataSampah(v.lang, v.w) || !kataDiBuku(b, v)) return false;
     const k = vocabKey(v.lang, v.w); if (seenWs.has(k)) return false; seenWs.add(k); return true;
   });
   const list = ws.slice(0, 8).map(v => `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div><div class="t1">${v.t ? esc(v.t) : '<i>belum ada arti</i>'}</div></div></div>`).join('');
