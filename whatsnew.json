@@ -1,5 +1,11 @@
 [
   {
+    "n": 1965,
+    "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
+    "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1963,
     "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
     "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
@@ -172,11 +178,5 @@
     "judul": "[peta 183] Buku Tamat dibuka ulang: ketuk kata tak naikkan streak",
     "poin": "Buku Tamat dibuka ulang: kartu melayang hilang, tinggal tombol Baca ulang di bawah.",
     "tgl": "2026-11-27"
-  },
-  {
-    "n": 1896,
-    "judul": "Tab Kata: tampilkan jumlah kata yang kamu tandai sulit",
-    "poin": "Tab Kata sekarang menampilkan \"N kata ditandai sulit\" di bawah tab Kartu.",
-    "tgl": "2026-11-26"
   }
 ]
