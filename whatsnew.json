@@ -1,5 +1,11 @@
 [
   {
+    "n": 1916,
+    "judul": "Home & Baca: tombol Tamat satu label 'Baca ulang (tanpa XP)'",
+    "poin": "Tombol Tamat sekarang satu baris: \"Baca ulang (tanpa XP)\".",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1914,
     "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
     "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
@@ -171,12 +177,6 @@
     "n": 1846,
     "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
     "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
-    "tgl": "2026-11-25"
-  },
-  {
-    "n": 1845,
-    "judul": "Tab bar bawah: pindah tab terasa halus, ikon aktif memantul kecil",
-    "poin": "Pindah tab di bawah sekarang berganti warna halus, tidak mendadak.",
     "tgl": "2026-11-25"
   }
 ]

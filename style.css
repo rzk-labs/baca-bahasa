@@ -1583,8 +1583,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .badge .em-stamp{display:block;width:40px;height:40px;margin:0 0 -2px;transform:rotate(-6deg)}
 .badge:nth-child(even) .em-stamp{transform:rotate(5deg)}
 /* #1817: subteks 'tanpa XP' di tombol Baca ulang (sebelum ditekan) */
-.re-xp{display:block;font-size:11px;font-weight:500;line-height:1.2;margin-top:2px;opacity:.75;text-decoration:none}
-.bk .bk-re,.fb-sec #fbr,#hero.hero-done #hRead,#endcard #ecr{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.bk .bk-re,.fb-sec #fbr,#hero.hero-done #hRead,#endcard #ecr{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;white-space:nowrap}
 /* #1859: tombol Tandai sulit di kartu ulang + penanda di daftar */
 .hardbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:0 14px;background:none;border:1.5px solid currentColor;border-radius:var(--radius-full);color:var(--color-text);font:600 14px/1 var(--font-body,inherit);cursor:pointer}
 .hardbtn svg.i{width:16px;height:16px}
