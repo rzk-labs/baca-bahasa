@@ -1,5 +1,11 @@
 [
   {
+    "n": 1943,
+    "judul": "Tab Kata: tombol 'Cari arti semua' untuk kata Menunggu arti",
+    "poin": "Tab Kata punya tombol \"Cari arti semua\" untuk kata yang belum ada artinya.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1941,
     "judul": "Reader: bagian terakhir tak lagi kosong, hitungan bagian cocok",
     "poin": "Layar terakhir buku tak lagi kosong; kolom kosong di ujung tidak dihitung.",
@@ -171,12 +177,6 @@
     "n": 1882,
     "judul": "Tab Kata 'Latih ucap': teks bantu jujur untuk kata ditandai sulit",
     "poin": "Teks bantu Latih ucap sekarang jujur: kata yang kamu tandai sulit ikut disebut.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1877,
-    "judul": "Sheet Tamat: satu ajakan utama, 'Baca ulang (tanpa XP)' satu label",
-    "poin": "Sheet Tamat sekarang pendek: satu tombol utama, sisanya tautan teks.",
     "tgl": "2026-11-26"
   }
 ]

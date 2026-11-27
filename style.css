@@ -1629,3 +1629,7 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 #view[inert] .endcard{opacity:0;pointer-events:none}
 .endcard .ec-end{flex:1 1 100%;margin:0;text-align:center;font-size:14px;color:var(--color-text-muted)}
 .endcard .ec-end[hidden]{display:none}
+.cariall{margin:0 0 8px}
+.cariall .vcariall{margin:0;padding:0 4px;text-decoration:underline;color:var(--color-text)}
+.cariall .vcariall:disabled{opacity:.7;text-decoration:none}
+.cariall .mut{margin:0 4px}
