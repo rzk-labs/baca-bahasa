@@ -1748,9 +1748,6 @@ function finishBook(b) {
     }
     if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
-  /* #1652: tawaran pengingat SEKALI seumur akun, hanya di Tamat pertama; menggantikan baris 'Besok' agar sheet tak memanjang */
-  const tawar = !ulang && !(db.remind && db.remind.on) && !db.remindOffer;
-  if (tawar) { db.remindOffer = true; save(); besok = ''; }
   if (!ulang) { sfx('win'); confetti(60); }
   { const ec = $('#endcard'); if (ec) ec.remove(); } /* #1918: kartu di latar tak dobel dgn sheet Tamat */
   openSheet(`<div class="sh-head" style="justify-content:flex-end">${closeBtn}</div>
@@ -1762,11 +1759,8 @@ function finishBook(b) {
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Keren, tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
     ${moreHtml ? `<div class="fb-sec fb-more">${moreHtml}</div>` : ''}
-    <div class="fb-sec fb-end"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button><span aria-hidden="true" class="fb-dot">·</span><button class="lnk" id="fbh">Ke Home</button></div>
-    ${tawar ? `<div class="fb-rem" id="fbrem"><span class="sm">Mau pengingat baca? Muncul saat Keepo terbuka.</span><button class="sec" id="fbrset" type="button">Atur pengingat</button><button class="lnk" id="fbrno" type="button">Nanti saja</button></div>` : ''}`, 'Tamat');
+    <div class="fb-sec fb-end"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button><span aria-hidden="true" class="fb-dot">·</span><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
-  const rs = $('#fbrset'); if (rs) rs.onclick = () => { closeSheet(); setTimeout(() => { openSettings(); setTimeout(() => { const g = $('#remGrp'); if (g) g.scrollIntoView({ block: 'center' }); }, 60); }, 50); };
-  const rn = $('#fbrno'); if (rn) rn.onclick = () => { const r = $('#fbrem'); if (r) r.remove(); };
   const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
