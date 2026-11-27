@@ -1263,6 +1263,7 @@ ol.steps3 .st1{background:none;display:flex;gap:12px;align-items:center;width:10
 .hero-pic{height:auto;max-height:none;object-fit:contain;width:100%}
 @media (max-height:700px){.hero-pic{display:none}}
 .add-grid.two{grid-template-columns:repeat(2,1fr)}
+.add-grid.one{grid-template-columns:1fr}
 /* #1142 Home pemula: Coba 1 cerita di atas, gambar di bawah, ruang bawah lega */
 .hero-pic{margin:var(--space-4) auto 0}
 .lang-hint{margin:6px 0 0}
