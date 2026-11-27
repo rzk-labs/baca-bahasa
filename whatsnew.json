@@ -1,5 +1,11 @@
 [
   {
+    "n": 1929,
+    "judul": "Home buku Tamat: tombol buku berikutnya sebut bahasanya bila beda",
+    "poin": "Tombol buku berikutnya di Home kini menyebut bahasanya kalau beda.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1927,
     "judul": "Sheet Tamat: buang tawaran pengingat, momen selesai buku tenang",
     "poin": "Sheet Tamat sekarang tenang: tawaran pengingat dibuang, sisa satu tombol utama.",
@@ -171,12 +177,6 @@
     "n": 1865,
     "judul": "Profil sendiri: ganti 'Aktif x mnt lalu' & 'Total XP' jadi kata tersimpan",
     "poin": "Profil sendiri kini menampilkan jumlah kata tersimpan dan buku tamat.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1861,
-    "judul": "Header reader: judul buku boleh 2 baris, tak terpotong 'The Adventur…'",
-    "poin": "Judul buku di reader sekarang bisa dua baris, tak terpotong lagi.",
     "tgl": "2026-11-26"
   }
 ]
