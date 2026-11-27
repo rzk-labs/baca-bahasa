@@ -1,5 +1,11 @@
 [
   {
+    "n": 1918,
+    "judul": "Sheet Tamat: 'Tidak ada kata baru' tak bertentangan dengan 'Ulang N kata'",
+    "poin": "Sheet Tamat sekarang jujur: \"Sesi ini belum ada kata baru. 5 kata siap diulang.\"",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1916,
     "judul": "Home & Baca: tombol Tamat satu label 'Baca ulang (tanpa XP)'",
     "poin": "Tombol Tamat sekarang satu baris: \"Baca ulang (tanpa XP)\".",
@@ -172,11 +178,5 @@
     "judul": "Streak Home: titik hari baca vs belum baca jelas beda",
     "poin": "Titik 7 hari di Streak sekarang jelas beda: baca penuh, bolong cincin tipis.",
     "tgl": "2026-11-26"
-  },
-  {
-    "n": 1846,
-    "judul": "Profil: rak 'Tamat' ringan & ringkas, tak blok plum gelap",
-    "poin": "Rak 'Tamat' di Profil sekarang terang, pendek, dan bukunya rapat di kiri.",
-    "tgl": "2026-11-25"
   }
 ]
