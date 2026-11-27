@@ -1,5 +1,23 @@
 [
   {
+    "n": 1957,
+    "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
+    "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1955,
+    "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
+    "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
+    "tgl": "2026-11-27"
+  },
+  {
+    "n": 1953,
+    "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
+    "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1949,
     "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
     "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
@@ -159,24 +177,6 @@
     "n": 1890,
     "judul": "Home buku Tamat: tombol langsung 'Mulai buku <judul>' bila ada",
     "poin": "Home buku tamat kini langsung bilang \"Mulai: judul buku\" bila ada buku lain.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1888,
-    "judul": "[peta 190] Buku contoh: arti kata menyala diambil dulu, sheet langsung isi",
-    "poin": "Buku contoh pertama: arti kata yang menyala disiapkan diam-diam sebelum diketuk.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1794,
-    "judul": "Rancangan: sheet Tamat maks 3 pilihan & satu 'Pilih buku berikutnya'",
-    "poin": "Rancangan siap: layar Tamat cuma 1 tombol utama dan 2 pilihan kecil.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1886,
-    "judul": "[peta 191] Reader HP: bar bawah 'Terakhir' tak terpotong, ada fallback N/N",
-    "poin": "Label bar bawah halaman terakhir sekarang \"Terakhir\", tidak lagi terpotong.",
     "tgl": "2026-11-26"
   }
 ]
