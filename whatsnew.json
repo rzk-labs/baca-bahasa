@@ -1,5 +1,11 @@
 [
   {
+    "n": 1925,
+    "judul": "Tab Kata: tombol 'Ulang kata sulit' satu ketuk langsung mulai",
+    "poin": "Tab Kata kini punya tombol \"Ulang N kata sulit\" di bagian atas.",
+    "tgl": "2026-11-27"
+  },
+  {
     "n": 1923,
     "judul": "Popup kata di reader: tombol 'Tandai sulit' sekali ketuk",
     "poin": "Di popup arti kata saat membaca, ada tombol bendera kecil di samping Simpan.",
@@ -171,12 +177,6 @@
     "n": 1859,
     "judul": "Kartu ulang kata: tombol kecil 'Tandai sulit' agar muncul lebih sering",
     "poin": "Kartu ulang kini punya tombol 'Tandai sulit' untuk kata yang susah diingat.",
-    "tgl": "2026-11-26"
-  },
-  {
-    "n": 1857,
-    "judul": "Home buku Tamat: kartu 'Simpan kata' tak lagi suruh buka bacaan tamat",
-    "poin": "Buku yang sudah Tamat tak lagi disuruh dibuka ulang dari kartu kata.",
     "tgl": "2026-11-26"
   }
 ]
