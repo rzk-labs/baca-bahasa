@@ -815,8 +815,41 @@ async function offWords(b) {
   } } }
   return out;
 }
+/* Isi arti otomatis (#1977): diam-diam, 1-2 bagian berikutnya, pakai offWords & batas yang sama dengan 'Siapkan offline'. Maks sekali per buku per 6 jam (b.autoOffAt). Tanpa toast. */
+const OFF_AUTO_GAP = 6 * 3600e3;
+let offAuto = null;
+const offAutoStop = () => { if (offAuto) { offAuto.abort(); offAuto = null; } };
+async function autoOff(b) {
+  try {
+    if (offAuto || db.autoArti === false || !b || !b.id) return;
+    const c = navigator.connection;
+    if (navigator.onLine === false || !c || c.saveData || c.effectiveType !== '4g') return;
+    if (b.autoOffAt && Date.now() - b.autoOffAt < OFF_AUTO_GAP) return;
+    await aoLoad(b.id);
+    if (AO.m.size >= AO_MAX) return;
+    const words = await offWords(b);
+    const ex = AO.id === b.id && AO.sl === b.lang && AO.tl === db.my ? AO.m : null;
+    const todo = words.filter(q => !(ex && ex.has(q)) && !prepHas(b, q)).slice(0, PREP_MAX);
+    b.autoOffAt = Date.now(); save();
+    if (!todo.length || AO.id !== b.id) return;
+    if (AO.sl !== b.lang || AO.tl !== db.my) { AO.sl = b.lang; AO.tl = db.my; AO.m = new Map(); }
+    const ac = offAuto = new AbortController();
+    let fails = 0, ok = 0;
+    for (const q of todo) {
+      if (ac.signal.aborted || navigator.onLine === false || AO.id !== b.id) break;
+      try {
+        const out = await gtxFetch(q, b.lang, db.my, ac.signal);
+        if (!out.text) throw new Error('kosong');
+        if (AO.m.size < AO_MAX) AO.m.set(q, out); ok++; fails = 0;
+      } catch (e) { if (ac.signal.aborted) break; if (++fails >= OFF_FAIL) break; }
+      await new Promise(r => setTimeout(r, OFF_GAP));
+    }
+    if (offAuto === ac) offAuto = null;
+    if (ok && AO.id === b.id) await aoSave();
+  } catch (e) { offAuto = null; }
+}
 function offHtml() {
-  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
+  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="eyebrow">Isi arti otomatis</div><div class="seg" id="offAuto" role="group" aria-label="Isi arti otomatis"><button type="button" data-v="1" class="${db.autoArti === false ? '' : 'on'}">Nyala</button><button type="button" data-v="0" class="${db.autoArti === false ? 'on' : ''}">Mati</button></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
 }
 async function bindOff(b) {
   const box = $('#offBox'); if (!box) return;
@@ -873,7 +906,8 @@ async function bindOff(b) {
     if (err || stop) { ttl.textContent = `Berhenti di ${mine()} kata`; msg.textContent = `${err || 'Dibatalkan.'} ${mine()} kata yang sudah masuk tetap tersimpan. Lanjutkan nanti.`; go.textContent = 'Lanjutkan'; }
     else if (ok) toast('Siap dibaca offline');
   };
-  go.onclick = start;
+  go.onclick = () => { offAutoStop(); start(); };
+  $$('#offAuto button').forEach(x => x.onclick = () => { db.autoArti = x.dataset.v === '1'; save(); segOn('#offAuto', x); if (!db.autoArti) offAutoStop(); });
   del.onclick = async () => { if (run) return; await aoDel(b.id); if (live()) sync(); };
   addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
 }
@@ -1994,6 +2028,7 @@ async function viewBaca() {
     const nm = b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca';
     toast(`Mau ${nm.toLowerCase()}? ` + (hpKecil ? `Buka Lainnya, lalu pilih ${nm}.` : `Ketuk tombol ${nm} di atas.`), 4000);
   }
+  setTimeout(() => { if ($('#reader') && db.cur === b.id) autoOff(b); }, 3000);
   $('#rMore').onclick = () => openMore();
   const openMore = () => {
     const sl = () => db.ttsRate === 'slow' ? 'Lambat' : 'Normal';
