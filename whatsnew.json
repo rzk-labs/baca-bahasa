@@ -1,5 +1,11 @@
 [
   {
+    "n": 2065,
+    "judul": "[peta 202] Label 'Contoh · HSK 1-3' di cerita contoh Mandarin",
+    "poin": "Cerita contoh Mandarin sekarang punya label \"HSK 1-3\" supaya level-nya jelas.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2061,
     "judul": "Arti gagal dimuat: toast punya tombol 'Coba lagi' & progres 3/10",
     "poin": "Pesan \"Ada yang gagal\" sekarang punya tombol \"Coba lagi\" untuk memuat arti ulang.",
@@ -171,12 +177,6 @@
     "n": 1993,
     "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
     "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1991,
-    "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
-    "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
     "tgl": "2026-11-28"
   }
 ]

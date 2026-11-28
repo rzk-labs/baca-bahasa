@@ -141,6 +141,9 @@ function applyTheme() {
   document.querySelector('meta[name=theme-color]').content = { paper: '#FAF7F0', sepia: '#F3E9D7', green: '#E3EEDC', night: '#1E1A1D' }[db.theme] || '#FAF7F0';
 }
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', th: 'Thai', hi: 'Hindi', tr: 'Turki', id: 'Indonesia' };
+/* #2065: label level HSK hanya untuk cerita contoh Mandarin bawaan (label tetap) */
+const HSK_ARIA = 'Cerita contoh, level HSK 1 sampai 3';
+const isZhSample = b => !!b && b.lang === 'zh-CN' && (b.title === SAMPLES['zh-CN'].title || b.title === SAMPLES_SHORT['zh-CN'].title);
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', th: '🇹🇭', hi: '🇮🇳', tr: '🇹🇷', id: '🇮🇩' };
 const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0]);
 /* #1987: satu nama tombol pindah buku di Home, reader, sheet Tamat */
@@ -1329,7 +1332,7 @@ function viewRak() {
   const { lv, inLv } = xpInfo();
   const other = cur && pctOf(cur) >= 100 ? list.find(b => b.id !== cur.id && pctOf(b) < 100) : null; /* buku belum tamat yang terakhir dibaca */
   const h = new Date().getHours(), hi = h < 11 ? 'Pagi' : h < 15 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
-  const try1Html = () => `<div class="try1"><div class="eyebrow">Coba 1 cerita · 3 kalimat</div><div class="try1-row">${Object.keys(SAMPLES).sort((a, b) => (b === 'zh-CN') - (a === 'zh-CN')).map(l => `<button class="pri" data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span></button>`).join('')}</div></div>`; /* #1933: tombol utama Home kosong */
+  const try1Html = () => `<div class="try1"><div class="eyebrow">Coba 1 cerita · 3 kalimat</div><div class="try1-row">${Object.keys(SAMPLES).sort((a, b) => (b === 'zh-CN') - (a === 'zh-CN')).map(l => `<button class="pri" data-try="${l}" aria-label="Coba 1 cerita ${LANG_ID[l]}${l === 'zh-CN' ? '. ' + HSK_ARIA : ''}"><span class="em">${FLAG[l]}</span><span>${LANG_ID[l]}</span>${l === 'zh-CN' ? '<small class="hsk-lbl" aria-hidden="true">Contoh · HSK 1-3</small>' : ''}</button>`).join('')}</div></div>`; /* #1933: tombol utama Home kosong */
   const addCard = (noUp) => `<div class="card">
       ${db.books.length ? `<button class="langsum ghost" id="langTog" aria-expanded="false">Cerita ${langName(db.lastLang)} → ${langName(db.my)} <u>Ganti bahasa</u></button>` : ''}
       <div class="langs" id="langs" hidden><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
@@ -1379,7 +1382,7 @@ function viewRak() {
     ${(() => { const n = hardPick().length; return n && dueList().length ? `<button type="button" class="fw-nudge due-nudge" id="hHardGo" style="margin:-2px 0 14px;min-height:44px" aria-label="Ulang ${n} kata sulit. Langsung mulai">${ico('flag')}<span>Ulang ${n} kata sulit</span><b>Mulai</b></button>` : ''; })()}
     ${pctOf(cur) >= 100 && dueList().length ? '' : mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
-    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
+    <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${isZhSample(b) ? `<span class="hsk-lbl" role="img" aria-label="${HSK_ARIA}">HSK 1-3</span>` : ''}${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang, tanpa XP: ${esc(b.title)}">Baca ulang (tanpa XP)</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
     db.books.forEach(ensureKb);
     db.books.forEach(ensureUnits); /* bobot bab buku lama dihitung sekali; Home digambar ulang bila berubah */
@@ -1438,7 +1441,7 @@ function viewRak() {
   $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
   const smp = $('#sample'); if (smp) smp.onclick = () => { /* #2018: Home kosong tak punya tombol ini; pakai chip Coba 1 cerita */
     openSheet(`<div class="sh-head"><h2>Cerita contoh</h2>${closeBtn}</div><div class="mut sm">Pilih bahasa ceritanya</div>
-      <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span></button>`).join('')}</div>`, 'Cerita contoh');
+      <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span>${l === 'zh-CN' ? `<span class="hsk-lbl" role="img" aria-label="${HSK_ARIA}">Contoh · HSK 1-3</span>` : ''}</button>`).join('')}</div>`, 'Cerita contoh');
     $$('[data-sl]').forEach(el => el.onclick = () => {
       closeSheet();
       startSample(el.dataset.sl);
