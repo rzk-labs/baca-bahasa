@@ -1,5 +1,53 @@
 [
   {
+    "n": 2001,
+    "judul": "Catatan sesi Tamat: 'kata baru' dan 'tersimpan 0' tak lagi bertentangan",
+    "poin": "Layar Tamat tak lagi bilang \"kata baru\" dan \"0 disimpan\" sekaligus.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1999,
+    "judul": "Sheet arti kata: tombol 'Ulang besok' yang jelas untuk kata sulit",
+    "poin": "Kartu arti kata sekarang punya tombol jelas: \"Ulang besok\".",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1997,
+    "judul": "Home Target baca: jelaskan baca ulang buku Tamat tak dihitung",
+    "poin": "Home sekarang jelaskan: baca ulang buku Tamat tak dihitung untuk target.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1995,
+    "judul": "Status buku 'Belum mulai' sama di sheet Tamat, Profil, Baca",
+    "poin": "Buku yang belum dibuka kini selalu disebut 'Belum dibuka' di semua layar.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1993,
+    "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
+    "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1991,
+    "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
+    "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1989,
+    "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
+    "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1987,
+    "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
+    "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1985,
     "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
     "poin": "Kartu Target baca di Home tak lagi membingungkan.",
@@ -129,54 +177,6 @@
     "n": 1937,
     "judul": "Kartu ulang: kata 1-2 huruf tampilkan kalimat asal di depan kartu",
     "poin": "Kartu ulang kata pendek (1-2 huruf) kini menampilkan kalimat asalnya di depan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1935,
-    "judul": "Ulang kata: tampilkan bahasa kata bila beda dari buku yang dibuka",
-    "poin": "Kartu ulang sekarang punya label bahasa kecil di dekat kata.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1933,
-    "judul": "[peta 188] Home kosong: 'Coba 1 cerita' jadi tombol utama",
-    "poin": "Layar awal kosong: 4 tombol \"Coba 1 cerita\" kini langsung terlihat di atas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1931,
-    "judul": "[peta 187] Home: cincin Target baca diisi dari menit utuh, 0 mnt = kosong",
-    "poin": "Cincin Target baca di Home sekarang kosong kalau belum genap 1 menit.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1929,
-    "judul": "Home buku Tamat: tombol buku berikutnya sebut bahasanya bila beda",
-    "poin": "Tombol buku berikutnya di Home kini menyebut bahasanya kalau beda.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1927,
-    "judul": "Sheet Tamat: buang tawaran pengingat, momen selesai buku tenang",
-    "poin": "Sheet Tamat sekarang tenang: tawaran pengingat dibuang, sisa satu tombol utama.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1925,
-    "judul": "Tab Kata: tombol 'Ulang kata sulit' satu ketuk langsung mulai",
-    "poin": "Tab Kata kini punya tombol \"Ulang N kata sulit\" di bagian atas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1923,
-    "judul": "Popup kata di reader: tombol 'Tandai sulit' sekali ketuk",
-    "poin": "Di popup arti kata saat membaca, ada tombol bendera kecil di samping Simpan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1921,
-    "judul": "Home Streak: 'Rekor barumu!' tampilkan rekor lama (naik dari N hari)",
-    "poin": "Kartu Streak kini menyebut angka rekor baru, mis. \"Rekor baru: 5 hari (dulu 4)\".",
     "tgl": "2026-11-27"
   }
 ]
