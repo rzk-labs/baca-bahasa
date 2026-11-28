@@ -662,14 +662,15 @@ async function openProfile(username) {
   openSheet(`<div class="sh-head"><h2>Profil</h2>${closeBtn}</div><div id="pfBody" class="mut sm">Memuat…</div>`, 'Profil');
   try {
     const p = await api('/u/' + encodeURIComponent(username));
-    if (p.self) p.streak = streak(); /* streak dari data lokal, sama dengan Home */
+    if (!p.self && db.acct && p.username === db.acct.username) p.self = true; /* profil sendiri selalu pakai angka lokal */
+    if (p.self) { p.streak = streak(); p.level = level(db.xp); } /* satu sumber: sama dengan Home */
     if (p.self) p.kata7 = kataBaruMinggu(); /* dari kata tersimpan lokal, bukan data sinkron lama */
     if (p.self) p.reading = rakList().map(b => ({ t: b.title, lang: b.lang, pct: pctOf(b) })).filter(r => r.pct > 0); /* sumber sama dengan rak: tak pernah bertentangan */
     const zero = !(+p.kata7 > 0);
     const rdMap = new Map(); /* satu entri per judul+bahasa, progres terbesar (data asli tak diubah) */
     (p.reading || []).forEach(r => { const k = titleKey(r.t), o = rdMap.get(k); if (!o || r.pct > o.pct) rdMap.set(k, r); });
     const rd = [...rdMap.values()], rdNow = rd.filter(r => r.pct < 100), rdDone = rd.filter(r => r.pct >= 100); /* 100 = Tamat, sama seperti kartu Home */
-    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level() : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${countedVocab(null).length} kata tersimpan${rdDone.length ? ` · ${rdDone.length} buku tamat` : ''}</div>` : ''}</div></div>
+    $('#pfBody').innerHTML = `<div class="acct-card"><div class="avatar big">${esc(initial(p.nick))}</div><div><b>${esc(p.nick)}</b>${p.premium ? ' <span class="prem-badge">★ Premium</span>' : ''}<div class="mut sm">@${esc(p.username)} · Level ${p.self ? level(db.xp) : p.level}${p.self ? (p.publik ? ' · publik' : ' · privat') : ''}</div>${p.self ? `<div class="mut sm">${countedVocab(null).length} kata tersimpan${rdDone.length ? ` · ${rdDone.length} buku tamat` : ''}</div>` : ''}</div></div>
       <div class="fr-stats"><div><b>${p.streak}</b><span>hari berturut</span></div>${zero ? '' : `<div title="Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" aria-label="${p.kata7} kata disimpan 7 hari. Total kata yang kamu simpan dalam 7 hari terakhir, bukan hanya sesi ini" role="group"><b>${p.kata7}</b><span><i class="nw">kata</i> <i class="nw">7 hari</i></span></div>`}<div><b>${p.pengikut}</b><span>pengikut</span></div><div><b>${p.mengikuti}</b><span>mengikuti</span></div></div>
       ${zero && !(rdDone.length && !rdNow.length) ? `<div class="mut sm" style="margin-top:10px">${NUDGE_TXT}</div>` : ''}
       ${p.self ? '' : `<div class="eyebrow" style="margin:14px 0 6px">Sedang dibaca</div>${rdNow.length ? rdNow.map(bacaBaris).join('') : `<div class="mut sm">${rdDone.length ? 'Sudah selesai semua.' : 'Belum ada buku yang dibuka.'}</div>`}`}
