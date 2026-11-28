@@ -2996,13 +2996,14 @@ async function onWord(el, lastEl) {
       const chip = (t, i) => { const on = norm(t) === cur; return `<button class="wchip${on ? ' on' : ''}" type="button" data-i="${i}" dir="auto"${on ? ' aria-pressed="true"' : ''}${i >= 6 && !on ? ' hidden' : ''}>${on ? '<span aria-hidden="true">✓ </span>' : ''}${esc(t)}</button>`; };
       if (kind.st === 'muat') body = '<div class="wchips" role="status" aria-label="Lagi memuat arti lain"><span class="wchip wskel"></span><span class="wchip wskel"></span><span class="wchip wskel"></span></div>';
       else if (kind.st === 'gagal') body = '<div class="wchips-msg"><span class="mut sm">Arti lain belum bisa dimuat</span> <button class="ghost wretry" type="button" id="wacoba">Coba lagi</button></div>';
+      else if (kind.st === 'satu') body = '<div class="wchips-msg"><span class="mut sm">Kata ini cuma punya satu arti.</span></div>';
       else if (kind.st === 'kosong') body = '<div class="wchips-msg"><span class="mut sm">Belum ada arti lain untuk ini</span> <button class="ghost wretry" type="button" id="wakosong">Terjemahkan ulang</button></div>';
       else {
         flat = kind.ph.length ? kind.ph : chipList(kind.dd);
         body = `<div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>`;
       }
       const exs = kind.st === 'ada' ? (Array.isArray(kind.ex) ? kind.ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('') : '';
-      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">Terjemahan mesin, bisa keliru.</div>`;
+      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>`;
       el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); });
       const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); };
       const rc = $('#wacoba'); if (rc) rc.onclick = () => fillAlt(false);
@@ -3034,8 +3035,15 @@ async function onWord(el, lastEl) {
         else if (Array.isArray(r.alt) && r.alt.length) more = r.alt;
         else more = await lim(altFill(q0, b.lang, db.my, ac.signal));
         if (!ok()) return;
-        if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; }
-        else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
+        const hadDict = altFlat(Array.isArray(more) ? more : []).length > 0 || (Array.isArray(r.dict) && r.dict.some(x => x && Array.isArray(x.terms) && x.terms.length));
+        if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; kind.src = ''; }
+        else {
+          /* #1975: kata dasar -> pivot Inggris -> MyMemory -> arti per kata; baru pesan jujur */
+          const ex = await lim(altExtra(q0, b.lang, db.my, r.base, ac.signal)); if (!ok()) return;
+          const eg = altArti(ex.groups, txt);
+          if (altFlat(eg).length) { kind.dd = eg; kind.st = 'ada'; kind.ph = []; kind.src = ex.src === 'base' ? 'Dari kata dasar: ' + ex.base + '. ' : ''; }
+          else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; kind.src = ''; } else kind.st = hadDict ? 'satu' : 'kosong'; }
+        }
       } catch (e) { if (!ok()) return; kind.st = 'gagal'; }
       finally { clearTimeout(tm); sig.removeEventListener('abort', onAb); if (altAc === ac) altAc = null; }
       paintDict(); keepVisible('.w.sel');
@@ -3043,7 +3051,7 @@ async function onWord(el, lastEl) {
     paintDict();
     /* arti lain kosong: ambil ulang sekali di latar; hasilnya selalu salah satu kondisi tetap */
     if (!alt.length) {
-      if (r.off || (b.lang === 'ja' && db.my === 'id')) perKata(qWord(), sig).then(ph => { if (my !== tok || !$('#wdict')) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; paintDict(); }).catch(() => { if (my === tok && $('#wdict')) { kind.st = 'kosong'; paintDict(); } });
+      if (r.off || (b.lang === 'ja' && db.my === 'id')) perKata(qWord(), sig).then(ph => { if (my !== tok || !$('#wdict')) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; paintDict(); } else if (navigator.onLine !== false) fillAlt(false); else { kind.st = 'kosong'; paintDict(); } }).catch(() => { if (my === tok && $('#wdict')) { kind.st = 'kosong'; paintDict(); } });
       else fillAlt(false);
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
