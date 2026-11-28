@@ -1638,3 +1638,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .cariall .vcariall{margin:0;padding:0 4px;text-decoration:underline;color:var(--color-text)}
 .cariall .vcariall:disabled{opacity:.7;text-decoration:none}
 .cariall .mut{margin:0 4px}
+
+/* #1981: bar bawah reader — 'Akhir' tak terpotong, tombol '<' 48x48 dengan jarak tepi, toast di atas bar */
+.rmid{min-width:3.5em}
+.rmid #pgn{flex-shrink:0;min-width:3.5em;text-overflow:clip}
+.rfoot{min-height:56px;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.rfoot #pv{flex:none;width:48px;min-width:48px;min-height:48px}
+body.reading #toast{bottom:calc(env(safe-area-inset-bottom) + 56px + var(--space-8))}
