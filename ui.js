@@ -1368,9 +1368,9 @@ function viewRak() {
     ${nextBadgeHtml()}
     <div id="hskSlot">${hskHomeHtml()}</div>
     ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
-    ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang${dueNote(cur && cur.lang)}. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang${dueNote(cur && cur.lang)}<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. ${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan' : 'Ketuk untuk buka bacaan'}">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan.' : 'Ketuk kata di bacaan, lalu Simpan.'}</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span>${pctOf(cur) >= 100 ? '' : '<span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span>'}</button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
+    ${(() => { const n = dueList().length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang${dueNote(cur && cur.lang)}. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang${dueNote(cur && cur.lang)}<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. ${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan' : 'Ketuk untuk buka bacaan'}">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan.' : 'Ketuk kata di bacaan, lalu Simpan.'}</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span>${pctOf(cur) >= 100 ? '' : '<span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span>'}</button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
     ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
-    ${pctOf(cur) >= 100 && db.vocab.some(isDue) ? '' : mileHtml()}
+    ${pctOf(cur) >= 100 && dueList().length ? '' : mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
       <div class="bk-act">${pctOf(b) >= 100 ? `<button class="sec bk-re" data-reread="${b.id}" aria-label="Baca ulang, tanpa XP: ${esc(b.title)}">Baca ulang (tanpa XP)</button>` : ''}<button class="del" data-menu="${b.id}" aria-label="Menu cerita: ${esc(b.title)}" aria-haspopup="dialog">${ico('more')}</button></div></div>`).join('')}</div>`;
@@ -1792,8 +1792,8 @@ function finishBook(b) {
       ? `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}" aria-label="${nextBkLabel(b, nx1)}: ${esc(nxTitle)}" title="${esc(nxTitle)}"><span class="fbn-t">${nextBkLabel(b, nx1)}</span><span class="fbn-m fbn-ex mut sm" dir="auto">${langName(nx1.lang)} · <span class="${nextBkCjk(nx1).trim()}" lang="${esc(nx1.lang)}">${esc(nxTitle)}</span> · ${nxProg}</span></button>`
       : `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}" aria-label="${nextBkLabel(b, nx1)}: ${esc(nx1.title)}" title="${esc(nx1.title)}"><span class="fbn-t">${nextBkLabel(b, nx1)}</span><span class="fbn-m mut sm" dir="auto"><span class="${nextBkCjk(nx1).trim()}" lang="${esc(nx1.lang)}">${esc(nextBkShort(nx1))}</span> · ${nxProg}</span></button>`);
   }
-  const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
-  const dueBuku = db.vocab.filter(v => isDue(v) && v.lang === b.lang && v.book === b.title).length; /* #2001: N dari buku ini */
+  const dueN = dueList().length; /* sama dgn 'N kata siap diulang' di Home */
+  const dueBuku = dueList(v => v.lang === b.lang && v.book === b.title).length; /* #2001: N dari buku ini */
   /* #1877: satu ajakan utama berwarna; sisanya tautan teks */
   /* #1991: 2 aksi saja: 1 tombol utama + tautan 'Ke Home'. 'Baca ulang' ada di kartu buku Home/Profil */
   let actsHtml;
@@ -1994,7 +1994,7 @@ async function viewBaca() {
     const inner = ss.filter(x => x.s).map(({ s, i }) => i < 0 ? esc(s) : `<span class="s" data-s="${i}">${wordsHtml(s)}</span>`).join('');
     return P.h ? `<h2 class="ch"${rtlA}>${inner}</h2>` : `<p${rtlA}>${inner}</p>`;
   }).join('');
-  const dueN = db.vocab.filter(isDue).length; /* titik pengingat di tombol menu; isDue sama dengan Home */
+  const dueN = dueList().length; /* titik pengingat di tombol menu; isDue sama dengan Home */
   const hr = new Date().getHours();
   const nightChip = db.theme === 'paper' && !db.themeSet && !!db.seenTip && (hr >= 19 || hr < 5 || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)); /* panduan dulu; saran tema malam baru setelah panduan ditutup, tak pernah bersamaan */
   $('#view').innerHTML = `
@@ -3652,7 +3652,7 @@ const hardPick = () => (db.vocab || []).filter(v => v && v.w && v.hard && !v.kno
 const lastAns = v => +v.la || ((v.lv || 0) > 0 && +v.due ? +v.due - REVIEW_DAYS[Math.min(v.lv, REVIEW_DAYS.length) - 1] * DAY_MS : 0);
 const extraRounds = () => db.xr && db.xr.d === today() ? +db.xr.n || 0 : 0;
 const extraRoundUse = () => { db.xr = { d: today(), n: extraRounds() + 1 }; };
-const extraPick = () => extraRounds() >= 2 || (db.vocab || []).some(isDue) ? [] : (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim() && Date.now() - lastAns(v) >= DAY_MS).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);
+const extraPick = () => extraRounds() >= 2 || dueList().length ? [] : (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim() && Date.now() - lastAns(v) >= DAY_MS).sort((a, b) => (+a.due || 0) - (+b.due || 0)).slice(0, 3);
 let quickXpGot = false;
 const Q_MIN = 1; /* #1771: Ulang boleh mulai 1 kata */
 const quickPick = () => { const bt = (book() || {}).title || ''; return (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => ((bt && b.book === bt ? 1 : 0) - (bt && a.book === bt ? 1 : 0)) || (+a.due || 0) - (+b.due || 0)).slice(0, 3); }; /* kata dari buku yang terakhir dibaca dulu, lalu urut jatuh tempo */
@@ -3664,11 +3664,15 @@ const retryGet = () => { const t = new Date().toDateString(); try { const o = JS
 const retrySet = o => { try { localStorage.setItem(RETRY_KEY, JSON.stringify(o)); } catch (e) {} };
 const isLearning = v => !!v && !v.known && (v.lv || 0) >= 1;
 const refreshHafal = () => { const a = $('#sumLearn'), b = $('#sumKnown'), c = $('#sumSaved'); if (c) c.textContent = countedVocab(null).length; if (a) a.textContent = db.vocab.filter(isLearning).length; if (b) b.textContent = db.vocab.filter(v => v.known).length; };
-const isDue = v => !!v && !!v.w && !v.known && (+v.due || 0) <= Date.now();
+/* #2016: 'siap diulang' hanya kata ber-arti (sama dgn countedVocab/Profil): t terisi, bukan noTr, bukan kata sampah */
+const adaArti = v => !!v && !!v.w && !v.noTr && !!String(v.t || '').trim() && !isKataSampah(v.lang, v.w);
+const isDue = v => adaArti(v) && !v.known && (+v.due || 0) <= Date.now();
+const dueList = (extra = null) => { const seen = new Set(); return (db.vocab || []).filter(v => { if (!isDue(v) || (extra && !extra(v))) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; }); };
+const menungguArti = () => { const seen = new Set(); return (db.vocab || []).filter(v => { if (!v || !v.w || v.known || adaArti(v) || isKataSampah(v.lang, v.w)) return false; const k = vocabKey(v.lang, v.w); if (seen.has(k)) return false; seen.add(k); return true; }).length; };
 /* #1935: nama bahasa kata jatuh tempo yang beda dari buku aktif (kosong bila sebahasa) */
 const dueNote = lang => { const m = []; for (const v of db.vocab || []) if (isDue(v) && v.lang && v.lang !== lang && !m.includes(v.lang)) m.push(v.lang); return m.length ? ' · termasuk ' + m.map(l => (LANG_ID[l] || (LANGS[l] || [l])[0]) + ((db.books || []).some(b => b && b.lang === l && pctOf(b) > 0) ? '' : ' (tersimpan)')).join(', ') : ''; };
 /* #1967: subteks 'N siap diulang' = bagian dari total tersimpan (countedVocab, sama dgn Profil); lebih besar dari total = kata tanpa arti ikut dijadwalkan */
-const dueSub = n => { const t = countedVocab(null).length; return !t ? 'Belum ada arti terisi' : n > t ? `Total tersimpan ${t}, sisanya belum ada arti` : `Dari ${t} tersimpan`; };
+const dueSub = n => { const t = countedVocab(null).length, w = menungguArti(); return w ? `${w} kata menunggu arti` : `Dari ${t} tersimpan`; };
 function viewKata() {
   try { viewKataIn(); }
   catch (e) {
@@ -3723,7 +3727,7 @@ function viewKataIn() {
     <h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1>
     <div class="sum"><div class="s1"><b id="sumSaved">${countedVocab(null).length}</b><span>Tersimpan (total)</span></div><div class="s1"><b id="sumLearn">${learning}</b><span>Dihafal</span></div><div class="s2"><b id="sumKnown">${known}</b><span>Hafal</span></div><div class="s3"><b>${weakAll.length}</b><span>Ucap</span></div></div>
     ${(() => { const n = hardPick().length; return n && !quickRun ? `<button type="button" class="fw-nudge due-nudge" id="khardGo" style="margin:0 0 6px" aria-label="Ulang ${n} kata sulit. Langsung mulai">${ico('flag')}<span>Ulang ${n} kata sulit</span><b>Mulai</b></button>` : ''; })()}
-    ${(() => { const n = db.vocab.filter(isDue).length; return n && kataSeg !== 'kartu' ? `<button type="button" class="fw-nudge due-nudge" id="kdue" style="margin:-2px 0 10px" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>` : ''; })()}
+    ${(() => { const n = dueList().length; return n && kataSeg !== 'kartu' ? `<button type="button" class="fw-nudge due-nudge" id="kdue" style="margin:-2px 0 10px" aria-label="${n} kata siap diulang. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>` : ''; })()}
     ${(() => { const cb = book(), s = cb ? sentLooksOf(cb.id) : null; return s && (s.kata || s.kalimat) ? `<div class="mut sm" id="kstat" style="margin:-2px 2px 10px">Buku ini: ${s.kata} kata dicek · ${s.kalimat} kalimat dibuka</div>` : ''; })()}
     <div class="seg" id="kseg" role="group" aria-label="Tampilan kata"><button data-v="kartu" class="${kataSeg === 'kartu' ? 'on' : ''}" aria-pressed="${kataSeg === 'kartu'}">${ico('bolt')}Kartu</button><button data-v="simpan" class="${kataSeg === 'simpan' ? 'on' : ''}" aria-pressed="${kataSeg === 'simpan'}">Tersimpan</button><button data-v="sulit" class="${kataSeg === 'sulit' ? 'on' : ''}" aria-pressed="${kataSeg === 'sulit'}"${weakAll.length ? ` aria-label="Latih ucap, ${weakAll.length} kata"` : ''}>Latih ucap${weakAll.length ? ' · ' + weakAll.length : ''}</button></div>${(() => { const n = db.vocab.filter(v => v && v.hard).length; return kataSeg === 'kartu' && n ? `<button type="button" class="hardcnt" id="khard">${ico('flag')}<span>Lihat daftar kata sulit (${n})</span></button>` : ''; })()}${kataSeg === 'sulit' ? '<p class="mut sm" id="khelp" style="margin:6px 2px 10px">Kata yang kamu tandai sulit + kata yang ucapannya di bawah 85%. Latih lewat tab Ngomong.</p>' : ''}
     <div id="kbody"></div>`;
@@ -3766,7 +3770,7 @@ function viewKataIn() {
         const fchip = (val, txt) => `<button class="fchip${csvF === val ? ' on' : ''}" data-f="${esc(val)}" aria-pressed="${csvF === val}">${esc(txt)}</button>`;
         const chipRow = filt ? `<div class="fchips" id="kChips" role="group" aria-label="Saring kata">${fchip('all', 'Semua')}${langs.length > 1 ? langs.map(l => fchip('l:' + l, langName(l))).join('') : ''}${books.length > 1 ? books.map(b => fchip('b:' + b, b)).join('') : ''}</div>` : '';
         const oldScroll = ($('#kChips') || {}).scrollLeft || kataChipScroll;
-        const hskDue = hskF ? db.vocab.filter(v => isDue(v) && inF(v)).length : 0;
+        const hskDue = hskF ? dueList(inF).length : 0;
         const hskIdleTxt = (() => {
           if (!hskF || hskDue) return '';
           const nx = db.vocab.filter(v => inF(v) && v.w && !v.known && (+v.due || 0) > Date.now()).reduce((m, v) => Math.min(m, +v.due), Infinity);
@@ -3956,7 +3960,7 @@ function deck(kb) {
       if ($('#q3Read')) $('#q3Read').onclick = () => setTab('baca');
       return;
     }
-    const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = db.vocab.filter(isDue).length, left = nLeft > 0;
+    const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = dueList().length, left = nLeft > 0;
     kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('cards', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
   const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false;
   const nCards = cards.length + deckRetry.filter(r => r !== rt && r !== rdy).length;
@@ -4047,7 +4051,7 @@ const APP_LINK = 'https://rzk-labs.github.io/baca-bahasa/';
 const remSupport = () => 'Notification' in window && 'serviceWorker' in navigator;
 const remJam = () => (db.remind && /^\d\d:\d\d$/.test(db.remind.jam) ? db.remind.jam : '19:30');
 function remText() {
-  const b = book(), n = (db.vocab || []).filter(isDue).length;
+  const b = book(), n = dueList().length;
   const t = b && b.title ? splitTitle(b.title).main.slice(0, 28) : '';
   if (t) return n ? `Lanjut ${t}? ${n} kata menunggu diulang` : `Lanjut ${t}? Satu halaman cukup.`;
   return n ? `${n} kata menunggu diulang. Yuk, 2 menit aja.` : 'Yuk baca satu halaman hari ini.';
