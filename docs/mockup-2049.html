@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #2049 – kartu Kata</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font:400 15px/1.4 Inter,system-ui,sans-serif;color:#351E28}
+.wrap{display:flex;gap:16px;flex-wrap:wrap}
+.ph{width:390px;background:#FFF9F0;border-radius:24px;padding:16px;box-sizing:border-box}
+.lbl{display:inline-block;font-size:12px;font-weight:700;background:#E9F056;border-radius:999px;padding:2px 10px;margin-bottom:10px}
+.card{min-height:350px;border:2px solid #d9cfd2;border-radius:28px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;box-sizing:border-box}
+.fw{font:800 48px/1.05 "Bricolage Grotesque",Inter,sans-serif}
+.ft{font:800 28px/1.2 "Bricolage Grotesque",Inter,sans-serif;background:#E9F056;border-radius:12px;padding:2px 12px}
+.note{font-size:12px;opacity:.7;margin-top:6px}
+.act{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.act b{min-height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #351E28}
+.act .y{background:#351E28;color:#FFF9F0}
+.one{min-height:56px;border-radius:999px;background:#351E28;color:#FFF9F0;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:14px}
+</style></head><body>
+<p><b>Gambaran gerak, layar tab Kata.</b> Panah = animasi singkat.</p>
+<div class="wrap">
+<div class="ph"><span class="lbl">Sebelum: kartu depan</span>
+<div class="card"><div class="fw">谢谢</div><div class="note">Ketuk untuk lihat arti</div></div>
+<div class="one">Lihat arti</div></div>
+<div class="ph"><span class="lbl">Sesudah: arti masuk (naik 6 px, 180 ms)</span>
+<div class="card"><div class="fw">谢谢</div><div class="ft">terima kasih</div><div class="note">xièxie</div></div>
+<div class="act"><b>Lupa</b><b>Ragu</b><b class="y">Hafal</b></div>
+<div class="note">Tombol fade 160 ms. Kartu berikutnya masuk scale .97 → 1, 200 ms.</div></div>
+</div></body></html>

@@ -3659,7 +3659,7 @@ const extraPick = () => extraRounds() >= 2 || dueList().length ? [] : (db.vocab 
 let quickXpGot = false;
 const Q_MIN = 1; /* #1771: Ulang boleh mulai 1 kata */
 const quickPick = () => { const bt = (book() || {}).title || ''; return (db.vocab || []).filter(v => v && v.w && !v.known && String(v.t || '').trim()).sort((a, b) => ((bt && b.book === bt ? 1 : 0) - (bt && a.book === bt ? 1 : 0)) || (+a.due || 0) - (+b.due || 0)).slice(0, 3); }; /* kata dari buku yang terakhir dibaca dulu, lalu urut jatuh tempo */
-let deckDone = 0, deckHint = '';
+let deckDone = 0, deckHint = '', deckNew = false;
 let deckRetry = [], deckAns = new Set(), deckRetryTot = 0; /* ulang di sesi sama: antrean di memori, hitungan di localStorage */
 const RETRY_KEY = 'kepo-deck-retry', RETRY_MAX = 2, RETRY_SESI = 8, RETRY_GAP = { lupa: 3, ragu: 5 };
 const retryId = v => v.lang + '|' + v.w;
@@ -3965,10 +3965,10 @@ function deck(kb) {
     }
     const dues = db.vocab.filter(v => v && !v.known && v.due > Date.now()).map(v => v.due), nd = dues.length ? Math.max(1, Math.ceil((Math.min(...dues) - Date.now()) / DAY_MS)) : 0, nLeft = dueList().length, left = nLeft > 0;
     kb.innerHTML = db.vocab.length ? emptyState('cheer', left ? 'Sesi hari ini beres' : 'Semua beres, balik besok ya', left ? `Masih ada ${nLeft} kata. Muncul lagi pas kamu balik nanti.` : nd ? `Kartu berikutnya muncul ${nd} hari ke depan. Simpan kata baru pas baca buat nambah kartu.` : 'Keren banget, semua kata udah hafal. Simpan kata baru pas baca buat nambah kartu.', 'Lanjut baca', "setTab('baca')") : emptyState('cards', 'Belum ada kartu', 'Pas baca, ketuk kata → Simpan. Kata itu jadi kartu hafalan di sini.', 'Mulai baca', "setTab('baca')"); return; }
-  const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false;
+  const v = cards[0], next = cards[1], rt = deckRetry.find(r => r.v === v); flipped = false; const cardIn = deckNew; deckNew = false;
   const nCards = cards.length + deckRetry.filter(r => r !== rt && r !== rdy).length;
   kb.innerHTML = `${db.autoSpeakAsked ? '' : `<div class="asp-ban" id="aspBan" role="group" aria-label="Bunyi otomatis"><span>Mau kata dibunyikan otomatis?</span><button class="yes" id="aspOn" type="button">Nyalakan</button><button class="ghost" id="aspOff" type="button">Nanti</button></div>`}<div class="deck">${next ? `<div class="flash under"><div class="fw" dir="auto" style="color:var(--color-text-muted)">${esc(next.w)}</div></div>` : ''}
-      <div class="flash" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="fsp" id="fSp" type="button" aria-label="Dengar kata"><img src="img/ikon-speaker.svg" alt="" width="48" height="48"></button>
+      <div class="flash${cardIn ? ' card-in' : ''}" id="card"><span class="stamp yes">HAFAL</span><span class="stamp no">LUPA</span><button class="fsp" id="fSp" type="button" aria-label="Dengar kata"><img src="img/ikon-speaker.svg" alt="" width="48" height="48"></button>
         <div class="eyebrow"><span class="lchip">${langName(v.lang)}</span> · ${nCards} kartu${rt ? ` <span class="recheck">Ulang ke-${rt.n}/${RETRY_MAX}</span>` : (v.lv || 0) > 0 ? ' <span class="recheck">Cek ulang</span>' : ''}</div>
         <div class="fw" dir="auto" lang="${esc(v.lang)}">${esc(v.w)}</div>${(() => { const cf = [...String(v.w || '').trim()].length <= 2 && /^(ja|ko|zh-CN)$/.test(v.lang) ? ctxOf(v) : ''; return cf ? `<div class="fs fs-front" id="fCtx" lang="${esc(v.lang)}">${hitHtml(cf, v.w)}</div>` : ''; })()}<div id="back" class="hide"><div class="ft">${String(v.t || '').trim() ? esc(v.t) : '<span class="mut">Arti menyusul</span> <button class="ghost" id="fget" type="button">Ambil arti</button>'}</div>${bacaOf(v.w, v.baca) ? ((db.peekBaca === 'langsung' || (db.peekBaca !== 'ketuk' && db.showBaca)) ? `<div class="fb" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, false)}` : `<button class="ghost fb-peek" id="peek" type="button">Lihat cara baca</button><div class="fb hide" id="peekv" lang="${esc(v.lang)}" style="overflow-wrap:anywhere">${pinyinHtml(bacaOf(v.w, v.baca), v.lang)}</div>${nadaLegend(bacaOf(v.w, v.baca), v.lang, true)}`) : ''}${baseOf(v.w, v.base) ? `<div class="fbase">Bentuk dasar: <b lang="${esc(v.lang)}">${esc(baseOf(v.w, v.base))}</b></div>` : ''}<div class="fs" style="margin-top:8px">${hitHtml(ctxOf(v), v.w)}</div>${String(v.t || '').trim() ? `<button class="ghost semua-btn" id="fAll" type="button">Semua arti${Array.isArray(v.all) && v.all.length ? ` (${v.all.reduce((n, g) => n + g.terms.length, 0)})` : ''}</button>` : ''}</div>
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
@@ -4023,7 +4023,7 @@ function deck(kb) {
     if (quickExtra) { v.la = Date.now(); deckHint = 'Jadwal kata ini tidak berubah'; sched(0); } else { v.due = Date.now() + DAY_MS; v.known = false; deckHint = 'Besok muncul lagi'; sched(1); }
     save(); sfx('pop');
     refreshHafal();
-    setTimeout(() => deck(kb), 280);
+    deckNew = true; setTimeout(() => deck(kb), 280);
   };
   const decide = ok => {
     if (!flipped) return;
@@ -4033,7 +4033,7 @@ function deck(kb) {
     else if (ok && rt) { v.known = false; v.due = Math.max(+v.due || 0, Date.now() + DAY_MS); deckHint = 'Nah, ingat. Kata ini selesai untuk sesi ini'; sched(0); save(); sfx('ding'); }
     else if (ok) { sched(0); const lv = v.lv || 0; if (lv >= REVIEW_DAYS.length) { v.known = true; v.due = 0; deckHint = 'Kata ini udah hafal beneran'; } else { const d = REVIEW_DAYS[lv]; v.lv = lv + 1; v.due = Date.now() + d * DAY_MS; v.known = false; deckHint = `Mantap! Muncul lagi ${d} hari ke depan · ${REVIEW_DAYS.length - lv} tahap lagi jadi hafal`; } save(); sfx('ding'); award(2, 'flash'); } else { v.lv = 0; v.due = Date.now(); v.known = false; deckHint = 'Lupa nggak apa-apa, kata ini muncul lagi'; if (!sched(2)) { v.due = Date.now() + DAY_MS; deckHint = 'Besok kita coba lagi'; } save(); sfx('soft'); }
     refreshHafal();
-    setTimeout(() => deck(kb), 280);
+    deckNew = true; setTimeout(() => deck(kb), 280);
   };
   if ($('#fget')) { const g = $('#fget'); g.addEventListener('pointerdown', e => e.stopPropagation()); g.addEventListener('pointerup', e => e.stopPropagation()); g.onclick = e => { e.stopPropagation(); g.disabled = true; g.textContent = 'Nyari…'; refillVocab().then(ok => { if (ok && kb.isConnected && $('#card')) deck(kb); else { g.disabled = false; g.textContent = 'Ambil arti'; toast('Belum ketemu, coba lagi nanti'); } }); }; }
   if ($('#fAll')) { const a = $('#fAll'); a.addEventListener('pointerdown', e => e.stopPropagation()); a.addEventListener('pointerup', e => e.stopPropagation()); a.onclick = e => { e.stopPropagation(); openSemua(v, () => { if (kb.isConnected && $('#fAll')) $('#fAll').textContent = `Semua arti (${(v.all || []).reduce((n, g) => n + g.terms.length, 0)})`; }); }; }
