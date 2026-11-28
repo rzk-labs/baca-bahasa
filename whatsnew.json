@@ -1,5 +1,11 @@
 [
   {
+    "n": 1979,
+    "judul": "[peta 183] Reader: satu satuan 'Bagian' di bar, sheet Tamat, catatan sesi",
+    "poin": "Bar bawah reader kini tulis \"Bagian 4 dari 9\", sama seperti bagian atas.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1977,
     "judul": "Offline: arti bagian berikutnya diisi otomatis diam-diam saat sinyal bagus",
     "poin": "Saat sinyal bagus, arti kata bagian berikutnya terisi sendiri di belakang layar.",
@@ -171,12 +177,6 @@
     "n": 1914,
     "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
     "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1912,
-    "judul": "Tab Kata Tersimpan: filter 'Sulit saja' untuk kata bertanda sulit",
-    "poin": "Tab Kata > Tersimpan kini punya tombol \"Sulit 3\" untuk lihat kata bertanda sulit saja.",
     "tgl": "2026-11-27"
   }
 ]

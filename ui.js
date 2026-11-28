@@ -1696,6 +1696,7 @@ async function isiArtiRekap(cand) {
 let rekapAktif = null;
 function sessRecap(b) {
   const all = [...SESSW.values()].filter(e => b && e.bid === b.id && e.lang === b.lang);
+  const nBag = b ? new Set([...SESPG].filter(k => k.startsWith(b.id + ':')).map(k => k.split(':')[1])).size : 0; /* #1979: bagian unik yang dibuka sesi ini */
   if (b) for (const k of [...SESPG]) if (k.startsWith(b.id + ':')) SESPG.delete(k);
   for (const e of all) SESSW.delete(vocabKey(e.lang, e.w));
   if (b) sesiClear(b.id);
@@ -1705,7 +1706,7 @@ function sessRecap(b) {
   rekapAktif = cand;
   /* #1674: tanpa b.pgN (berubah menurut ukuran huruf); posisi pakai Bagian k dari n, satuan sama dgn reader & Tamat */
   const pos = (b.total || 1) > 1 ? `${secWord(b, b.pos)} ${Math.min((b.pos || 0) + 1, b.total)} dari ${b.total}` : '';
-  const pgTxt = pos ? `Berhenti di ${pos}. ` : '';
+  const pgTxt = (nBag ? `${nBag} bagian kamu baca hari ini. ` : '') + (pos ? `Berhenti di ${pos}. ` : '');
   const row = (e, i) => { const c = trCache.get(trKey(e)); return `<div class="vitem"><div class="inf"><div class="w1" dir="auto" lang="${esc(e.lang)}">${esc(e.w)}</div><div class="t1${c && c.text ? '' : ' noarti'}" data-rt="${i}">${c && c.text ? esc(c.text) : 'arti belum ada'}</div></div><button class="pill-sm" data-rs="${i}" aria-label="Simpan kata ${esc(e.w)}">Simpan</button></div>`; };
   openSheet(`<div class="grab"></div><div class="sh-head"><span class="stepchip">Kata sesi ini</span>${closeBtn}</div>
     <h2>Kata yang kamu ketuk tadi</h2><p class="mut sm">${pgTxt}${cand.length} kata belum disimpan. Simpan yang mau dihafal.</p>
@@ -2493,7 +2494,8 @@ function showPage(p, anim = true) {
     const bp = bookPct(b), rem = ml && ml.t && bp < 100 ? ml.t.replace(/^(bab|bagian) ini /, '') : '';
     const wd = secWord(b, b.pos), tb = 0; if ((b.tb || 0) !== tb) { b.tb = tb; save(); }
     /* #1285: satu satuan = halaman (1-based, sama dengan chip 'Lanjut dari halaman'); nomor bagian tak ditulis */
-    const sec = `Layar ${RD.page + 1}/${RD.n}`, secFull = `Layar ${RD.page + 1} dari ${RD.n} dalam bagian ini`;
+    /* #1979: satu satuan 'Bagian k dari m' (sama dgn header & sheet Tamat); nomor layar tak ditulis */
+    const sec = secLabel(b.pos + 1, b.total || 1, false, wd), secFull = sec, secShort = secLabel(b.pos + 1, b.total || 1, false, wd, true);
     const notes = [ml && ml.part ? 'bagian lain belum dihitung' : '', multi && lastPg && b.pos < b.total - 1 ? 'Halaman terakhir di bab ini, geser untuk lanjut' : ''].filter(Boolean);
     pgn.title = ['persen dari seluruh buku, perkiraan sisa waktu'].concat(notes).join('. ');
     pgn.setAttribute('aria-label', [secFull, multi ? `${bp} persen dari seluruh buku` : '', ml && ml.t ? `perkiraan sisa ${ml.t}` : ''].concat(notes).filter(Boolean).join(', '));
@@ -2510,12 +2512,12 @@ function showPage(p, anim = true) {
     }
     if (tamat) { pgn.setAttribute('aria-label', 'Tamat. ' + secFull); pgn.title = 'Buku sudah Tamat. ' + secFull; }
     if (tamat) { fill(['Tamat']); pgn.innerHTML = ico('check', 'ck') + pgn.innerHTML; } /* #1630: selalu 'Tamat' utuh, tanpa ' · N/N' yang bisa terpotong; jumlah halaman ada di aria-label & title */
-    else if (akhir) { pgn.innerHTML = nw('Hal. terakhir'); if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(`${RD.page + 1}/${RD.n}`); } /* #1886: label pendek, cadangan N/N; teks lengkap di title & aria-label */
+    else if (akhir) { pgn.innerHTML = nw('Hal. terakhir'); if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(secShort); } /* #1886: label pendek, cadangan N/N; teks lengkap di title & aria-label */
     else {
       fill([sec, bs.txt, (window.innerWidth || 400) <= 360 ? '' : rem]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([sec, bs.txt]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([bs.txt]);
-      if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(`${RD.page + 1}/${RD.n}`);
+      if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(secShort);
     }
   }
   if (pb) { const bp = bookPct(b); pb.style.width = bp + '%'; if (pb.parentElement) pb.parentElement.setAttribute('aria-valuenow', bp); if (pb.parentElement) pb.parentElement.title = `${bp}% dari seluruh buku`; }
