@@ -1089,7 +1089,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v807';
+const APP_VER = 'v808';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -3356,7 +3356,17 @@ function paintHafal(lang, w, on) {
 function paintSaved(lang, w, on) {
   const b = book(); if (!b || b.lang !== lang) return;
   const k = String(w || '').trim().toLowerCase();
-  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) { const baru = on && !x.classList.contains('saved'); x.classList.toggle('saved', on); if (baru) { x.classList.remove('saved-new'); void x.offsetWidth; x.classList.add('saved-new'); x.addEventListener('animationend', () => x.classList.remove('saved-new'), { once: true }); } if (on) x.classList.remove('kenal'); else x.classList.remove('hafal'); } });
+  const mark = x => { const baru = on && !x.classList.contains('saved'); x.classList.toggle('saved', on); if (baru) { x.classList.remove('saved-new'); void x.offsetWidth; x.classList.add('saved-new'); x.addEventListener('animationend', () => x.classList.remove('saved-new'), { once: true }); } if (on) x.classList.remove('kenal'); else x.classList.remove('hafal'); };
+  /* frasa (2-5 kata): tandai deretan kata berurutan di halaman, sama seperti saat halaman dirender ulang */
+  if (/\s/.test(k) && !['ja', 'zh-CN', 'zh-TW', 'th'].includes(lang)) {
+    const pw = tokens(k, lang).filter(t => t.w).map(t => t.t.toLowerCase());
+    if (pw.length >= 2 && pw.length <= 5) {
+      const els = [...$$('.cols .w')], tx = els.map(x => x.textContent.trim().toLowerCase());
+      for (let i = 0; i + pw.length <= els.length; i++) if (pw.every((x, j) => tx[i + j] === x)) for (let j = 0; j < pw.length; j++) mark(els[i + j]);
+    }
+    return;
+  }
+  $$('.cols .w').forEach(x => { if (x.textContent.trim().toLowerCase() === k) mark(x); });
 }
 let lastSentLook = '';
 function showSentence(word, sent, sIdx, sEl) {
