@@ -143,6 +143,8 @@ function applyTheme() {
 const LANG_ID = { en: 'Inggris', ja: 'Jepang', ko: 'Korea', 'zh-CN': 'Mandarin', fr: 'Prancis', de: 'Jerman', es: 'Spanyol', it: 'Italia', nl: 'Belanda', pt: 'Portugis', ru: 'Rusia', ar: 'Arab', th: 'Thai', hi: 'Hindi', tr: 'Turki', id: 'Indonesia' };
 const FLAG = { en: '🇬🇧', ja: '🇯🇵', ko: '🇰🇷', 'zh-CN': '🇨🇳', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸', it: '🇮🇹', nl: '🇳🇱', pt: '🇵🇹', ru: '🇷🇺', ar: '🇸🇦', th: '🇹🇭', hi: '🇮🇳', tr: '🇹🇷', id: '🇮🇩' };
 const langName = l => (FLAG[l] || '') + ' ' + (LANG_ID[l] || (LANGS[l] || [l])[0]);
+/* #1987: satu nama tombol pindah buku di Home, reader, sheet Tamat */
+const nextBkLabel = (from, to) => !to ? 'Buku baru' : `Mulai buku ${from && to.lang === from.lang ? 'berikutnya' : (LANG_ID[to.lang] || (LANGS[to.lang] || [to.lang])[0])}`;
 /* SATU rumus persen buku (bobot bab bila units valid) untuk SEMUA layar: Home, bar baca, Profil, Koleksi, Sosial.
    Dihitung ulang saat render dari pos + halaman tersimpan, bukan dari b.pct lama yang bisa basi. Tamat = 100. */
 /* posisi dalam bab = pecahan stabil b.frac (0-1, milik bab b.fracPos); buku lama: dari pg/pgN; tak ada = awal bab */
@@ -1346,7 +1348,7 @@ function viewRak() {
     $('#view').innerHTML = `
     ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; const dl = other.lang !== cur.lang; /* #1929: beda bahasa = sebut bahasanya */ const lb = `${v} buku ${dl ? langName(other.lang).trim() : 'berikutnya'}`; /* #1969: label pendek, judul jadi baris kecil */ return `<button class="pri nx-bk" id="hNext" aria-label="${lb}: ${esc(other.title)}"><span class="nx-v">${lb}</span><span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const lb = nextBkLabel(cur, other); /* #1929/#1987: beda bahasa = sebut bahasanya */ /* #1969: label pendek, judul jadi baris kecil */ return `<button class="pri nx-bk" id="hNext" aria-label="${lb}: ${esc(other.title)}"><span class="nx-v">${lb}</span><span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Buku baru</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
@@ -1778,16 +1780,16 @@ function finishBook(b) {
   const acts = [];
   if (nx1) { /* #1762 + #1758: buku contoh bawaan diberi label jelas, buku pengguna tetap 'Lanjut' */
     const nxEx = /\(contoh\)/i.test(nx1.title || '') || Object.values(SAMPLES).some(x => x.title === nx1.title) || isShortSample(nx1);
-    const nxProg = pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum mulai';
+    const nxProg = pctOf(nx1) > 0 ? pctOf(nx1) + '%' : 'Belum dibuka';
     const nxTitle = nxEx ? (nx1.title.replace(/\s*\(contoh\)\s*/ig, ' ').trim() || nx1.title) : nx1.title;
     acts.push(nxEx
-      ? `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t">Coba buku contoh</span><span class="fbn-m fbn-ex mut sm" dir="auto">${langName(nx1.lang)} · <span lang="${esc(nx1.lang)}">${esc(nxTitle)}</span> · ${nxProg}</span></button>`
-      : `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t" dir="auto" lang="${esc(nx1.lang)}">Lanjut: ${esc(nx1.title)}</span><span class="fbn-m mut sm">${langName(nx1.lang)} · ${nxProg}</span></button>`);
+      ? `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t">${nextBkLabel(b, nx1)}</span><span class="fbn-m fbn-ex mut sm" dir="auto">${langName(nx1.lang)} · <span lang="${esc(nx1.lang)}">${esc(nxTitle)}</span> · ${nxProg}</span></button>`
+      : `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t">${nextBkLabel(b, nx1)}</span><span class="fbn-m mut sm" dir="auto"><span lang="${esc(nx1.lang)}">${esc(nx1.title)}</span> · ${nxProg}</span></button>`);
   }
   const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
   /* #1877: satu ajakan utama berwarna; sisanya tautan teks */
   const lnk = (id, t) => `<button type="button" class="lnk" id="${id}">${t}</button>`;
-  const aDue = dueN ? { id: 'fbdue', t: `Ulang ${dueN} kata siap` } : null;
+  const aDue = dueN ? { id: 'fbdue', t: `Ulang ${dueN} kata` } : null;
   const aLihat = total > 0 && (ws.length || !dueN) ? { id: 'fbk', t: ws.length ? `Lihat ${ws.length} kata` : 'Lihat kata' } : null;
   const aBaru = { id: 'fbadd', t: 'Buku baru' };
   let actsHtml = '', more = [];
@@ -2568,7 +2570,7 @@ function endCard(b, last) {
   if (tamatSeen === b.id + ':' + SESS.t) return; /* #1560: sheet Tamat sudah muncul/ditutup di buku ini → satu aksi 'Buku baru' saja (di sheet) */
   const nx = nextBooks(b)[0];
   const c = document.createElement('div'); c.id = 'endcard'; c.className = 'endcard'; c.setAttribute('role', 'note');
-  c.innerHTML = `<p class="ec-end" id="ecend" hidden>Tamat. Sampai sini dulu.</p><button class="sec" id="ecn">${nx ? 'Buku berikutnya' : 'Buku baru'}</button><button class="lnk" id="ecr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button>`;
+  c.innerHTML = `<p class="ec-end" id="ecend" hidden>Tamat. Sampai sini dulu.</p><button class="sec" id="ecn">${nextBkLabel(b, nx)}</button><button class="lnk" id="ecr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button>`;
   c.onclick = c.onpointerdown = c.ontouchstart = e => e.stopPropagation();
   vp.append(c);
   $('#ecr').onclick = () => { restartBook(b); viewBaca(); };

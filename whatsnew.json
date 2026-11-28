@@ -1,5 +1,11 @@
 [
   {
+    "n": 1987,
+    "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
+    "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1985,
     "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
     "poin": "Kartu Target baca di Home tak lagi membingungkan.",
@@ -171,12 +177,6 @@
     "n": 1923,
     "judul": "Popup kata di reader: tombol 'Tandai sulit' sekali ketuk",
     "poin": "Di popup arti kata saat membaca, ada tombol bendera kecil di samping Simpan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1921,
-    "judul": "Home Streak: 'Rekor barumu!' tampilkan rekor lama (naik dari N hari)",
-    "poin": "Kartu Streak kini menyebut angka rekor baru, mis. \"Rekor baru: 5 hari (dulu 4)\".",
     "tgl": "2026-11-27"
   }
 ]
