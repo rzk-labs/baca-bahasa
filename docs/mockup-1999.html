@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #1999 Ulang besok</title>
+<style>
+body{margin:0;padding:16px;background:#eee;font-family:Inter,system-ui,sans-serif;color:#351E28}
+.lbl{font:700 12px/1 Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:16px auto 8px;width:390px;color:#6b5560}
+.phone{width:390px;margin:0 auto;background:#FAF7F0;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px #0002;min-height:340px;position:relative}
+.page{padding:20px;font:17px/28px Georgia,serif;opacity:.5}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:18px 20px 22px;box-shadow:0 -4px 16px #0002}
+.w{font:700 24px/30px "Bricolage Grotesque",Inter,sans-serif}
+.tr{font:600 20px/28px Inter,sans-serif;margin:4px 0 0}
+.act{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+button{font:600 14px/1 Inter,sans-serif;min-height:48px;border-radius:999px;cursor:default}
+.pri{flex:1 1 0;min-width:96px;min-height:52px;background:#351E28;color:#FAF7F0;border:0}
+.hb{flex:1 1 128px;min-height:52px;padding:0 12px;background:none;border:1.5px solid #351E28;color:#351E28;white-space:nowrap}
+.hb.on{background:#D7EFFF;border-color:#a33}
+.sec{flex:1 1 100%;background:none;border:1.5px solid #351E28;color:#351E28}
+.toast{position:absolute;left:16px;right:16px;top:14px;background:#351E28;color:#FAF7F0;border-radius:12px;padding:12px 14px;font:600 14px Inter,sans-serif}
+</style></head><body>
+<div class="lbl">Sebelum</div>
+<div class="phone"><div class="page">Ich habe heute ein neues Wort gelernt.</div>
+<div class="sheet"><div class="w">gelernt</div><div class="tr">dipelajari</div>
+<div class="act"><button class="pri">Simpan</button><button class="hb" style="flex:0 0 52px;min-width:52px;padding:0" aria-label="Tandai sulit">⚑</button><button class="sec">Tandai &amp; lanjut</button></div></div></div>
+<div class="lbl">Sesudah</div>
+<div class="phone"><div class="page">Ich habe heute ein neues Wort gelernt.</div>
+<div class="sheet"><div class="w">gelernt</div><div class="tr">dipelajari</div>
+<div class="act"><button class="pri">Simpan</button><button class="hb">⚑ Ulang besok</button><button class="sec">Tandai &amp; lanjut</button></div></div></div>
+<div class="lbl">Sesudah ditekan</div>
+<div class="phone"><div class="toast">Muncul lagi besok · <u>Urungkan</u></div><div class="page" style="padding-top:70px">Ich habe heute ein neues Wort gelernt.</div>
+<div class="sheet"><div class="w">gelernt</div><div class="tr">dipelajari</div>
+<div class="act"><button class="pri">Tersimpan</button><button class="hb on">⚑ Batal ulang besok</button></div></div></div>
+</body></html>
