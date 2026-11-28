@@ -1,5 +1,11 @@
 [
   {
+    "n": 1981,
+    "judul": "Reader HP: bar bawah 'Hal. terak' tak terpotong + tombol '<' lebih besar",
+    "poin": "Bar bawah di halaman terakhir kini tertulis \"Akhir\", tidak terpotong lagi.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1979,
     "judul": "[peta 183] Reader: satu satuan 'Bagian' di bar, sheet Tamat, catatan sesi",
     "poin": "Bar bawah reader kini tulis \"Bagian 4 dari 9\", sama seperti bagian atas.",
@@ -171,12 +177,6 @@
     "n": 1916,
     "judul": "Home & Baca: tombol Tamat satu label 'Baca ulang (tanpa XP)'",
     "poin": "Tombol Tamat sekarang satu baris: \"Baca ulang (tanpa XP)\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1914,
-    "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
-    "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
     "tgl": "2026-11-27"
   }
 ]
