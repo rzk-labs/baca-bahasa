@@ -1,5 +1,47 @@
 [
   {
+    "n": 1983,
+    "judul": "Streak & Level Profil sama dengan Home (satu sumber angka)",
+    "poin": "Streak dan Level di Profil sekarang selalu sama dengan Home.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1981,
+    "judul": "Reader HP: bar bawah 'Hal. terak' tak terpotong + tombol '<' lebih besar",
+    "poin": "Bar bawah di halaman terakhir kini tertulis \"Akhir\", tidak terpotong lagi.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1979,
+    "judul": "[peta 183] Reader: satu satuan 'Bagian' di bar, sheet Tamat, catatan sesi",
+    "poin": "Bar bawah reader kini tulis \"Bagian 4 dari 9\", sama seperti bagian atas.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1977,
+    "judul": "Offline: arti bagian berikutnya diisi otomatis diam-diam saat sinyal bagus",
+    "poin": "Saat sinyal bagus, arti kata bagian berikutnya terisi sendiri di belakang layar.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1975,
+    "judul": "[peta 197] Arti lain tak kosong terus: kata dasar, pivot Inggris, MyMemory",
+    "poin": "\"Arti lain\" di kartu kata sekarang jarang kosong: dicari lewat kata dasar dan cadangan.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1973,
+    "judul": "Home: satu baris 'Lencana berikutnya' + sisa progress",
+    "poin": "Home sekarang punya satu baris kecil: lencana berikutnya dan sisa progresnya.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 1969,
+    "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
+    "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1967,
     "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
     "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
@@ -135,48 +177,6 @@
     "n": 1918,
     "judul": "Sheet Tamat: 'Tidak ada kata baru' tak bertentangan dengan 'Ulang N kata'",
     "poin": "Sheet Tamat sekarang jujur: \"Sesi ini belum ada kata baru. 5 kata siap diulang.\"",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1916,
-    "judul": "Home & Baca: tombol Tamat satu label 'Baca ulang (tanpa XP)'",
-    "poin": "Tombol Tamat sekarang satu baris: \"Baca ulang (tanpa XP)\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1914,
-    "judul": "[peta 192] Toast simpan kata 4 dtk, jeda saat disentuh, tak menutup teks",
-    "poin": "Pesan \"kata tersimpan\" sekarang hilang dalam 4 detik, tak lama menutup bacaan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1912,
-    "judul": "Tab Kata Tersimpan: filter 'Sulit saja' untuk kata bertanda sulit",
-    "poin": "Tab Kata > Tersimpan kini punya tombol \"Sulit 3\" untuk lihat kata bertanda sulit saja.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1910,
-    "judul": "Tab Kata Tersimpan: kata 'Menunggu arti' dapat tombol 'Cari arti'",
-    "poin": "Kata \"Menunggu arti\" sekarang punya tombol \"Cari arti\" di daftar Tersimpan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1908,
-    "judul": "[peta 195] Buka file buku langsung dengan Keepo (Android & komputer)",
-    "poin": "Buku .epub, .pdf, .txt sekarang bisa dibuka langsung lewat Keepo di Android dan komputer.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1906,
-    "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
-    "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1904,
-    "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
-    "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
     "tgl": "2026-11-27"
   }
 ]

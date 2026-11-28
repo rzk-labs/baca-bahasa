@@ -1,0 +1,27 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockup #1979 satu satuan Bagian</title>
+<style>
+body{margin:0;padding:16px;background:#D7EFFF;font-family:Inter,system-ui,sans-serif;color:#351E28}
+h1{font:700 18px/1.3 "Bricolage Grotesque",Inter,sans-serif;margin:0 0 12px}
+.lbl{font-size:12px;font-weight:700;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.ph{width:390px;max-width:100%;box-sizing:border-box;background:#FBF8F1;border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(53,30,40,.15)}
+.txt{font-size:17px;line-height:1.7;min-height:90px}
+.bar{display:flex;align-items:center;gap:8px;border-top:1px solid #e4dccb;padding-top:10px}
+.bar button{min-height:44px;min-width:44px;border:1px solid #cfc6b3;background:#fff;border-radius:12px;font:600 14px Inter;color:#351E28;padding:0 12px}
+.mid{flex:1;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden}
+.mid.t{font-size:14px;font-weight:600}
+.prog{height:3px;background:#e4dccb;border-radius:2px;margin:8px 0 0}.prog i{display:block;height:100%;background:#351E28;border-radius:2px}
+.sheet{background:#fff;border-radius:16px;padding:16px;font-size:14px;line-height:1.5;width:390px;max-width:100%;box-sizing:border-box}
+.sheet h2{font:700 17px "Bricolage Grotesque",Inter,sans-serif;margin:0 0 6px}.mut{color:#6b5a62}
+</style></head><body>
+<h1>#1979: satu satuan "Bagian" di reader</h1>
+<div class="lbl">Sebelum: bar tulis "Layar 6/7", catatan "6/7 halaman"</div>
+<div class="ph"><div class="txt">…teks bacaan…</div><div class="bar"><button>‹</button><div class="mid">Layar 6/7 · 38% · 12 mnt</div><button>›</button></div></div>
+<div class="lbl">Sesudah: sedang baca (390px)</div>
+<div class="ph"><div class="txt">…teks bacaan…</div><div class="bar"><button aria-label="Halaman sebelumnya">‹</button><div class="mid">Bagian 4 dari 9 · 38%</div><button aria-label="Halaman berikutnya">›</button></div><div class="prog"><i style="width:38%"></i></div></div>
+<div class="lbl">Sesudah: buku Tamat (angka hanya di aria-label "Tamat. Bagian 9 dari 9")</div>
+<div class="ph"><div class="txt">…teks bacaan…</div><div class="bar"><button>‹</button><div class="mid t" aria-label="Tamat. Bagian 9 dari 9">✓ Tamat</div><button style="font-weight:700">Baca ulang</button></div><div class="prog"><i style="width:100%"></i></div></div>
+<div class="lbl">Sesudah: catatan sesi</div>
+<div class="sheet"><h2>Kata yang kamu ketuk tadi</h2><p class="mut" style="margin:0">4 bagian kamu baca hari ini. Berhenti di Bagian 4 dari 9. 5 kata belum disimpan. Simpan yang mau dihafal.</p></div>
+<div class="lbl">Sesudah: sheet Tamat</div>
+<div class="sheet"><h2>Tamat!</h2><p class="mut" style="margin:0">9 bagian · 3 kata baru</p></div>
+</body></html>
