@@ -2059,9 +2059,13 @@ async function viewBaca() {
     $$('#sheetBody [data-q]').forEach(x => x.onclick = () => { setRt('zh-CN', +x.dataset.q); closeSheet(); viewBaca(); });
   }
   if (['ja', 'ko', 'zh-CN'].includes(b.lang) && !rtOf(b.lang) && !b.doneAt && !db.rtHint[b.lang]) { /* #1789: petunjuk sekali per bahasa */
-    db.rtHint[b.lang] = 1; save();
-    const nm = b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca';
-    toast(`Mau ${nm.toLowerCase()}? ` + (hpKecil ? `Buka Lainnya, lalu pilih ${nm}.` : `Ketuk tombol ${nm} di atas.`), 4000);
+    setTimeout(() => { /* #2086: hanya di halaman awal, tanpa sheet/kartu Tamat; bila ditahan, tak ditandai */
+      if (!$('#reader') || db.cur !== b.id || db.rtHint[b.lang] || rtOf(b.lang)) return;
+      if (RD.page !== 0 || RD.n < 2 || !$('#sheet').classList.contains('hide') || $('.fb-acts, .endcard')) return;
+      db.rtHint[b.lang] = 1; save();
+      const nm = b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca';
+      toast(`Mau ${nm.toLowerCase()}? ` + (hpKecil ? `Buka Lainnya, lalu pilih ${nm}.` : `Ketuk tombol ${nm} di atas.`), 4000);
+    }, 1200);
   }
   setTimeout(() => { if ($('#reader') && db.cur === b.id) autoOff(b); }, 3000);
   $('#rMore').onclick = () => openMore();
