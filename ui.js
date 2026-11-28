@@ -267,6 +267,23 @@ const badgeProgress = id => {
   if (!m) return null;
   return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
 };
+/* #1973: satu baris 'Lencana berikutnya' di Home; hanya tampilan, data tak diubah */
+const BADGE_UNIT = { kepo1: 'kata', kolektor: 'kata', koleksi50: 'kata', koleksi100: 'kata', kutubuku: 'halaman', berani: 'tantangan', perfect: 'skor 95%+', boss: 'kata sulit', otak: 'kartu', fire3: 'hari', fire7: 'hari', lv5: 'XP' };
+function nextBadge() {
+  let best = null;
+  BADGES.forEach(([id, em, name, desc]) => { if (badgeShown(id)) return; const pr = badgeProgress(id), r = pr ? pr.now / pr.need : 0; if (!best || r > best.r) best = { id, em, name, desc, pr, r }; });
+  if (!best) return null;
+  const rem = best.pr ? best.pr.need - best.pr.now : 0;
+  return { ...best, txt: rem > 0 && BADGE_UNIT[best.id] ? `sisa ${rem} ${BADGE_UNIT[best.id]}` : best.desc };
+}
+function nextBadgeHtml() {
+  if (!db.books || !db.books.length) return '';
+  const n = nextBadge(); if (!n) return '';
+  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span>Lencana berikutnya: <b>${esc(n.name)}</b> · ${esc(n.txt)}</span></button>`;
+}
+function badgeListSheet() {
+  openSheet(`<div class="sh-head"><h2>Lencana</h2>${closeBtn}</div><ul class="rules">${BADGES.map(([id, , name, desc]) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id); return `<li><b>${esc(name)}</b>${on ? ' · sudah kebuka' : ` · ${esc(BADGE_HOW[id] || desc)}${pr && pr.need > 1 ? ` (${pr.now}/${pr.need})` : ''}`}</li>`; }).join('')}</ul>`, 'Lencana');
+}
 let badgeQ = Promise.resolve();
 /* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
 const lateQ = []; let lateT = null;
@@ -815,8 +832,41 @@ async function offWords(b) {
   } } }
   return out;
 }
+/* Isi arti otomatis (#1977): diam-diam, 1-2 bagian berikutnya, pakai offWords & batas yang sama dengan 'Siapkan offline'. Maks sekali per buku per 6 jam (b.autoOffAt). Tanpa toast. */
+const OFF_AUTO_GAP = 6 * 3600e3;
+let offAuto = null;
+const offAutoStop = () => { if (offAuto) { offAuto.abort(); offAuto = null; } };
+async function autoOff(b) {
+  try {
+    if (offAuto || db.autoArti === false || !b || !b.id) return;
+    const c = navigator.connection;
+    if (navigator.onLine === false || !c || c.saveData || c.effectiveType !== '4g') return;
+    if (b.autoOffAt && Date.now() - b.autoOffAt < OFF_AUTO_GAP) return;
+    await aoLoad(b.id);
+    if (AO.m.size >= AO_MAX) return;
+    const words = await offWords(b);
+    const ex = AO.id === b.id && AO.sl === b.lang && AO.tl === db.my ? AO.m : null;
+    const todo = words.filter(q => !(ex && ex.has(q)) && !prepHas(b, q)).slice(0, PREP_MAX);
+    b.autoOffAt = Date.now(); save();
+    if (!todo.length || AO.id !== b.id) return;
+    if (AO.sl !== b.lang || AO.tl !== db.my) { AO.sl = b.lang; AO.tl = db.my; AO.m = new Map(); }
+    const ac = offAuto = new AbortController();
+    let fails = 0, ok = 0;
+    for (const q of todo) {
+      if (ac.signal.aborted || navigator.onLine === false || AO.id !== b.id) break;
+      try {
+        const out = await gtxFetch(q, b.lang, db.my, ac.signal);
+        if (!out.text) throw new Error('kosong');
+        if (AO.m.size < AO_MAX) AO.m.set(q, out); ok++; fails = 0;
+      } catch (e) { if (ac.signal.aborted) break; if (++fails >= OFF_FAIL) break; }
+      await new Promise(r => setTimeout(r, OFF_GAP));
+    }
+    if (offAuto === ac) offAuto = null;
+    if (ok && AO.id === b.id) await aoSave();
+  } catch (e) { offAuto = null; }
+}
 function offHtml() {
-  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
+  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="eyebrow">Isi arti otomatis</div><div class="seg" id="offAuto" role="group" aria-label="Isi arti otomatis"><button type="button" data-v="1" class="${db.autoArti === false ? '' : 'on'}">Nyala</button><button type="button" data-v="0" class="${db.autoArti === false ? 'on' : ''}">Mati</button></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
 }
 async function bindOff(b) {
   const box = $('#offBox'); if (!box) return;
@@ -873,7 +923,8 @@ async function bindOff(b) {
     if (err || stop) { ttl.textContent = `Berhenti di ${mine()} kata`; msg.textContent = `${err || 'Dibatalkan.'} ${mine()} kata yang sudah masuk tetap tersimpan. Lanjutkan nanti.`; go.textContent = 'Lanjutkan'; }
     else if (ok) toast('Siap dibaca offline');
   };
-  go.onclick = start;
+  go.onclick = () => { offAutoStop(); start(); };
+  $$('#offAuto button').forEach(x => x.onclick = () => { db.autoArti = x.dataset.v === '1'; save(); segOn('#offAuto', x); if (!db.autoArti) offAutoStop(); });
   del.onclick = async () => { if (run) return; await aoDel(b.id); if (live()) sync(); };
   addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
 }
@@ -1295,7 +1346,7 @@ function viewRak() {
     $('#view').innerHTML = `
     ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; const dl = other.lang !== cur.lang; /* #1929: beda bahasa = sebut bahasanya */ return `<button class="pri nx-bk" id="hNext" aria-label="${v} buku ${dl ? langName(other.lang).trim() + ': ' : ''}${esc(other.title)}"><span class="nx-v">${v}${dl ? ' · ' + langName(other.lang).trim() : ''}:</span> <span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; const dl = other.lang !== cur.lang; /* #1929: beda bahasa = sebut bahasanya */ const lb = `${v} buku ${dl ? langName(other.lang).trim() : 'berikutnya'}`; /* #1969: label pendek, judul jadi baris kecil */ return `<button class="pri nx-bk" id="hNext" aria-label="${lb}: ${esc(other.title)}"><span class="nx-v">${lb}</span><span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
@@ -1305,6 +1356,7 @@ function viewRak() {
       <div class="t-lime lv-tap" id="goalCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Target baca harian ${goalMin()} menit. ${goalTodayText()}. Ketuk untuk detail">${goalCardHtml()}</div>
       <div class="t-lav lv-tap" id="lvCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Level ${xpInfo().lv}. Ketuk untuk lihat cara dapat XP">${lvCardHtml()}</div>
     </div>
+    ${nextBadgeHtml()}
     <div id="hskSlot">${hskHomeHtml()}</div>
     ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang${dueNote(cur && cur.lang)}. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang${dueNote(cur && cur.lang)}<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. ${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan' : 'Ketuk untuk buka bacaan'}">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan.' : 'Ketuk kata di bacaan, lalu Simpan.'}</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span>${pctOf(cur) >= 100 ? '' : '<span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span>'}</button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
@@ -1320,6 +1372,7 @@ function viewRak() {
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
     const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
+    const nbl = $('#nbLine'); if (nbl) nbl.onclick = badgeListSheet;
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const xd = $('#xtraDone'); if (xd) xd.onclick = () => open('baca'); /* #1561: 'Cukup hari ini' tak buntu; lanjut baca (semua tamat = tab Baca) */
     const xb = $('#xtraBtn'); if (xb) xb.onclick = () => { const p = extraPick(); if (!p.length) return; db.q3k = (+db.q3k || 0) + 1; extraRoundUse(); save(); quickPend = p; quickExtra = true; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1442: satu tombol ulang; latihan ekstra tak ubah jadwal (api/ tak diubah) */
@@ -1995,6 +2048,7 @@ async function viewBaca() {
     const nm = b.lang === 'zh-CN' ? 'Pinyin' : 'Cara baca';
     toast(`Mau ${nm.toLowerCase()}? ` + (hpKecil ? `Buka Lainnya, lalu pilih ${nm}.` : `Ketuk tombol ${nm} di atas.`), 4000);
   }
+  setTimeout(() => { if ($('#reader') && db.cur === b.id) autoOff(b); }, 3000);
   $('#rMore').onclick = () => openMore();
   const openMore = () => {
     const sl = () => db.ttsRate === 'slow' ? 'Lambat' : 'Normal';
@@ -2979,13 +3033,14 @@ async function onWord(el, lastEl) {
       const chip = (t, i) => { const on = norm(t) === cur; return `<button class="wchip${on ? ' on' : ''}" type="button" data-i="${i}" dir="auto"${on ? ' aria-pressed="true"' : ''}${i >= 6 && !on ? ' hidden' : ''}>${on ? '<span aria-hidden="true">✓ </span>' : ''}${esc(t)}</button>`; };
       if (kind.st === 'muat') body = '<div class="wchips" role="status" aria-label="Lagi memuat arti lain"><span class="wchip wskel"></span><span class="wchip wskel"></span><span class="wchip wskel"></span></div>';
       else if (kind.st === 'gagal') body = '<div class="wchips-msg"><span class="mut sm">Arti lain belum bisa dimuat</span> <button class="ghost wretry" type="button" id="wacoba">Coba lagi</button></div>';
+      else if (kind.st === 'satu') body = '<div class="wchips-msg"><span class="mut sm">Kata ini cuma punya satu arti.</span></div>';
       else if (kind.st === 'kosong') body = '<div class="wchips-msg"><span class="mut sm">Belum ada arti lain untuk ini</span> <button class="ghost wretry" type="button" id="wakosong">Terjemahkan ulang</button></div>';
       else {
         flat = kind.ph.length ? kind.ph : chipList(kind.dd);
         body = `<div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>`;
       }
       const exs = kind.st === 'ada' ? (Array.isArray(kind.ex) ? kind.ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('') : '';
-      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">Terjemahan mesin, bisa keliru.</div>`;
+      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>`;
       el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); });
       const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); };
       const rc = $('#wacoba'); if (rc) rc.onclick = () => fillAlt(false);
@@ -3017,8 +3072,15 @@ async function onWord(el, lastEl) {
         else if (Array.isArray(r.alt) && r.alt.length) more = r.alt;
         else more = await lim(altFill(q0, b.lang, db.my, ac.signal));
         if (!ok()) return;
-        if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; }
-        else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; }
+        const hadDict = altFlat(Array.isArray(more) ? more : []).length > 0 || (Array.isArray(r.dict) && r.dict.some(x => x && Array.isArray(x.terms) && x.terms.length));
+        if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; kind.src = ''; }
+        else {
+          /* #1975: kata dasar -> pivot Inggris -> MyMemory -> arti per kata; baru pesan jujur */
+          const ex = await lim(altExtra(q0, b.lang, db.my, r.base, ac.signal)); if (!ok()) return;
+          const eg = altArti(ex.groups, txt);
+          if (altFlat(eg).length) { kind.dd = eg; kind.st = 'ada'; kind.ph = []; kind.src = ex.src === 'base' ? 'Dari kata dasar: ' + ex.base + '. ' : ''; }
+          else { const ph = await lim(perKata(q0, ac.signal)); if (!ok()) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; kind.src = ''; } else kind.st = hadDict ? 'satu' : 'kosong'; }
+        }
       } catch (e) { if (!ok()) return; kind.st = 'gagal'; }
       finally { clearTimeout(tm); sig.removeEventListener('abort', onAb); if (altAc === ac) altAc = null; }
       paintDict(); keepVisible('.w.sel');
@@ -3026,7 +3088,7 @@ async function onWord(el, lastEl) {
     paintDict();
     /* arti lain kosong: ambil ulang sekali di latar; hasilnya selalu salah satu kondisi tetap */
     if (!alt.length) {
-      if (r.off || (b.lang === 'ja' && db.my === 'id')) perKata(qWord(), sig).then(ph => { if (my !== tok || !$('#wdict')) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; } else kind.st = 'kosong'; paintDict(); }).catch(() => { if (my === tok && $('#wdict')) { kind.st = 'kosong'; paintDict(); } });
+      if (r.off || (b.lang === 'ja' && db.my === 'id')) perKata(qWord(), sig).then(ph => { if (my !== tok || !$('#wdict')) return; if (ph.length) { kind.ph = ph; kind.st = 'ada'; paintDict(); } else if (navigator.onLine !== false) fillAlt(false); else { kind.st = 'kosong'; paintDict(); } }).catch(() => { if (my === tok && $('#wdict')) { kind.st = 'kosong'; paintDict(); } });
       else fillAlt(false);
     }
     setTimeout(() => { if (my === tok && $('#wfreq')) { try { showFreq(word, b); } catch (e) {} keepVisible('.w.sel'); } }, 0);
