@@ -228,10 +228,10 @@ const readSecToday = () => Math.max(0, +((db.readSec || {})[today()]) || 0);
 const minToday = () => Math.floor(readSecToday() / 60);
 const goalDone = () => readSecToday() >= goalMin() * 60;
 const subMin = () => readSecToday() > 0 && minToday() < 1;
-const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : subMin() ? `Baru ${Math.floor(readSecToday())} dtk, sisa ${goalMin()} menit` : `${Math.min(minToday(), goalMin())} dari ${goalMin()} menit`;
+const goalTodayText = () => goalDone() ? `Beres! ${goalMin()} menit hari ini` : goalLeft(); /* #2082: satu gaya dengan goalLeft */
 const goalHint = () => readSecToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : subMin() ? 'Sudah kehitung, lanjut dikit lagi' : `Sisa ${goalMin() - minToday()} menit, yuk`;
 /* #1892: satu baris sisa jujur: 0 dtk = 'Target N menit'; <1 mnt = 'Sisa hampir N menit'; 1+ = 'Sisa N menit' (dibulatkan ke atas dari detik nyata) */
-const goalLeft = () => { const g = goalMin(), s = readSecToday(); return s < 1 ? `Target ${g} menit` : s < 60 ? `Baru ${Math.floor(s)} dtk, sisa ${g} menit` : `Sisa ${Math.ceil((g * 60 - s) / 60)} menit`; };
+const goalLeft = () => { const g = goalMin(), s = readSecToday(); return s < 1 ? `Target ${g} menit` : s < 60 ? `Baru ${Math.floor(s)} dtk dari ${g} menit` : `Sisa ${Math.ceil((g * 60 - s) / 60)} menit`; };
 /* #1855: cincin diisi halus per detik (detik/(g*60)); <60 dtk tampil '<1'. 0 dtk = kosong. Target/XP tetap per detik */
 const rereadNote = () => { const b = book() || db.books[0]; return !!(b && b.doneAt) && readSecToday() < 1; }; /* #1997 */
 const goalCardHtml =() => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : m / g, n = subMin() ? '&lt;1' : m; let an = ''; if (ok) { try { if (localStorage.getItem('kepo_goal_anim') !== today()) { localStorage.setItem('kepo_goal_anim', today()); an = ' beres-anim'; } } catch (e) {} } return `<div class="eyebrow">Target baca</div><div class="goal-row${an}">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2" title="${goalHint()}" aria-label="${goalHint()}">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${rereadNote() ? 'Baca ulang tak dihitung. Mulai buku baru untuk isi target.' : goalLeft()}</span>`}</div>`; };
