@@ -18,6 +18,7 @@ Dibuat 22 Nov 2026. Dibaca peran Kreatif, Ilustrasi, Motion, dan Design System. 
 - Animasi untuk memberi kejelasan (centang, progres), bukan hiasan.
 - Durasi 120-400 ms; hormati `prefers-reduced-motion`.
 - Simpan kata: garis bawah di teks tergambar kiri ke kanan (380 ms) + tombol memantul 0.96 ke 1 dengan centang tergambar (250 ms); hanya saat baru disimpan (#1581).
+- Ngomong: stabilo Wasabi menyapu kata saat dinilai (420 ms); mik merekam = cincin merah berdenyut 1,1 s (#2045).
 
 ## 3. Cara menerapkan di Keepo (patuh BRAND.md v9)
 - Palet tetap Plum Noir, Biru Es, Wasabi, Jade, Kertas. **Tanpa maskot, tanpa neon.**
