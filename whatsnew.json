@@ -1,5 +1,59 @@
 [
   {
+    "n": 2058,
+    "judul": "[peta 199] Cara baca Jepang: label 'perkiraan' & tombol Cek ulang",
+    "poin": "Cara baca kata Jepang kini jujur: ada label \"perkiraan\" kalau hasilnya tebakan.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2049,
+    "judul": "Motion: kartu latihan Kata, arti muncul halus saat 'Lihat arti'",
+    "poin": "Arti kata dan tombol di kartu latihan sekarang muncul halus.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2048,
+    "judul": "Reader: ganti halaman diumumkan pembaca layar, menu bawah min 12px",
+    "poin": "Pembaca layar kini mengumumkan halaman yang sedang dibaca.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2046,
+    "judul": "Doodle 'kartu retak' untuk layar error Tab Kata",
+    "poin": "Layar error Tab Kata sekarang punya gambar kartu retak yang ditempel plester.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2045,
+    "judul": "Ngomong: kartu kalimat & mik jadi 'panggung' yang hidup",
+    "poin": "Kalimat latihan ngomong sekarang lebih besar dan jadi pusat layar.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2043,
+    "judul": "Reader: halaman ikut jari saat digeser, lepas = pindah atau balik",
+    "poin": "Saat geser halaman, teks kini ikut jari dan tidak diam kaku.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2042,
+    "judul": "Kotak unduh arti: satu judul & tombol sama di reader, Bab, Profil",
+    "poin": "Kotak unduh arti di baca dan daftar bab kini sama dengan di Profil.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2031,
+    "judul": "Tombol kecil di Kata & Sosial: area ketuk jadi 44px",
+    "poin": "Tiga tombol kecil di tab Kata dan Sosial sekarang lebih mudah diketuk.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2028,
+    "judul": "Home: tombol 'Ulang yang sulit saja' bila ada kata ditandai sulit",
+    "poin": "Home kini punya tombol kecil \"Ulang yang sulit saja\", plus jumlah katanya.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2027,
     "judul": "Stempel doodle untuk 4 lencana Profil yang masih ikon polos",
     "poin": "Empat lencana terakhir di Profil kini punya stempel gambar tangan juga.",
@@ -123,60 +177,6 @@
     "n": 1989,
     "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
     "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1987,
-    "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
-    "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1985,
-    "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
-    "poin": "Kartu Target baca di Home tak lagi membingungkan.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1983,
-    "judul": "Streak & Level Profil sama dengan Home (satu sumber angka)",
-    "poin": "Streak dan Level di Profil sekarang selalu sama dengan Home.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1981,
-    "judul": "Reader HP: bar bawah 'Hal. terak' tak terpotong + tombol '<' lebih besar",
-    "poin": "Bar bawah di halaman terakhir kini tertulis \"Akhir\", tidak terpotong lagi.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1979,
-    "judul": "[peta 183] Reader: satu satuan 'Bagian' di bar, sheet Tamat, catatan sesi",
-    "poin": "Bar bawah reader kini tulis \"Bagian 4 dari 9\", sama seperti bagian atas.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1977,
-    "judul": "Offline: arti bagian berikutnya diisi otomatis diam-diam saat sinyal bagus",
-    "poin": "Saat sinyal bagus, arti kata bagian berikutnya terisi sendiri di belakang layar.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1975,
-    "judul": "[peta 197] Arti lain tak kosong terus: kata dasar, pivot Inggris, MyMemory",
-    "poin": "\"Arti lain\" di kartu kata sekarang jarang kosong: dicari lewat kata dasar dan cadangan.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1973,
-    "judul": "Home: satu baris 'Lencana berikutnya' + sisa progress",
-    "poin": "Home sekarang punya satu baris kecil: lencana berikutnya dan sisa progresnya.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1969,
-    "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
-    "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
     "tgl": "2026-11-28"
   }
 ]

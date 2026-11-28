@@ -182,6 +182,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 /* #1832: 'siap diulang' di Home = kartu aksi utama, tombol jelas (pil Plum Noir di atas Biru Es) */
+#dueList{display:block;min-height:44px;margin:0 0 0 auto;padding:0 14px;border:0;background:none;color:var(--ink);font:600 13px/44px var(--font-body,inherit);text-decoration:underline;text-underline-offset:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}#dueList:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 #dueNudge{min-height:56px;padding:10px 10px 10px 14px}#dueNudge b{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);text-decoration:none}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 /* #1745: kartu 'Simpan 3 kata dulu' — grid: ikon | judul 1 baris | angka; subteks, bar 3 segmen, 'Buka bacaan →' di bawah. Warna tetap (kartu selalu Biru Es) supaya kontras sama di 4 tema */
@@ -193,7 +194,14 @@ body.reading::after{display:none}
 .q3-lock .q3-seg i{flex:1;height:8px;border-radius:var(--radius-full);background:rgba(53,30,40,.12);box-shadow:inset 0 0 0 1.5px rgba(53,30,40,.45)}
 .q3-lock .q3-seg i.on{background:#351E28;box-shadow:none}
 .q3-lock .q3-go{grid-column:2/-1;justify-self:start;margin-top:2px;font:700 13px/18px var(--font-body,inherit);color:#351E28;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
-.soft-nudge{margin:12px 0 0}.due-nudge small,.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
+body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
+.soft-nudge{margin:12px 0 0}
+/* #2028: tombol kecil sekunder 'Ulang yang sulit saja · N kata' di bawah kartu ulang Home; satu baris, latar transparan bergaris supaya tak menyaingi 'Ulang sekarang' */
+.fw-nudge.hard-nudge{width:auto;max-width:100%;min-height:44px;margin:8px 0 0;padding:8px 14px 8px 12px;gap:8px;border:1.5px solid var(--ice);border-left:4px solid var(--hl);background:transparent;color:inherit;font-size:13px;line-height:18px}
+.fw-nudge.hard-nudge svg.i{width:16px;height:16px}
+.fw-nudge.hard-nudge span{flex:0 1 auto;white-space:nowrap;overflow-wrap:normal}
+@media(max-width:340px){.fw-nudge.hard-nudge{padding:8px 10px;font-size:12px}}
+.due-nudge small,.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:var(--ink)}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
 .a2hs{display:flex;align-items:flex-start;gap:12px;margin:12px 0 -4px;padding:12px 14px;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}
@@ -299,6 +307,11 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .vmeta .hskc{margin-right:2px}
 .tr{font:800 24px/30px var(--font-display);margin:2px 0 var(--space-2)}
 .ttsnote{font-size:12px;line-height:18px;color:var(--color-text-muted);margin:0 0 6px}
+/* #2058: label 'perkiraan' + Cek ulang cara baca Jepang di sheet arti */
+.wkira{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:6px;font-size:13px;line-height:20px;overflow-wrap:anywhere}
+.wkira[hidden]{display:none}
+.kira-tag{background:#E9F056;color:#351E28;border-radius:6px;padding:0 7px;font-size:11px;font-weight:700}
+.kira-btn{min-height:44px;padding:0 12px;font-size:13px}
 .wmeta{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;font-size:13px;line-height:20px;color:var(--color-text-muted);overflow-wrap:anywhere}
 .wmeta>span:empty,.wnote>span:empty{display:none}
 .wmeta>span:not(:empty)~span:not(:empty)::before,.wnote>span:not(:empty)~span:not(:empty)::before{content:"·";margin-right:6px}
@@ -572,7 +585,7 @@ body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0;margin:0 8px}
 .rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
-@media (max-width:359px){.rmid #pgn{font-size:.7rem}}
+@media (max-width:359px){.rmid #pgn{font-size:.75rem}}
 .rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
 .rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
 .rmid #pgn.tamat .ck{width:14px;height:14px;stroke-width:3;flex:none}
@@ -854,7 +867,7 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .fyp-b{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--color-surface-soft);border-radius:12px;padding:8px 10px;font-size:14px}
 .fyp-b svg.i{width:18px;height:18px;flex:none}
 .fyp-b span{flex:1;min-width:0}
-.fyp-b button{min-height:36px}
+.fyp-b button{min-height:44px}
 .fyp-a{display:flex;gap:8px}
 .fyp-like.on{color:var(--brick-text,inherit)}
 /* Intip kata bab (#638): ikut tergulir di halaman pertama bab */
@@ -903,7 +916,8 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 #wnama[hidden],#wsave[hidden]{display:none}
 /* #768 Home HP: label tab utuh, angka cincin muat, penulis di judul kartu Lanjut */
 #tabs button span{white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
-@media (max-width:389px){#tabs button{font-size:.6875rem}}
+@media (max-width:389px){#tabs button{font-size:.75rem}}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .goal-row .ring{width:64px;height:64px;flex:none}.goal-row .ring svg{width:64px;height:64px}
 .goal-row .ring .score{padding:0 9px;box-sizing:border-box;white-space:nowrap;line-height:1}
 .goal-row .ring .score .gn{font:800 14px/16px var(--font-ui);letter-spacing:-.02em}
@@ -1129,10 +1143,10 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 .rk-p{display:block;font-size:var(--fs-min);color:var(--rk-mu);margin-bottom:8px}
 .rk-board{height:8px;margin:0 -10px;background:var(--rk-bd)}
 .rk-more{display:block;margin:8px auto 0}
-.rk-up{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid var(--color-border)}
+.rk-up{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--color-border)}
 .rk-n{flex:none;width:20px;font-size:12px;color:var(--color-text-muted)}
 .rk-ut{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rk-up button{flex:none;min-height:36px;padding:0 10px;font-size:12px}
+.rk-up button{flex:none;min-height:44px;padding:0 10px;font-size:12px}
 .rk-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px 10px;background:var(--color-surface-soft);border-radius:14px}
 .fr-read .fr-st{font-size:13px}
 /* #1006: judul buku utuh di Profil: judul satu baris penuh (maks 2 lalu terpotong), bahasa + status di baris bawah */
@@ -1320,7 +1334,7 @@ ol.steps3 li>img{flex:none;width:48px;height:48px}
 .mut.sm{overflow-wrap:anywhere}
 .asp-ban{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#D7EFFF;color:var(--ink);font-size:14px}
 .asp-ban span{flex:1 1 100%}
-.asp-ban button{min-height:40px;padding:0 16px}
+.asp-ban button{min-height:44px;padding:0 16px}
 @media (max-width:480px){#tabs button{font-size:12px;letter-spacing:-.03em}}
 .sum .s3{border:0;box-shadow:inset 0 0 0 2px var(--color-border)}
 /* #1229 tombol penanda di bar bawah + chip lanjut */
@@ -1657,6 +1671,30 @@ body:not(.reading) #view{padding-bottom:var(--view-gap-bawah)}
 .nx-bk .nx-t{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;opacity:.7}
 .nx-bk .nx-t.cjk,#hero.hero-done .nx-bk .nx-t.cjk{opacity:1;font-size:13px}
 .fb-next .fbn-m .cjk{color:var(--color-text);opacity:1}
+/* motion #2049: arti & tombol masuk halus, kartu baru masuk saat berganti */
+@keyframes kata-arti-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes kata-act-in{from{opacity:0}to{opacity:1}}
+@keyframes kata-kartu-in{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+#back:not(.hide){animation:kata-arti-in 180ms var(--ease-out)}
+#actBack:not(.hide){animation:kata-act-in 160ms var(--ease-out)}
+.flash.card-in{animation:kata-kartu-in 200ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){#back:not(.hide),#actBack:not(.hide),.flash.card-in{animation:none}}
+/* #2045 Ngomong 'panggung': kalimat besar, stabilo Wasabi saat kata dinilai, mik bercincin Biru Es, rekam jelas */
+.target{font-size:26px;font-weight:600;line-height:1.6;letter-spacing:-.005em;margin:var(--space-3) 0 var(--space-1)}
+.target .t[data-p]{animation:t-judge .42s var(--ease-out) both}
+@keyframes t-judge{0%,45%{background:var(--hl);color:var(--ink)}}
+.micwrap{margin:var(--space-4) 0 var(--space-1);gap:var(--space-3)}
+.mic{box-shadow:0 0 0 5px var(--ice);transition:box-shadow var(--dur-color),background var(--dur-color),transform var(--dur-tap) ease-out}
+[data-theme=dark] .mic{box-shadow:0 0 0 3px var(--color-surface),0 0 0 5px var(--ice)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .mic{box-shadow:0 0 0 3px var(--color-surface),0 0 0 5px var(--ice)}}
+.mic.rec,[data-theme=dark] .mic.rec{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record);animation:mic-pulse 1.1s ease-in-out infinite alternate}
+@media (prefers-color-scheme:dark){[data-theme=auto] .mic.rec{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record)}}
+@keyframes mic-pulse{to{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record),0 0 0 16px color-mix(in srgb,var(--color-record) 22%,transparent)}}
+.micwrap:has(.mic.rec) .mic-lbl{color:var(--color-poor)}
+.micwrap:has(.mic.rec) .mic-lbl::before{content:"";display:inline-block;width:9px;height:9px;margin-right:7px;border-radius:50%;background:var(--color-record);vertical-align:2px}
+@media (prefers-reduced-motion:reduce){.target .t[data-p],.mic.rec{animation:none!important}}
+@media (max-width:360px){.target{font-size:22px}.card:has(>#target){padding:var(--space-4) var(--space-3)}.micwrap{margin-top:var(--space-3)}}
+@media (max-height:700px){.micwrap{margin-top:var(--space-3);gap:var(--space-2)}.mic{width:92px;height:92px}.aux{margin-top:var(--space-2)}}
 /* Target beres: centang tergambar + cincin berdenyut sekali per hari */
 .goal-row.beres-anim .ring{animation:goalpulse 350ms var(--ease-out) 1}
 .goal-row.beres-anim ~ .lbl2 .goal-ok .ck path{stroke-dasharray:24;stroke-dashoffset:24;animation:wgck 250ms var(--ease-out) 120ms forwards}
