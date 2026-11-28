@@ -1,5 +1,11 @@
 [
   {
+    "n": 2022,
+    "judul": "Home HP: satu aturan ruang bawah, tombol kartu tak tertutup bar menu",
+    "poin": "Tombol kartu Home sekarang tidak tertutup bar menu bawah di HP.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2047,
     "judul": "Rancangan: label level HSK di cerita contoh Mandarin",
     "poin": "Cerita contoh Mandarin akan diberi label level, jadi pemula tahu cocok atau tidak.",
@@ -171,12 +177,6 @@
     "n": 1963,
     "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
     "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1961,
-    "judul": "Reader: tombol Ulang tulis jelas 'Ulang 5 kata', bukan ikon + angka",
-    "poin": "Tombol Ulang di halaman baca kini jelas: \"Ulang 5 kata\".",
     "tgl": "2026-11-27"
   }
 ]
