@@ -1,5 +1,11 @@
 [
   {
+    "n": 1993,
+    "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
+    "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1991,
     "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
     "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
@@ -171,12 +177,6 @@
     "n": 1929,
     "judul": "Home buku Tamat: tombol buku berikutnya sebut bahasanya bila beda",
     "poin": "Tombol buku berikutnya di Home kini menyebut bahasanya kalau beda.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1927,
-    "judul": "Sheet Tamat: buang tawaran pengingat, momen selesai buku tenang",
-    "poin": "Sheet Tamat sekarang tenang: tawaran pengingat dibuang, sisa satu tombol utama.",
     "tgl": "2026-11-27"
   }
 ]
