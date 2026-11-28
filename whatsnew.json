@@ -1,5 +1,11 @@
 [
   {
+    "n": 2072,
+    "judul": "[peta 205] Arti lain frasa tak nyasar: hapus chip per kata, pesan jujur",
+    "poin": "Sorot frasa: chip \"Arti lain\" ngawur per kata sudah hilang.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2068,
     "judul": "[peta 200] Kartu Kata & ulang: kana ketuk-untuk-lihat kata Jepang",
     "poin": "Kata Jepang berkanji kini tampil kanji dulu; cara baca muncul setelah diketuk.",
@@ -171,12 +177,6 @@
     "n": 1997,
     "judul": "Home Target baca: jelaskan baca ulang buku Tamat tak dihitung",
     "poin": "Home sekarang jelaskan: baca ulang buku Tamat tak dihitung untuk target.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1995,
-    "judul": "Status buku 'Belum mulai' sama di sheet Tamat, Profil, Baca",
-    "poin": "Buku yang belum dibuka kini selalu disebut 'Belum dibuka' di semua layar.",
     "tgl": "2026-11-28"
   }
 ]
