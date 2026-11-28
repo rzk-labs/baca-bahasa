@@ -181,6 +181,7 @@ body.reading::after{display:none}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
 .due-nudge{margin:12px 0 0}.due-nudge b{flex:none;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 /* #1832: 'siap diulang' di Home = kartu aksi utama, tombol jelas (pil Plum Noir di atas Biru Es) */
+#dueList{display:block;min-height:44px;margin:0 0 0 auto;padding:0 14px;border:0;background:none;color:var(--ink);font:600 13px/44px var(--font-body,inherit);text-decoration:underline;text-underline-offset:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}#dueList:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 #dueNudge{min-height:56px;padding:10px 10px 10px 14px}#dueNudge b{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:var(--radius-full);background:var(--ink);color:var(--cream);text-decoration:none}
 @media(max-width:360px){.due-nudge{flex-wrap:wrap}.due-nudge b{margin-left:30px}}
 /* #1745: kartu 'Simpan 3 kata dulu' — grid: ikon | judul 1 baris | angka; subteks, bar 3 segmen, 'Buka bacaan →' di bawah. Warna tetap (kartu selalu Biru Es) supaya kontras sama di 4 tema */
