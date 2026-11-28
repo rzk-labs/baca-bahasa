@@ -1,5 +1,11 @@
 [
   {
+    "n": 1985,
+    "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
+    "poin": "Kartu Target baca di Home tak lagi membingungkan.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1983,
     "judul": "Streak & Level Profil sama dengan Home (satu sumber angka)",
     "poin": "Streak dan Level di Profil sekarang selalu sama dengan Home.",
@@ -171,12 +177,6 @@
     "n": 1921,
     "judul": "Home Streak: 'Rekor barumu!' tampilkan rekor lama (naik dari N hari)",
     "poin": "Kartu Streak kini menyebut angka rekor baru, mis. \"Rekor baru: 5 hari (dulu 4)\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1918,
-    "judul": "Sheet Tamat: 'Tidak ada kata baru' tak bertentangan dengan 'Ulang N kata'",
-    "poin": "Sheet Tamat sekarang jujur: \"Sesi ini belum ada kata baru. 5 kata siap diulang.\"",
     "tgl": "2026-11-27"
   }
 ]
