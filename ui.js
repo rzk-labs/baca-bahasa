@@ -3705,7 +3705,7 @@ function viewKata() {
   catch (e) {
     console.error('Tab Kata error', e);
     const v = $('#view'); if (!v) return;
-    v.innerHTML = `<h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1><div class="empty"><h2>Tab Kata lagi bermasalah</h2><div class="mut sm">Coba muat ulang. Kata simpananmu aman kok.</div><button class="pri" id="kReload" type="button">Muat ulang</button></div>`;
+    v.innerHTML = `<h1 style="margin:6px 2px 12px">Kata <span class="circle-txt">kamu</span></h1><div class="empty"><img class="empty-pic" src="img/aset/error-kata.svg" alt="" width="150" height="150" decoding="async"><h2>Tab Kata lagi bermasalah</h2><div class="mut sm">Coba muat ulang. Kata simpananmu aman kok.</div><button class="pri" id="kReload" type="button">Muat ulang</button></div>`;
     const b = $('#kReload'); if (b) b.onclick = () => location.reload();
   }
 }
