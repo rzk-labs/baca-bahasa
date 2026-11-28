@@ -1,5 +1,47 @@
 [
   {
+    "n": 2028,
+    "judul": "Home: tombol 'Ulang yang sulit saja' bila ada kata ditandai sulit",
+    "poin": "Home kini punya tombol kecil \"Ulang yang sulit saja\", plus jumlah katanya.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2027,
+    "judul": "Stempel doodle untuk 4 lencana Profil yang masih ikon polos",
+    "poin": "Empat lencana terakhir di Profil kini punya stempel gambar tangan juga.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2025,
+    "judul": "Motion: centang 'Beres!' Target baca tergambar saat target tercapai",
+    "poin": "Target baca yang beres sekarang punya centang tergambar dan cincin berdenyut.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2023,
+    "judul": "Home: tombol 'Ulang N kata sulit' satu ketuk (pintasan)",
+    "poin": "Home kini punya tombol \"Ulang N kata sulit\" di bawah kartu siap diulang.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2022,
+    "judul": "Home HP: satu aturan ruang bawah, tombol kartu tak tertutup bar menu",
+    "poin": "Tombol kartu Home sekarang tidak tertutup bar menu bawah di HP.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2047,
+    "judul": "Rancangan: label level HSK di cerita contoh Mandarin",
+    "poin": "Cerita contoh Mandarin akan diberi label level, jadi pemula tahu cocok atau tidak.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2026,
+    "judul": "Rancangan: pintasan 'Ulang yang sulit' dari Home",
+    "poin": "Rancangan tombol \"Ulang yang sulit\" di Home sudah ditulis, lengkap dengan gambaran layar.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2020,
     "judul": "Kotak offline: judul 'Baca tanpa internet', tombol 'Unduh arti'",
     "poin": "Kotak offline sekarang berjudul \"Baca tanpa internet\", tombolnya \"Unduh arti\".",
@@ -136,47 +178,5 @@
     "judul": "Home: satu baris 'Lencana berikutnya' + sisa progress",
     "poin": "Home sekarang punya satu baris kecil: lencana berikutnya dan sisa progresnya.",
     "tgl": "2026-11-28"
-  },
-  {
-    "n": 1969,
-    "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
-    "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1967,
-    "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
-    "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1965,
-    "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
-    "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1963,
-    "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
-    "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1961,
-    "judul": "Reader: tombol Ulang tulis jelas 'Ulang 5 kata', bukan ikon + angka",
-    "poin": "Tombol Ulang di halaman baca kini jelas: \"Ulang 5 kata\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1959,
-    "judul": "Sheet Tamat: baris 'Besok' tak lagi salah 'simpan 3 kata dulu'",
-    "poin": "Layar Tamat tak lagi bilang \"simpan 3 kata dulu\" yang salah.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1957,
-    "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
-    "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
-    "tgl": "2026-11-27"
   }
 ]
