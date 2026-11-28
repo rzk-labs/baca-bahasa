@@ -1,5 +1,11 @@
 [
   {
+    "n": 1969,
+    "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
+    "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1967,
     "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
     "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
@@ -171,12 +177,6 @@
     "n": 1906,
     "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
     "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1904,
-    "judul": "Profil: jumlah 'kata tersimpan' sama dengan lencana Kolektor",
-    "poin": "Angka \"kata tersimpan\" di Profil sekarang sama dengan lencana Kolektor dan tab Kata.",
     "tgl": "2026-11-27"
   }
 ]
