@@ -1,5 +1,11 @@
 [
   {
+    "n": 1973,
+    "judul": "Home: satu baris 'Lencana berikutnya' + sisa progress",
+    "poin": "Home sekarang punya satu baris kecil: lencana berikutnya dan sisa progresnya.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1969,
     "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
     "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
@@ -171,12 +177,6 @@
     "n": 1908,
     "judul": "[peta 195] Buka file buku langsung dengan Keepo (Android & komputer)",
     "poin": "Buku .epub, .pdf, .txt sekarang bisa dibuka langsung lewat Keepo di Android dan komputer.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1906,
-    "judul": "[peta 194] Arti lain tak lagi macet: batas 8 detik + Coba lagi",
-    "poin": "Bagian \"Arti lain\" tak lagi macet: paling lama 8 detik, lalu muncul pesan jelas.",
     "tgl": "2026-11-27"
   }
 ]
