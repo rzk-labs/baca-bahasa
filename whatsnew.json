@@ -1,5 +1,11 @@
 [
   {
+    "n": 2007,
+    "judul": "Tombol buku berikutnya: nama & judul sama di reader dan sheet Tamat",
+    "poin": "Tombol pindah ke buku lain sekarang bernama sama di Home, reader, dan layar Tamat.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2005,
     "judul": "Home: 'Lencana berikutnya' tak lagi terpotong titik-titik",
     "poin": "Info lencana berikutnya di Home sekarang singkat: \"Nama · 5 kata lagi\".",
@@ -171,12 +177,6 @@
     "n": 1943,
     "judul": "Tab Kata: tombol 'Cari arti semua' untuk kata Menunggu arti",
     "poin": "Tab Kata punya tombol \"Cari arti semua\" untuk kata yang belum ada artinya.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1941,
-    "judul": "Reader: bagian terakhir tak lagi kosong, hitungan bagian cocok",
-    "poin": "Layar terakhir buku tak lagi kosong; kolom kosong di ujung tidak dihitung.",
     "tgl": "2026-11-27"
   }
 ]
