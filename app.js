@@ -746,6 +746,44 @@ function altOf(j) {
   } catch (e) { }
   return out;
 }
+/* terjemahan polos (dt=t); lempar galat bila layanan gagal */
+async function gtxText(q, sl, tl, signal) {
+  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&q=${encodeURIComponent(q)}`, 8000, signal);
+  if (!r.ok) throw new Error('gtx ' + r.status);
+  const j = await r.json().catch(() => null);
+  return Array.isArray(j) && Array.isArray(j[0]) ? j[0].map(x => Array.isArray(x) && typeof x[0] === 'string' ? x[0] : '').join('').trim() : '';
+}
+/* arti lain jalur tambahan (#1975): kata dasar -> pivot Inggris -> matches MyMemory.
+   Hasil {groups, src}; groups kosong bila tak ada. Melempar galat hanya bila semua jalur gagal. */
+async function altExtra(q, sl, tl, base, signal) {
+  let fails = 0, tries = 0;
+  const nz = t => String(t || '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '');
+  if (base && nz(base) !== nz(q)) {
+    tries++;
+    try { const g = await altFetch(base, sl, tl, signal); if (g.length) return { groups: g, src: 'base', base }; } catch (e) { if (signal && signal.aborted) throw e; fails++; }
+  }
+  if (sl !== 'en' && tl !== 'en') {
+    tries++;
+    try {
+      const en = await altFetch(q, sl, 'en', signal);
+      const ens = [...new Set(en.flatMap(g => g.terms).map(t => t.toLowerCase()))].slice(0, 4);
+      const got = await Promise.all(ens.map(e => gtxText(e, 'en', tl, signal).catch(() => '')));
+      const seen = new Set(), terms = [];
+      got.forEach(t => { const k = nz(t); if (t && k && !seen.has(k)) { seen.add(k); terms.push(t); } });
+      if (terms.length) return { groups: [{ pos: '', terms }], src: 'pivot' };
+    } catch (e) { if (signal && signal.aborted) throw e; fails++; }
+  }
+  tries++;
+  try {
+    const r = await fetchTimeout(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`, 8000, signal);
+    const j = await r.json();
+    const seen = new Set(), terms = [];
+    (Array.isArray(j.matches) ? j.matches : []).forEach(m => { const t = m && typeof m.translation === 'string' ? m.translation.trim() : ''; const k = nz(t); if (t && k && t.length <= 60 && !/MYMEMORY WARNING|INVALID/i.test(t) && !seen.has(k)) { seen.add(k); terms.push(t); } });
+    if (terms.length) return { groups: [{ pos: '', terms: terms.slice(0, 6) }], src: 'mm' };
+  } catch (e) { if (signal && signal.aborted) throw e; fails++; }
+  if (fails >= tries) throw new Error('semua jalur gagal');
+  return { groups: [], src: '' };
+}
 /* arti lain otomatis (#1243): ambil sekali bila kosong; hasil disimpan ke cache kata itu (r.dict), cache bagus tak ditimpa */
 async function altFill(q, sl, tl, signal) {
   const more = await altFetch(q, sl, tl, signal);
