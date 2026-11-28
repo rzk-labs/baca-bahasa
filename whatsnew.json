@@ -1,5 +1,11 @@
 [
   {
+    "n": 2014,
+    "judul": "[peta 198] Arti lain: cadangan tetap dicoba bila layanan utama gagal",
+    "poin": "Arti lain kini tetap dicari lewat jalur cadangan, walau layanan utama menolak.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2010,
     "judul": "Profil: 'Hampir tercapai' hanya untuk lencana yang sudah >50%",
     "poin": "\"Hampir tercapai\" di Profil kini hanya muncul untuk lencana yang sudah separuh jalan.",
@@ -171,12 +177,6 @@
     "n": 1949,
     "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
     "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1947,
-    "judul": "Sampul Profil rak: judul Jepang/Mandarin pendek tak terpotong",
-    "poin": "Sampul buku Jepang/Mandarin pendek di rak Profil kini menampilkan judul utuh.",
     "tgl": "2026-11-27"
   }
 ]
