@@ -781,11 +781,11 @@ function prepWords(b, sec) {
 }
 const prepHas = (b, q) => { const v = trCache.get(b.lang + '|' + db.my + '|' + q); return !!v && ('baca' in v || !NONLATIN.test(q)); };
 function prepHtml() {
-  return `<div class="prep" id="prepBox"><div class="prep-t">${ico('dl')}<b>Arti bagian ini tanpa sinyal</b></div><div class="mut sm" id="prepMsg" role="status">Unduh arti kata bagian ini sekali, biar tetap kebuka di KRL.</div><div class="prep-bar" id="prepBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti" hidden><i></i></div><div class="prep-acts"><button class="sec" id="prepGo" type="button">Siapkan arti bab ini</button><button class="ghost" id="prepCancel" type="button" hidden>Batal</button></div></div>`;
+  return `<div class="prep" id="prepBox"><div class="prep-t">${ico('dl')}<b id="prepT">Baca tanpa internet</b></div><div class="mut sm" id="prepMsg" role="status">Unduh arti kata bagian ini sekali, biar bisa dibaca tanpa sinyal.</div><div class="prep-bar" id="prepBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti" hidden><i></i></div><div class="prep-acts"><button class="sec" id="prepGo" type="button">Unduh arti</button><button class="ghost" id="prepCancel" type="button" hidden>Batal</button></div></div>`;
 }
 function bindPrep(b, sec) {
   const box = $('#prepBox'); if (!box) return;
-  const go = $('#prepGo'), cancel = $('#prepCancel'), msg = $('#prepMsg'), bar = $('#prepBar');
+  const go = $('#prepGo'), cancel = $('#prepCancel'), msg = $('#prepMsg'), bar = $('#prepBar'), ttl = $('#prepT');
   const words = prepWords(b, sec); let run = 0;
   const live = () => box.isConnected;
   const sync = () => {
@@ -794,15 +794,15 @@ function bindPrep(b, sec) {
     if (!words.length) { go.disabled = true; go.textContent = 'Tidak ada kata baru'; return; }
     if (n >= words.length) { go.disabled = true; go.textContent = 'Sudah siap semua'; msg.textContent = `${n} kata siap dibaca tanpa sinyal`; return; }
     if (navigator.onLine === false) { go.disabled = true; go.textContent = 'Butuh internet sekali'; if (n) msg.textContent = `${n} dari ${words.length} kata sudah siap.`; return; }
-    go.disabled = false; go.textContent = 'Siapkan arti bagian ini';
+    go.disabled = false; go.textContent = n ? 'Siapkan lagi' : 'Unduh arti';
     msg.textContent = n ? `${n} dari ${words.length} kata sudah siap tanpa sinyal.` : `${words.length} kata menunggu. Butuh internet sekali.`;
   };
   sync();
   const start = async () => {
     const my = ++run; let ok = 0, done = 0, stop = false;
     const todo = words.filter(q => !prepHas(b, q)), total = words.length, base = total - todo.length;
-    const show = () => { msg.textContent = `${base + ok} dari ${total} kata siap`; bar.hidden = false; const pc = Math.round((base + done) / total * 100); bar.firstElementChild.style.width = pc + '%'; bar.setAttribute('aria-valuenow', pc); };
-    go.hidden = true; cancel.hidden = false; show(); let idx = 0;
+    const show = () => { msg.textContent = `Mengunduh ${done}/${total}`; bar.hidden = false; const pc = Math.round((base + done) / total * 100); bar.firstElementChild.style.width = pc + '%'; bar.setAttribute('aria-valuenow', pc); };
+    go.hidden = true; cancel.hidden = false; ttl.textContent = 'Mengunduh arti…'; show(); let idx = 0;
     cancel.onclick = () => { stop = true; };
     const worker = async () => {
       while (!stop && live() && my === run && navigator.onLine !== false) {
@@ -814,12 +814,12 @@ function bindPrep(b, sec) {
     };
     await Promise.all([worker(), worker(), worker()]);
     trFlush(); if (!live() || my !== run) return;
-    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true; go.disabled = false;
+    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true; go.disabled = false; ttl.textContent = 'Baca tanpa internet';
     const n = words.filter(q => prepHas(b, q)).length;
-    if (stop || navigator.onLine === false) msg.textContent = `${n} dari ${total} kata siap. Nanti dicoba lagi ya.`;
+    if (stop || navigator.onLine === false) msg.textContent = `${stop ? 'Dibatalkan.' : 'Sinyal putus.'} ${n} dari ${total} kata sudah tersimpan. Lanjutkan nanti.`;
     else if (n < total) msg.textContent = `${n} kata siap dibaca tanpa sinyal. ${total - n} kata belum, nanti dicoba lagi ya.`;
     else msg.textContent = `${n} kata siap dibaca tanpa sinyal`;
-    if (n < total) go.textContent = 'Coba lagi yang belum'; else { go.disabled = true; go.textContent = 'Sudah siap semua'; }
+    if (n < total) go.textContent = 'Lanjutkan'; else { go.disabled = true; go.textContent = 'Sudah siap semua'; }
   };
   go.onclick = () => {
     if (navigator.connection && navigator.connection.saveData && go.dataset.ok !== '1') { go.dataset.ok = '1'; msg.textContent = 'Hemat Data lagi nyala. Unduh ini pakai kuota. Ketuk lagi kalau tetap mau.'; go.textContent = 'Tetap unduh'; return; }
