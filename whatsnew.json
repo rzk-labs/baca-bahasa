@@ -1,5 +1,11 @@
 [
   {
+    "n": 2061,
+    "judul": "Arti gagal dimuat: toast punya tombol 'Coba lagi' & progres 3/10",
+    "poin": "Pesan \"Ada yang gagal\" sekarang punya tombol \"Coba lagi\" untuk memuat arti ulang.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2058,
     "judul": "[peta 199] Cara baca Jepang: label 'perkiraan' & tombol Cek ulang",
     "poin": "Cara baca kata Jepang kini jujur: ada label \"perkiraan\" kalau hasilnya tebakan.",
@@ -171,12 +177,6 @@
     "n": 1991,
     "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
     "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1989,
-    "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
-    "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
     "tgl": "2026-11-28"
   }
 ]
