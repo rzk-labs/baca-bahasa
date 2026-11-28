@@ -1,5 +1,11 @@
 [
   {
+    "n": 2020,
+    "judul": "Kotak offline: judul 'Baca tanpa internet', tombol 'Unduh arti'",
+    "poin": "Kotak offline sekarang berjudul \"Baca tanpa internet\", tombolnya \"Unduh arti\".",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2018,
     "judul": "[peta 189] Home kosong: hapus tombol 'Cerita contoh' kembar",
     "poin": "Layar awal tanpa buku tak lagi punya tombol cerita contoh kembar.",
@@ -171,12 +177,6 @@
     "n": 1957,
     "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
     "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1955,
-    "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
-    "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
     "tgl": "2026-11-27"
   }
 ]

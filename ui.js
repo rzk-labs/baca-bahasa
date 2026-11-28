@@ -874,8 +874,9 @@ async function autoOff(b) {
     if (ok && AO.id === b.id) await aoSave();
   } catch (e) { offAuto = null; }
 }
+function offAutoNote() { return db.autoArti === false ? 'Arti tidak diisi otomatis.' : 'Arti terisi otomatis saat sinyal bagus. Pakai sedikit kuota.'; }
 function offHtml() {
-  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Siapkan offline</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="eyebrow">Isi arti otomatis</div><div class="seg" id="offAuto" role="group" aria-label="Isi arti otomatis"><button type="button" data-v="1" class="${db.autoArti === false ? '' : 'on'}">Nyala</button><button type="button" data-v="0" class="${db.autoArti === false ? 'on' : ''}">Mati</button></div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Siapkan offline</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
+  return `<div class="prep" id="offBox"><div class="prep-t">${ico('dl')}<b id="offT">Baca tanpa internet</b></div><div class="mut sm" id="offMsg" role="status">Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.</div><div class="prep-bar" id="offBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti offline" hidden><i></i></div><div class="eyebrow">Isi arti otomatis</div><div class="seg" id="offAuto" role="group" aria-label="Isi arti otomatis"><button type="button" data-v="1" class="${db.autoArti === false ? '' : 'on'}">Nyala</button><button type="button" data-v="0" class="${db.autoArti === false ? 'on' : ''}">Mati</button></div><div class="mut sm" id="offAutoNote">${offAutoNote()}</div><div class="prep-acts"><button class="sec" id="offGo" type="button" disabled>Unduh arti</button><button class="ghost" id="offCancel" type="button" hidden>Batal</button><button class="ghost" id="offDel" type="button" hidden>Hapus arti offline</button></div></div>`;
 }
 async function bindOff(b) {
   const box = $('#offBox'); if (!box) return;
@@ -889,8 +890,8 @@ async function bindOff(b) {
     if (run || !live()) return;
     const n = mine(), h = have(), todo = words.filter(q => !h(q)).slice(0, PREP_MAX);
     del.hidden = !AO.m.size || AO.id !== b.id;
-    ttl.textContent = n ? 'Siap dibaca offline' : 'Siapkan offline';
-    go.textContent = n ? 'Siapkan lagi' : 'Siapkan offline';
+    ttl.textContent = n ? 'Siap dibaca offline' : 'Baca tanpa internet';
+    go.textContent = n ? 'Siapkan lagi' : 'Unduh arti';
     if (n) msg.textContent = `${n} kata siap offline. Kalimat utuh tetap butuh internet.`;
     else msg.textContent = 'Unduh arti kata baru bagian ini dan berikutnya. Maks 150 kata.';
     if (!words.length) { go.disabled = true; if (!n) msg.textContent = 'Belum ada kata baru untuk diunduh.'; return; }
@@ -933,7 +934,7 @@ async function bindOff(b) {
     else if (ok) toast('Siap dibaca offline');
   };
   go.onclick = () => { offAutoStop(); start(); };
-  $$('#offAuto button').forEach(x => x.onclick = () => { db.autoArti = x.dataset.v === '1'; save(); segOn('#offAuto', x); if (!db.autoArti) offAutoStop(); });
+  $$('#offAuto button').forEach(x => x.onclick = () => { db.autoArti = x.dataset.v === '1'; save(); segOn('#offAuto', x); $('#offAutoNote').textContent = offAutoNote(); if (!db.autoArti) offAutoStop(); });
   del.onclick = async () => { if (run) return; await aoDel(b.id); if (live()) sync(); };
   addEventListener('offline', sync, { once: true }); addEventListener('online', sync, { once: true });
 }
