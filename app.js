@@ -796,6 +796,7 @@ async function altExtra(q, sl, tl, base, signal) {
       if (terms.length) return { groups: [{ pos: '', terms }], src: 'pivot' };
     } catch (e) { if (signal && signal.aborted) throw e; fails++; }
   }
+  if (q.trim().split(/\s+/).length >= 2) return { groups: [], src: '' }; /* frasa: memori terjemahan publik terlalu sering nyasar */
   tries++;
   try {
     const r = await fetchTimeout(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`, 8000, signal);
