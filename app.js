@@ -674,8 +674,19 @@ async function fetchTimeout(url, ms = 8000, ext) {
   const onAb = () => ac.abort(); if (ext) { if (ext.aborted) ac.abort(); else ext.addEventListener('abort', onAb); }
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
+/* Google gtx: host utama dulu, lalu clients5 (punya CORS juga) bila gagal/ditolak; bawa galat terakhir */
+async function gtxGet(qs, signal) {
+  let err;
+  for (const h of ['translate.googleapis.com/translate_a/single', 'clients5.google.com/translate_a/single']) {
+    try {
+      const r = await fetchTimeout('https://' + h + '?' + qs.replace(/^client=gtx/, h.startsWith('clients5') ? 'client=dict-chrome-ex' : 'client=gtx'), 8000, signal);
+      if (r.ok) return r; err = new Error('gtx ' + r.status);
+    } catch (e) { if (signal && signal.aborted) throw e; err = e; }
+  }
+  throw err;
+}
 async function gtxFetch(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await gtxGet(`client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=rm&dt=ex&dt=at&q=${encodeURIComponent(q)}`, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
   if (!Array.isArray(j) || !Array.isArray(j[0])) throw new Error('Balasan terjemahan aneh');
@@ -721,7 +732,7 @@ function simpanSemua(v, d) {
 }
 /* arti lain (tombol 'Arti ini salah?'): alternatif gtx (dt=bd + dt=at); lempar galat bila layanan gagal, balasan aneh = daftar kosong */
 async function altFetch(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await gtxGet(`client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
   return altOf(j, q);
@@ -758,7 +769,7 @@ function altOf(j, q) {
 }
 /* terjemahan polos (dt=t); lempar galat bila layanan gagal */
 async function gtxText(q, sl, tl, signal) {
-  const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&q=${encodeURIComponent(q)}`, 8000, signal);
+  const r = await gtxGet(`client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&q=${encodeURIComponent(q)}`, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
   return Array.isArray(j) && Array.isArray(j[0]) ? j[0].map(x => Array.isArray(x) && typeof x[0] === 'string' ? x[0] : '').join('').trim() : '';
