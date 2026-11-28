@@ -174,7 +174,7 @@
       "nama": "Masukan Pengguna Manusia",
       "fase": "Beta Nyata",
       "status": "draft",
-      "catatan": "Draft 20 Nov 2026: 41 kutipan bukti internet dari 9 sumber, 22 di antaranya suara pembelajar Indonesia (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; vonis: kamus memutus alur terbukti, harga & sinyal belum jelas; tetap draft karena aturan_fase2; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
+      "catatan": "Draft 20 Nov 2026: 41 kutipan bukti internet dari 9 sumber, 22 di antaranya suara pembelajar Indonesia (bukan data manusia Keepo), docs/riset-suara-manusia-tahap-24.md; vonis: kamus memutus alur terbukti, harga & sinyal belum jelas; tetap draft karena aturan_fase2; 5 pengguna nyata lewat 3 kanal publik belum berjalan. Masukan pengguna manusia nyata 28 Nov 2026: cara baca furigana tak ada, kalau cuma ngandelin pendengaran takut tak pas; riset + usulan di docs/riset-cara-baca-kanji-tanpa-furigana.md (#2024), status tetap draft. Keluar bila: >=20 masukan manusia nyata (form, Threads, WA, ulasan) dirangkum; 3 masalah teratas jadi backlog. Masukan pengguna AI tidak dihitung. Peran: pm, riset. Lihat docs/pm-peta-fase-2.md."
     },
     {
       "no": 25,
@@ -241,6 +241,8 @@
     }
   ],
   "backlog": [
+    {"no":200,"peran":"developer","prioritas":"P1","nama":"Kartu Kata & ulang: kana ketuk-untuk-lihat untuk kata Jepang (#2024)","dokumen":"docs/riset-cara-baca-kanji-tanpa-furigana.md","status":"siap dikerjakan","catatan":"Usulan 2 di dokumen. Ubah render kartu di ui.js + style.css; kartu lama tanpa baca diisi diam-diam. Naikkan C di sw.js."},
+    {"no":199,"peran":"developer","prioritas":"P0","nama":"Cara baca Jepang tak kosong diam-diam: label 'perkiraan', tombol Cek ulang, frasa & kata >12 huruf tetap dicoba (#2024)","dokumen":"docs/riset-cara-baca-kanji-tanpa-furigana.md","status":"siap dikerjakan","catatan":"Mockup: docs/mockup-2024.html. Ubah jaFind/bacaOf di app.js & baris cara baca sheet arti di ui.js (~2972, ~3024). Naikkan C di sw.js."},
     {"no":198,"peran":"developer","prioritas":"P0","nama":"Arti lain tak lagi gagal terus: cadangan tetap dicoba bila layanan utama menolak (#2011)","dokumen":"docs/pm-arti-lain-belum-bisa-dimuat-2011.md","status":"selesai (#2014)","catatan":"Mockup: docs/mockup-2011.html. Ubah fillAlt di ui.js (try/catch di langkah utama, lanjut ke altExtra). Naikkan C di sw.js."},
     {"no":197,"peran":"developer","prioritas":"P0","nama":"Arti lain tak kosong terus: cari lewat kata dasar, pivot Inggris, cadangan MyMemory, pesan 'cuma satu arti' (#1970)","dokumen":"docs/pm-arti-lain-kosong-1970.md","status":"selesai (#1975)","catatan":"Mockup: docs/mockup-1970.html. Ubah altOf/altFill di app.js & fillAlt/paintDict di ui.js. Jangan cache kosong >1 hari. Naikkan C di sw.js."},
     {"no":196,"peran":"developer","prioritas":"P0","nama":"Sheet arti kata: tombol Simpan / Tandai sulit / Tandai & lanjut tak lagi rusak di HP (#1951)","dokumen":"docs/desain-sheet-arti-tombol-rusak-1951.md","status":"selesai (#1963)","catatan":"Mockup: docs/mockup-1951.html. Akar: style.css baris ~1068 (.wact>button:not(#wsave), spesifisitas lebih tinggi) mengalahkan aturan #whard/#wtanda baris ~1401. Perbaiki spesifisitas, uji 320/390px. Naikkan C di sw.js."},
