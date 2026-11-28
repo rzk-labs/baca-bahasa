@@ -1,5 +1,11 @@
 [
   {
+    "n": 2049,
+    "judul": "Motion: kartu latihan Kata, arti muncul halus saat 'Lihat arti'",
+    "poin": "Arti kata dan tombol di kartu latihan sekarang muncul halus.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2048,
     "judul": "Reader: ganti halaman diumumkan pembaca layar, menu bawah min 12px",
     "poin": "Pembaca layar kini mengumumkan halaman yang sedang dibaca.",
@@ -171,12 +177,6 @@
     "n": 1987,
     "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
     "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1985,
-    "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
-    "poin": "Kartu Target baca di Home tak lagi membingungkan.",
     "tgl": "2026-11-28"
   }
 ]

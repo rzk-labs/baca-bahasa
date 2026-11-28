@@ -1666,6 +1666,14 @@ body:not(.reading) #view{padding-bottom:var(--view-gap-bawah)}
 .nx-bk .nx-t{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;opacity:.7}
 .nx-bk .nx-t.cjk,#hero.hero-done .nx-bk .nx-t.cjk{opacity:1;font-size:13px}
 .fb-next .fbn-m .cjk{color:var(--color-text);opacity:1}
+/* motion #2049: arti & tombol masuk halus, kartu baru masuk saat berganti */
+@keyframes kata-arti-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes kata-act-in{from{opacity:0}to{opacity:1}}
+@keyframes kata-kartu-in{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+#back:not(.hide){animation:kata-arti-in 180ms var(--ease-out)}
+#actBack:not(.hide){animation:kata-act-in 160ms var(--ease-out)}
+.flash.card-in{animation:kata-kartu-in 200ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){#back:not(.hide),#actBack:not(.hide),.flash.card-in{animation:none}}
 /* #2045 Ngomong 'panggung': kalimat besar, stabilo Wasabi saat kata dinilai, mik bercincin Biru Es, rekam jelas */
 .target{font-size:26px;font-weight:600;line-height:1.6;letter-spacing:-.005em;margin:var(--space-3) 0 var(--space-1)}
 .target .t[data-p]{animation:t-judge .42s var(--ease-out) both}
