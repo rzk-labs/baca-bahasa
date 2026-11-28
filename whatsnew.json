@@ -1,5 +1,11 @@
 [
   {
+    "n": 2001,
+    "judul": "Catatan sesi Tamat: 'kata baru' dan 'tersimpan 0' tak lagi bertentangan",
+    "poin": "Layar Tamat tak lagi bilang \"kata baru\" dan \"0 disimpan\" sekaligus.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1999,
     "judul": "Sheet arti kata: tombol 'Ulang besok' yang jelas untuk kata sulit",
     "poin": "Kartu arti kata sekarang punya tombol jelas: \"Ulang besok\".",
@@ -171,12 +177,6 @@
     "n": 1937,
     "judul": "Kartu ulang: kata 1-2 huruf tampilkan kalimat asal di depan kartu",
     "poin": "Kartu ulang kata pendek (1-2 huruf) kini menampilkan kalimat asalnya di depan.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1935,
-    "judul": "Ulang kata: tampilkan bahasa kata bila beda dari buku yang dibuka",
-    "poin": "Kartu ulang sekarang punya label bahasa kecil di dekat kata.",
     "tgl": "2026-11-27"
   }
 ]

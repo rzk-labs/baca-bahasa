@@ -1671,9 +1671,8 @@ function kataDiBuku(b, v) {
   if (!cache._low) cache._low = cache.pages.map(s => s.join('\n')).join('\n').toLowerCase();
   return [v.w, v.base].some(x => x && cache._low.includes(String(x).toLowerCase()));
 }
-const TXT_TAK_ADA_BARU = 'Tidak ada kata baru kali ini. Ketuk kata di cerita untuk menyimpannya.';
-/* #1918: jujur soal sesi vs kata siap ulang; tak berdiri sendiri bila ada kata jatuh tempo */
-const txtBelumBaru = dueN => dueN ? `Sesi ini belum ada kata baru. ${dueN} kata dari buku ini siap diulang (bagian dari kata tersimpan).` : TXT_TAK_ADA_BARU;
+/* #2001: satu definisi 'kata baru' = disimpan di sesi ini. Tanpa itu: satu kalimat jujur, N = siap diulang dari buku ini */
+const txtBelumBaru = dueBuku => `Sesi ini belum simpan kata.${dueBuku ? ` Dari buku ini ada ${dueBuku} kata siap diulang.` : ' Ketuk kata di cerita untuk menyimpannya.'}`;
 function recSess(b, w, sent) {
   if (!b || !w || /\s/.test(String(w).trim()) || isKataSampah(b.lang, w)) return;
   const k = vocabKey(b.lang, w), e = SESSW.get(k) || { w, lang: b.lang, bid: b.id, n: 0, s: sent };
@@ -1791,6 +1790,7 @@ function finishBook(b) {
       : `<button class="__C__ full fb-next" data-nb="${esc(nx1.id)}"><span class="fbn-t">${nextBkLabel(b, nx1)}</span><span class="fbn-m mut sm" dir="auto"><span lang="${esc(nx1.lang)}">${esc(nx1.title)}</span> · ${nxProg}</span></button>`);
   }
   const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
+  const dueBuku = db.vocab.filter(v => isDue(v) && v.lang === b.lang && v.book === b.title).length; /* #2001: N dari buku ini */
   /* #1877: satu ajakan utama berwarna; sisanya tautan teks */
   /* #1991: 2 aksi saja: 1 tombol utama + tautan 'Ke Home'. 'Baca ulang' ada di kartu buku Home/Profil */
   let actsHtml;
@@ -1820,7 +1820,8 @@ function finishBook(b) {
     <h2>${ws.length ? `${ws.length} kata disimpan dari "${esc(b.title)}"` : 'Tamat! Keren banget'}</h2>
     ${besok}
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
-    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Tinggal pilih mau lanjut ke mana.</p>')}
+    ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut" id="fbnone">${esc(txtBelumBaru(dueBuku))}</p>` : '<p class="mut">Kamu udah sampai akhir. Tinggal pilih mau lanjut ke mana.</p>')}
+    ${total > 0 || dueN ? `<p class="mut sm" id="fbcount" style="margin:6px 0 0">${total > 0 ? `<span>Tersimpan total: <b>${total}</b> kata</span>` : ''}${total > 0 && dueN ? '<br>' : ''}${dueN ? `<span>Siap diulang sekarang: <b>${dueN}</b> kata</span>` : ''}</p>` : ''}
     <div class="fb-acts">${actsHtml}</div>
     <div class="fb-sec fb-end"><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
