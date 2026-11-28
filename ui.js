@@ -3070,7 +3070,7 @@ async function onWord(el, lastEl) {
   const slowMsg = (my, retry, off) => { if (my !== tok || $('#wtr') !== wtrEl) return; wtrEl.innerHTML = `<span class="loading">${off ? 'Lagi offline. Arti muncul begitu ada sinyal.' : 'Masih nyari artinya…'}</span> <button class="ghost wretry" id="wslow">Coba lagi</button>`; $('#wslow').onclick = () => { wtrEl.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span>'; retry(); }; };
   /* #1603: chip 'Lagi offline' di dalam sheet (bukan toast); hanya bila arti belum tersimpan */
   const offChip = on => { const o = $('#woff'); if (!o) return; o.hidden = !on; o.innerHTML = on ? `${ico('wifioff')}<span>Lagi offline. Arti baru butuh internet.</span>` : ''; };
-  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (navigator.onLine !== false || savedOf()) offChip(false); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig).then(r => {
+  const load = () => { const my = ++tok; if (trAc) trAc.abort(); if (navigator.onLine !== false || savedOf()) offChip(false); if (isNama(b, word)) { clearTimeout(slowT); showNama(); return Promise.resolve(); } trAc = new AbortController(); const sig = trAc.signal; const sv = savedOf(); if (sv) showSaved(sv); clearTimeout(slowT); if (!sv) { if (!navigator.onLine) slowMsg(my, load, true); else slowT = setTimeout(() => slowMsg(my, load), SLOW_MS); } return translate(qWord(), b.lang, db.my, sig, false, lo !== hi && !NOSPACE.has(b.lang) ? sent : undefined).then(r => {
     if (my !== tok || !$('#wtr')) return;
     clearTimeout(slowT); offChip(false);
     tr = r; gagalTandai(b.lang, word, false); setTx('#wpart', partNote());
@@ -3103,7 +3103,9 @@ async function onWord(el, lastEl) {
         body = `<div class="wchips" role="group" aria-label="Arti lain">${flat.map(chip).join('')}${flat.length > 6 ? `<button class="wchip wmore" type="button" id="wmore">Lihat semua (${flat.length})</button>` : ''}</div>`;
       }
       const exs = kind.st === 'ada' ? (Array.isArray(kind.ex) ? kind.ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('') : '';
-      el.innerHTML = `${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>`;
+      const cut = (() => { if (lo === hi || NOSPACE.has(b.lang) || b.lang !== 'en') return ''; const ws2 = qWord().toLowerCase().split(/\s+/).map(x => x.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, '')), CJ = new Set(['and', 'or', 'but', 'the', 'of', 'to']), f = ws2[0], l = ws2[ws2.length - 1]; return CJ.has(l) ? l : CJ.has(f) ? f : ''; })();
+      const cutH = cut ? `<div class="wcut" role="note">Frasa terpotong? Coba hapus "${esc(cut)}"</div>` : '';
+      el.innerHTML = `${cutH}${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>`;
       el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); });
       const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); };
       const pkb = $('#wpk'); if (pkb) pkb.onclick = () => { kind.pkOpen = !kind.pkOpen; paintDict(); keepVisible('.w.sel'); };

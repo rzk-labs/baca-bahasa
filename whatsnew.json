@@ -1,5 +1,11 @@
 [
   {
+    "n": 2074,
+    "judul": "[peta 206] Arti frasa tak ngawur: terjemah dengan konteks, petunjuk terpotong",
+    "poin": "Arti frasa panjang sekarang diterjemah bareng kalimatnya, jadi lebih masuk akal.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2072,
     "judul": "[peta 205] Arti lain frasa tak nyasar: hapus chip per kata, pesan jujur",
     "poin": "Sorot frasa: chip \"Arti lain\" ngawur per kata sudah hilang.",
@@ -171,12 +177,6 @@
     "n": 1999,
     "judul": "Sheet arti kata: tombol 'Ulang besok' yang jelas untuk kata sulit",
     "poin": "Kartu arti kata sekarang punya tombol jelas: \"Ulang besok\".",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1997,
-    "judul": "Home Target baca: jelaskan baca ulang buku Tamat tak dihitung",
-    "poin": "Home sekarang jelaskan: baca ulang buku Tamat tak dihitung untuk target.",
     "tgl": "2026-11-28"
   }
 ]
