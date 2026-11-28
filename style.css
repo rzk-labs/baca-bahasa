@@ -193,7 +193,13 @@ body.reading::after{display:none}
 .q3-lock .q3-seg i.on{background:#351E28;box-shadow:none}
 .q3-lock .q3-go{grid-column:2/-1;justify-self:start;margin-top:2px;font:700 13px/18px var(--font-body,inherit);color:#351E28;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 body:not(.reading) #view:has(.q3-lock){padding-bottom:calc(env(safe-area-inset-bottom) + var(--tabbar-h) + 136px)}
-.soft-nudge{margin:12px 0 0}.due-nudge small,.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
+.soft-nudge{margin:12px 0 0}
+/* #2028: tombol kecil sekunder 'Ulang yang sulit saja · N kata' di bawah kartu ulang Home; satu baris, latar transparan bergaris supaya tak menyaingi 'Ulang sekarang' */
+.fw-nudge.hard-nudge{width:auto;max-width:100%;min-height:44px;margin:8px 0 0;padding:8px 14px 8px 12px;gap:8px;border:1.5px solid var(--ice);border-left:4px solid var(--hl);background:transparent;color:inherit;font-size:13px;line-height:18px}
+.fw-nudge.hard-nudge svg.i{width:16px;height:16px}
+.fw-nudge.hard-nudge span{flex:0 1 auto;white-space:nowrap;overflow-wrap:normal}
+@media(max-width:340px){.fw-nudge.hard-nudge{padding:8px 10px;font-size:12px}}
+.due-nudge small,.soft-nudge small{display:block;font-weight:400;font-size:12px;opacity:.75;margin-top:2px}
 .q3-btn{margin:12px 0 0}.q3-btn small{display:block;font-weight:400;font-size:12px;opacity:.75}
 .mile{margin:12px 0 -4px;padding:12px 14px;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}.mile-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font:700 14px/18px var(--font-body,inherit)}.mile-h span{font-weight:500;font-size:12px;opacity:.8}.mile .bar{height:6px;background:rgba(53,30,40,.16)}.mile .bar i{background:var(--ink)}.mile-tip{flex-basis:100%;font-weight:500;font-size:12px;opacity:.8}.mile-card{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 -4px;padding:10px 14px;border-radius:var(--radius-xl);background:var(--hl);color:var(--ink);font:700 14px/18px var(--font-body,inherit)}.mile-card+.mile{margin-top:8px}.mile-card button{min-height:44px;padding:0 12px;color:var(--ink)}
 .a2hs{display:flex;align-items:flex-start;gap:12px;margin:12px 0 -4px;padding:12px 14px;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink)}
