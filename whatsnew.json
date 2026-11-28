@@ -1,5 +1,11 @@
 [
   {
+    "n": 2068,
+    "judul": "[peta 200] Kartu Kata & ulang: kana ketuk-untuk-lihat kata Jepang",
+    "poin": "Kata Jepang berkanji kini tampil kanji dulu; cara baca muncul setelah diketuk.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2065,
     "judul": "[peta 202] Label 'Contoh · HSK 1-3' di cerita contoh Mandarin",
     "poin": "Cerita contoh Mandarin sekarang punya label \"HSK 1-3\" supaya level-nya jelas.",
@@ -171,12 +177,6 @@
     "n": 1995,
     "judul": "Status buku 'Belum mulai' sama di sheet Tamat, Profil, Baca",
     "poin": "Buku yang belum dibuka kini selalu disebut 'Belum dibuka' di semua layar.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1993,
-    "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
-    "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
     "tgl": "2026-11-28"
   }
 ]
