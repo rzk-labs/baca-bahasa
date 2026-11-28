@@ -1420,7 +1420,7 @@ ol.steps3 li>img{flex:none;width:48px;height:48px}
 #wdict{max-height:40vh;overflow-y:auto}
 /* #1363 Tandai & lanjut */
 /* #1923 tombol 'Tandai sulit' (ikon) di sheet arti kata, sejajar Simpan */
-.wact>#wsave{flex:1 1 0;min-width:96px;white-space:nowrap}
+.wact>#wsave{flex:1 1 auto;min-width:max-content;padding-left:18px;padding-right:18px;white-space:nowrap}
 .wact>button#whard:not(#x){flex:1 1 128px;min-width:0;min-height:52px;padding:0 12px;white-space:nowrap;border-radius:var(--radius-full)}
 .wact>button#whard[hidden]{display:none}
 .wact>button#wtanda:not(#x){flex:1 1 100%;min-height:48px}.wact>button#wtanda[hidden]{display:none}

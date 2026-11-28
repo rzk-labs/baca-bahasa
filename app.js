@@ -690,7 +690,7 @@ async function gtxFetch(q, sl, tl, signal) {
     const bs = bd.map(d => baseOf(q, d[3])).find(Boolean); if (bs) out.base = bs;
   } catch (e) { }
   out.ex = exOf(j);
-  out.alt = altOf(j); /* arti lain ikut permintaan yang sama (#1906); field tambahan, format lama tak berubah */
+  out.alt = altOf(j, q); /* arti lain ikut permintaan yang sama (#1906); field tambahan, format lama tak berubah */
   return out;
 }
 /* contoh kalimat (dt=ex): maks 3, teks polos, kata kunci diapit ‹…›; balasan aneh = daftar kosong */
@@ -724,10 +724,20 @@ async function altFetch(q, sl, tl, signal) {
   const r = await fetchTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&dt=t&dt=bd&dt=at&q=${encodeURIComponent(q)}`, 8000, signal);
   if (!r.ok) throw new Error('gtx ' + r.status);
   const j = await r.json().catch(() => null);
-  return altOf(j);
+  return altOf(j, q);
+}
+/* saring arti alternatif ngawur (memori terjemahan publik): sisa HTML/entitas, angka asing, kalimat utuh untuk kata/frasa pendek */
+function altBersih(t, q) {
+  t = String(t || '').trim(); q = String(q || '').trim();
+  if (!t || /[<>]|&[#a-z0-9]+;/i.test(t)) return false;
+  if (/\d/.test(t) && !/\d/.test(q)) return false;
+  const nw = x => x.split(/\s+/).filter(Boolean).length;
+  if (nw(q) <= 4 && nw(t) > Math.max(nw(q) * 2, nw(q) + 2)) return false;
+  if (nw(q) <= 4 && /[.!?]$/.test(t) && !/[.!?]$/.test(q)) return false;
+  return true;
 }
 /* arti lain dari balasan gtx (dt=bd + dt=at): [{pos, terms}] maks 15 per jenis; item aneh dilewati, balasan aneh = kosong */
-function altOf(j) {
+function altOf(j, q) {
   const out = [];
   if (!Array.isArray(j)) return out;
   try {
@@ -740,7 +750,7 @@ function altOf(j) {
   try {
     if (Array.isArray(j[5])) {
       const terms = [];
-      j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && typeof x[0] === 'string' && x[0] && terms.push(x[0])));
+      j[5].forEach(s => Array.isArray(s) && Array.isArray(s[2]) && s[2].forEach(x => Array.isArray(x) && typeof x[0] === 'string' && x[0] && altBersih(x[0], q) && terms.push(x[0])));
       if (terms.length) out.push({ pos: '', terms: terms.slice(0, 15) });
     }
   } catch (e) { }
@@ -778,7 +788,7 @@ async function altExtra(q, sl, tl, base, signal) {
     const r = await fetchTimeout(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${sl}|${tl}`, 8000, signal);
     const j = await r.json();
     const seen = new Set(), terms = [];
-    (Array.isArray(j.matches) ? j.matches : []).forEach(m => { const t = m && typeof m.translation === 'string' ? m.translation.trim() : ''; const k = nz(t); if (t && k && t.length <= 60 && !/MYMEMORY WARNING|INVALID/i.test(t) && !seen.has(k)) { seen.add(k); terms.push(t); } });
+    (Array.isArray(j.matches) ? j.matches : []).forEach(m => { const t = m && typeof m.translation === 'string' ? m.translation.trim() : ''; const k = nz(t); if (t && k && t.length <= 60 && altBersih(t, q) && !/MYMEMORY WARNING|INVALID/i.test(t) && !seen.has(k)) { seen.add(k); terms.push(t); } });
     if (terms.length) return { groups: [{ pos: '', terms: terms.slice(0, 6) }], src: 'mm' };
   } catch (e) { if (signal && signal.aborted) throw e; fails++; }
   if (fails >= tries) throw new Error('semua jalur gagal');
