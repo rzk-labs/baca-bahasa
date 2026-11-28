@@ -267,6 +267,23 @@ const badgeProgress = id => {
   if (!m) return null;
   return { now: Math.min(m[1], Math.max(0, m[0]() || 0)), need: m[1] };
 };
+/* #1973: satu baris 'Lencana berikutnya' di Home; hanya tampilan, data tak diubah */
+const BADGE_UNIT = { kepo1: 'kata', kolektor: 'kata', koleksi50: 'kata', koleksi100: 'kata', kutubuku: 'halaman', berani: 'tantangan', perfect: 'skor 95%+', boss: 'kata sulit', otak: 'kartu', fire3: 'hari', fire7: 'hari', lv5: 'XP' };
+function nextBadge() {
+  let best = null;
+  BADGES.forEach(([id, em, name, desc]) => { if (badgeShown(id)) return; const pr = badgeProgress(id), r = pr ? pr.now / pr.need : 0; if (!best || r > best.r) best = { id, em, name, desc, pr, r }; });
+  if (!best) return null;
+  const rem = best.pr ? best.pr.need - best.pr.now : 0;
+  return { ...best, txt: rem > 0 && BADGE_UNIT[best.id] ? `sisa ${rem} ${BADGE_UNIT[best.id]}` : best.desc };
+}
+function nextBadgeHtml() {
+  if (!db.books || !db.books.length) return '';
+  const n = nextBadge(); if (!n) return '';
+  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span>Lencana berikutnya: <b>${esc(n.name)}</b> · ${esc(n.txt)}</span></button>`;
+}
+function badgeListSheet() {
+  openSheet(`<div class="sh-head"><h2>Lencana</h2>${closeBtn}</div><ul class="rules">${BADGES.map(([id, , name, desc]) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id); return `<li><b>${esc(name)}</b>${on ? ' · sudah kebuka' : ` · ${esc(BADGE_HOW[id] || desc)}${pr && pr.need > 1 ? ` (${pr.now}/${pr.need})` : ''}`}</li>`; }).join('')}</ul>`, 'Lencana');
+}
 let badgeQ = Promise.resolve();
 /* Saat membaca, toast/perayaan ditunda; keluar e-reader atau tamat bab -> tampil berurutan (1 per 2 dtk) */
 const lateQ = []; let lateT = null;
@@ -1295,7 +1312,7 @@ function viewRak() {
     $('#view').innerHTML = `
     ${lanjutCard(cur)}
     <div class="bento" style="margin-top:4px">
-      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; const dl = other.lang !== cur.lang; /* #1929: beda bahasa = sebut bahasanya */ return `<button class="pri nx-bk" id="hNext" aria-label="${v} buku ${dl ? langName(other.lang).trim() + ': ' : ''}${esc(other.title)}"><span class="nx-v">${v}${dl ? ' · ' + langName(other.lang).trim() : ''}:</span> <span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
+      <div class="tile t-pink wide${pctOf(cur) >= 100 ? ' hero-done' : ''}" id="hero">${pctOf(cur) >= 100 ? `<div class="hd-row"><div class="inf"><div class="t">${heroTitle(cur.title)}</div><div class="sm">Tamat · ${langName(cur.lang)}</div></div></div><div class="hero-act">${other ? (() => { const v = pctOf(other) > 0 ? 'Lanjut' : 'Mulai'; const dl = other.lang !== cur.lang; /* #1929: beda bahasa = sebut bahasanya */ const lb = `${v} buku ${dl ? langName(other.lang).trim() : 'berikutnya'}`; /* #1969: label pendek, judul jadi baris kecil */ return `<button class="pri nx-bk" id="hNext" aria-label="${lb}: ${esc(other.title)}"><span class="nx-v">${lb}</span><span class="nx-t">${esc(splitTitle(other.title).main)}</span></button>`; })() : '<button class="pri" id="hNext">Pilih buku berikutnya</button>'}</div><div class="hd-re"><button type="button" class="lnk" id="hRead" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button></div></div>` : `<div class="hero">${cover(cur)}<div class="inf"><div class="eyebrow">Lanjut baca · ${bookStatus(cur).label}</div><div class="t">${heroTitle(cur.title)}</div><div class="sm">${langName(cur.lang)}</div><div class="sm hero-pos" id="heroPos">${heroPos(cur)}</div>${lastMark(cur) ? `<button class="hero-mk" id="hMark" aria-label="Buka buku dari penanda yang terakhir dibuat">${ico('bm')} Dari penanda terakhir</button>` : ''}<div class="bar" style="margin-top:12px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${bookStatus(cur).pct}" aria-label="Progres buku ${bookStatus(cur).pct} persen"><i style="width:${bookStatus(cur).pct}%"></i></div></div></div>
         <div class="hero-act"><button class="pri" id="hRead">Gas baca →</button>${other ? `<button class="sec" id="hOther">Buku berikutnya</button>` : ''}</div></div>`}
     </div>
     <div class="mut sm" style="margin:14px 0 4px">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
@@ -1305,6 +1322,7 @@ function viewRak() {
       <div class="t-lime lv-tap" id="goalCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Target baca harian ${goalMin()} menit. ${goalTodayText()}. Ketuk untuk detail">${goalCardHtml()}</div>
       <div class="t-lav lv-tap" id="lvCard" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Level ${xpInfo().lv}. Ketuk untuk lihat cara dapat XP">${lvCardHtml()}</div>
     </div>
+    ${nextBadgeHtml()}
     <div id="hskSlot">${hskHomeHtml()}</div>
     ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = db.vocab.filter(isDue).length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang${dueNote(cur && cur.lang)}. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang${dueNote(cur && cur.lang)}<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. ${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan' : 'Ketuk untuk buka bacaan'}">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan.' : 'Ketuk kata di bacaan, lalu Simpan.'}</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span>${pctOf(cur) >= 100 ? '' : '<span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span>'}</button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
@@ -1320,6 +1338,7 @@ function viewRak() {
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
     const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
+    const nbl = $('#nbLine'); if (nbl) nbl.onclick = badgeListSheet;
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const xd = $('#xtraDone'); if (xd) xd.onclick = () => open('baca'); /* #1561: 'Cukup hari ini' tak buntu; lanjut baca (semua tamat = tab Baca) */
     const xb = $('#xtraBtn'); if (xb) xb.onclick = () => { const p = extraPick(); if (!p.length) return; db.q3k = (+db.q3k || 0) + 1; extraRoundUse(); save(); quickPend = p; quickExtra = true; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1442: satu tombol ulang; latihan ekstra tak ubah jadwal (api/ tak diubah) */

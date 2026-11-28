@@ -1620,9 +1620,10 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 /* #1894: centang Tamat di pojok sampul (kiri) pada tata letak sampul+judul, tak menimpa judul */
 .rk-row.rk-few .rk-tag{right:auto;left:-4px;top:-4px}
 /* #1890: tombol Home Tamat memuat judul buku berikutnya, 1 baris */
-#hero.hero-done .hero-act button.nx-bk{display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;min-width:0}
-#hero.hero-done .nx-bk .nx-v{flex:none}
-#hero.hero-done .nx-bk .nx-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* #1969: label pendek + judul 1 baris kecil abu-abu */
+#hero.hero-done .hero-act button.nx-bk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;max-width:100%;overflow:hidden}
+#hero.hero-done .nx-bk .nx-v{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hero.hero-done .nx-bk .nx-t{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;opacity:.7}
 @media(max-width:360px){#kseg button{padding:0 4px;font-size:13px;min-width:0;white-space:nowrap}#kseg button svg.i{display:none}}
 /* #1918: kartu akhir tak dobel dgn sheet Tamat; baris penutup bagian kosong */
 #view[inert] .endcard{opacity:0;pointer-events:none}
@@ -1638,3 +1639,8 @@ body:not(.reading) #view:has(.hscroll>.bk),body:not(.reading) #view:has(.hero-up
 .cariall .vcariall{margin:0;padding:0 4px;text-decoration:underline;color:var(--color-text)}
 .cariall .vcariall:disabled{opacity:.7;text-decoration:none}
 .cariall .mut{margin:0 4px}
+.nb-line{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:10px 0 0;padding:8px 12px;border:0;border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);font:600 13px/18px var(--font-body,inherit);text-align:left;cursor:pointer}
+.nb-line svg.i{flex:none;width:18px;height:18px}
+.nb-line span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-line:active{transform:scale(.98)}
+.nb-line:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
