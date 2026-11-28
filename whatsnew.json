@@ -1,5 +1,11 @@
 [
   {
+    "n": 2003,
+    "judul": "Reader halaman Tamat: isi layar tak kosong, tombol dekat jempol",
+    "poin": "Kartu Tamat di halaman terakhir sekarang turun, dekat jempol.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2001,
     "judul": "Catatan sesi Tamat: 'kata baru' dan 'tersimpan 0' tak lagi bertentangan",
     "poin": "Layar Tamat tak lagi bilang \"kata baru\" dan \"0 disimpan\" sekaligus.",
@@ -171,12 +177,6 @@
     "n": 1939,
     "judul": "Home buku Tamat: kartu 'Simpan 1 kata dulu' tak kembar tombol buku",
     "poin": "Home buku Tamat: tombol \"Pilih buku berikutnya\" tidak muncul dua kali lagi.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1937,
-    "judul": "Kartu ulang: kata 1-2 huruf tampilkan kalimat asal di depan kartu",
-    "poin": "Kartu ulang kata pendek (1-2 huruf) kini menampilkan kalimat asalnya di depan.",
     "tgl": "2026-11-27"
   }
 ]

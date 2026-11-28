@@ -2585,7 +2585,9 @@ function endCard(b, last) {
   if (!bottom || vr.bottom - bottom < c.offsetHeight + 48) { c.remove(); return; }
   if (bottom + 24 + c.offsetHeight > vr.bottom) { c.remove(); return; } /* #1606: cek ulang, jangan pernah menimpa teks */
   /* #994/#1415: kartu di bawah teks, jarak 24px dari paragraf terakhir dan min 24px dari bar bawah */
-  c.style.top = Math.round(bottom - vr.top + 24) + 'px'; c.style.bottom = 'auto';
+  /* #2003: kartu turun ke dekat jempol; sisakan ruang untuk toast + bar bawah, tak pernah di atas teks */
+  const tTop = Math.max(bottom + 24, vr.bottom - c.offsetHeight - 80);
+  c.style.top = Math.round(Math.min(tTop, vr.bottom - c.offsetHeight - 24) - vr.top) + 'px'; c.style.bottom = 'auto';
   if (bottom - vr.top < 80) { const e = $('#ecend'); if (e) { e.hidden = false; if (vr.bottom - bottom < c.offsetHeight + 48) e.hidden = true; } } /* #1918: bagian akhir hampir kosong teks → satu baris penutup */
 }
 /* prafetch arti kalimat (#458): halaman diam ±1,5 dtk → terjemahkan diam-diam maks 12 kalimat halaman aktif */
