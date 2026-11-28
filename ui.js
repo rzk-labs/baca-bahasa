@@ -289,7 +289,7 @@ function nextBadge() {
 function nextBadgeHtml() {
   if (!db.books || !db.books.length) return '';
   const n = nextBadge(); if (!n) return '';
-  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span><b>${esc(n.name)}</b> · ${esc(n.txt)}</span></button>`;
+  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span><b>${esc(n.name)}</b> · ${esc(n.txt)}</span><span class="nb-go" aria-hidden="true">→</span></button>`;
 }
 function badgeListSheet() {
   openSheet(`<div class="sh-head"><h2>Lencana</h2>${closeBtn}</div><ul class="rules">${BADGES.map(([id, , name, desc]) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id); return `<li><b>${esc(name)}</b>${on ? ' · sudah kebuka' : ` · ${esc(BADGE_HOW[id] || desc)}${pr && pr.need > 1 ? ` (${pr.now}/${pr.need})` : ''}`}</li>`; }).join('')}</ul>`, 'Lencana');
@@ -1391,7 +1391,7 @@ function viewRak() {
     $('#addBtn').onclick = () => { openSheet(`<div class="sh-head"><h2>Tambah cerita</h2>${closeBtn}</div>${addCard()}`, 'Tambah cerita'); bindAdd(); };
     const ha = $('#hAdd'); if (ha) ha.onclick = e => { e.stopPropagation(); $('#addBtn').click(); };
     const ho = $('#hOther'); if (ho && other) ho.onclick = e => { e.stopPropagation(); db.cur = other.id; save(); setTab('baca'); };
-    const nbl = $('#nbLine'); if (nbl) nbl.onclick = badgeListSheet;
+    const nbl = $('#nbLine'); if (nbl) nbl.onclick = () => { const q = $('#q3Lock'); if (q) { q.scrollIntoView({ behavior: 'smooth', block: 'center' }); q.focus({ preventScroll: true }); } else badgeListSheet(); }; /* #2084: banner -> kartu Simpan bila ada */
     const fn = $('#fwNudge'); if (fn) fn.onclick = () => open('baca');
     const xd = $('#xtraDone'); if (xd) xd.onclick = () => open('baca'); /* #1561: 'Cukup hari ini' tak buntu; lanjut baca (semua tamat = tab Baca) */
     const xb = $('#xtraBtn'); if (xb) xb.onclick = () => { const p = extraPick(); if (!p.length) return; db.q3k = (+db.q3k || 0) + 1; extraRoundUse(); save(); quickPend = p; quickExtra = true; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1442: satu tombol ulang; latihan ekstra tak ubah jadwal (api/ tak diubah) */
