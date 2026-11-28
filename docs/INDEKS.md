@@ -185,6 +185,7 @@ Markas tim agent (folder `dev/`). Dokumen yang menyangkut papan, kartu, dan tomb
 ### Bahasa & tulisan
 - [bahasa-rtl-thai-hindi](riset-bahasa-rtl-thai-hindi.md)
 - [cara-baca-default-mandarin](riset-cara-baca-default-mandarin.md)
+- [cara-baca-kanji-tanpa-furigana](riset-cara-baca-kanji-tanpa-furigana.md)
 - [cara-baca-romanisasi](riset-cara-baca-romanisasi.md)
 - [furigana-ruby-epub](riset-furigana-ruby-epub.md)
 - [jepang-tulisan-tegak](riset-jepang-tulisan-tegak.md)
