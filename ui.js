@@ -2958,6 +2958,7 @@ async function onWord(el, lastEl) {
     <div class="wd"><b id="wword" dir="auto" lang="${esc(b.lang)}">${esc(word)}</b><button class="icon tint" id="sw" aria-label="Dengerin kata">${ico('vol')}</button><span class="wex" role="group" aria-label="Perluas jadi frasa"><button class="icon tint wexb" id="wexl" aria-label="Tambah kata sebelumnya" title="Tambah kata sebelumnya">‹</button><span class="wexlbl" aria-hidden="true">frasa</span>${['ja', 'zh-CN', 'zh'].includes(b.lang) && [...word].length > 1 && !el.querySelector('ruby') ? '<button class="icon tint wexb" id="wsplit" aria-label="Pecah per huruf" title="Pecah per huruf">✂</button>' : ''}<button class="icon tint wexb" id="wexp" aria-label="Tambah kata berikutnya" title="Tambah kata berikutnya">›</button></span></div>
     ${ttsNote(b.lang)}
     <div class="wmeta"><span class="pos" id="wpos"></span><span class="hskc" id="whsk"></span><span id="wbaca"></span><span id="wbase"></span><span id="wpart"></span></div>
+    <div class="wkira" id="wkira" hidden></div>
     <div class="offnet" id="woff" role="status" hidden></div>
     <div class="tr" id="wtr" lang="${esc(db.my)}" aria-live="polite"><span class="loading ldots" role="status" aria-label="Lagi nyari artinya"><i></i><i></i><i></i></span></div>
     <div class="wnote"><span id="wlook"></span><span class="wfreq" id="wfreq"></span><span class="wtap" id="wtap"></span></div>
@@ -2991,7 +2992,22 @@ async function onWord(el, lastEl) {
   const bumpLook = () => { db.looks = db.looks || {}; const k = b.lang + '|' + word.toLowerCase(); const n = db.looks[k] = (db.looks[k] || 0) + 1; save(); bumpSentLook(b.id, 'kata'); const e = $('#wlook'); if (e) e.textContent = n > 1 ? `Udah kamu cek ${n}×` : 'Pertama kali kamu cek kata ini'; };
   const baseLabel = (w, lang, base) => { const x = baseOf(w, base); if (x) return 'Bentuk dasar: ' + x; const g = baseOf(w, guessBase(w, lang)); return g ? 'Bentuk dasar: ' + g + ' (tebakan)' : ''; };
   const setTx = (sel, t) => { const e = $(sel); if (e) { e.textContent = t; if (sel === '#wtr') arriveFx(e); } };
-  const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; };
+  const setWBaca = t => { const e = $('#wbaca'); if (!e) return; e.dataset.b = t; e.textContent = db.showBaca ? t : ''; if (!t) kiraPaint(false); };
+  /* #2058: cara baca Jepang jujur: 'perkiraan' bila bukan dari kamus lokal, 'belum ada' bila kosong, plus Cek ulang */
+  const kiraPaint = async (has, busy) => {
+    const e = $('#wkira'); if (!e) return;
+    if (b.lang !== 'ja' || !db.showBaca) { e.hidden = true; e.innerHTML = ''; return; }
+    let guess = false;
+    if (has) { try { guess = !(await jaLookup(word, 'ja')); } catch (x) { guess = true; } }
+    if (!$('#wkira')) return;
+    const msg = has ? (guess ? '<span class="kira-tag">perkiraan</span> <span class="mut sm">Suara HP kadang salah baca kanji.</span>' : '') : '<span class="mut sm">Cara baca belum ada, jangan andalkan suara saja.</span>';
+    e.hidden = !msg; e.innerHTML = msg ? msg + ` <button class="ghost kira-btn" type="button" id="wkirabtn"${busy ? ' disabled' : ''}>${busy ? 'Mengecek…' : 'Cek ulang'}</button>` : '';
+    const bt = $('#wkirabtn'); if (bt) bt.onclick = async () => {
+      kiraPaint(has, true);
+      try { const r = await translate(qWord(), b.lang, db.my, null, true); if (!$('#wkira')) return; const t = bacaDisp(word, bacaShow(word, r.baca, b.lang)); setWBaca(t); isiKosong(r); kiraPaint(!!t); }
+      catch (x) { kiraPaint(has); }
+    };
+  };
   const savedOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const kosongOf = () => db.vocab.find(v => !String(v.t || '').trim() && sameVocab(v, b.lang, word));
   /* #1685: kata tersimpan tanpa arti terisi otomatis saat diketuk ulang; titik penanda hilang */
@@ -3001,7 +3017,7 @@ async function onWord(el, lastEl) {
   const pickChip = () => { const t = $('#wtr'); if (t && !t.querySelector('.pickchip')) t.insertAdjacentHTML('beforeend', ' <span class="stepchip pickchip">pilihanmu</span>'); };
   const showSaved = v => {
     setTx('#wtr', v.t); if (v.pick) pickChip();
-    setWBaca(bacaDisp(word, bacaShow(word, v.baca, b.lang)));
+    { const t = bacaDisp(word, bacaShow(word, v.baca, b.lang)); setWBaca(t); kiraPaint(!!t); }
     setTx('#wbase', baseLabel(word, b.lang, v.base));
     setTx('#wpos', v.pos ? (POS[v.pos] || v.pos) : '');
     { const dc = $('#wdict'); if (dc) dc.innerHTML = '<span class="offchip">Tersimpan, jalan tanpa internet</span>'; }
@@ -3053,7 +3069,7 @@ async function onWord(el, lastEl) {
     tr = r; gagalTandai(b.lang, word, false); setTx('#wpart', partNote());
     isiKosong(r);
     { const pk = savedOf(); if (pk && pk.pick) showSaved(pk); else if (pickT) { setTx('#wtr', pickT); pickChip(); } else setTx('#wtr', r.text); }
-    setWBaca(bacaDisp(word, bacaShow(word, r.baca, b.lang)));
+    { const t = bacaDisp(word, bacaShow(word, r.baca, b.lang)); setWBaca(t); kiraPaint(!!t); }
     setTx('#wbase', baseLabel(word, b.lang, r.base));
     const d = r.dict || [];
     setTx('#wpos', d.length ? (POS[d[0].pos] || d[0].pos) : '');

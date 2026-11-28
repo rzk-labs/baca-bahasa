@@ -1,5 +1,11 @@
 [
   {
+    "n": 2058,
+    "judul": "[peta 199] Cara baca Jepang: label 'perkiraan' & tombol Cek ulang",
+    "poin": "Cara baca kata Jepang kini jujur: ada label \"perkiraan\" kalau hasilnya tebakan.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2049,
     "judul": "Motion: kartu latihan Kata, arti muncul halus saat 'Lihat arti'",
     "poin": "Arti kata dan tombol di kartu latihan sekarang muncul halus.",
@@ -171,12 +177,6 @@
     "n": 1989,
     "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
     "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1987,
-    "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
-    "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
     "tgl": "2026-11-28"
   }
 ]
