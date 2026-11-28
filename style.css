@@ -580,7 +580,7 @@ body.reading .lvlup.lvlbn{bottom:calc(env(safe-area-inset-bottom) + var(--space-
 .rmid .bar{height:3px;margin-top:4px}
 .rmid{min-width:0;margin:0 8px}
 .rmid #pgn{display:block;font-size:.75rem;line-height:1.35;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
-@media (max-width:359px){.rmid #pgn{font-size:.7rem}}
+@media (max-width:359px){.rmid #pgn{font-size:.75rem}}
 .rmid #pgn.tamat,.rmid #pgn.tamat .nw{font-size:.875rem;font-weight:600;color:var(--color-text);text-decoration:none;background:none;box-shadow:none;border:0}
 .rmid #pgn.tamat{pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px;text-overflow:clip}
 .rmid #pgn.tamat .ck{width:14px;height:14px;stroke-width:3;flex:none}
@@ -911,7 +911,8 @@ button.avatar::after,.pill.login::after,.wsug .pill-sm::after{content:"";positio
 #wnama[hidden],#wsave[hidden]{display:none}
 /* #768 Home HP: label tab utuh, angka cincin muat, penulis di judul kartu Lanjut */
 #tabs button span{white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
-@media (max-width:389px){#tabs button{font-size:.6875rem}}
+@media (max-width:389px){#tabs button{font-size:.75rem}}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .goal-row .ring{width:64px;height:64px;flex:none}.goal-row .ring svg{width:64px;height:64px}
 .goal-row .ring .score{padding:0 9px;box-sizing:border-box;white-space:nowrap;line-height:1}
 .goal-row .ring .score .gn{font:800 14px/16px var(--font-ui);letter-spacing:-.02em}

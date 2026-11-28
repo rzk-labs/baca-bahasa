@@ -2014,7 +2014,7 @@ async function viewBaca() {
       <div class="vp" id="vp"><div class="page cols" id="cols" style="font-size:${readFs(b.lang)}px">${intip}${html}</div></div>
       ${guideOn(b) ? `<div class="rtip gtip" id="gtip" role="note"><span>${ico('pointer')}<span class="rtt">Ketuk kata yang menyala</span></span><button id="gskip" type="button" aria-label="Lewati petunjuk">Lewati</button></div>` : tipOn() ? `<div class="rtip" id="tip" role="note"><span>${ico('pointer')}<span class="rtt">${TIPS[tipStepNow()]}</span></span><button id="tipx" aria-label="Paham, tutup petunjuk">Paham</button></div>` : ''}
       <div class="rfoot"><button class="pg" id="pv" aria-label="Halaman sebelumnya" title="Halaman sebelumnya">${ico('left')}</button>
-        <div class="rmid"><span id="pgn"></span><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Posisi baca"><i id="pbar"></i></div></div>
+        <div class="rmid"><span id="pgn"></span><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Posisi baca"><i id="pbar"></i></div><span id="pgLive" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></div>
         <button class="icon rmark" id="rMark" type="button" aria-pressed="false" aria-label="Tandai halaman ini" title="Tandai halaman ini">${ico('bm')}</button>
         <button class="rmenu" id="rMenuBtn" type="button" aria-label="Menu baca: tampilkan atau sembunyikan bilah atas">Menu</button>
         <button class="pg" id="nx" aria-label="Halaman berikutnya">${ico('right')}</button></div>
@@ -2488,6 +2488,7 @@ function rovKey(e) {
   n.tabIndex = 0; try { n.focus({ preventScroll: true }); } catch (x) { }
   const vp = $('#vp'); if (vp) { vp.scrollLeft = 0; vp.scrollTop = 0; }
 }
+let pgLiveT = 0;
 function showPage(p, anim = true) {
   const cols = $('#cols'), b = book(); if (!cols) return;
   closeInline();
@@ -2547,6 +2548,13 @@ function showPage(p, anim = true) {
       if (pgn.scrollWidth > pgn.clientWidth + 1) fill([bs.txt]);
       if (pgn.scrollWidth > pgn.clientWidth + 1) pgn.innerHTML = nw(secShort);
     }
+  }
+  /* #2048: umumkan ganti halaman ke pembaca layar; render pertama tak diumumkan, update maks 1x/400 ms */
+  const live = $('#pgLive');
+  if (live) {
+    const msg = `Halaman ${RD.page + 1} dari ${RD.n}`;
+    if (!live.dataset.r) live.dataset.r = '1';
+    else { clearTimeout(pgLiveT); pgLiveT = setTimeout(() => { const l = $('#pgLive'); if (l) l.textContent = msg; }, 400); }
   }
   if (pb) { const bp = bookPct(b); pb.style.width = bp + '%'; if (pb.parentElement) pb.parentElement.setAttribute('aria-valuenow', bp); if (pb.parentElement) pb.parentElement.title = `${bp}% dari seluruh buku`; }
   syncMarks();
