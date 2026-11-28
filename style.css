@@ -1407,6 +1407,7 @@ ol.steps3 li>img{flex:none;width:48px;height:48px}
 @media (max-width:430px){.rchap .rcf{display:none}.rchap .rcs{display:inline}.rtitle .rchap{padding:0 8px}}
 /* #1333: chip arti lain di kartu arti */
 .wchips-h{font:800 15px "Bricolage Grotesque",Inter,sans-serif;margin:10px 0 4px}
+.wcut{background:var(--hl);color:var(--ink);border-radius:12px;padding:8px 12px;font:600 13px Inter,sans-serif;margin:8px 0;overflow-wrap:anywhere}
 .wchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
 .wchip{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border-radius:var(--radius-full);background:#D7EFFF;color:var(--ink);border:1.5px solid var(--ink);font-weight:800;font-size:15px;max-width:100%;overflow-wrap:anywhere;text-align:left}
 .wchip[hidden]{display:none}

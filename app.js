@@ -1009,7 +1009,19 @@ async function jaLookup(q, sl) {
   if (sl !== 'ja') return null;
   try { return jaFind(await jaLoad(), q); } catch (e) { return null; }
 }
-async function translate(q, sl, tl, signal, fresh) {
+/* #2074: frasa 3+ kata diterjemah bersama kalimat penuh (frasa dibungkus [ ]), ambil bagian frasa; gagal/aneh = '' (pakai terjemahan polos) */
+async function ctxPart(q, sent, sl, tl, signal) {
+  try {
+    if (!sent || sent.length > 300 || q.length > 120 || q.trim().split(/\s+/).length < 3 || /[\[\]]/.test(sent)) return '';
+    const i = sent.indexOf(q); if (i < 0) return '';
+    const t = await gtxText(sent.slice(0, i) + '[' + q + ']' + sent.slice(i + q.length), sl, tl, signal);
+    if (t.split('[').length !== 2 || t.split(']').length !== 2) return '';
+    const m = t.match(/\[([^\[\]]+)\]/);
+    const p = m ? m[1].replace(/\s+/g, ' ').trim() : '';
+    return p && p.length <= q.length * 4 + 20 ? p : '';
+  } catch (e) { if (signal && signal.aborted) throw e; return ''; }
+}
+async function translate(q, sl, tl, signal, fresh, ctx) {
   pfPause();
   const k = sl + '|' + tl + '|' + q;
   const o = await jaLookup(q, sl);
@@ -1021,7 +1033,7 @@ async function translate(q, sl, tl, signal, fresh) {
     if (o.base) out.base = o.base;
     return out;
   }
-  if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q))) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
+  if (!fresh && trCache.has(k) && ('baca' in trCache.get(k) || !NONLATIN.test(q)) && (!ctx || trCache.get(k).cx)) { const v = trCache.get(k); trCache.delete(k); trCache.set(k, v); return mix(v); }
   { const a = !fresh && aoGet(sl, tl, q); if (a && a.text) return mix(a); } /* arti unduhan offline (#1367): tanpa jaringan */
   const stale = trCache.get(k);
   if (stale && stale.text && navigator.onLine === false) return mix(stale);
@@ -1039,6 +1051,7 @@ async function translate(q, sl, tl, signal, fresh) {
     } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');
+  if (ctx && !fb) { const cp = await ctxPart(q, ctx, sl, tl, signal); if (cp) out = { ...out, text: cp }; out.cx = 1; } /* #2074 */
   /* hasil cadangan (MyMemory) hanya untuk tampilan saat itu: tak disimpan, arti lama tak tertimpa */
   if (fb) return mix(stale && stale.text ? stale : out);
   trCache.delete(k); trCache.set(k, out); trPersist();
