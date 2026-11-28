@@ -389,7 +389,9 @@ function globalErr(ev) {
   if (ev && ev.target && ev.target !== window) return; // gagal muat gambar/skrip bukan error kode
   const now = Date.now(); if (now - lastErrToast < 10000) return; lastErrToast = now;
   console.error(r || msg);
-  toast('Ada yang gagal sebentar. Bacaan & katamu aman.', 8000);
+  /* #2061: 'Coba lagi' memakai muatUlangArti yang ada, hanya bila ada arti kosong di halaman reader */
+  const bk = document.body.classList.contains('reading') ? book() : null, kata = [...new Set($$('.cols .w.noarti').map(x => x.textContent.trim().toLowerCase()).filter(Boolean))];
+  toast('Ada yang gagal sebentar. Bacaan & katamu aman.', 8000, bk && kata.length && !muatUlangJalan ? { label: 'Coba lagi', fn: () => muatUlangArti(bk, kata) } : undefined);
 }
 /* muat ulang paksa: hanya cache app & service worker; data buku/kata/login tidak disentuh */
 async function muatUlangVersi() {
@@ -431,6 +433,8 @@ async function muatUlangArti(b, words) {
   if (navigator.onLine === false) return toast('Lagi offline. Sambung internet dulu ya.');
   muatUlangJalan = true;
   let ok = 0, gagal = 0, i = 0;
+  const total = words.length, teks = () => total > 0 ? `Memuat ulang arti… ${Math.min(ok + gagal, total)}/${total}` : 'Memuat ulang arti…';
+  const progres = () => { const tt = $('#toast'), x = tt && tt.querySelector('.ttx'); if (x && !tt.classList.contains('hide') && /^Memuat ulang arti/.test(x.textContent)) x.textContent = teks(); };
   const kerja = async () => {
     while (i < words.length) {
       if (navigator.onLine === false) { gagal += words.length - i; i = words.length; break; }
@@ -443,10 +447,10 @@ async function muatUlangArti(b, words) {
         v.t = r.text; v.baca = bacaOf(v.w, r.baca); if (r.base) v.base = r.base; if (r.dict && r.dict[0]) v.pos = r.dict[0].pos; delete v.noTr; delete v.nyusul;
         $$('.cols .w.noarti').forEach(x => { if (x.textContent.trim().toLowerCase() === k) x.classList.remove('noarti'); });
         ok++;
-      } catch (e) { gagal++; } finally { clearTimeout(tm); }
+      } catch (e) { gagal++; } finally { clearTimeout(tm); progres(); }
     }
   };
-  toast('Memuat ulang arti…', 20000);
+  toast(teks(), 20000);
   try { await Promise.all([kerja(), kerja()]); } finally { muatUlangJalan = false; }
   save(); if (kataSeg && $('#klist')) viewKata();
   toast(`${ok} arti berhasil dimuat${gagal ? `. ${gagal} belum, coba lagi` : ''}`, 4500);

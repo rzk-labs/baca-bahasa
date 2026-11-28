@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup #2061 — Toast arti</title>
+<style>
+body{margin:0;background:#eee;font-family:Inter,system-ui,sans-serif;color:#222}
+.lbl{font:700 12px Inter,sans-serif;text-align:center;margin:16px 0 6px;color:#351E28}
+.ph{position:relative;width:390px;height:560px;margin:0 auto 12px;background:#FBF8F2;border-radius:24px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.txt{padding:48px 24px;font:18px/1.7 Georgia,serif}
+.txt .n{border-bottom:2px dotted #351E28}
+.bar{position:absolute;left:0;right:0;bottom:0;height:56px;background:#351E28;color:#D7EFFF;display:flex;justify-content:space-around;align-items:center;font-size:13px}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:72px;width:calc(100% - 32px);box-sizing:border-box;background:#351E28;color:#D7EFFF;border-radius:14px;padding:6px 14px;min-height:44px;display:flex;align-items:center;gap:8px;font-size:14px;box-shadow:0 0 0 1.5px #D7EFFF,0 6px 18px rgba(53,30,40,.28)}
+.toast .t{flex:1}
+.toast b{font-weight:800;text-decoration:underline;padding:10px 4px;color:#E9F056}
+</style></head><body>
+<div class="lbl">Sebelum: tanpa aksi</div>
+<div class="ph"><div class="txt">The <span class="n">rabbit</span> ran past the <span class="n">hedge</span>.</div>
+<div class="toast"><span class="t">Ada yang gagal sebentar. Bacaan &amp; katamu aman.</span></div><div class="bar"><span>Home</span><span>Baca</span><span>Kata</span></div></div>
+<div class="lbl">Sesudah: ada "Coba lagi"</div>
+<div class="ph"><div class="txt">The <span class="n">rabbit</span> ran past the <span class="n">hedge</span>.</div>
+<div class="toast"><span class="t">Ada yang gagal sebentar. Bacaan &amp; katamu aman.</span><b>Coba lagi</b></div><div class="bar"><span>Home</span><span>Baca</span><span>Kata</span></div></div>
+<div class="lbl">Sesudah: progres memuat arti</div>
+<div class="ph"><div class="txt">The <span class="n">rabbit</span> ran past the <span class="n">hedge</span>.</div>
+<div class="toast"><span class="t">Memuat ulang arti… 3/10</span></div><div class="bar"><span>Home</span><span>Baca</span><span>Kata</span></div></div>
+</body></html>
