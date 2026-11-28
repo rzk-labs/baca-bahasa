@@ -231,7 +231,7 @@ const goalHint = () => readSecToday() < 1 ? 'Gapapa, 1 halaman juga hitung' : su
 const goalLeft = () => { const g = goalMin(), s = readSecToday(); return s < 1 ? `Target ${g} menit` : s < 60 ? `Baru ${Math.floor(s)} dtk, sisa ${g} menit` : `Sisa ${Math.ceil((g * 60 - s) / 60)} menit`; };
 /* #1855: cincin diisi halus per detik (detik/(g*60)); <60 dtk tampil '<1'. 0 dtk = kosong. Target/XP tetap per detik */
 const rereadNote = () => { const b = book() || db.books[0]; return !!(b && b.doneAt) && readSecToday() < 1; }; /* #1997 */
-const goalCardHtml =() => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : m / g, n = subMin() ? '&lt;1' : m; return `<div class="eyebrow">Target baca</div><div class="goal-row">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2" title="${goalHint()}" aria-label="${goalHint()}">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${rereadNote() ? 'Baca ulang tak dihitung. Mulai buku baru untuk isi target.' : goalLeft()}</span>`}</div>`; };
+const goalCardHtml =() => { const g = goalMin(), m = Math.min(minToday(), g), ok = goalDone(), p = ok ? 1 : m / g, n = subMin() ? '&lt;1' : m; let an = ''; if (ok) { try { if (localStorage.getItem('kepo_goal_anim') !== today()) { localStorage.setItem('kepo_goal_anim', today()); an = ' beres-anim'; } } catch (e) {} } return `<div class="eyebrow">Target baca</div><div class="goal-row${an}">${ringSmall(p,`<span class="gn">${n}</span><small>mnt</small>`)}</div><div class="lbl2" title="${goalHint()}" aria-label="${goalHint()}">${ok ? `<span class="goal-ok">${ico('check', 'ck')}Beres!</span>` : `<span>${rereadNote() ? 'Baca ulang tak dihitung. Mulai buku baru untuk isi target.' : goalLeft()}</span>`}</div>`; };
 const lvCardHtml = () => { const { lv, inLv } = xpInfo(); return `<div class="eyebrow">Level</div><div class="num">${lv}</div><div class="bar lvbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${inLv}" aria-label="Progres ke Level ${lv + 1}"><i style="width:${inLv}%"></i></div><div class="lbl2 lvl-line"><span class="lv-xp">${inLv}/100 XP</span><span class="lv-next">→ Lv ${lv + 1}</span></div>`; };
 const hskTot = n => String(((window.HSK_DATA || {})[n]) || '').split(' ').filter(Boolean).length;
 const hskUniq = n => new Set(db.vocab.filter(v => v && v.lang === 'zh-CN' && hskOf(v.w) === n).map(v => String(v.w).trim())).size;
@@ -781,11 +781,11 @@ function prepWords(b, sec) {
 }
 const prepHas = (b, q) => { const v = trCache.get(b.lang + '|' + db.my + '|' + q); return !!v && ('baca' in v || !NONLATIN.test(q)); };
 function prepHtml() {
-  return `<div class="prep" id="prepBox"><div class="prep-t">${ico('dl')}<b>Arti bagian ini tanpa sinyal</b></div><div class="mut sm" id="prepMsg" role="status">Unduh arti kata bagian ini sekali, biar tetap kebuka di KRL.</div><div class="prep-bar" id="prepBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti" hidden><i></i></div><div class="prep-acts"><button class="sec" id="prepGo" type="button">Siapkan arti bab ini</button><button class="ghost" id="prepCancel" type="button" hidden>Batal</button></div></div>`;
+  return `<div class="prep" id="prepBox"><div class="prep-t">${ico('dl')}<b id="prepT">Baca tanpa internet</b></div><div class="mut sm" id="prepMsg" role="status">Unduh arti kata bagian ini sekali, biar bisa dibaca tanpa sinyal.</div><div class="prep-bar" id="prepBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Unduhan arti" hidden><i></i></div><div class="prep-acts"><button class="sec" id="prepGo" type="button">Unduh arti</button><button class="ghost" id="prepCancel" type="button" hidden>Batal</button></div></div>`;
 }
 function bindPrep(b, sec) {
   const box = $('#prepBox'); if (!box) return;
-  const go = $('#prepGo'), cancel = $('#prepCancel'), msg = $('#prepMsg'), bar = $('#prepBar');
+  const go = $('#prepGo'), cancel = $('#prepCancel'), msg = $('#prepMsg'), bar = $('#prepBar'), ttl = $('#prepT');
   const words = prepWords(b, sec); let run = 0;
   const live = () => box.isConnected;
   const sync = () => {
@@ -794,15 +794,15 @@ function bindPrep(b, sec) {
     if (!words.length) { go.disabled = true; go.textContent = 'Tidak ada kata baru'; return; }
     if (n >= words.length) { go.disabled = true; go.textContent = 'Sudah siap semua'; msg.textContent = `${n} kata siap dibaca tanpa sinyal`; return; }
     if (navigator.onLine === false) { go.disabled = true; go.textContent = 'Butuh internet sekali'; if (n) msg.textContent = `${n} dari ${words.length} kata sudah siap.`; return; }
-    go.disabled = false; go.textContent = 'Siapkan arti bagian ini';
+    go.disabled = false; go.textContent = n ? 'Siapkan lagi' : 'Unduh arti';
     msg.textContent = n ? `${n} dari ${words.length} kata sudah siap tanpa sinyal.` : `${words.length} kata menunggu. Butuh internet sekali.`;
   };
   sync();
   const start = async () => {
     const my = ++run; let ok = 0, done = 0, stop = false;
     const todo = words.filter(q => !prepHas(b, q)), total = words.length, base = total - todo.length;
-    const show = () => { msg.textContent = `${base + ok} dari ${total} kata siap`; bar.hidden = false; const pc = Math.round((base + done) / total * 100); bar.firstElementChild.style.width = pc + '%'; bar.setAttribute('aria-valuenow', pc); };
-    go.hidden = true; cancel.hidden = false; show(); let idx = 0;
+    const show = () => { msg.textContent = `Mengunduh ${done}/${total}`; bar.hidden = false; const pc = Math.round((base + done) / total * 100); bar.firstElementChild.style.width = pc + '%'; bar.setAttribute('aria-valuenow', pc); };
+    go.hidden = true; cancel.hidden = false; ttl.textContent = 'Mengunduh arti…'; show(); let idx = 0;
     cancel.onclick = () => { stop = true; };
     const worker = async () => {
       while (!stop && live() && my === run && navigator.onLine !== false) {
@@ -814,12 +814,12 @@ function bindPrep(b, sec) {
     };
     await Promise.all([worker(), worker(), worker()]);
     trFlush(); if (!live() || my !== run) return;
-    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true; go.disabled = false;
+    run = 0; cancel.hidden = true; go.hidden = false; bar.hidden = true; go.disabled = false; ttl.textContent = 'Baca tanpa internet';
     const n = words.filter(q => prepHas(b, q)).length;
-    if (stop || navigator.onLine === false) msg.textContent = `${n} dari ${total} kata siap. Nanti dicoba lagi ya.`;
+    if (stop || navigator.onLine === false) msg.textContent = `${stop ? 'Dibatalkan.' : 'Sinyal putus.'} ${n} dari ${total} kata sudah tersimpan. Lanjutkan nanti.`;
     else if (n < total) msg.textContent = `${n} kata siap dibaca tanpa sinyal. ${total - n} kata belum, nanti dicoba lagi ya.`;
     else msg.textContent = `${n} kata siap dibaca tanpa sinyal`;
-    if (n < total) go.textContent = 'Coba lagi yang belum'; else { go.disabled = true; go.textContent = 'Sudah siap semua'; }
+    if (n < total) go.textContent = 'Lanjutkan'; else { go.disabled = true; go.textContent = 'Sudah siap semua'; }
   };
   go.onclick = () => {
     if (navigator.connection && navigator.connection.saveData && go.dataset.ok !== '1') { go.dataset.ok = '1'; msg.textContent = 'Hemat Data lagi nyala. Unduh ini pakai kuota. Ketuk lagi kalau tetap mau.'; go.textContent = 'Tetap unduh'; return; }
@@ -1370,7 +1370,9 @@ function viewRak() {
     <div id="hskSlot">${hskHomeHtml()}</div>
     ${firstWordNudge() && pctOf(cur) < 100 ? `<button type="button" class="fw-nudge" id="fwNudge" aria-label="${NUDGE_TXT}. Buka bacaan sekarang">${ico('book')}<span>${NUDGE_TXT}</span></button>` : ''}
     ${(() => { const n = dueList().length; if (n) return `<button type="button" class="fw-nudge due-nudge" id="dueNudge" aria-label="${n} kata siap diulang${dueNote(cur && cur.lang)}. Ulang sekarang">${ico('cards')}<span>${n} kata siap diulang${dueNote(cur && cur.lang)}<small>${dueSub(n)}</small></span><b>Ulang sekarang</b></button>`; const x = extraPick().length; if (x) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraBtn" aria-label="Latihan ekstra, ${x} kata. Belum waktunya, tapi boleh latihan lagi">${ico('cards')}<span>Latihan ekstra · ${x} kata<small>Belum waktunya, tapi boleh latihan lagi</small></span><b>Mulai</b></button>`; if (extraRounds() >= 2) return `<button type="button" class="fw-nudge due-nudge soft-nudge" id="xtraDone" aria-label="Cukup hari ini, latihan ekstra lanjut besok. Baca lanjut: buka bacaan terakhir">${ico('book')}<span>Cukup hari ini, latihan ekstra lanjut besok.</span><b>Baca lanjut</b></button>`; const k = quickPick().length; if (k >= Q_MIN && k < 3) return `<button type="button" class="fw-nudge due-nudge" id="q1Go" aria-label="Ulang ${k} kata. ${k === 1 ? 'Sebentar aja, cuma 1 kata' : 'Dua kata, sebentar aja'}">${ico('cards')}<span>Ulang ${k} kata<small>${k === 1 ? 'Sebentar aja, cuma 1 kata.' : 'Dua kata, sebentar aja.'}</small></span><b>Ulang</b></button>`; if (k < Q_MIN) return `<button type="button" class="fw-nudge q3-lock" id="q3Lock" aria-label="Ulang kata masih terkunci. Simpan ${Q_MIN} kata dulu, baru ${k} dari ${Q_MIN}. ${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan' : 'Ketuk untuk buka bacaan'}">${ico('cards')}<span class="q3-t">Simpan ${Q_MIN} kata dulu</span><span class="q3-n">${k}/${Q_MIN}</span><small class="q3-s">${pctOf(cur) >= 100 ? 'Ketuk kata di buku berikutnya, lalu Simpan.' : 'Ketuk kata di bacaan, lalu Simpan.'}</small><span class="q3-seg" role="progressbar" aria-valuemin="0" aria-valuemax="${Q_MIN}" aria-valuenow="${k}">${[0].map(j => `<i${j < k ? ' class="on"' : ''}></i>`).join('')}</span>${pctOf(cur) >= 100 ? '' : '<span class="q3-go">Buka bacaan <span aria-hidden="true">→</span></span>'}</button>`; /* #1745: judul 1 baris + angka kanan, bar 3 segmen, tombol pindah ke bawah */ return ''; })()}
+    ${(() => { const n = hardPick().length; return n ? `<button type="button" class="fw-nudge soft-nudge hard-nudge" id="hHardGo" aria-label="Ulang yang sulit saja, ${n} kata. Langsung mulai">${ico('flag')}<span>Ulang yang sulit saja · ${n} kata</span></button>` : ''; })()}
     ${pctOf(cur) < 100 && !firstWordNudge() && a2hsShow() ? a2hsHtml() : ''}
+    ${(() => { const n = hardPick().length; return n && dueList().length ? `<button type="button" class="fw-nudge due-nudge" id="hHardGo" style="margin:-2px 0 14px;min-height:44px" aria-label="Ulang ${n} kata sulit. Langsung mulai">${ico('flag')}<span>Ulang ${n} kata sulit</span><b>Mulai</b></button>` : ''; })()}
     ${pctOf(cur) >= 100 && dueList().length ? '' : mileHtml()}
     <div class="sec-h"><h2>Koleksi kamu</h2><button class="ghost" id="addBtn">+ Tambah</button></div>
     <div class="hscroll">${list.map(b => `<div class="bk" data-open="${b.id}">${cover(b)}${shelfTitle(b.title, b.author)}<div class="m">${langName(b.lang)} · ${bookStatus(b).txt}</div>${kbHtml(b)}
@@ -1389,6 +1391,7 @@ function viewRak() {
     const nn = $('#hNext'); if (nn) nn.onclick = e => { e.stopPropagation(); if (other) { db.cur = other.id; save(); setTab('baca'); } else $('#addBtn').click(); };
     const q1 = $('#q1Go'); if (q1) q1.onclick = () => { const p = quickPick(); if (!p.length) { toast('Belum ada kata. Simpan dulu dari bacaan.'); return; } quickPend = p; quickExtra = false; quickLogged = false; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }; /* #1771: Ulang 1-2 kata */
     const q3l = $('#q3Lock'); if (q3l) q3l.onclick = () => { if (pctOf(cur) >= 100) { if (nn) nn.click(); } else open('baca'); }; /* #1499: kartu terkunci = tombol 'Buka bacaan' (lanjut buku aktif) */
+    document.querySelectorAll('#hHardGo').forEach(hh => hh.onclick = () => { const p = hardPick(); if (!p.length) return; quickPend = p; quickExtra = false; quickHard = true; quickLogged = false; deckLv = 0; kataSeg = 'kartu'; sfx('pop'); setTab('kata'); }); /* #2023+#2028: pintasan Home = alur kartu ulang kata sulit yang sama */
     const dn = $('#dueNudge'); if (dn) dn.onclick = () => { kataSeg = 'kartu'; setTab('kata'); };
     const lc = $('#lanjutCard'); if (lc) lc.onclick = () => { try { if (window.kepoMark) window.kepoMark('lanjut_baca'); } catch (e) { } open('baca'); }; /* #1379: alur 'open' sama dgn tombol Gas baca */
     const hm = $('#hMark'); if (hm) hm.onclick = e => { e.stopPropagation(); const m = lastMark(cur); if (!m) return; cur.pos = Math.max(0, Math.min(m.p, (cur.total || 1) - 1)); cur.si = m.s; RD.quiet = true; open('baca'); };
@@ -1803,18 +1806,18 @@ function finishBook(b) {
   else actsHtml = '<button class="pri full" id="fbadd">Buku baru</button>';
   /* 'Besok': lencana berikutnya yang belum didapat (data BADGES yang sudah ada) */
   const nb = BADGES.find(x => !badgeShown(x[0]));
-  let besok = '';
+  let besok = '', hariIni = false;
   if (nb) {
     const pr = nb[0] === 'kutubuku' ? badgeProgress('kutubuku') : null, rem = pr ? pr.need - pr.now : 0;
     let apa = pr && rem > 0 && rem <= 5 ? `baca ${rem} halaman` : nb[3].charAt(0).toLowerCase() + nb[3].slice(1), nama = nb[2];
     if (nb[0] in BADGE_VOCAB_MIN) { /* lencana kata: target & sisa sama persis dgn kartu Home */
       const n = countedVocab(null).length, t = wordMile(n), tb = wordMileBadge(t);
       /* #1959: tanpa kata disimpan sesi ini = tanpa ajakan simpan kata; angka hanya dari data nyata (sisa ke target) */
-      if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata dulu`; nama = ''; } /* #1701/#1771: sama dgn kartu Home q3Lock */
+      if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata dulu`; nama = ''; hariIni = true; } /* #1701/#1771: sama dgn kartu Home q3Lock */
       else if (ws.length && t && tb && t - n > 0 && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
       else apa = '';
     }
-    if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">Besok: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
+    if (apa) besok = `<p class="mut sm" id="fbbesok" style="margin:0 0 6px">${hariIni ? 'Hari ini' : 'Besok'}: ${esc(apa)}${nama ? `, dapat lencana ${esc(nama)}` : ''}</p>`;
   }
   if (!ulang) { sfx('win'); confetti(60); }
   { const ec = $('#endcard'); if (ec) ec.remove(); } /* #1918: kartu di latar tak dobel dgn sheet Tamat */
