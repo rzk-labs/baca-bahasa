@@ -289,7 +289,7 @@
       "nama": "Reader: alur buka ulang buku Tamat (label Tamat sesuai doneAt, streak tak naik tanpa baca, tanpa tombol melayang, satu ikon <) (#1728)",
       "dokumen": "docs/ux-alur-buka-ulang-buku-tamat.md",
       "status": "spesifikasi siap dikerjakan",
-      "catatan": "Pecah jadi tugas [peta N] per bagian 2.1-2.5. Mockup: docs/mockup-1728.html. Uji 320/390px, 4 tema. Naikkan versi C di sw.js."
+      "catatan": "Pecahan (e) satuan angka selesai (#1979). Pecah jadi tugas [peta N] per bagian 2.1-2.5. Mockup: docs/mockup-1728.html. Uji 320/390px, 4 tema. Naikkan versi C di sw.js."
     },
     {
       "no": 184,
