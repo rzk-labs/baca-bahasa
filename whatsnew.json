@@ -1,5 +1,11 @@
 [
   {
+    "n": 2018,
+    "judul": "[peta 189] Home kosong: hapus tombol 'Cerita contoh' kembar",
+    "poin": "Layar awal tanpa buku tak lagi punya tombol cerita contoh kembar.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2016,
     "judul": "Home: 'siap diulang' hanya hitung kata yang sudah ada arti",
     "poin": "Angka \"siap diulang\" sekarang cuma hitung kata yang sudah ada artinya.",
@@ -171,12 +177,6 @@
     "n": 1955,
     "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
     "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1953,
-    "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
-    "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
     "tgl": "2026-11-27"
   }
 ]

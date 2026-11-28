@@ -1328,7 +1328,7 @@ function viewRak() {
   const addCard = (noUp) => `<div class="card">
       ${db.books.length ? `<button class="langsum ghost" id="langTog" aria-expanded="false">Cerita ${langName(db.lastLang)} → ${langName(db.my)} <u>Ganti bahasa</u></button>` : ''}
       <div class="langs" id="langs" hidden><label>Bahasa cerita<select id="bl">${langOpts(db.lastLang)}</select></label><label>Artiin ke<select id="ml">${langOpts(db.my)}</select></label></div>
-      <div class="add-grid${noUp ? ' two' : ''}">${noUp ? '' : `<button class="main" id="up"><span class="em">${ico('upload')}</span>Tambah cerita</button>`}<button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button><button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button></div>
+      <div class="add-grid${noUp ? ' one' : ''}">${noUp ? '' : `<button class="main" id="up"><span class="em">${ico('upload')}</span>Tambah cerita</button>`}<button id="paste"><span class="em">${ico('clip')}</span>Tempel teks</button>${noUp ? '' : `<button id="sample"><span class="em">${ico('sparkle')}</span>Cerita contoh</button>`}</div>
       ${noUp ? '' : '<div class="mut sm center" style="margin-top:10px">TXT · EPUB · PDF (yang ada teksnya)</div>'}
     </div>`;
   if (!cur && typeof bkState !== 'undefined' && bkState) {
@@ -1427,7 +1427,7 @@ function viewRak() {
     try { await addBook(S.title, cleanParas(S.text), l); } catch (e) { console.error(e); toast(MSG_SIMPAN_GAGAL, 5000); }
   };
   $$('[data-try]').forEach(el => el.onclick = () => startSample(el.dataset.try));
-  $('#sample').onclick = () => {
+  const smp = $('#sample'); if (smp) smp.onclick = () => { /* #2018: Home kosong tak punya tombol ini; pakai chip Coba 1 cerita */
     openSheet(`<div class="sh-head"><h2>Cerita contoh</h2>${closeBtn}</div><div class="mut sm">Pilih bahasa ceritanya</div>
       <div class="sample-pick">${Object.keys(SAMPLES).map(l => `<button class="sec" data-sl="${l}"><span class="em">${FLAG[l]}</span>${LANG_ID[l]}<span class="mut sm">${esc(SAMPLES[l].title.replace(' (contoh)', ''))}</span></button>`).join('')}</div>`, 'Cerita contoh');
     $$('[data-sl]').forEach(el => el.onclick = () => {
@@ -1598,7 +1598,7 @@ function kartuScan() {
     <ul><li>Cari versi <b>EPUB</b> atau <b>TXT</b>.</li><li>Atau ubah scan jadi teks lewat OCR gratis, lalu impor.</li><li>Contoh OCR gratis: Google Drive atau Adobe online.</li><li>Atau ketik/tempel dialognya sendiri.</li></ul></div>
     <div class="row"><button class="pri" id="scTempel">${ico('clip')}Tempel teks</button><button class="sec" id="scCoba">${ico('sparkle')}Coba cerita contoh</button><button class="sec" data-close>Tutup</button></div>`, 'PDF scan');
   $('#scTempel').onclick = () => { closeSheet(); const b = $('#paste'); if (b) b.click(); else { setTab('baca'); setTimeout(() => { const x = $('#paste'); if (x) x.click(); }, 150); } };
-  $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample'); if (x) x.click(); }, 150); } };
+  $('#scCoba').onclick = () => { closeSheet(); const b = $('#sample') || $('[data-try]'); if (b) b.click(); else { setTab('home'); setTimeout(() => { const x = $('#sample') || $('[data-try]'); if (x) x.click(); }, 150); } };
 }
 async function addBook(title, paras, lang, src, cov, author) {
   const id = 'b' + Date.now().toString(36);
