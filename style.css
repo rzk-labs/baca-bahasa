@@ -1663,3 +1663,19 @@ body:not(.reading) #view{padding-bottom:calc(env(safe-area-inset-bottom) + var(-
 .nx-bk .nx-t{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;opacity:.7}
 .nx-bk .nx-t.cjk,#hero.hero-done .nx-bk .nx-t.cjk{opacity:1;font-size:13px}
 .fb-next .fbn-m .cjk{color:var(--color-text);opacity:1}
+/* #2045 Ngomong 'panggung': kalimat besar, stabilo Wasabi saat kata dinilai, mik bercincin Biru Es, rekam jelas */
+.target{font-size:26px;font-weight:600;line-height:1.6;letter-spacing:-.005em;margin:var(--space-3) 0 var(--space-1)}
+.target .t[data-p]{animation:t-judge .42s var(--ease-out) both}
+@keyframes t-judge{0%,45%{background:var(--hl);color:var(--ink)}}
+.micwrap{margin:var(--space-4) 0 var(--space-1);gap:var(--space-3)}
+.mic{box-shadow:0 0 0 5px var(--ice);transition:box-shadow var(--dur-color),background var(--dur-color),transform var(--dur-tap) ease-out}
+[data-theme=dark] .mic{box-shadow:0 0 0 3px var(--color-surface),0 0 0 5px var(--ice)}
+@media (prefers-color-scheme:dark){[data-theme=auto] .mic{box-shadow:0 0 0 3px var(--color-surface),0 0 0 5px var(--ice)}}
+.mic.rec,[data-theme=dark] .mic.rec{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record);animation:mic-pulse 1.1s ease-in-out infinite alternate}
+@media (prefers-color-scheme:dark){[data-theme=auto] .mic.rec{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record)}}
+@keyframes mic-pulse{to{box-shadow:0 0 0 3px var(--color-surface),0 0 0 6px var(--color-record),0 0 0 16px color-mix(in srgb,var(--color-record) 22%,transparent)}}
+.micwrap:has(.mic.rec) .mic-lbl{color:var(--color-poor)}
+.micwrap:has(.mic.rec) .mic-lbl::before{content:"";display:inline-block;width:9px;height:9px;margin-right:7px;border-radius:50%;background:var(--color-record);vertical-align:2px}
+@media (prefers-reduced-motion:reduce){.target .t[data-p],.mic.rec{animation:none!important}}
+@media (max-width:360px){.target{font-size:22px}.card:has(>#target){padding:var(--space-4) var(--space-3)}.micwrap{margin-top:var(--space-3)}}
+@media (max-height:700px){.micwrap{margin-top:var(--space-3);gap:var(--space-2)}.mic{width:92px;height:92px}.aux{margin-top:var(--space-2)}}
