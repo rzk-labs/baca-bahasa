@@ -177,6 +177,7 @@ body.reading::after{display:none}
 .wod-w{font:800 30px/32px var(--font-display);overflow-wrap:anywhere;margin-top:4px}.wod-t{font-weight:700;font-size:16px;line-height:21px;margin-top:2px;overflow-wrap:anywhere}.wod-s{margin-top:8px;font-style:italic;overflow-wrap:anywhere}.wod .hero-act{margin-top:12px;flex-wrap:wrap}.wod .hero-act button{flex:1 1 130px;white-space:nowrap}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer}
 .stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.pf-first{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .fw-nudge{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:12px 0 -8px;padding:12px 14px;border:0;border-left:4px solid var(--hl);border-radius:var(--radius-xl);background:var(--ice);color:var(--ink);font:700 14px/18px var(--font-body,inherit);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .fw-nudge svg.i{flex:none;width:20px;height:20px}
 .fw-nudge span{flex:1;min-width:0;overflow-wrap:anywhere;text-wrap:pretty}
@@ -1454,6 +1455,10 @@ ol.steps3 li>img{flex:none;width:48px;height:48px}
 .stat3 .streak1 .lbl2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;min-width:0;margin-top:auto;position:relative}
 /* #1570 huruf hari 3 huruf (Min Sen Sel…): kartu Streak selebar satu baris supaya 7 hari muat di 320px */
 .stat3 .streak1{grid-column:1/-1;min-height:0}
+/* #2088: tinggi kartu target & level terkunci (teks 'Baru N dtk, sisa N menit' bisa 2 baris) agar Home tak loncat */
+.stat3 #goalCard .lbl2,.stat3 #lvCard .lbl2{min-height:30px}
+.stat3 #goalCard,.stat3 #lvCard{min-height:132px}
+@media(max-width:359px){.stat3 #goalCard .lbl2{min-height:45px}.stat3 #goalCard,.stat3 #lvCard{min-height:150px}}
 .sdots{width:100%;max-width:340px;margin-left:auto;margin-right:auto}
 .sdots .sd em{font-size:12px;letter-spacing:0}
 /* #1809 penjelas streak: satu baris kecil abu, tanpa patah */
