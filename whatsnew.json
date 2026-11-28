@@ -1,5 +1,11 @@
 [
   {
+    "n": 2023,
+    "judul": "Home: tombol 'Ulang N kata sulit' satu ketuk (pintasan)",
+    "poin": "Home kini punya tombol \"Ulang N kata sulit\" di bawah kartu siap diulang.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2022,
     "judul": "Home HP: satu aturan ruang bawah, tombol kartu tak tertutup bar menu",
     "poin": "Tombol kartu Home sekarang tidak tertutup bar menu bawah di HP.",
@@ -171,12 +177,6 @@
     "n": 1965,
     "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
     "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1963,
-    "judul": "[peta 196] Sheet arti kata: tombol Simpan/Tandai sulit tak lagi rusak di HP",
-    "poin": "Tombol \"Simpan\" di popup arti kata tak lagi sempit dan hurufnya tak bertumpuk.",
     "tgl": "2026-11-27"
   }
 ]
