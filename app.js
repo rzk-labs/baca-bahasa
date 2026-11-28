@@ -675,6 +675,7 @@ async function fetchTimeout(url, ms = 8000, ext) {
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
 /* Google gtx: host utama dulu, lalu clients5 (punya CORS juga) bila gagal/ditolak; bawa galat terakhir */
+let GTX_ERR = '';
 async function gtxGet(qs, signal) {
   let err;
   for (const h of ['translate.googleapis.com/translate_a/single', 'clients5.google.com/translate_a/single']) {
@@ -683,6 +684,7 @@ async function gtxGet(qs, signal) {
       if (r.ok) return r; err = new Error('gtx ' + r.status);
     } catch (e) { if (signal && signal.aborted) throw e; err = e; }
   }
+  GTX_ERR = String((err && (err.message || err.name)) || 'galat').slice(0, 40);
   throw err;
 }
 async function gtxFetch(q, sl, tl, signal) {
@@ -1068,7 +1070,7 @@ async function translate(q, sl, tl, signal, fresh, ctx) {
       const j = await r.json();
       const t = j.responseData?.translatedText;
       if (j.responseStatus !== 200 || !t || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID|YOU USED ALL/i.test(t)) throw new Error('mymemory ' + j.responseStatus);
-      out = { text: t, dict: [], baca: '' }; fb = true;
+      out = { text: t, dict: [], baca: '', fbErr: GTX_ERR || 'tak diketahui' }; fb = true;
     } catch (e2) { if (stale && stale.text) return mix(stale); throw new Error('Sinyal lemah, arti belum kebuka. Coba lagi ya.'); }
   }
   if (!out.text) throw new Error('Terjemahan kosong');

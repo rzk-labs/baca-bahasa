@@ -1089,7 +1089,7 @@ async function muatUlangPaksa() {
 }
 /* ---------- kirim masukan (tahap 1: tanpa server) ---------- */
 /* APP_VER harus sama dengan nomor C di sw.js (kepo-vNNN): naikkan bersamaan */
-const APP_VER = 'v805';
+const APP_VER = 'v806';
 const FEEDBACK_URL = 'https://kepo-dev.rizkachoirunnisa0403.workers.dev/feedback'; // Worker HQ (dev/); token GitHub tetap di sana
 function openFeedback(opt = {}) {
   const reading = document.body.classList.contains('reading');
@@ -3105,7 +3105,7 @@ async function onWord(el, lastEl) {
       const exs = kind.st === 'ada' ? (Array.isArray(kind.ex) ? kind.ex : []).filter(t => typeof t === 'string' && t).slice(0, 3).map(t => `<div class="semua-ex" dir="auto" lang="${esc(b.lang)}">${esc(t).replace(/‹/g, '<b>').replace(/›/g, '</b>')}<small>contoh otomatis</small></div>`).join('') : '';
       const cut = (() => { if (lo === hi || NOSPACE.has(b.lang) || b.lang !== 'en') return ''; const ws2 = qWord().toLowerCase().split(/\s+/).map(x => x.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, '')), CJ = new Set(['and', 'or', 'but', 'the', 'of', 'to']), f = ws2[0], l = ws2[ws2.length - 1]; return CJ.has(l) ? l : CJ.has(f) ? f : ''; })();
       const cutH = cut ? `<div class="wcut" role="note">Frasa terpotong? Coba hapus "${esc(cut)}"</div>` : '';
-      el.innerHTML = `${cutH}${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>`;
+      el.innerHTML = `${cutH}${H}${body}${exs ? `<div class="wchips-h">Frasa &amp; contoh</div>${exs}` : ''}<div class="mut sm">${kind.st === 'ada' && kind.src ? esc(kind.src) : ''}Terjemahan mesin, bisa keliru.</div>${r.fbErr ? `<div class="mut sm">Pakai layanan cadangan (Google gagal: ${esc(r.fbErr)}).</div>` : ''}`;
       el.querySelectorAll('.wchip[data-i]').forEach(x => x.onclick = () => { const t = flat[+x.dataset.i]; if (t) pickArti(t); });
       const m = $('#wmore'); if (m) m.onclick = () => { el.querySelectorAll('.wchip[hidden]').forEach(x => x.hidden = false); m.remove(); keepVisible('.w.sel'); };
       const pkb = $('#wpk'); if (pkb) pkb.onclick = () => { kind.pkOpen = !kind.pkOpen; paintDict(); keepVisible('.w.sel'); };
