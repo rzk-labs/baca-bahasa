@@ -3073,10 +3073,12 @@ async function onWord(el, lastEl) {
       const lim = p => Promise.race([p, new Promise((_, rej) => { if (ac.signal.aborted) rej(new Error('batal')); else ac.signal.addEventListener('abort', () => rej(new Error('batal'))); })]);
       try {
         if (navigator.onLine === false) throw new Error('offline');
-        let more;
+        let more = [];
+        try {
         if (force) { const r2 = await lim(translate(q0, b.lang, db.my, ac.signal, true)); more = r2 && Array.isArray(r2.dict) ? r2.dict : []; if (!more.length && r2 && Array.isArray(r2.alt)) more = r2.alt; if (!more.length) more = await lim(altFetch(q0, b.lang, db.my, ac.signal)); }
         else if (Array.isArray(r.alt) && r.alt.length) more = r.alt;
         else more = await lim(altFill(q0, b.lang, db.my, ac.signal));
+        } catch (e2) { if ((e2 && (e2.message === 'offline' || e2.message === 'batal' || e2.name === 'AbortError')) || ac.signal.aborted) throw e2; more = []; /* #2014: layanan utama gagal -> cadangan tetap dicoba */ }
         if (!ok()) return;
         const hadDict = altFlat(Array.isArray(more) ? more : []).length > 0 || (Array.isArray(r.dict) && r.dict.some(x => x && Array.isArray(x.terms) && x.terms.length));
         if (altFlat(altArti(more, txt)).length) { kind.dd = more; kind.st = 'ada'; kind.ph = []; kind.src = ''; }

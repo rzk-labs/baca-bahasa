@@ -1,5 +1,23 @@
 [
   {
+    "n": 2016,
+    "judul": "Home: 'siap diulang' hanya hitung kata yang sudah ada arti",
+    "poin": "Angka \"siap diulang\" sekarang cuma hitung kata yang sudah ada artinya.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2014,
+    "judul": "[peta 198] Arti lain: cadangan tetap dicoba bila layanan utama gagal",
+    "poin": "Arti lain kini tetap dicari lewat jalur cadangan, walau layanan utama menolak.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2010,
+    "judul": "Profil: 'Hampir tercapai' hanya untuk lencana yang sudah >50%",
+    "poin": "\"Hampir tercapai\" di Profil kini hanya muncul untuk lencana yang sudah separuh jalan.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2007,
     "judul": "Tombol buku berikutnya: nama & judul sama di reader dan sheet Tamat",
     "poin": "Tombol pindah ke buku lain sekarang bernama sama di Home, reader, dan layar Tamat.",
@@ -159,24 +177,6 @@
     "n": 1953,
     "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
     "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1949,
-    "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
-    "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1947,
-    "judul": "Sampul Profil rak: judul Jepang/Mandarin pendek tak terpotong",
-    "poin": "Sampul buku Jepang/Mandarin pendek di rak Profil kini menampilkan judul utuh.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1943,
-    "judul": "Tab Kata: tombol 'Cari arti semua' untuk kata Menunggu arti",
-    "poin": "Tab Kata punya tombol \"Cari arti semua\" untuk kata yang belum ada artinya.",
     "tgl": "2026-11-27"
   }
 ]
