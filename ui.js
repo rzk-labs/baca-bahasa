@@ -2103,13 +2103,33 @@ async function viewBaca() {
       showSentence('', sEl.textContent.trim(), +sEl.dataset.s, sEl); award(1, 'look');
     }, 450);
   }, { passive: true });
-  vp.addEventListener('touchmove', e => { if (!tx || !lpT) return; const t = e.touches[0]; if (Math.hypot(t.clientX - tx[0], t.clientY - tx[1]) > 8) lpStop(); }, { passive: true });
-  vp.addEventListener('touchcancel', lpStop);
+  /* #2043: halaman ikut jari saat digeser; lepas = pindah atau balik mulus */
+  let drag = 0, tt = 0;
+  const dragBase = () => `translate(${-RD.page * RD.step}px, ${RD.dy || 0}px)`;
+  const dragEdge = dx => { const bk = book(); return !!bk && ((dx > 0 && RD.page === 0 && bk.pos === 0) || (dx < 0 && RD.page >= RD.n - 1 && bk.pos >= bk.total - 1)); };
+  const dragEnd = back => {
+    if (!drag) return; drag = 0;
+    const c = $('#cols'); if (!c) return;
+    const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    c.style.transition = back && calm ? 'none' : '';
+    if (back) c.style.transform = dragBase();
+  };
+  vp.addEventListener('touchmove', e => {
+    if (!tx) return; const t = e.touches[0], dx = t.clientX - tx[0], dy = t.clientY - tx[1];
+    if (lpT && Math.hypot(dx, dy) > 8) lpStop();
+    if (e.touches.length !== 1 || lpDone) return;
+    if (!drag && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.3) { drag = 1; const c = $('#cols'); if (c) c.style.transition = 'none'; }
+    if (drag) { const c = $('#cols'); if (c) c.style.transform = `translate(${-RD.page * RD.step + (dragEdge(dx) ? dx / 3 : dx)}px, ${RD.dy || 0}px)`; }
+  }, { passive: true });
+  vp.addEventListener('touchstart', () => { tt = Date.now(); }, { passive: true });
+  vp.addEventListener('touchcancel', () => { lpStop(); dragEnd(true); tx = null; });
   vp.addEventListener('contextmenu', e => { if (lpDone) e.preventDefault(); });
   vp.addEventListener('touchend', e => {
-    lpStop(); if (lpDone) { e.preventDefault(); return; }
+    lpStop(); if (lpDone) { dragEnd(true); e.preventDefault(); return; }
     if (!tx) return; const t = e.changedTouches[0], dx = t.clientX - tx[0], dy = t.clientY - tx[1]; tx = null;
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; turn(dx < 0 ? 1 : -1); }
+    const fast = Math.abs(dx) > 20 && Math.abs(dx) / Math.max(1, Date.now() - tt) > 0.5;
+    if ((Math.abs(dx) > 45 || fast) && Math.abs(dx) > Math.abs(dy) * 1.3) { moved = true; dragEnd(false); turn(dx < 0 ? 1 : -1); const c = $('#cols'); if (c) c.style.transform = dragBase(); }
+    else { if (drag) moved = true; dragEnd(true); }
     if (moved) setTimeout(() => { moved = false; }, 400); // klik susulan tak datang -> jangan telan ketukan berikutnya
   });
   vp.addEventListener('keydown', rovKey);
