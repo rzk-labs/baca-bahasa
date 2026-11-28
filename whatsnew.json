@@ -1,5 +1,11 @@
 [
   {
+    "n": 2031,
+    "judul": "Tombol kecil di Kata & Sosial: area ketuk jadi 44px",
+    "poin": "Tiga tombol kecil di tab Kata dan Sosial sekarang lebih mudah diketuk.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2028,
     "judul": "Home: tombol 'Ulang yang sulit saja' bila ada kata ditandai sulit",
     "poin": "Home kini punya tombol kecil \"Ulang yang sulit saja\", plus jumlah katanya.",
@@ -171,12 +177,6 @@
     "n": 1975,
     "judul": "[peta 197] Arti lain tak kosong terus: kata dasar, pivot Inggris, MyMemory",
     "poin": "\"Arti lain\" di kartu kata sekarang jarang kosong: dicari lewat kata dasar dan cadangan.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1973,
-    "judul": "Home: satu baris 'Lencana berikutnya' + sisa progress",
-    "poin": "Home sekarang punya satu baris kecil: lencana berikutnya dan sisa progresnya.",
     "tgl": "2026-11-28"
   }
 ]
