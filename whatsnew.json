@@ -1,5 +1,35 @@
 [
   {
+    "n": 2020,
+    "judul": "Kotak offline: judul 'Baca tanpa internet', tombol 'Unduh arti'",
+    "poin": "Kotak offline sekarang berjudul \"Baca tanpa internet\", tombolnya \"Unduh arti\".",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2018,
+    "judul": "[peta 189] Home kosong: hapus tombol 'Cerita contoh' kembar",
+    "poin": "Layar awal tanpa buku tak lagi punya tombol cerita contoh kembar.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2016,
+    "judul": "Home: 'siap diulang' hanya hitung kata yang sudah ada arti",
+    "poin": "Angka \"siap diulang\" sekarang cuma hitung kata yang sudah ada artinya.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2014,
+    "judul": "[peta 198] Arti lain: cadangan tetap dicoba bila layanan utama gagal",
+    "poin": "Arti lain kini tetap dicari lewat jalur cadangan, walau layanan utama menolak.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2010,
+    "judul": "Profil: 'Hampir tercapai' hanya untuk lencana yang sudah >50%",
+    "poin": "\"Hampir tercapai\" di Profil kini hanya muncul untuk lencana yang sudah separuh jalan.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2007,
     "judul": "Tombol buku berikutnya: nama & judul sama di reader dan sheet Tamat",
     "poin": "Tombol pindah ke buku lain sekarang bernama sama di Home, reader, dan layar Tamat.",
@@ -147,36 +177,6 @@
     "n": 1957,
     "judul": "Rak Profil: centang Tamat tak lagi menutupi huruf sampul",
     "poin": "Centang kuning \"Tamat\" di rak Profil sekarang lebih kecil.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1955,
-    "judul": "Teks rekor & sheet Tamat: 'Naik dari 4 hari', buang 'Keren' dobel",
-    "poin": "Teks rekor sekarang jelas: \"Rekor baru: 5 hari, naik dari 4 hari\".",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1953,
-    "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
-    "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1949,
-    "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
-    "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1947,
-    "judul": "Sampul Profil rak: judul Jepang/Mandarin pendek tak terpotong",
-    "poin": "Sampul buku Jepang/Mandarin pendek di rak Profil kini menampilkan judul utuh.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1943,
-    "judul": "Tab Kata: tombol 'Cari arti semua' untuk kata Menunggu arti",
-    "poin": "Tab Kata punya tombol \"Cari arti semua\" untuk kata yang belum ada artinya.",
     "tgl": "2026-11-27"
   }
 ]
