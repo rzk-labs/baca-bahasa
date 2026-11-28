@@ -1788,15 +1788,11 @@ function finishBook(b) {
   }
   const dueN = db.vocab.filter(isDue).length; /* sama dgn 'N kata siap diulang' di Home */
   /* #1877: satu ajakan utama berwarna; sisanya tautan teks */
-  const lnk = (id, t) => `<button type="button" class="lnk" id="${id}">${t}</button>`;
-  const aDue = dueN ? { id: 'fbdue', t: `Ulang ${dueN} kata` } : null;
-  const aLihat = total > 0 && (ws.length || !dueN) ? { id: 'fbk', t: ws.length ? `Lihat ${ws.length} kata` : 'Lihat kata' } : null;
-  const aBaru = { id: 'fbadd', t: 'Buku baru' };
-  let actsHtml = '', more = [];
-  if (nx1) { actsHtml = acts[0].replace('__C__', 'pri'); more = [aDue, aLihat, aBaru]; }
-  else if (aDue && none) { actsHtml = `<button class="pri full" id="fbdue">${aDue.t}</button>`; more = [aLihat, aBaru]; }
-  else { actsHtml = '<button class="pri full" id="fbadd">Buku baru</button>'; more = [aDue, aLihat]; }
-  const moreHtml = more.filter(Boolean).map(x => lnk(x.id, x.t)).join('');
+  /* #1991: 2 aksi saja: 1 tombol utama + tautan 'Ke Home'. 'Baca ulang' ada di kartu buku Home/Profil */
+  let actsHtml;
+  if (dueN) actsHtml = `<button class="pri full" id="fbdue">Ulang ${dueN > 9 ? '9+' : dueN} kata</button>`;
+  else if (nx1) actsHtml = acts[0].replace('__C__', 'pri');
+  else actsHtml = '<button class="pri full" id="fbadd">Buku baru</button>';
   /* 'Besok': lencana berikutnya yang belum didapat (data BADGES yang sudah ada) */
   const nb = BADGES.find(x => !badgeShown(x[0]));
   let besok = '';
@@ -1806,7 +1802,7 @@ function finishBook(b) {
     if (nb[0] in BADGE_VOCAB_MIN) { /* lencana kata: target & sisa sama persis dgn kartu Home */
       const n = countedVocab(null).length, t = wordMile(n), tb = wordMileBadge(t);
       /* #1959: tanpa kata disimpan sesi ini = tanpa ajakan simpan kata; angka hanya dari data nyata (sisa ke target) */
-      if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata, buka Ulang kata`; nama = ''; } /* #1701/#1771: sama dgn kartu Home q3Lock */
+      if (quickPick().length < Q_MIN) { apa = `simpan ${Q_MIN} kata dulu`; nama = ''; } /* #1701/#1771: sama dgn kartu Home q3Lock */
       else if (ws.length && t && tb && t - n > 0 && t - n <= 5) { apa = `simpan ${t - n} kata lagi`; nama = tb[2] + (tb[0].startsWith('koleksi') ? ' kata' : ''); }
       else apa = '';
     }
@@ -1822,15 +1818,12 @@ function finishBook(b) {
     ${pahamTxt ? `<p class="mut sm" id="fbpaham">${esc(pahamTxt)}</p>` : ''}
     ${ws.length ? list + (ws.length > 8 ? `<p class="mut sm">+${ws.length - 8} kata lainnya ada di tab Kata.</p>` : '') : (pend ? `<p class="mut">${pend} kata belum disimpan.</p><button class="sec full" id="fbsv">Simpan kata</button>` : total > 0 && !nPaham ? `<p class="mut">${esc(txtBelumBaru(dueN))}</p>` : '<p class="mut">Kamu udah sampai akhir. Tinggal pilih mau lanjut ke mana.</p>')}
     <div class="fb-acts">${actsHtml}</div>
-    ${moreHtml ? `<div class="fb-sec fb-more">${moreHtml}</div>` : ''}
-    <div class="fb-sec fb-end"><button class="lnk" id="fbr" aria-label="Baca ulang, tanpa XP">Baca ulang (tanpa XP)</button><span aria-hidden="true" class="fb-dot">·</span><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
+    <div class="fb-sec fb-end"><button class="lnk" id="fbh">Ke Home</button></div>`, 'Tamat');
   const sv = $('#fbsv'); if (sv) sv.onclick = () => { closeSheet(); setTimeout(() => sessRecap(b), 50); };
-  const fr = $('#fbr'); if (fr) fr.onclick = () => { closeSheet(); restartBook(b); viewBaca(); };
   $$('[data-nb]').forEach(el => el.onclick = () => { closeSheet(); db.cur = el.dataset.nb; save(); setTab('baca'); });
   const fa = $('#fbadd'); if (fa) fa.onclick = () => { closeSheet(); setTab('rak'); setTimeout(() => { const a = $('#addBtn'); if (a) a.click(); }, 50); };
   $('#fbh').onclick = () => { closeSheet(); setTab('rak'); };
   const fd = $('#fbdue'); if (fd) fd.onclick = () => { closeSheet(); kataSeg = 'kartu'; setTab('kata'); };
-  const fk = $('#fbk'); if (fk) fk.onclick = () => { closeSheet(); setTab('kata'); };
 }
 /* ---------- Intip kata bab (#638): kartu 3-5 kata baru di awal bab ---------- */
 const INTIP_SKIP = ['th']; /* Thai: pemotongan kata belum andal. ja/ko/zh memakai pemotong kata Intl (#658) */

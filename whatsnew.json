@@ -1,5 +1,11 @@
 [
   {
+    "n": 1991,
+    "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
+    "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1989,
     "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
     "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
@@ -171,12 +177,6 @@
     "n": 1927,
     "judul": "Sheet Tamat: buang tawaran pengingat, momen selesai buku tenang",
     "poin": "Sheet Tamat sekarang tenang: tawaran pengingat dibuang, sisa satu tombol utama.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1925,
-    "judul": "Tab Kata: tombol 'Ulang kata sulit' satu ketuk langsung mulai",
-    "poin": "Tab Kata kini punya tombol \"Ulang N kata sulit\" di bagian atas.",
     "tgl": "2026-11-27"
   }
 ]
