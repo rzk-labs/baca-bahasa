@@ -1657,3 +1657,8 @@ body:not(.reading) #view{padding-bottom:var(--view-gap-bawah)}
 .nx-bk .nx-t{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;opacity:.7}
 .nx-bk .nx-t.cjk,#hero.hero-done .nx-bk .nx-t.cjk{opacity:1;font-size:13px}
 .fb-next .fbn-m .cjk{color:var(--color-text);opacity:1}
+/* Target beres: centang tergambar + cincin berdenyut sekali per hari */
+.goal-row.beres-anim .ring{animation:goalpulse 350ms var(--ease-out) 1}
+.goal-row.beres-anim ~ .lbl2 .goal-ok .ck path{stroke-dasharray:24;stroke-dashoffset:24;animation:wgck 250ms var(--ease-out) 120ms forwards}
+@keyframes goalpulse{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.goal-row.beres-anim .ring{animation:none}.goal-row.beres-anim ~ .lbl2 .goal-ok .ck path{animation:none;stroke-dashoffset:0}}

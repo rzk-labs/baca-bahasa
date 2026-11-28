@@ -1,5 +1,11 @@
 [
   {
+    "n": 2025,
+    "judul": "Motion: centang 'Beres!' Target baca tergambar saat target tercapai",
+    "poin": "Target baca yang beres sekarang punya centang tergambar dan cincin berdenyut.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2023,
     "judul": "Home: tombol 'Ulang N kata sulit' satu ketuk (pintasan)",
     "poin": "Home kini punya tombol \"Ulang N kata sulit\" di bawah kartu siap diulang.",
@@ -171,12 +177,6 @@
     "n": 1967,
     "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
     "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1965,
-    "judul": "Kartu PDF scan: tombol 'Tempel teks dialog' sebagai jalan lain",
-    "poin": "Kartu \"PDF scan\" sekarang punya tombol \"Tempel teks\" untuk dialog komik.",
     "tgl": "2026-11-27"
   }
 ]
