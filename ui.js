@@ -127,6 +127,7 @@ const altArti = (dict, main) => {
 const altCount = gs => gs.reduce((n, g) => n + g.terms.length, 0);
 const altFlat = gs => gs.flatMap(g => g.terms);
 /* kelompok arti -> HTML: label jenis kata (tanpa label bila tak ada), chip bernomor data-i berurutan */
+const altFailMsg = () => navigator.onLine === false ? 'Lagi offline. Arti lain muncul lagi begitu ada sinyal.' : 'Layanan terjemahan lagi sibuk, bukan salahmu. Coba lagi sebentar.';
 const altHtml = gs => { let i = 0; return gs.map(g => `${g.pos ? `<div class="altpos">${esc((POS[g.pos] || g.pos).replace(/^./, c => c.toUpperCase()))}</div>` : ''}<div class="altch" role="group" aria-label="Arti lain">${g.terms.map(t => `<button class="altopt" type="button" data-i="${i++}" dir="auto">${esc(t)}</button>`).join('')}</div>`).join(''); };
 /* huruf awal sampul: lewati tanda kutip & kata sandang umum (The, Der, Le, L', El, Il...) bila masih ada huruf lain */
 function coverIni(t) { const x = String(t || '').replace(/^[^\p{L}\p{N}]+/u, ''), y = x.replace(/^(?:the|an?|der|die|das|le|la|les|el|los|il|l['’]|un|une)(?:\s+|(?<=['’]))(?=[\p{L}\p{N}])/iu, ''); return ((y.match(/[\p{L}\p{N}]/u) || x.match(/[\p{L}\p{N}]/u) || ['K'])[0]).toLocaleUpperCase(); }
@@ -3187,7 +3188,7 @@ async function onWord(el, lastEl) {
   const openAlt = async () => {
     if (!wAlt) return; const w = word; wAlt.dataset.open = '1';
     if (openAc) openAc.abort(); const oac = openAc = new AbortController(), otm = setTimeout(() => oac.abort(), 8000);
-    const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
+    const fail = msg => { if (word !== w || $('#walt') !== wAlt) return; if (document.querySelector('.wchips .wchip:not(.wskel)')) { delete wAlt.dataset.open; altLink(); return; } wAlt.innerHTML = `<div class="altbox"><div class="mut sm">${msg}</div><div class="altrow"><button class="ghost wretry" id="waretry" type="button">Coba lagi</button><button class="ghost wretry" id="waclose" type="button">Tutup</button></div></div>`; $('#waretry').onclick = openAlt; $('#waclose').onclick = altLink; };
     wAlt.innerHTML = '<span class="loading ldots" role="status" aria-label="Lagi nyari arti lain"><i></i><i></i><i></i></span>';
     let groups = [];
     try {
@@ -3197,7 +3198,7 @@ async function onWord(el, lastEl) {
         const more = await altFetch(qWord(), b.lang, db.my, oac.signal);
         groups = altArti([...base, ...more], cur);
       }
-    } catch (e) { clearTimeout(otm); if (openAc !== oac) return; return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    } catch (e) { clearTimeout(otm); if (openAc !== oac) return; return fail(altFailMsg()); }
     clearTimeout(otm);
     if (word !== w || $('#walt') !== wAlt) return;
     const list = altFlat(groups);
@@ -3628,7 +3629,7 @@ function bossArti(w, lang) {
     try {
       const c = cur(), base = (r && r.dict) || []; groups = altArti(base, c);
       if (altCount(groups) < 3 && !(lang === 'ja' && db.my === 'id')) { const more = await altFetch(w, lang, db.my); groups = altArti([...base, ...more], c); }
-    } catch (e) { return fail('Arti belum ketemu, kayaknya kena batas layanan gratis. Coba lagi ya.'); }
+    } catch (e) { return fail(altFailMsg()); }
     if (!alive()) return; const list = altFlat(groups);
     if (!list.length) { al.innerHTML = '<div class="altbox"><div class="mut sm">Belum ada arti lain untuk kata ini</div><div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>'; $('#raclose').onclick = link; return; }
     al.innerHTML = `<div class="altbox"><div class="mut sm"><b>Mungkin maksudnya:</b></div>${altHtml(groups)}<div class="altrow"><button class="ghost wretry" id="raclose" type="button">Tutup</button></div></div>`;
@@ -3991,7 +3992,7 @@ function openSemua(v, onSave) {
       if (!$('#sheet').classList.contains('hide')) show();
     } catch (e) {
       if ($('#sheet').classList.contains('hide')) return;
-      $('#sheetBody').innerHTML = `<div class="sh-head"><h2 dir="auto">${esc(v.w)} · semua arti</h2>${closeBtn}</div><div class="mut sm" role="status">${navigator.onLine === false ? 'Lagi offline, daftar arti belum bisa dibuka.' : 'Daftar arti belum kebuka, kayaknya kena batas layanan gratis.'}</div><div class="altrow"><button class="ghost wretry" id="semuaRetry" type="button">Coba lagi</button><button class="ghost wretry" data-close type="button">Tutup</button></div>`;
+      $('#sheetBody').innerHTML = `<div class="sh-head"><h2 dir="auto">${esc(v.w)} · semua arti</h2>${closeBtn}</div><div class="mut sm" role="status">${altFailMsg()}</div><div class="altrow"><button class="ghost wretry" id="semuaRetry" type="button">Coba lagi</button><button class="ghost wretry" data-close type="button">Tutup</button></div>`;
       $$('#sheet [data-close]').forEach(b => b.onclick = closeSheet); $('#semuaRetry').onclick = load;
     }
   };
