@@ -2889,10 +2889,11 @@ function nearWord(vp, x, y) {
   return best;
 }
 /* #1923: logika tandai sulit dipakai bersama kartu ulang & sheet arti kata (tanpa XP) */
-function setHardVocab(v, now) {
+function setHardVocab(v, now, besok) {
   if (!v.hard) {
     v.hard = true; v.hd = { due: v.due, known: !!v.known };
-    if (v.known) { v.known = false; v.due = now + DAY_MS; }
+    if (besok) { v.known = false; v.due = now + DAY_MS; } /* #1999 Ulang besok: jatuh tempo tepat besok */
+    else if (v.known) { v.known = false; v.due = now + DAY_MS; }
     else { const left = (+v.due || 0) - now; if (left > DAY_MS) v.due = now + Math.max(DAY_MS, Math.round(left / 2)); }
   } else { delete v.hard; if (v.hd && !(+v.due <= now)) { v.due = v.hd.due; v.known = v.hd.known; } delete v.hd; }
 }
@@ -2926,10 +2927,10 @@ async function onWord(el, lastEl) {
     <div class="wsug" id="wsug" hidden></div>
     <div class="dict" id="wdict"></div>
     <div class="walt" id="walt"></div>
-    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="hardbtn hardic" id="whard" type="button" aria-pressed="false" aria-label="Tandai sulit" title="Tandai sulit">${ico('flag')}</button><button class="sec" id="wtanda" type="button">Tandai &amp; lanjut</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
+    <div class="wact" role="group" aria-label="Aksi kata"><button class="pri" id="wsave">${saveLbl()}</button><button class="hardbtn hardic" id="whard" type="button" aria-pressed="false" aria-label="Ulang besok" title="Ulang besok">${ico('flag')}<span>Ulang besok</span></button><button class="sec" id="wtanda" type="button">Tandai &amp; lanjut</button><button class="sec" id="wkenal" hidden></button><button class="sec" id="whafal" type="button" hidden></button><button class="sec" id="wnama" type="button" hidden></button></div>
     <div class="wact2"><button class="ghost" data-close id="wdone">Selesai</button><button class="ghost" id="wnext">${ico('eye')} Masih bingung? Lihat kalimatnya</button></div>`, 'Arti kata');
   const kenalLbl = () => isKenal(b.lang, word) ? `${ico('bmcheck')} Belum kenal` : 'Sudah kenal';
-  const updHard = () => { const h = $('#whard'); if (!h) return; h.hidden = isNama(b, word); const on = db.vocab.some(v => v.hard && sameVocab(v, b.lang, word)), t = on ? 'Batal tandai sulit' : 'Tandai sulit'; h.classList.toggle('on', on); h.setAttribute('aria-pressed', String(on)); h.setAttribute('aria-label', t); h.title = t; };
+  const updHard = () => { const h = $('#whard'); if (!h) return; h.hidden = isNama(b, word); const on = db.vocab.some(v => v.hard && sameVocab(v, b.lang, word)), t = on ? 'Batal ulang besok' : 'Ulang besok'; h.classList.toggle('on', on); h.setAttribute('aria-pressed', String(on)); h.setAttribute('aria-label', t); h.title = t; const sp = h.querySelector('span'); if (sp) sp.textContent = t; };
   const updKenal = () => { updHard(); const k = $('#wkenal'); if (!k) return; k.hidden = isSaved() || isNama(b, word); k.innerHTML = kenalLbl(); updHafal(); };
   const hafalOf = () => db.vocab.find(v => v.t && sameVocab(v, b.lang, word));
   const updHafal = () => { const h = $('#whafal'); if (!h) return; const v = hafalOf(); h.hidden = !v || isNama(b, word); if (v) { h.innerHTML = v.known ? `${ico('check')} Udah hafal` : 'Udah hafal'; h.setAttribute('aria-pressed', v.known ? 'true' : 'false'); } };
@@ -3187,9 +3188,9 @@ async function onWord(el, lastEl) {
       if (!isSaved()) await $('#wsave').onclick(); /* alur Simpan yang sama; tanda sulit tidak menambah XP */
       const w = word, lang = b.lang, vs = db.vocab.filter(v => sameVocab(v, lang, w)); if (!vs.length) return;
       const was = !!vs[0].hard, now = Date.now(), prev = vs.map(v => ({ v, hard: v.hard, hd: v.hd, due: v.due, known: v.known }));
-      vs.forEach(v => { if (!!v.hard === was) setHardVocab(v, now); }); save(); vib(8); sfx('pop'); updHard();
+      vs.forEach(v => { if (!!v.hard === was) setHardVocab(v, now, true); }); save(); vib(8); sfx('pop'); updHard();
       const sync = () => { updHard(); if (kataSeg && $('#klist')) viewKata(); };
-      toast(was ? 'Tanda sulit dibatalkan' : 'Ditandai sulit, bakal muncul lebih sering', 5000, { label: 'Urungkan', fn: () => { prev.forEach(p => { const x = p.v; if (p.hard) x.hard = p.hard; else delete x.hard; if (p.hd) x.hd = p.hd; else delete x.hd; x.due = p.due; x.known = p.known; }); save(); sync(); } });
+      toast(was ? 'Ulang besok dibatalkan' : 'Muncul lagi besok', 5000, { label: 'Urungkan', fn: () => { prev.forEach(p => { const x = p.v; if (p.hard) x.hard = p.hard; else delete x.hard; if (p.hd) x.hd = p.hd; else delete x.hd; x.due = p.due; x.known = p.known; }); save(); sync(); } });
     } finally { if (h.isConnected) h.disabled = false; }
   };
   $('#wnama').onclick = () => {
@@ -3960,7 +3961,7 @@ function deck(kb) {
         <div class="tap" id="tapl">Ingat dulu artinya</div></div></div>
     <div class="deck-act" id="actFront"><button class="yes full" id="fShow" type="button">${ico('eye')}Lihat arti</button></div>
     <div class="deck-act three hide" id="actBack"><button class="no" id="fNo" type="button"><span class="dl">${ico('x')}Lupa</span><span class="when">nanti lagi</span></button><button class="mid" id="fMaybe" type="button"><span class="dl">Ragu</span><span class="when">sebentar lagi</span></button><button class="yes" id="fYes" type="button"><span class="dl">${ico('check')}Hafal</span><span class="when">${(v.lv || 0) >= REVIEW_DAYS.length ? 'tuntas' : REVIEW_DAYS[v.lv || 0] + ' hari'}</span></button></div>
-    <div class="center" style="margin-top:6px"><button class="hardbtn${v.hard ? ' on' : ''}" id="fHard" type="button" aria-pressed="${!!v.hard}">${ico('flag')}<span>${v.hard ? 'Batal tandai sulit' : 'Tandai sulit'}</span></button></div>
+    <div class="center" style="margin-top:6px"><button class="hardbtn${v.hard ? ' on' : ''}" id="fHard" type="button" aria-pressed="${!!v.hard}">${ico('flag')}<span>${v.hard ? 'Batal ulang besok' : 'Ulang besok'}</span></button></div>
     <div class="mut sm center" style="margin-top:6px">${deckHint ? esc(deckHint) : 'Ingat dulu, baru buka · geser kanan = hafal, kiri = lupa'}</div>${quickRun ? `<div class="center" style="margin-top:6px"><button class="ghost" id="q3Close" type="button">${quickHard ? 'Tutup ulang kata sulit' : 'Tutup latihan ekstra'}</button></div>` : ''}${deckLv ? `<div class="center" style="margin-top:6px"><span class="mut sm">Hanya HSK ${deckLv}</span> <button class="ghost" id="hskAll" type="button">Semua level</button></div>` : ''}`;
   if ($('#hskAll')) $('#hskAll').onclick = () => { deckLv = 0; viewKata(); };
   if ($('#q3Close')) $('#q3Close').onclick = () => { quickRun = null; quickExtra = false; quickHard = false; viewKata(); };
@@ -3983,7 +3984,7 @@ function deck(kb) {
       deckHint = 'Tanda sulit dibatalkan';
     }
     save(); sfx('pop');
-    const b = $('#fHard'); b.classList.toggle('on', !!v.hard); b.setAttribute('aria-pressed', String(!!v.hard)); b.lastElementChild.textContent = v.hard ? 'Batal tandai sulit' : 'Tandai sulit';
+    const b = $('#fHard'); b.classList.toggle('on', !!v.hard); b.setAttribute('aria-pressed', String(!!v.hard)); b.lastElementChild.textContent = v.hard ? 'Batal ulang besok' : 'Ulang besok';
     const h = b.parentElement.nextElementSibling; if (h) h.textContent = deckHint;
     const nh = db.vocab.filter(x => x && x.hard).length, kh = $('#khard');
     if (kh) { kh.hidden = !nh; kh.lastElementChild.textContent = 'Lihat daftar kata sulit (' + nh + ')'; }
