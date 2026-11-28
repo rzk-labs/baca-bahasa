@@ -1,5 +1,41 @@
 [
   {
+    "n": 2068,
+    "judul": "[peta 200] Kartu Kata & ulang: kana ketuk-untuk-lihat kata Jepang",
+    "poin": "Kata Jepang berkanji kini tampil kanji dulu; cara baca muncul setelah diketuk.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2065,
+    "judul": "[peta 202] Label 'Contoh · HSK 1-3' di cerita contoh Mandarin",
+    "poin": "Cerita contoh Mandarin sekarang punya label \"HSK 1-3\" supaya level-nya jelas.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2061,
+    "judul": "Arti gagal dimuat: toast punya tombol 'Coba lagi' & progres 3/10",
+    "poin": "Pesan \"Ada yang gagal\" sekarang punya tombol \"Coba lagi\" untuk memuat arti ulang.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2058,
+    "judul": "[peta 199] Cara baca Jepang: label 'perkiraan' & tombol Cek ulang",
+    "poin": "Cara baca kata Jepang kini jujur: ada label \"perkiraan\" kalau hasilnya tebakan.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2049,
+    "judul": "Motion: kartu latihan Kata, arti muncul halus saat 'Lihat arti'",
+    "poin": "Arti kata dan tombol di kartu latihan sekarang muncul halus.",
+    "tgl": "2026-11-28"
+  },
+  {
+    "n": 2048,
+    "judul": "Reader: ganti halaman diumumkan pembaca layar, menu bawah min 12px",
+    "poin": "Pembaca layar kini mengumumkan halaman yang sedang dibaca.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2046,
     "judul": "Doodle 'kartu retak' untuk layar error Tab Kata",
     "poin": "Layar error Tab Kata sekarang punya gambar kartu retak yang ditempel plester.",
@@ -141,42 +177,6 @@
     "n": 1995,
     "judul": "Status buku 'Belum mulai' sama di sheet Tamat, Profil, Baca",
     "poin": "Buku yang belum dibuka kini selalu disebut 'Belum dibuka' di semua layar.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1993,
-    "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
-    "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1991,
-    "judul": "Sheet Tamat: sisakan 2 aksi, label 'Ulang 5 kata' seperti reader",
-    "poin": "Layar Tamat sekarang cuma 2 aksi: tombol utama dan \"Ke Home\".",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1989,
-    "judul": "Daftar arti kata: 'Belum ada arti lain' sama di semua tempat",
-    "poin": "Pesan \"belum ada arti lain\" sekarang sama persis di tiga tempat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1987,
-    "judul": "Tombol buku berikutnya satu nama di Home, reader, sheet Tamat",
-    "poin": "Tombol pindah buku kini sama di Home, baca, dan layar Tamat.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1985,
-    "judul": "Home Target baca: '<1 mnt' dan sisa waktu tak lagi bertentangan",
-    "poin": "Kartu Target baca di Home tak lagi membingungkan.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1983,
-    "judul": "Streak & Level Profil sama dengan Home (satu sumber angka)",
-    "poin": "Streak dan Level di Profil sekarang selalu sama dengan Home.",
     "tgl": "2026-11-28"
   }
 ]
