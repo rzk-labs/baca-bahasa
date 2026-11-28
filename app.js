@@ -675,16 +675,22 @@ async function fetchTimeout(url, ms = 8000, ext) {
   try { return await fetch(url, { signal: ac.signal }); } finally { clearTimeout(t); if (ext) ext.removeEventListener('abort', onAb); }
 }
 /* Google gtx: host utama dulu, lalu clients5 (punya CORS juga) bila gagal/ditolak; bawa galat terakhir */
-let GTX_ERR = '';
+let GTX_ERR = '', GTX_FAIL_AT = 0;
 async function gtxGet(qs, signal) {
   let err;
-  for (const h of ['translate.googleapis.com/translate_a/single', 'clients5.google.com/translate_a/single']) {
-    try {
-      const r = await fetchTimeout('https://' + h + '?' + qs.replace(/^client=gtx/, h.startsWith('clients5') ? 'client=dict-chrome-ex' : 'client=gtx'), 8000, signal);
-      if (r.ok) return r; err = new Error('gtx ' + r.status);
-    } catch (e) { if (signal && signal.aborted) throw e; err = e; }
+  /* 2 putaran (jeda 0,7 dtk): Google sering menolak sesaat (Safari menyebutnya "Load failed") lalu normal lagi */
+  for (let round = 0; round < 2; round++) {
+    if (round) await new Promise(res => setTimeout(res, 700));
+    if (signal && signal.aborted) throw new Error('dibatalkan');
+    for (const h of ['translate.googleapis.com/translate_a/single', 'clients5.google.com/translate_a/single']) {
+      try {
+        const r = await fetchTimeout('https://' + h + '?' + qs.replace(/^client=gtx/, h.startsWith('clients5') ? 'client=dict-chrome-ex' : 'client=gtx'), 8000, signal);
+        if (r.ok) { GTX_FAIL_AT = 0; return r; } err = new Error('gtx ' + r.status);
+      } catch (e) { if (signal && signal.aborted) throw e; err = e; }
+    }
   }
   GTX_ERR = String((err && (err.message || err.name)) || 'galat').slice(0, 40);
+  GTX_FAIL_AT = Date.now(); /* prafetch diam 90 dtk supaya ketukan kata tidak ikut kena batas */
   throw err;
 }
 async function gtxFetch(q, sl, tl, signal) {
@@ -818,7 +824,7 @@ async function altFill(q, sl, tl, signal) {
 }
 /* prafetch kalimat halaman aktif (#458): senyap, satu permintaan sekali jalan, tanpa MyMemory; ketukan pengguna selalu didahulukan */
 const PF = { ac: null, q: [], sl: '', tl: '', gen: 0, fails: 0, t: 0, dirty: false, busy: false };
-function pfOk() { return !db.plain && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
+function pfOk() { return !db.plain && Date.now() - GTX_FAIL_AT > 90000 && navigator.onLine !== false && !(navigator.connection && navigator.connection.saveData) && !document.hidden; }
 function pfFlush() { if (PF.dirty) { PF.dirty = false; trPersist(); } }
 function pfPause() { clearTimeout(PF.t); PF.t = 0; PF.gen++; if (PF.ac) { PF.ac.abort(); PF.ac = null; } PF.busy = false; }
 function pfStop() { pfPause(); PF.q = []; pfFlush(); }
