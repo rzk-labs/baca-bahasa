@@ -299,6 +299,11 @@ body:has(#sheet[aria-label="Tamat"]:not(.hide)) #shade{background:rgba(53,30,40,
 .vmeta .hskc{margin-right:2px}
 .tr{font:800 24px/30px var(--font-display);margin:2px 0 var(--space-2)}
 .ttsnote{font-size:12px;line-height:18px;color:var(--color-text-muted);margin:0 0 6px}
+/* #2058: label 'perkiraan' + Cek ulang cara baca Jepang di sheet arti */
+.wkira{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:6px;font-size:13px;line-height:20px;overflow-wrap:anywhere}
+.wkira[hidden]{display:none}
+.kira-tag{background:#E9F056;color:#351E28;border-radius:6px;padding:0 7px;font-size:11px;font-weight:700}
+.kira-btn{min-height:44px;padding:0 12px;font-size:13px}
 .wmeta{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;font-size:13px;line-height:20px;color:var(--color-text-muted);overflow-wrap:anywhere}
 .wmeta>span:empty,.wnote>span:empty{display:none}
 .wmeta>span:not(:empty)~span:not(:empty)::before,.wnote>span:not(:empty)~span:not(:empty)::before{content:"·";margin-right:6px}

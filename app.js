@@ -992,7 +992,7 @@ function jaCands(w) {
 const JA_CLS = { v1: ['v1'], v5: ['v5'], adj: ['adj'], vs: ['vs'], vk: ['vk'] };
 function jaFind(m, w) {
   w = String(w || '').trim();
-  if (!m || !w || /\s/.test(w) || w.length > 12) return null;
+  if (!m || !w || w.length > 40) return null; /* #2058: frasa & kata panjang tetap dicoba; tak ketemu di kamus → layanan terjemahan */
   let e = m.get(w), base = '';
   if (!e) {
     for (const [b, cls] of jaCands(w)) { const x = m.get(b); if (x && x.pos === cls) { e = x; base = x.w; break; } }
