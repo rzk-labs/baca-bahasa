@@ -1,5 +1,11 @@
 [
   {
+    "n": 2043,
+    "judul": "Reader: halaman ikut jari saat digeser, lepas = pindah atau balik",
+    "poin": "Saat geser halaman, teks kini ikut jari dan tidak diam kaku.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2042,
     "judul": "Kotak unduh arti: satu judul & tombol sama di reader, Bab, Profil",
     "poin": "Kotak unduh arti di baca dan daftar bab kini sama dengan di Profil.",
@@ -171,12 +177,6 @@
     "n": 1979,
     "judul": "[peta 183] Reader: satu satuan 'Bagian' di bar, sheet Tamat, catatan sesi",
     "poin": "Bar bawah reader kini tulis \"Bagian 4 dari 9\", sama seperti bagian atas.",
-    "tgl": "2026-11-28"
-  },
-  {
-    "n": 1977,
-    "judul": "Offline: arti bagian berikutnya diisi otomatis diam-diam saat sinyal bagus",
-    "poin": "Saat sinyal bagus, arti kata bagian berikutnya terisi sendiri di belakang layar.",
     "tgl": "2026-11-28"
   }
 ]
