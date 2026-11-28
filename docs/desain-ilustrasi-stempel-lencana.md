@@ -12,4 +12,5 @@
 
 ## 2. Tempat pakai
 - Profil, kartu Lencana (cloud.js), ukuran 40px.
-- Lencana lain (Berani, Sempurna, Boss, Otak) tetap ikon lama.
+- Empat stempel baru: ngomong (gelembung), sempurna (target), boss (perisai retak), otak (kartu balik).
+- Semua lencana terbuka kini bergaya stempel; yang terkunci tetap abu-abu.
