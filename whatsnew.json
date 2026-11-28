@@ -1,5 +1,11 @@
 [
   {
+    "n": 1995,
+    "judul": "Status buku 'Belum mulai' sama di sheet Tamat, Profil, Baca",
+    "poin": "Buku yang belum dibuka kini selalu disebut 'Belum dibuka' di semua layar.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 1993,
     "judul": "Toast tak lagi menimpa kartu Home & bar bawah reader",
     "poin": "Notifikasi kecil tak lagi menutupi kartu Home dan bar bawah saat baca.",
@@ -171,12 +177,6 @@
     "n": 1931,
     "judul": "[peta 187] Home: cincin Target baca diisi dari menit utuh, 0 mnt = kosong",
     "poin": "Cincin Target baca di Home sekarang kosong kalau belum genap 1 menit.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1929,
-    "judul": "Home buku Tamat: tombol buku berikutnya sebut bahasanya bila beda",
-    "poin": "Tombol buku berikutnya di Home kini menyebut bahasanya kalau beda.",
     "tgl": "2026-11-27"
   }
 ]
