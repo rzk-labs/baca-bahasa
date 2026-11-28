@@ -276,12 +276,12 @@ function nextBadge() {
   BADGES.forEach(([id, em, name, desc]) => { if (badgeShown(id)) return; const pr = badgeProgress(id), r = pr ? pr.now / pr.need : 0; if (!best || r > best.r) best = { id, em, name, desc, pr, r }; });
   if (!best) return null;
   const rem = best.pr ? best.pr.need - best.pr.now : 0;
-  return { ...best, txt: rem > 0 && BADGE_UNIT[best.id] ? `sisa ${rem} ${BADGE_UNIT[best.id]}` : best.desc };
+  return { ...best, txt: rem > 0 && BADGE_UNIT[best.id] ? `${rem} ${BADGE_UNIT[best.id]} lagi` : best.desc };
 }
 function nextBadgeHtml() {
   if (!db.books || !db.books.length) return '';
   const n = nextBadge(); if (!n) return '';
-  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span>Lencana berikutnya: <b>${esc(n.name)}</b> · ${esc(n.txt)}</span></button>`;
+  return `<button type="button" class="nb-line" id="nbLine" aria-haspopup="dialog" aria-label="Lencana berikutnya: ${esc(n.name)}, ${esc(n.txt)}. Ketuk untuk lihat semua lencana">${ico(n.em)}<span><b>${esc(n.name)}</b> · ${esc(n.txt)}</span></button>`;
 }
 function badgeListSheet() {
   openSheet(`<div class="sh-head"><h2>Lencana</h2>${closeBtn}</div><ul class="rules">${BADGES.map(([id, , name, desc]) => { const on = badgeShown(id), pr = on ? null : badgeProgress(id); return `<li><b>${esc(name)}</b>${on ? ' · sudah kebuka' : ` · ${esc(BADGE_HOW[id] || desc)}${pr && pr.need > 1 ? ` (${pr.now}/${pr.need})` : ''}`}</li>`; }).join('')}</ul>`, 'Lencana');
