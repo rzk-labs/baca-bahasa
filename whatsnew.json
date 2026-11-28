@@ -1,5 +1,11 @@
 [
   {
+    "n": 2016,
+    "judul": "Home: 'siap diulang' hanya hitung kata yang sudah ada arti",
+    "poin": "Angka \"siap diulang\" sekarang cuma hitung kata yang sudah ada artinya.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2014,
     "judul": "[peta 198] Arti lain: cadangan tetap dicoba bila layanan utama gagal",
     "poin": "Arti lain kini tetap dicari lewat jalur cadangan, walau layanan utama menolak.",
@@ -171,12 +177,6 @@
     "n": 1953,
     "judul": "Reader: label 'Terakhir' jelas, tombol 'Buku berikutnya' tak pucat",
     "poin": "Label halaman terakhir di reader sekarang \"Hal. terakhir\", lebih jelas.",
-    "tgl": "2026-11-27"
-  },
-  {
-    "n": 1949,
-    "judul": "Home Lanjut: kata baru hanya dari buku yang sedang dibuka",
-    "poin": "Layar Tamat sekarang hanya menyebut kata baru dari buku yang baru kamu baca.",
     "tgl": "2026-11-27"
   }
 ]
