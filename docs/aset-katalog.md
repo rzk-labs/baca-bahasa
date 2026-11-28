@@ -26,6 +26,11 @@
 | `img/aset/stempel-kata.svg` (1,1 KB) | Profil, lencana terbuka: Keepo Pertama, Kolektor, Koleksi 50/100 | Cap tinta bulat, cincin putus-putus, kartu kata + stabilo Wasabi, tekstur kertas halus | referensi-visual.md: tempel-stiker, cap tinta |
 | `img/aset/stempel-baca.svg` (1,2 KB) | Profil, lencana terbuka: Kutu Buku, Level 5 | Cap tinta bulat, buku terbuka + stabilo Wasabi | Sama |
 | `img/aset/stempel-streak.svg` (1,1 KB) | Profil, lencana terbuka: On Fire, Seminggu Nonstop | Cap tinta bulat, api kecil, inti Wasabi | Sama |
+| `img/aset/error-kata.svg` (0,9 KB) | Tab Kata, layar error "Tab Kata lagi bermasalah" | Doodle: kartu retak zig-zag + plester silang, stabilo Wasabi, latar Biru Es | referensi-visual.md: tempel-stiker, goresan tak sempurna |
+| `img/aset/stempel-ngomong.svg` (1,1 KB) | Profil, lencana terbuka: Berani Ngomong | Cap tinta bulat, gelembung ucap, coretan Wasabi | Sama |
+| `img/aset/stempel-sempurna.svg` (1,1 KB) | Profil, lencana terbuka: Sempurna | Cap tinta bulat, papan target kena | Sama |
+| `img/aset/stempel-boss.svg` (1,0 KB) | Profil, lencana terbuka: Boss Slayer | Cap tinta bulat, perisai retak | Sama |
+| `img/aset/stempel-otak.svg` (1,2 KB) | Profil, lencana terbuka: Otak Encer | Cap tinta bulat, dua kartu balik | Sama |
 
 ## 2. Catatan teknis
 - Ukuran 0,6 KB per file. viewBox 160x160. Tanpa teks.
