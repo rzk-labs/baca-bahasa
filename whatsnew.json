@@ -1,5 +1,11 @@
 [
   {
+    "n": 2027,
+    "judul": "Stempel doodle untuk 4 lencana Profil yang masih ikon polos",
+    "poin": "Empat lencana terakhir di Profil kini punya stempel gambar tangan juga.",
+    "tgl": "2026-11-28"
+  },
+  {
     "n": 2025,
     "judul": "Motion: centang 'Beres!' Target baca tergambar saat target tercapai",
     "poin": "Target baca yang beres sekarang punya centang tergambar dan cincin berdenyut.",
@@ -172,11 +178,5 @@
     "judul": "Home buku Tamat: tombol buku berikutnya singkat 'Mulai buku Korea'",
     "poin": "Tombol buku berikutnya di Home kini singkat: \"Mulai buku Korea\".",
     "tgl": "2026-11-28"
-  },
-  {
-    "n": 1967,
-    "judul": "Angka kata Profil & Home cocok: 'tersimpan' vs 'siap diulang' jelas",
-    "poin": "Home sekarang bilang \"dari N tersimpan\" di bawah jumlah kata siap diulang.",
-    "tgl": "2026-11-27"
   }
 ]
